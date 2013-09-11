@@ -12,15 +12,12 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.order.domain.Order;
-import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
@@ -28,15 +25,10 @@ import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.repository.ShipmentRepository;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
@@ -47,8 +39,7 @@ public class ShipmentServiceTest {
 
   @Mock
   private ShipmentRepository shipmentRepository;
-  @Mock
-  private OrderService orderService;
+
   @Mock
   private RequisitionService requisitionService;
   @Mock
@@ -131,27 +122,6 @@ public class ShipmentServiceTest {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
     verify(shipmentRepository).insertShipmentFileInfo(shipmentFileInfo);
-  }
-
-  @Test
-  public void shouldUpdateOrders() throws Exception {
-    final ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setId(1L);
-    shipmentFileInfo.setProcessingError(FALSE);
-    Set<Long> orderIds = new HashSet<>();
-    orderIds.add(1L);
-
-    shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
-
-    final ArgumentMatcher<List<Order>> argumentMatcher = new ArgumentMatcher<List<Order>>() {
-      @Override
-      public boolean matches(Object argument) {
-        List<Order> orders = (List<Order>) argument;
-        Order order = orders.get(0);
-        return order.getShipmentFileInfo().equals(shipmentFileInfo) && order.getId().equals(1L);
-      }
-    };
-    verify(orderService).updateFulfilledAndShipmentIdForOrders(argThat(argumentMatcher));
   }
 
 

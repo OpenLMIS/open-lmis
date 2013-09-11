@@ -8,12 +8,14 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.Set;
@@ -34,25 +36,28 @@ public class ShipmentFilePostProcessHandler {
   @Autowired
   private MessageChannel ftpArchiveOutputChannel;
 
+  @Autowired
+  private OrderService orderService;
 
   private static final Logger logger = Logger.getLogger(ShipmentFilePostProcessHandler.class);
 
 
-  public void process(Set<Long> orderIds, File shipmentFile, boolean error) {
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), error);
+  @Transactional
+  public void process(Set<Long> orderIds, File shipmentFile, boolean success) {
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(shipmentFile.getName(), !success);
 
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
-    shipmentService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
     Message<File> message = withPayload(shipmentFile).build();
 
-    if (error) {
-      ftpErrorChannel.send(message);
-      logger.warn("Shipment file " + shipmentFile.getName() + " copied to error folder");
-    } else {
+    if (success) {
       ftpArchiveOutputChannel.send(message);
       logger.debug("Shipment file " + shipmentFile.getName() + " archived");
+    } else {
+      ftpErrorChannel.send(message);
+      logger.warn("Shipment file " + shipmentFile.getName() + " copied to error folder");
     }
 
     if (!deleteQuietly(shipmentFile)) {

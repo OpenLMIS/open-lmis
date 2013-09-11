@@ -9,8 +9,6 @@ package org.openlmis.shipment.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.order.domain.Order;
-import org.openlmis.order.service.OrderService;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -18,18 +16,14 @@ import org.openlmis.shipment.repository.ShipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @NoArgsConstructor
 public class ShipmentService {
   @Autowired
   private ShipmentRepository shipmentRepository;
-  @Autowired
-  private OrderService orderService;
+
   @Autowired
   private RequisitionService requisitionService;
   @Autowired
@@ -59,16 +53,6 @@ public class ShipmentService {
 
   public void insertShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
     shipmentRepository.insertShipmentFileInfo(shipmentFileInfo);
-  }
-
-  public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
-    List<Order> orders = new ArrayList<>();
-    for (Long id : orderIds) {
-      Order order = new Order(id);
-      order.updateShipmentFileInfo(shipmentFileInfo);
-      orders.add(order);
-    }
-    orderService.updateFulfilledAndShipmentIdForOrders(orders);
   }
 
   public Date getProcessedTimeStamp(ShipmentLineItem shipmentLineItem) {

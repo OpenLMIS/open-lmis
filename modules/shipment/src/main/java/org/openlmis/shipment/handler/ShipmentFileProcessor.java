@@ -65,27 +65,27 @@ public class ShipmentFileProcessor {
     logger.debug("processing Shipment File " + shipmentFile.getName());
     Set<Long> orderIds = new HashSet<>();
 
-
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
+    boolean successfullyProcessed = true;
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
       processShipmentLineItem(listReader, shipmentFileTemplate, orderIds);
       logger.debug("Successfully processed file " + shipmentFile.getName());
-      //mark orders as success
-      shipmentFilePostProcessHandler.process(orderIds, shipmentFile, false);
+
     } catch (Exception e) {
-      //mark orders as erred
-      shipmentFilePostProcessHandler.process(orderIds, shipmentFile, true);
+      successfullyProcessed = false;
     }
+
+    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, successfullyProcessed);
   }
 
   @Transactional
   private void processShipmentLineItem(ICsvListReader listReader,
-                                       ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderIds) throws Exception {
-    boolean errorInFile = false;
+                                       ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet) throws Exception {
+    boolean status = true;
 
     List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
 
@@ -101,40 +101,39 @@ public class ShipmentFileProcessor {
       if (fieldsInOneRow.size() < maxPosition) {
         //TODO: should we still update the order in this case??
         logger.warn("Shipment file should contain at least " + maxPosition + " columns");
-        errorInFile = true;
+        status = false;
       } else {
         ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
-        errorInFile = isOrderShippable(orderIds, dto, errorInFile);
-        if (!errorInFile) {
-          errorInFile = !saveLineItem(dto, packedDateFormat, shippedDateFormat);
+        status = status && addShippableOrder(orderSet, dto);
+        if (status) {
+          status = saveLineItem(dto, packedDateFormat, shippedDateFormat);
         }
       }
     }
 
-    if (errorInFile) {
+    if (!status) {
       throw new DataException("shipment.file.error");
     }
   }
 
-  private boolean isOrderShippable(Set<Long> orderIds, ShipmentLineItemDTO dto, boolean errorInFile) {
-    Long orderId = null;
-
+  private boolean addShippableOrder(Set<Long> orderIds, ShipmentLineItemDTO dto) {
+    boolean status = true;
     try {
-      parseLong(dto.getOrderId());
+      Long orderId = parseLong(dto.getOrderId());
 
       if (!orderIds.contains(orderId)) {
         if (orderService.isShippable(orderId)) {
           orderIds.add(orderId);
         } else {
-          errorInFile = true;
+          status = false;
         }
       }
     } catch (NumberFormatException e) {
       logger.warn("invalid orderId: " + dto.getOrderId() + " in shipment file");
-      errorInFile = true;
+      status = false;
     }
 
-    return errorInFile;
+    return status;
   }
 
   private boolean saveLineItem(ShipmentLineItemDTO dto,

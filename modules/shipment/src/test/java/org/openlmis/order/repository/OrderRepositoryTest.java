@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -18,6 +18,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.springframework.dao.DuplicateKeyException;
 
@@ -28,8 +29,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -64,15 +65,13 @@ public class OrderRepositoryTest {
 
   @Test
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
-    List<Order> orders = new ArrayList<>();
-    Order order1 = new Order();
-    Order order2 = new Order();
-    orders.add(order1);
-    orders.add(order2);
+    Long orderId = 123L;
+    Long shipmentId = 456L;
+    OrderStatus status = RELEASED;
 
-    orderRepository.updateStatusAndShipmentIdForOrder(orders);
+    orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentId);
 
-    verify(orderMapper, times(2)).updateShipmentInfo(any(Order.class));
+    verify(orderMapper).updateShipmentAndStatus(orderId, status, shipmentId);
   }
 
   @Test

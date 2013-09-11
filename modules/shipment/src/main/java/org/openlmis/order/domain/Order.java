@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -13,9 +13,6 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
-
-import static org.openlmis.order.domain.OrderStatus.PACKED;
-import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Data
 @NoArgsConstructor
@@ -40,11 +37,5 @@ public class Order extends BaseModel {
     this.id = orderId;
     this.rnr = rnr;
     this.supplyLine = supplyLine;
-  }
-
-  public void updateShipmentFileInfo(ShipmentFileInfo shipmentFileInfo) {
-    this.shipmentFileInfo = shipmentFileInfo;
-    //TODO why is status RELEASED in case of error?
-    this.status = shipmentFileInfo.isProcessingError() ? RELEASED : PACKED;
   }
 }

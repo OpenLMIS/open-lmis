@@ -27,11 +27,14 @@ import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -194,12 +197,39 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldUpdateFulfilledAndShipmentIdForOrders() throws Exception {
-    List<Order> orders = new ArrayList<>();
+  public void shouldSetErrorStatusForAllOrdersIfErrorInShipment() throws Exception {
+    Set<Long> orderIds = new HashSet<>();
+    orderIds.add(123L);
+    orderIds.add(456L);
+    long shipmentId = 678L;
 
-    orderService.updateFulfilledAndShipmentIdForOrders(orders);
+    boolean processingError = true;
 
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(orders);
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
+    shipmentFileInfo.setId(shipmentId);
+
+    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, SHIPMENT_ERROR, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, SHIPMENT_ERROR, shipmentId);
+  }
+
+  @Test
+  public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
+    Set<Long> orderIds = new HashSet<>();
+    orderIds.add(123L);
+    orderIds.add(456L);
+    long shipmentId = 678L;
+
+    boolean processingError = false;
+
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
+    shipmentFileInfo.setId(shipmentId);
+
+    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, PACKED, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, PACKED, shipmentId);
   }
 
   @Test

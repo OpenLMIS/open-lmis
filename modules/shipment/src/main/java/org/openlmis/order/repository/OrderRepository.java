@@ -39,10 +39,8 @@ public class OrderRepository {
     return orderMapper.getById(id);
   }
 
-  public void updateStatusAndShipmentIdForOrder(List<Order> orders) {
-    for (Order order : orders) {
-      orderMapper.updateShipmentInfo(order);
-    }
+  public void updateStatusAndShipmentIdForOrder(Long orderId, OrderStatus status, Long shipmentId) {
+    orderMapper.updateShipmentAndStatus(orderId, status, shipmentId);
   }
 
   public List<OrderFileColumn> getOrderFileTemplate() {

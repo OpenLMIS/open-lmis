@@ -42,10 +42,12 @@ public interface OrderMapper {
   Order getById(Long id);
 
   @Update({"UPDATE orders SET",
-    "shipmentId = #{shipmentFileInfo.id},",
+    "shipmentId = #{shipmentId},",
     "status = #{status}",
-    "WHERE id = #{id} AND status IN ('RELEASED', 'SHIPMENT_ERROR')"})
-  void updateShipmentInfo(Order order);
+    "WHERE id = #{orderId}"})
+  void updateShipmentAndStatus(@Param("orderId") Long orderId,
+                               @Param("status") OrderStatus status,
+                               @Param("shipmentId") Long shipmentId);
 
   @Select("SELECT * FROM order_file_columns ORDER BY position")
   List<OrderFileColumn> getOrderFileColumns();

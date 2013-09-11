@@ -19,6 +19,7 @@ import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,8 +109,11 @@ public class OrderService {
     return lineItemsForOrder;
   }
 
-  public void updateFulfilledAndShipmentIdForOrders(List<Order> orders) {
-    orderRepository.updateStatusAndShipmentIdForOrder(orders);
+  public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
+    for (Long orderId : orderIds) {
+      OrderStatus status = (shipmentFileInfo.isProcessingError()) ? SHIPMENT_ERROR : PACKED;
+      orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
+    }
   }
 
   public OrderFileTemplateDTO getOrderFileTemplateDTO() {

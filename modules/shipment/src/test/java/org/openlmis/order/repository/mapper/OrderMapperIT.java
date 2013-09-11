@@ -147,8 +147,8 @@ public class OrderMapperIT {
     shipmentFileInfo.setProcessingError(false);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    order.updateShipmentFileInfo(shipmentFileInfo);
-    mapper.updateShipmentInfo(order);
+
+    mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
 
     List<Order> orders = mapper.getAll();
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
@@ -157,18 +157,12 @@ public class OrderMapperIT {
 
   @Test
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
-    Rnr rnr = insertRequisition(1L);
-    Order order = new Order(rnr);
-    order.setStatus(RELEASED);
-    order.setSupplyLine(supplyLine);
-    mapper.insert(order);
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setFileName("ord_1.csv");
+    Order order = insertOrder(1L);
+
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipment.csv", true);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    order.updateShipmentFileInfo(shipmentFileInfo);
-
-    mapper.updateShipmentInfo(order);
+    mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrId = ?", asList(order.getRnr().getId()));
 
