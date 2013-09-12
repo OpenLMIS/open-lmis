@@ -17,7 +17,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 @Category(IntegrationTests.class)
@@ -39,15 +42,19 @@ public class ShipmentConfigurationMapperIT {
 
   @Test
   public void shouldUpdateShipmentConfiguration() {
-    ShipmentConfiguration shipmentConfiguration = mapper.get();
-    shipmentConfiguration.setHeaderInFile(true);
-    shipmentConfiguration.setModifiedBy(1L);
+    ShipmentConfiguration configuration = mapper.get();
 
-    mapper.update(shipmentConfiguration);
+    Date originalModifiedDate = configuration.getModifiedDate();
 
-    shipmentConfiguration = mapper.get();
-    assertThat(shipmentConfiguration.isHeaderInFile(), is(true));
-    assertThat(shipmentConfiguration.getModifiedBy(), is(1L));
+    configuration.setHeaderInFile(true);
+    configuration.setModifiedBy(1L);
+
+    mapper.update(configuration);
+
+    configuration = mapper.get();
+    assertThat(configuration.isHeaderInFile(), is(true));
+    assertThat(configuration.getModifiedBy(), is(1L));
+    assertThat(configuration.getModifiedDate(), is(not(originalModifiedDate)));
   }
 }
 

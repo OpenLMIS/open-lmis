@@ -17,7 +17,10 @@ public interface ShipmentConfigurationMapper {
   @Select("SELECT * FROM shipment_configuration")
   ShipmentConfiguration get();
 
-  @Update({"UPDATE shipment_configuration set headerInFile =  #{headerInFile}, modifiedBy = #{modifiedBy}"})
+  @Update({"UPDATE shipment_configuration SET",
+    "headerInFile =  #{headerInFile},",
+    "modifiedDate = NOW(),",
+    "modifiedBy = #{modifiedBy}"})
   void update(ShipmentConfiguration shipmentConfiguration);
 
 }
