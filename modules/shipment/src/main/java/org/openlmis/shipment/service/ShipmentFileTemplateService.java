@@ -6,12 +6,15 @@
 
 package org.openlmis.shipment.service;
 
+import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class ShipmentFileTemplateService {
@@ -22,16 +25,17 @@ public class ShipmentFileTemplateService {
 
   @Transactional
   public void update(ShipmentFileTemplate shipmentFileTemplate) {
-    //TODO should ONLY update based on column.name
     shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getShipmentConfiguration());
-    shipmentTemplateRepository.deleteAllShipmentFileColumns();
+
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileTemplate.getShipmentFileColumns()) {
-      shipmentTemplateRepository.insertShipmentFileColumn(shipmentFileColumn);
+      shipmentTemplateRepository.update(shipmentFileColumn);
     }
   }
 
   public ShipmentFileTemplate get() {
-    return new ShipmentFileTemplate(shipmentTemplateRepository.getShipmentConfiguration(),
-      shipmentTemplateRepository.getAllShipmentFileColumns());
+    ShipmentConfiguration config = shipmentTemplateRepository.getShipmentConfiguration();
+    List<ShipmentFileColumn> columns = shipmentTemplateRepository.getAllShipmentFileColumns();
+
+    return new ShipmentFileTemplate(config, columns);
   }
 }

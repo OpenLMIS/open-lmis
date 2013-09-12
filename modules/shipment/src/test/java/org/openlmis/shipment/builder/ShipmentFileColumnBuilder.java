@@ -11,6 +11,8 @@ import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 
+import java.util.Date;
+
 public class ShipmentFileColumnBuilder {
 
   public static Property<? super ShipmentFileColumn, String> fieldName = new Property<>();
@@ -24,6 +26,8 @@ public class ShipmentFileColumnBuilder {
   public static Property<? super ShipmentFileColumn, Boolean> mandatory = new Property<>();
 
   public static Property<? super ShipmentFileColumn, String> dateFormat = new Property<>();
+  public static Property<? super ShipmentFileColumn, Long> modifiedById = new Property<>();
+  public static Property<? super ShipmentFileColumn, Date> modifiedOnDate = new Property<>();
 
 
   public static final Instantiator<ShipmentFileColumn> mandatoryShipmentFileColumn = new Instantiator<ShipmentFileColumn>() {
@@ -37,7 +41,9 @@ public class ShipmentFileColumnBuilder {
       column.setMandatory(true);
       column.setInclude(true);
       column.setDatePattern(lookup.valueOf(dateFormat, "MM/yy"));
-      column.setModifiedBy(1L);
+      column.setModifiedBy(lookup.valueOf(modifiedById, 1L));
+      column.setModifiedDate(lookup.valueOf(modifiedOnDate, new Date()));
+
       return column;
     }
   };
