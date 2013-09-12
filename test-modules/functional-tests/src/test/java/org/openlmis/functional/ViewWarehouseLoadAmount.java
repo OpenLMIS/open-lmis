@@ -9,6 +9,7 @@ package org.openlmis.functional;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -20,6 +21,7 @@ import org.openlmis.pageobjects.DistributionPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.WarehouseLoadAmountPage;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -304,14 +306,17 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
 
   @AfterMethod(groups = "distribution")
+  @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+      ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
     }
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+
   }
 
 

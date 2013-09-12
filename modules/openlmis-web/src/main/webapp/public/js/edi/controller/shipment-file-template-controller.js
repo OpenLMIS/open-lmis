@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 20.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -20,16 +20,15 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     return false;
   }
 
-  function isPositionEmptyForIncludedColumn() {
+  function isInvalidPosition() {
     var emptyPosition = false;
     angular.forEach($scope.shipmentFileTemplate.shipmentFileColumns, function (column) {
 
-      if (column.include && isUndefined(column.position)) {
+      if (column.include && (isUndefined(column.position) || parseInt(column.position) === 0 )) {
         $scope.message = "";
-        $scope.error = "shipment.file.empty.position";
+        $scope.error = "shipment.file.invalid.position";
         emptyPosition = true;
-      }
-      if (!isUndefined(column.position)) {
+      } else if (!isUndefined(column.position)) {
         column.position = parseInt(column.position);
       }
     });
@@ -38,10 +37,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
   }
 
   $scope.saveShipmentFileTemplate = function () {
-    if (isPositionEmptyForIncludedColumn()) {
-      return;
-    }
-    if (isDuplicatePosition()) {
+    if (isInvalidPosition() || isDuplicatePosition()) {
       return;
     }
 

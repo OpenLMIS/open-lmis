@@ -9,15 +9,21 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductPrice;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
+import org.openlmis.core.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @Component
 @NoArgsConstructor
@@ -32,6 +38,11 @@ public class ProgramProductService {
   @Autowired
   private ProductService productService;
 
+  @Autowired
+  private ProgramRepository programRepository;
+
+  @Autowired
+  private FacilityRepository facilityRepository;
 
   public Long getIdByProgramIdAndProductId(Long programId, Long productId) {
     return programProductRepository.getIdByProgramIdAndProductId(programId, productId);
@@ -54,8 +65,6 @@ public class ProgramProductService {
   }
 
   public void save(ProgramProduct programProduct) {
-
-
     if (programProduct.getId() == null) {
       boolean globalProductStatus = productService.isActive(programProduct.getProduct().getCode());
       if (globalProductStatus && programProduct.isActive())
@@ -110,11 +119,15 @@ public class ProgramProductService {
     return programProductRepository.getByProgram(program);
   }
 
-  public List<ProgramProduct> getOptionsByProduct(Product product) {
-    return programProductRepository.getOptionsByProduct(product);
-  }
-
   public List<ProgramProduct> getByProductCode(String productCode) {
     return programProductRepository.getByProductCode(productCode);
+  }
+
+  public List<ProgramProduct> getProgramProductsBy(String programCode, String facilityTypeCode) {
+    FacilityType facilityType = new FacilityType();
+    if ((facilityTypeCode = trimToNull(facilityTypeCode)) != null) {
+      facilityType = facilityRepository.getFacilityTypeByCode(new FacilityType(facilityTypeCode));
+    }
+    return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)), facilityType.getCode());
   }
 }

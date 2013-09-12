@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -27,21 +27,27 @@ import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.order.domain.DateFormat.*;
+import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(OrderService.class)
@@ -70,7 +76,7 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldConvertRequisitionsToOrder() throws Exception {
+  public void shouldConvertRequisitionsToOrderWithStatusInRoute() throws Exception {
     Program program = new Program();
     Long userId = 1L;
     Rnr rnr = new Rnr();
@@ -102,6 +108,68 @@ public class OrderServiceTest {
   }
 
   @Test
+  public void shouldConvertRequisitionsToOrderWithStatusReadyToPack() throws Exception {
+    Program program = new Program();
+    Long userId = 1L;
+    Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+
+    SupplyLine supplyLine = new SupplyLine();
+    supplyLine.setExportOrders(Boolean.FALSE);
+
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(supplyLine);
+
+    List<Rnr> rnrList = new ArrayList<>();
+    rnrList.add(rnr);
+
+    orderService.convertToOrder(rnrList, userId);
+
+    Order order = new Order(rnr);
+    order.setStatus(OrderStatus.READY_TO_PACK);
+    order.setSupplyLine(supplyLine);
+    verify(orderRepository).save(order);
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    assertThat(order.getSupplyLine(), is(supplyLine));
+  }
+
+  @Test
+  public void shouldConvertRequisitionsToOrderWithStatusTransferFailed() throws Exception {
+    String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
+    Program program = new Program();
+    Long userId = 1L;
+    Rnr rnr = new Rnr();
+    rnr.setId(1L);
+    rnr.setSupervisoryNodeId(1L);
+    rnr.setProgram(program);
+
+    when(requisitionService.getLWById(1L)).thenReturn(rnr);
+    SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
+    whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(null);
+
+    List<Rnr> rnrList = new ArrayList<>();
+    rnrList.add(rnr);
+
+    orderService.convertToOrder(rnrList, userId);
+
+    Order order = new Order(rnr);
+    order.setStatus(OrderStatus.TRANSFER_FAILED);
+    order.setFtpComment(SUPPLY_LINE_MISSING_COMMENT);
+    order.setSupplyLine(null);
+    verify(orderRepository).save(order);
+    verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
+    verify(requisitionService).getLWById(rnr.getId());
+    verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+  }
+
+  @Test
   public void shouldGetOrdersFilledWithRequisition() throws Exception {
     Rnr rnr1 = make(a(defaultRnr, with(id, 78L)));
     final Order order1 = new Order();
@@ -129,12 +197,39 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldUpdateFulfilledAndShipmentIdForOrders() throws Exception {
-    List<Order> orders = new ArrayList<>();
+  public void shouldSetErrorStatusForAllOrdersIfErrorInShipment() throws Exception {
+    Set<Long> orderIds = new HashSet<>();
+    orderIds.add(123L);
+    orderIds.add(456L);
+    long shipmentId = 678L;
 
-    orderService.updateFulfilledAndShipmentIdForOrders(orders);
+    boolean processingError = true;
 
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(orders);
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
+    shipmentFileInfo.setId(shipmentId);
+
+    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, SHIPMENT_ERROR, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, SHIPMENT_ERROR, shipmentId);
+  }
+
+  @Test
+  public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
+    Set<Long> orderIds = new HashSet<>();
+    orderIds.add(123L);
+    orderIds.add(456L);
+    long shipmentId = 678L;
+
+    boolean processingError = false;
+
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
+    shipmentFileInfo.setId(shipmentId);
+
+    orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, PACKED, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, PACKED, shipmentId);
   }
 
   @Test
@@ -192,9 +287,9 @@ public class OrderServiceTest {
   @Test
   public void shouldGetAllDateFormats() throws Exception {
     List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
-    List<DateFormat> expectedDateFormats = asList(DATE_1,DATE_2,DATE_3,DATE_4,DATE_5,DATE_6,DATE_7,DATE_8,DATE_9,DATE_10,
-      DATE_11,DATE_12,DATE_13,DATE_14,DATE_15,DATE_16,DATE_17,DATE_18,DATE_19,DATE_20,
-      DATE_21,DATE_22,DATE_23,DATE_24,DATE_25,DATE_26,DATE_27,DATE_28,DATE_29,DATE_30
+    List<DateFormat> expectedDateFormats = asList(DATE_1, DATE_2, DATE_3, DATE_4, DATE_5, DATE_6, DATE_7, DATE_8, DATE_9, DATE_10,
+      DATE_11, DATE_12, DATE_13, DATE_14, DATE_15, DATE_16, DATE_17, DATE_18, DATE_19, DATE_20,
+      DATE_21, DATE_22, DATE_23, DATE_24, DATE_25, DATE_26, DATE_27, DATE_28, DATE_29, DATE_30
     );
 
     assertThat(dateFormats, is(expectedDateFormats));
@@ -205,5 +300,45 @@ public class OrderServiceTest {
     Order order = new Order();
     orderService.updateOrderStatus(order);
     verify(orderRepository).updateOrderStatus(order);
+  }
+
+  @Test
+  public void shouldReturnTrueIfOrderIsReleased() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId)).thenReturn(RELEASED);
+
+    assertThat(orderService.isShippable(orderId), is(true));
+
+    verify(orderRepository).getStatus(123L);
+
+  }
+
+  @Test
+  public void shouldReturnTrueIfOrderIsShipmentError() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId)).thenReturn(SHIPMENT_ERROR);
+
+    assertThat(orderService.isShippable(orderId), is(true));
+
+    verify(orderRepository).getStatus(123L);
+
+  }
+
+  @Test
+  public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
+    long orderId = 123L;
+    when(orderRepository.getStatus(orderId))
+      .thenReturn(IN_ROUTE)
+      .thenReturn(PACKED)
+      .thenReturn(TRANSFER_FAILED)
+      .thenReturn(READY_TO_PACK);
+
+    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderId), is(false));
+    assertThat(orderService.isShippable(orderId), is(false));
+
+    verify(orderRepository, times(4)).getStatus(123L);
+
   }
 }

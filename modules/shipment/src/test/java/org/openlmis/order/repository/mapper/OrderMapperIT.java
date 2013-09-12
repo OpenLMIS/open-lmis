@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -147,8 +147,8 @@ public class OrderMapperIT {
     shipmentFileInfo.setProcessingError(false);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    order.updateShipmentFileInfo(shipmentFileInfo);
-    mapper.updateShipmentInfo(order);
+
+    mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
 
     List<Order> orders = mapper.getAll();
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
@@ -157,18 +157,12 @@ public class OrderMapperIT {
 
   @Test
   public void shouldUpdateStatusAndShipmentIdForOrder() throws Exception {
-    Rnr rnr = insertRequisition(1L);
-    Order order = new Order(rnr);
-    order.setStatus(RELEASED);
-    order.setSupplyLine(supplyLine);
-    mapper.insert(order);
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setFileName("ord_1.csv");
+    Order order = insertOrder(1L);
+
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipment.csv", true);
     shipmentMapper.insertShipmentFileInfo(shipmentFileInfo);
 
-    order.updateShipmentFileInfo(shipmentFileInfo);
-
-    mapper.updateShipmentInfo(order);
+    mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrId = ?", asList(order.getRnr().getId()));
 
@@ -238,6 +232,16 @@ public class OrderMapperIT {
     assertThat(savedOrder.getFtpComment(), is(ftpComment));
   }
 
+  @Test
+  public void shouldGetOrderStatusById() throws Exception {
+    long programId = 1L;
+    Order order = insertOrder(programId);
+
+    OrderStatus status = mapper.getStatus(order.getId());
+
+    assertThat(status, is(order.getStatus()));
+  }
+
   private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
     List paramList = new ArrayList();
     paramList.add(new java.sql.Date(date.getTime()));
@@ -248,7 +252,7 @@ public class OrderMapperIT {
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
-    order.setStatus(OrderStatus.IN_ROUTE);
+    order.setStatus(IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
     return order;

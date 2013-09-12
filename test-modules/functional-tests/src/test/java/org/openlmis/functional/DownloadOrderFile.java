@@ -11,7 +11,6 @@ import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
-import lombok.installer.IdeFinder;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
@@ -22,13 +21,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 
 @TransactionConfiguration(defaultRollback = true)
@@ -209,9 +206,10 @@ public class DownloadOrderFile extends TestCaseHelper {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
     }
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+
   }
 
   @DataProvider(name = "Data-Provider-Function")

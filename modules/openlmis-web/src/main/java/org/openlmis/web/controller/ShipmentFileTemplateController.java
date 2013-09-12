@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -16,6 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -28,13 +32,16 @@ public class ShipmentFileTemplateController extends BaseController {
   @RequestMapping(value = "/shipment-file-template", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> get() {
-    return OpenLmisResponse.response("shipment_template", service.get());
+    return response("shipment_template", service.get());
   }
 
   @RequestMapping(value = "/shipment-file-template", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
-  public ResponseEntity<OpenLmisResponse> update(@RequestBody ShipmentFileTemplate shipmentFileTemplate) {
+  public ResponseEntity<OpenLmisResponse> update(@RequestBody ShipmentFileTemplate shipmentFileTemplate,
+                                                 HttpServletRequest request) {
+    shipmentFileTemplate.setModifiedBy(loggedInUserId(request));
     service.update(shipmentFileTemplate);
-    return OpenLmisResponse.success("shipment.file.configuration.success");
+
+    return success("shipment.file.configuration.success");
   }
 }

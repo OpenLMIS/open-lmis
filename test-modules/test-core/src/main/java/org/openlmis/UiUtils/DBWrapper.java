@@ -66,6 +66,7 @@ public class DBWrapper {
   }
 
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
+    String programName = "";
     String productCode = "";
     String productName = "";
     String desc = "";
@@ -74,7 +75,7 @@ public class DBWrapper {
     List<String> prodDetails = new ArrayList<String>();
 
     ResultSet rs = query("select prog.code as programCode, prog.name as programName, prod.code as productCode, " +
-      "prod.primaryname as productName, prod.description as desc, prod.dispensingunit as unit, pg.name as pgName " +
+      "prod.primaryname as productName, prod.description as desc, prod.dosesperdispensingunit as unit, pg.name as pgName " +
       "from products prod, programs prog, " +
       "program_products pp, product_categories pg " +
       "where prog.id=pp.programid and pp.productid=prod.id and " +
@@ -82,12 +83,41 @@ public class DBWrapper {
       "and prod.active='true' and pp.active='true';");
 
     while (rs.next()) {
-      productCode = rs.getString(0);
-      productName = rs.getString(1);
-      desc = rs.getString(2);
-      unit = rs.getString(3);
-      pgName = rs.getString(4);
-      prodDetails.add(productCode + "," + productName + "," + desc + "," + unit + "," + pgName);
+      programName = rs.getString(2);
+      productCode = rs.getString(3);
+      productName = rs.getString(4);
+      desc = rs.getString(5);
+      unit = rs.getString(6);
+      pgName = rs.getString(7);
+      prodDetails.add(programName + "," + productCode + "," + productName + "," + desc + "," + unit + "," + pgName);
+    }
+    return prodDetails;
+  }
+
+  public List<String> getProductDetailsForProgramAndFacilityType(String programCode, String facilityCode) throws SQLException {
+    String programName = "";
+    String productCode = "";
+    String productName = "";
+    String desc = "";
+    String unit = "";
+    String pgName = "";
+    List<String> prodDetails = new ArrayList<String>();
+
+    ResultSet rs = query("select prog.code as programCode, prog.name as programName, prod.code as productCode, " +
+      "prod.primaryname as productName, prod.description as desc, prod.dosesperdispensingunit as unit, " +
+      "pg.name as pgName from products prod, programs prog, program_products pp, product_categories pg, " +
+      "facility_approved_products fap, facility_types ft where prog.id=pp.programid and pp.productid=prod.id and " +
+      "pg.id=prod.categoryid and fap. programproductid=pp.id and ft.id=fap. Facilitytypeid and prog.code='"+programCode+"' and ft.code='"+facilityCode+"' " +
+      "and prod.active='true' and pp.active='true';\n");
+
+    while (rs.next()) {
+      programName = rs.getString(2);
+      productCode = rs.getString(3);
+      productName = rs.getString(4);
+      desc = rs.getString(5);
+      unit = rs.getString(6);
+      pgName = rs.getString(7);
+      prodDetails.add(programName + "," + productCode + "," + productName + "," + desc + "," + unit + "," + pgName);
     }
     return prodDetails;
   }

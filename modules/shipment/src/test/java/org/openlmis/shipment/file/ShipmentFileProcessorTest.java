@@ -3,6 +3,7 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package org.openlmis.shipment.file;
 
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
@@ -77,6 +79,9 @@ public class ShipmentFileProcessorTest {
   @Mock
   CsvListReader mockedCsvListReader;
 
+  @Mock
+  private OrderService orderService;
+
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
 
@@ -114,9 +119,9 @@ public class ShipmentFileProcessorTest {
       assertThat(e.getMessage(), is("shipment.file.error"));
     }
 
-    verify(shipmentService, times(0)).insertShippedLineItem(any(ShipmentLineItem.class));
+    verify(shipmentService, times(0)).insertOrUpdate(any(ShipmentLineItem.class));
 
-    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, true);
+    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
   }
 
   @Test
@@ -137,14 +142,16 @@ public class ShipmentFileProcessorTest {
     lineItem.setOrderId(232L);
     when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString())).thenReturn(lineItem);
 
+    when(orderService.isShippable(232L)).thenReturn(true);
+
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader, times(0)).getHeader(true);
-    verify(shipmentService, times(1)).insertShippedLineItem(any(ShipmentLineItem.class));
+    verify(shipmentService, times(1)).insertOrUpdate(any(ShipmentLineItem.class));
 
     Set<Long> orderIds = new HashSet<>();
     orderIds.add(232L);
-    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, false);
+    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, true);
   }
 
   @Test
@@ -164,9 +171,7 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader).getHeader(true);
-    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
-
-
+    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, true);
   }
 
   @Test
@@ -174,11 +179,15 @@ public class ShipmentFileProcessorTest {
     List<ShipmentFileColumn> shipmentFileColumnList = asList(
       make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 1),
+        with(fieldName, "orderId")
+      )),
+      make(a(mandatoryShipmentFileColumn,
+        with(columnPosition, 2),
         with(fieldName, "packedDate"),
         with(dateFormat, "MM/yy")
       )),
       make(a(defaultShipmentFileColumn,
-        with(columnPosition, 2),
+        with(columnPosition, 3),
         with(fieldName, "shippedDate"),
         with(dateFormat, "dd/MM/yyyy")
       )));
@@ -187,19 +196,24 @@ public class ShipmentFileProcessorTest {
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
-    when(mockedCsvListReader.read()).thenReturn(asList("11/13", "11/11/2011")).thenReturn(null);
+    when(mockedCsvListReader.read()).thenReturn(asList("333", "11/13", "11/11/2011")).thenReturn(null);
 
     ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO();
+    shipmentLineItemDTO.setOrderId("333");
     shipmentLineItemDTO.setPackedDate("11/13");
     shipmentLineItemDTO.setShippedDate("11/11/2011");
     ShipmentLineItem shipmentLineItem = mock(ShipmentLineItem.class);
-    when(shipmentLineItem.getOrderId()).thenReturn(null);
+    when(shipmentLineItem.getOrderId()).thenReturn(333L);
+    when(orderService.isShippable(333L)).thenReturn(true);
+
     when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy")).thenReturn(shipmentLineItem);
 
     shipmentFileProcessor.process(message);
 
-    verify(shipmentService).insertShippedLineItem(shipmentLineItem);
+    verify(shipmentService).insertOrUpdate(shipmentLineItem);
 
-    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
+    HashSet<Long> orderIds = new HashSet<>();
+    orderIds.add(333L);
+    verify(shipmentFilePostProcessHandler).process(orderIds, shipmentFile, true);
   }
 }

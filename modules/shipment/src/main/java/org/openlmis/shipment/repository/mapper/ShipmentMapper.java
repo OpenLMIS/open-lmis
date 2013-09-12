@@ -34,7 +34,8 @@ public interface ShipmentMapper {
   @Select("SELECT * FROM shipment_file_info WHERE id = #{id}")
   ShipmentFileInfo getShipmentFileInfo(Long id);
 
-  @Select("SELECT * FROM shipment_line_items WHERE orderId = #{orderId} AND productCode=#{productCode}")
+  @Select({"SELECT * FROM shipment_line_items",
+    "WHERE orderId = #{orderId} AND productCode=#{productCode}"})
   ShipmentLineItem getShippedLineItem(ShipmentLineItem shipmentLineItem);
 
   @Update({"UPDATE shipment_line_items ",

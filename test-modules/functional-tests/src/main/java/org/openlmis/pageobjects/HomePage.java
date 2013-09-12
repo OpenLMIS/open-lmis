@@ -75,6 +75,9 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
   private static WebElement manageMenuItem;
 
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
+  private static WebElement offlineDistributions;
+
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
   private static WebElement viewOrdersMenuItem;
 
@@ -406,7 +409,7 @@ public class HomePage extends Page {
 
 
   public InitiateRnRPage clickProceed() throws IOException {
-    testWebDriver.handleScrollByPixels(0,2000);
+//    testWebDriver.handleScrollByPixels(0,2000);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);
@@ -566,6 +569,15 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(manageDistributionHeader);
     return new DistributionPage(testWebDriver);
   }
+
+    public DistributionPage navigateOfflineDistribution() throws IOException {
+        assertTrue(offlineDistributions.isDisplayed());
+        testWebDriver.waitForElementToAppear(offlineDistributions);
+        testWebDriver.keyPress(offlineDistributions);
+        testWebDriver.waitForElementToAppear(manageMenuItem);
+        testWebDriver.keyPress(manageMenuItem);
+        return new DistributionPage(testWebDriver);
+    }
 
   public ProgramProductISAPage navigateProgramProductISA() throws IOException {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);

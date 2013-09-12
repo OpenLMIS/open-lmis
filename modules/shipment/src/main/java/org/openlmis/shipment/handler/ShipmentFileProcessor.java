@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
@@ -55,91 +56,93 @@ public class ShipmentFileProcessor {
   @Autowired
   private ShipmentLineItemTransformer transformer;
 
+  @Autowired
+  private OrderService orderService;
+
 
   public void process(Message message) throws Exception {
     File shipmentFile = (File) message.getPayload();
     logger.debug("processing Shipment File " + shipmentFile.getName());
+    Set<Long> orderIds = new HashSet<>();
 
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
+    boolean successfullyProcessed = true;
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
-      processShipmentLineItem(listReader, shipmentFileTemplate, shipmentFile);
-
+      processShipmentLineItem(listReader, shipmentFileTemplate, orderIds);
       logger.debug("Successfully processed file " + shipmentFile.getName());
+
+    } catch (Exception e) {
+      successfullyProcessed = false;
     }
+
+    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, successfullyProcessed);
   }
 
   @Transactional
   private void processShipmentLineItem(ICsvListReader listReader,
-                                       ShipmentFileTemplate shipmentFileTemplate,
-                                       File shipmentFile) throws Exception {
-    Set<Long> orderIds = new HashSet<>();
-    boolean errorInFile = false;
+                                       ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet) throws Exception {
+    boolean status = true;
 
+    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
+
+    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
+
+    String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
+    String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
+
+    List<String> fieldsInOneRow;
+    while ((fieldsInOneRow = listReader.read()) != null) {
+
+      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+      status = status && addShippableOrder(orderSet, dto);
+
+      if (status) {
+        status = saveLineItem(dto, packedDateFormat, shippedDateFormat);
+      }
+    }
+
+    if (!status) {
+      throw new DataException("shipment.file.error");
+    }
+  }
+
+  private boolean addShippableOrder(Set<Long> orderIds, ShipmentLineItemDTO dto) {
+    boolean status = true;
     try {
+      Long orderId = parseLong(dto.getOrderId());
 
-      List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
-
-      Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
-
-      String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
-      String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
-
-      int maxPosition = findMaximumPosition(includedColumns);
-      List<String> fieldsInOneRow;
-      while ((fieldsInOneRow = listReader.read()) != null) {
-
-        if (fieldsInOneRow.size() < maxPosition) {
-          logger.warn("Shipment file should contain at least " + maxPosition + " columns");
-          errorInFile = true;
+      if (!orderIds.contains(orderId)) {
+        if (orderService.isShippable(orderId)) {
+          orderIds.add(orderId);
         } else {
-          ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
-          errorInFile = saveLineItem(dto, orderIds, errorInFile, packedDateFormat, shippedDateFormat);
+          status = false;
         }
       }
-
-      if (errorInFile) {
-        throw new DataException("shipment.file.error");
-      }
-
-    } finally {
-      shipmentFilePostProcessHandler.process(orderIds, shipmentFile, errorInFile);
+    } catch (NumberFormatException e) {
+      logger.warn("invalid orderId: " + dto.getOrderId() + " in shipment file");
+      status = false;
     }
+
+    return status;
   }
 
   private boolean saveLineItem(ShipmentLineItemDTO dto,
-                               Set<Long> orderIds,
-                               final boolean errorInFile,
                                String packedDateFormat,
                                String shippedDateFormat) {
+    boolean savedSuccessfully = true;
     try {
       ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
-      if (!errorInFile) {
-        shipmentService.insertShippedLineItem(lineItem);
-      }
+      shipmentService.insertOrUpdate(lineItem);
     } catch (DataException e) {
       logger.warn("Error in processing shipment file for orderId: " + dto.getOrderId(), e);
-      return true;
-    } finally {
-      addOrderId(orderIds, dto);
+      savedSuccessfully = false;
     }
 
-    return errorInFile;
-  }
-
-  private void addOrderId(Set<Long> orderIds, ShipmentLineItemDTO lineItemDTO) {
-    Long orderId = null;
-    try {
-      orderId = parseLong(lineItemDTO.getOrderId());
-    } catch (Exception e) {
-      logger.warn("invalid order id", e);
-    }
-    if (orderId != null) {
-      orderIds.add(orderId);
-    }
+    return savedSuccessfully;
   }
 
 
@@ -164,7 +167,8 @@ public class ShipmentFileProcessor {
         field.setAccessible(true);
         field.set(dto, fieldsInOneRow.get(position - 1));
       } catch (Exception e) {
-        logger.error("Exception in creating DTO from shipment file", e);
+        logger.error("Unable to set field '" + name +
+          "' in ShipmentLinetItemDTO, check mapping between DTO and ShipmentFileColumn", e);
       }
     }
 
@@ -176,16 +180,6 @@ public class ShipmentFileProcessor {
     if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
       listReader.getHeader(true);
     }
-  }
-
-  private int findMaximumPosition(Collection<ShipmentFileColumn> shipmentFileColumns) {
-    int maxPosition = 0;
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
-      if (shipmentFileColumn.getPosition() > maxPosition) {
-        maxPosition = shipmentFileColumn.getPosition();
-      }
-    }
-    return maxPosition;
   }
 
   private String getFormatForField(String fieldName, List<ShipmentFileColumn> shipmentFileColumns) {

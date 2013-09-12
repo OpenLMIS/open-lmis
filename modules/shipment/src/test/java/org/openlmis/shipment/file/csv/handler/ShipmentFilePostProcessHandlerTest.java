@@ -1,5 +1,6 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 20.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
@@ -12,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.service.ShipmentService;
@@ -42,8 +44,12 @@ public class ShipmentFilePostProcessHandlerTest {
   @Mock(name = "ftpArchiveOutputChannel")
   private MessageChannel ftpArchiveOutputChannel;
 
+  @Mock
+  private OrderService orderService;
+
   @InjectMocks
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
+
 
   @Before
   public void setUp() throws Exception {
@@ -53,18 +59,19 @@ public class ShipmentFilePostProcessHandlerTest {
   @Test
   public void shouldAddShipmentFileInfo() throws Exception {
     Set<Long> orderIds = new HashSet<>();
-    boolean processingError = false;
+    boolean success = true;
+    Boolean failure = false;
     File shipmentFile = mock(File.class);
     String fileName = "FileName";
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    ShipmentFileInfo shipmentFileInfo = mock(ShipmentFileInfo.class);
 
     when(shipmentFile.getName()).thenReturn(fileName);
-    whenNew(ShipmentFileInfo.class).withArguments(fileName, processingError).thenReturn(shipmentFileInfo);
+    whenNew(ShipmentFileInfo.class).withArguments(fileName, failure).thenReturn(shipmentFileInfo);
 
-    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, processingError);
+    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, success);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    verify(orderService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
     verify(ftpErrorChannel, never()).send(any(Message.class));
     verify(ftpArchiveOutputChannel).send(any(Message.class));
   }
@@ -72,18 +79,19 @@ public class ShipmentFilePostProcessHandlerTest {
   @Test
   public void shouldAddShipmentFileInfoAndSendFileToFtpOutputChannelWhenFileHasError() throws Exception {
     Set<Long> orderIds = new HashSet<>();
-    boolean processingError = true;
+    boolean failure = true;
+    boolean success = false;
     File shipmentFile = mock(File.class);
     String fileName = "FileName";
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
 
     when(shipmentFile.getName()).thenReturn(fileName);
-    whenNew(ShipmentFileInfo.class).withArguments(fileName, processingError).thenReturn(shipmentFileInfo);
+    whenNew(ShipmentFileInfo.class).withArguments(fileName, failure).thenReturn(shipmentFileInfo);
 
-    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, processingError);
+    shipmentFilePostProcessHandler.process(orderIds, shipmentFile, success);
 
     verify(shipmentService).insertShipmentFileInfo(shipmentFileInfo);
-    verify(shipmentService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
+    verify(orderService).updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
     verify(ftpErrorChannel).send(any(Message.class));
     verify(ftpArchiveOutputChannel, never()).send(any(Message.class));
   }

@@ -31,6 +31,7 @@ INSERT INTO facilities
 ('F31','Central Hospital','IT department','G7646',9876234981,'fax','A','B',4,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 ('F32','Central Hospital','IT department','G7646',9876234981,'fax','A','B',4,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 ('F33','Central Hospital','IT department','G7646',9876234981,'fax','A','B',4,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
+('F100','Central Hospital','IT department','G7646',9876234981,'fax','A','B',4,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 
 ('F8A','Facility8A','Village Clinic','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code ='District1'),2,10000,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 ('F8B','Facility8B','Village Clinic','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code ='District1'),2,20000,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
@@ -85,6 +86,10 @@ INSERT INTO programs_supported(facilityId, programId, startDate, active, modifie
 ((SELECT id FROM facilities WHERE code = 'F13'), 3, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F14'), 1, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F14'), 2, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F100'), 2, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F100'), 4, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F100'), 3, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'F100'), 1, '11/11/12', true, 1),
 
 ((SELECT id FROM facilities WHERE code = 'F8A'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'F8B'), 5, '11/11/12', true, 1),

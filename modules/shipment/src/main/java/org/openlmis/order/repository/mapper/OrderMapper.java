@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
+import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(rnrId, status, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
+  @Insert("INSERT INTO orders(rnrId, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 
@@ -41,10 +42,12 @@ public interface OrderMapper {
   Order getById(Long id);
 
   @Update({"UPDATE orders SET",
-    "shipmentId = #{shipmentFileInfo.id},",
+    "shipmentId = #{shipmentId},",
     "status = #{status}",
-    "WHERE rnrId=#{rnr.id} AND status = 'RELEASED'"})
-  void updateShipmentInfo(Order order);
+    "WHERE id = #{orderId}"})
+  void updateShipmentAndStatus(@Param("orderId") Long orderId,
+                               @Param("status") OrderStatus status,
+                               @Param("shipmentId") Long shipmentId);
 
   @Select("SELECT * FROM order_file_columns ORDER BY position")
   List<OrderFileColumn> getOrderFileColumns();
@@ -59,4 +62,7 @@ public interface OrderMapper {
 
   @Update("UPDATE orders SET status = #{status}, ftpComment = #{ftpComment}, modifiedDate = DEFAULT WHERE id = #{id}")
   void updateOrderStatus(Order order);
+
+  @Select("SELECT status FROM orders WHERE id = #{id}")
+  OrderStatus getStatus(Long id);
 }

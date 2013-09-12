@@ -9,6 +9,8 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -17,6 +19,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -51,8 +54,8 @@ public class DistributionPage extends Page {
 
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
+    testWebDriver.setImplicitWait(1);
 
   }
 
@@ -175,5 +178,37 @@ public class DistributionPage extends Page {
     return viewLoadAmountButton.isDisplayed();
   }
 
+  public boolean verifyDeliveryZoneSelectBoxNotPresent() {
+        boolean deliveryZoneSelectBoxPresent = false;
+        try {
+            deliveryZoneSelectBoxPresent=selectDeliveryZoneSelectBox.isDisplayed();
+        } catch (NoSuchElementException e) {
+            deliveryZoneSelectBoxPresent = false;
+        } finally {
+            return deliveryZoneSelectBoxPresent;
+        }
+    }
+
+    public boolean verifyProgramSelectBoxNotPresent() {
+        boolean programSelectBoxPresent = false;
+        try {
+            programSelectBoxPresent=selectProgramSelectBox.isDisplayed();
+        } catch (NoSuchElementException e) {
+            programSelectBoxPresent = false;
+        } finally {
+            return programSelectBoxPresent;
+        }
+    }
+
+    public boolean verifyPeriodSelectBoxNotPresent() {
+        boolean periodSelectBoxPresent = false;
+        try {
+            periodSelectBoxPresent=selectPeriodSelectBox.isDisplayed();
+        } catch (NoSuchElementException e) {
+            periodSelectBoxPresent = false;
+        } finally {
+            return periodSelectBoxPresent;
+        }
+    }
 
 }

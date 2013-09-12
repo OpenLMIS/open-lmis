@@ -6,7 +6,6 @@
 
 package org.openlmis.shipment.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
@@ -17,13 +16,16 @@ import java.util.List;
 @Repository
 public interface ShipmentFileColumnMapper {
 
-  @Insert({"INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) values",
-    "(#{name}, #{dataFieldLabel}, #{position}, #{include}, #{mandatory}, #{datePattern})"})
-  public void insert(ShipmentFileColumn shipmentFileColumn);
+  @Insert({"UPDATE shipment_file_columns SET",
+    "position = #{position},",
+    "include = #{include},",
+    "datePattern = #{datePattern},",
+    "modifiedBy = #{modifiedBy},",
+    "modifiedDate = #{modifiedDate}",
+    "WHERE name = #{name}"})
+  public void update(ShipmentFileColumn shipmentFileColumn);
 
   @Select("SELECT * FROM shipment_file_columns")
   public List<ShipmentFileColumn> getAll();
 
-  @Delete("DELETE FROM shipment_file_columns")
-  void deleteAll();
 }

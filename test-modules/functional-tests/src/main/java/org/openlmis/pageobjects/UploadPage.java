@@ -85,11 +85,11 @@ public class UploadPage extends Page {
   }
 
   public void validateErrorMessageOnUploadScreen(String message) {
-    assertTrue("Error Message incorrect : " + "Expected '" + message + "' but saw '" + saveErrorMsgDiv.getText() + "'.", saveErrorMsgDiv.getText().trim().contains(message.trim()));
+    assertTrue("Error Message incorrect : " + "Expected '" + message.toLowerCase() + "' but saw '" + saveErrorMsgDiv.getText().toLowerCase() + "'.", saveErrorMsgDiv.getText().trim().toLowerCase().contains(message.trim().toLowerCase()));
   }
 
   public void validateSuccessMessageOnUploadScreen(String message) {
-    assertTrue("Message Message incorrect : " + "Expected '" + message + "' but saw '" + saveSuccessMsgDiv.getText() + "'.", saveSuccessMsgDiv.getText().trim().contains(message.trim()));
+    assertTrue("Message Message incorrect : " + "Expected '" + message.toLowerCase() + "' but saw '" + saveSuccessMsgDiv.getText().toLowerCase() + "'.", saveSuccessMsgDiv.getText().trim().toLowerCase().contains(message.trim().toLowerCase()));
   }
 
   public void uploadAndVerifyGeographicZone(String uploadFileNameWithExtension) throws FileNotFoundException {

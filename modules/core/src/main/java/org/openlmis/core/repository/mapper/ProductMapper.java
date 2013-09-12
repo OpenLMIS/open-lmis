@@ -8,6 +8,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.domain.ProductGroup;
 import org.springframework.stereotype.Repository;
 
@@ -62,7 +63,7 @@ public interface ProductMapper {
     "#{packRoundingThreshold}, #{category.id},  #{productGroup.id}," +
     "#{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
-  Long insert(Product product);
+  Integer insert(Product product);
 
   @Select("SELECT id FROM dosage_Units WHERE LOWER(code) = LOWER(#{code})")
   Long getDosageUnitIdForCode(String code);
@@ -74,6 +75,10 @@ public interface ProductMapper {
   Long getIdByCode(String code);
 
   @Select("SELECT * FROM products WHERE LOWER(code)=LOWER(#{code})")
+  @Results({
+    @Result(property = "category", column = "categoryId", javaType = ProductCategory.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getProductCategoryById"))
+  })
   Product getByCode(String code);
 
   @Update({"UPDATE products SET  alternateItemCode=#{alternateItemCode}, ",
@@ -96,11 +101,11 @@ public interface ProductMapper {
     "modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE id=#{id}"})
   void update(Product product);
 
-   @Select("SELECT * FROM products WHERE id=#{id}")
-    @Results({
-      @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
-        one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
-    })
+  @Select("SELECT * FROM products WHERE id=#{id}")
+  @Results({
+    @Result(property = "productGroup", column = "productGroupId", javaType = ProductGroup.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductGroupMapper.getById"))
+  })
   Product getById(Long id);
 
 

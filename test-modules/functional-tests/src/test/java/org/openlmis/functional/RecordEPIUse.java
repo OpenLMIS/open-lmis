@@ -7,16 +7,15 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -26,6 +25,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -40,7 +41,6 @@ public class RecordEPIUse extends TestCaseHelper {
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
   @BeforeMethod(groups = {"distribution","offline"})
-  @Before
   public void setUp() throws Exception {
     super.setup();
   }
@@ -248,18 +248,8 @@ public class RecordEPIUse extends TestCaseHelper {
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
         dbWrapper.insertProductGroup("PG1");
-        dbWrapper.insertProductGroup("PG2");
-        dbWrapper.insertProductGroup("PG3");
-        dbWrapper.insertProductWithGroup("Product1","ProdutName1","PG1",true);
-        dbWrapper.insertProductWithGroup("Product2","ProdutName2","PG1",false);
-        dbWrapper.insertProductWithGroup("Product3","ProdutName3","PG2",false);
-        dbWrapper.insertProductWithGroup("Product4","ProdutName4","PG2",false);
-        dbWrapper.insertProductWithGroup("Product5","ProdutName5","PG3",true);
-        dbWrapper.insertProductWithGroup("Product6","ProdutName6","PG3",true);
-        dbWrapper.insertProgramProduct("Product1",programFirst,"10","false");
-        dbWrapper.insertProgramProduct("Product2",programFirst,"10","true");
-        dbWrapper.insertProgramProduct("Product3",programFirst,"10","true");
-        dbWrapper.insertProgramProduct("Product4",programFirst,"10","true");
+        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
+        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
         dbWrapper.insertProgramProduct("Product5",programFirst,"10","false");
         dbWrapper.insertProgramProduct("Product6",programFirst,"10","true");
 
@@ -269,15 +259,22 @@ public class RecordEPIUse extends TestCaseHelper {
         distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
         distributionPage.selectValueFromProgram(programFirst);
         distributionPage.clickInitiateDistribution();
+
         testWebDriver.sleep(10000);
         switchOffNetwork();
-        homePage.navigatePlanDistribution();
+        testWebDriver.sleep(2000);
+        homePage.navigateHomePage();
+        homePage.navigateOfflineDistribution();
+        assertFalse("Delivery Zone selectbox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
+        assertFalse("Period selectbox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
+        assertFalse("Program selectbox displayed.",distributionPage.verifyProgramSelectBoxNotPresent());
+
         distributionPage.clickRecordData();
         FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
         facilityListPage.selectFacility("F10");
         EPIUse epiUse = new EPIUse(testWebDriver);
         epiUse.navigate();
-        epiUse.verifyProductGroup("PG3-Name",1);
+        epiUse.verifyProductGroup("PG1-Name",1);
         epiUse.verifyIndicator("RED");
 
         epiUse.enterValueInStockAtFirstOfMonth("10",1);
@@ -310,19 +307,19 @@ public class RecordEPIUse extends TestCaseHelper {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
     }
-
-    switchOnNetwork();
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+      ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 
     @AfterMethod(groups = {"offline"})
-    @After
     public void tearDownNew() throws Exception {
         switchOnNetwork();
+        testWebDriver.sleep(5000);
         dbWrapper.deleteData();
         dbWrapper.closeConnection();
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
     }
 
 

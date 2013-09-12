@@ -1,9 +1,16 @@
+/*
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package org.openlmis.shipment.repository.mapper;
 
-import org.junit.Before;
+import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +19,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
+import static org.apache.commons.collections.CollectionUtils.select;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.columnPosition;
-import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.mandatoryShipmentFileColumn;
+import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,50 +40,47 @@ public class ShipmentFileColumnMapperIT {
   @Autowired
   private ShipmentFileColumnMapper mapper;
 
-  @Before
-  public void setUp() throws Exception {
-    mapper.deleteAll();
-  }
+  @Autowired
+  private QueryExecutor queryExecutor;
+
 
   @Test
-  public void shouldInsertShipmentFileColumn() {
+  public void shouldUpdateOnlyRequiredFields() throws SQLException {
 
-    ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
+    List params = asList("ColumnName", "label", 100, false, false, "dd/MM/yyyy");
 
-    mapper.insert(shipmentFileColumn);
+    queryExecutor.executeUpdate("INSERT INTO shipment_file_columns" +
+      "(name, dataFieldLabel, position, include, mandatory, datePattern) VALUES" +
+      "(?,?,?,?,?,?)", params);
+    ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn,
+      with(fieldName, "ColumnName"),
+      with(dataFieldLabel, "new label"),
+      with(columnPosition, 120),
+      with(includeInShipmentFile, true),
+      with(modifiedById, 22L),
+      with(modifiedOnDate, new Date(9898989898L)),
+      with(dateFormat, "dd/MM")));
 
-    List<ShipmentFileColumn> updatedColumns = mapper.getAll();
-    assertThat(updatedColumns.size(), is(1));
-    assertThat(updatedColumns.get(0).getName(), is("name"));
-    assertThat(updatedColumns.get(0).getDataFieldLabel(), is("label"));
-    assertThat(updatedColumns.get(0).getDatePattern(), is("MM/yy"));
-    assertThat(updatedColumns.get(0).getInclude(), is(true));
-    assertThat(updatedColumns.get(0).getMandatory(), is(true));
-    assertThat(updatedColumns.get(0).getPosition(), is(10));
+    mapper.update(shipmentFileColumn);
+
+    ShipmentFileColumn column = filterColumns(mapper.getAll(), "ColumnName");
+
+    assertThat(column.getDataFieldLabel(), is("label"));
+    assertThat(column.getDatePattern(), is("dd/MM"));
+    assertThat(column.getInclude(), is(true));
+    assertThat(column.getMandatory(), is(false));
+    assertThat(column.getPosition(), is(120));
+    assertThat(column.getModifiedBy(), is(22L));
+    assertThat(column.getModifiedDate(), is(new Date(9898989898L)));
   }
 
-  @Test
-  public void shouldGetAllShipmentFileColumns() {
-    assertThat(mapper.getAll().size(), is(0));
-
-    ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
-    mapper.insert(shipmentFileColumn);
-
-    assertThat(mapper.getAll().size(), is(1));
-
+  private ShipmentFileColumn filterColumns(List<ShipmentFileColumn> updatedColumns, final String columnName) {
+    return (ShipmentFileColumn) select(updatedColumns, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return (((ShipmentFileColumn) o).getName().equals(columnName));
+      }
+    }).toArray(new ShipmentFileColumn[1])[0];
   }
 
-  @Test
-  public void shouldDeleteAllShipmentFileColumns() {
-    ShipmentFileColumn shipmentFileColumn1 = make(a(mandatoryShipmentFileColumn, with(columnPosition, 10)));
-    mapper.insert(shipmentFileColumn1);
-
-    ShipmentFileColumn shipmentFileColumn2 = make(a(mandatoryShipmentFileColumn, with(columnPosition, 20)));
-    mapper.insert(shipmentFileColumn2);
-
-    assertThat(mapper.getAll().size(), is(2));
-
-    mapper.deleteAll();
-    assertThat(mapper.getAll().size(), is(0));
-  }
 }

@@ -445,6 +445,7 @@ public class ConfigureOrderPage extends Page {
   }
 
   public void verifySuccessMessage(String message) {
+    testWebDriver.sleep(250);
     testWebDriver.waitForElementToAppear(successMessageDiv);
     assertEquals(successMessageDiv.getText(), message);
   }

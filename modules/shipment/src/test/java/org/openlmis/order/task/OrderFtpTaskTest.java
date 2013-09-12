@@ -6,7 +6,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityFtpDetails;
 import org.openlmis.core.domain.OrderConfiguration;
@@ -15,7 +14,6 @@ import org.openlmis.core.service.FacilityFtpDetailsService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
-import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
@@ -27,12 +25,9 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 import static org.openlmis.order.task.OrderFtpTask.FTP_CREDENTIAL_MISSING_COMMENT;
-import static org.openlmis.order.task.OrderFtpTask.SUPPLY_LINE_MISSING_COMMENT;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -103,19 +98,6 @@ public class OrderFtpTaskTest {
 
   }
 
-  @Test
-  public void shouldUpdateOrderAsTransferFailedIfSupplyLineDoesNotExist() {
-    SupplyLine supplyLine = null;
-    when(orderService.getOrderForDownload(order.getId())).thenReturn(fullOrder);
-    when(fullOrder.getSupplyLine()).thenReturn(supplyLine);
-
-    orderFtpTask.processOrder(orderList);
-
-    verify(fullOrder).setStatus(TRANSFER_FAILED);
-    verify(fullOrder).setFtpComment(SUPPLY_LINE_MISSING_COMMENT);
-    verify(orderService).updateOrderStatus(fullOrder);
-
-  }
 
   @Test
   public void shouldUpdateOrderAsTransferFailedIfFacilityFtpDetailsDoesNotExist() {

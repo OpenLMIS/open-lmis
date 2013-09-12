@@ -15,12 +15,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProgramProductBuilder;
-import org.openlmis.core.domain.Money;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.domain.ProgramProductPrice;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.ProgramProductRepository;
+import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
@@ -50,6 +49,12 @@ public class ProgramProductServiceTest {
 
   @InjectMocks
   private ProgramProductService programProductService;
+
+  @Mock
+  private ProgramRepository programRepository;
+
+  @Mock
+  private FacilityRepository facilityRepository;
 
   @Test
   public void shouldUpdateCurrentPriceOfProgramProductCodeCombinationAndUpdatePriceHistory() throws Exception {
@@ -215,7 +220,7 @@ public class ProgramProductServiceTest {
     programProductService.save(programProductForUpdate);
 
     verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
-   }
+  }
 
   @Test
   public void shouldNotNotifyOnUpdateIfActiveFlagsChangeFromTFAndBecomeFF() throws Exception {
@@ -231,7 +236,7 @@ public class ProgramProductServiceTest {
     programProductService.save(programProductForUpdate);
 
     verify(programService, never()).setFeedSendFlag(programProductForUpdate.getProgram(), true);
-   }
+  }
 
   @Test
   public void shouldGetAllProductsByProgram() {
@@ -254,6 +259,37 @@ public class ProgramProductServiceTest {
 
     assertThat(programProducts, is(expectedProgramProducts));
     verify(programProductRepository).getByProductCode("code");
+  }
+
+  @Test
+  public void shouldGetAllProgramProductsByProgramCodeAndFacilityTypeCode() {
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programRepository.getIdByCode("P1")).thenReturn(10L);
+    FacilityType warehouse = new FacilityType("warehouse");
+    when(facilityRepository.getFacilityTypeByCode(warehouse)).thenReturn(warehouse);
+    when(programProductRepository.getProgramProductsBy(10L, "warehouse")).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductService.getProgramProductsBy(" P1", " warehouse");
+
+    assertThat(programProducts, is(expectedProgramProducts));
+    verify(facilityRepository).getFacilityTypeByCode(warehouse);
+    verify(programRepository).getIdByCode("P1");
+    verify(programProductRepository).getProgramProductsBy(10L, "warehouse");
+  }
+
+
+  @Test
+  public void shouldGetAllProgramProductsByProgramCodeForNullFacilityTypeCode() {
+    List<ProgramProduct> expectedProgramProducts = new ArrayList<>();
+    when(programRepository.getIdByCode("P1")).thenReturn(10L);
+    when(programProductRepository.getProgramProductsBy(10L, "warehouse")).thenReturn(expectedProgramProducts);
+
+    List<ProgramProduct> programProducts = programProductService.getProgramProductsBy("P1", null);
+
+    assertThat(programProducts, is(expectedProgramProducts));
+    verify(facilityRepository, never()).getFacilityTypeByCode(any(FacilityType.class));
+    verify(programRepository).getIdByCode("P1");
+    verify(programProductRepository).getProgramProductsBy(10L, null);
   }
 
 }

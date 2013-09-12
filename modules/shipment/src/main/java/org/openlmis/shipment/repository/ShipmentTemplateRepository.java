@@ -3,6 +3,7 @@
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 package org.openlmis.shipment.repository;
 
 import org.openlmis.shipment.domain.ShipmentConfiguration;
@@ -35,11 +36,7 @@ public class ShipmentTemplateRepository {
     shipmentConfigurationMapper.update(shipmentConfiguration);
   }
 
-  public void deleteAllShipmentFileColumns() {
-    shipmentFileColumnMapper.deleteAll();
-  }
-
-  public void insertShipmentFileColumn(ShipmentFileColumn shipmentFileColumn) {
-    shipmentFileColumnMapper.insert(shipmentFileColumn);
+  public void update(ShipmentFileColumn shipmentFileColumn) {
+    shipmentFileColumnMapper.update(shipmentFileColumn);
   }
 }

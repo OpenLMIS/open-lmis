@@ -124,7 +124,8 @@ public class FacilityRepository {
     if (operatedByCode == null || operatedByCode.isEmpty()) return;
 
     Long operatedById = mapper.getOperatedByIdForCode(operatedByCode);
-    if (operatedById == null) throw new DataException("error.reference.data.invalid.operated.by");
+    if (operatedById == null)
+      throw new DataException("error.reference.data.invalid.operated.by");
 
     facility.setOperatedBy(mapper.getFacilityOperatorById(operatedById));
   }
@@ -177,7 +178,11 @@ public class FacilityRepository {
   }
 
   public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
-    return mapper.getFacilityTypeForCode(facilityType.getCode());
+    facilityType = mapper.getFacilityTypeForCode(facilityType.getCode());
+    if (facilityType == null) {
+      throw new DataException("error.facility.type.code.invalid");
+    }
+    return facilityType;
   }
 
   //TODO send only code
