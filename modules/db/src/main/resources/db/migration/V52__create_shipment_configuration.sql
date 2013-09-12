@@ -3,9 +3,13 @@
 DROP TABLE IF EXISTS shipment_configuration;
 
 CREATE TABLE shipment_configuration (
-  headerInFile            BOOLEAN     NOT NULL,
-  createdBy               INTEGER,
-  createdDate             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy              INTEGER,
-  modifiedDate            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  headerInFile BOOLEAN NOT NULL,
+  createdBy    INTEGER,
+  createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy   INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO shipment_configuration
+(headerInFile) VALUES
+(FALSE);
