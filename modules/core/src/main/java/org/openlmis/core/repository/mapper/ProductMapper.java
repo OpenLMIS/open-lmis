@@ -63,7 +63,7 @@ public interface ProductMapper {
     "#{packRoundingThreshold}, #{category.id},  #{productGroup.id}," +
     "#{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
-  Integer insert(Product product);
+  Long insert(Product product);
 
   @Select("SELECT id FROM dosage_Units WHERE LOWER(code) = LOWER(#{code})")
   Long getDosageUnitIdForCode(String code);
