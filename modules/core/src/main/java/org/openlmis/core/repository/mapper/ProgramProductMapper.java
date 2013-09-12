@@ -65,12 +65,12 @@ public interface ProgramProductMapper {
   })
   List<ProgramProduct> getByProductCode(String code);
 
-  @Select("SELECT pp.active, pr.code AS programCode, pr.name as programName, p.code as productCode, " +
+  @Select("SELECT DISTINCT pp.active, pr.code AS programCode, pr.name as programName, p.code as productCode, " +
     "       p.primaryName as productName, p.description, p.dosesPerDispensingUnit as unit, pc.name as category " +
-    "FROM program_products pp "+
+    "FROM program_products pp " +
     "INNER JOIN products p  ON pp.productid=p.id " +
     "INNER JOIN programs pr ON pr.id=pp.programid " +
-    "INNER JOIN product_categories pc ON pc.id = p.categoryId  " +
+    "LEFT OUTER JOIN product_categories pc ON pc.id = p.categoryId  " +
     "LEFT OUTER JOIN facility_approved_products fap ON fap.programproductid=pp.id " +
     "LEFT OUTER JOIN facility_types ft  ON ft.id=fap.facilitytypeid " +
     "WHERE " +
@@ -80,8 +80,8 @@ public interface ProgramProductMapper {
     "   TRUE " +
     " ELSE LOWER(ft.code)=LOWER(#{facilityTypeCode}) " +
     " END " +
-    "AND pr.id=#{programId} "+
-    "AND p.active = TRUE "+
+    "AND pr.id=#{programId} " +
+    "AND p.active = TRUE " +
     "AND pp.active = TRUE ")
   @Results(value = {
     @Result(property = "id", column = "id"),
