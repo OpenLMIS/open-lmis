@@ -7,6 +7,7 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
@@ -368,6 +369,17 @@ public class TestCaseHelper {
         testWebDriver.sleep(2000);
         Runtime.getRuntime().exec("sudo ifconfig en1 up");
         testWebDriver.sleep(2000);
+    }
+
+    public void waitForAppCacheDownload(){
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("applicationCache.oncached = function (e) {window.loaded = true;};");
+        int count=0;
+        while((Boolean)(((JavascriptExecutor) testWebDriver.getDriver()) .executeScript("window.loaded;"))){
+            testWebDriver.sleep(2000);
+            count=count++;
+            if (count<10)
+                break;
+        }
     }
 }
 

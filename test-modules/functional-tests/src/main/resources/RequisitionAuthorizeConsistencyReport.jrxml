@@ -235,7 +235,7 @@ ORDER BY f.code, p.name, sn.code]]>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Facility Status]]></text>
+				<text><![CDATA[Facility Active]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="61" height="20"/>
