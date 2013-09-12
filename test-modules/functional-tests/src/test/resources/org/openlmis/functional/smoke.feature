@@ -428,7 +428,7 @@ Feature: Smoke Tests
     And I record data
     And I choose facility "F10"
     And Navigate to EPI tab
-    Then Verify "epi use" indicator should be "AMBER"
+    Then Verify "epi use" indicator should be "RED"
     Then I should see product group "penta-Name"
     When I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
