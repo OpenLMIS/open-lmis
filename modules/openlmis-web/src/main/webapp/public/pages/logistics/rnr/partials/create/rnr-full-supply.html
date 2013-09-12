@@ -33,7 +33,7 @@
             ng-bind = "rnrLineItem.productCategory" ></td >
       </tr >
       <tr ng-class = "getRowErrorClass(rnrLineItem)" >
-        <td class = "cell-input" ng-repeat = "column in visibleColumns"
+        <td class = "cell-input col-{{column.name}}" ng-repeat = "column in visibleColumns"
             ng-hide = "column.name == 'quantityApproved'" >
           <ng-switch on = "column.source.name" >
               <span ng-switch-when = "USER_INPUT" >
