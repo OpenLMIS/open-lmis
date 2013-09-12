@@ -14,7 +14,7 @@ function ViewOrderListController($scope, orders, messageService) {
     enableColumnResize: true,
     enableSorting: false,
     columnDefs: [
-      {field: 'rnr.id', displayName: messageService.get("label.order.no")},
+      {field: 'id', displayName: messageService.get("label.order.no")},
       {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
       {field: 'rnr.programName', displayName: messageService.get("label.program")},
       {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},

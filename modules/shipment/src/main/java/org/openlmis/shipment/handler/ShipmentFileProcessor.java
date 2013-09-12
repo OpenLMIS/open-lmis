@@ -98,7 +98,7 @@ public class ShipmentFileProcessor {
     while ((fieldsInOneRow = listReader.read()) != null) {
 
       ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
-      status = status && addShippableOrder(orderSet, dto);
+      status = addShippableOrder(orderSet, dto) && status;
 
       if (status) {
         status = saveLineItem(dto, packedDateFormat, shippedDateFormat);
