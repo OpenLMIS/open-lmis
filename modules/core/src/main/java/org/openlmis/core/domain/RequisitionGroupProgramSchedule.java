@@ -6,15 +6,16 @@
 
 package org.openlmis.core.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class RequisitionGroupProgramSchedule extends BaseModel implements Importable {
 

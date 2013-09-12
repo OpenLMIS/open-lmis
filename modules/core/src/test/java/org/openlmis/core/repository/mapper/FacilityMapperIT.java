@@ -30,6 +30,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
@@ -85,6 +86,9 @@ public class FacilityMapperIT {
 
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;
+
+  @Autowired
+  RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
 
   @Test
   public void shouldFetchAllFacilitiesAvailable() throws Exception {
@@ -311,6 +315,24 @@ public class FacilityMapperIT {
     programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
+
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
+
+    requisitionGroupProgramSchedule.setModifiedBy(1L);
+    requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
+
+    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram,with(programCode, "Random"))));
+
+    requisitionGroupProgramSchedule.setRequisitionGroup(rg1);
+    requisitionGroupProgramSchedule.setDirectDelivery(true);
+    requisitionGroupProgramSchedule.setDropOffFacility(facilitySupportingProgramInRG1);
+
+    ProcessingSchedule schedule = make(a(defaultProcessingSchedule));
+    processingScheduleMapper.insert(schedule);
+
+    requisitionGroupProgramSchedule.setProcessingSchedule(schedule);
+
+    requisitionGroupProgramScheduleMapper.insert(requisitionGroupProgramSchedule);
 
     List<Facility> facilities = mapper.getFacilitiesBy(make(a(defaultProgram, with(programCode, "Random"))).getId(), "{" + rg1.getId() + "," + rg2.getId() + " }");
 

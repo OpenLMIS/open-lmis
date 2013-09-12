@@ -99,8 +99,10 @@ public interface FacilityMapper {
   @Select("SELECT DISTINCT f.* FROM facilities f " +
     "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
+    "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programid = ps.programid AND rgps.requisitiongroupid=rgm.requisitiongroupid)"+
     "WHERE ps.programId = #{programId} " +
     "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+    "AND rgps.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
     "AND f.active = true " +
     "AND ps.active = true ")
   @Results(value = {
