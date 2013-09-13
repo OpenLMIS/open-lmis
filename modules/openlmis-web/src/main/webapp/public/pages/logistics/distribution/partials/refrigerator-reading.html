@@ -34,7 +34,8 @@
               <label openlmis-message="label.refrigerator.temperature"></label>
               <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature.value"
                      numeric-validator="numericValue,3,1"
-                     error-holder="temperatureError{{$index}}"/>&deg;<span
+                     error-holder="temperatureError{{$index}}"
+                     class="right-justified" />&deg;<span
               openlmis-message="label.celcius.symbol"></span>
               <input id="temperature{{$index}}" type="checkbox" ng-model="refrigeratorReading.temperature.notRecorded"
                      not-recorded/>
@@ -74,7 +75,8 @@
               <input type="text" name="lowAlarmEvent{{$index}}" ng-model="refrigeratorReading.lowAlarmEvents.value"
                      numeric-validator="positiveInteger"
                      maxlength="3"
-                     error-holder="lowAlarmError{{$index}}"/>
+                     error-holder="lowAlarmError{{$index}}"
+                     class="right-justified" />
 
               <input id="lowAlarmEvent{{$index}}" type="checkbox"
                      ng-model="refrigeratorReading.lowAlarmEvents.notRecorded"
@@ -91,7 +93,8 @@
               <input name="highAlarmEvent{{$index}}" type="text" ng-model="refrigeratorReading.highAlarmEvents.value"
                      numeric-validator="positiveInteger"
                      maxlength="3"
-                     error-holder="highAlarmError{{$index}}"/>
+                     error-holder="highAlarmError{{$index}}"
+                     class="right-justified" />
 
               <input id="highAlarmEvent{{$index}}" type="checkbox"
                      ng-model="refrigeratorReading.highAlarmEvents.notRecorded"

@@ -750,6 +750,8 @@ td.col-cost {
   }
 }
 
+
+
 .col-packsToShip {
   min-width: 170px;
 }
@@ -1741,6 +1743,7 @@ input[placeholder].placeholder {
   }
 }
 
+#overrideIsaModal,
 #programProductISA {
   width: 1000px;
   margin-top: -260px;
@@ -1789,6 +1792,12 @@ input[placeholder].placeholder {
   .form-error {
     margin: -6px 0 8px 0;
     display: none;
+  }
+}
+
+#programProductISA {
+  input[type="text"] {
+    text-align: right;
   }
 }
 
@@ -2007,6 +2016,7 @@ input[placeholder].placeholder {
   margin: 5px;
   input[type="text"] {
     margin-bottom: 0;
+    text-align: right;
   }
   div {
     &.has-overridden-isa {
@@ -2084,6 +2094,13 @@ input[placeholder].placeholder {
         }
       }
     }
+    td {
+      text-align: right;
+      &:first-child{
+        text-align: left;
+      }
+    }
+
     &:last-child {
       td {
         background: #d6f5f8 !important;
