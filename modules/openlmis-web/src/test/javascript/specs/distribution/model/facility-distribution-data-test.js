@@ -6,27 +6,23 @@
  *
  */
 describe('Facility Distribution data', function() {
-  var epiUse, refrigerators, generalObservations;
+  var facilityDistributionData, epiUse, refrigerators, generalObservations;
   var COMPLETE = 'is-complete';
   var INCOMPLETE = 'is-incomplete';
   var EMPTY = 'is-empty';
 
   beforeEach(function() {
-    epiUse = new EpiUse();
-    refrigerators = new Refrigerators();
-    generalObservations = new GeneralObservation();
+    facilityDistributionData = new FacilityDistributionData({});
+    epiUse = facilityDistributionData.epiUse;
+    refrigerators = facilityDistributionData.refrigerators;
+    generalObservations = facilityDistributionData.generalObservations;
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE",function(){
-    var completeStatus = function() {
-      return statusFunction(COMPLETE);
-    };
     spyOn(epiUse, "computeStatus").andReturn(COMPLETE);
     spyOn(refrigerators, "computeStatus").andReturn(COMPLETE);
     spyOn(generalObservations, "computeStatus").andReturn(COMPLETE);
 
-    var facilityDistributionData =
-      new FacilityDistributionData([epiUse, refrigerators, generalObservations]);
     expect(facilityDistributionData.computeStatus()).toEqual(COMPLETE);
   });
 
@@ -35,8 +31,6 @@ describe('Facility Distribution data', function() {
     spyOn(refrigerators, "computeStatus").andReturn(EMPTY);
     spyOn(generalObservations, "computeStatus").andReturn(EMPTY);
 
-    var facilityDistributionData =
-      new FacilityDistributionData([epiUse, refrigerators, generalObservations]);
     expect(facilityDistributionData.computeStatus()).toEqual(EMPTY);
   });
 
@@ -45,8 +39,6 @@ describe('Facility Distribution data', function() {
     spyOn(refrigerators, "computeStatus").andReturn(COMPLETE);
     spyOn(generalObservations, "computeStatus").andReturn(INCOMPLETE);
 
-    var facilityDistributionData =
-      new FacilityDistributionData([epiUse, refrigerators, generalObservations]);
     expect(facilityDistributionData.computeStatus()).toEqual(INCOMPLETE);
   });
 
@@ -55,8 +47,6 @@ describe('Facility Distribution data', function() {
     spyOn(refrigerators, "computeStatus").andReturn(INCOMPLETE);
     spyOn(generalObservations, "computeStatus").andReturn(INCOMPLETE);
 
-    var facilityDistributionData =
-      new FacilityDistributionData([epiUse, refrigerators, generalObservations]);
     expect(facilityDistributionData.computeStatus()).toEqual(INCOMPLETE);
   });
 });

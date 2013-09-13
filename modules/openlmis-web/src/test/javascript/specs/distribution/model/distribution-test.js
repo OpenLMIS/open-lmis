@@ -16,9 +16,9 @@ describe('Distribution', function () {
   var dispensaryData, level3HospitalData;
 
   beforeEach(function () {
-    dispensaryData = new FacilityDistributionData([]);
-    level3HospitalData = new FacilityDistributionData();
-    distribution = new Distribution({facilityDistributionData: [dispensaryData, level3HospitalData]});
+    distribution = new Distribution({facilityDistributionData: [{}, {}]});
+    dispensaryData = distribution.facilityDistributionData[0];
+    level3HospitalData = distribution.facilityDistributionData[1];
   });
 
   it('should return complete if all data available for facilities', function () {
@@ -29,6 +29,19 @@ describe('Distribution', function () {
   });
 
   it('should return empty if no data is available for any facilities', function () {
+    spyOn(dispensaryData, "computeStatus").andReturn(EMPTY);
+    spyOn(level3HospitalData, "computeStatus").andReturn(EMPTY);
+
+    expect(distribution.computeStatus()).toEqual(EMPTY);
+  });
+
+  it('should return empty if no data is recorded for any facilities', function () {
+    distribution.facilityDistributionData = undefined;
+
+    expect(distribution.computeStatus()).toEqual(EMPTY);
+  });
+
+  it('should return empty if no facility is available', function () {
     spyOn(dispensaryData, "computeStatus").andReturn(EMPTY);
     spyOn(level3HospitalData, "computeStatus").andReturn(EMPTY);
 

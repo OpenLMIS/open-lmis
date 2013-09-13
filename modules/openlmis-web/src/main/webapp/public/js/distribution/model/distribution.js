@@ -11,11 +11,11 @@ function Distribution(distributionJson) {
 
   $.extend(true, this, distributionJson);
 
-  if (this.facilityDistributionData) {
-    $.each(this.facilityDistributionData, function (key, value) {
-      value.epiUse = new EpiUse(value.epiUse);
-      value.refrigerators = new Refrigerators(value.refrigerators);
-      value.generalObservation = new GeneralObservation(value.generalObservation);
+  if (distributionJson.facilityDistributionData) {
+    var _this = this;
+    this.facilityDistributionData = {};
+    $.each(distributionJson.facilityDistributionData, function (key, value) {
+      _this.facilityDistributionData[key] = new FacilityDistributionData(value);
     });
   }
 
@@ -25,21 +25,24 @@ function Distribution(distributionJson) {
 
   Distribution.prototype.computeStatus = function () {
     var status;
-    $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
-      if (facilityDistributionData.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
-        status = COMPLETE;
-      } else if (facilityDistributionData.computeStatus() === EMPTY && (!status || status == EMPTY)) {
-        status = EMPTY;
-      } else if (facilityDistributionData.computeStatus() === INCOMPLETE ||
-        (facilityDistributionData.computeStatus() === EMPTY && status === COMPLETE) ||
-        (facilityDistributionData.computeStatus() === COMPLETE && status === EMPTY))
-      {
-        status = INCOMPLETE;
-        return false;
-      }
-      return true;
-    });
-
+    if (this.facilityDistributionData) {
+      $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
+        if (facilityDistributionData.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
+          status = COMPLETE;
+        } else if (facilityDistributionData.computeStatus() === EMPTY && (!status || status == EMPTY)) {
+          status = EMPTY;
+        } else if (facilityDistributionData.computeStatus() === INCOMPLETE ||
+          (facilityDistributionData.computeStatus() === EMPTY && status === COMPLETE) ||
+          (facilityDistributionData.computeStatus() === COMPLETE && status === EMPTY))
+        {
+          status = INCOMPLETE;
+          return false;
+        }
+        return true;
+      });
+    } else {
+      status = EMPTY;
+    }
     return status;
   };
   return this;

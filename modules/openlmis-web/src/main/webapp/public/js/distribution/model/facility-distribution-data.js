@@ -6,24 +6,27 @@
  *
  */
 
-function FacilityDistributionData(data){
+function FacilityDistributionData(facilityDistributionData) {
   var COMPLETE = 'is-complete';
   var EMPTY = 'is-empty';
   var INCOMPLETE = 'is-incomplete';
 
-  $.extend(true, this, data);
+  this.epiUse = new EpiUse(facilityDistributionData.epiUse);
+  this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
+  this.generalObservations = new Refrigerators(facilityDistributionData.generalObservations);
 
-  FacilityDistributionData.prototype.computeStatus = function() {
+  var _this = this;
+  FacilityDistributionData.prototype.computeStatus = function () {
+    var forms = [_this.epiUse, _this.refrigerators, _this.generalObservations];
     var status;
-    $.each(data,function(index, form){
+    $.each(forms, function (index, form) {
       if (form.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
         status = COMPLETE;
       } else if (form.computeStatus() === EMPTY && (!status || status == EMPTY)) {
         status = EMPTY;
       } else if (form.computeStatus() === INCOMPLETE ||
         (form.computeStatus() === EMPTY && status === COMPLETE) ||
-        (form.computeStatus() === COMPLETE && status === EMPTY))
-      {
+        (form.computeStatus() === COMPLETE && status === EMPTY)) {
         status = INCOMPLETE;
         return false;
       }
