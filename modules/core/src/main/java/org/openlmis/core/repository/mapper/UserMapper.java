@@ -59,7 +59,7 @@ public interface UserMapper {
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +
-    "email = #{email}, active = #{active}, verified = #{verified}, " +
+    "email = #{email}, active = #{active}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 

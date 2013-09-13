@@ -10,7 +10,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
   $scope.dateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
 
   function isDuplicatePosition() {
-    var positionList = _.pluck($scope.shipmentFileTemplate.shipmentFileColumns, "position");
+    var positionList = _.pluck(_.where($scope.shipmentFileTemplate.shipmentFileColumns, {"include": true}), "position");
     var uniquePositionList = _.uniq(positionList);
     if (uniquePositionList.length != positionList.length) {
       $scope.message = "";

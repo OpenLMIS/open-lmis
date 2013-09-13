@@ -53,7 +53,7 @@ describe('RefrigeratorController', function () {
 
   it('should set duplicate serial number if serial number already exists', function () {
     scope.newRefrigerator = {serialNumber: "Abc"};
-    scope.addRefrigeratorToStore()
+    scope.addRefrigeratorToStore();
     expect(scope.isDuplicateSerialNumber).toBeTruthy();
   });
 

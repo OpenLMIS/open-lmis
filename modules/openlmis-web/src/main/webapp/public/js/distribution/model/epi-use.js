@@ -1,3 +1,11 @@
+/*
+ *
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ */
+
 function EpiUse(epiUse) {
   var DATE_REGEXP = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
   var fieldList = ['stockAtFirstOfMonth', 'received', 'distributed', 'loss', 'stockAtEndOfMonth', 'expirationDate'];

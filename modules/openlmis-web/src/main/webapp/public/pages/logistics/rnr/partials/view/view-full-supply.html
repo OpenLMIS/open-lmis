@@ -5,7 +5,7 @@
   -->
 
 <div ng-controller="ViewFullSupplyController">
-  <div class="rnr-table rnr-approval" custom-horizontal-scroll>
+  <div id="viewRnr" class="rnr-table rnr-approval" custom-horizontal-scroll>
     <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
     <table id="fullSupplyTable" class="table table-bordered scrollable">
       <thead>
@@ -20,7 +20,7 @@
             ng-bind="rnrLineItem.productCategory"></td>
       </tr>
       <tr>
-        <td class="cell-input" ng-repeat="column in visibleColumns">
+        <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns">
             <span ng-switch on="column.name">
 
               <span ng-switch-when="lossesAndAdjustments">

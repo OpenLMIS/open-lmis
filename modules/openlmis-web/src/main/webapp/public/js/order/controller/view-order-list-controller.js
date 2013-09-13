@@ -6,7 +6,7 @@
 
 function ViewOrderListController($scope, orders, messageService) {
   $scope.orders = orders;
-
+  $scope.shipmentErrorMsg = messageService.get("error.shipment.file");
   $scope.gridOptions = { data: 'orders',
     showFooter: false,
     showColumnMenu: false,
@@ -14,14 +14,14 @@ function ViewOrderListController($scope, orders, messageService) {
     enableColumnResize: true,
     enableSorting: false,
     columnDefs: [
-      {field: 'rnr.id', displayName: messageService.get("label.order.no")},
+      {field: 'id', displayName: messageService.get("label.order.no")},
       {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
       {field: 'rnr.programName', displayName: messageService.get("label.program")},
       {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.periodStartDate | date: 'dd/MM/yyyy'}} - {{row.entity.rnr.periodEndDate | date: 'dd/MM/yyyy'}})</span></div>"},
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
       {field: 'createdDate', displayName: messageService.get("label.order.date.time"), cellFilter: "date:'dd/MM/yyyy hh:mm:ss'"},
       {field: 'status', displayName: messageService.get("label.order.status"),
-        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\"><span ng-bind=\"getStatus(row.entity.status)\"></span><span ng-show='row.entity.shipmentError' openlmis-message='error.shipment.file'></span></div> "},
+        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\"><a href='' tooltip='{{shipmentErrorMsg}}' tooltip-placement='right' class='shipment-error'><i class='icon-warning-sign' ng-show='row.entity.shipmentError'></i></a>  <span ng-bind=\"getStatus(row.entity.status)\"></span></div> "},
       {field: 'ftpComment', displayName: messageService.get("label.comment"),
         cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"ftpComment\"> <span ng-show='row.entity.ftpComment' openlmis-message='row.entity.ftpComment'></span></div>"},
       {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a>" +
@@ -30,7 +30,7 @@ function ViewOrderListController($scope, orders, messageService) {
     ]
   };
 
-  $scope.getStatus = function(status) {
+  $scope.getStatus = function (status) {
     return messageService.get("label.order." + status);
   }
 }

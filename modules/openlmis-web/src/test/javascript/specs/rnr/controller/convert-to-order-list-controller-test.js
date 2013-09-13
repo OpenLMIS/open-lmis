@@ -60,6 +60,18 @@ describe('ConvertToOrderListController', function () {
     expect(scope.filteredRequisitions[0]).toEqual(requisitionList[1]);
   });
 
+  it('should un-select selected requisitions when filtering', function () {
+    scope.query = "second CO";
+    scope.searchField = "facilityCode";
+    scope.gridOptions.selectedItems = [requisitionList[0]];
+
+    scope.filterRequisitions();
+
+    expect(scope.filteredRequisitions.length).toEqual(1);
+    expect(scope.gridOptions.selectedItems.length).toEqual(0);
+    expect(scope.filteredRequisitions[0]).toEqual(requisitionList[1]);
+  });
+
   it('should Filter requisitions against supplying depot', function () {
     scope.query = "depot first";
     scope.searchField = "supplyingDepot";

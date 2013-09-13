@@ -1,6 +1,6 @@
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
   <h2 openlmis-message="heading.health.center" ng-show="facilitySelected">
-    <span>:&nbsp;</span>
+    <span ng-class="distribution.facilityDistributionData[facilitySelected.id].computeStatus()">:&nbsp;</span>
     <span openlmis-message="facilitySelected.name"></span>
   </h2>
 

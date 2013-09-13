@@ -109,7 +109,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       if (data.facilities.length > 0) {
         var referenceData = {facilities: data.facilities};
         Refrigerators.get({"deliveryZoneId": $scope.selectedZone.id, "programId": $scope.selectedProgram.id}, function (data) {
-          referenceData["refrigerators"] = data.refrigerators;
+          referenceData.refrigerators = data.refrigerators;
           referenceDataDefer.resolve(referenceData);
         }, {});
       } else {

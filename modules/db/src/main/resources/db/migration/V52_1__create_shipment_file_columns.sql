@@ -5,7 +5,7 @@ CREATE TABLE shipment_file_columns (
   id             SERIAL PRIMARY KEY,
   name           VARCHAR(150) NOT NULL,
   dataFieldLabel VARCHAR(150),
-  position       INTEGER UNIQUE,
+  position       INTEGER,
   include        BOOLEAN      NOT NULL,
   mandatory      BOOLEAN      NOT NULL,
   datePattern    VARCHAR(25),

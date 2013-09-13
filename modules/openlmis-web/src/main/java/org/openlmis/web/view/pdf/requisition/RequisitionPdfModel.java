@@ -11,6 +11,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
@@ -25,12 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.collections.CollectionUtils.find;
+import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 
 @Data
 @NoArgsConstructor
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
+  private List<RequisitionStatusChange> statusChanges;
   private Map<String, Object> model;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
@@ -46,6 +51,7 @@ public class RequisitionPdfModel {
 
   public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
     this.model = model;
+    this.statusChanges = (List<RequisitionStatusChange>) model.get(RequisitionController.STATUS_CHANGES);
     this.rnrColumnList = (List<RnrColumn>) model.get(RequisitionController.RNR_TEMPLATE);
     this.regimenColumnList = (List<RegimenColumn>) model.get(RequisitionController.REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RequisitionController.RNR);
@@ -243,14 +249,37 @@ public class RequisitionPdfModel {
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));
 
-    String submittedDate = requisition.getSubmittedDate() != null ? DATE_FORMAT.format(requisition.getSubmittedDate()) : "";
-    String authorizedDate = requisition.getAuthorizedDate() != null ? DATE_FORMAT.format(requisition.getAuthorizedDate()) : "";
-
-    summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": ")));
-    summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));
-    summaryTable.addCell(summaryCell(textCell(messageService.message("label.authorized.by") + ": ")));
-    summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + authorizedDate)));
+    fillAuditFields(summaryTable);
     return summaryTable;
+  }
+
+  private void fillAuditFields(PdfPTable summaryTable) {
+    RequisitionStatusChange submittedStatusChange = getStatusChangeFor(SUBMITTED);
+    RequisitionStatusChange authorizedStatusChange = getStatusChangeFor(AUTHORIZED);
+
+    String submittedDate = submittedStatusChange != null ? DATE_FORMAT.format(submittedStatusChange.getCreatedDate()) : "";
+    String submittedBy = submittedStatusChange != null ?
+      submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
+
+    String authorizedDate = authorizedStatusChange != null ? DATE_FORMAT.format(authorizedStatusChange.getCreatedDate()) : "";
+    String authorizedBy = authorizedStatusChange != null ?
+      authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
+
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": " + submittedBy)));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));
+    summaryTable.addCell(summaryCell(textCell(" ")));
+    summaryTable.addCell(summaryCell(textCell(" ")));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.authorized.by") + ": " + authorizedBy)));
+    summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + authorizedDate)));
+  }
+
+  private RequisitionStatusChange getStatusChangeFor(final RnrStatus status) {
+    return (RequisitionStatusChange) find(statusChanges, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((RequisitionStatusChange) o).getStatus().equals(status);
+      }
+    });
   }
 
   private PdfPCell summaryCell(PdfPCell cell) {

@@ -4,71 +4,97 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<h2 openlmis-message="header.view.requisitions"></h2>
-<form name="viewRequisitionForm" id="viewRequisitionForm" ng-submit="loadRequisitions()" novalidate>
-  <div class="app-form view-req-form">
-    <div class="row-fluid">
-      <div class="span4">
-        <label openlmis-message="label.requisition.facilityName"><span class="label-required"> *</span></label>
-        <select name="selectFacility"
-                ng-options="facility.id as facility.code +'-'+ facility.name for facility in facilities"
-                ng-model="selectedFacilityId" ng-required="true" ng-change="loadProgramsForFacility()">
-          <option value="" ng-bind="facilityLabel"></option>
+<h2 openlmis-message = "header.view.requisitions"></h2>
+<form name = "viewRequisitionForm" id = "viewRequisitionForm"
+      ng-submit = "loadRequisitions()" novalidate>
+  <div class = "app-form view-req-form">
+    <div class = "row-fluid">
+      <div class = "span4">
+        <label openlmis-message = "label.requisition.facilityName"><span
+            class = "label-required"> *</span></label>
+        <select ui-select2 openlmis-message = "facilityLabel"
+                name = "selectFacility"
+                ng-model = "selectedFacilityId" ng-required = "true"
+                ng-change = "loadProgramsForFacility()">
+          <option value = ""></option>
+          <option ng-repeat = "facility in facilities | orderBy: 'name'"
+                  value = "{{ facility.id }}">{{ facility.code }} - {{
+            facility.name }}
+          </option>
         </select>
-            <span class="field-error" ng-show="viewRequisitionForm.selectFacility.$error.required && errorShown" openlmis-message="error.select.value"></span>
+        <span class = "field-error"
+              ng-show = "viewRequisitionForm.selectFacility.$error.required && errorShown"
+              openlmis-message = "error.select.value"></span>
       </div>
-      <div class="span4">
-        <label><span openlmis-message="label.program"></span><span class="label-required"> *</span></label>
-        <select name="selectProgram" ng-options="program.id as program.name for program in programs"
-                ng-model="selectedProgramId">
-          <option ng-bind="programLabel"></option>
+      <div class = "span4">
+        <label><span openlmis-message = "label.program"></span><span
+            class = "label-required"> *</span></label>
+        <select ui-select2 openlmis-message = "programLabel"
+                name = "selectProgram" ng-model = "selectedProgramId">
+          <option value = ""></option>
+          <option ng-repeat = "program in programs | orderBy: 'name'"
+                  value = "{{ program.id }}">{{ program.name }}
+          </option>
         </select>
       </div>
     </div>
-    <div class="row-fluid">
-      <div class="span4">
-        <span openlmis-message="label.date.range"></span>
+    <div class = "row-fluid">
+      <div class = "span4">
+        <span openlmis-message = "label.date.range"></span>
 
-        <div class="row-fluid date-range">
-          <div class="span6">
-            <label for="startDate" openlmis-message="label.from"></label>:<span class="label-required"> *&nbsp;</span>
-            <input name="startDate" id="startDate" type="text"
-                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" readonly ng-model="startDate"
-                   ng-change="setEndDateOffset()" ng-required="true"/>
+        <div class = "row-fluid date-range">
+          <div class = "span6">
+            <label for = "startDate"
+                   openlmis-message = "label.from"></label>:<span
+              class = "label-required"> *&nbsp;</span>
+            <input name = "startDate" id = "startDate" type = "text"
+                   ui-date = "{dateFormat: 'dd/mm/yy', changeYear: true}"
+                   readonly ng-model = "startDate"
+                   ng-change = "setEndDateOffset()" ng-required = "true"/>
 
-                <span class="field-error"
-                      ng-show="viewRequisitionForm.startDate.$error.required && errorShown" openlmis-message="error.select.value"></span>
+            <span class = "field-error"
+                  ng-show = "viewRequisitionForm.startDate.$error.required && errorShown"
+                  openlmis-message = "error.select.value"></span>
           </div>
-          <div class="span6">
-            <label for="endDate" openlmis-message="label.to"></label>:<span class="label-required"> *&nbsp;</span>
-            <input name="endDate" id="endDate" type="text"
-                   ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}" readonly
-                   ng-model="endDate" ng-required="true" ng-disabled="!startDate"/>
+          <div class = "span6">
+            <label for = "endDate" openlmis-message = "label.to"></label>:<span
+              class = "label-required"> *&nbsp;</span>
+            <input name = "endDate" id = "endDate" type = "text"
+                   ui-date = "{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}"
+                   readonly
+                   ng-model = "endDate" ng-required = "true"
+                   ng-disabled = "!startDate"/>
 
-                <span class="field-error" ng-show="viewRequisitionForm.endDate.$error.required && errorShown" openlmis-message="error.select.value"></span>
+            <span class = "field-error"
+                  ng-show = "viewRequisitionForm.endDate.$error.required && errorShown"
+                  openlmis-message = "error.select.value"></span>
           </div>
         </div>
       </div>
     </div>
-    <div class="row-fluid">
-      <div class="span12">
-        <input type="submit" class="btn btn-primary" openlmis-message="button.search"/>
+    <div class = "row-fluid">
+      <div class = "span12">
+        <input type = "submit" class = "btn btn-primary"
+               openlmis-message = "button.search"/>
       </div>
     </div>
   </div>
 </form>
-<div class="facility-list" ng-show="requisitionFoundMessage">
-<h3>
-<div ng-bind="requisitionFoundMessage"></div>
-</h3>
+<div class = "facility-list" ng-show = "requisitionFoundMessage">
+  <h3>
+    <div ng-bind = "requisitionFoundMessage"></div>
+  </h3>
 </div>
 
-<div ng-show="requisitions.length">
-  <div class="row-fluid">
-    <div class="span4 offset8 grid-filters">
-      <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-             ng-model="query" openlmis-message="placeholder.search.by.status" />
+<div ng-show = "requisitions.length">
+  <div class = "row-fluid">
+    <div class = "span4 offset8 grid-filters">
+      <input id = "searchRequisition" class = "search-query"
+             ng-change = "filterRequisitions()" type = "text"
+             ng-model = "query"
+             openlmis-message = "placeholder.search.by.status"/>
     </div>
   </div>
-  <div id='viewReqList' class="gridStyle" ng-grid="rnrListGrid" ng-show="requisitions.length"></div>
+  <div id = 'viewReqList' class = "gridStyle" ng-grid = "rnrListGrid"
+       ng-show = "requisitions.length"></div>
 </div>

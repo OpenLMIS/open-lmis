@@ -6,56 +6,68 @@
 
 package org.openlmis.web.controller;
 
-import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.service.EventFeedService;
-import org.ict4h.atomfeed.server.service.helper.EventFeedServiceHelper;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.mock.web.MockHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(EventFeedServiceHelper.class)
 public class AtomFeedControllerTest {
 
   @Mock
   EventFeedService eventFeedService;
 
+  @Mock
+  VendorEventFeedService vendorEventFeedService;
+
   @InjectMocks
   AtomFeedController controller;
 
-  MockHttpServletRequest request;
+  @Mock
+  HttpServletRequest request;
+
+  @Before
+  public void setUp() throws Exception {
+    when(request.getServletPath()).thenReturn("/path");
+  }
 
   @Test
   public void shouldGetRecentFeeds() throws Exception {
-    mockStatic(EventFeedServiceHelper.class);
-    request = new MockHttpServletRequest();
-    when(EventFeedServiceHelper.getRecentFeed(eq(eventFeedService), anyString(), anyString(), any(Logger.class))).thenReturn("feed");
+    String category = "category1";
+    String vendor = "vendor1";
+    String baseUrl = "baseUrl";
 
-    //String recentFeeds = controller.getRecentFeeds(request);
+    when(vendorEventFeedService.getRecentFeed("baseUrl/path", vendor, category)).thenReturn("xml atom feed content");
+    String recentFeeds = controller.getRecentFeeds(category, vendor, baseUrl, request);
 
-    //assertThat(recentFeeds, is("feed"));
+    assertThat(recentFeeds, is("xml atom feed content"));
   }
 
   @Test
   public void shouldFeedById() throws Exception {
-    mockStatic(EventFeedServiceHelper.class);
-    request = new MockHttpServletRequest();
-    when(EventFeedServiceHelper.getEventFeed(eq(eventFeedService), anyString(), anyString(), eq(1), any(Logger.class))).thenReturn("feed");
 
-    //String feed = controller.getFeed(request, 1);
 
-    //assertThat(feed, is("feed"));
+    String category = "category1";
+    String vendor = "vendor1";
+    String baseUrl = "baseUrl";
+    int feedNumber = 1;
+
+    when(vendorEventFeedService.getEventFeed("baseUrl/path", vendor, category, feedNumber)).thenReturn("xml atom feed content");
+
+    String feed = controller.getFeed(category, vendor, feedNumber, baseUrl, request);
+
+    assertThat(feed, is("xml atom feed content"));
   }
 }

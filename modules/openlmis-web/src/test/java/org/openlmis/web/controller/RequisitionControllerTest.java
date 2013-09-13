@@ -29,6 +29,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.rnr.service.RequisitionStatusChangeService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -77,6 +78,9 @@ public class RequisitionControllerTest {
 
   @Mock
   private RegimenColumnService regimenColumnService;
+
+  @Mock
+  private RequisitionStatusChangeService requisitionStatusChangeService;
 
   private MockHttpServletRequest request;
 
@@ -418,7 +422,17 @@ public class RequisitionControllerTest {
 
     verify(requisitionService).getLossesAndAdjustmentsTypes();
     assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get("lossAdjustmentTypes"), is(lossesAndAdjustmentsTypes));
+  }
 
+  @Test
+  public void shouldSetStatusChangesInModelForPrint() throws Exception {
+    List<RequisitionStatusChange> statusChanges = new ArrayList<>();
+    when(requisitionStatusChangeService.getByRnrId(1L)).thenReturn(statusChanges);
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(make(a(defaultRnr)));
+
+    ModelAndView printModel = controller.printRequisition(1L);
+
+    assertThat((List<RequisitionStatusChange>) printModel.getModel().get("statusChanges"), is(statusChanges));
   }
 
   private Rnr createRequisition() {

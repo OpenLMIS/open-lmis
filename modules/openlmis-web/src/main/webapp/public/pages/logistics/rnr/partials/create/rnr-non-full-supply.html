@@ -8,7 +8,8 @@
 <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
   <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
     <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
-    <a href="" ng-switch-default class="dropdown-toggle" openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
+    <a href="" ng-switch-default class="dropdown-toggle"
+       openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
     </a>
     <ul class="dropdown-menu">
       <li ng-repeat="page in errorPages.nonFullSupply">
@@ -25,7 +26,8 @@
 </div>
 
 <div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
-  <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable" ng-show="pageLineItems.length > 0">
+  <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable"
+         ng-show="pageLineItems.length > 0">
     <thead>
     <tr>
       <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
@@ -38,7 +40,7 @@
           ng-bind="rnrLineItem.productCategory"></td>
     </tr>
     <tr>
-      <td class="cell-input" ng-repeat="column in visibleNonFullSupplyColumns">
+      <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleNonFullSupplyColumns">
         <ng-switch on="column.name">
               <span ng-switch-when="remarks">
                 <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
@@ -82,15 +84,17 @@
               <span ng-switch-when="lossesAndAdjustments">
                 <span ng-bind="rnrLineItem['totalLossesAndAdjustments']" class="cell-text"></span>
               </span>
-          <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
-                class="cell-text"></span>
+
+              <span ng-switch-default>
+                <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}" class="cell-text"></span>
+              </span>
 
         </ng-switch>
       </td>
     </tr>
     </tbody>
   </table>
-</div >
+</div>
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
        options="{ backdrop: 'static', escape: false}">
@@ -113,7 +117,8 @@
       <div class="row-fluid">
         <div class="span7">
           <label for="nonFullSupplyProductsCodeAndName" openlmis-message="label.product.code"></label>
-          <select ui-select2="{formatNoMatches: formatNoMatches}" class="span11 bottom-spacer" id="nonFullSupplyProductsCodeAndName"
+          <select ui-select2="{formatNoMatches: formatNoMatches}" class="span11 bottom-spacer"
+                  id="nonFullSupplyProductsCodeAndName"
                   ng-model="facilityApprovedProduct" name="productCode" openlmis-message="placeholder.select.product"
                   ng-options="facilityTypeApprovedProduct.programProduct.product.code+' | '+facilityTypeApprovedProduct.programProduct.product.primaryName for facilityTypeApprovedProduct in nonFullSupplyProductsToDisplay">
             <option></option>
@@ -124,8 +129,8 @@
       <div class="row-fluid">
         <div class="span2">
           <label for="quantityRequested"><span
-              ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
-          <input type="text" class="span12" name="newNonFullSupply.quantityRequested"
+            ng-bind="labelForRnrColumn('quantityRequested')"></span></label>
+          <input type="text" class="span12 right-justified" name="newNonFullSupply.quantityRequested"
                  ng-model="newNonFullSupply.quantityRequested"
                  id="quantityRequested"
                  rnr-validator="positiveInteger" maxlength="8"/><br>
@@ -135,7 +140,7 @@
         </div>
         <div class="span6">
           <label for="reasonForRequestedQuantity"><span
-              ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
+            ng-bind="labelForRnrColumn('reasonForRequestedQuantity')"></span></label>
           <input type="text" class="span12" ng-model="newNonFullSupply.reasonForRequestedQuantity"
                  id="reasonForRequestedQuantity" maxlength="250"/><br>
             <span class="alert alert-warning warning-alert"
@@ -165,9 +170,10 @@
           <div class="span2">
             <div class="fluid-grid-cell">
               <input type="text" ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.quantityRequested)"
+                     class="right-justified"
                      name="nonFullSupplyProductQuantityRequested{{$index}}" rnr-validator="positiveInteger"
                      ng-required="true" maxlength="8" ng-model="nonFullSupplyProduct.quantityRequested"
-                     openlmis-message="placeholder.quantity" />
+                     openlmis-message="placeholder.quantity"/>
                 <span class="rnr-form-error" style="display:none;"
                       id="nonFullSupplyProductQuantityRequested{{$index}}" openlmis-message="error.number.only">
                 </span>
@@ -180,7 +186,7 @@
                      ng-class="highlightRequiredFieldInModal(nonFullSupplyProduct.reasonForRequestedQuantity)"
                      maxlength="250" ng-required="true"
                      ng-model="nonFullSupplyProduct.reasonForRequestedQuantity"
-                     openlmis-message="placeholder.explanation" />
+                     openlmis-message="placeholder.explanation"/>
             </div>
           </div>
 

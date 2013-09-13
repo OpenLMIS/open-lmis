@@ -4,8 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog,
-                                      messageService) {
+function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog, messageService) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
   $scope.selectedItems = [];
@@ -31,6 +30,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
 
   $scope.filterRequisitions = function () {
     $scope.filteredRequisitions = [];
+    $scope.gridOptions.selectedItems.length = 0;
     var query = $scope.query || "";
     var searchField = $scope.searchField;
 
@@ -83,7 +83,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     };
 
     var errorHandler = function (response) {
-      $scope,message= "";
+      $scope, message = "";
       if (response.data.error) {
         $scope.error = response.data.error;
       } else {

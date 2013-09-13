@@ -6,45 +6,42 @@
 
 package org.openlmis.web.controller;
 
-import org.apache.log4j.Logger;
-import org.ict4h.atomfeed.server.repository.AllEventRecords;
-import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.controller.VendorEventFeedServiceHelper.getEventFeed;
-import static org.openlmis.web.controller.VendorEventFeedServiceHelper.getRecentFeed;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class AtomFeedController extends BaseController {
 
-    private Logger logger = Logger.getLogger(AtomFeedController.class);
+  @Autowired
+  VendorEventFeedService vendorEventFeedService;
 
-    @Autowired
-    EventFeedService eventFeedService;
+  @RequestMapping(method = GET, value = "feeds/{category}/recent", produces = "application/atom+xml")
+  @ResponseBody
+  public String getRecentFeeds(@PathVariable(value = "category") String category,
+                               @RequestParam(value = "vendor", required = false) String vendor,
+                               @Value("${app.url}") String baseUrl,
+                               HttpServletRequest request) {
 
-    @Autowired
-    AllEventRecords allEventRecords;
+    return vendorEventFeedService.getRecentFeed(baseUrl + request.getServletPath(), vendor, category);
+  }
 
-    @Value("${app.url}")
-    String baseUrl;
+  @RequestMapping(method = GET, value = "feeds/{category}/{feedNumber}", produces = "application/atom+xml")
+  @ResponseBody
+  public String getFeed(@PathVariable(value = "category") String category,
+                        @RequestParam(value = "vendor", required = false) String vendor,
+                        @PathVariable Integer feedNumber,
+                        @Value("${app.url}") String baseUrl,
+                        HttpServletRequest request) {
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "feeds/{category}/recent", produces = "application/atom+xml")
-    @ResponseBody
-    public String getRecentFeeds(@PathVariable(value = "category") String category, HttpServletRequest request,
-                                 @RequestParam(value = "vendor", required = false) String vendor) {
-        return getRecentFeed(eventFeedService, baseUrl + request.getServletPath(), logger, vendor, category);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "feeds/{category}/{id}", produces = "application/atom+xml")
-    @ResponseBody
-    public String getFeed(@PathVariable(value = "category") String category, HttpServletRequest request,
-                          @PathVariable Integer id, @RequestParam(value = "vendor", required = false) String vendor) {
-        return getEventFeed(eventFeedService, baseUrl + request.getServletPath(), id, logger, vendor, category);
-    }
+    return vendorEventFeedService.getEventFeed(baseUrl + request.getServletPath(), vendor, category, feedNumber);
+  }
 }

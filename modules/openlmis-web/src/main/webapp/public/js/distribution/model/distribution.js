@@ -5,20 +5,46 @@
  */
 
 function Distribution(distributionJson) {
+  var COMPLETE = 'is-complete';
+  var EMPTY = 'is-empty';
+  var INCOMPLETE = 'is-incomplete';
+
   $.extend(true, this, distributionJson);
 
-  if (this.facilityDistributionData) {
-    $.each(this.facilityDistributionData, function (key, value) {
-      value.epiUse = new EpiUse(value.epiUse);
-      value.refrigerators = new Refrigerators(value.refrigerators);
-      value.generalObservation = new GeneralObservation(value.generalObservation);
+  if (distributionJson.facilityDistributionData) {
+    var _this = this;
+    this.facilityDistributionData = {};
+    $.each(distributionJson.facilityDistributionData, function (key, value) {
+      _this.facilityDistributionData[key] = new FacilityDistributionData(value);
     });
   }
 
-  Distribution.prototype.setEpiNotRecorded = function(facilityId) {
+  Distribution.prototype.setEpiNotRecorded = function (facilityId) {
     this.facilityDistributionData[facilityId].epiUse.setNotRecorded();
   };
 
+  Distribution.prototype.computeStatus = function () {
+    var status;
+    if (this.facilityDistributionData) {
+      $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
+        if (facilityDistributionData.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
+          status = COMPLETE;
+        } else if (facilityDistributionData.computeStatus() === EMPTY && (!status || status == EMPTY)) {
+          status = EMPTY;
+        } else if (facilityDistributionData.computeStatus() === INCOMPLETE ||
+          (facilityDistributionData.computeStatus() === EMPTY && status === COMPLETE) ||
+          (facilityDistributionData.computeStatus() === COMPLETE && status === EMPTY))
+        {
+          status = INCOMPLETE;
+          return false;
+        }
+        return true;
+      });
+    } else {
+      status = EMPTY;
+    }
+    return status;
+  };
   return this;
 }
 
