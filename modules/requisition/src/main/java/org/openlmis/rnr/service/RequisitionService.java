@@ -149,7 +149,8 @@ public class RequisitionService {
   public Rnr submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    if (savedRnr.getStatus() != INITIATED) throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+    if (savedRnr.getStatus() != INITIATED)
+      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -166,7 +167,8 @@ public class RequisitionService {
   public Rnr authorize(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-    if (savedRnr.getStatus() != SUBMITTED) throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR));
+    if (savedRnr.getStatus() != SUBMITTED)
+      throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR));
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -233,7 +235,6 @@ public class RequisitionService {
     fillSupportingInfo(savedRnr);
     fillSupplyingDepot(savedRnr);
     savedRnr.setSubmittedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.SUBMITTED.toString()));
-    savedRnr.setAuthorizedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.AUTHORIZED.toString()));
     return savedRnr;
   }
 
@@ -266,7 +267,8 @@ public class RequisitionService {
   private void fillSupplyingDepot(Rnr requisition) {
     if (requisition.getSupervisoryNodeId() != null && requisition.getStatus().equals(RnrStatus.APPROVED)) {
       SupplyLine supplyLine = supplyLineService.getSupplyLineBy(new SupervisoryNode(requisition.getSupervisoryNodeId()), requisition.getProgram());
-      if (supplyLine != null) requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
+      if (supplyLine != null)
+        requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
     }
   }
 
@@ -332,7 +334,6 @@ public class RequisitionService {
 
       requisition.fillBasicInformation(facility, program, period);
       requisition.setSubmittedDate(getOperationDateFor(requisition.getId(), SUBMITTED.toString()));
-      requisition.setAuthorizedDate(getOperationDateFor(requisition.getId(), AUTHORIZED.toString()));
     }
   }
 
