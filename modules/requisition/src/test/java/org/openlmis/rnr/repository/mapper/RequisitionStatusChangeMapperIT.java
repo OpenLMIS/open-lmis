@@ -1,7 +1,6 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -23,7 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -97,12 +96,20 @@ public class RequisitionStatusChangeMapperIT {
     assertThat(change, is(statusChange));
   }
 
-  @Test @Ignore
-  public void shouldGetOperationDateForRequisitionForStatus() throws Exception {
+  @Test
+  public void shouldGetStatusChangesForAnRnr() throws Exception {
+    mapper.insert(statusChange);
+    statusChange.setStatus(SUBMITTED);
+    mapper.insert(statusChange);
+    statusChange.setStatus(AUTHORIZED);
     mapper.insert(statusChange);
 
-    Date initiatedDate = mapper.getOperationDateFor(requisition.getId(), INITIATED.toString());
-    assertThat(statusChange.getCreatedDate(), is(initiatedDate));
+    List<RequisitionStatusChange> statusChanges = mapper.getByRnrId(requisition.getId());
+
+    assertThat(statusChanges.size(), is(3));
+    assertThat(statusChanges.get(0).getStatus(), is(INITIATED));
+    assertThat(statusChanges.get(1).getStatus(), is(SUBMITTED));
+    assertThat(statusChanges.get(2).getStatus(), is(AUTHORIZED));
   }
 
   private ProcessingPeriod insertPeriod(String name) {

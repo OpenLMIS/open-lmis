@@ -15,6 +15,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.rnr.service.RequisitionStatusChangeService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.slf4j.Logger;
@@ -54,21 +55,21 @@ public class RequisitionController extends BaseController {
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
+  public static final String STATUS_CHANGES = "statusChanges";
 
+  @Autowired
   private RequisitionService requisitionService;
+  @Autowired
   private RnrTemplateService rnrTemplateService;
+  @Autowired
+  private RequisitionStatusChangeService requisitionStatusChangeService;
+  @Autowired
+  private RegimenColumnService regimenColumnService;
+
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
 
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
-  private RegimenColumnService regimenColumnService;
 
-
-  @Autowired
-  public RequisitionController(RequisitionService requisitionService, RnrTemplateService rnrTemplateService, RegimenColumnService regimenColumnService) {
-    this.requisitionService = requisitionService;
-    this.rnrTemplateService = rnrTemplateService;
-    this.regimenColumnService = regimenColumnService;
-  }
 
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
@@ -224,6 +225,7 @@ public class RequisitionController extends BaseController {
     Long programId = requisition.getProgram().getId();
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
     modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
+    modelAndView.addObject(STATUS_CHANGES, requisitionStatusChangeService.getByRnrId(id));
     return modelAndView;
   }
 

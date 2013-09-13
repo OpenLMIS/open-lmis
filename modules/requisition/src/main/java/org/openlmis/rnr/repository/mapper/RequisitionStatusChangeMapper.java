@@ -8,6 +8,7 @@ import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface RequisitionStatusChangeMapper {
@@ -22,4 +23,7 @@ public interface RequisitionStatusChangeMapper {
 
   @Select("SELECT createdDate FROM requisition_status_changes WHERE rnrId = #{rnrId} AND status = #{status}")
   Date getOperationDateFor(@Param("rnrId") Long rnrId, @Param("status") String status);
+
+  @Select({"SELECT * from requisition_status_changes where rnrId = #{rnrId} ORDER BY createdDate"})
+  List<RequisitionStatusChange> getByRnrId(Long rnrId);
 }
