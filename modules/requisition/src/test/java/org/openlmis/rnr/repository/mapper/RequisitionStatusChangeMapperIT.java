@@ -14,6 +14,7 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,6 +27,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -115,12 +117,22 @@ public class RequisitionStatusChangeMapperIT {
     List<RequisitionStatusChange> statusChanges = mapper.getByRnrId(requisition.getId());
 
     assertThat(statusChanges.size(), is(3));
-    assertThat(statusChanges.get(0).getStatus(), is(INITIATED));
-    assertThat(statusChanges.get(1).getStatus(), is(SUBMITTED));
     assertThat(statusChanges.get(0).getCreatedBy().getFirstName(), is(user.getFirstName()));
     assertThat(statusChanges.get(0).getCreatedBy().getLastName(), is(user.getLastName()));
     assertThat(statusChanges.get(0).getCreatedBy().getId(), is(user.getId()));
-    assertThat(statusChanges.get(2).getStatus(), is(AUTHORIZED));
+
+    assertStatusPresent(statusChanges, INITIATED);
+    assertStatusPresent(statusChanges, SUBMITTED);
+    assertStatusPresent(statusChanges, AUTHORIZED);
+  }
+
+  private void assertStatusPresent(List<RequisitionStatusChange> statusChanges, RnrStatus status) {
+    boolean present = false;
+    for (RequisitionStatusChange change : statusChanges) {
+      if (change.getStatus().equals(status))
+        present = true;
+    }
+    assertTrue(present);
   }
 
   private ProcessingPeriod insertPeriod(String name) {

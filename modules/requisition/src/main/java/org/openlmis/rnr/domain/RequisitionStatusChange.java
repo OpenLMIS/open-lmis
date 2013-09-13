@@ -28,6 +28,6 @@ public class RequisitionStatusChange {
   public RequisitionStatusChange(Rnr requisition) {
     this.rnrId = requisition.getId();
     this.status = requisition.getStatus();
-    this.createdBy = new User(requisition.getCreatedBy(), null);
+    this.createdBy = new User(requisition.getModifiedBy(), null);
   }
 }

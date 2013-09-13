@@ -267,6 +267,8 @@ public class RequisitionPdfModel {
 
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": " + submittedBy)));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));
+    summaryTable.addCell(summaryCell(textCell(" ")));
+    summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.authorized.by") + ": " + authorizedBy)));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + authorizedDate)));
   }

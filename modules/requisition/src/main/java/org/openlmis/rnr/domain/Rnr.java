@@ -50,7 +50,6 @@ public class Rnr extends BaseModel {
   private Facility supplyingDepot;
   private Long supervisoryNodeId;
   private Date submittedDate;
-  private Date authorizedDate;
   private List<Comment> comments = new ArrayList<>();
 
   public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy, Long createdBy) {
@@ -289,7 +288,8 @@ public class Rnr extends BaseModel {
   private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
     for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) throw new DataException("product.code.invalid");
+      if (savedLineItem == null)
+        throw new DataException("product.code.invalid");
       savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
       savedLineItem.setModifiedBy(rnr.getModifiedBy());
     }
@@ -304,7 +304,8 @@ public class Rnr extends BaseModel {
   private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
     for (RnrLineItem lineItem : lineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) throw new DataException("product.code.invalid");
+      if (savedLineItem == null)
+        throw new DataException("product.code.invalid");
       savedLineItem.setModifiedBy(rnr.modifiedBy);
       savedLineItem.copyApproverEditableFields(lineItem, template);
     }

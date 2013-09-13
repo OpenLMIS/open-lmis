@@ -138,7 +138,8 @@ public class RequisitionPdfModelTest {
     assertRowValues(summary.getRow(4), " ", " ");
     assertRowValues(summary.getRow(5), " ", " ");
     assertRowValues(summary.getRow(6), "Submitted By: submit-firstName submit-lastName", "Date: " + DATE_FORMAT.format(currentDate.getTime()));
-    assertRowValues(summary.getRow(7), "Authorized By: auth-firstName auth-lastName", "Date: " + DATE_FORMAT.format(authorizedDate.getTime()));
+    assertRowValues(summary.getRow(7), " ", " ");
+    assertRowValues(summary.getRow(8), "Authorized By: auth-firstName auth-lastName", "Date: " + DATE_FORMAT.format(authorizedDate.getTime()));
   }
 
   @Test

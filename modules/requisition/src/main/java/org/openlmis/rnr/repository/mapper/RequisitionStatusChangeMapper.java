@@ -19,7 +19,7 @@ public interface RequisitionStatusChangeMapper {
   Date getOperationDateFor(@Param("rnrId") Long rnrId, @Param("status") String status);
 
   @Select({"SELECT rsc.*, u.firstName, u.lastName, u.id as userId from requisition_status_changes rsc",
-    "INNER JOIN users u ON rsc.createdBy = u.id WHERE rnrId = #{rnrId} ORDER BY createdDate"})
+    "INNER JOIN users u ON rsc.createdBy = u.id WHERE rnrId = #{rnrId}"})
   @Results({
     @Result(column = "firstName", property = "createdBy.firstName"),
     @Result(column = "lastName", property = "createdBy.lastName"),
