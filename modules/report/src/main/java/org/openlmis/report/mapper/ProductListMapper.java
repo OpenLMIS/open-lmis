@@ -50,9 +50,9 @@ public interface ProductListMapper {
             "product_forms.code AS formCode \n" +
             "FROM \n" +
             "products \n" +
-            "INNER JOIN product_forms ON product_forms.id = products.formid \n" +
-            "INNER JOIN dosage_units ON dosage_units.id = products.dosageunitid \n" +
-            "INNER JOIN product_categories ON product_categories.id = products.categoryid")
+            "LEFT OUTER JOIN product_forms ON  products.formid  = product_forms.id  \n" +
+            "LEFT OUTER JOIN dosage_units ON  products.dosageunitid =  dosage_units.id  \n" +
+            "LEFT OUTER JOIN product_categories ON  products.categoryid = product_categories.id")
     @Results(value = {
         @Result(property = "id", column = "id"),
         @Result(property = "programs", javaType = List.class, column = "id",
