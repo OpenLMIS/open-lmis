@@ -575,9 +575,19 @@ span[class^="tpl-"] {
     }
     .col-name {
       min-width: 190px;
+      padding-left: 6px;
     }
     .col-remarks {
       min-width: 460px;
+      input[type="text"].cell-text {
+        width: 96%;
+        padding: 0px 6px;
+      }
+    }
+    .col-patientsOnTreatment, .col-patientsToInitiateTreatment, .col-patientsStoppedTreatment {
+      input[type="text"] {
+        width: 91%;
+      }
     }
     th {
       width: 90px;
@@ -715,9 +725,10 @@ td.col-quantityReceived,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
+td.col-expirationDate,
 td.col-quantityRequested {
   input[type="text"] {
-    text-align: right;
+    width: 89%;
   }
 }
 
@@ -726,10 +737,12 @@ td.col-quantityReceived,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
-td.col-expirationDate,
-td.col-quantityRequested {
+td.col-quantityRequested,
+td.col-patientsOnTreatment,
+td.col-patientsToInitiateTreatment,
+td.col-patientsStoppedTreatment {
   input[type="text"] {
-    width: 89%;
+    text-align: right;
   }
 }
 

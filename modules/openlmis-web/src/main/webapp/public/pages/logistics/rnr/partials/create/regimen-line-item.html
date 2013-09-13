@@ -30,7 +30,7 @@
             ng-bind="regimenLineItem.category.name"></td>
       </tr>
       <tr>
-        <td class="cell-input" ng-repeat="regimenColumn in visibleRegimenColumns">
+        <td class="cell-input col-{{ regimenColumn.name }}" ng-repeat="regimenColumn in visibleRegimenColumns">
           <ng-switch on="regimenColumn.name">
               <span ng-switch-when="name">
                 <span ng-bind="regimenLineItem.name" class="cell-text"></span>
