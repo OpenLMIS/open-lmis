@@ -20,8 +20,10 @@ import org.openlmis.shipment.service.ShipmentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
@@ -39,6 +41,7 @@ import static java.lang.Long.parseLong;
 import static org.apache.commons.collections.CollectionUtils.select;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
+@Component
 @MessageEndpoint
 @NoArgsConstructor
 public class ShipmentFileProcessor {
@@ -59,6 +62,12 @@ public class ShipmentFileProcessor {
   @Autowired
   private OrderService orderService;
 
+  @Autowired
+  private ApplicationContext applicationContext;
+
+  private ShipmentFileProcessor getSpringProxy() {
+    return applicationContext.getBean(this.getClass());
+  }
 
   public void process(Message message) throws Exception {
     File shipmentFile = (File) message.getPayload();
@@ -72,7 +81,7 @@ public class ShipmentFileProcessor {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
-      processShipmentLineItem(listReader, shipmentFileTemplate, orderIds);
+      getSpringProxy().processShipmentLineItem(listReader, shipmentFileTemplate, orderIds);
       logger.debug("Successfully processed file " + shipmentFile.getName());
 
     } catch (Exception e) {
@@ -83,8 +92,8 @@ public class ShipmentFileProcessor {
   }
 
   @Transactional
-  private void processShipmentLineItem(ICsvListReader listReader,
-                                       ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet) throws Exception {
+  public void processShipmentLineItem(ICsvListReader listReader,
+                                      ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet) throws Exception {
     boolean status = true;
 
     List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();

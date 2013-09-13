@@ -111,7 +111,7 @@ public class OrderService {
 
   public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
     for (Long orderId : orderIds) {
-      OrderStatus status = (shipmentFileInfo.isProcessingError()) ? SHIPMENT_ERROR : PACKED;
+      OrderStatus status = (shipmentFileInfo.isProcessingError()) ? RELEASED : PACKED;
       orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
     }
   }
@@ -139,7 +139,7 @@ public class OrderService {
   }
 
   public boolean isShippable(Long orderId) {
-    List<OrderStatus> shippableOrderStatuses = asList(RELEASED, SHIPMENT_ERROR);
+    List<OrderStatus> shippableOrderStatuses = asList(RELEASED);
     return shippableOrderStatuses.contains(orderRepository.getStatus(orderId));
   }
 }

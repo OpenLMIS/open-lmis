@@ -81,7 +81,6 @@ describe("Order File Template Controller", function () {
 
   it('should save order file template', function () {
     httpBackend.expect('POST', "/order-file-template.json").respond({success: "Saved successfully"}, 200);
-    console.log(scope.orderFileTemplate);
     scope.saveOrderFileTemplate();
     httpBackend.flush();
     expect(scope.message).toEqual("Saved successfully");

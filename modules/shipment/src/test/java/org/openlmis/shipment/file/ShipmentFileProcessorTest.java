@@ -26,6 +26,7 @@ import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.support.MessageBuilder;
 import org.supercsv.io.CsvListReader;
@@ -81,6 +82,9 @@ public class ShipmentFileProcessorTest {
 
   @Mock
   private OrderService orderService;
+
+  @Mock
+  ApplicationContext applicationContext;
 
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
@@ -141,7 +145,7 @@ public class ShipmentFileProcessorTest {
     ShipmentLineItem lineItem = new ShipmentLineItem();
     lineItem.setOrderId(232L);
     when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString())).thenReturn(lineItem);
-
+    when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
     when(orderService.isShippable(232L)).thenReturn(true);
 
     shipmentFileProcessor.process(message);
@@ -165,6 +169,7 @@ public class ShipmentFileProcessorTest {
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(new ShipmentConfiguration(headerInFile), shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
+    when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
 
     when(mockedCsvListReader.read()).thenReturn(null);
 
@@ -207,6 +212,7 @@ public class ShipmentFileProcessorTest {
     when(orderService.isShippable(333L)).thenReturn(true);
 
     when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy")).thenReturn(shipmentLineItem);
+    when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
 
     shipmentFileProcessor.process(message);
 

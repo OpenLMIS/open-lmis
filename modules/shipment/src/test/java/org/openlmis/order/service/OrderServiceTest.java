@@ -197,7 +197,7 @@ public class OrderServiceTest {
   }
 
   @Test
-  public void shouldSetErrorStatusForAllOrdersIfErrorInShipment() throws Exception {
+  public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
     Set<Long> orderIds = new HashSet<>();
     orderIds.add(123L);
     orderIds.add(456L);
@@ -210,8 +210,8 @@ public class OrderServiceTest {
 
     orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, SHIPMENT_ERROR, shipmentId);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, SHIPMENT_ERROR, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, RELEASED, shipmentId);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, RELEASED, shipmentId);
   }
 
   @Test
@@ -313,16 +313,7 @@ public class OrderServiceTest {
 
   }
 
-  @Test
-  public void shouldReturnTrueIfOrderIsShipmentError() throws Exception {
-    long orderId = 123L;
-    when(orderRepository.getStatus(orderId)).thenReturn(SHIPMENT_ERROR);
 
-    assertThat(orderService.isShippable(orderId), is(true));
-
-    verify(orderRepository).getStatus(123L);
-
-  }
 
   @Test
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {

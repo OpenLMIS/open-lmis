@@ -21,9 +21,9 @@ import java.util.Date;
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate, modifiedDate)",
+    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate)",
     "VALUES",
-    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}, #{modifiedDate})"})
+    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
@@ -42,7 +42,7 @@ public interface ShipmentMapper {
     "SET orderId = #{orderId},",
     "productCode= #{productCode},",
     "quantityShipped= #{quantityShipped},",
-    "modifiedDate= #{modifiedDate}",
+    "modifiedDate = DEFAULT",
     "WHERE id= #{id}"})
   void updateShippedLineItem(ShipmentLineItem shipmentLineItem);
 
