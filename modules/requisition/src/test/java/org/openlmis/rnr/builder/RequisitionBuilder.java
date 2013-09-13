@@ -60,6 +60,7 @@ public class RequisitionBuilder {
     RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
     rnr.add(rnrLineItemCost48, true);
     rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));
+    rnr.setCreatedBy(lookup.valueOf(modifiedBy, 1L));
     return rnr;
   }
 

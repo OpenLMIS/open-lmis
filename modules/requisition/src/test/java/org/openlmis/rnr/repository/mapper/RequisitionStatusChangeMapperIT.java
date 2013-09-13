@@ -96,11 +96,12 @@ public class RequisitionStatusChangeMapperIT {
   public void shouldLogStatusChangesToRequisition() throws Exception {
     mapper.insert(statusChange);
 
-    RequisitionStatusChange change = mapper.getById(statusChange.getId());
+    List<RequisitionStatusChange> statusChanges = mapper.getByRnrId(requisition.getId());
+
+    assertThat(statusChanges.size(), is(1));
+    RequisitionStatusChange change = statusChanges.get(0);
     assertThat(change.getCreatedDate(), is(notNullValue()));
     change.setCreatedDate(null);
-
-    assertThat(change, is(statusChange));
   }
 
   @Test

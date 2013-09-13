@@ -15,9 +15,6 @@ public interface RequisitionStatusChangeMapper {
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 
-  @Select("SELECT * FROM requisition_status_changes WHERE id = #{id}")
-  RequisitionStatusChange getById(Long id);
-
   @Select("SELECT createdDate FROM requisition_status_changes WHERE rnrId = #{rnrId} AND status = #{status}")
   Date getOperationDateFor(@Param("rnrId") Long rnrId, @Param("status") String status);
 
