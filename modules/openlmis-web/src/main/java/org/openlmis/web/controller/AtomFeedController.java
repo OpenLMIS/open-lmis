@@ -6,7 +6,6 @@
 
 package org.openlmis.web.controller;
 
-import org.ict4h.atomfeed.server.service.EventFeedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,36 +16,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.openlmis.web.controller.VendorEventFeedServiceHelper.getEventFeed;
-import static org.openlmis.web.controller.VendorEventFeedServiceHelper.getRecentFeed;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class AtomFeedController extends BaseController {
 
   @Autowired
-  EventFeedService eventFeedService;
-
-  @Value("${app.url}")
-  String baseUrl;
-
+  VendorEventFeedService vendorEventFeedService;
 
   @RequestMapping(method = GET, value = "feeds/{category}/recent", produces = "application/atom+xml")
   @ResponseBody
   public String getRecentFeeds(@PathVariable(value = "category") String category,
                                @RequestParam(value = "vendor", required = false) String vendor,
+                               @Value("${app.url}") String baseUrl,
                                HttpServletRequest request) {
 
-    return getRecentFeed(eventFeedService, baseUrl + request.getServletPath(), vendor, category);
+    return vendorEventFeedService.getRecentFeed(baseUrl + request.getServletPath(), vendor, category);
   }
 
   @RequestMapping(method = GET, value = "feeds/{category}/{feedNumber}", produces = "application/atom+xml")
   @ResponseBody
   public String getFeed(@PathVariable(value = "category") String category,
-                        @PathVariable Integer feedNumber,
                         @RequestParam(value = "vendor", required = false) String vendor,
+                        @PathVariable Integer feedNumber,
+                        @Value("${app.url}") String baseUrl,
                         HttpServletRequest request) {
 
-    return getEventFeed(eventFeedService, baseUrl + request.getServletPath(), feedNumber, vendor, category);
+    return vendorEventFeedService.getEventFeed(baseUrl + request.getServletPath(), vendor, category, feedNumber);
   }
 }

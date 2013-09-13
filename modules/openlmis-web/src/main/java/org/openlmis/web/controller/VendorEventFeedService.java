@@ -22,10 +22,11 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.openlmis.core.exception.DataException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -41,14 +42,19 @@ import static java.util.regex.Pattern.compile;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class VendorEventFeedServiceHelper {
+@Service
+public class VendorEventFeedService {
+
+
+  @Autowired
+  EventFeedService eventFeedService;
 
   private static final Pattern XML_CDATA_PATTERN = compile("(?:<!\\[CDATA\\[)(.+)(?:\\]\\]>)");
   private static final String VENDOR_MAPPING_TEMPLATE = "vendorMapping_%s_%s.xml";
 
-  private static final Logger logger = Logger.getLogger(VendorEventFeedServiceHelper.class);
+  private static final Logger logger = Logger.getLogger(VendorEventFeedService.class);
 
-  public static String getRecentFeed(EventFeedService eventFeedService, String requestURL, String vendor, String category) {
+  public String getRecentFeed(String requestURL, String vendor, String category) {
     try {
       Feed feed = eventFeedService.getRecentFeed(new URI(requestURL), category);
       mapFeedBasedOnVendorAndCategory(feed, vendor, category);
@@ -59,20 +65,40 @@ public class VendorEventFeedServiceHelper {
     }
   }
 
-  static File vendorMappingTemplate(String templateName) throws IOException {
+  public String getEventFeed(String requestURL, String vendor, String category, int feedNumber) {
     try {
-      return new ClassPathResource(templateName).getFile();
-    } catch (FileNotFoundException fne) {
-      return null;
+      Feed feed = eventFeedService.getEventFeed(new URI(requestURL), category, feedNumber);
+      try {
+        mapFeedBasedOnVendorAndCategory(feed, vendor, category);
+      } catch (IOException e) {
+        logger.error(e);
+      }
+
+      return new WireFeedOutput().outputString(feed);
+
+    } catch (URISyntaxException | FeedException e) {
+      logger.error("error occurred while getting feed for feedNumber: " + feedNumber, e);
+      throw new RuntimeException("Error serializing feed.", e);
     }
   }
 
-  private static void mapFeedBasedOnVendorAndCategory(Feed feed, String vendor,
-                                                      String category) throws IOException {
+  File vendorMappingTemplate(String templateName) {
+    File vendorTemplate = null;
+    try {
+      vendorTemplate = new ClassPathResource(templateName).getFile();
+    } catch (IOException e) {
+      logger.warn(e);
+    }
+    return vendorTemplate;
+
+  }
+
+  private void mapFeedBasedOnVendorAndCategory(Feed feed, String vendor, String category) throws IOException {
     String templateName = format(VENDOR_MAPPING_TEMPLATE, vendor, category);
 
     File templateFile;
     if (isEmpty(vendor) || (templateFile = vendorMappingTemplate(templateName)) == null) {
+      logger.warn(format("using default template for vendor: %s and category: %s", feed.getTitle(), vendor, category));
       return;
     }
 
@@ -88,7 +114,7 @@ public class VendorEventFeedServiceHelper {
     }
   }
 
-  static String parseAtomFeedContent(String atomFeedContentValue) {
+  String parseAtomFeedContent(String atomFeedContentValue) {
     Matcher matcher = XML_CDATA_PATTERN.matcher(atomFeedContentValue);
     String atomFeedContent = EMPTY;
     if (matcher.find() && matcher.groupCount() == 1) {
@@ -97,7 +123,7 @@ public class VendorEventFeedServiceHelper {
     return atomFeedContent;
   }
 
-  private static JsonNode convertToTemplate(Map<String, String> map, String value) throws IOException {
+  private JsonNode convertToTemplate(Map<String, String> map, String value) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode rootNode = objectMapper.readTree(value);
     ObjectNode returnedNode = new ObjectNode(JsonNodeFactory.instance);
@@ -115,7 +141,7 @@ public class VendorEventFeedServiceHelper {
     return returnedNode;
   }
 
-  private static Map<String, String> createTemplateMap(File templateFile) {
+  private Map<String, String> createTemplateMap(File templateFile) {
     Document document;
     try {
       SAXBuilder saxBuilder = new SAXBuilder();
@@ -132,26 +158,5 @@ public class VendorEventFeedServiceHelper {
       map.put(openLmisName, vendorName);
     }
     return map;
-  }
-
-  public static String getEventFeed(EventFeedService eventFeedService,
-                                    String requestURL,
-                                    int feedNumber,
-                                    String vendor,
-                                    String category) {
-    try {
-      Feed feed = eventFeedService.getEventFeed(new URI(requestURL), category, feedNumber);
-      try {
-        mapFeedBasedOnVendorAndCategory(feed, vendor, category);
-      } catch (IOException e) {
-        logger.error(e);
-      }
-
-      return new WireFeedOutput().outputString(feed);
-
-    } catch (URISyntaxException | FeedException e) {
-      logger.error("error occurred while getting feed for feedNumber: " + feedNumber, e);
-      throw new RuntimeException("Error serializing feed.", e);
-    }
   }
 }
