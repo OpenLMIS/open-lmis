@@ -10,17 +10,19 @@ package org.openlmis.rnr.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.User;
 
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequisitionStatusChange{
+public class RequisitionStatusChange {
   private Long id;
 
   private Long rnrId;
   private RnrStatus status;
+  private User createdByUser;
   private Long createdBy;
   private Date createdDate;
 

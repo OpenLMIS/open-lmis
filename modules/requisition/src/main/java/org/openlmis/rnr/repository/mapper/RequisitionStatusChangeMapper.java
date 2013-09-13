@@ -1,9 +1,6 @@
 package org.openlmis.rnr.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.springframework.stereotype.Repository;
 
@@ -24,6 +21,12 @@ public interface RequisitionStatusChangeMapper {
   @Select("SELECT createdDate FROM requisition_status_changes WHERE rnrId = #{rnrId} AND status = #{status}")
   Date getOperationDateFor(@Param("rnrId") Long rnrId, @Param("status") String status);
 
-  @Select({"SELECT * from requisition_status_changes where rnrId = #{rnrId} ORDER BY createdDate"})
+  @Select({"SELECT rsc.*, u.firstName, u.lastName, u.id as userId from requisition_status_changes rsc",
+    "INNER JOIN users u ON rsc.createdBy = u.id WHERE rnrId = #{rnrId} ORDER BY createdDate"})
+  @Results({
+    @Result(column = "firstName", property = "createdByUser.firstName"),
+    @Result(column = "lastName", property = "createdByUser.lastName"),
+    @Result(column = "userId", property = "createdByUser.id")
+  })
   List<RequisitionStatusChange> getByRnrId(Long rnrId);
 }

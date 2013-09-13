@@ -54,7 +54,6 @@ public class RequisitionController extends BaseController {
   public static final String COMMENTS = "comments";
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
-  public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
   public static final String STATUS_CHANGES = "statusChanges";
 
   @Autowired

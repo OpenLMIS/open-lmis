@@ -7,11 +7,9 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
-import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
-import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
+import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
@@ -31,6 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Category(IntegrationTests.class)
@@ -57,6 +56,9 @@ public class RequisitionStatusChangeMapperIT {
   @Autowired
   private RequisitionStatusChangeMapper mapper;
 
+  @Autowired
+  UserMapper userMapper;
+
 
   private ProcessingSchedule processingSchedule;
   private Facility facility;
@@ -64,6 +66,7 @@ public class RequisitionStatusChangeMapperIT {
   private SupervisoryNode supervisoryNode;
   private RequisitionStatusChange statusChange;
   private Rnr requisition;
+  private User user;
 
   @Before
   public void setUp() throws Exception {
@@ -78,8 +81,12 @@ public class RequisitionStatusChangeMapperIT {
     Program program = new Program();
     program.setId(1L);
 
+    user = make(a(defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+
     requisition = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.periodId, processingPeriod.getId()),
-      with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.program, program)));
+      with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.program, program),
+      with(RequisitionBuilder.modifiedBy, user.getId())));
     requisitionMapper.insert(requisition);
 
     statusChange = new RequisitionStatusChange(requisition);
@@ -109,6 +116,9 @@ public class RequisitionStatusChangeMapperIT {
     assertThat(statusChanges.size(), is(3));
     assertThat(statusChanges.get(0).getStatus(), is(INITIATED));
     assertThat(statusChanges.get(1).getStatus(), is(SUBMITTED));
+    assertThat(statusChanges.get(0).getCreatedByUser().getFirstName(), is(user.getFirstName()));
+    assertThat(statusChanges.get(0).getCreatedByUser().getLastName(), is(user.getLastName()));
+    assertThat(statusChanges.get(0).getCreatedByUser().getId(), is(user.getId()));
     assertThat(statusChanges.get(2).getStatus(), is(AUTHORIZED));
   }
 
