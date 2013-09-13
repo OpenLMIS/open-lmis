@@ -5,6 +5,10 @@
  */
 
 function Distribution(distributionJson) {
+  var COMPLETE = 'is-complete';
+  var EMPTY = 'is-empty';
+  var INCOMPLETE = 'is-incomplete';
+
   $.extend(true, this, distributionJson);
 
   if (this.facilityDistributionData) {
@@ -15,10 +19,29 @@ function Distribution(distributionJson) {
     });
   }
 
-  Distribution.prototype.setEpiNotRecorded = function(facilityId) {
+  Distribution.prototype.setEpiNotRecorded = function (facilityId) {
     this.facilityDistributionData[facilityId].epiUse.setNotRecorded();
   };
 
+  Distribution.prototype.computeStatus = function () {
+    var status;
+    $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
+      if (facilityDistributionData.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
+        status = COMPLETE;
+      } else if (facilityDistributionData.computeStatus() === EMPTY && (!status || status == EMPTY)) {
+        status = EMPTY;
+      } else if (facilityDistributionData.computeStatus() === INCOMPLETE ||
+        (facilityDistributionData.computeStatus() === EMPTY && status === COMPLETE) ||
+        (facilityDistributionData.computeStatus() === COMPLETE && status === EMPTY))
+      {
+        status = INCOMPLETE;
+        return false;
+      }
+      return true;
+    });
+
+    return status;
+  };
   return this;
 }
 
