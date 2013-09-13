@@ -5,7 +5,7 @@
   -->
 
 <div ng-controller="ViewNonFullSupplyController">
-  <div class="rnr-table" custom-horizontal-scroll>
+  <div id="viewNonFullSupplyTable" class="rnr-table" custom-horizontal-scroll>
     <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
     <table id="nonFullSupplyTable" class="table table-bordered scrollable">
       <thead>
@@ -20,7 +20,7 @@
             ng-bind="rnrLineItem.productCategory"></td>
       </tr>
       <tr>
-        <td class="cell-input" ng-repeat="column in visibleNonFullSupplyColumns">
+        <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleNonFullSupplyColumns">
             <span ng-switch on="column.name">
 
                 <span ng-switch-when="price">
@@ -33,8 +33,10 @@
                         class="cell-text"></span>
                 </span>
 
-                <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
-                      class="cell-text"></span>
+                <span ng-switch-default>
+                  <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                        class="cell-text"></span>
+                  </span>
             </span>
         </td>
       </tr>
