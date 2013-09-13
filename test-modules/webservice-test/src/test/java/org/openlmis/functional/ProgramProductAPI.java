@@ -19,7 +19,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
-public class ProgramProductFeed extends TestCaseHelper {
+public class ProgramProductAPI extends TestCaseHelper {
 
   public static final String URL = "http://localhost:9091/rest-api/programProducts.json";
   public static final String commTrackUser = "commTrack";
@@ -170,7 +170,7 @@ public class ProgramProductFeed extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Bad request"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Invalid program code"));
   }
 
   @Test(groups = {"webservice"})

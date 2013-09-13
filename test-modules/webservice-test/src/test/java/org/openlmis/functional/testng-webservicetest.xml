@@ -16,7 +16,7 @@
       </class>
       <class name="org.openlmis.functional.ProgramCatalogChangesFeed">
       </class>
-      <class name="org.openlmis.functional.AgentFeed">
+      <class name="org.openlmis.functional.CreateUpdateCHW">
       </class>
       <class name="org.openlmis.functional.FacilityProgramSupportedFeed">
       </class>
@@ -25,6 +25,8 @@
       <class name="org.openlmis.functional.SubmitReportTest">
       </class>
       <class name="org.openlmis.functional.CommTrackTemplateTest">
+      </class>
+      <class name="org.openlmis.functional.ProgramProductAPI">
       </class>
     </classes>
   </test>
