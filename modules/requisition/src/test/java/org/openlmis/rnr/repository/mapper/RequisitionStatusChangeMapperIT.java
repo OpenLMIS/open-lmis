@@ -116,9 +116,9 @@ public class RequisitionStatusChangeMapperIT {
     assertThat(statusChanges.size(), is(3));
     assertThat(statusChanges.get(0).getStatus(), is(INITIATED));
     assertThat(statusChanges.get(1).getStatus(), is(SUBMITTED));
-    assertThat(statusChanges.get(0).getCreatedByUser().getFirstName(), is(user.getFirstName()));
-    assertThat(statusChanges.get(0).getCreatedByUser().getLastName(), is(user.getLastName()));
-    assertThat(statusChanges.get(0).getCreatedByUser().getId(), is(user.getId()));
+    assertThat(statusChanges.get(0).getCreatedBy().getFirstName(), is(user.getFirstName()));
+    assertThat(statusChanges.get(0).getCreatedBy().getLastName(), is(user.getLastName()));
+    assertThat(statusChanges.get(0).getCreatedBy().getId(), is(user.getId()));
     assertThat(statusChanges.get(2).getStatus(), is(AUTHORIZED));
   }
 

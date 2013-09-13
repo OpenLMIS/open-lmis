@@ -18,26 +18,27 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.rnr.builder.RegimenColumnBuilder.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.facility;
 import static org.openlmis.rnr.builder.RequisitionBuilder.rnrWithRegimens;
 import static org.openlmis.rnr.builder.RnrTemplateBuilder.defaultRnrTemplate;
+import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.openlmis.web.view.pdf.requisition.RequisitionPdfModel.DATE_FORMAT;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -49,6 +50,8 @@ public class RequisitionPdfModelTest {
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
   @Mock
   MessageService messageService;
+  private Date currentDate;
+  private Date authorizedDate;
 
   @Before
   public void setUp() throws Exception {
@@ -70,7 +73,29 @@ public class RequisitionPdfModelTest {
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     lossesAndAdjustmentsList = asList(additive1);
     model.put(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES, lossesAndAdjustmentsList);
-    requisitionPdfModel = new RequisitionPdfModel(model,messageService);
+
+    currentDate = new Date();
+    authorizedDate = new Date();
+
+    model.put("statusChanges", getRequisitionStatusChanges());
+    requisitionPdfModel = new RequisitionPdfModel(model, messageService);
+  }
+
+  private List<RequisitionStatusChange> getRequisitionStatusChanges() {
+    User initiatingUser = make(a(defaultUser, with(firstName, "init-firstName"), with(lastName, "init-lastName")));
+    User submittingUser = make(a(defaultUser, with(firstName, "submit-firstName"), with(lastName, "submit-lastName")));
+    User authorizingUser = make(a(defaultUser, with(firstName, "auth-firstName"), with(lastName, "auth-lastName")));
+
+    final RequisitionStatusChange initiatedStatusChange = new RequisitionStatusChange(1L, 2L, INITIATED, initiatingUser, currentDate);
+    final RequisitionStatusChange submittedStatusChange = new RequisitionStatusChange(1L, 2L, SUBMITTED, submittingUser, currentDate);
+    final RequisitionStatusChange authorizedStatusChange = new RequisitionStatusChange(1L, 2L, AUTHORIZED, authorizingUser, authorizedDate);
+
+
+    return new ArrayList<RequisitionStatusChange>() {{
+      add(initiatedStatusChange);
+      add(submittedStatusChange);
+      add(authorizedStatusChange);
+    }};
   }
 
   @Test
@@ -112,9 +137,8 @@ public class RequisitionPdfModelTest {
     assertRowValues(summary.getRow(3), "Total Cost", "$8.00");
     assertRowValues(summary.getRow(4), " ", " ");
     assertRowValues(summary.getRow(5), " ", " ");
-    assertRowValues(summary.getRow(6), "Submitted By: ", "Date: 19/03/2013");
-    assertRowValues(summary.getRow(7), "Authorized By: ", "Date: ");
-
+    assertRowValues(summary.getRow(6), "Submitted By: submit-firstName submit-lastName", "Date: " + DATE_FORMAT.format(currentDate.getTime()));
+    assertRowValues(summary.getRow(7), "Authorized By: auth-firstName auth-lastName", "Date: " + DATE_FORMAT.format(authorizedDate.getTime()));
   }
 
   @Test

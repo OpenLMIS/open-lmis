@@ -11,7 +11,7 @@ import java.util.List;
 public interface RequisitionStatusChangeMapper {
 
   @Insert({"INSERT INTO requisition_status_changes(rnrId, status, createdBy, modifiedBy) VALUES (#{rnrId}, #{status},",
-    "#{createdBy}, #{createdBy})"})
+    "#{createdBy.id}, #{createdBy.id})"})
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 
@@ -24,9 +24,9 @@ public interface RequisitionStatusChangeMapper {
   @Select({"SELECT rsc.*, u.firstName, u.lastName, u.id as userId from requisition_status_changes rsc",
     "INNER JOIN users u ON rsc.createdBy = u.id WHERE rnrId = #{rnrId} ORDER BY createdDate"})
   @Results({
-    @Result(column = "firstName", property = "createdByUser.firstName"),
-    @Result(column = "lastName", property = "createdByUser.lastName"),
-    @Result(column = "userId", property = "createdByUser.id")
+    @Result(column = "firstName", property = "createdBy.firstName"),
+    @Result(column = "lastName", property = "createdBy.lastName"),
+    @Result(column = "userId", property = "createdBy.id")
   })
   List<RequisitionStatusChange> getByRnrId(Long rnrId);
 }
