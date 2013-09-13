@@ -4,7 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
+function InitiateRnrController($scope, $location, $rootScope, Requisitions,
+                               PeriodsForFacilityAndProgram, UserFacilityList,
+                               CreateRequisitionProgramList,
+                               UserSupervisedFacilitiesForProgram,
+                               FacilityProgramRights, navigateBackService,
+                               messageService) {
 
   $rootScope.fullScreen = false;
   var isNavigatedBack;
@@ -71,7 +76,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   };
 
   $scope.loadFacilitiesForProgram = function () {
-    if ($scope.selectedProgram) {
+    if ($scope.selectedProgram.id) {
       UserSupervisedFacilitiesForProgram.get({programId: $scope.selectedProgram.id}, function (data) {
         $scope.facilities = data.facilities;
         $scope.selectedFacilityId = null;
@@ -163,18 +168,18 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   $scope.loadPeriods = function () {
     $scope.selectedPeriod = null;
     $scope.periodGridData = [];
-    if ($scope.selectedProgram && $scope.selectedFacilityId) {
-      PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id},
-        function (data) {
-          $scope.error = "";
-          createPeriodWithRnrStatus(data.periods, data.rnr);
-        },
-        function (data) {
-          $scope.error = data.data.error;
-        });
-    } else {
+    if (!($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedFacilityId)) {
       $scope.error = "";
+      return;
     }
+    PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id},
+      function (data) {
+        $scope.error = "";
+        createPeriodWithRnrStatus(data.periods, data.rnr);
+      },
+      function (data) {
+        $scope.error = data.data.error;
+      });
   };
 
   $scope.initRnr = function () {
