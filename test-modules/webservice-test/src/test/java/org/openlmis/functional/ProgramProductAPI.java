@@ -113,6 +113,24 @@ public class ProgramProductAPI extends TestCaseHelper {
     }
   }
 
+    @Test(groups = {"webservice"})
+    public void shouldVerifyProgramProductWithoutCategory() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        String programCode = "HIV";
+        dbWrapper.deleteCategogyFromProducts();
+
+        ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
+        assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+                    responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
+                            "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10}"));
+
+        assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
+                        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10}"));
+    }
+
   @Test(groups = {"webservice"})
   public void shouldVerifyProgramProductWitInvalidProgramCode() throws Exception {
     HttpClient client = new HttpClient();

@@ -71,7 +71,7 @@ public class DBWrapper {
     String productName = "";
     String desc = "";
     String unit = "";
-    String pgName = "";
+    String pcName = "";
     List<String> prodDetails = new ArrayList<String>();
 
     ResultSet rs = query("select prog.code as programCode, prog.name as programName, prod.code as productCode, " +
@@ -88,8 +88,8 @@ public class DBWrapper {
       productName = rs.getString(4);
       desc = rs.getString(5);
       unit = rs.getString(6);
-      pgName = rs.getString(7);
-      prodDetails.add(programName + "," + productCode + "," + productName + "," + desc + "," + unit + "," + pgName);
+      pcName = rs.getString(7);
+      prodDetails.add(programName + "," + productCode + "," + productName + "," + desc + "," + unit + "," + pcName);
     }
     return prodDetails;
   }
@@ -466,6 +466,10 @@ public class DBWrapper {
       "('" + product1 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_categories where code='C1')),\n" +
       "('" + product2 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
   }
+
+    public void deleteCategogyFromProducts() throws SQLException, IOException {
+        update("UPDATE products SET categoryId=null;");
+    }
 
   public void insertProductWithCategory(String product, String productName, String category) throws SQLException, IOException {
 
