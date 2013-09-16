@@ -3,24 +3,32 @@
     <span ng-class="distribution.facilityDistributionData[facilitySelected.id].computeStatus()">
       <span class="status-icon"></span>
       </span>
-      <h2 openlmis-message="heading.health.center">
-        <span>:&nbsp;</span>
-        <span openlmis-message="facilitySelected.name"></span>
-      </h2>
+
+    <h2 openlmis-message="heading.health.center">
+      <span>:&nbsp;</span>
+      <span openlmis-message="facilitySelected.name"></span>
+    </h2>
   </div>
 
   <h2 openlmis-message="message.no.facility.selected" ng-show="!facilitySelected"></h2>
 
   <div class="info-box">
     <div class="row-fluid">
-      <select ui-select2="{formatResult: format}" id="selectFacility" class="span3" ng-model="facilitySelected.id"
-              ng-options="facility.id as facility.code+' - '+facility.name group by facility.geographicZone.code
-            for facility in facilities | orderBy: 'geographicZone.code'" ng-change="chooseFacility()">
-        <option value="" openlmis-message="label"></option>
+      <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility" class="span3"
+              ng-model="facilitySelected.id"
+              ng-change="chooseFacility()">
+        <option value=""></option>
+        <optgroup ng-repeat="zone in geographicZones | orderBy: 'code'" label="{{ zone.code }}">
+          <option ng-repeat="facility in zoneFacilityMap[zone.code] | orderBy: 'name'" value="{{ facility.id }}"
+                  ng-class="distribution.facilityDistributionData[facility.id].computeStatus()">
+            {{ facility.code }} - {{ facility.name }}
+          </option>
+        </optgroup>
       </select>
 
       <div class="span3 offset1 info-box-labels">
-        <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span ng-bind="distribution.deliveryZone.name"></span>
+        <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
+        ng-bind="distribution.deliveryZone.name"></span>
       </div>
       <div class="span3 info-box-labels">
         <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="distribution.program.name"></span>

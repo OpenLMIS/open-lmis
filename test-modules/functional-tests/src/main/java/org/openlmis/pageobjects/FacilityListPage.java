@@ -30,7 +30,7 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div/h2[1]")
   private static WebElement facilityPageHeader;
 
-  @FindBy(how = XPATH, using = "//a[@class='select2-choice']/span")
+  @FindBy(how = XPATH, using = "//*[@id='s2id_selectFacility']/a")
   private static WebElement facilityListSelect;
 
   @FindBy(how = ID, using = "selectFacility")

@@ -10,26 +10,30 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
   $scope.distribution = distributionService.distribution;
 
   IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
-    $scope.facilities = event.target.result.facilities;
-    $scope.facilitySelected = _.findWhere($scope.facilities, {id: utils.parseIntWithBaseTen($routeParams.facility)});
+    var facilities = event.target.result.facilities;
+    $scope.zoneFacilityMap = _.groupBy(facilities, function (facility) {
+      return facility.geographicZone.code;
+    });
+    $scope.geographicZones = _.uniq(_.pluck(facilities, 'geographicZone'), function (zone) {
+      return zone.code;
+    });
+    $scope.facilitySelected = _.findWhere(facilities, {id: utils.parseIntWithBaseTen($routeParams.facility)});
   }, {});
 
-  $scope.format = function (facility) {
-    if (facility.id) {
-      return "<div class='is-empty'>" +
-        "<span class='status-icon'></span>" + facility.text +
+  $scope.format = function (dropDownObj) {
+    if (dropDownObj.element[0].value) {
+      var facilityId = utils.parseIntWithBaseTen(dropDownObj.element[0].value);
+      return "<div class='" + $scope.distribution.facilityDistributionData[facilityId].computeStatus() + "'>" +
+        "<span class='status-icon'></span>" + dropDownObj.text +
         "</div>";
     } else {
-      return facility.text;
+      return dropDownObj.text;
     }
   };
 
   $scope.chooseFacility = function () {
-    if (!$scope.facilitySelected || !$scope.facilitySelected.id) {
-      $location.path('record-facility-data/' + $routeParams.distribution);
-      return;
-    }
-    $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.id + '/refrigerator-data');
+    if ($routeParams.facility != $scope.facilitySelected.id)
+      $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.id + '/refrigerator-data');
   }
 
 }
