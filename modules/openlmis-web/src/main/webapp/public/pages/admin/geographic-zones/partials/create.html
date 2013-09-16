@@ -39,14 +39,16 @@
                     <div>
                         <label for="level">Level: <span class="label-required"> *</span></label>
                         <div class="form-field">
-                            <select  style="width:200px;" ng-required="true"  name="level" id="level" ng-model="geographicZone.level.id" ng-options="option.id as option.name for option in geographicLevels">
+                            <select  style="width:200px;" ng-required="true"  name="level" id="level" ng-model="geographicZone.level.id" ng-options="option.id as option.name for option in geographicLevels" ng-change="validateGeographicZoneLevel()">
                             </select>
+                            <span class="field-error" ng-show="geographicZoneLevelInvalid">Level invalid
+                            </span>
                         </div>
                     </div>
                     <div>
                         <label for="parent">Parent: <span class="label-required"> *</span></label>
                         <div class="form-field">
-                            <select style="width:200px;" ng-required="true"  name="parent" id="parent" ng-model="geographicZone.parent.id" ng-options="option.id as option.name for option in geographicZones">
+                            <select style="width:200px;" ng-required="true"  name="parent" id="parent" ng-model="geographicZone.parent.id" ng-options="option.id as option.name for option in geographicZones" ng-change="validateGeographicZoneLevelParent()">
                             </select>
                         </div>
                     </div>
