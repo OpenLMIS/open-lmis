@@ -216,22 +216,19 @@
   overflow: auto;
   table {
     min-width: 100%;
-    border: 1px solid #ccc;
-    tr {
-      border-bottom: 1px solid #ccc;
-    }
   }
   th {
     text-align: left;
     min-height: 62px;
-    border-right: 1px solid #ddd;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #FFF;
     padding: 10px;
     background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
   }
   td {
     min-height: 71px;
-    border-right: 1px solid #ddd;
-    padding: 10px;
+    padding: 10px 10px 6px;
     label {
       display: inline;
       vertical-align: middle;
@@ -242,6 +239,9 @@
     .rnr-form-error {
       bottom: 30px;
       left: -10px;
+    }
+    .warning-alert {
+      bottom: 25px;
     }
   }
   .col-doses {
@@ -254,15 +254,12 @@
     max-width: 96px;
   }
   input[type="text"] {
-    width: 80px;
+    width: 85%;
     margin-bottom: 3px;
     text-align: right;
   }
   input[type="checkbox"] {
     margin-top: 0;
-  }
-  .warning-alert {
-    bottom: 25px;
   }
 }
 

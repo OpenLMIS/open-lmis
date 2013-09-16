@@ -97,36 +97,36 @@
     <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
   </span>
 
-  <div>
+  <div class="period-table">
     <h2 openlmis-message="periods.header"></h2>
 
-    <div class="list-header-container">
-      <div class="row-fluid list-header">
-        <div class="span1">&nbsp;</div>
-        <div class="span1"><span openlmis-message="header.name"></span></div>
-        <div class="span2"><span openlmis-message="label.description"></span></div>
-        <div class="span2"><span openlmis-message="period.header.startDate"></span></div>
-        <div class="span2"><span openlmis-message="period.header.endDate"></span></div>
-        <div class="span1"><span openlmis-message="period.header.totalDays"></span></div>
-        <div class="span2"><span openlmis-message="period.header.numOfMonths"></span></div>
-        <div class="span1">&nbsp;</div>
-      </div>
-    </div>
-    <div class="list-container">
-      <div ng-repeat="period in periodList" class="row-fluid list-row">
-        <div class="span1">&nbsp;</div>
-        <div class="span1">{{period.name}}</div>
-        <div class="span2">{{period.description}}</div>
-        <div class="span2">{{period.startDate | date:'dd/MM/yyyy'}}</div>
-        <div class="span2">{{period.endDate | date:'dd/MM/yyyy'}}</div>
-        <div class="span1">{{calculateDays(period.startDate, period.endDate)}}</div>
-        <div class="span2">{{period.numberOfMonths}}</div>
-        <div class="span1">
-          <input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)"
-                 class="btn btn-danger btn btn-mini" openlmis-message="button.delete"/>
-        </div>
-      </div>
-    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th><span openlmis-message="header.name"></span></th>
+          <th><span openlmis-message="label.description"></span></th>
+          <th><span openlmis-message="period.header.startDate"></span></th>
+          <th><span openlmis-message="period.header.endDate"></span></th>
+          <th class="col-total-days"><span openlmis-message="period.header.totalDays"></span></th>
+          <th class="col-number-of-months"><span openlmis-message="period.header.numOfMonths"></span></th>
+          <th class="col-delete-button">&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="period in periodList">
+          <td class="col-period-name">{{period.name}}</td>
+          <td class="col-description">{{period.description}}</td>
+          <td class="col-start-date">{{period.startDate | date:'dd/MM/yyyy'}}</td>
+          <td class="col-end-date">{{period.endDate | date:'dd/MM/yyyy'}}</td>
+          <td class="col-total-days">{{calculateDays(period.startDate, period.endDate)}}</td>
+          <td class="col-number-of-months">{{period.numberOfMonths}}</td>
+          <td class="col-delete-button">
+            <input type="button" ng-click="deletePeriod(period.id)"
+                   class="btn btn-danger btn btn-mini" openlmis-message="button.delete"/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
   </div>
 
