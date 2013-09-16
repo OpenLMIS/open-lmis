@@ -24,6 +24,13 @@ System Requirement
 - Postgresql 9
 
 
+Source code 
+------------------
+ Get the source code using ``git clone http://github.com/OpenLMIS/open-lmis/``
+ Also resolve dependencies on submodule using command ``git submodule init`` and then ``git submodule update``
+ 
+
+
 IntelliJ IDEA Setup
 -------------------
 1. Run ```gradle idea``` to create the intellij project files
