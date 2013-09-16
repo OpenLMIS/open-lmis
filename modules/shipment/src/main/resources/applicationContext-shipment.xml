@@ -53,7 +53,7 @@
                                      delete-remote-files="true"
                                      remote-directory="${ftp.remote.directory}"
                                      local-directory="${ftp.local.directory}">
-        <int:poller fixed-rate="3000" max-messages-per-poll="-1" task-executor=""/>
+        <int:poller fixed-rate="30000" max-messages-per-poll="-1" task-executor=""/>
     </int-ftp:inbound-channel-adapter>
 
     <int:channel id="ftpErrorChannel"/>
