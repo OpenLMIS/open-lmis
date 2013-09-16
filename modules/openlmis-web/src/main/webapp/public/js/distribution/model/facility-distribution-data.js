@@ -16,7 +16,7 @@ function FacilityDistributionData(facilityDistributionData) {
   this.generalObservation = new GeneralObservation(facilityDistributionData.generalObservation);
 
   FacilityDistributionData.prototype.computeStatus = function () {
-    var forms = [this.epiUse, this.refrigerators, this.generalObservation];
+    var forms = [this.epiUse, this.refrigerators, this.generalObservations];
     var overallStatus;
     $.each(forms, function (index, form) {
       var computedStatus = form.computeStatus();

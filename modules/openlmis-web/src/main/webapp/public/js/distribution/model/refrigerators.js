@@ -17,9 +17,6 @@ function Refrigerators(refrigerators) {
   });
 
   Refrigerators.prototype.computeStatus = function () {
-    if (_.findWhere(this.refrigeratorReadings, {status: undefined})) {
-      return 'is-incomplete';
-    }
     if (_.findWhere(this.refrigeratorReadings, {status: 'is-incomplete'})) {
       return 'is-incomplete';
     }
@@ -32,7 +29,7 @@ function Refrigerators(refrigerators) {
     return 'is-complete';
   };
 
-  Refrigerators.prototype.addRefrigerator = function(reading) {
+  Refrigerators.prototype.addRefrigerator = function (reading) {
     this.refrigeratorReadings.push(new RefrigeratorReading(reading));
   }
 }
