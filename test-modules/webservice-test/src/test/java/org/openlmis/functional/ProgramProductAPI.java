@@ -49,13 +49,14 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode, facilityType);
-    for (String product : productDetails) {
-      String[] productDetailsArray = product.split(",");
-      assertTrue("Actual Response entity : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("\"programCode\":\"" + programCode + "\",\"programName\":\"" + productDetailsArray[0] + "\",\"productCode\":\"" + productDetailsArray[1] + "\"," +
-          "\"productName\":\"" + productDetailsArray[2] + "\",\"description\":\"" + productDetailsArray[3] + "\",\"unit\":" + productDetailsArray[4] + ",\"category\":\"" + productDetailsArray[5] + "\""));
-    }
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
+
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
+
   }
 
   @Test(groups = {"webservice"})
@@ -67,14 +68,13 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode.toUpperCase(), facilityType.toLowerCase());
-    for (String product : productDetails) {
-      String[] productDetailsArray = product.split(",");
-      assertTrue("Actual Response entity : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"" + productDetailsArray[0] + "\",\"productCode\":\"" + productDetailsArray[1] + "\"," +
-          "\"productName\":\"" + productDetailsArray[2] + "\",\"description\":\"" + productDetailsArray[3] + "\",\"unit\":" + productDetailsArray[4] + ",\"category\":\"" + productDetailsArray[5] + "\""));
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
 
-    }
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -88,10 +88,9 @@ public class ProgramProductAPI extends TestCaseHelper {
 
 
     List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode, facilityType);
-    for (String product : productDetails) {
-      String[] productDetailsArray = product.split(",");
-      assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid facility type\"}"));
-    }
+    assertTrue("0 records should show up", productDetails.size() == 0);
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid facility type\"}"));
+
   }
 
   @Test(groups = {"webservice"})
@@ -101,44 +100,63 @@ public class ProgramProductAPI extends TestCaseHelper {
     String programCode = "HIV";
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
 
-
-    List<String> productDetails = dbWrapper.getProductDetailsForProgram(programCode);
-    for (String product : productDetails) {
-      String[] productDetailsArray = product.split(",");
-      assertTrue("Actual Response entity : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"" + productDetailsArray[0] + "\",\"productCode\":\"" + productDetailsArray[1] + "\"," +
-          "\"productName\":\"" + productDetailsArray[2] + "\",\"description\":\"" + productDetailsArray[3] + "\",\"unit\":" + productDetailsArray[4] + ",\"category\":\"" + productDetailsArray[5] + "\""));
-
-    }
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
   }
 
-    @Test(groups = {"webservice"})
-    public void shouldVerifyProgramProductWithoutCategory() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String programCode = "HIV";
-        dbWrapper.deleteCategogyFromProducts();
+  @Test(groups = {"webservice"})
+  public void shouldVerifyProgramProductWithoutCategory() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String programCode = "HIV";
+    dbWrapper.deleteCategoryFromProducts();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-        assertTrue("Actual Response entity : " + responseEntity.getResponse(),
-                    responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
-                            "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10}"));
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10}"));
 
-        assertTrue("Actual Response entity : " + responseEntity.getResponse(),
-                responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
-                        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10}"));
-    }
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
+        "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10}"));
+  }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWitInvalidProgramCode() throws Exception {
+  public void shouldVerifyProgramProductWithoutDescription() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String programCode = "HIV";
+    String productCode1 = "P10";
+    String productCode2 = "P11";
+    dbWrapper.deleteDescriptionFromProducts(productCode1);
+    dbWrapper.deleteDescriptionFromProducts(productCode2);
+
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"HIV\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
+        "\"productName\":\"antibiotic\",\"unit\":10,\"category\":\"Antibiotics\"}"));
+
+    assertTrue("Actual Response entity : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"programCode\":\"HIV\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
+        "\"productName\":\"antibiotic\",\"unit\":10,\"category\":\"Antibiotics\"}"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void shouldVerifyProgramProductWithInvalidProgramCode() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "testing123";
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
-
+    List<String> productDetails = dbWrapper.getProductDetailsForProgram(programCode);
+    assertTrue("0 records should show up", productDetails.size() == 0);
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid program code\"}"));
   }
 

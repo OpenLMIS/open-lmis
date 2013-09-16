@@ -467,9 +467,13 @@ public class DBWrapper {
       "('" + product2 + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    'antibiotic', 'antibiotic',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          TRUE,     FALSE,       TRUE,         1,                    FALSE,      TRUE,   5, (Select id from product_categories where code='C1'));\n");
   }
 
-    public void deleteCategogyFromProducts() throws SQLException, IOException {
-        update("UPDATE products SET categoryId=null;");
-    }
+  public void deleteCategoryFromProducts() throws SQLException, IOException {
+    update("UPDATE products SET categoryId=null;");
+  }
+
+  public void deleteDescriptionFromProducts(String productCode) throws SQLException, IOException {
+    update("UPDATE products SET description=null;");
+  }
 
   public void insertProductWithCategory(String product, String productName, String category) throws SQLException, IOException {
 
