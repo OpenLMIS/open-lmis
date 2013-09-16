@@ -66,9 +66,13 @@ public class ShipmentFileTemplateControllerTest {
 
   @Test
   public void shouldUpdateShipmentFileTemplate() {
+    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn();
+    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn();
+    shipmentFileColumn1.setInclude(false);
+    shipmentFileColumn2.setInclude(false);
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(
       new ShipmentConfiguration(true),
-      asList(new ShipmentFileColumn(), new ShipmentFileColumn()));
+      asList(shipmentFileColumn1, shipmentFileColumn2));
 
 
     ResponseEntity<OpenLmisResponse> response = controller.update(shipmentFileTemplate, httpServletRequest);

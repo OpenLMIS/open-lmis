@@ -9,8 +9,11 @@ package org.openlmis.shipment.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,10 +24,24 @@ public class ShipmentFileTemplate {
 
   private List<ShipmentFileColumn> shipmentFileColumns;
 
-  public void setModifiedBy(Long userId) {
+  public void validateAndSetModifiedBy(Long userId) {
+    Set<Integer> positions = new HashSet();
+    Integer includedColumnCount = 0;
     shipmentConfiguration.setModifiedBy(userId);
-    for (ShipmentFileColumn column : shipmentFileColumns) {
-      column.setModifiedBy(userId);
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+      if (shipmentFileColumn.getInclude()) {
+        positions.add(shipmentFileColumn.getPosition());
+        includedColumnCount++;
+      }
+      shipmentFileColumn.setModifiedBy(userId);
+      if (positions.contains(null)) {
+        throw new DataException("shipment.file.invalid.position");
+      }
+      if (positions.size() != includedColumnCount) {
+        throw new DataException("shipment.file.duplicate.position");
+      }
     }
   }
+
+
 }
