@@ -39,17 +39,16 @@
 </head>
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
 <body class="home-background" onunload="">
-<div id="wrap">
-  <ng-include src="'/public/pages/header-offline.html'"></ng-include>
-  <ng-include src="'/public/pages/navigation-offline.html'"></ng-include>
-  <div class="home-content">
-    <h2 class="innershadow" title="Welcome to" openlmis-message="welcome.to.message"></h2>
+<ng-include src="'/public/pages/header-offline.html'"></ng-include>
+<ng-include src="'/public/pages/navigation-offline.html'"></ng-include>
+<div class="home-content">
+  <h2 class="innershadow" title="Welcome to" openlmis-message="welcome.to.message"></h2>
 
-    <h3 class="innershadow" title="Logistics Management" openlmis-message="label.logistics.management"></h3>
+  <h3 class="innershadow" title="Logistics Management" openlmis-message="label.logistics.management"></h3>
 
-    <h3 class="innershadow" title="Information Systems" openlmis-message="label.information.systems"></h3>
-  </div>
+  <h3 class="innershadow" title="Information Systems" openlmis-message="label.information.systems"></h3>
 </div>
+
 </body>
 </html>
 

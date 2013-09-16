@@ -47,17 +47,16 @@
 </head>
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
 <body class="home-background" onunload="">
-<div id="wrap">
-  <ng-include src="'/public/pages/header.html'"></ng-include>
-  <ng-include src="'/public/pages/navigation.html'"></ng-include>
-  <div class="home-content">
-    <h2 class="innershadow welcome-message" openlmis-message="welcome.to.message"></h2>
+<ng-include src="'/public/pages/header.html'"></ng-include>
+<ng-include src="'/public/pages/navigation.html'"></ng-include>
+<div class="home-content">
+  <h2 class="innershadow welcome-message" openlmis-message="welcome.to.message"></h2>
 
-    <h3 class="innershadow welcome-message" openlmis-message="label.logistics.management"></h3>
+  <h3 class="innershadow welcome-message" openlmis-message="label.logistics.management"></h3>
 
-    <h3 class="innershadow welcome-message" openlmis-message="label.information.systems"></h3>
-  </div>
+  <h3 class="innershadow welcome-message" openlmis-message="label.information.systems"></h3>
 </div>
+
 </body>
 </html>
 
