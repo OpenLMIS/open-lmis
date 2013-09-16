@@ -71,10 +71,9 @@ public class FacilityListPage extends RequisitionPage {
 
   public void verifyGeographicZoneOrder(String geoZoneFirst, String geoZoneSecond)
   {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']"));
-    assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
-    assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[3][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
+    testWebDriver.sleep(1500);
+    assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").getText());
+    assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[2]/div").getText());
   }
 
   public void selectFacility(String facilityCode)
