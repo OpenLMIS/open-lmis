@@ -15,24 +15,23 @@ function FacilityDistributionData(facilityDistributionData) {
   this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
   this.generalObservation = new GeneralObservation(facilityDistributionData.generalObservation);
 
-  var _this = this;
   FacilityDistributionData.prototype.computeStatus = function () {
-    var forms = [_this.epiUse, _this.refrigerators, _this.generalObservation];
-    var status;
+    var forms = [this.epiUse, this.refrigerators, this.generalObservation];
+    var overallStatus;
     $.each(forms, function (index, form) {
-      if (form.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
-        status = COMPLETE;
-      } else if (form.computeStatus() === EMPTY && (!status || status == EMPTY)) {
-        status = EMPTY;
-      } else if (form.computeStatus() === INCOMPLETE ||
-        (form.computeStatus() === EMPTY && status === COMPLETE) ||
-        (form.computeStatus() === COMPLETE && status === EMPTY)) {
-        status = INCOMPLETE;
+      var computedStatus = form.computeStatus();
+      if (computedStatus === COMPLETE && (overallStatus === COMPLETE || !overallStatus)) {
+        overallStatus = COMPLETE;
+      } else if (computedStatus === EMPTY && (!overallStatus || overallStatus == EMPTY)) {
+        overallStatus = EMPTY;
+      } else if (computedStatus === INCOMPLETE || (computedStatus === EMPTY && overallStatus === COMPLETE) ||
+        (computedStatus === COMPLETE && overallStatus === EMPTY)) {
+        overallStatus = INCOMPLETE;
         return false;
       }
-
       return true;
     });
-    return status;
+
+    return overallStatus;
   };
 }
