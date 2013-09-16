@@ -13,7 +13,7 @@ function FacilityDistributionData(facilityDistributionData) {
 
   this.epiUse = new EpiUse(facilityDistributionData.epiUse);
   this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
-  this.generalObservations = new Refrigerators(facilityDistributionData.generalObservations);
+  this.generalObservations = new GeneralObservation(facilityDistributionData.generalObservations);
 
   var _this = this;
   FacilityDistributionData.prototype.computeStatus = function () {
