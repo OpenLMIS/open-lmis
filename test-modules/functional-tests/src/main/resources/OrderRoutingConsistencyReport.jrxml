@@ -65,7 +65,7 @@ FROM supply_lines sl INNER JOIN facilities f
   LEFT JOIN facility_ftp_details ffd
     ON f.id = ffd.facilityid
 WHERE (ffd.id IS null OR f.enabled = FALSE) AND sl.exportorders = TRUE
-ORDER BY f.code, f.name, p.code]]>
+ORDER BY f.code, f.name, p.name]]>
 	</queryString>
 	<field name="supply_line_description" class="java.lang.String"/>
 	<field name="supervisory_node_code" class="java.lang.String"/>
@@ -87,7 +87,7 @@ ORDER BY f.code, f.name, p.code]]>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Supply Line Without FTP]]></text>
+				<text><![CDATA[Order Routing Consistency Check Report]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="709" y="0" width="72" height="32"/>
@@ -101,56 +101,49 @@ ORDER BY f.code, f.name, p.code]]>
 	<pageHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="359" y="0" width="110" height="20"/>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="202" y="0" width="244" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Warehouse]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="d949733d-046b-41aa-a2a4-3d5c0bd9170a" x="51" y="0" width="183" height="20"/>
-				<textElement>
-					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
-				</textElement>
-				<text><![CDATA[Supply Line Description]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="234" y="0" width="125" height="20"/>
+				<reportElement uuid="a3153510-d287-46ad-835a-df817aa47786" x="38" y="0" width="164" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Supervisory Node]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="51" height="20"/>
+				<reportElement uuid="5a7f10ba-925c-4ca7-b48a-4feb4161ed64" x="0" y="0" width="38" height="20"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[S.No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7a2bce85-864e-42e7-9581-125974028476" x="572" y="0" width="108" height="20"/>
+				<reportElement uuid="7a2bce85-864e-42e7-9581-125974028476" x="549" y="0" width="79" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[FTP credentials]]></text>
+				<text><![CDATA[FTP defined]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="715dcbae-dc74-4fa2-b7b4-b30a376656ba" x="469" y="0" width="45" height="20"/>
+				<reportElement uuid="715dcbae-dc74-4fa2-b7b4-b30a376656ba" x="446" y="0" width="45" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Active]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="10a02754-cce1-4337-a1d1-003a31f7a8ed" x="514" y="0" width="58" height="20"/>
+				<reportElement uuid="10a02754-cce1-4337-a1d1-003a31f7a8ed" x="491" y="0" width="58" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Enabled]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="680" y="0" width="101" height="20"/>
+				<reportElement uuid="ef159a2f-33d9-42ba-9b59-6670c74bd785" x="628" y="0" width="153" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -161,46 +154,41 @@ ORDER BY f.code, f.name, p.code]]>
 	<detail>
 		<band height="20">
 			<textField>
-				<reportElement uuid="0cb682e4-45b1-4bae-a3c3-5f9512886f9f" x="0" y="0" width="51" height="20"/>
+				<reportElement uuid="0cb682e4-45b1-4bae-a3c3-5f9512886f9f" x="0" y="0" width="38" height="20"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="656d8893-0a9d-43ba-bc9d-337b6af09873" x="51" y="0" width="183" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{supply_line_description}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="2d97d1a7-f057-497d-98f4-376032bdf48f" x="234" y="0" width="125" height="20"/>
+				<reportElement uuid="2d97d1a7-f057-497d-98f4-376032bdf48f" x="38" y="0" width="164" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{supervisory_node_code}+'-'+$F{supervisory_node_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a2f59c46-025d-4328-8b47-c18385282767" x="359" y="0" width="110" height="20"/>
+				<reportElement uuid="a2f59c46-025d-4328-8b47-c18385282767" x="202" y="0" width="244" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{warehouse_code}+'-'+$F{warehouse_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="14e89f25-8081-42c8-be94-070ffee23547" x="572" y="0" width="108" height="20"/>
+				<reportElement uuid="14e89f25-8081-42c8-be94-070ffee23547" x="549" y="0" width="79" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{ftp_credentials}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="dc1c17ae-7dcc-427f-ad15-db8d78a464ac" x="469" y="0" width="45" height="20"/>
+				<reportElement uuid="dc1c17ae-7dcc-427f-ad15-db8d78a464ac" x="446" y="0" width="45" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{active}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3fd6951d-3b93-4615-9861-a07f42fc42a5" x="514" y="0" width="58" height="20"/>
+				<reportElement uuid="3fd6951d-3b93-4615-9861-a07f42fc42a5" x="491" y="0" width="58" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{enabled}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3b6201ef-3bb6-4bb5-bf4b-5560f753e6ae" x="680" y="0" width="101" height="20"/>
+				<reportElement uuid="3b6201ef-3bb6-4bb5-bf4b-5560f753e6ae" x="628" y="0" width="153" height="20"/>
 				<textElement/>
-				<textFieldExpression><![CDATA[$F{program_code}+'-'+$F{program_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{program_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -234,7 +222,7 @@ ORDER BY f.code, f.name, p.code]]>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Supply Line Without FTP]]></text>
+				<text><![CDATA[Order Routing Consistency Check Report]]></text>
 			</staticText>
 		</band>
 	</noData>
