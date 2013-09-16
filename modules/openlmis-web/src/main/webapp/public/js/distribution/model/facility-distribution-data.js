@@ -13,11 +13,11 @@ function FacilityDistributionData(facilityDistributionData) {
 
   this.epiUse = new EpiUse(facilityDistributionData.epiUse);
   this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
-  this.generalObservations = new GeneralObservation(facilityDistributionData.generalObservations);
+  this.generalObservation = new GeneralObservation(facilityDistributionData.generalObservation);
 
   var _this = this;
   FacilityDistributionData.prototype.computeStatus = function () {
-    var forms = [_this.epiUse, _this.refrigerators, _this.generalObservations];
+    var forms = [_this.epiUse, _this.refrigerators, _this.generalObservation];
     var status;
     $.each(forms, function (index, form) {
       if (form.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
