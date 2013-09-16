@@ -27,7 +27,7 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//h2[contains(text(),'No facility selected')]")
   private static WebElement noFacilitySelectedHeader;
 
-  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/h2[1]")
+  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div/h2[1]")
   private static WebElement facilityPageHeader;
 
   @FindBy(how = XPATH, using = "//a[@class='select2-choice']/span")
