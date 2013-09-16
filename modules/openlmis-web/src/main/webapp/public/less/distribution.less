@@ -35,6 +35,7 @@
   border: 1px solid #d2d2d2;
   position: relative;
 }
+
 .left-navigation {
   position: absolute;
   width: 270px;
@@ -95,11 +96,13 @@
     background: #f0a513;
   }
 }
+
 .is-complete {
   .status-icon {
     background: #52a81e;
   }
 }
+
 .is-empty {
   .status-icon {
     background: #cb4040;
@@ -156,6 +159,7 @@
     }
   }
 }
+
 .refrigerator-form {
   background: white;
   margin-top: 8px;
@@ -203,19 +207,64 @@
     }
   }
 }
+
 .isEditable {
   background: #f9f9f9;
 }
 
 #epiUseTable {
-  .expiration-date {
-    position: relative;
+  overflow: auto;
+  table {
+    min-width: 100%;
+    border: 1px solid #ccc;
+    tr {
+      border-bottom: 1px solid #ccc;
+    }
   }
-  .warning-alert{
-    bottom: 57px;
+  th {
+    text-align: left;
+    min-height: 62px;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%);
+  }
+  td {
+    min-height: 71px;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    label {
+      display: inline;
+      vertical-align: middle;
+    }
+    .error {
+      position: relative;
+    }
+    .rnr-form-error {
+      bottom: 30px;
+      left: -10px;
+    }
+  }
+  .col-doses {
+    min-width: 150px;
+  }
+  .col-total {
+    min-width: 100px;
+  }
+  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-expiration-date {
+    max-width: 96px;
+  }
+  input[type="text"] {
+    width: 80px;
+    margin-bottom: 3px;
+    text-align: right;
+  }
+  input[type="checkbox"] {
+    margin-top: 0;
+  }
+  .warning-alert {
+    bottom: 25px;
   }
 }
-
 
 .general-observation-container {
   min-width: 600px;
