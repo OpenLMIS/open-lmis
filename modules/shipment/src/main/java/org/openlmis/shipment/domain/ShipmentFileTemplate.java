@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,19 +29,21 @@ public class ShipmentFileTemplate {
   public void validateAndSetModifiedBy(Long userId) {
     Set<Integer> positions = new HashSet();
     Integer includedColumnCount = 0;
+    List<String> mandatoryColumnNames = asList("productCode", "orderId", "quantityShipped");
     shipmentConfiguration.setModifiedBy(userId);
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+      shipmentFileColumn.validate();
+      if (mandatoryColumnNames.contains(shipmentFileColumn.getName()) && !shipmentFileColumn.getInclude()) {
+        throw new DataException("shipment.file.mandatory.columns.not.included");
+      }
       if (shipmentFileColumn.getInclude()) {
         positions.add(shipmentFileColumn.getPosition());
         includedColumnCount++;
       }
-      shipmentFileColumn.setModifiedBy(userId);
-      if (positions.contains(null)) {
-        throw new DataException("shipment.file.invalid.position");
-      }
       if (positions.size() != includedColumnCount) {
         throw new DataException("shipment.file.duplicate.position");
       }
+      shipmentFileColumn.setModifiedBy(userId);
     }
   }
 

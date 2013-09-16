@@ -66,10 +66,8 @@ public class ShipmentFileTemplateControllerTest {
 
   @Test
   public void shouldUpdateShipmentFileTemplate() {
-    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn();
-    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn();
-    shipmentFileColumn1.setInclude(false);
-    shipmentFileColumn2.setInclude(false);
+    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn("name", "Label", 1, false, true, "dd/mm/yy");
+    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn("name", "Label", 2, false, true, "dd/mm/yy");
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(
       new ShipmentConfiguration(true),
       asList(shipmentFileColumn1, shipmentFileColumn2));
