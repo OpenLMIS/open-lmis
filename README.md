@@ -26,8 +26,8 @@ System Requirement
 
 Source code 
 ------------------
- Get the source code using ``git clone http://github.com/OpenLMIS/open-lmis/``
- Also resolve dependencies on submodule using command ``git submodule init`` and then ``git submodule update``
+ 1. Get the source code using ``git clone http://github.com/OpenLMIS/open-lmis/``
+ 2. Also resolve dependencies on submodule using command ``git submodule init`` and then ``git submodule update``
  
 
 
