@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~ Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
   ~
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
@@ -40,7 +40,7 @@
         <http-basic/>
     </http>
 
-    <http use-expressions="true" auto-config="false" entry-point-ref="restAuthenticationEntryPoint">
+    <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
         <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
         <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
         <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>
@@ -61,9 +61,12 @@
         <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
 
         <session-management>
-            <concurrency-control expired-url="/user-context.json" max-sessions="10" />
+            <concurrency-control expired-url="/user-context.json" max-sessions="10"/>
         </session-management>
+        <request-cache ref="nullRequestCache"/>
     </http>
+
+    <beans:bean id="nullRequestCache" class="org.openlmis.authentication.web.NullRequestCache"/>
 
     <beans:bean id="authenticationSuccessHandler"
                 class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
