@@ -85,7 +85,7 @@ CACHE:
 /public/js/program-product/model/program-product-ISA.js
 
 /public/lib/jquery/jquery-ui-1.9.2.custom.min.js
-/public/lib/angular-ui/bootstrap/ui-bootstrap-0.6.0.min.js
+/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js
 /public/lib/underscore/underscore-min.js
 /public/js/shared/util.js
 
