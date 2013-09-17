@@ -532,6 +532,9 @@ span[class^="tpl-"] {
   .table-bordered td {
     border-left: none;
     border-right: 1px solid #ddd;
+    &:last-child {
+      border-right: none;
+    }
     .ng-scope {
       position: relative;
     }
@@ -573,8 +576,6 @@ span[class^="tpl-"] {
     }
   }
 }
-
-
 
 .rnr-table td,
 #epiUseTable td {
@@ -719,9 +720,11 @@ td.col-quantityReceived,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
-td.col-quantityRequested {
+td.col-expirationDate,
+td.col-quantityRequested,
+td.col-quantityApproved {
   input[type="text"] {
-    text-align: right;
+    width: 89%;
   }
 }
 
@@ -730,10 +733,13 @@ td.col-quantityReceived,
 td.col-quantityDispensed,
 td.col-newPatientCount,
 td.col-stockOutDays,
-td.col-expirationDate,
-td.col-quantityRequested {
+td.col-quantityRequested,
+td.col-patientsOnTreatment,
+td.col-patientsToInitiateTreatment,
+td.col-patientsStoppedTreatment,
+td.col-quantityApproved {
   input[type="text"] {
-    width: 89%;
+    text-align: right;
   }
 }
 
@@ -747,14 +753,53 @@ td.col-maxStockQuantity,
 td.col-calculatedOrderQuantity,
 td.col-packsToShip,
 td.col-price,
-td.col-cost {
+td.col-cost,
+td.col-lossesAndAdjustments {
   span {
     text-align: right;
     display: block;
   }
 }
 
+#viewRnr {
+  td.col-beginningBalance,
+  td.col-quantityReceived,
+  td.col-quantityDispensed,
+  td.col-newPatientCount,
+  td.col-stockOutDays,
+  td.col-quantityRequested,
+  td.col-patientsOnTreatment,
+  td.col-patientsToInitiateTreatment,
+  td.col-patientsStoppedTreatment,
+  td.col-quantityApproved {
+    span {
+      text-align: right;
+      display: block;
+    }
+  }
+}
 
+#approveRnr {
+  td.col-beginningBalance,
+  td.col-quantityReceived,
+  td.col-quantityDispensed,
+  td.col-newPatientCount,
+  td.col-stockOutDays,
+  td.col-quantityRequested,
+  td.col-patientsOnTreatment,
+  td.col-patientsToInitiateTreatment,
+  td.col-patientsStoppedTreatment, {
+    span {
+      text-align: right;
+      display: block;
+    }
+  }
+  td.col-remarks {
+    input[type="text"] {
+      width: 93%;
+    }
+  }
+}
 
 .col-packsToShip {
   min-width: 170px;
@@ -2134,7 +2179,7 @@ input[placeholder].placeholder {
     }
     td {
       text-align: right;
-      &:first-child{
+      &:first-child {
         text-align: left;
       }
     }
@@ -2237,7 +2282,7 @@ input[placeholder].placeholder {
     position: absolute;
     top: 6px;
     left: -8px;
-    border-right: 8px solid rgba(0,0,0,0.7);
+    border-right: 8px solid rgba(0, 0, 0, 0.7);
     border-top: 6px solid transparent;
     border-bottom: 6px solid transparent;
     border-left: none;
