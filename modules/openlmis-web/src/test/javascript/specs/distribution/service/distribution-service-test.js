@@ -19,8 +19,8 @@ describe('Distribution Service', function () {
       }});
     });
 
-    inject(function ($injector, _distributionService_, SharedDistributions) {
-      indexedDB = $injector.get('IndexedDB');
+    inject(function (IndexedDB, _distributionService_, SharedDistributions) {
+      indexedDB = IndexedDB;
       distributionService = _distributionService_;
       spyOn(indexedDB, 'put');
       SharedDistributions.distributionList = [
