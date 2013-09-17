@@ -152,7 +152,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I click ok$")
   public void clickOk() {
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(1000);
     initiateRnRPage.clickOk();
 
   }
