@@ -47,6 +47,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/epi-use.html
 /public/pages/logistics/distribution/partials/refrigerator-reading.html
 /public/pages/logistics/distribution/partials/refrigerator.html
+/public/pages/logistics/distribution/partials/general-observation.html
 
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js

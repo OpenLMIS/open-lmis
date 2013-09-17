@@ -18,17 +18,27 @@ function GeneralObservation(generalObservationJson) {
     var status;
 
     function isValid(fieldName) {
+      if(!_this[fieldName]) return false;
+
       if (fieldName === 'observations') return !isUndefined(_this[fieldName]);
 
-      return _this[fieldName] && !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
+      return !(isUndefined(_this[fieldName].name) || isUndefined(_this[fieldName].title));
+    }
+
+    function isEmpty(fieldName) {
+      if(!_this[fieldName]) return true;
+
+      if (fieldName === 'observations') return isUndefined(_this[fieldName]);
+
+      return isUndefined(_this[fieldName].name) && isUndefined(_this[fieldName].title);
     }
 
     $(mandatoryList).each(function (i, fieldName) {
       if (isValid(fieldName) && (status == COMPLETE || !status)) {
         status = COMPLETE;
-      } else if (!isValid(fieldName) && (!status || status == EMPTY)) {
+      } else if (!isValid(fieldName) && isEmpty(fieldName) && (!status || status == EMPTY)) {
         status = EMPTY;
-      } else if ((!isValid(fieldName) && status === COMPLETE) || (isValid(fieldName) && status === EMPTY)) {
+      } else if ((!isValid(fieldName) && status === COMPLETE) || (isValid(fieldName) && status === EMPTY) || (!isEmpty(fieldName))) {
         status = INCOMPLETE;
         return false;
       }
