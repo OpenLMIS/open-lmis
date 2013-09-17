@@ -30,7 +30,7 @@
       <div class="list-container">
         <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
           <span ng-class="distribution.computeStatus()" class="delivery-zone-status span1">
-            <span class="status-icon"></span>
+            <span id="indicator{{ $index }}" class="status-icon"></span>
           </span>
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>

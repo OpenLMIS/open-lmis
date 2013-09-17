@@ -1,7 +1,7 @@
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
   <div class="facility-heading" ng-show="facilitySelected">
     <span ng-class="distribution.facilityDistributionData[facilitySelected.id].computeStatus()">
-      <span class="status-icon"></span>
+      <span id="facilityIndicator" class="status-icon"></span>
       </span>
 
     <h2 openlmis-message="heading.health.center">
