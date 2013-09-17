@@ -140,7 +140,7 @@ public class EPIUse extends DistributionTab {
 
   public void verifyProductGroup(String productGroup, int rownumber) {
     testWebDriver.sleep(2000);
-    WebElement productGroupLbl = testWebDriver.getElementByXpath("//div[@id='epiUseTable']/div[2]/div[" + rownumber + "]/form/div[1]/span");
+    WebElement productGroupLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/table/tbody/tr[" + rownumber + "]/td[1]/span");
     testWebDriver.waitForElementToAppear(productGroupLbl);
     assertEquals(productGroup, productGroupLbl.getText());
   }
@@ -236,7 +236,7 @@ public class EPIUse extends DistributionTab {
   }
 
   public void verifyTotal(String total, int rownumber) {
-    WebElement totalLbl = testWebDriver.getElementByXpath("//div[@id='epiUseTable']/div[2]/div[" + rownumber + "]/form/div[4]/span");
+    WebElement totalLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/table/tbody/tr[" + rownumber + "]/td[4]/span");
     assertEquals(total, totalLbl.getText());
   }
 

@@ -68,10 +68,10 @@ public class PeriodsPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton;
 
-  @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid list-row ng-scope']/div[@class='span2 ng-binding'])[2]")
+  @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[3]")
   private static WebElement startDateList;
 
-  @FindBy(how = How.XPATH, using = "(//div[@class='row-fluid list-row ng-scope']/div[@class='span2 ng-binding'])[3]")
+  @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[4]")
   private static WebElement endDateList;
 
 
