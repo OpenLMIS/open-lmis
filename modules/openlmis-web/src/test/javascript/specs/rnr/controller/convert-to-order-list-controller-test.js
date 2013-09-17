@@ -6,24 +6,38 @@
 
 describe('ConvertToOrderListController', function () {
 
-  var scope, ctrl, httpBackend, controller, messageService;
+  var scope, ctrl, httpBackend, controller, messageService, routeParams, location;
   var requisitionList;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller,
+                              $routeParams, $location) {
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
+    routeParams = $routeParams;
+    location = $location;
+    scope.pageSize = 2;
+    scope.maxNumberOfPages = 2;
 
     requisitionList = [
       {"facilityName": "first facility", "programName": "first program", "facilityCode": "first code", supplyingDepot: "supplying depot first "},
-      {"facilityName": "second facility", "programName": "second program", "facilityCode": "second code", supplyingDepot: "supplying depot second"}
+      {"facilityName": "second facility", "programName": "second program", "facilityCode": "second code", supplyingDepot: "supplying depot second"},
+      {"facilityName": "third facility", "programName": "third program", "facilityCode": "third code", supplyingDepot: "supplying depot third"}
     ];
-    ctrl = controller(ConvertToOrderListController, {$scope: scope, requisitionList: requisitionList});
+    ctrl = controller(ConvertToOrderListController, {$scope: scope, requisitionList: requisitionList, $location: location, $routeParams: routeParams});
   }));
+
+  it('should set page line items based on pageSize', function () {
+    routeParams.page = 2;
+    scope.pageSize = 2;
+    scope.$broadcast("$routeUpdate");
+    expect(scope.currentPage).toEqual(2);
+    expect(scope.filteredRequisitions).toEqual([requisitionList[2]]);
+  });
 
   it('should show all requisitions if filter is not applied', function () {
     expect(scope.filteredRequisitions).toEqual(requisitionList);
@@ -103,7 +117,7 @@ describe('ConvertToOrderListController', function () {
 
   it("should convert the selected requisitions to order", function () {
     httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(201);
-    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
+    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list": [requisitionList[1]]});
     scope.dialogCloseCallback(true);
 
     httpBackend.flush();
@@ -124,7 +138,7 @@ describe('ConvertToOrderListController', function () {
   it('should convert to order if ok is clicked on the confirm modal', function () {
     scope.gridOptions.selectedItems = [requisitionList[0]];
     httpBackend.expectPOST('/orders.json', scope.gridOptions.selectedItems).respond(201);
-    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list":[requisitionList[1]]});
+    httpBackend.expectGET('/requisitions-for-convert-to-order.json').respond({"rnr_list": [requisitionList[1]]});
     scope.dialogCloseCallback(true);
     httpBackend.flush();
     expect(scope.message).toEqual("msg.rnr.converted.to.order");

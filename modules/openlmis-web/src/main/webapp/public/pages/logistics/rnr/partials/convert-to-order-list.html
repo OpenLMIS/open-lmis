@@ -4,40 +4,55 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<h2 openlmis-message="label.requisition.convertOrder"></h2>
+<h2 openlmis-message = "label.requisition.convertOrder"></h2>
 
-<div class="alert alert-error" id="saveErrorMsgDiv" ng-show="error" openlmis-message="error"></div>
-<div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message" openlmis-message="message"></div>
-<div class="alert alert-info" id="noRequisitionSelectedMsgDiv" ng-show="noRequisitionSelectedMessage"
-     openlmis-message="noRequisitionSelectedMessage"></div>
+<div class = "alert alert-error" id = "saveErrorMsgDiv" ng-show = "error"
+     openlmis-message = "error"></div>
+<div class = "alert alert-success" id = "saveSuccessMsgDiv" ng-show = "message"
+     openlmis-message = "message"></div>
+<div class = "alert alert-info" id = "noRequisitionSelectedMsgDiv"
+     ng-show = "noRequisitionSelectedMessage"
+     openlmis-message = "noRequisitionSelectedMessage"></div>
 
-<div class="app-form">
-  <div class="form-group">
-    <h3 openlmis-message="label.requisition.list"></h3>
+<div class = "app-form">
+  <div class = "form-group">
+    <h3 openlmis-message = "label.requisition.list"></h3>
 
-    <div class="alert alert-info" id="NoRequisitionsPendingMessage" ng-hide="requisitions.length">
-      <span openlmis-message="message.noRnr.pending"></span>
+    <div class = "alert alert-info" id = "NoRequisitionsPendingMessage"
+         ng-hide = "requisitions.length">
+      <span openlmis-message = "message.noRnr.pending"></span>
     </div>
-    <div ng-show="requisitions.length">
-      <div class="row-fluid">
-        <div class="span4 offset8 grid-filters">
-          <input id="searchRequisition" class="search-query" ng-change="filterRequisitions()" type="text"
-                 ng-model="query" openlmis-message="placeholder.search"/>
-          <span openlmis-message="label.in"></span>
-          <select ng-model="searchField" ng-change="filterRequisitions()">
-            <option value="" openlmis-message="option.value.all"></option>
-            <option value="programName" openlmis-message="option.value.program"></option>
-            <option value="facilityCode" openlmis-message="option.value.facility.code"></option>
-            <option value="facilityName" openlmis-message="option.value.facility.name"></option>
-            <option value="supplyingDepot" openlmis-message="label.supplying.depot"></option>
+    <div ng-show = "requisitions.length">
+      <div class = "row-fluid">
+        <div class = "span4 offset8 grid-filters">
+          <input id = "searchRequisition" class = "search-query"
+                 ng-change = "filterRequisitions()" type = "text"
+                 ng-model = "query" openlmis-message = "placeholder.search"/>
+          <span openlmis-message = "label.in"></span>
+          <select ng-model = "searchField" ng-change = "filterRequisitions()">
+            <option value = "" openlmis-message = "option.value.all"></option>
+            <option value = "programName"
+                    openlmis-message = "option.value.program"></option>
+            <option value = "facilityCode"
+                    openlmis-message = "option.value.facility.code"></option>
+            <option value = "facilityName"
+                    openlmis-message = "option.value.facility.name"></option>
+            <option value = "supplyingDepot"
+                    openlmis-message = "label.supplying.depot"></option>
           </select>
         </div>
       </div>
-      <div class="gridStyle" ng-grid="gridOptions" ng-show="requisitions.length"></div>
-      <div form-toolbar id="action_buttons" class="action-buttons">
-        <div class="form-cell button-row">
-          <input type="submit" ng-click="convertToOrder()" class="btn btn-primary save-button"
-                 openlmis-message="button.convert.to.order" ng-disabled="filteredRequisitions.length == 0"/>
+      <div class = "gridStyle" ng-grid = "gridOptions"
+           ng-show = "requisitions.length"></div>
+      <openlmis-pagination num-pages = "numberOfPages"
+                           current-page = "currentPage" max-size = "50"
+                           check-error-on-page = "checkErrorOnPage(page)"></openlmis-pagination>
+      <div form-toolbar id = "action_buttons" class = "action-buttons">
+        <div class = "form-cell button-row">
+          <input type = "submit" ng-click = "convertToOrder()"
+                 class = "btn btn-primary save-button"
+                 openlmis-message = "button.convert.to.order"
+                 ng-disabled = "filteredRequisitions.length == 0"/>
         </div>
       </div>
     </div>
