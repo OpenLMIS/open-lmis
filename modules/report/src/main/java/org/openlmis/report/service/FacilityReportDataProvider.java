@@ -42,7 +42,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     private ReportData getFacilityReport(Facility facility){
         if(facility == null) return null;
 
-        return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getAddress1(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null ,null,null,facility.getMainPhone(),null,null);
+        return new FacilityReport(facility.getCode(),facility.getName(),facility.getFacilityType() != null ? facility.getFacilityType().getName() : null,facility.getActive(),facility.getAddress1(),facility.getOperatedBy() != null ? facility.getOperatedBy().getText() : null ,null,null,facility.getMainPhone(),null,null,null);
     }
 
     private List<ReportData> getListFacilityReport(List<Facility> facilityList){
@@ -87,12 +87,6 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-
-        return (int)facilityReportMapper.SelectFilteredFacilitiesCount(getReportFilterData(filterCriteria));
-    }
-
-    @Override
     public FacilityReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         FacilityReportFilter facilityReportFilter = new FacilityReportFilter();
 
@@ -102,6 +96,10 @@ public class FacilityReportDataProvider extends ReportDataProvider {
             facilityReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
             facilityReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
             facilityReportFilter.setStatusId(filterCriteria.get("statusId") == null || filterCriteria.get("statusId")[0].isEmpty() ? null : Boolean.valueOf(filterCriteria.get("statusId")[0]));
+            facilityReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+            facilityReportFilter.setRgId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
+
+
         }
 
         return facilityReportFilter;

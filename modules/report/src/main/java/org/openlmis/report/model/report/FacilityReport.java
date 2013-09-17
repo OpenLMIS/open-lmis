@@ -33,6 +33,7 @@ public class FacilityReport implements ReportData {
     private String phoneNumber;
     private String MSLMSDCode;
     private String fax;
+    private String requisitionGroup;
    // private String contact;
 
     public FacilityReport(String code,String facilityName,String facilityType,boolean active){

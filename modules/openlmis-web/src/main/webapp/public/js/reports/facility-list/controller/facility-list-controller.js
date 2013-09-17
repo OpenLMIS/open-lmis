@@ -1,4 +1,4 @@
-function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, GeographicZones, $http, $routeParams, $location) {
+function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, GeographicZones, RequisitionGroups, $http, $routeParams, $location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -34,10 +34,16 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
         $scope.filterObject =  {
              facilityType : $scope.facilityType,
              zone : $scope.zone,
+             rgroupId : $scope.rgroupId,
+             rgroup : "",
              status : $scope.status
         };
+        RequisitionGroups.get(function (data) {
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+        });
 
-        ReportFacilityTypes.get(function(data) {
+         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
             $scope.facilityTypes.unshift({'name': 'All Facility Types', id:'0'});
         });
@@ -70,6 +76,22 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             angular.element(event.target).parents(".dropdown").click();
             $location.search('page', page);
         };
+
+        $scope.$watch('rgroupId', function (selection) {
+            if (selection == "All") {
+                $scope.filterObject.rgroupId = -1;
+            } else if (selection != undefined || selection == "") {
+                $scope.filterObject.rgroupId = selection;
+                $.each($scope.requisitionGroups, function (item, idx) {
+                    if (idx.id == selection) {
+                        $scope.filterObject.rgroup = idx.name;
+                    }
+                });
+            } else {
+                $scope.filterObject.rgroupId = 0;
+            }
+            $scope.filterGrid();
+        });
 
         $scope.$watch("currentPage", function () {  //good watch no problem
 
@@ -104,9 +126,12 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
                                                 "page" : page
                                                };
                         }
+
+
                         params['zoneId'] = $scope.zone;
                         params['facilityTypeId'] = $scope.facilityType;
                         params['statusId'] = $scope.status;
+                        params['rgroupId'] =$scope.filterObject.rgroupId;
 
                         $scope.data = [];
 

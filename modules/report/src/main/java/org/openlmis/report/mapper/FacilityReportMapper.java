@@ -56,8 +56,4 @@ public interface FacilityReportMapper {
             @Param("RowBounds")RowBounds rowBounds
     );
 
-    @SelectProvider(type=FacilityReportQueryBuilder.class, method="SelectFilteredFacilitiesCountSql")
-    public Integer SelectFilteredFacilitiesCount(@Param("filterCriteria") ReportData filterCriteria);
-
-
 }
