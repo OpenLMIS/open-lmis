@@ -272,14 +272,18 @@ public class RequisitionService {
     }
   }
 
-  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
-    Date programStartDate = programService.getProgramStartDate(facilityId, programId);
+  private List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
+    return getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(facilityId, programId));
+  }
+
+  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(RequisitionSearchCriteria criteria) {
+    Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
-      facilityId, programId);
+      criteria.getFacilityId(), criteria.getProgramId());
 
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
       null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
+    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate,
       periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 

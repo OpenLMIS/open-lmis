@@ -38,6 +38,7 @@ import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -179,14 +180,13 @@ public class RequisitionController extends BaseController {
     return response(RNR_LIST, prepareForListApproval(approvedRequisitions));
   }
 
-  @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-    @PathVariable("facilityId") Long facilityId,
-    @PathVariable("programId") Long programId) {
+  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
     try {
-      List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
-      Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
+      List<ProcessingPeriod> periodList =
+        requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
+      Rnr currentRequisition = isEmpty(periodList) ? null : getRequisitionForCurrentPeriod(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
       response.addData(RNR, currentRequisition);
       return new ResponseEntity<>(response, HttpStatus.OK);
@@ -195,11 +195,9 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  private Rnr getRequisitionForCurrentPeriod(Long facilityId, Long programId, List<ProcessingPeriod> periodList) {
-    if (periodList == null || periodList.isEmpty()) return null;
-    boolean withoutLineItems = true;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId,
-      periodList.get(0).getId(), withoutLineItems);
+  private Rnr getRequisitionForCurrentPeriod(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+    criteria.setWithoutLineItems(true);
+    criteria.setPeriodId(periodList.get(0).getId());
     List<Rnr> rnrList = requisitionService.get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
   }

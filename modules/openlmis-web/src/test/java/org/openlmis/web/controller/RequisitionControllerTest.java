@@ -310,21 +310,25 @@ public class RequisitionControllerTest {
       processingPeriod.getId(), withoutLineItems);
     when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
-    when(requisitionService.getAllPeriodsForInitiatingRequisition(1L, 2L)).thenReturn(periodList);
+    when(requisitionService.getAllPeriodsForInitiatingRequisition(criteria)).thenReturn(periodList);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1L, 2L);
+    ResponseEntity<OpenLmisResponse> response =
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
 
-    verify(requisitionService).getAllPeriodsForInitiatingRequisition(1L, 2L);
+    verify(requisitionService).getAllPeriodsForInitiatingRequisition(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
     assertThat((Rnr) response.getBody().getData().get(RNR), is(rnr));
   }
 
   @Test
   public void shouldReturnErrorResponseIfNoPeriodsFoundForInitiatingRequisition() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 2L);
     String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(requisitionService).getAllPeriodsForInitiatingRequisition(1L, 2L);
+    doThrow(new DataException(errorMessage)).when(requisitionService).
+      getAllPeriodsForInitiatingRequisition(criteria);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1L, 2L);
+    ResponseEntity<OpenLmisResponse> response =
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }

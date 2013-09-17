@@ -322,7 +322,9 @@ public class RequisitionServiceTest {
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
       thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
-    List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
+    List<ProcessingPeriod> periods =
+      requisitionService.getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(FACILITY.getId(),
+        PROGRAM.getId()));
 
     assertThat(periods.size(), is(2));
     assertThat(periods.get(0), is(processingPeriod3));
@@ -342,7 +344,7 @@ public class RequisitionServiceTest {
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
       thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
-    List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
+    List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId()));
 
     assertThat(periods.size(), is(2));
     assertThat(periods.get(0), is(processingPeriod1));

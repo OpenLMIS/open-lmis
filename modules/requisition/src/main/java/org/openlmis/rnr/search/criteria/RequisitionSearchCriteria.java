@@ -26,30 +26,28 @@ public class RequisitionSearchCriteria {
   Date dateRangeEnd;
 
   public RequisitionSearchCriteria(Long facilityId, Long programId, Date periodStartDate, Date periodEndDate) {
-    this.facilityId = facilityId;
-    this.programId = programId;
+    this(facilityId, programId);
     this.dateRangeStart = periodStartDate;
     this.dateRangeEnd = periodEndDate;
   }
 
   public RequisitionSearchCriteria(Long facilityId, Long programId, Long userId, Date dateRangeStart, Date dateRangeEnd) {
-    this.facilityId = facilityId;
-    this.programId = programId;
+    this(facilityId, programId, dateRangeStart, dateRangeEnd);
     this.userId = userId;
-    this.dateRangeStart = dateRangeStart;
-    this.dateRangeEnd = dateRangeEnd;
   }
 
   public RequisitionSearchCriteria(Long facilityId, Long programId, Long periodId) {
-    this.facilityId = facilityId;
-    this.programId = programId;
+    this(facilityId, programId);
     this.periodId = periodId;
   }
 
   public RequisitionSearchCriteria(Long facilityId, Long programId, Long periodId, boolean withoutLineItems) {
+    this(facilityId, programId, periodId);
+    this.withoutLineItems = withoutLineItems;
+  }
+
+  public RequisitionSearchCriteria(Long facilityId, Long programId) {
     this.facilityId = facilityId;
     this.programId = programId;
-    this.periodId = periodId;
-    this.withoutLineItems = withoutLineItems;
   }
 }
