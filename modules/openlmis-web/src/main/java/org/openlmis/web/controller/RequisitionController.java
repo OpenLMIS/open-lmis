@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.web.response.OpenLmisResponse.*;
@@ -184,15 +185,21 @@ public class RequisitionController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
     try {
-      List<ProcessingPeriod> periodList =
-        requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
+      List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
       Rnr currentRequisition = isEmpty(periodList) ? null : getRequisitionForCurrentPeriod(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
       response.addData(RNR, currentRequisition);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      return new ResponseEntity<>(response, OK);
     } catch (DataException e) {
       return error(e, CONFLICT);
     }
+  }
+
+  private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
+    ProcessingPeriod currentPeriod;
+    return criteria.isEmergency() ?
+          (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ? asList(currentPeriod) : null  :
+          requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
   }
 
   private Rnr getRequisitionForCurrentPeriod(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {

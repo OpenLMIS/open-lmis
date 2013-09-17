@@ -414,5 +414,9 @@ public class RequisitionService {
   public Date getOperationDateFor(Long rnrId, String status) {
     return requisitionRepository.getOperationDateFor(rnrId, status);
   }
+
+  public ProcessingPeriod getCurrentPeriod(RequisitionSearchCriteria criteria) {
+    return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId());
+  }
 }
 

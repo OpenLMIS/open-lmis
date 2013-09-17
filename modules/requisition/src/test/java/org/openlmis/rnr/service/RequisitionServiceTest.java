@@ -1231,6 +1231,13 @@ public class RequisitionServiceTest {
     assertThat(returnedRnr, is(expectedRnr));
   }
 
+  @Test
+  public void shouldGetCurrentPeriodForFacilityAndProgram() {
+    requisitionService.getCurrentPeriod(new RequisitionSearchCriteria(1L, 2L));
+
+    verify(processingScheduleService).getCurrentPeriod(1L, 2L);
+  }
+
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);

@@ -7,10 +7,14 @@
 package org.openlmis.rnr.search.criteria;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import java.util.Date;
+
+import static java.lang.Boolean.FALSE;
+import static lombok.AccessLevel.NONE;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -24,6 +28,13 @@ public class RequisitionSearchCriteria {
   boolean withoutLineItems;
   Date dateRangeStart;
   Date dateRangeEnd;
+
+  @Getter(NONE)
+  Boolean emergency = FALSE;
+
+  public Boolean isEmergency() {
+    return emergency;
+  }
 
   public RequisitionSearchCriteria(Long facilityId, Long programId, Date periodStartDate, Date periodEndDate) {
     this(facilityId, programId);

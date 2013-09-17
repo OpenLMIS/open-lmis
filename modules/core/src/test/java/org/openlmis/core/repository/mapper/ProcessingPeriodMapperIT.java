@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static junit.framework.Assert.assertNull;
+import static org.apache.commons.lang.time.DateUtils.addDays;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.notNullValue;
@@ -292,7 +294,35 @@ public class ProcessingPeriodMapperIT {
     assertThat(searchResults, is(Arrays.asList(period4, period1, period3, period2)));
   }
 
+  @Test
+  public void shouldGetCurrentPeriodByFacilityAndProgram() {
+    Date currentDate = new Date();
+    ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
 
+    mapper.insert(period1);
+
+    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId());
+
+    assertThat(actualPeriod, is(period1));
+  }
+
+  @Test
+  public void shouldReturnNullIfCurrentPeriodDoesNotExist() {
+    Date currentDate = new Date();
+    ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
+      with(startDate, addDays(currentDate, 2)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
+
+    mapper.insert(period1);
+
+    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId());
+
+    assertNull(actualPeriod);
+  }
 
   private ProcessingPeriod insertProcessingPeriod(String name, DateTime startDate, DateTime endDate) {
     ProcessingPeriod period = make(a(defaultProcessingPeriod,

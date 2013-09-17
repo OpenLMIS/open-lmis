@@ -8,6 +8,7 @@ CREATE TABLE requisitions (
   programId                       INTEGER     NOT NULL REFERENCES programs (id),
   periodId                        INTEGER     NOT NULL REFERENCES processing_periods (id),
   status                          VARCHAR(20) NOT NULL,
+  emergency                       BOOLEAN     NOT NULL DEFAULT FALSE,
   fullSupplyItemsSubmittedCost    NUMERIC(15, 4),
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
   supervisoryNodeId               INTEGER REFERENCES supervisory_nodes (id),

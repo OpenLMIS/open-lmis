@@ -275,4 +275,17 @@ public class ProcessingScheduleServiceTest {
     verify(periodRepository).getAllPeriodsBefore(1l, date);
 
   }
+
+  @Test
+  public void shouldGetCurrentPeriodForFacilityAndProgram() {
+
+    RequisitionGroupProgramSchedule schedule = new RequisitionGroupProgramSchedule();
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroup.setId(5L);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(2L), new Facility(1L)))
+      .thenReturn(requisitionGroup);
+    when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(5L, 2L)).thenReturn(schedule);
+    service.getCurrentPeriod(1L, 2L);
+    verify(periodRepository).getCurrentPeriod(schedule);
+  }
 }
