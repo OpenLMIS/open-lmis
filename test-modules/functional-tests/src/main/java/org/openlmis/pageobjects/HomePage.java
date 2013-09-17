@@ -424,7 +424,7 @@ public class HomePage extends Page {
   }
 
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
-      testWebDriver.sleep(2000);
+    testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
@@ -474,6 +474,7 @@ public class HomePage extends Page {
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
     assertTrue(ordersMenuItem.isDisplayed());
+    testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
     testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
