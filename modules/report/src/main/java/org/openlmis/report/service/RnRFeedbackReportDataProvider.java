@@ -60,11 +60,6 @@ public class RnRFeedbackReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return 0;
-    }
-
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
 
         RnRFeedbackReportFilter feedbackReportFilter = null;

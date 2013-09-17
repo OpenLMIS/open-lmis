@@ -75,14 +75,6 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return reportMapper.getNonReportingTotalFacilities(filterCriteria).get(0);
-    }
-
-
-
-
-    @Override
     public HashMap<String, String> getAdditionalReportData(Map params){
         HashMap<String, String> result = new HashMap<String, String>() ;
 

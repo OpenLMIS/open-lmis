@@ -26,7 +26,4 @@ public interface SummaryReportMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     public List<SummaryReport> getReport(Map params, @Param("RowBounds") RowBounds rowBounds);
 
-
-    @SelectProvider(type=SummaryQueryBuilder.class, method="getTotalCount")
-    public Integer getTotal(Map params);
 }

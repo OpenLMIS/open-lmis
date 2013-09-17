@@ -58,13 +58,6 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-
-        return (int) reportMapper.getFilteredSortedPagedAdjustmentSummaryReportCount(getReportFilterData(filterCriteria));
-    }
-
-
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         DistrictConsumptionReportFilter districtConsumptionReportFilter = null;
 

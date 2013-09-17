@@ -56,11 +56,6 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filter) {
-        return 0;
-    }
-
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         StockImbalanceReportFilter stockImbalanceReportFilter = null;
 

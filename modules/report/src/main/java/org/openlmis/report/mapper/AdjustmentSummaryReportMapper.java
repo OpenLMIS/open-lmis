@@ -35,7 +35,4 @@ public interface AdjustmentSummaryReportMapper {
             @Param("RowBounds")RowBounds rowBounds
     );
 
-    @SelectProvider(type=AdjustmentSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecordsCount")
-    public Integer getFilteredSortedPagedAdjustmentSummaryReportCount(@Param("filterCriteria") AdjustmentSummaryReportFilter filterCriteria);
-
 }

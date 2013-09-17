@@ -25,6 +25,8 @@ public class FacilityReportQueryBuilder {
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
+        LEFT_OUTER_JOIN("requisition_group_members ON f.id = requisition_group_members.facilityid");
+        LEFT_OUTER_JOIN("requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid");
         LEFT_OUTER_JOIN("Users U on U.facilityId = F.id ");
         if(filter != null){
             if (filter.getStatusId() != null) {
@@ -35,6 +37,9 @@ public class FacilityReportQueryBuilder {
             }
             if (filter.getFacilityTypeId() != 0) {
                 WHERE("F.typeid = " + filter.getFacilityTypeId());
+            }
+            if(filter.getRgId() != 0){
+                WHERE("requisition_groups.id = "+ filter.getRgId());
             }
         }
 
@@ -65,23 +70,5 @@ public class FacilityReportQueryBuilder {
 
         return SQL();
     }
-    public static String SelectFilteredFacilitiesCountSql(Map params){//,ReportData SortCriteria ,int page,int pageSize) {
 
-        FacilityReportFilter filter  = (FacilityReportFilter)params.get("filterCriteria");
-         // filterCriteria
-        BEGIN();
-        SELECT("COUNT(*)");
-        FROM("facilities F");
-
-        if (filter.getStatusId() != null) {
-            WHERE("F.active = " + filter.getStatusId().toString());
-        }
-        if (filter.getZoneId() != 0) {
-            WHERE("geographiczoneid = " + filter.getZoneId());
-        }
-        if (filter.getFacilityTypeId() != 0) {
-            WHERE("typeid = " + filter.getFacilityTypeId());
-        }
-        return SQL();
-    }
 }

@@ -37,6 +37,4 @@ public interface ConsumptionReportMapper {
             @Param("RowBounds")RowBounds rowBounds
     );
 
-    @SelectProvider(type=ConsumptionQueryBuilder.class, method="SelectFilteredSortedPagedConsumptionCountSql")
-    public Integer getFilteredSortedPagedConsumptionReportCount(@Param("filterCriteria") ReportData filterCriteria);
 }

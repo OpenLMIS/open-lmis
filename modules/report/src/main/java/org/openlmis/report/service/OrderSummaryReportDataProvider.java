@@ -60,11 +60,6 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return 0;
-    }
-
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
 
         OrderReportFilter orderReportFilter = null;

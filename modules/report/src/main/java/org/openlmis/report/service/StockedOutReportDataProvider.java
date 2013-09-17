@@ -141,10 +141,6 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
         }
         return stockedOutReportFilter;
     }
-    @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return reportMapper.getStockedoutTotalFacilities(filterCriteria).get(0);
-    }
 
     @Override
     public HashMap<String, String> getAdditionalReportData(Map params){

@@ -39,6 +39,4 @@ public interface AverageConsumptionReportMapper {
             @Param("RowBounds")RowBounds rowBounds
     );
 
-    @SelectProvider(type=AverageConsumptionQueryBuilder.class, method="SelectFilteredSortedPagedAverageConsumptionCountSql")
-    public Integer getFilteredSortedPagedAverageConsumptionReportCount(@Param("filterCriteria") AverageConsumptionReportFilter filterCriteria);
 }

@@ -33,7 +33,4 @@ public interface DistrictConsumptionReportMapper {
             @Param("RowBounds")RowBounds rowBounds
     );
 
-    @SelectProvider(type=DistrictConsumptionQueryBuilder.class, method="SelectFilteredSortedPagedRecordsCount")
-    public Integer getFilteredSortedPagedAdjustmentSummaryReportCount(@Param("filterCriteria") ReportData filterCriteria);
-
 }

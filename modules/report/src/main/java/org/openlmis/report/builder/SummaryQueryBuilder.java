@@ -100,26 +100,4 @@ public class SummaryQueryBuilder {
         return predicate;
     }
 
-    public static String getTotalCount(Map params){
-        String query = "select count(*) \n"+
-                "    from facilities        \n" +
-                    "    inner join requisitions r ON  r.facilityid = facilities.id         \n" +
-                    "    inner join requisition_line_items li ON li.rnrid = r.id         \n" +
-                    "    inner join products ON products.code  ::text =   li.productcode  ::text       \n" +
-                    "    inner join program_products ON program_products.productid = products.id \n" +
-                    "    inner join programs ON  program_products.programid = programs.id   AND  programs.id = r.programid       \n" +
-                    "    inner join requisition_group_members ON facilities.id = requisition_group_members.facilityid         \n" +
-                    "    inner join requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid         \n" +
-                    "    inner join requisition_group_program_schedules ON requisition_group_program_schedules.programid = programs.id   AND requisition_group_program_schedules.requisitiongroupid = requisition_groups.id         \n" +
-                    "    inner join processing_schedules ON processing_schedules.id = requisition_group_program_schedules.scheduleid         \n" +
-                    "    inner join processing_periods ON processing_periods.scheduleid = processing_schedules.id  \n" +
-
-                writePredicates(params);
-
-        return query;
-    }
-
-
-
-
 }

@@ -51,8 +51,4 @@ public interface MailingLabelReportMapper {
             //        @Param("page") int page,
             //        @Param("pageSize") int pageSize
     );
-
-    @SelectProvider(type=MailingLabelReportQueryBuilder.class, method="SelectFilteredFacilitiesCountSql")
-    //@Selcet("select count(*) from facilities")
-    public Integer SelectFilteredFacilitiesCount(@Param("filterCriteria") ReportData filterCriteria);
 }

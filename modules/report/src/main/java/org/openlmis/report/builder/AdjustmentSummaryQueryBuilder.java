@@ -32,26 +32,6 @@ public class AdjustmentSummaryQueryBuilder {
       return query;
     }
 
-    public static String SelectFilteredSortedPagedRecordsCount(Map params){
-
-        AdjustmentSummaryReportFilter filter  = (AdjustmentSummaryReportFilter)params.get("filterCriteria");
-
-        BEGIN();
-        SELECT("COUNT(*) perCounts");
-        FROM(" vw_requisition_adjustment");
-        writePredicates(filter);
-
-        GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
-        ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
-
-        String subQuery = SQL().toString();
-
-        BEGIN();
-        SELECT("COUNT(*)");
-        FROM("( "+ subQuery +" ) as counts");
-        return SQL();
-    }
-
     private static void writePredicates(AdjustmentSummaryReportFilter filter){
         WHERE("req_status in ('APPROVED','RELEASED')");
         if(filter != null){

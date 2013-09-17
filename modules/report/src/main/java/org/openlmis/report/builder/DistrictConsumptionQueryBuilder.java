@@ -77,25 +77,4 @@ public class DistrictConsumptionQueryBuilder {
         return predicate;
     }
 
-    public static String SelectFilteredSortedPagedRecordsCount(Map params){
-
-        DistrictConsumptionReportFilter filter  = (DistrictConsumptionReportFilter)params.get("filterCriteria");
-
-        String query = "WITH temp AS (select product,zone_name, SUM(normalizedconsumption) normalizedconsumption "+
-
-                "from vw_district_consumption_summary "+
-                writePredicates(filter)+
-                "group by product,zone_name "+
-                "order by product) "+
-
-                "select count(*) "+
-                "from temp t "+
-                "INNER JOIN ( select product,SUM(normalizedconsumption) total "+
-                "from temp "+
-                "group by product "+
-                "order by product) temp2 ON t.product = temp2.product ";
-        return query;
-    }
-
-
 }

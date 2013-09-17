@@ -83,26 +83,4 @@ public class MailingLabelReportQueryBuilder {
 
         return SQL();
     }
-
-    public static String SelectFilteredFacilitiesCountSql(Map params){
-
-        MailingLabelReportFilter filter  = (MailingLabelReportFilter)params.get("filterCriteria");
-        // filterCriteria
-        BEGIN();
-        SELECT("COUNT(*)");
-        FROM("facilities as F");
-
-        if (filter.getFacilityCode() != "") {
-           // WHERE("F.code like '%101%' ");
-            WHERE("F.code like '%' || #{filterCriteria.facilityCode} || '%' ");
-        }
-        if (filter.getFacilityName() != "") {
-            WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
-        }
-        if (filter.getFacilityTypeId() != 0) {
-            WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
-        }
-
-        return SQL();
-    }
 }

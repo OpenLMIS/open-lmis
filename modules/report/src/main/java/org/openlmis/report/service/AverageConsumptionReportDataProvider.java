@@ -58,12 +58,6 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-
-        return (int) reportMapper.getFilteredSortedPagedAverageConsumptionReportCount(getReportFilterData(filterCriteria));
-    }
-
-    @Override
     public AverageConsumptionReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         AverageConsumptionReportFilter averageConsumptionReportFilter = null;
 

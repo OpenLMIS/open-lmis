@@ -87,12 +87,6 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-
-        return (int)mailingLabelReportMapper.SelectFilteredFacilitiesCount(getReportFilterData(filterCriteria));
-    }
-
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
         if(filterCriteria != null){

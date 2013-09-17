@@ -82,10 +82,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("facilities");//reportKey);
         List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
         (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-
-        return new Pages(page,totalRecCount,max,facilityReportList);
+        return new Pages(page,max,facilityReportList);
     }
 
     @RequestMapping(value = "/reportdata/mailingLabels", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -100,9 +98,8 @@ public class InteractiveReportController  extends BaseController {
         List<MailingLabelReport> mailingLabelReports =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
 
         (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-        return new Pages(page,totalRecCount,max,mailingLabelReports);
+        return new Pages(page,max,mailingLabelReports);
     }
 
     @RequestMapping(value = "/reportdata/consumption", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -119,9 +116,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("consumption");
         List<ConsumptionReport> consumptionReportList =
                 (List<ConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
 
-        return new Pages(page,totalRecCount,max,consumptionReportList);
+        return new Pages(page,max,consumptionReportList);
     }
 
     @RequestMapping(value = "/reportdata/averageConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -136,9 +132,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("average_consumption");
         List<AverageConsumptionReport> averageConsumptionReportList =
                 (List<AverageConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
 
-        return new Pages(page,totalRecCount,max,averageConsumptionReportList);
+        return new Pages(page,max,averageConsumptionReportList);
     }
 
 
@@ -160,9 +155,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("summary");
         List<SummaryReport> reportList =
                 (List<SummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-        return new Pages(page,totalRecCount,max,reportList);
+        return new Pages(page,max,reportList);
     }
 
     @RequestMapping(value = "/non_reporting", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -180,9 +174,7 @@ public class InteractiveReportController  extends BaseController {
         List<MasterReport> reportList =
                 (List<MasterReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
 
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
-
-        return new Pages(page,totalRecCount,max,reportList);
+        return new Pages(page,max,reportList);
     }
 
 
@@ -222,9 +214,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("adjustment_summary");
         List<AdjustmentSummaryReport> adjustmentSummaryReportList =
                 (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
 
-        return new Pages(page,totalRecCount,max,adjustmentSummaryReportList);
+        return new Pages(page,max,adjustmentSummaryReportList);
     }
 
     @RequestMapping(value = "/reportdata/districtConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -238,9 +229,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("district_consumption");
         List<DistrictConsumptionReport> districtConsumptionReportList =
                 (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-        return new Pages(page,totalRecCount,max,districtConsumptionReportList);
+        return new Pages(page,max,districtConsumptionReportList);
     }
 
     @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -257,9 +247,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("order_summary");
         List<OrderSummaryReport> orderReportList =
                 (List<OrderSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());;
 
-        return new Pages(page,totalRecCount,max,orderReportList);
+        return new Pages(page,max,orderReportList);
     }
 
     @RequestMapping(value = "/reportdata/supply_status", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -275,9 +264,9 @@ public class InteractiveReportController  extends BaseController {
 
         Report report = reportManager.getReportByKey("supply_status");
         List<SupplyStatusReport> supplyStatusReportList =
-                (List<SupplyStatusReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        (List<SupplyStatusReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
 
-        return new Pages(page,supplyStatusReportList.size(),max,supplyStatusReportList);
+        return new Pages(page,max,supplyStatusReportList);
     }
 
     @RequestMapping(value = "/reportdata/stockImbalance", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -293,9 +282,7 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("stock_imbalance");
         List<StockImbalanceReport> stockImbalanceReportList =
                 (List<StockImbalanceReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount =  stockImbalanceReportList.size();
-
-        return new Pages(page,totalRecCount,max,stockImbalanceReportList);
+        return new Pages(page,max,stockImbalanceReportList);
     }
 
 
@@ -313,10 +300,8 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("stocked_out");
         List<StockedOutReport> stockedOutReportList =
                 (List<StockedOutReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        //int totalRecCount =  stockedOutReportList.size();
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
 
-        return new Pages(page,totalRecCount,max,stockedOutReportList);
+        return new Pages(page,max,stockedOutReportList);
     }
 
     @RequestMapping(value = "/reportdata/rnr_feedback", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -332,9 +317,7 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("rnr_feedback");
         List<RnRFeedbackReport> rnRFeedbackReports =
                 (List<RnRFeedbackReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-        int totalRecCount =  rnRFeedbackReports.size();
-
-        return new Pages(page,totalRecCount,max,rnRFeedbackReports);
+        return new Pages(page,max,rnRFeedbackReports);
     }
 
 

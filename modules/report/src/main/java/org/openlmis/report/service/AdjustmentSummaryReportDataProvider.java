@@ -52,25 +52,6 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
         RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
         return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
     }
-
-    @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-
-        return (int) reportMapper.getFilteredSortedPagedAdjustmentSummaryReportCount(getReportFilterData(filterCriteria));
-    }
-
-   /* @Override
-    public ReportData getReportFilterData(final Map<String, String[]> params) {
-       return new ReportData() {
-                        @Override
-                        public String toString() {
-                            return "The Period: " + params.get("fromMonth")[0].toString() + ",  " + params.get("fromYear")[0].toString() +" - "+ params.get("toMonth")[0].toString() +" , "+ params.get("toYear")[0].toString() +"\n"
-
-                                    ;
-                        }
-                    };
-     }*/
-
     @Override
     public AdjustmentSummaryReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         AdjustmentSummaryReportFilter adjustmentSummaryReportFilter = null;

@@ -37,10 +37,10 @@ public class Pages {
     public int max;
     public int total;
 
-    public Pages(int page,int total,int max,List<? extends ReportData> rows) {
+    public Pages(int page,int max,List<? extends ReportData> rows) {
         this.rows = rows;
         this.page = page;
         this.max = max;
-        this.total = total;
+        this.total = rows.size();
     }
 }

@@ -46,12 +46,6 @@ public class SummaryReportDataProvider extends ReportDataProvider {
         RowBounds rowBounds = new RowBounds((page-1) * pageSize,pageSize);
         return reportMapper.getReport(filterCriteria, rowBounds);
     }
-
-    @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return reportMapper.getTotal(filterCriteria);
-    }
-
     @Override
     public ReportData getReportFilterData(Map<String, String[]> params) {
         String facilityTypeId =  params.get("facilityTypeId")[0];

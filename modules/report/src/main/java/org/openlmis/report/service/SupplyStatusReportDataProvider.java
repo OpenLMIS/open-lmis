@@ -53,11 +53,6 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
     }
 
     @Override
-    public int getReportDataCountByFilterCriteria(Map<String, String[]> filterCriteria) {
-        return 0;
-    }
-
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> params) {
         String period = "";
         String productId = params.get("productId")[0];
