@@ -242,7 +242,7 @@ describe('InitiateRnrController', function () {
         {"id":3, "name":"Third Month", "description":"Third Month Description"}
       ];
       var rnr = {"id":1, "status":"INITIATED", "period":{"id" : 1}};
-      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":periods, "rnr":rnr});
+      $httpBackend.expectGET('/logistics/periods.json?facilityId=20&programId=10').respond({"periods":periods, "rnr":rnr});
 
       spyOn(messageService, 'get').andCallFake(function (arg) {
         return "Previous R&R pending";
@@ -263,7 +263,7 @@ describe('InitiateRnrController', function () {
     });
 
     it('should display appropriate message if no periods found for selected facility and program', function () {
-      $httpBackend.expectGET('/logistics/facility/20/program/10/periods.json').respond({"periods":[], "rnr":undefined});
+      $httpBackend.expectGET('/logistics/periods.json?facilityId=20&programId=10').respond({"periods":[], "rnr":undefined});
 
       spyOn(messageService, 'get').andCallFake(function (arg) {
         return "No period(s) available";
