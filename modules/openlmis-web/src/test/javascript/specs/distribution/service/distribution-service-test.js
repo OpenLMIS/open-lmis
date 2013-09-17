@@ -12,19 +12,24 @@ describe('Distribution Service', function () {
   var distributionService;
   var indexedDB;
   beforeEach(module('distribution'));
-  beforeEach(module('IndexedDB'));
 
-  beforeEach(inject(function (_distributionService_, SharedDistributions, IndexedDB) {
-    distributionService = _distributionService_;
+  beforeEach(function () {
+    module(function ($provide) {
+      $provide.value('IndexedDB', {put: function () {
+      }});
+    });
 
-    indexedDB = IndexedDB;
-    spyOn(indexedDB, 'put');
+    inject(function ($injector, _distributionService_, SharedDistributions) {
+      indexedDB = $injector.get('IndexedDB');
+      distributionService = _distributionService_;
+      spyOn(indexedDB, 'put');
+      SharedDistributions.distributionList = [
+        {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
+        {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
+      ];
+    });
 
-    SharedDistributions.distributionList = [
-      {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
-      {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
-    ];
-  }));
+  });
 
   it('should check if distribution is already cached', function () {
     var distribution = {deliveryZone: {id: 1}, program: {id: 1}, period: {id: 1}};

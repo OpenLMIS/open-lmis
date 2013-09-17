@@ -10,6 +10,10 @@ describe('DistributionController', function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('distribution'));
+  beforeEach(module(function ($provide) {
+    $provide.value('IndexedDB', {put: function () {
+    }});
+  }));
 
   beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _distributionService_) {
     messageService = _messageService_;
