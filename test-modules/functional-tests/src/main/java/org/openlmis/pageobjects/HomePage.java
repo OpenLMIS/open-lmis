@@ -310,6 +310,7 @@ public class HomePage extends Page {
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
     myFacilityRadioButton.click();
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.waitForElementToAppear(startDate);
