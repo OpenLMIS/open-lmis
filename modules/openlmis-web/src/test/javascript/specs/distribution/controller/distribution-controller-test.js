@@ -5,41 +5,24 @@
  */
 
 describe('DistributionController', function () {
-  var scope, controller, httpBackend, messageService;
-
-  var mockedIndexedDB = {
-    execute: function () {
-    },
-    get: function() {
-
-    },
-    put: function() {
-
-    }
-  }
+  var scope, controller, httpBackend, messageService, distributionService;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
-  beforeEach(module('IndexedDB'));
   beforeEach(module('distribution'));
 
-  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_) {
+  beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _distributionService_) {
     messageService = _messageService_;
     scope = $rootScope.$new();
     controller = $controller;
-    spyOn(mockedIndexedDB, 'get');
-    spyOn(mockedIndexedDB, 'put');
     httpBackend = $httpBackend;
-    var sharedDistribution = {update: function () {
-    }, distributionList: [
-      {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
-      {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
-    ]};
+
+    distributionService = _distributionService_;
+    spyOn(distributionService, 'put');
 
     spyOn(OpenLmisDialog, 'newDialog');
 
-    controller(DistributionController, {$scope: scope, deliveryZones: [], IndexedDB: mockedIndexedDB,
-      messageService: messageService, SharedDistributions: sharedDistribution});
+    controller(DistributionController, {$scope: scope, deliveryZones: [], messageService: messageService});
   }));
 
   it('should load programs', function () {
@@ -87,25 +70,49 @@ describe('DistributionController', function () {
 
   it('should not initiate the distribution if already cached', function () {
     spyOn(messageService, 'get');
-    scope.distributionList = [
-      {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
-      {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
-    ];
     scope.selectedZone = {id: 1, name: 'zone1'};
     scope.selectedProgram = {id: 1, name: 'program1'};
     scope.selectedPeriod = {id: 1, name: 'period1'};
+    spyOn(distributionService, 'isCached').andCallFake(function () {
+      return true;
+    });
     scope.initiateDistribution();
     expect(messageService.get).toHaveBeenCalledWith("message.distribution.already.cached", 'zone1', 'program1', 'period1');
   });
 
-  xit('should get reference data for a distribution if distribution not initiated', function () {
+  it('should get reference data for a distribution if distribution not initiated', function () {
+    spyOn(distributionService, 'isCached').andCallFake(function () {
+      return false;
+    });
     scope.selectedZone = {id: 4, name: 'zone1'};
     scope.selectedProgram = {id: 4, name: 'program1'};
     scope.selectedPeriod = {id: 3, name: 'period1'};
     var facilities = [
       {id: 2, name: "F1"}
     ];
-    httpBackend.expect('POST','/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
+    httpBackend.expect('POST', '/distributions.json').respond(200, {"success": "Data has been downloaded", distribution: {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
+    httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
+      {'id': '23'}
+    ]});
+    httpBackend.expect('GET', '/deliveryZone/4/program/4/refrigerators.json').respond(200, {"refrigerators": [
+      {'id': '1'}
+    ]});
+
+    scope.initiateDistribution();
+
+    httpBackend.flush();
+
+    setTimeout(function () {
+      expect(distributionService.put).toHaveBeenCalled();
+    });
+  });
+
+  it('should not initiate the distribution already initiated', function () {
+    scope.selectedZone = {id: 4, name: 'zone1'};
+    scope.selectedProgram = {id: 4, name: 'program1'};
+    scope.selectedPeriod = {id: 4, name: 'period1'};
+
+    httpBackend.expect('POST', '/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
     httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
@@ -117,25 +124,5 @@ describe('DistributionController', function () {
 
     httpBackend.flush();
     expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
-    expect(mockedIndexedDB.put).toHaveBeenCalled();
-  });
-
-  xit('should not initiate the distribution already initiated', function () {
-    scope.selectedZone = {id: 4, name: 'zone1'};
-    scope.selectedProgram = {id: 4, name: 'program1'};
-    scope.selectedPeriod = {id: 4, name: 'period1'};
-
-    httpBackend.expect('POST','/distributions.json').respond(200, {"success": "Data has been downloaded", "distribution": {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
-    httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
-      {'id': '23'}
-    ]});
-    httpBackend.expect('GET', '/deliveryZone/4/program/4/refrigerators.json').respond(200, {"refrigerators": [
-      {'id': '1'}
-    ]});
-
-    scope.initiateDistribution();
-
-    httpBackend.flush();
-    expect(mockedIndexedDB.execute).toHaveBeenCalled();
   });
 });

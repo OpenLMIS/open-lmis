@@ -25,7 +25,4 @@ distributionModule.service('SharedDistributions', function (IndexedDB, $rootScop
       };
     });
   };
-
-  this.update();
-
 });
