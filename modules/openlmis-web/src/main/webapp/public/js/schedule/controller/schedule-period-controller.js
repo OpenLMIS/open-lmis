@@ -28,7 +28,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     var endDate = new Date(endTime);
     endDate.setHours(0);
     startDate.setHours(0);
-    var days = Math.ceil(((endDate.getTime() - startDate.getTime()) / $scope.oneDay));
+    var days = Math.ceil(((endDate.getTime() - startDate.getTime() + $scope.oneDay) / $scope.oneDay));
     if (days > 0)
       return days;
     else return null;

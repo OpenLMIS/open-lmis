@@ -4,15 +4,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisitions,
-                               PeriodsForFacilityAndProgram, UserFacilityList,
-                               CreateRequisitionProgramList,
-                               UserSupervisedFacilitiesForProgram,
-                               FacilityProgramRights, navigateBackService,
-                               messageService) {
+function InitiateRnrController($scope, $location, $rootScope, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
 
   $rootScope.fullScreen = false;
   var isNavigatedBack;
+
+  $scope.selectedRnrType = {"name": "Regular", "emergency": false};
+  $scope.rnrTypes = {"types": [
+    {"name": "Regular", "emergency": false},
+    {"name": "Emergency", "emergency": true}
+  ]};
 
   var resetRnrData = function () {
     $scope.periodGridData = [];
@@ -172,7 +173,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions,
       $scope.error = "";
       return;
     }
-    PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id},
+    PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, emergency: $scope.selectedRnrType.emergency},
       function (data) {
         $scope.error = "";
         createPeriodWithRnrStatus(data.periods, data.rnr);
