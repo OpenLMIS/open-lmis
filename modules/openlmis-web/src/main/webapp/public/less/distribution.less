@@ -215,7 +215,7 @@
 #epiUseTable {
   overflow: auto;
   table {
-    min-width: 100%;
+    min-width: 800px;
     tr:nth-child(even) td {
       background: #f9f9f9;
     }
@@ -248,16 +248,21 @@
     }
   }
   .col-doses {
-    min-width: 150px;
+    min-width: 100px;
+    max-width: 250px;
+    word-wrap: break-word;
   }
   .col-total {
-    min-width: 100px;
+    min-width: 70px;
   }
   .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-expiration-date {
-    max-width: 96px;
+    max-width: 100px;
+    min-width: 70px;
   }
   input[type="text"] {
-    width: 85%;
+    padding: 0;
+    width: 98%;
+    height: 28px;
     margin-bottom: 3px;
   }
   input[type="checkbox"] {
