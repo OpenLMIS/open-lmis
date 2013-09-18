@@ -332,18 +332,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
     homePage.navigateViewOrders();
   }
 
-  @Then("^I should see ordered list$")
-  public void verifyOrderedList() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    ViewOrdersPage viewOrdersPage = new ViewOrdersPage(testWebDriver);
-    String requisitionId = dbWrapper.getLatestRequisitionId();
-    String[] periods = periodTopSNUser.split("-");
-    String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", true);
-    dbWrapper.updatePacksToShip("0");
-    homePage.navigateConvertToOrder();
-    homePage.navigateViewOrders();
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", false);
+  @Then("^I should see ordered list with download link$")
+  public void verifyOrderListWithdDownloadLink() throws Exception {
+      verifyOrderedList(true);
   }
 
   @When("^I do not have anything to pack to ship$")
@@ -351,16 +342,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.updatePacksToShip("0");
   }
 
-  @Then("^I should not see download link$")
-  public void verifyOrderListAndDownloadLink() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    ViewOrdersPage viewOrdersPage = new ViewOrdersPage(testWebDriver);
-    String requisitionId = dbWrapper.getLatestRequisitionId();
-    String[] periods = periodTopSNUser.split("-");
-    String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
-    homePage.navigateConvertToOrder();
-    homePage.navigateViewOrders();
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", false);
+  @Then("^I should see ordered list without download link$")
+  public void verifyOrderListWithoutdDownloadLink() throws Exception {
+      verifyOrderedList(false);
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
@@ -382,6 +366,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, boolean programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
+  }
+
+  private void verifyOrderedList(boolean downloadFlag) throws Exception {
+    ViewOrdersPage viewOrdersPage = new ViewOrdersPage(testWebDriver);
+    String requisitionId = dbWrapper.getLatestRequisitionId();
+    String[] periods = periodTopSNUser.split("-");
+    String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
+    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
   @After
