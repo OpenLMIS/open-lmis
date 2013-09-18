@@ -46,7 +46,7 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = ID, using = "facilityIndicator")
   private static WebElement facilityOverAllIndicator;
 
-  @FindBy(how = XPATH, using = "//div[@class='is-incomplete']/span[@class='status-icon']")
+  @FindBy(how = XPATH, using = "//div[@class='select2-result-label']/div/span[@class='status-icon']")
   private static WebElement firstFacilityIndicator;
 
 
@@ -122,7 +122,9 @@ public class FacilityListPage extends RequisitionPage {
     else if(whichIcon.toLowerCase().equals("Individual".toLowerCase())){
       clickFacilityListDropDown();
       testWebDriver.waitForElementToAppear(facilityListTextField);
+      testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
       SeleneseTestBase.assertEquals(color, firstFacilityIndicator.getCssValue("background-color"));
+      clickFacilityListDropDown();
     }
 
   }

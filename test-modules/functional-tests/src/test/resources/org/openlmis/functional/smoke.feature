@@ -498,14 +498,14 @@ Feature: Smoke Tests
     When I record data
     And I choose facility "F10"
     Then I should see "Overall" facility icon as "AMBER"
-#    And I should see "Individual" facility icon as "AMBER"
+    And I should see "Individual" facility icon as "AMBER"
     When I add new refrigerator
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
     And I access done
     Then I should see "Overall" facility icon as "RED"
-#    And I should see "Individual" facility icon as "RED"
+    And I should see "Individual" facility icon as "RED"
     When I access plan my distribution page
     Then I should see overall distribution icon as "RED"
     When I record data
@@ -530,7 +530,7 @@ Feature: Smoke Tests
     And I enter EPI end of month as "5"
 
     Then I should see "Overall" facility icon as "GREEN"
-  #    And I should see "Individual" facility icon as "GREEN"
+    And I should see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
     Then I should see overall distribution icon as "GREEN"
 
