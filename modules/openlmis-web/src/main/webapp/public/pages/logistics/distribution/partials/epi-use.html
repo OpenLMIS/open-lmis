@@ -4,155 +4,199 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<ng-include src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
-<div class="clearfix facility-container">
-  <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+<ng-include
+    src = "'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+<div class = "clearfix facility-container">
+  <ng-include
+      src = "'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-  <div class="facility-info">
-    <div class="refrigerator-container">
+  <div class = "facility-info">
+    <div class = "refrigerator-container">
       <h3>
-        <span openlmis-message="header.epi.use"></span>
-        <a href="javascript:void(0)" ng-click="applyNRAll()" class="pull-right btn"
-           openlmis-message="button.apply.nr.all"></a>
+        <span openlmis-message = "header.epi.use"></span>
+        <a href = "javascript:void(0)" ng-click = "applyNRAll()"
+           class = "pull-right btn"
+           openlmis-message = "button.apply.nr.all"></a>
       </h3>
 
-      <div class="alert alert-info" id="noRefrigerators"
-           ng-hide="distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
-        <span openlmis-message="message.no.product.groups"></span>
+      <div class = "alert alert-info" id = "noRefrigerators"
+           ng-hide = "distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
+        <span openlmis-message = "message.no.product.groups"></span>
       </div>
 
-      <div id="epiUseTable" tab-scroll bottom-offset="180"
-           ng-show="distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th class="col-doses" openlmis-message="header.epi.use.doses"></th>
-              <th class="col-starting-stock" openlmis-message="header.epi.use.startingStock"></th>
-              <th class="col-received" openlmis-message="header.epi.use.received"></th>
-              <th class="col-total" openlmis-message="header.epi.use.total"></th>
-              <th class="col-distributed" openlmis-message="header.epi.use.distributed"></th>
-              <th class="col-loss" openlmis-message="header.epi.use.loss"></th>
-              <th class="col-ending-stock" openlmis-message="header.epi.use.endingStock"></th>
-              <th class="col-expiration-date" openlmis-message="description.column.expiration.date"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="groupReading in distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups"
-               ng-controller="EpiUseRowController">
-            <form auto-save="distribution" object-store="distributions">
-              <td class="col-doses">
-                <span ng-bind="groupReading.name"></span>
-              </td>
-              <td class="col-starting-stock">
-                <div>
-                  <input type="text" ng-model="groupReading.reading.stockAtFirstOfMonth.value"
-                       name="stockAtFirstOfMonth{{$index}}" numeric-validator="positiveInteger" maxlength="7"
-                       error-holder="stockAtFirstOfMonthError{{$index}}"/>
-                </div>
-                <div class="error">
-                  <span id="stockAtFirstOfMonthError{{$index}}" class="rnr-form-error"
-                     openlmis-message="error.number.only"
-                     style="display: none"></span>
-                </div>
-                <input id="stockAtFirstOfMonth{{$index}}" type="checkbox"
-                       ng-model="groupReading.reading.stockAtFirstOfMonth.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="stockAtFirstOfMonth{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="col-received">
-                <div>
-                  <input type="text" ng-model="groupReading.reading.received.value" name="received{{$index}}"
-                       numeric-validator="positiveInteger" maxlength="7" error-holder="receivedError{{$index}}"/>
-                </div>
-                <div class="error">
-                  <span id="receivedError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
-                        style="display: none"></span>
-                </div>
-                <input id="received{{$index}}" type="checkbox"
-                       ng-model="groupReading.reading.received.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="received{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="col-total">
-                <span ng-bind="getTotal()"></span>
-              </td>
-              <td class="col-distributed">
-                <div>
-                  <input type="text" ng-model="groupReading.reading.distributed.value" name="distributed{{$index}}"
-                       numeric-validator="positiveInteger" maxlength="7" error-holder="distributedError{{$index}}"/>
-                </div>
+      <div id = "epiUseTable" tab-scroll bottom-offset = "180"
+           ng-show = "distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
+        <form auto-save = "distribution" object-store = "distributions">
+          <table class = "table table-bordered">
+            <thead>
+              <tr>
+                <th class = "col-doses"
+                    openlmis-message = "header.epi.use.doses"></th>
+                <th class = "col-starting-stock"
+                    openlmis-message = "header.epi.use.startingStock"></th>
+                <th class = "col-received"
+                    openlmis-message = "header.epi.use.received"></th>
+                <th class = "col-total"
+                    openlmis-message = "header.epi.use.total"></th>
+                <th class = "col-distributed"
+                    openlmis-message = "header.epi.use.distributed"></th>
+                <th class = "col-loss"
+                    openlmis-message = "header.epi.use.loss"></th>
+                <th class = "col-ending-stock"
+                    openlmis-message = "header.epi.use.endingStock"></th>
+                <th class = "col-expiration-date"
+                    openlmis-message = "description.column.expiration.date"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat = "groupReading in distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups"
+                  ng-controller = "EpiUseRowController">
+                <td class = "col-doses">
+                  <span ng-bind = "groupReading.name"></span>
+                </td>
+                <td class = "col-starting-stock">
+                  <div>
+                    <input type = "text"
+                           ng-model = "groupReading.reading.stockAtFirstOfMonth.value"
+                           name = "stockAtFirstOfMonth{{$index}}"
+                           numeric-validator = "positiveInteger" maxlength = "7"
+                           error-holder = "stockAtFirstOfMonthError{{$index}}"/>
+                  </div>
+                  <div class = "error">
+                    <span id = "stockAtFirstOfMonthError{{$index}}"
+                          class = "rnr-form-error"
+                          openlmis-message = "error.number.only"
+                          style = "display: none"></span>
+                  </div>
+                  <input id = "stockAtFirstOfMonth{{$index}}" type = "checkbox"
+                         ng-model = "groupReading.reading.stockAtFirstOfMonth.notRecorded"
+                         not-recorded/>
+                  <label class = "checkbox-label"
+                         for = "stockAtFirstOfMonth{{$index}}"
+                         openlmis-message = "label.not.recorded"></label>
+                </td>
+                <td class = "col-received">
+                  <div>
+                    <input type = "text"
+                           ng-model = "groupReading.reading.received.value"
+                           name = "received{{$index}}"
+                           numeric-validator = "positiveInteger" maxlength = "7"
+                           error-holder = "receivedError{{$index}}"/>
+                  </div>
+                  <div class = "error">
+                    <span id = "receivedError{{$index}}"
+                          class = "rnr-form-error"
+                          openlmis-message = "error.number.only"
+                          style = "display: none"></span>
+                  </div>
+                  <input id = "received{{$index}}" type = "checkbox"
+                         ng-model = "groupReading.reading.received.notRecorded"
+                         not-recorded/>
+                  <label class = "checkbox-label" for = "received{{$index}}"
+                         openlmis-message = "label.not.recorded"></label>
+                </td>
+                <td class = "col-total">
+                  <span ng-bind = "getTotal()"></span>
+                </td>
+                <td class = "col-distributed">
+                  <div>
+                    <input type = "text"
+                           ng-model = "groupReading.reading.distributed.value"
+                           name = "distributed{{$index}}"
+                           numeric-validator = "positiveInteger" maxlength = "7"
+                           error-holder = "distributedError{{$index}}"/>
+                  </div>
 
-                <div class="error">
-                  <span id="distributedError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
-                     style="display: none"></span>
-                </div>
-                <input id="distributed{{$index}}" type="checkbox"
-                       ng-model="groupReading.reading.distributed.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="distributed{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="col-loss">
-                <div>
-                  <input type="text" ng-model="groupReading.reading.loss.value" name="loss{{$index}}" maxlength="7"
-                       numeric-validator="positiveInteger" error-holder="lossError{{$index}}"/>
-                </div>
+                  <div class = "error">
+                    <span id = "distributedError{{$index}}"
+                          class = "rnr-form-error"
+                          openlmis-message = "error.number.only"
+                          style = "display: none"></span>
+                  </div>
+                  <input id = "distributed{{$index}}" type = "checkbox"
+                         ng-model = "groupReading.reading.distributed.notRecorded"
+                         not-recorded/>
+                  <label class = "checkbox-label" for = "distributed{{$index}}"
+                         openlmis-message = "label.not.recorded"></label>
+                </td>
+                <td class = "col-loss">
+                  <div>
+                    <input type = "text"
+                           ng-model = "groupReading.reading.loss.value"
+                           name = "loss{{$index}}" maxlength = "7"
+                           numeric-validator = "positiveInteger"
+                           error-holder = "lossError{{$index}}"/>
+                  </div>
 
-                <div class="error">
-                  <span id="lossError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only"
-                     style="display: none"></span>
-                </div>
-                <input id="loss{{$index}}" type="checkbox"
-                       ng-model="groupReading.reading.loss.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="loss{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="col-ending-stock">
-                <div>
-                  <input type="text" ng-model="groupReading.reading.stockAtEndOfMonth.value"
-                       name="stockAtEndOfMonth{{$index}}" numeric-validator="positiveInteger" maxlength="7"
-                       error-holder="stockAtEndOfMonthError{{$index}}"/>
-                </div>
-                <div class="error">
-                  <span id="stockAtEndOfMonthError{{$index}}" class="rnr-form-error" openlmis-message="error.number.only" style="display: none"></span>
-                </div>
-                <input id="stockAtEndOfMonth{{$index}}" type="checkbox"
-                       ng-model="groupReading.reading.stockAtEndOfMonth.notRecorded"
-                       not-recorded/>
-                <label class="checkbox-label" for="stockAtEndOfMonth{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-              <td class="expiration-date">
-                <div>
-                  <input type="text" ng-model="groupReading.reading.expirationDate.value" name="expirationDate{{$index}}"
-                       date-validator="date"
-                       showError="inputClass" error-holder="expirationDateError{{$index}}" maxlength="7"/>
-                </div>
+                  <div class = "error">
+                    <span id = "lossError{{$index}}" class = "rnr-form-error"
+                          openlmis-message = "error.number.only"
+                          style = "display: none"></span>
+                  </div>
+                  <input id = "loss{{$index}}" type = "checkbox"
+                         ng-model = "groupReading.reading.loss.notRecorded"
+                         not-recorded/>
+                  <label class = "checkbox-label" for = "loss{{$index}}"
+                         openlmis-message = "label.not.recorded"></label>
+                </td>
+                <td class = "col-ending-stock">
+                  <div>
+                    <input type = "text"
+                           ng-model = "groupReading.reading.stockAtEndOfMonth.value"
+                           name = "stockAtEndOfMonth{{$index}}"
+                           numeric-validator = "positiveInteger" maxlength = "7"
+                           error-holder = "stockAtEndOfMonthError{{$index}}"/>
+                  </div>
+                  <div class = "error">
+                    <span id = "stockAtEndOfMonthError{{$index}}"
+                          class = "rnr-form-error"
+                          openlmis-message = "error.number.only"
+                          style = "display: none"></span>
+                  </div>
+                  <input id = "stockAtEndOfMonth{{$index}}" type = "checkbox"
+                         ng-model = "groupReading.reading.stockAtEndOfMonth.notRecorded"
+                         not-recorded/>
+                  <label class = "checkbox-label"
+                         for = "stockAtEndOfMonth{{$index}}"
+                         openlmis-message = "label.not.recorded"></label>
+                </td>
+                <td class = "expiration-date">
+                  <div>
+                    <input type = "text"
+                           ng-model = "groupReading.reading.expirationDate.value"
+                           name = "expirationDate{{$index}}"
+                           date-validator = "date"
+                           showError = "inputClass"
+                           error-holder = "expirationDateError{{$index}}"
+                           maxlength = "7"/>
+                  </div>
 
-                <div class="error">
-                  <span class="alert alert-warning warning-alert" id="expirationDateError{{$index}}"
-                      style="display:none;" openlmis-message="error.invalid.date.format"></span>
-                </div>
-                <input id="expirationDate{{$index}}" type="checkbox"
-                       ng-model="groupReading.reading.expirationDate.notRecorded"
-                       not-recorded="clearError"/>
-                <label class="checkbox-label" for="expirationDate{{$index}}"
-                       openlmis-message="label.not.recorded"></label>
-              </td>
-            </form>
-            </tr>
-          </tbody>
-        </table>
+                  <div class = "error">
+                    <span class = "alert alert-warning warning-alert"
+                          id = "expirationDateError{{$index}}"
+                          style = "display:none;"
+                          openlmis-message = "error.invalid.date.format"></span>
+                  </div>
+                  <input id = "expirationDate{{$index}}" type = "checkbox"
+                         ng-model = "groupReading.reading.expirationDate.notRecorded"
+                         not-recorded = "clearError"/>
+                  <label class = "checkbox-label"
+                         for = "expirationDate{{$index}}"
+                         openlmis-message = "label.not.recorded"></label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
       </div>
     </div>
   </div>
 
-  <div class="facility-info facility-toolbar">
-    <a href="" class="pull-left">&laquo; <span openlmis-message="link.previous"></span></a>
-    <a href="" class="pull-right"><span openlmis-message="link.next"></span> &raquo;</a>
+  <div class = "facility-info facility-toolbar">
+    <a href = "" class = "pull-left">&laquo; <span
+        openlmis-message = "link.previous"></span></a>
+    <a href = "" class = "pull-right"><span
+        openlmis-message = "link.next"></span> &raquo;</a>
   </div>
 
 </div>
