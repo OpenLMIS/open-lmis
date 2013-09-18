@@ -118,7 +118,7 @@ public class ShipmentFileProcessor {
       }
     }
 
-    if (!status) {
+    if ((!status) || (orderSet.size() == 0)) {
       throw new DataException("shipment.file.error");
     }
   }

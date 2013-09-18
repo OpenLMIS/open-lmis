@@ -194,7 +194,7 @@ public class ShipmentFileProcessorTest {
     shipmentFileProcessor.process(message);
 
     verify(mockedCsvListReader).getHeader(true);
-    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, true);
+    verify(shipmentFilePostProcessHandler).process(new HashSet<Long>(), shipmentFile, false);
   }
 
   @Test
