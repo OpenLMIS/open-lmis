@@ -430,7 +430,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(2500);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
     return new ConvertOrderPage(testWebDriver);
   }
