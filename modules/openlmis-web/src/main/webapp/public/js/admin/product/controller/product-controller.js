@@ -46,24 +46,37 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
         $scope.filteredProducts = [];
         query = query || "";
         if (query == 'NaN' || query == '') {
-            $scope.filteredProducts = $scope.productsList;
+            $scope.filteredProducts = $scope.filterProductsByName($scope.productsList);
             return;
         }
         $scope.query = query;
+        $scope.filteredArray = [];
         angular.forEach($scope.productsList, function (product) {
              $scope.product = product;
-            console.log('Query is ' + $scope.query);
-            console.log(' Product is ' + $scope.product.primaryname);
              angular.forEach($scope.product.programs, function (pp){
-                 console.log('  Program id is ' + pp.id + ' ' + pp.name);
                  if(pp.id == $scope.query){
-                        $scope.filteredProducts.push($scope.product);
+                     $scope.filteredArray.push($scope.product);
                  }
             });
         });
-
+        $scope.filteredProducts =  $scope.filterProductsByName( $scope.filteredArray );
         $scope.resultCount = $scope.filteredProducts.length;
     };
+
+    $scope.filterProductsByName = function(arrayOfProducts){
+        if($scope.productName == '' || $scope.productName == undefined){
+            return arrayOfProducts;
+        }
+
+        var result = [];
+        angular.forEach(arrayOfProducts, function(product){
+            if(product.primaryName.indexOf($scope.productName) == 0){
+                result.push(product);
+            }
+        });
+        return result;
+
+    }
 
 //  scope is undefined,
     $scope.productLoaded = function () {
