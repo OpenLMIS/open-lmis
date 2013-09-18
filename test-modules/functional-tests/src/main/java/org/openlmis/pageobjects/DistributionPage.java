@@ -9,7 +9,6 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -19,7 +18,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -50,6 +49,9 @@ public class DistributionPage extends Page {
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement saveSuccessMessageDiv;
+
+  @FindBy(how = ID, using = "indicator0")
+  private static WebElement distributionIndicator;
 
 
   public DistributionPage(TestWebDriver driver) throws IOException {
@@ -210,5 +212,17 @@ public class DistributionPage extends Page {
             return periodSelectBoxPresent;
         }
     }
+
+  public void verifyDistributionColor(String color) {
+    testWebDriver.waitForElementToAppear(distributionIndicator);
+    if(color.toLowerCase().equals("RED".toLowerCase()))
+      color="rgba(203, 64, 64, 1)";
+    else if(color.toLowerCase().equals("GREEN".toLowerCase()))
+      color="rgba(82, 168, 30, 1)";
+    else if(color.toLowerCase().equals("AMBER".toLowerCase()))
+      color="rgba(240, 165, 19, 1)";
+
+      assertEquals(color,distributionIndicator.getCssValue("background-color"));
+  }
 
 }

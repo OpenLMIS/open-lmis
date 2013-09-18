@@ -7,6 +7,7 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -41,6 +42,12 @@ public class FacilityListPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li/ul/li/div/div")
   private static WebElement facilityListSelectField;
+
+  @FindBy(how = ID, using = "facilityIndicator")
+  private static WebElement facilityOverAllIndicator;
+
+  @FindBy(how = XPATH, using = "//div[@class='is-incomplete']/span[@class='status-icon']")
+  private static WebElement firstFacilityIndicator;
 
 
 
@@ -84,6 +91,7 @@ public class FacilityListPage extends RequisitionPage {
     facilityListTextField.sendKeys(facilityCode);
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
+    testWebDriver.sleep(250);
   }
 
   public void clickFacilityListDropDown() {
@@ -100,7 +108,24 @@ public class FacilityListPage extends RequisitionPage {
     assertTrue("Facility name incorrect in header.",facilityPageHeader.getText().contains(facilityName));
   }
 
+  public void verifyFacilityIndicatorColor(String whichIcon, String color) {
+    testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
+    if(color.toLowerCase().equals("RED".toLowerCase()))
+      color="rgba(203, 64, 64, 1)";
+    else if(color.toLowerCase().equals("GREEN".toLowerCase()))
+      color="rgba(82, 168, 30, 1)";
+    else if(color.toLowerCase().equals("AMBER".toLowerCase()))
+      color="rgba(240, 165, 19, 1)";
 
+    if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+      SeleneseTestBase.assertEquals(color, facilityOverAllIndicator.getCssValue("background-color"));
+    else if(whichIcon.toLowerCase().equals("Individual".toLowerCase())){
+      clickFacilityListDropDown();
+      testWebDriver.waitForElementToAppear(facilityListTextField);
+      SeleneseTestBase.assertEquals(color, firstFacilityIndicator.getCssValue("background-color"));
+    }
+
+  }
 
 
 }

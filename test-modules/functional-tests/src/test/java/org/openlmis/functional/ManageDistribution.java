@@ -90,6 +90,11 @@ public class ManageDistribution extends TestCaseHelper {
     updateProductWithGroup(product, productGroup);
   }
 
+  @And("^I disassociate \"([^\"]*)\" from delivery zone$")
+  public void disassociateFacility(String facility) throws Exception {
+    dbWrapper.deleteDeliveryZoneMembers(facility);
+  }
+
   @When("^I Enter \"([^\"]*)\" values:$")
   public void enterEPIValues(String tabName, DataTable tableData) {
     Map<String, String> data = tableData.asMaps().get(0);
@@ -186,6 +191,18 @@ public class ManageDistribution extends TestCaseHelper {
   public void initiateDistribution() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.clickInitiateDistribution();
+  }
+
+  @Then("^I should see overall distribution icon as \"([^\"]*)\"$")
+  public void verifyOverAllDistributionIndicator(String color) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.verifyDistributionColor(color);
+  }
+
+  @Then("^I should see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
+  public void verifyOverAllFacilityIndicator(String whichIcon,String color) throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
   }
 
   @And("^I record data$")

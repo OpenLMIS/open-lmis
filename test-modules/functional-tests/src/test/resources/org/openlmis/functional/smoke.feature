@@ -472,3 +472,66 @@ Feature: Smoke Tests
     And I verify saved "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth | total |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          | 22    |
+    When I access plan my distribution page
+    When I record data
+    And I choose facility "F10"
+    Then Verify "epi use" indicator should be "GREEN"
+
+  @Smoke
+  @ie2
+
+  Scenario: User should verify facility and sync status
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    And I disassociate "F11" from delivery zone
+    When I am logged in as "storeincharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    Then I should see overall distribution icon as "AMBER"
+    When I record data
+    And I choose facility "F10"
+    Then I should see "Overall" facility icon as "AMBER"
+#    And I should see "Individual" facility icon as "AMBER"
+    When I add new refrigerator
+    When I enter Brand "LG"
+    And I enter Modal "800 LITRES"
+    And I enter Serial Number "GR-J287PGHV"
+    And I access done
+    Then I should see "Overall" facility icon as "RED"
+#    And I should see "Individual" facility icon as "RED"
+    When I access plan my distribution page
+    Then I should see overall distribution icon as "RED"
+    When I record data
+
+    And I choose facility "F10"
+    When I edit refrigerator
+    And I enter refrigerator temperature "3"
+    And I verify "Yes" it was working correctly when I left
+    And I enter low alarm events "1"
+    And I enter high alarm events "0"
+    And I verify "No" that there is a problem with refrigerator since last visit
+
+    And I navigate to general observations tab
+    And I Enter "general observation" values:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               | mai ka         | lal             |
+
+    And Navigate to EPI tab
+    And I Enter "epi use" values:
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           |            |
+    And I enter EPI end of month as "5"
+
+    Then I should see "Overall" facility icon as "GREEN"
+  #    And I should see "Individual" facility icon as "GREEN"
+    When I access plan my distribution page
+    Then I should see overall distribution icon as "GREEN"
+
+
