@@ -32,10 +32,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.*;
 
 import static java.lang.Long.parseLong;
 import static org.apache.commons.collections.CollectionUtils.select;
@@ -72,6 +73,9 @@ public class ShipmentFileProcessor {
   public void process(Message message) throws Exception {
     File shipmentFile = (File) message.getPayload();
     logger.debug("processing Shipment File " + shipmentFile.getName());
+    Path path = Paths.get(shipmentFile.getPath());
+    BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+    Date creationDate = new Date(attributes.creationTime().toMillis());
     Set<Long> orderIds = new HashSet<>();
 
     ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
@@ -81,7 +85,7 @@ public class ShipmentFileProcessor {
 
       ignoreFirstLineIfHeadersArePresent(shipmentFileTemplate, listReader);
 
-      getSpringProxy().processShipmentLineItem(listReader, shipmentFileTemplate, orderIds);
+      getSpringProxy().processShipmentLineItem(listReader, shipmentFileTemplate, orderIds, creationDate);
       logger.debug("Successfully processed file " + shipmentFile.getName());
 
     } catch (Exception e) {
@@ -93,7 +97,7 @@ public class ShipmentFileProcessor {
 
   @Transactional
   public void processShipmentLineItem(ICsvListReader listReader,
-                                      ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet) throws Exception {
+                                      ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
     boolean status = true;
 
     List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
@@ -106,7 +110,7 @@ public class ShipmentFileProcessor {
     List<String> fieldsInOneRow;
     while ((fieldsInOneRow = listReader.read()) != null) {
 
-      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns, creationDate);
       status = addShippableOrder(orderSet, dto) && status;
 
       if (status) {
@@ -164,7 +168,7 @@ public class ShipmentFileProcessor {
     });
   }
 
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns) {
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns, Date creationDate) {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
@@ -174,6 +178,9 @@ public class ShipmentFileProcessor {
       try {
         Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
         field.setAccessible(true);
+        if (field.getName().equals("packedDate") && (fieldsInOneRow.get(position - 1) == null)) {
+          fieldsInOneRow.set(position - 1, creationDate.toString());
+        }
         field.set(dto, fieldsInOneRow.get(position - 1));
       } catch (Exception e) {
         logger.error("Unable to set field '" + name +

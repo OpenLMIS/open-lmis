@@ -34,10 +34,16 @@ import org.supercsv.io.CsvListReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -45,6 +51,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.shipment.builder.ShipmentFileColumnBuilder.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
@@ -98,6 +105,17 @@ public class ShipmentFileProcessorTest {
     whenNew(FileInputStream.class).withArguments(shipmentFile).thenReturn(shipmentInputStream);
     whenNew(FileReader.class).withArguments(shipmentFile).thenReturn(mockedFileReader);
     whenNew(CsvListReader.class).withArguments(mockedFileReader, STANDARD_PREFERENCE).thenReturn(mockedCsvListReader);
+
+    mockStatic(Paths.class);
+    Path path = mock(Path.class);
+    String shipmentFilePath = "testPath";
+    when(shipmentFile.getPath()).thenReturn(shipmentFilePath);
+    when(Paths.get(shipmentFilePath)).thenReturn(path);
+    mockStatic(Files.class);
+    BasicFileAttributes attributes = mock(BasicFileAttributes.class);
+    when(Files.readAttributes(path, BasicFileAttributes.class)).thenReturn(attributes);
+    FileTime fileTime =  FileTime.from(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+    when(attributes.creationTime()).thenReturn(fileTime);
 
     shipmentConfiguration = new ShipmentConfiguration(false);
   }

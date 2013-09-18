@@ -43,7 +43,8 @@ public interface OrderMapper {
 
   @Update({"UPDATE orders SET",
     "shipmentId = #{shipmentId},",
-    "status = #{status}",
+    "status = #{status},",
+    "modifiedDate = DEFAULT",
     "WHERE id = #{orderId}"})
   void updateShipmentAndStatus(@Param("orderId") Long orderId,
                                @Param("status") OrderStatus status,

@@ -50,7 +50,9 @@ public class ShipmentLineItemTransformer {
     }
 
     if (!isBlank(dto.getPackedDate())) {
-      lineItem.setPackedDate(new SimpleDateFormat(packedDateFormat).parse(dto.getPackedDate().trim()));
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat(packedDateFormat);
+      simpleDateFormat.setLenient(false);
+      lineItem.setPackedDate(simpleDateFormat.parse(dto.getPackedDate().trim()));
     }
 
     if (!isBlank(dto.getShippedDate())) {
