@@ -7,19 +7,20 @@
 describe("HeaderController", function () {
 
   beforeEach(module('openlmis.services'));
+  beforeEach(module('openlmis'));
 
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.directives'));
 
-  var scope, ctrl, httpBackend, messageService;
+  var scope, loginConfig;
 
-  beforeEach(inject(function ($rootScope, $controller, _messageService_, _$httpBackend_) {
-    httpBackend = _$httpBackend_;
+  beforeEach(inject(function ($rootScope, $controller) {
+    loginConfig = {a: {}, b: {}};
     scope = $rootScope.$new();
-    messageService = _messageService_;
-    spyOn(messageService, 'populate');
-    httpBackend.when('GET', '/user-context.json').respond({"id": 123, "userName": "User420"});
-    ctrl = $controller(HeaderController, {$scope: scope, messageService: messageService});
+    $controller(HeaderController, {$scope: scope, loginConfig: loginConfig});
   }));
 
+  it('should set login config in scope', function () {
+    expect(scope.loginConfig).toEqual(loginConfig);
+  })
 });
