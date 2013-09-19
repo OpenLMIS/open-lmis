@@ -7,6 +7,7 @@
 package org.openlmis.core.domain;
 
 
+import org.apache.commons.lang.time.DateUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -19,6 +20,8 @@ import java.util.Date;
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static junit.framework.Assert.fail;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
@@ -87,6 +90,15 @@ public class ProcessingPeriodTest {
     exException.expect(dataExceptionMatcher("error.period.invalid.dates"));
 
     processingPeriod.validate();
+  }
+
+  @Test
+  public void shouldIncludeEndDateInPeriod() throws Exception {
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
+    processingPeriod.includeEntireDuration();
+
+    assertThat(processingPeriod.getStartDate(), is(DateUtils.parseDate("01-01-12 00:00:00", new String[]{"dd-MM-yy HH:mm:ss"})));
+    assertThat(processingPeriod.getEndDate(), is(DateUtils.parseDate("01-02-12 23:59:59", new String[]{"dd-MM-yy HH:mm:ss"})));
   }
 
   private Date oneMonthPast(Date date) {

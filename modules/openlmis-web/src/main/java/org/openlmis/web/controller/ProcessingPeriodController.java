@@ -54,8 +54,8 @@ public class ProcessingPeriodController extends BaseController {
 
     try {
       processingScheduleService.savePeriod(processingPeriod);
-    } catch (DataException e) {
-      return error(e, HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+      return error(new DataException(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
     ResponseEntity<OpenLmisResponse> successResponse = success(messageService.message("message.period.added.success"));
     successResponse.getBody().addData("id", processingPeriod.getId());

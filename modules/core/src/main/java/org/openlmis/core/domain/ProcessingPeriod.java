@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -63,5 +65,12 @@ public class ProcessingPeriod extends BaseModel {
 
   public ProcessingPeriod basicInformation() {
     return new ProcessingPeriod(id, startDate, endDate, numberOfMonths, name);
+  }
+
+  public void includeEntireDuration() throws ParseException {
+    SimpleDateFormat dateFormatWithoutTime = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dateFormatWithTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    startDate = dateFormatWithoutTime.parse(dateFormatWithoutTime.format(startDate) + " 00:00:00");
+    endDate = dateFormatWithTime.parse(dateFormatWithoutTime.format(endDate) + " 23:59:59");
   }
 }

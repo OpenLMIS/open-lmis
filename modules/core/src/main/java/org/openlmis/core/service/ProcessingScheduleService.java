@@ -16,6 +16,7 @@ import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class ProcessingScheduleService {
     return processingSchedule;
   }
 
-  public void savePeriod(ProcessingPeriod processingPeriod) {
+  public void savePeriod(ProcessingPeriod processingPeriod) throws ParseException {
     periodRepository.insert(processingPeriod);
   }
 
@@ -73,7 +74,7 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriod) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
-        startingPeriod, programStartDate, new Date());
+      startingPeriod, programStartDate, new Date());
   }
 
   private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
