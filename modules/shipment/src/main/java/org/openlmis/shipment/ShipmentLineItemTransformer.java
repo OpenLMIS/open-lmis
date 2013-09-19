@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -24,7 +25,7 @@ public class ShipmentLineItemTransformer {
 
   public ShipmentLineItem transform(ShipmentLineItemDTO shipmentLineItemDTO,
                                     String packedDateFormat,
-                                    String shippedDateFormat) throws DataException {
+                                    String shippedDateFormat, Date creationDate) throws DataException {
 
 
     checkMandatory(shipmentLineItemDTO);
@@ -33,7 +34,7 @@ public class ShipmentLineItemTransformer {
 
     try {
       setMandatoryFields(lineItem, shipmentLineItemDTO);
-      setOptionalFields(lineItem, shipmentLineItemDTO, packedDateFormat, shippedDateFormat);
+      setOptionalFields(lineItem, shipmentLineItemDTO, packedDateFormat, shippedDateFormat, creationDate);
     } catch (Exception e) {
       throw new DataException("wrong.data.type");
     }
@@ -42,7 +43,7 @@ public class ShipmentLineItemTransformer {
   }
 
   private void setOptionalFields(ShipmentLineItem lineItem, ShipmentLineItemDTO dto,
-                                 String packedDateFormat, String shippedDateFormat)
+                                 String packedDateFormat, String shippedDateFormat, Date creationDate)
     throws ParseException {
 
     if (!isBlank(dto.getCost())) {
@@ -53,6 +54,8 @@ public class ShipmentLineItemTransformer {
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat(packedDateFormat);
       simpleDateFormat.setLenient(false);
       lineItem.setPackedDate(simpleDateFormat.parse(dto.getPackedDate().trim()));
+    } else {
+      lineItem.setPackedDate(creationDate);
     }
 
     if (!isBlank(dto.getShippedDate())) {

@@ -110,11 +110,11 @@ public class ShipmentFileProcessor {
     List<String> fieldsInOneRow;
     while ((fieldsInOneRow = listReader.read()) != null) {
 
-      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns, creationDate);
+      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
       status = addShippableOrder(orderSet, dto) && status;
 
       if (status) {
-        status = saveLineItem(dto, packedDateFormat, shippedDateFormat);
+        status = saveLineItem(dto, packedDateFormat, shippedDateFormat, creationDate);
       }
     }
 
@@ -145,10 +145,10 @@ public class ShipmentFileProcessor {
 
   private boolean saveLineItem(ShipmentLineItemDTO dto,
                                String packedDateFormat,
-                               String shippedDateFormat) {
+                               String shippedDateFormat, Date creationDate) {
     boolean savedSuccessfully = true;
     try {
-      ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat);
+      ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat, creationDate);
       shipmentService.insertOrUpdate(lineItem);
     } catch (DataException e) {
       logger.warn("Error in processing shipment file for orderId: " + dto.getOrderId(), e);
@@ -168,7 +168,7 @@ public class ShipmentFileProcessor {
     });
   }
 
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns, Date creationDate) {
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns) {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
@@ -178,9 +178,6 @@ public class ShipmentFileProcessor {
       try {
         Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
         field.setAccessible(true);
-        if (field.getName().equals("packedDate") && (fieldsInOneRow.get(position - 1) == null)) {
-          fieldsInOneRow.set(position - 1, creationDate.toString());
-        }
         field.set(dto, fieldsInOneRow.get(position - 1));
       } catch (Exception e) {
         logger.error("Unable to set field '" + name +

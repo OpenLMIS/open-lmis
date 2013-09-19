@@ -39,10 +39,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -98,6 +95,8 @@ public class ShipmentFileProcessorTest {
 
   ShipmentConfiguration shipmentConfiguration;
 
+  Date creationDate;
+
   @Before
   public void setUp() throws Exception {
 
@@ -114,8 +113,10 @@ public class ShipmentFileProcessorTest {
     mockStatic(Files.class);
     BasicFileAttributes attributes = mock(BasicFileAttributes.class);
     when(Files.readAttributes(path, BasicFileAttributes.class)).thenReturn(attributes);
-    FileTime fileTime =  FileTime.from(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+    FileTime fileTime = FileTime.from(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     when(attributes.creationTime()).thenReturn(fileTime);
+    creationDate = new Date();
+    whenNew(Date.class).withArguments(fileTime.toMillis()).thenReturn(creationDate);
 
     shipmentConfiguration = new ShipmentConfiguration(false);
   }
@@ -162,7 +163,7 @@ public class ShipmentFileProcessorTest {
     when(mockedCsvListReader.read()).thenReturn(asList("", "232")).thenReturn(null);
     ShipmentLineItem lineItem = new ShipmentLineItem();
     lineItem.setOrderId(232L);
-    when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString())).thenReturn(lineItem);
+    when(shipmentLineItemTransformer.transform(any(ShipmentLineItemDTO.class), anyString(), anyString(), any(Date.class))).thenReturn(lineItem);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
     when(orderService.isShippable(232L)).thenReturn(true);
 
@@ -229,7 +230,7 @@ public class ShipmentFileProcessorTest {
     when(shipmentLineItem.getOrderId()).thenReturn(333L);
     when(orderService.isShippable(333L)).thenReturn(true);
 
-    when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy")).thenReturn(shipmentLineItem);
+    when(shipmentLineItemTransformer.transform(shipmentLineItemDTO, "MM/yy", "dd/MM/yyyy", creationDate)).thenReturn(shipmentLineItem);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
 
     shipmentFileProcessor.process(message);
