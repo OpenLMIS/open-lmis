@@ -231,9 +231,8 @@ public interface FacilityApprovedProductMapper {
             "WHERE ",
             "pp.programId = #{programId} " +
             "AND fap.facilityTypeId = #{facilityTypeId} ",
-            "AND p.id = #{productId}",
-            "AND p.active = TRUE ",
-            "AND pp.active = TRUE "})
+            "AND p.id = #{productId}"
+            })
     @Results(value = {
             @Result(property = "programProduct.id", column = "programProductId"),
             @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
