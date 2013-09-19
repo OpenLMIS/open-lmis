@@ -156,7 +156,7 @@ public class RequisitionPdfModel {
 
     Facility facility = requisition.getFacility();
     addFirstLine(facility, table);
-    addSecondLine(facility, table);
+    addSecondLine(facility, table, requisition.getEmergency());
     table.setSpacingAfter(PARAGRAPH_SPACING);
     return table;
   }
@@ -194,19 +194,25 @@ public class RequisitionPdfModel {
     table.addCell(cell);
   }
 
-  private void addSecondLine(Facility facility, PdfPTable table) {
+  private void addSecondLine(Facility facility, PdfPTable table, Boolean emergency) {
     GeographicZone geographicZone = facility.getGeographicZone();
     GeographicZone parent = geographicZone.getParent();
     StringBuilder builder = new StringBuilder();
     builder.append(geographicZone.getLevel().getName()).append(": ").append(geographicZone.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
-    builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
+      builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
     builder.append(messageService.message("label.facility.reportingPeriod") + ": ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
       append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
-    insertCell(table, builder.toString(), 2);
+    insertCell(table, builder.toString(), 1);
+
+    String label = emergency? "requisition.type.emergency":"requisition.type.regular";
+    builder = new StringBuilder();
+    builder.append(messageService.message("label.requisition.type")).append(": ").append(messageService.message(label));
+    insertCell(table, builder.toString(), 1);
+
   }
 
   private PdfPTable prepareRequisitionHeaderTable() throws DocumentException {
