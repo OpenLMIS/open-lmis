@@ -11,8 +11,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
 
   $scope.selectedRnrType = {"name": "Regular", "emergency": false};
   $scope.rnrTypes = {"types": [
-    {"name": "Regular", "emergency": false},
-    {"name": "Emergency", "emergency": true}
+    {"name": messageService.get("requisition.type.regular"), "emergency": false},
+    {"name": messageService.get("requisition.type.emergency"), "emergency": true}
   ]};
 
   var resetRnrData = function () {
