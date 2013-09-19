@@ -52,6 +52,31 @@ public class ShipmentLineItemTransformerTest {
   }
 
   @Test
+  public void shouldThrowErrorIfPackedDateIsDifferentFromFormat() {
+    String packedDate = "10/10/2013 ";
+
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
+      "12", "34", packedDate, "10/09/2013");
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("wrong.data.type");
+    new ShipmentLineItemTransformer().transform(dto, "MM/dd/yy", "MM/dd/yyyy", new Date());
+  }
+
+  @Test
+  public void shouldThrowErrorIfShippedDateIsDifferentFromFormat() {
+    String shippedDate = "10/10/13 ";
+
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
+      "12", "34", "10/09/2013", shippedDate);
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("wrong.data.type");
+    new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
+  }
+
+
+  @Test
   public void shouldCreateLineItemIfOnlyMandatoryFieldsArePresent() throws Exception {
 
     ShipmentLineItemDTO dto = dtoWithMandatoryFields();
@@ -66,7 +91,7 @@ public class ShipmentLineItemTransformerTest {
   }
 
   @Test
-  public void shouldSetPackedDateToCreationDateIfPackedDateIsNull(){
+  public void shouldSetPackedDateToCreationDateIfPackedDateIsNull() {
     ShipmentLineItemDTO dto = dtoWithMandatoryFields();
 
     Date ftpDate = new Date();

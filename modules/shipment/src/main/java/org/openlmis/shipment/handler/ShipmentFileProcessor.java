@@ -118,8 +118,11 @@ public class ShipmentFileProcessor {
       }
     }
 
-    if ((!status) || (orderSet.size() == 0)) {
+    if (!status) {
       throw new DataException("shipment.file.error");
+    }
+    if(orderSet.size() == 0) {
+      throw new DataException("mandatory.field.missing");
     }
   }
 
