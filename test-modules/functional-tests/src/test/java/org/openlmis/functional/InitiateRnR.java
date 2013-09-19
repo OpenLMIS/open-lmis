@@ -82,6 +82,18 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
   }
 
+  @Given("^I access initiate emergency requisition page$")
+  public void onInitiateEmergencyRnRScreen() throws IOException, SQLException {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateAndInitiateEmergencyRnr(program);
+  }
+
+  @Then ("I should see no period available$")
+  public void verifyPeriodNotAvailable()throws IOException{
+      HomePage homePage = new HomePage(testWebDriver);
+      assertEquals("No period(s) available",homePage.getFirstPeriod());
+  }
+
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
   public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
     String[] rightList = rights.split(",");

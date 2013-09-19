@@ -204,6 +204,11 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "program")
   private static WebElement selectProgramSelectBox;
 
+  @FindBy(how = ID, using = "rnrType")
+  private static WebElement rnrTypeSelectBox;
+
+  @FindBy(how = How.XPATH, using ="//div/div/div[1]/div[2]/div/span")
+  private static WebElement firstPeriodLabel;
 
   public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -301,14 +306,8 @@ public class HomePage extends Page {
   }
 
   public String navigateAndInitiateRnr(String program) throws IOException {
+    navigateRnr();
     String periodDetails = null;
-    testWebDriver.waitForElementToAppear(requisitionsLink);
-    testWebDriver.keyPress(requisitionsLink);
-    testWebDriver.waitForElementToAppear(createLink);
-    testWebDriver.sleep(2000);
-    testWebDriver.keyPress(createLink);
-    testWebDriver.sleep(2000);
-    testWebDriver.waitForElementToAppear(myFacilityRadioButton);
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(programDropDown);
@@ -338,7 +337,7 @@ public class HomePage extends Page {
 
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
-      testWebDriver.sleep(1000);
+    testWebDriver.sleep(1000);
     assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
@@ -413,7 +412,7 @@ public class HomePage extends Page {
   }
 
   public ApprovePage navigateToApprove() throws IOException {
-      testWebDriver.sleep(1000);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
@@ -492,5 +491,31 @@ public class HomePage extends Page {
     public void verifyLoggedInUser(String Username) {
         testWebDriver.waitForElementToAppear(loggedInUserLabel);
         SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+    }
+
+    public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
+        navigateRnr();
+        String periodDetails = null;
+        myFacilityRadioButton.click();
+        testWebDriver.sleep(2000);
+        testWebDriver.waitForElementToAppear(programDropDown);
+        testWebDriver.selectByVisibleText(programDropDown, program);
+        testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
+        testWebDriver.waitForElementToAppear(startDate);
+    }
+
+    public String getFirstPeriod()
+    {
+        return firstPeriodLabel.getText().trim();
+    }
+
+    public void navigateRnr() throws IOException {
+        testWebDriver.waitForElementToAppear(requisitionsLink);
+        testWebDriver.keyPress(requisitionsLink);
+        testWebDriver.waitForElementToAppear(createLink);
+        testWebDriver.sleep(2000);
+        testWebDriver.keyPress(createLink);
+        testWebDriver.sleep(2000);
+        testWebDriver.waitForElementToAppear(myFacilityRadioButton);
     }
 }

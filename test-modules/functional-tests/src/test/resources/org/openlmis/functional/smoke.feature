@@ -534,4 +534,13 @@ Feature: Smoke Tests
     When I access plan my distribution page
     Then I should see overall distribution icon as "GREEN"
 
+  @Smoke
+  @ie2
 
+  Scenario: User should be able to see emergency RnR
+    Given I have the following data for regimen:
+      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+    And I am logged in as "storeincharge"
+    And I access initiate emergency requisition page
+    Then I should see no period available
