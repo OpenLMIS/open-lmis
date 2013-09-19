@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -85,6 +86,39 @@ public class E2EDistributionTest extends TestCaseHelper {
         distributionPage.clickRecordData();
         FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
         facilityListPage.selectFacility("F10");
+
+        RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+        refrigeratorPage.onRefrigeratorScreen();
+        refrigeratorPage.clickAddNew();
+        refrigeratorPage.enterValueInBrandModal("LG");
+        refrigeratorPage.enterValueInModelModal("800 LITRES");
+        refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
+        refrigeratorPage.clickDoneOnModal();
+
+        String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
+        for (int i = 0; i < refrigeratorDetails.length; i++) {
+            assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
+        }
+
+        refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
+        refrigeratorPage.clickEdit();
+        refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
+
+        refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+        refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
+        refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "AMBER");
+
+        refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+        refrigeratorPage.enterValueInLowAlarmEvents("1");
+        refrigeratorPage.enterValueInHighAlarmEvents("0");
+        refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
+
+        refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
+        refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+
+        refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
+        refrigeratorPage.clickDone();
+
         EPIUse epiUse = new EPIUse(testWebDriver);
         epiUse.navigate();
         epiUse.verifyProductGroup("PG1-Name",1);
@@ -98,10 +132,21 @@ public class E2EDistributionTest extends TestCaseHelper {
         epiUse.enterValueInStockAtEndOfMonth("50",1);
         epiUse.enterValueInExpirationDate("10/2011",1);
 
+        homePage.navigateHomePage();
+        homePage.navigateOfflineDistribution();
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F10");
 
-        RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-        refrigeratorPage.navigateToRefrigeratorTab();
+        refrigeratorPage.clickEdit();
+        assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
+        assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(),"1");
+        assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(),"0");
+        assertEquals(refrigeratorPage.getNotesTextAreaValue(), "miscellaneous");
+        refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
+        refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+
         epiUse.navigate();
+        epiUse.verifyIndicator("GREEN");
 
         epiUse.verifyTotal("30",1);
         epiUse.verifyStockAtFirstOfMonth("10", 1);
@@ -110,6 +155,7 @@ public class E2EDistributionTest extends TestCaseHelper {
         epiUse.verifyLoss("40", 1);
         epiUse.verifyStockAtEndOfMonth("50", 1);
         epiUse.verifyExpirationDate("10/2011", 1);
+
     }
 
     @AfterMethod(groups = {"offline"})
