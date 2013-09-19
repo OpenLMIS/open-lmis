@@ -6,7 +6,20 @@
 
 function InitiateRnrController($scope, $location, $rootScope, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
 
-  $rootScope.fullScreen = false;
+  $scope.fullScreen = false;
+  $scope.$watch('fullScreen', function () {
+      angular.element(window).scrollTop(0);
+      if (!$.browser.msie) {
+        $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
+        }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
+        });
+      }
+      else {
+        $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
+      }
+      $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
+    });
+
   var isNavigatedBack;
 
   $scope.selectedRnrType = {"name": "Regular", "emergency": false};
