@@ -4,33 +4,34 @@
   ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
   -->
 
-<div ng-show="modalShown" id="myModal">
-  <div class="modal-backdrop"></div>
-  <div class="modal modal-login fade in">
-    <ng-include src="'/public/pages/login-form.html'"/>
-  </div>
-</div>
-
-<div ng-controller="HeaderController" class="toggleFullScreen">
-  <div class="header row-fluid">
-
-    <div class="span7">
-      <div class="logo clearfix">
-        <img src="/public/images/logo.png"/>
-
-        <h1 openlmis-message="label.app.header"></h1>
-      </div>
-    </div>
-    <div id="loader" class="loader-icon"></div>
-    <div class="span5">
-      <div ng-switch on="user">
-        <div ng-switch-when="true">
-        </div>
-        <div ng-switch-default>
-          <ng-include src="'/public/pages/user.html'"/>
-        </div>
-      </div>
+<div ng-controller="HeaderController">
+  <div ng-show="loginConfig.modalShown" id="myModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal modal-login fade in">
+      <ng-include src="'/public/pages/login-form.html'"/>
     </div>
   </div>
-</div>
 
+  <div class="toggleFullScreen">
+    <div class="header row-fluid">
+
+      <div class="span7">
+        <div class="logo clearfix">
+          <img src="/public/images/logo.png"/>
+
+          <h1 openlmis-message="label.app.header"></h1>
+        </div>
+      </div>
+      <div id="loader" class="loader-icon"></div>
+      <div class="span5">
+        <div ng-switch on="user">
+          <div ng-switch-when="true">
+          </div>
+          <div ng-switch-default>
+            <ng-include src="'/public/pages/user.html'"></ng-include>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,7 +9,7 @@
 /* App Module */
 var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'],
   function ($httpProvider) {
-    var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
+    var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
       function responseSuccess(response) {
         angular.element('#loader').hide();
         return response;
@@ -22,7 +22,8 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
             $window.location = "/public/pages/access-denied.html";
             break;
           case 401:
-            scope.modalShown = true;
+            loginConfig.preventReload = (response.config.method != 'GET');
+            loginConfig.modalShown = true;
             break;
           default:
             break;
@@ -47,6 +48,8 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
     }];
     $httpProvider.interceptors.push(interceptor);
   });
+
+app.value("loginConfig", {modalShown: false, preventReload: false});
 
 app.directive('dateValidator', function () {
   return {
