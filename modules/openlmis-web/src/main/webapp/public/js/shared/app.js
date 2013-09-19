@@ -30,7 +30,17 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
         return $q.reject(response);
       }
 
+      var spinnerFunction = function (data) {
+        angular.element('#loader').show();
+        return data;
+      };
+
       return {
+        'request': function (config) {
+          config.transformRequest.push(spinnerFunction);
+          config.headers["X-Requested-With"] = "XMLHttpRequest";
+          return config;
+        },
         'response': responseSuccess,
         'responseError': responseError
       }
@@ -170,15 +180,6 @@ app.positiveInteger = function (value, errorHolder) {
 
   return valid;
 };
-
-app.config(function ($httpProvider) {
-  var spinnerFunction = function (data) {
-    angular.element('#loader').show();
-    return data;
-  };
-  $httpProvider.defaults.transformRequest.push(spinnerFunction);
-  $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-});
 
 app.run(function ($rootScope) {
   $rootScope.$on('$routeChangeStart', function () {
