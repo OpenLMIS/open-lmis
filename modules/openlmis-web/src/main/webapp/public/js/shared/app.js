@@ -8,34 +8,35 @@
 
 /* App Module */
 var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'],
-    function ($httpProvider) {
-      var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
-        function success(response) {
-          angular.element('#loader').hide();
-          return response;
-        }
+  function ($httpProvider) {
+    var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
+      function responseSuccess(response) {
+        angular.element('#loader').hide();
+        return response;
+      }
 
-        function error(response) {
-          angular.element('#loader').hide();
-          switch (response.status) {
-            case 403:
-              $window.location = "/public/pages/access-denied.html";
-              break;
-            case 401:
-              scope.modalShown = true;
-              break;
-            default:
-              break;
-          }
-          return $q.reject(response);
+      function responseError(response) {
+        angular.element('#loader').hide();
+        switch (response.status) {
+          case 403:
+            $window.location = "/public/pages/access-denied.html";
+            break;
+          case 401:
+            scope.modalShown = true;
+            break;
+          default:
+            break;
         }
+        return $q.reject(response);
+      }
 
-        return function (promise) {
-          return promise.then(success, error);
-        };
-      }];
-      $httpProvider.responseInterceptors.push(interceptor);
-    });
+      return {
+        'response': responseSuccess,
+        'responseError': responseError
+      }
+    }];
+    $httpProvider.interceptors.push(interceptor);
+  });
 
 app.directive('dateValidator', function () {
   return {
