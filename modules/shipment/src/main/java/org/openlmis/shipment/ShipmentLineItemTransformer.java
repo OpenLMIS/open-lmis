@@ -50,12 +50,13 @@ public class ShipmentLineItemTransformer {
       lineItem.setCost(new BigDecimal(dto.getCost().trim()));
     }
 
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(packedDateFormat);
-    simpleDateFormat.setLenient(false);
+    SimpleDateFormat simpleDateFormat;
     if (!isBlank(dto.getPackedDate())) {
       if (packedDateFormat.length() != dto.getPackedDate().trim().length()) {
         throw new DataException("wrong.data.type");
       }
+      simpleDateFormat = new SimpleDateFormat(packedDateFormat);
+      simpleDateFormat.setLenient(false);
       lineItem.setPackedDate(simpleDateFormat.parse(dto.getPackedDate().trim()));
     } else {
       lineItem.setPackedDate(creationDate);
@@ -65,6 +66,8 @@ public class ShipmentLineItemTransformer {
       if (shippedDateFormat.length() != dto.getShippedDate().trim().length()) {
         throw new DataException("wrong.data.type");
       }
+      simpleDateFormat = new SimpleDateFormat(shippedDateFormat);
+      simpleDateFormat.setLenient(false);
       lineItem.setShippedDate(simpleDateFormat.parse(dto.getShippedDate().trim()));
     }
 
