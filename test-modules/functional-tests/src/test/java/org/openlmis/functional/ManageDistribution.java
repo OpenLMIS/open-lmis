@@ -193,13 +193,13 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
   }
 
-  @Then("^I should see overall distribution icon as \"([^\"]*)\"$")
+  @Then("^I see overall distribution icon as \"([^\"]*)\"$")
   public void verifyOverAllDistributionIndicator(String color) throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.verifyDistributionColor(color);
   }
 
-  @Then("^I should see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
+  @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
   public void verifyOverAllFacilityIndicator(String whichIcon,String color) throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);

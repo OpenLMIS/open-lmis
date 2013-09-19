@@ -152,7 +152,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     refrigeratorPage.clickDone();
   }
 
-    @Then("^I should see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
+    @Then("^I see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
     public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws IOException, SQLException {
         RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
         refrigeratorPage.verifyIndividualRefrigeratorColor(whichIcon, color);

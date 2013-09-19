@@ -306,18 +306,18 @@ Feature: Smoke Tests
     And I verify Distributions data is not synchronised
     And I verify Refrigerator data is not synchronised
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" added successfully
-    And I should see "overall" refrigerator icon as "RED"
+    And I see "overall" refrigerator icon as "RED"
     When I edit refrigerator
-    Then I should see "individual" refrigerator icon as "RED"
+    Then I see "individual" refrigerator icon as "RED"
     And I enter refrigerator temperature "3"
-    And I should see "overall" refrigerator icon as "AMBER"
-    Then I should see "individual" refrigerator icon as "AMBER"
+    And I see "overall" refrigerator icon as "AMBER"
+    Then I see "individual" refrigerator icon as "AMBER"
     And I verify "Yes" it was working correctly when I left
     And I enter low alarm events "1"
     And I enter high alarm events "0"
     And I verify "No" that there is a problem with refrigerator since last visit
-    Then I should see "individual" refrigerator icon as "GREEN"
-    And I should see "overall" refrigerator icon as "GREEN"
+    Then I see "individual" refrigerator icon as "GREEN"
+    And I see "overall" refrigerator icon as "GREEN"
     And I enter Notes "miscellaneous"
     And I add refrigerator
     And I verify Refrigerator data is not synchronised
@@ -494,20 +494,20 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    Then I should see overall distribution icon as "AMBER"
+    Then I see overall distribution icon as "AMBER"
     When I record data
     And I choose facility "F10"
-    Then I should see "Overall" facility icon as "AMBER"
-    And I should see "Individual" facility icon as "AMBER"
+    Then I see "Overall" facility icon as "AMBER"
+    And I see "Individual" facility icon as "AMBER"
     When I add new refrigerator
     When I enter Brand "LG"
     And I enter Modal "800 LITRES"
     And I enter Serial Number "GR-J287PGHV"
     And I access done
-    Then I should see "Overall" facility icon as "RED"
-    And I should see "Individual" facility icon as "RED"
+    Then I see "Overall" facility icon as "RED"
+    And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
-    Then I should see overall distribution icon as "RED"
+    Then I see overall distribution icon as "RED"
     When I record data
 
     And I choose facility "F10"
@@ -529,10 +529,10 @@ Feature: Smoke Tests
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
-    Then I should see "Overall" facility icon as "GREEN"
-    And I should see "Individual" facility icon as "GREEN"
+    Then I see "Overall" facility icon as "GREEN"
+    And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
-    Then I should see overall distribution icon as "GREEN"
+    Then I see overall distribution icon as "GREEN"
 
   @Smoke
   @ie2

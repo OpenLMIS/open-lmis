@@ -91,7 +91,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Then ("I should see no period available$")
   public void verifyPeriodNotAvailable()throws IOException{
       HomePage homePage = new HomePage(testWebDriver);
-      assertEquals("No current period defined. Please contact the Admin.\n",homePage.getFirstPeriod());
+      assertEquals("No current period defined. Please contact the Admin.",homePage.getFirstPeriod());
   }
 
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")

@@ -40,7 +40,7 @@ public class RecordEPIUse extends TestCaseHelper {
   public static final String periodDisplayedByDefault = "Period14";
   public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
-  @BeforeMethod(groups = {"distribution","offline"})
+  @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {
     super.setup();
   }
@@ -232,74 +232,6 @@ public class RecordEPIUse extends TestCaseHelper {
 
     }
 
-    @Test(groups = {"offline"}, dataProvider = "Data-Provider-Function")
-    public void testEditEPIUseOffline(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                               String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                               String facilityCodeFirst, String facilityCodeSecond,
-                               String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
-
-        List<String> rightsList = new ArrayList<String>();
-        rightsList.add("MANAGE_DISTRIBUTION");
-        setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-                deliveryZoneNameFirst, deliveryZoneNameSecond,
-                facilityCodeFirst, facilityCodeSecond,
-                programFirst, programSecond, schedule);
-        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-        dbWrapper.insertProductGroup("PG1");
-        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
-        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
-        dbWrapper.insertProgramProduct("Product5",programFirst,"10","false");
-        dbWrapper.insertProgramProduct("Product6",programFirst,"10","true");
-
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userSIC, password);
-        DistributionPage distributionPage = homePage.navigatePlanDistribution();
-        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-        distributionPage.selectValueFromProgram(programFirst);
-        distributionPage.clickInitiateDistribution();
-
-        testWebDriver.sleep(10000);
-        switchOffNetwork();
-        testWebDriver.sleep(2000);
-        homePage.navigateHomePage();
-        homePage.navigateOfflineDistribution();
-        assertFalse("Delivery Zone selectbox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
-        assertFalse("Period selectbox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
-        assertFalse("Program selectbox displayed.",distributionPage.verifyProgramSelectBoxNotPresent());
-
-        distributionPage.clickRecordData();
-        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-        facilityListPage.selectFacility("F10");
-        EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.navigate();
-        epiUse.verifyProductGroup("PG1-Name",1);
-        epiUse.verifyIndicator("RED");
-
-        epiUse.enterValueInStockAtFirstOfMonth("10",1);
-        epiUse.verifyIndicator("AMBER");
-        epiUse.enterValueInReceived("20", 1);
-        epiUse.enterValueInDistributed("30", 1);
-        epiUse.enterValueInLoss("40", 1);
-        epiUse.enterValueInStockAtEndOfMonth("50",1);
-        epiUse.enterValueInExpirationDate("10/2011",1);
-
-
-        RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-        refrigeratorPage.navigateToRefrigeratorTab();
-        epiUse.navigate();
-
-        epiUse.verifyTotal("30",1);
-        epiUse.verifyStockAtFirstOfMonth("10", 1);
-        epiUse.verifyReceived("20", 1);
-        epiUse.verifyDistributed("30", 1);
-        epiUse.verifyLoss("40", 1);
-        epiUse.verifyStockAtEndOfMonth("50", 1);
-        epiUse.verifyExpirationDate("10/2011", 1);
-    }
-
-
   @AfterMethod(groups = {"distribution"})
   @After
   public void tearDown() throws Exception {
@@ -312,15 +244,6 @@ public class RecordEPIUse extends TestCaseHelper {
     }
       ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
-
-    @AfterMethod(groups = {"offline"})
-    public void tearDownNew() throws Exception {
-        switchOnNetwork();
-        testWebDriver.sleep(5000);
-        dbWrapper.deleteData();
-        dbWrapper.closeConnection();
-        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
-    }
 
 
     @DataProvider(name = "Data-Provider-Function")
