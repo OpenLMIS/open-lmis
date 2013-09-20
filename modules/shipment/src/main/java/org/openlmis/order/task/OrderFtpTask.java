@@ -20,6 +20,7 @@ import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +51,8 @@ public class OrderFtpTask {
   @Autowired
   private OrderFtpSender ftpSender;
 
+  @Value("${ftp.order.local.directory}")
+  String localFileDirectory;
 
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);
 
@@ -78,8 +81,11 @@ public class OrderFtpTask {
 
       OrderFileTemplateDTO orderFileTemplateDTO = orderService.getOrderFileTemplateDTO();
       String fileName = orderFileTemplateDTO.getOrderConfiguration().getFilePrefix() + order.getId() + ".csv";
-
-      File file = new File(fileName);
+      File localDirectory = new File(localFileDirectory);
+      if (!localDirectory.exists()) {
+        localDirectory.mkdir();
+      }
+      File file = new File(localFileDirectory + System.getProperty("file.separator") + fileName);
       try (FileWriter fileWriter = new FileWriter(file)) {
         orderCsvHelper.writeCsvFile(order, orderFileTemplateDTO, fileWriter);
         fileWriter.flush();
@@ -92,6 +98,8 @@ public class OrderFtpTask {
       } catch (Exception e) {
         logger.error("Error in ftp of order file", e);
         updateOrder(order, TRANSFER_FAILED, null);
+      } finally {
+        file.delete();
       }
     }
   }

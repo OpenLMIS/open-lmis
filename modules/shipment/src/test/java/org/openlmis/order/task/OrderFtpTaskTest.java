@@ -50,6 +50,9 @@ public class OrderFtpTaskTest {
   @Mock
   private OrderFtpSender ftpSender;
 
+  @Mock
+  String localFileDirectory = "test";
+
   @InjectMocks
   private OrderFtpTask orderFtpTask;
 
@@ -85,7 +88,8 @@ public class OrderFtpTaskTest {
     orderConfiguration.setFilePrefix("Order");
     when(orderService.getOrderFileTemplateDTO()).thenReturn(orderFileTemplateDTO);
     File file  = mock(File.class);
-    whenNew(File.class).withArguments("Order1.csv").thenReturn(file);
+    whenNew(File.class).withArguments(localFileDirectory).thenReturn(file);
+    whenNew(File.class).withArguments(localFileDirectory + System.getProperty("file.separator") + "Order1.csv").thenReturn(file);
     FileWriter fileWriter = mock(FileWriter.class);
     whenNew(FileWriter.class).withArguments(file).thenReturn(fileWriter);
 
