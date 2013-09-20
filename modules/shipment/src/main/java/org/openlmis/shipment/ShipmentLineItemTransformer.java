@@ -27,7 +27,6 @@ public class ShipmentLineItemTransformer {
                                     String packedDateFormat,
                                     String shippedDateFormat, Date creationDate) throws DataException {
 
-
     checkMandatory(shipmentLineItemDTO);
 
     ShipmentLineItem lineItem = new ShipmentLineItem();
@@ -50,31 +49,24 @@ public class ShipmentLineItemTransformer {
       lineItem.setCost(new BigDecimal(dto.getCost().trim()));
     }
 
-    SimpleDateFormat simpleDateFormat;
-    if (!isBlank(dto.getPackedDate())) {
-      if (packedDateFormat.length() != dto.getPackedDate().trim().length()) {
-        throw new DataException("wrong.data.type");
-      }
-      simpleDateFormat = new SimpleDateFormat(packedDateFormat);
-      simpleDateFormat.setLenient(false);
-      lineItem.setPackedDate(simpleDateFormat.parse(dto.getPackedDate().trim()));
-    } else {
-      lineItem.setPackedDate(creationDate);
-    }
+    Date packedDate = (!isBlank(dto.getPackedDate())) ? parseDate(packedDateFormat, dto.getPackedDate().trim()) : creationDate;
+    lineItem.setPackedDate(packedDate);
 
     if (!isBlank(dto.getShippedDate())) {
-      if (shippedDateFormat.length() != dto.getShippedDate().trim().length()) {
-        throw new DataException("wrong.data.type");
-      }
-      simpleDateFormat = new SimpleDateFormat(shippedDateFormat);
-      simpleDateFormat.setLenient(false);
-      lineItem.setShippedDate(simpleDateFormat.parse(dto.getShippedDate().trim()));
+      lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate()));
     }
+  }
 
+  private Date parseDate(String dateFormat, String date) throws ParseException {
+    if (dateFormat.length() != date.length()) {
+      throw new DataException("wrong.data.type");
+    }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+    simpleDateFormat.setLenient(false);
+    return simpleDateFormat.parse(date);
   }
 
   private void setMandatoryFields(ShipmentLineItem lineItem, ShipmentLineItemDTO shipmentLineItemDTO) {
-
     lineItem.setProductCode(shipmentLineItemDTO.getProductCode().trim());
     lineItem.setOrderId(Long.valueOf(shipmentLineItemDTO.getOrderId().trim()));
     lineItem.setQuantityShipped(Integer.valueOf(shipmentLineItemDTO.getQuantityShipped().trim()));
