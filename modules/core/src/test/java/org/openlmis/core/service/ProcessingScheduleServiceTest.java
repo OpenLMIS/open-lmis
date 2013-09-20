@@ -254,7 +254,7 @@ public class ProcessingScheduleServiceTest {
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(
-        requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
+      requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
     when(periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
 
     List<ProcessingPeriod> actual = service.getAllPeriodsForDateRange(facility, program, startDate, endDate);
@@ -278,14 +278,15 @@ public class ProcessingScheduleServiceTest {
 
   @Test
   public void shouldGetCurrentPeriodForFacilityAndProgram() {
-
+    ProcessingSchedule processingSchedule = new ProcessingSchedule(11L);
     RequisitionGroupProgramSchedule schedule = new RequisitionGroupProgramSchedule();
+    schedule.setProcessingSchedule(processingSchedule);
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     requisitionGroup.setId(5L);
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(2L), new Facility(1L)))
       .thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(5L, 2L)).thenReturn(schedule);
     service.getCurrentPeriod(1L, 2L);
-    verify(periodRepository).getCurrentPeriod(schedule);
+    verify(periodRepository).getCurrentPeriod(schedule.getProcessingSchedule().getId());
   }
 }

@@ -108,6 +108,6 @@ public class ProcessingScheduleService {
 
   public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId) {
     RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
-    return periodRepository.getCurrentPeriod(schedule);
+    return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId());
   }
 }

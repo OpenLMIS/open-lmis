@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.openlmis.db.categories.UnitTests;
@@ -216,12 +215,10 @@ public class ProcessingPeriodRepositoryTest {
   @Test
   public void shouldGetCurrentPeriodForFacilityAndProgram() {
     ProcessingPeriod currentPeriod = new ProcessingPeriod();
-    RequisitionGroupProgramSchedule schedule = new RequisitionGroupProgramSchedule();
-    schedule.setId(3L);
-    when(mapper.getCurrentPeriod(schedule.getId())).thenReturn(currentPeriod);
+    when(mapper.getCurrentPeriod(3L)).thenReturn(currentPeriod);
 
-    ProcessingPeriod expectedPeriod = repository.getCurrentPeriod(schedule);
-    verify(mapper).getCurrentPeriod(schedule.getId());
+    ProcessingPeriod expectedPeriod = repository.getCurrentPeriod(3L);
+    verify(mapper).getCurrentPeriod(3L);
 
     assertThat(expectedPeriod, is(currentPeriod));
   }

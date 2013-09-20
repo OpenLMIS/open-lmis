@@ -8,7 +8,6 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.RequisitionGroupProgramSchedule;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +85,7 @@ public class ProcessingPeriodRepository {
     return mapper.getAllPeriodsBefore(scheduleId, beforeDate);
   }
 
-  public ProcessingPeriod getCurrentPeriod(RequisitionGroupProgramSchedule schedule) {
-    return mapper.getCurrentPeriod(schedule.getId());
+  public ProcessingPeriod getCurrentPeriod(Long scheduleId) {
+    return mapper.getCurrentPeriod(scheduleId);
   }
 }
