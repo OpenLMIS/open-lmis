@@ -252,6 +252,7 @@
                                ng-disabled="!supportedProgram.program.id"/></td>
                     <td><input type="text" id="supported-program-start-date" name="supportedProgram"
                                ng-model="supportedProgram.editedStartDate"
+                               readonly
                                ng-change="showConfirmDateChangeWindow(supportedProgram)"
                                value="{{supportedProgram.startDate | date: 'dd/MM/yy'}}"
                                ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
