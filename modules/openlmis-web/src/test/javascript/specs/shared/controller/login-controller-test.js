@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -71,5 +71,35 @@ describe("LoginController", function () {
     scope.password = undefined;
     scope.doLogin();
     expect(messageService.get).toHaveBeenCalledWith('error.login.password');
+  });
+
+  it('should clear password on failed login attempt', function () {
+    scope.username = "john";
+    scope.password = "john-password";
+
+    spyOn(messageService, 'populate');
+    httpBackend.when('POST', '/j_spring_security_check').respond(403, {'error': 'error msg'});
+
+    scope.doLogin();
+    httpBackend.flush();
+
+    expect(scope.password).toBe(undefined);
+  });
+
+  it('should clear password on successful login attempt', function () {
+    scope.username = "john";
+    scope.password = "john-password";
+    scope.loginConfig = {modalShown: false, preventReload: true};
+
+    spyOn(messageService, 'populate');
+    httpBackend.when('POST', '/j_spring_security_check').respond(200,
+      {authenticated: true, name: "john", rights: [
+        {right: "MANAGE_USER", type: "ADMIN"}
+      ]});
+
+    scope.doLogin();
+    httpBackend.flush();
+
+    expect(scope.password).toBe(undefined);
   });
 });
