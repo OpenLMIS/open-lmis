@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static java.lang.System.getProperty;
 
 public class TestCaseHelper {
@@ -371,14 +372,17 @@ public class TestCaseHelper {
         testWebDriver.sleep(2000);
     }
 
-    public void waitForAppCacheDownload(){
-        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("applicationCache.oncached = function (e) {window.loaded = true;};");
+    public void waitForAppCache(){
         int count=0;
-        while((Boolean)(((JavascriptExecutor) testWebDriver.getDriver()) .executeScript("window.loaded;"))){
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.localStorage.setItem(\"x\",\"false\");");
+        while((((JavascriptExecutor) testWebDriver.getDriver()).executeScript("return window.localStorage.getItem(\"x\");")).toString().equals("false")){
             testWebDriver.sleep(2000);
-            count=count++;
-            if (count<10)
+            ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"x\",\"true\");};");
+            count++;
+            if (count>5){
+                fail("Appcache not working in 10 sec.");
                 break;
+            }
         }
     }
 }
