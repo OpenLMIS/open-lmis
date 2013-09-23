@@ -29,7 +29,7 @@ import static org.testng.Assert.assertTrue;
 public class TestWebDriver {
 
   private static WebDriver driver;
-  private String BASE_URL;
+  private static String BASE_URL;
   private String ERROR_MESSAGE_LOGIN;
   private int DEFAULT_WAIT_TIME = 30;
 

@@ -23,8 +23,8 @@ import static java.lang.System.getProperty;
 public class TestCaseHelper {
 
   public static DBWrapper dbWrapper;
-  protected String baseUrlGlobal, dburlGlobal;
-  protected String DOWNLOAD_FILE_PATH;
+  protected static String baseUrlGlobal, dburlGlobal;
+  protected static String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
