@@ -127,7 +127,7 @@ public class RequisitionController extends BaseController {
       return success(messageService.message(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
         submittedRnr.getProgram())));
     } catch (DataException e) {
-      return error(e, BAD_REQUEST);
+      return error(messageService.message(e.getOpenLmisMessage()), BAD_REQUEST);
     }
   }
 
@@ -149,7 +149,7 @@ public class RequisitionController extends BaseController {
       return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
         authorizedRnr.getFacility(), authorizedRnr.getProgram())));
     } catch (DataException e) {
-      return error(e, BAD_REQUEST);
+      return error(messageService.message(e.getOpenLmisMessage()), BAD_REQUEST);
     }
   }
 

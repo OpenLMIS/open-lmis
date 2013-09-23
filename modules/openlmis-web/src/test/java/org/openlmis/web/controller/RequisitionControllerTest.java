@@ -192,7 +192,9 @@ public class RequisitionControllerTest {
   public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    doThrow(new DataException(new OpenLmisMessage("some error"))).when(requisitionService).submit(rnr);
+    OpenLmisMessage errorMessage = new OpenLmisMessage("some error");
+    when(messageService.message(errorMessage)).thenReturn("some error");
+    doThrow(new DataException(errorMessage)).when(requisitionService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
@@ -223,14 +225,15 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
-    String errorMessage = "some error";
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
+    OpenLmisMessage errorMessage = new OpenLmisMessage("");
+    when(messageService.message(errorMessage)).thenReturn("some error");
 
-    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(requisitionService).authorize(rnr);
+    doThrow(new DataException(errorMessage)).when(requisitionService).authorize(rnr);
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
 
-    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+    assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
   @Test

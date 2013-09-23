@@ -152,7 +152,7 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
     if (savedRnr.getStatus() != INITIATED)
-      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
+      throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR, savedRnr.getStatus().name()));
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -170,7 +170,7 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
     if (savedRnr.getStatus() != SUBMITTED)
-      throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR));
+      throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR, savedRnr.getStatus().name()));
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);

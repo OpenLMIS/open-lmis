@@ -50,7 +50,6 @@ public class MessageService {
   public static MessageService getRequestInstance() {
     ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
     resourceBundleMessageSource.setBasename("messages");
-//    resourceBundleMessageSource.setDefaultEncoding("UTF-8");
     return new MessageService(resourceBundleMessageSource, "en");
   }
 
@@ -59,7 +58,7 @@ public class MessageService {
   }
 
   public String message(OpenLmisMessage openLmisMessage) {
-    return message(openLmisMessage.getCode(), (Object) openLmisMessage.getParams());
+    return message(openLmisMessage.getCode(), (Object[]) openLmisMessage.getParams());
   }
 
   public String message(String key, Object... args) {
