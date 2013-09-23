@@ -78,7 +78,7 @@ public class RequisitionService {
   }
 
   @Transactional
-  public Rnr initiate(Long facilityId, Long programId, Long periodId, Long modifiedBy) {
+  public Rnr initiate(Long facilityId, Long programId, Long periodId, Long modifiedBy, Boolean emergency) {
     Long createdBy = modifiedBy;
     if (!requisitionPermissionService.hasPermission(modifiedBy, new Facility(facilityId), new Program(programId),
       CREATE_REQUISITION))
@@ -91,7 +91,9 @@ public class RequisitionService {
     if (rnrTemplate.getColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");
 
-    validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
+    if (!emergency) {
+      validateIfRnrCanBeInitiatedFor(facilityId, programId, periodId);
+    }
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
@@ -99,13 +101,13 @@ public class RequisitionService {
 
     List<Regimen> regimens = regimenService.getByProgram(programId);
 
-    Rnr requisition = new Rnr(facilityId, programId, periodId, facilityTypeApprovedProducts, regimens, modifiedBy, createdBy);
+    Rnr requisition = new Rnr(facilityId, programId, periodId, emergency, facilityTypeApprovedProducts, regimens, modifiedBy, createdBy);
 
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, emergency);
 
     List<Rnr> rnrList = get(criteria);
     return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
@@ -278,11 +280,12 @@ public class RequisitionService {
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(RequisitionSearchCriteria criteria) {
     Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
+
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
       criteria.getFacilityId(), criteria.getProgramId());
-
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
       null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
+
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate,
       periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
@@ -416,7 +419,8 @@ public class RequisitionService {
   }
 
   public ProcessingPeriod getCurrentPeriod(RequisitionSearchCriteria criteria) {
-    return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId());
+    Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
+    return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
   }
 }
 

@@ -76,6 +76,6 @@ public interface ProcessingPeriodMapper {
     "ORDER BY startDate DESC"})
   List<ProcessingPeriod> getAllPeriodsBefore(@Param("scheduleId") Long scheduleId, @Param("beforeDate") Date beforeDate);
 
-  @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND startDate<=NOW() AND endDate>=NOW()"})
-  ProcessingPeriod getCurrentPeriod(Long scheduleId);
+  @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND startDate<=NOW() AND startDate>= #{programStartDate} AND endDate>=NOW()"})
+  ProcessingPeriod getCurrentPeriod(@Param("scheduleId") Long scheduleId, @Param("programStartDate") Date programStartDate);
 }

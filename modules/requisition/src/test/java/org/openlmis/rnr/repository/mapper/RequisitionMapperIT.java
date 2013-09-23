@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright � 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -106,13 +106,13 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldSetRequisitionId() {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
     assertThat(requisition.getId(), is(notNullValue()));
   }
 
   @Test
   public void shouldGetRequisitionById() {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
@@ -146,7 +146,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldUpdateRequisition() {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
     requisition.setModifiedBy(USER_ID);
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
@@ -162,7 +162,6 @@ public class RequisitionMapperIT {
     assertThat(updatedRequisition.getModifiedBy(), is(equalTo(USER_ID)));
   }
 
-
   @Test
   public void shouldReturnRequisitionWithoutLineItemsByFacilityProgramAndPeriod() {
     Program program = insertProgram();
@@ -176,8 +175,8 @@ public class RequisitionMapperIT {
     FacilityTypeApprovedProduct fullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
     FacilityTypeApprovedProduct nonFullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
 
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
-    insertRequisition(processingPeriod2, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
+    insertRequisition(processingPeriod2, INITIATED, false);
 
     insertRnrLineItem(requisition, fullSupplyFacilityTypeApprovedProduct);
     insertRnrLineItem(requisition, nonFullSupplyFacilityTypeApprovedProduct);
@@ -194,7 +193,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
     Product product = insertProduct(true, "P1");
     Program program = insertProgram();
     ProgramProduct programProduct = insertProgramProduct(product, program);
@@ -214,7 +213,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldNotGetInitiatedRequisitionsForFacilitiesAndPrograms() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
 
@@ -225,7 +224,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetRequisitionsInSubmittedStateForRoleAssignment() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, AUTHORIZED);
+    Rnr requisition = insertRequisition(processingPeriod1, AUTHORIZED, false);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
     RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1L, PROGRAM_ID, supervisoryNode);
@@ -253,15 +252,15 @@ public class RequisitionMapperIT {
 
     processingPeriodMapper.insert(processingPeriod4);
 
-    Rnr rnr1 = insertRequisition(processingPeriod1, AUTHORIZED);
+    Rnr rnr1 = insertRequisition(processingPeriod1, AUTHORIZED, false);
     rnr1.setSubmittedDate(date1.toDate());
     mapper.update(rnr1);
 
-    Rnr rnr2 = insertRequisition(processingPeriod4, APPROVED);
+    Rnr rnr2 = insertRequisition(processingPeriod4, APPROVED, false);
     rnr2.setSubmittedDate(date2.toDate());
     mapper.update(rnr2);
 
-    insertRequisition(processingPeriod3, INITIATED);
+    insertRequisition(processingPeriod3, INITIATED, false);
 
     Rnr lastRequisitionToEnterThePostSubmitFlow = mapper.getLastRequisitionToEnterThePostSubmitFlow(facility.getId(), PROGRAM_ID);
 
@@ -270,7 +269,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetAllTheApprovedRequisitions() {
-    Rnr requisition = insertRequisition(processingPeriod1, APPROVED);
+    Rnr requisition = insertRequisition(processingPeriod1, APPROVED, false);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     updateSupplyingDepotForRequisition(requisition);
 
@@ -290,16 +289,16 @@ public class RequisitionMapperIT {
     Program program = new Program(PROGRAM_ID);
 
     String commaSeparatedPeriodIds = "{" + processingPeriod1.getId() + "," + processingPeriod2.getId() + "," + processingPeriod3.getId() + "}";
-    insertRequisition(processingPeriod1, AUTHORIZED);
-    insertRequisition(processingPeriod2, APPROVED);
-    insertRequisition(processingPeriod3, SUBMITTED);
+    insertRequisition(processingPeriod1, AUTHORIZED, false);
+    insertRequisition(processingPeriod2, APPROVED, false);
+    insertRequisition(processingPeriod3, SUBMITTED, false);
     List<Rnr> result = mapper.getPostSubmitRequisitions(facility, program, commaSeparatedPeriodIds);
     assertThat(result.size(), is(2));
   }
 
   @Test
-  public void shouldOnlyLoadRequisitionDataForGivenQuery() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+  public void shouldOnlyLoadRegularRequisitionDataForGivenQuery() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
 
     Rnr fetchedRnr = mapper.getRequisitionWithoutLineItems(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
 
@@ -310,9 +309,23 @@ public class RequisitionMapperIT {
     assertThat(fetchedRnr.getNonFullSupplyLineItems().size(), is(0));
   }
 
-  private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status) {
-    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), MODIFIED_BY, 1L);
+  @Test
+  public void shouldOnlyLoadEmergencyRequisitionDataForGivenQuery() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, true);
+
+    Rnr fetchedRnr = mapper.getRequisitionWithoutLineItems(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
+
+    assertThat(fetchedRnr.getId(), is(requisition.getId()));
+    assertThat(fetchedRnr.getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(fetchedRnr.getStatus(), is(INITIATED));
+    assertThat(fetchedRnr.getFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRnr.getNonFullSupplyLineItems().size(), is(0));
+  }
+
+  private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status, Boolean emergency) {
+    Rnr rnr = new Rnr(facility.getId(), PROGRAM_ID, period.getId(), false, MODIFIED_BY, 1L);
     rnr.setStatus(status);
+    rnr.setEmergency(emergency);
     rnr.setModifiedDate(new Date());
     rnr.setSubmittedDate(new Date(111111L));
     mapper.insert(rnr);
@@ -370,7 +383,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetLWRequisitionById() {
-    Rnr requisition = insertRequisition(processingPeriod1, INITIATED);
+    Rnr requisition = insertRequisition(processingPeriod1, INITIATED, false);
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));

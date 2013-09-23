@@ -304,7 +304,7 @@ public class ProcessingPeriodMapperIT {
 
     mapper.insert(period1);
 
-    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId());
+    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId(), period1.getStartDate());
 
     assertThat(actualPeriod, is(period1));
   }
@@ -319,7 +319,7 @@ public class ProcessingPeriodMapperIT {
 
     mapper.insert(period1);
 
-    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId());
+    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId(), period1.getStartDate());
 
     assertNull(actualPeriod);
   }

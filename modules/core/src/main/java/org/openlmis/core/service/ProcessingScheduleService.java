@@ -106,8 +106,8 @@ public class ProcessingScheduleService {
     return periodRepository.getAllPeriodsBefore(scheduleId, beforeDate);
   }
 
-  public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId) {
+  public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date programStartDate) {
     RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
-    return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId());
+    return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
   }
 }

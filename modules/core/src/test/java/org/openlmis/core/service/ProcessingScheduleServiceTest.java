@@ -286,7 +286,8 @@ public class ProcessingScheduleServiceTest {
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(2L), new Facility(1L)))
       .thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(5L, 2L)).thenReturn(schedule);
-    service.getCurrentPeriod(1L, 2L);
-    verify(periodRepository).getCurrentPeriod(schedule.getProcessingSchedule().getId());
+    Date programStartDate = new Date();
+    service.getCurrentPeriod(1L, 2L, programStartDate);
+    verify(periodRepository).getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
   }
 }

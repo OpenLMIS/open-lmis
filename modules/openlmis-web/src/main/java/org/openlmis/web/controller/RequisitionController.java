@@ -78,7 +78,7 @@ public class RequisitionController extends BaseController {
                                                       @RequestParam("periodId") Long periodId,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request)));
+      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request), false));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -198,8 +198,8 @@ public class RequisitionController extends BaseController {
   private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
     ProcessingPeriod currentPeriod;
     return criteria.isEmergency() ?
-          (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ? asList(currentPeriod) : null  :
-          requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
+      (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ? asList(currentPeriod) : null :
+      requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
   }
 
   private Rnr getRequisitionForCurrentPeriod(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {

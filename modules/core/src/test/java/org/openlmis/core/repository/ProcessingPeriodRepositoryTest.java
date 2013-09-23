@@ -215,10 +215,11 @@ public class ProcessingPeriodRepositoryTest {
   @Test
   public void shouldGetCurrentPeriodForFacilityAndProgram() {
     ProcessingPeriod currentPeriod = new ProcessingPeriod();
-    when(mapper.getCurrentPeriod(3L)).thenReturn(currentPeriod);
+    Date programStartDate = new Date();
+    when(mapper.getCurrentPeriod(3L, programStartDate)).thenReturn(currentPeriod);
 
-    ProcessingPeriod expectedPeriod = repository.getCurrentPeriod(3L);
-    verify(mapper).getCurrentPeriod(3L);
+    ProcessingPeriod expectedPeriod = repository.getCurrentPeriod(3L, programStartDate);
+    verify(mapper).getCurrentPeriod(3L, programStartDate);
 
     assertThat(expectedPeriod, is(currentPeriod));
   }

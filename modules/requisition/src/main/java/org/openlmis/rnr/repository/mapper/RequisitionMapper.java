@@ -19,8 +19,8 @@ import java.util.List;
 @Repository
 public interface RequisitionMapper {
 
-  @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, modifiedBy, createdBy) " +
-    "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{modifiedBy}, #{createdBy})")
+  @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, emergency, modifiedBy, createdBy) " +
+    "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{emergency}, #{modifiedBy}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Rnr requisition);
 
@@ -135,4 +135,14 @@ public interface RequisitionMapper {
   })
   Rnr getLWById(Long rnrId);
 
+  @Select({"SELECT * FROM requisitions WHERE",
+    "facilityId = #{facilityId} AND",
+    "programId = #{programId} AND emergency = true AND status='INITIATED'"
+  })
+  @Results(value = {
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "period.id", column = "periodId")
+  })
+  List<Rnr> getInitiatedEmergencyRequisition(Long facilityId, Long programId);
 }

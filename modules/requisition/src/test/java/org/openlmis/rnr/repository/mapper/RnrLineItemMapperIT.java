@@ -102,7 +102,7 @@ public class RnrLineItemMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
 
-    rnr = new Rnr(facility.getId(), PROGRAM_ID, processingPeriod.getId(), MODIFIED_BY, 1L);
+    rnr = new Rnr(facility.getId(), PROGRAM_ID, processingPeriod.getId(), false, MODIFIED_BY, 1L);
     rnr.setStatus(INITIATED);
   }
 

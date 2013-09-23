@@ -85,7 +85,7 @@ public class ProcessingPeriodRepository {
     return mapper.getAllPeriodsBefore(scheduleId, beforeDate);
   }
 
-  public ProcessingPeriod getCurrentPeriod(Long scheduleId) {
-    return mapper.getCurrentPeriod(scheduleId);
+  public ProcessingPeriod getCurrentPeriod(Long scheduleId, Date programStartDate) {
+    return mapper.getCurrentPeriod(scheduleId, programStartDate);
   }
 }

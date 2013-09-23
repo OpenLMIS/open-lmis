@@ -316,7 +316,7 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
-  public void itShouldUseMapperToReturnRequisitionWithoutLineItems() throws Exception {
+  public void shouldReturnRegularRequisitionWithoutLineItems() throws Exception {
 
     long periodId = 8L;
     long programId = 5L;
