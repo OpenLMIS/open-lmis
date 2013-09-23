@@ -35,6 +35,8 @@ task migrateReportDB() << {
     println("migrateReportDB:")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable  )
     ant.flywayMigrate( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: newmigtable, baseDir: newmigpath , basePackage: newmigpath)
 }
 
