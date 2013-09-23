@@ -146,6 +146,12 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
 
 
     $scope.showRemoveRequisitionGroupConfirmDialog = function () {
+        if($scope.facilities.length > 0) {
+            $scope.showError = true;
+            $scope.error = "Requisition group is associated with facilities.  Please first remove the associated facilities!";
+            return false;
+        }
+
         $scope.selectedRequisitionGroup = $scope.requisitionGroup;
         var options = {
             id: "removeRequisitionGroupMemberConfirmDialog",
