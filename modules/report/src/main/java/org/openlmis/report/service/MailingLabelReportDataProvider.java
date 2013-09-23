@@ -90,10 +90,11 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
         if(filterCriteria != null){
-
-            mailingLabelReportFilter.setFacilityCode(filterCriteria.get("facilityCodeFilter") == null ? "" : filterCriteria.get("facilityCodeFilter")[0]);
             mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-            mailingLabelReportFilter.setFacilityName(filterCriteria.get("facilityNameFilter") == null ? "" : filterCriteria.get("facilityNameFilter")[0]);
+            mailingLabelReportFilter.setFacilityType((filterCriteria.get("facilityType")[0]));
+            mailingLabelReportFilter.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
+            mailingLabelReportFilter.setRgroup((filterCriteria.get("rgroup")[0]));
+
         }
 
         return mailingLabelReportFilter;

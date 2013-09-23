@@ -12,11 +12,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
 /**
- * Created with IntelliJ IDEA.
- * User: user
+ * User: wolde
  * Date: 3/29/13
  * Time: 7:17 AM
- * To change this template use File | Settings | File Templates.
  */
 @Data
 @NoArgsConstructor
@@ -24,22 +22,17 @@ import org.openlmis.report.model.ReportData;
 public class MailingLabelReportFilter implements ReportData {
 
     //top filters
-    private String facilityCode;
-    private String facilityName;
     private int facilityTypeId;
-    private int zoneId;
+    private String facilityType;
+    private int rgroupId;
+    private String rgroup;
 
     @Override
     public String toString(){
         if(this == null ) return null;
         StringBuilder filterDescription = new StringBuilder("");
-
-        if(facilityName != null && !facilityName.isEmpty())
-            filterDescription.append("Facility Name : ").append(facilityName).append("\n");
-        if(facilityCode != null && !facilityCode.isEmpty())
-            filterDescription.append("Facility Code : ").append(facilityCode).append("\n");
-        if(facilityTypeId != 0)
-           filterDescription.append("Facility Type : ").append(facilityTypeId).append("\n");
+        filterDescription.append("Facility Type : ").append(facilityTypeId != 0 ? facilityType : "All Facility Types ").append("\n").
+                         append("Requisition Group : ").append(rgroupId != 0 ? rgroup : "All Requisition Groups");
 
         return filterDescription.toString().isEmpty() ? null : filterDescription.toString();
     }

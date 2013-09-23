@@ -11,6 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.report.model.ReportData;
 
+import javax.persistence.Column;
+
 /**
  * A report data used to fill mailing labels report.
  * Mailing Labels Report is used to generates mailing labels displaying the contact person and address for each facility in the distribution system.
@@ -22,19 +24,26 @@ import org.openlmis.report.model.ReportData;
 @AllArgsConstructor
 public class MailingLabelReport implements ReportData {
 
+    @Column(name = "F.code")
     private String code;
+    @Column(name = "f.name")
     private String facilityName;
+    @Column(name = "F.typeid")
     private String facilityType;
     private boolean active;
+    @Column(name = "GZ.name")
     private String region;
+    @Column(name = "F.address1")
     private String address1;
     private String address2;
+    @Column(name = "FO.code")
     private String owner;
     private String email;
     private String phoneNumber;
     private String mslOrmsdCode;
     private String fax;
     private String gpsCoordinates;
+    @Column(name = " U.firstName")
     private String contact;
 
 }
