@@ -66,7 +66,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
 
-    testWebDriver.sleep(10000);
+    waitForAppCacheComplete();
     switchOffNetwork();
     testWebDriver.sleep(2000);
     homePage.navigateHomePage();
@@ -179,7 +179,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
 
-    testWebDriver.sleep(10000);
+    waitForAppCacheComplete();
     switchOffNetwork();
     testWebDriver.sleep(2000);
     homePage.navigateHomePage();
