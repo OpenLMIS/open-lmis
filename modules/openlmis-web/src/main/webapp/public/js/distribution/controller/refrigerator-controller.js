@@ -62,6 +62,16 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog, messageService);
   };
 
+
+}
+
+function showProblemDivAnimation(idSent){
+  $('body,html').animate({
+     scrollTop : parseInt($('#'+idSent).offset().top)+'px'
+  },'fast');
+}
+function showProblemsDiv(idSent){
+  setTimeout(showProblemDivAnimation(idSent),100)
 }
 
 

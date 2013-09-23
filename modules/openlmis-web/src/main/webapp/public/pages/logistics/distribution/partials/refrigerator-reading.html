@@ -112,7 +112,7 @@
               <label openlmis-message="label.problem.last.visit"></label>
 
               <input type="radio" id="problemSinceLastVisitYes{{ $index }}" name="problemSinceLastVisit{{$index}}"
-                     value="Y"
+                     value="Y" onchange="showProblemsDiv('problemSinceLastVisitYes{{ $index }}')"
                      ng-model="refrigeratorReading.problemSinceLastTime.value"/>
               <label class="radio-label" for="problemSinceLastVisitYes{{ $index }}"
                      openlmis-message="label.yes"></label>
