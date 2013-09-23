@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.service;
@@ -35,31 +37,32 @@ public class RequisitionPermissionService {
   @Autowired
   private RoleAssignmentService roleAssignmentService;
 
-  public Boolean hasPermission(Long userId, Facility facility, Program program, Right... rights) {
+  public Boolean hasPermission(Long userId, Facility facility, Program program, Right right) {
     Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
-    return containsAny(userRights, asList(rights));
-
+    return containsAny(userRights, asList(right));
   }
 
-  public Boolean hasPermission(Long userId, Rnr rnr, Right... rights) {
-    return hasPermission(userId, rnr.getFacility(), rnr.getProgram(), rights);
+  public Boolean hasPermission(Long userId, Rnr rnr, Right right) {
+    if (right.equals(APPROVE_REQUISITION))
+      return hasPermissionToApprove(userId, rnr);
+
+    return hasPermission(userId, rnr.getFacility(), rnr.getProgram(), right);
   }
 
   public boolean hasPermissionToSave(Long userId, Rnr rnr) {
     return (rnr.getStatus() == INITIATED && hasPermission(userId, rnr, CREATE_REQUISITION)) ||
-        (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
-        (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, APPROVE_REQUISITION)) ||
-        (rnr.getStatus() == IN_APPROVAL && hasPermission(userId, rnr, APPROVE_REQUISITION));
+      (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
+      (rnr.getStatus() == AUTHORIZED && hasPermissionToApprove(userId, rnr)) ||
+      (rnr.getStatus() == IN_APPROVAL && hasPermissionToApprove(userId, rnr));
   }
 
-  public boolean hasPermissionToApprove(Long userId, final Rnr rnr) {
+  private boolean hasPermissionToApprove(Long userId, final Rnr rnr) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
 
     return exists(assignments, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        final RoleAssignment o1 = (RoleAssignment) o;
-        return (o1.getSupervisoryNode().getId().equals(rnr.getSupervisoryNodeId()));
+        return (((RoleAssignment) o).getSupervisoryNode().getId().equals(rnr.getSupervisoryNodeId()));
       }
     });
   }

@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.service;
@@ -794,49 +796,6 @@ public class RequisitionServiceTest {
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
     assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
-  }
-
-  @Test
-  public void shouldGetRequisitionForApprovalById() throws Exception {
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
-    when(requisitionPermissionService.hasPermissionToApprove(USER_ID, savedRnr)).thenReturn(true);
-
-    Rnr actual = requisitionService.getRnrForApprovalById(authorizedRnr.getId(), USER_ID);
-
-    assertThat(actual, is(savedRnr));
-  }
-
-  @Test
-  public void shouldThrowExceptionIfUserDoesNotHaveAccessToRequestedRequisition() throws Exception {
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    Rnr expected = new Rnr();
-    expected.setFacility(FACILITY);
-    expected.setProgram(PROGRAM);
-    expected.setPeriod(PERIOD);
-    expected.setStatus(RnrStatus.AUTHORIZED);
-    final Long supervisoryNodeId = 1L;
-    expected.setSupervisoryNodeId(supervisoryNodeId);
-    final Long rnrId = 1L;
-    when(requisitionRepository.getById(rnrId)).thenReturn(expected);
-    SupervisoryNode supervisoryNode = new SupervisoryNode();
-    supervisoryNode.setId(supervisoryNodeId);
-    SupplyLine supplyLine = mock(SupplyLine.class);
-
-    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
-    Facility supplyingDepot = new Facility();
-    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
-
-    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
-    }};
-
-    final Long userId = 1L;
-    when(roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
-    requisitionService.getRnrForApprovalById(rnrId, userId);
   }
 
   @Test
