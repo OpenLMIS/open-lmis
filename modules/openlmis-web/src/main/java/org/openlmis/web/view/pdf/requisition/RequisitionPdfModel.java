@@ -18,7 +18,6 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.web.controller.RequisitionController;
 import org.openlmis.web.model.PrintRnrLineItem;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +28,7 @@ import java.util.Map;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.web.controller.RequisitionController.*;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 
 @Data
@@ -51,11 +51,11 @@ public class RequisitionPdfModel {
 
   public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
     this.model = model;
-    this.statusChanges = (List<RequisitionStatusChange>) model.get(RequisitionController.STATUS_CHANGES);
-    this.rnrColumnList = (List<RnrColumn>) model.get(RequisitionController.RNR_TEMPLATE);
-    this.regimenColumnList = (List<RegimenColumn>) model.get(RequisitionController.REGIMEN_TEMPLATE);
-    this.requisition = (Rnr) model.get(RequisitionController.RNR);
-    this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(RequisitionController.LOSSES_AND_ADJUSTMENT_TYPES);
+    this.statusChanges = (List<RequisitionStatusChange>) model.get(STATUS_CHANGES);
+    this.rnrColumnList = (List<RnrColumn>) model.get(RNR_TEMPLATE);
+    this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
+    this.requisition = (Rnr) model.get(RNR);
+    this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(LOSSES_AND_ADJUSTMENT_TYPES);
     this.messageService = messageService;
   }
 
@@ -201,14 +201,14 @@ public class RequisitionPdfModel {
     builder.append(geographicZone.getLevel().getName()).append(": ").append(geographicZone.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
-      builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
+    builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
     builder.append(messageService.message("label.facility.reportingPeriod") + ": ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
       append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
     insertCell(table, builder.toString(), 1);
 
-    String label = emergency? "requisition.type.emergency":"requisition.type.regular";
+    String label = emergency ? "requisition.type.emergency" : "requisition.type.regular";
     builder = new StringBuilder();
     builder.append(messageService.message("label.requisition.type")).append(": ").append(messageService.message(label));
     insertCell(table, builder.toString(), 1);

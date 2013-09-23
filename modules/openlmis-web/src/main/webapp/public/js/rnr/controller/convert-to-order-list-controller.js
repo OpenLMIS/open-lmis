@@ -4,27 +4,26 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, Orders,
+function ConvertToOrderListController($scope, pagedRequisitionList, Orders,
                                       RequisitionForConvertToOrder, $dialog,
                                       messageService, $routeParams, $location) {
-  $scope.requisitions = requisitionList;
-  $scope.filteredRequisitions = $scope.requisitions;
+  $scope.requisitions = pagedRequisitionList.rnr_list;
+  $scope.filteredRequisitions = pagedRequisitionList.rnr_list;
+  $scope.numberOfPages = pagedRequisitionList.number_of_pages;
   $scope.selectedItems = [];
   $scope.message = "";
   $scope.noRequisitionSelectedMessage = "";
-  $scope.pageSize = 50;
   $scope.maxNumberOfPages = 10;
 
-  function fillPageData() {
-    $scope.numberOfPages = Math.ceil($scope.filteredRequisitions.length / $scope.pageSize) ? Math.ceil($scope.filteredRequisitions.length / $scope.pageSize) : 1;
+  function setCurrentPage() {
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, $scope.maxNumberOfPages) : 1;
-    $scope.filteredRequisitions = $scope.filteredRequisitions.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
   }
 
-  fillPageData();
+  setCurrentPage();
 
   $scope.$on('$routeUpdate', function () {
-    fillPageData();
+    setCurrentPage();
+    $scope.fetchFilteredRequisitions();
   });
 
   $scope.$watch("currentPage", function () {
@@ -48,28 +47,13 @@ function ConvertToOrderListController($scope, requisitionList, Orders,
     ]
   };
 
-  $scope.filterRequisitions = function () {
-    $scope.filteredRequisitions = [];
-    $scope.gridOptions.selectedItems.length = 0;
-    var query = $scope.query || "";
-    var searchField = $scope.searchField;
-
-    $scope.filteredRequisitions = $.grep($scope.requisitions, function (rnr) {
-      return (searchField) ? contains(rnr[searchField], query) : matchesAnyField(query, rnr);
-    });
-
-    fillPageData();
-
-    $scope.resultCount = $scope.filteredRequisitions.length;
-  };
-
   $scope.dialogCloseCallback = function (result) {
     if (result) {
       convert();
     }
   };
 
-  showConfirmModal = function () {
+  var showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
       header: messageService.get("label.confirm.action"),
@@ -88,52 +72,51 @@ function ConvertToOrderListController($scope, requisitionList, Orders,
     showConfirmModal();
   };
 
-  var fetchPendingRequisitions = function () {
-    RequisitionForConvertToOrder.get({}, function (data) {
-      $scope.requisitions = data.rnr_list;
+  $scope.fetchFilteredRequisitions = function () {
+    if ($scope.requestInProgress) return;
+
+    $scope.requestInProgress = true;
+    RequisitionForConvertToOrder.get({page: $scope.currentPage,
+      searchType: $scope.searchField, searchVal: $scope.query}, function (data) {
+
+      $scope.filteredRequisitions = data.rnr_list;
+      $scope.numberOfPages = data.number_of_pages;
       $scope.selectedItems.length = 0;
-      $scope.filterRequisitions();
+      $scope.resultCount = $scope.filteredRequisitions.length;
+      $scope.requestInProgress = false;
     });
   };
 
   var convert = function () {
     var successHandler = function () {
-      fetchPendingRequisitions();
+      $scope.fetchFilteredRequisitions();
       $scope.message = "msg.rnr.converted.to.order";
       $scope.error = "";
 
     };
 
     var errorHandler = function (response) {
-      $scope, message = "";
+      $scope.message = "";
       if (response.data.error) {
         $scope.error = response.data.error;
       } else {
         $scope.error = "msg.error.occurred";
       }
 
-      fetchPendingRequisitions();
+      $scope.fetchFilteredRequisitions();
     };
 
     Orders.post({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);
   };
-
-  function contains(string, query) {
-    return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
-  }
-
-  function matchesAnyField(query, rnr) {
-    var rnrString = "|" + rnr.programName + "|" + rnr.facilityCode + "|" + "|" + rnr.facilityName + "|" + "|" + rnr.supplyingDepotName + "|";
-    return contains(rnrString, query);
-  }
 }
 
 ConvertToOrderListController.resolve = {
-  requisitionList: function ($q, $timeout, RequisitionForConvertToOrder) {
+  pagedRequisitionList: function ($q, $timeout, $route,
+                                  RequisitionForConvertToOrder) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionForConvertToOrder.get({}, function (data) {
-        deferred.resolve(data.rnr_list);
+      RequisitionForConvertToOrder.get({page: $route.current.params.page ? $route.current.params.page : 1}, function (data) {
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;

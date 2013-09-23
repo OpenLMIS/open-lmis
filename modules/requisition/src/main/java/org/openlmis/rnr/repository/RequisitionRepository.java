@@ -188,5 +188,13 @@ public class RequisitionRepository {
   public Rnr getLWById(Long rnrId) {
     return requisitionMapper.getLWById(rnrId);
   }
+
+  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber, Integer pageSize) {
+    return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+  }
+
+  public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal) {
+    return requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
+  }
 }
 

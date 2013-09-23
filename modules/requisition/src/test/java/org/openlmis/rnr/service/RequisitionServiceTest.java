@@ -110,6 +110,9 @@ public class RequisitionServiceTest {
   private RequisitionPermissionService requisitionPermissionService;
 
   @Mock
+  private StaticReferenceDataService staticReferenceDataService;
+
+  @Mock
   private UserService userService;
 
   @InjectMocks
@@ -1271,6 +1274,44 @@ public class RequisitionServiceTest {
     requisitionService.getCurrentPeriod(new RequisitionSearchCriteria(1L, 2L));
 
     verify(processingScheduleService).getCurrentPeriod(1L, 2L, programStartDate);
+  }
+
+
+  @Test
+  public void shouldGetApprovedRequisitionsBySearchCriteriaAndPageNumber() throws Exception {
+
+    String searchType = RequisitionService.SEARCH_ALL;
+    String searchVal = "test";
+    Integer pageNumber = 1;
+    Integer pageSize = 3;
+
+    Rnr rnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(make(a(defaultRnr)), Right.CONVERT_TO_ORDER);
+
+
+    List<Rnr> filteredRnrs = Arrays.asList(rnr);
+
+    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize)).thenReturn(filteredRnrs);
+    when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
+
+    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber);
+
+    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+    assertThat(rnrList, is(filteredRnrs));
+  }
+
+  @Test
+  public void shouldGetCountOfApprovedRequisitions() throws Exception {
+
+    int numberOfApprovedRequisitions = 5;
+    String searchType = "searchType";
+    String searchVal = "search";
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(numberOfApprovedRequisitions);
+    Integer pageSize = 3;
+    when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
+
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+
+    assertThat(count, is(numberOfApprovedRequisitions / pageSize + 1));
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

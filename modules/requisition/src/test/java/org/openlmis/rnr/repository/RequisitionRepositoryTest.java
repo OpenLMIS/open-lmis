@@ -39,6 +39,7 @@ import static org.openlmis.rnr.builder.RegimenLineItemBuilder.code;
 import static org.openlmis.rnr.builder.RegimenLineItemBuilder.defaultRegimenLineItem;
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
+import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -354,5 +355,35 @@ public class RequisitionRepositoryTest {
     when(requisitionMapper.getLWById(rnrId)).thenReturn(expectedRnr);
     Rnr returnedRnr = requisitionRepository.getLWById(rnrId);
     assertThat(returnedRnr, is(expectedRnr));
+  }
+
+  @Test
+  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumber() throws Exception {
+
+    List<Rnr> expected = mock(List.class);
+    String searchType = SEARCH_ALL;
+    String searchVal = "test";
+    Integer pageNumber = 2;
+    Integer pageSize = 2;
+    when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize)).thenReturn(expected);
+
+    List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+
+    assertThat(rnrList, is(expected));
+    verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+  }
+
+  @Test
+  public void shouldGetCountOfApprovedRequisitionsForCriteriaAndPageNumber() throws Exception {
+
+    Integer requisitionCount = 5;
+    String searchType = SEARCH_ALL;
+    String searchVal = "test";
+    when(requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(requisitionCount);
+
+    Integer result = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
+
+    assertThat(result, is(requisitionCount));
+    verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
   }
 }

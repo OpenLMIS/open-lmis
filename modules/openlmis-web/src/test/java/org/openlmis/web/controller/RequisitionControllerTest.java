@@ -25,6 +25,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -90,6 +91,9 @@ public class RequisitionControllerTest {
   private RequisitionController controller;
 
   private Rnr rnr;
+
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
 
 
   @Before
@@ -341,13 +345,19 @@ public class RequisitionControllerTest {
   public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder() {
     ArrayList<Rnr> expectedRequisitions = new ArrayList<>();
     mockStatic(RnrDTO.class);
-    when(requisitionService.getApprovedRequisitions()).thenReturn(expectedRequisitions);
+
+    String searchType = "all";
+    String searchVal = "test";
+    Integer pageNumber = 1;
+
+    when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder();
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber);
 
-    verify(requisitionService).getApprovedRequisitions();
+    verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber);
+
     assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }
 
@@ -429,7 +439,7 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getReferenceData();
 
     verify(requisitionService).getLossesAndAdjustmentsTypes();
-    assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get("lossAdjustmentTypes"), is(lossesAndAdjustmentsTypes));
+    assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get(LOSS_ADJUSTMENT_TYPES), is(lossesAndAdjustmentsTypes));
   }
 
   @Test
@@ -440,7 +450,7 @@ public class RequisitionControllerTest {
 
     ModelAndView printModel = controller.printRequisition(1L);
 
-    assertThat((List<RequisitionStatusChange>) printModel.getModel().get("statusChanges"), is(statusChanges));
+    assertThat((List<RequisitionStatusChange>) printModel.getModel().get(STATUS_CHANGES), is(statusChanges));
   }
 
   private Rnr createRequisition() {

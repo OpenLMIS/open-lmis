@@ -44,6 +44,15 @@ public class RequisitionService {
   public static final String RNR_APPROVED_SUCCESSFULLY = "msg.rnr.approved.success";
   public static final String RNR_ALREADY_APPROVED = "rnr.already.approved";
 
+  public static final String SEARCH_ALL = "all";
+  public static final String SEARCH_PROGRAM_NAME = "programName";
+  public static final String SEARCH_FACILITY_CODE = "facilityCode";
+  public static final String SEARCH_FACILITY_NAME = "facilityName";
+  public static final String SEARCH_SUPPLYING_DEPOT_NAME = "supplyingDepot";
+  public static final String CONVERT_TO_ORDER_PAGE_SIZE = "convert.to.order.page.size";
+  public static final String NUMBER_OF_PAGES = "number_of_pages";
+
+
   @Autowired
   private RequisitionRepository requisitionRepository;
   @Autowired
@@ -72,6 +81,9 @@ public class RequisitionService {
   private RegimenService regimenService;
   @Autowired
   private RegimenColumnService regimenColumnService;
+
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -407,5 +419,22 @@ public class RequisitionService {
     Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
     return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
   }
+
+  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber) {
+    Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
+
+    List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+
+    fillFacilityPeriodProgramWithAuditFields(requisitions);
+    fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
+    return requisitions;
+  }
+
+  public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal) {
+    Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
+    Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
+    return (approvedRequisitionsByCriteria / pageSize) + 1;
+  }
+
 }
 

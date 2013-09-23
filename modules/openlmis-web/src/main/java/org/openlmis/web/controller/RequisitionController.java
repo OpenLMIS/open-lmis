@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
@@ -39,6 +41,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
+import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
+import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
@@ -68,6 +72,8 @@ public class RequisitionController extends BaseController {
   private RequisitionStatusChangeService requisitionStatusChangeService;
   @Autowired
   private RegimenColumnService regimenColumnService;
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
 
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
 
@@ -179,9 +185,19 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
-  public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
-    List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
-    return response(RNR_LIST, prepareForListApproval(approvedRequisitions));
+  public ResponseEntity<OpenLmisResponse> listForConvertToOrder(@RequestParam(value = "searchType", required = false, defaultValue = SEARCH_ALL) String searchType,
+                                                                @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
+                                                                @RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
+    try {
+      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page);
+      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+      List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
+      OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
+      response.addData(NUMBER_OF_PAGES, numberOfPages);
+      return new ResponseEntity<>(response, HttpStatus.OK);
+    } catch (Exception e) {
+      return error(new DataException(e.getMessage()), BAD_REQUEST);
+    }
   }
 
   @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
