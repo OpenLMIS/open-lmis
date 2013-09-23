@@ -16,10 +16,7 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
-import org.openlmis.rnr.search.strategy.FacilityDateRangeSearch;
-import org.openlmis.rnr.search.strategy.FacilityProgramDateRangeSearch;
-import org.openlmis.rnr.search.strategy.RequisitionOnlySearch;
-import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
+import org.openlmis.rnr.search.strategy.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -62,7 +59,7 @@ public class RequisitionSearchStrategyFactoryTest {
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
     whenNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService)
-        .thenReturn(mock(FacilityDateRangeSearch.class));
+      .thenReturn(mock(FacilityDateRangeSearch.class));
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
@@ -80,5 +77,18 @@ public class RequisitionSearchStrategyFactoryTest {
 
     assertTrue(facilityDateRangeStrategy instanceof RequisitionOnlySearch);
     verifyNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionRepository);
+  }
+
+  @Test
+  public void shouldUseEmergencyRequisitionSearchStrategyIfEmergencyIsTrue() throws Exception {
+    Long facilityId = 1L, programId = 3L, periodId = 4L;
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
+    criteria.setEmergency(true);
+    whenNew(EmergencyRequisitionSearch.class).withArguments(criteria, requisitionRepository).thenReturn(mock(EmergencyRequisitionSearch.class));
+
+    RequisitionSearchStrategy emergencyRequisitionSearch = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
+
+    assertTrue(emergencyRequisitionSearch instanceof EmergencyRequisitionSearch);
+    verifyNew(EmergencyRequisitionSearch.class).withArguments(criteria, requisitionRepository);
   }
 }

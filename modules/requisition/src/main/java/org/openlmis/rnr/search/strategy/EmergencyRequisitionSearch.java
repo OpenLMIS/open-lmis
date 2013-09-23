@@ -12,12 +12,12 @@ import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 
 import java.util.List;
 
-public class EmergencyRequisitionSearchStrategy implements RequisitionSearchStrategy {
+public class EmergencyRequisitionSearch implements RequisitionSearchStrategy {
 
   private RequisitionSearchCriteria criteria;
   private RequisitionRepository requisitionRepository;
 
-  public EmergencyRequisitionSearchStrategy(RequisitionSearchCriteria criteria, RequisitionRepository requisitionRepository) {
+  public EmergencyRequisitionSearch(RequisitionSearchCriteria criteria, RequisitionRepository requisitionRepository) {
     this.criteria = criteria;
     this.requisitionRepository = requisitionRepository;
   }
