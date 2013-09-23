@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.pageSize = pageSize;
@@ -302,7 +302,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   function resetFlags() {
     $scope.submitError = "";
-    $rootScope.submitMessage = "";
+    $scope.submitMessage = "";
     $scope.error = "";
     $scope.message = "";
   }
