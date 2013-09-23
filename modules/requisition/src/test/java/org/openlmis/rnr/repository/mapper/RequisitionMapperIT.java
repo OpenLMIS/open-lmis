@@ -313,13 +313,13 @@ public class RequisitionMapperIT {
   public void shouldOnlyLoadEmergencyRequisitionDataForGivenQuery() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, INITIATED, true);
 
-    Rnr fetchedRnr = mapper.getRequisitionWithoutLineItems(facility.getId(), PROGRAM_ID, processingPeriod1.getId());
+    List<Rnr> fetchedRnr = mapper.getInitiatedEmergencyRequisition(facility.getId(), PROGRAM_ID);
 
-    assertThat(fetchedRnr.getId(), is(requisition.getId()));
-    assertThat(fetchedRnr.getPeriod().getId(), is(processingPeriod1.getId()));
-    assertThat(fetchedRnr.getStatus(), is(INITIATED));
-    assertThat(fetchedRnr.getFullSupplyLineItems().size(), is(0));
-    assertThat(fetchedRnr.getNonFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRnr.get(0).getId(), is(requisition.getId()));
+    assertThat(fetchedRnr.get(0).getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(fetchedRnr.get(0).getStatus(), is(INITIATED));
+    assertThat(fetchedRnr.get(0).getFullSupplyLineItems().size(), is(0));
+    assertThat(fetchedRnr.get(0).getNonFullSupplyLineItems().size(), is(0));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, RnrStatus status, Boolean emergency) {

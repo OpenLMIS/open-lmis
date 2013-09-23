@@ -428,7 +428,8 @@ public class RequisitionServiceTest {
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), true, facilityTypeApprovedProducts, regimens, USER_ID, USER_ID).thenReturn(spyRequisition);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), true);
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
+    criteria.setEmergency(true);
     doReturn(asList(spyRequisition)).when(spyRequisitionService).get(criteria);
 
     Rnr rnr = spyRequisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, true);

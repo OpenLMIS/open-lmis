@@ -137,12 +137,13 @@ public interface RequisitionMapper {
 
   @Select({"SELECT * FROM requisitions WHERE",
     "facilityId = #{facilityId} AND",
-    "programId = #{programId} AND emergency = true AND status='INITIATED'"
+    "programId = #{programId} AND emergency = TRUE AND status='INITIATED'"
   })
   @Results(value = {
     @Result(property = "facility.id", column = "facilityId"),
     @Result(property = "program.id", column = "programId"),
     @Result(property = "period.id", column = "periodId")
   })
-  List<Rnr> getInitiatedEmergencyRequisition(Long facilityId, Long programId);
+  List<Rnr> getInitiatedEmergencyRequisition(@Param("facilityId") Long facilityId,
+                                             @Param("programId") Long programId);
 }
