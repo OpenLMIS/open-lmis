@@ -77,7 +77,6 @@ public interface RequisitionMapper {
                                   @Param("program") Program program,
                                   @Param("period") ProcessingPeriod period);
 
-
   @Select({"SELECT * FROM requisitions R",
     "WHERE facilityId = #{facilityId}",
     "AND programId = #{programId} ",
