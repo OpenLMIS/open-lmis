@@ -86,7 +86,15 @@ public class FacilityApprovedProductService {
       if (facilityTypeApprovedProduct.getId() != null) {
           repository.update(facilityTypeApprovedProduct);
       } else {
+        FacilityTypeApprovedProduct fproduct = repository.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeApprovedProduct.getFacilityType().getId(), facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getId() );
+        if(fproduct == null){
           repository.insert(facilityTypeApprovedProduct);
+        } else{
+          fproduct.setMaxMonthsOfStock( facilityTypeApprovedProduct.getMaxMonthsOfStock() );
+          fproduct.setMinMonthsOfStock( facilityTypeApprovedProduct.getMinMonthsOfStock() );
+          repository.update(fproduct);
+        }
+
       }
   }
 
