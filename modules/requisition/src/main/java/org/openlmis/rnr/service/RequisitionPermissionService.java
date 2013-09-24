@@ -62,7 +62,8 @@ public class RequisitionPermissionService {
     return exists(assignments, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        return (((RoleAssignment) o).getSupervisoryNode().getId().equals(rnr.getSupervisoryNodeId()));
+        RoleAssignment roleAssignment = (RoleAssignment) o;
+        return (roleAssignment.getSupervisoryNode().getId().equals(rnr.getSupervisoryNodeId()) && roleAssignment.getProgramId().equals(rnr.getProgram().getId()));
       }
     });
   }

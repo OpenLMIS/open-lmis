@@ -36,6 +36,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.domain.Right.*;
+import static org.openlmis.rnr.builder.RequisitionBuilder.program;
 import static org.openlmis.rnr.builder.RequisitionBuilder.status;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -144,7 +145,7 @@ public class RequisitionPermissionServiceTest {
     Long supervisoryNodeId = 1L;
     Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
     rnr.setSupervisoryNodeId(supervisoryNodeId);
-    final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId);
+    final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId, 3l);
     List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
       add(assignment);
     }};
@@ -152,6 +153,23 @@ public class RequisitionPermissionServiceTest {
     when(roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
 
     assertThat(requisitionPermissionService.hasPermission(userId, rnr, APPROVE_REQUISITION), is(true));
+  }
+
+  @Test
+  public void shouldReturnFalseIfUserHasApproveRightOnNodeButNotForProgram() throws Exception {
+    Long supervisoryNodeId = 1L;
+    Long supportedProgramId = 3l;
+    Long rnrProgramId = 2l;
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(program, new Program(rnrProgramId))));
+    rnr.setSupervisoryNodeId(supervisoryNodeId);
+    final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId, supportedProgramId);
+    List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
+      add(assignment);
+    }};
+
+    when(roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId)).thenReturn(roleAssignments);
+
+    assertThat(requisitionPermissionService.hasPermission(userId, rnr, APPROVE_REQUISITION), is(false));
   }
 
   @Test
@@ -164,11 +182,12 @@ public class RequisitionPermissionServiceTest {
     assertThat(requisitionPermissionService.hasPermission(1L, CREATE_REQUISITION), is(false));
   }
 
-  private RoleAssignment roleAssignmentWithSupervisoryNodeId(Long supervisoryNodeId) {
+  private RoleAssignment roleAssignmentWithSupervisoryNodeId(Long supervisoryNodeId, Long programId) {
     final RoleAssignment assignment = new RoleAssignment();
     final SupervisoryNode node = new SupervisoryNode();
     node.setId(supervisoryNodeId);
     assignment.setSupervisoryNode(node);
+    assignment.setProgramId(programId);
     return assignment;
   }
 }

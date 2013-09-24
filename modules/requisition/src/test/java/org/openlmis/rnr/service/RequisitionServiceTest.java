@@ -670,6 +670,7 @@ public class RequisitionServiceTest {
     savedRnr.setProgram(PROGRAM);
     savedRnr.setPeriod(PERIOD);
 
+    when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, APPROVE_REQUISITION)).thenReturn(true);
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
@@ -1048,7 +1049,7 @@ public class RequisitionServiceTest {
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, APPROVE_REQUISITION)).thenReturn(false);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+    expectedException.expectMessage(RNR_ALREADY_APPROVED);
 
     requisitionService.approve(authorizedRnr);
   }

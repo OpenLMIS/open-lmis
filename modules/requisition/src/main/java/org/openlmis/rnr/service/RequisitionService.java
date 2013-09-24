@@ -42,6 +42,7 @@ public class RequisitionService {
   public static final String RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "msg.rnr.approved.without.supervisor";
   public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "msg.rnr.submitted.without.supervisor";
   public static final String RNR_APPROVED_SUCCESSFULLY = "msg.rnr.approved.success";
+  public static final String RNR_ALREADY_APPROVED = "rnr.already.approved";
 
   @Autowired
   private RequisitionRepository requisitionRepository;
@@ -176,7 +177,7 @@ public class RequisitionService {
     savedRnr.validateForApproval();
 
     if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION))
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+      throw new DataException(RNR_ALREADY_APPROVED);
 
     if (savedRnr.getStatus() != AUTHORIZED && savedRnr.getStatus() != IN_APPROVAL) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
