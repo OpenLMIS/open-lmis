@@ -122,7 +122,7 @@ describe('InitiateRnrController', function () {
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
       {right: 'CREATE_REQUISITION'}
     ]});
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectGET('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
@@ -140,7 +140,7 @@ describe('InitiateRnrController', function () {
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
       {right: 'AUTHORIZE_REQUISITION'}
     ]});
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectGET('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
     spyOn(messageService, 'get').andCallFake(function (arg) {
       return "Requisition not submitted yet";
@@ -162,8 +162,8 @@ describe('InitiateRnrController', function () {
       {right: 'CREATE_REQUISITION'}
     ]});
 
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
-    $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(400, {"error": "errorMessage"});
+    $httpBackend.expectGET('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond(null);
+    $httpBackend.expectPOST('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond(400, {"error": "errorMessage"});
 
     scope.initRnr();
     $httpBackend.flush();
@@ -179,8 +179,8 @@ describe('InitiateRnrController', function () {
       {right: 'CREATE_REQUISITION'}
     ]});
 
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
-    $httpBackend.expectPOST('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectGET('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond(null);
+    $httpBackend.expectPOST('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
 
     scope.initRnr();
     $httpBackend.flush();
@@ -198,7 +198,7 @@ describe('InitiateRnrController', function () {
       {right: 'AUTHORIZE_REQUISITION'}
     ]});
 
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond(null);
+    $httpBackend.expectGET('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond(null);
     spyOn(rootScope, 'hasPermission').andReturn(false);
 
     spyOn(messageService, 'get').andCallFake(function (arg) {
@@ -221,7 +221,7 @@ describe('InitiateRnrController', function () {
     $httpBackend.expectGET('/facility/1/program/2/rights.json').respond({rights: [
       {right: 'CREATE_REQUISITION'}
     ]});
-    $httpBackend.expectGET('/requisitions.json?facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
+    $httpBackend.expectGET('/requisitions.json?emergency=false&facilityId=1&periodId=3&programId=2').respond({"rnr": {"id": 1, status: "INITIATED"}});
     scope.initRnr();
     $httpBackend.flush();
     expect(navigateBackService.setData).toHaveBeenCalledWith(testData);

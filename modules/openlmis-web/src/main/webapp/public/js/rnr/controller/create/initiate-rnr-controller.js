@@ -8,21 +8,22 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
 
   $scope.fullScreen = false;
   $scope.$watch('fullScreen', function () {
-      angular.element(window).scrollTop(0);
-      if (!$.browser.msie) {
-        $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
-        }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
-        });
-      }
-      else {
-        $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
-      }
-      $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
-    });
+    angular.element(window).scrollTop(0);
+    if (!$.browser.msie) {
+      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
+      }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
+      });
+    }
+    else {
+      $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
+    }
+    $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
+  });
 
   var isNavigatedBack;
 
   $scope.selectedRnrType = {"name": "Regular", "emergency": false};
+
   $scope.rnrTypes = {"types": [
     {"name": messageService.get("requisition.type.regular"), "emergency": false},
     {"name": messageService.get("requisition.type.emergency"), "emergency": true}
@@ -213,7 +214,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
         });
       };
 
-      Requisitions.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {},
+      Requisitions.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
+          periodId: $scope.selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {},
         function (data) {
           if ((data.rnr == null || data.rnr == undefined) && !hasPermission('CREATE_REQUISITION')) {
             $scope.error = messageService.get("error.requisition.not.initiated");
@@ -229,7 +231,8 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
             $location.url(createRnrPath);
           }
           else {
-            Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, periodId: $scope.selectedPeriod.id}, {}, function (data) {
+            Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
+              periodId: $scope.selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {}, function (data) {
               $scope.$parent.rnr = data.rnr;
               createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
               $location.url(createRnrPath);

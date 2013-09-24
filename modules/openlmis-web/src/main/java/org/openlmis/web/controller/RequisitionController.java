@@ -76,9 +76,10 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
                                                       @RequestParam("programId") Long programId,
                                                       @RequestParam("periodId") Long periodId,
+                                                      @RequestParam("emergency") Boolean emergency,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request), false));
+      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request), emergency));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }

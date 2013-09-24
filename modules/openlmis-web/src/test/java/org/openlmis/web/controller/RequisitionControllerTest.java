@@ -105,7 +105,7 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldInitiateRnr() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, 3L, request);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, 3L, false, request);
 
     verify(requisitionService).initiate(1L, 2L, 3L, USER_ID, false);
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
@@ -151,7 +151,7 @@ public class RequisitionControllerTest {
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
     doThrow(new DataException(errorMessage)).when(requisitionService).initiate(1L, 2L, null, USER_ID, false);
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, null, request);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, null, false, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
