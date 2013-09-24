@@ -29,11 +29,8 @@ public class TestCaseHelper {
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
   public static final String DEFAULT_BROWSER = "firefox";
-  //public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
-  //public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
-
-    public static final String DEFAULT_BASE_URL ="https://qa-openlmis.org/";
-    public static final String DEFAULT_DB_URL = "jdbc:postgresql://192.168.34.2/open_lmis";
+  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
+  public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
 
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
