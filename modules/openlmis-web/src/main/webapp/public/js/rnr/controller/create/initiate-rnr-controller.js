@@ -86,7 +86,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
         }
       }, {});
     } else if (selectedType == 1) { // Supervised facility
-      $scope.selectedFacilityId=null;
+      resetRnrData();
       CreateRequisitionProgramList.get({}, function (data) {
         $scope.programs = data.programList;
       }, {});
