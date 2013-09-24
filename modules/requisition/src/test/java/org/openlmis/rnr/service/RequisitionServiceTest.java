@@ -686,7 +686,7 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
+    expectedException.expectMessage(RNR_ALREADY_APPROVED);
 
     requisitionService.approve(submittedRnr);
   }

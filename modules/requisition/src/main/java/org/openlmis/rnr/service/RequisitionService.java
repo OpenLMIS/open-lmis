@@ -175,12 +175,8 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     savedRnr.validateForApproval();
 
-    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION))
+    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION) || !savedRnr.isApprovable())
       throw new DataException(RNR_ALREADY_APPROVED);
-
-    if (savedRnr.getStatus() != AUTHORIZED && savedRnr.getStatus() != IN_APPROVAL) {
-      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-    }
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
