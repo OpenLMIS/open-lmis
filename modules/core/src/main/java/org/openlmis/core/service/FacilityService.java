@@ -177,4 +177,8 @@ public class FacilityService {
      return facilityRepository.getFacilitiesForAFacilityType(facilityTypeId);
   }
 
+  public List<Facility> getSupplyingFacilitiesCompleteList() {
+      return facilityRepository.getSupplyingFacilitiesCompleteList();
+  }
+
 }
