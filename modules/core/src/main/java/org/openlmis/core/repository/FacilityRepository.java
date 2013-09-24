@@ -201,4 +201,8 @@ public class FacilityRepository {
   public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {
     return mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
   }
+
+  public List<Facility> getSupplyingFacilitiesCompleteList() {
+      return mapper.getSupplyingFacilitiesCompleteList();
+  }
 }
