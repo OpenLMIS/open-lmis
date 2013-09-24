@@ -217,7 +217,8 @@ public class RequisitionService {
   public List<Rnr> get(RequisitionSearchCriteria criteria) {
     RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
     List<Rnr> requisitions = strategy.search();
-    fillSupportingInfo(requisitions);
+    if (requisitions != null)
+      fillSupportingInfo(requisitions);
     return requisitions;
   }
 

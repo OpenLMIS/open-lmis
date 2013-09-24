@@ -386,4 +386,14 @@ public class RequisitionRepositoryTest {
     assertThat(result, is(requisitionCount));
     verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
   }
+
+  @Test
+  public void shouldLoadEmergencyRequisitionInInitiatedState(){
+    List<Rnr> requisitionList = new ArrayList<>();
+    when(requisitionMapper.getInitiatedEmergencyRequisition(1l, 2l)).thenReturn(requisitionList);
+
+    List<Rnr> emergencyRequisitions = requisitionRepository.getInitiatedEmergencyRequisition(1l, 2l);
+
+    assertThat(emergencyRequisitions, is(requisitionList));
+  }
 }

@@ -205,9 +205,9 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
     try {
       List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
-      Rnr currentRequisition = isEmpty(periodList) ? null : getRequisitionForCurrentPeriod(criteria, periodList);
+      List<Rnr> requisitions = isEmpty(periodList) ? null : getRequisitionForCurrentPeriod(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
-      response.addData(RNR, currentRequisition);
+      response.addData(RNR, requisitions);
       return new ResponseEntity<>(response, OK);
     } catch (DataException e) {
       return error(e, CONFLICT);
@@ -217,15 +217,16 @@ public class RequisitionController extends BaseController {
   private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
     ProcessingPeriod currentPeriod;
     return criteria.isEmergency() ?
-      (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ? asList(currentPeriod) : null :
+      (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ?
+        asList(currentPeriod) : null :
       requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
   }
 
-  private Rnr getRequisitionForCurrentPeriod(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+  private List<Rnr> getRequisitionForCurrentPeriod(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
     criteria.setWithoutLineItems(true);
     criteria.setPeriodId(periodList.get(0).getId());
     List<Rnr> rnrList = requisitionService.get(criteria);
-    return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
+    return rnrList;
   }
 
   @RequestMapping(value = "/requisitions/{id}", method = GET)

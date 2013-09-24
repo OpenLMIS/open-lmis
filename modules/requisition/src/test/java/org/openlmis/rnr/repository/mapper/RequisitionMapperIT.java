@@ -375,7 +375,7 @@ public class RequisitionMapperIT {
     List<Rnr> fetchedRnr = mapper.getInitiatedEmergencyRequisition(facility.getId(), program.getId());
 
     assertThat(fetchedRnr.get(0).getId(), is(requisition.getId()));
-    assertThat(fetchedRnr.get(0).getPeriod().getId(), is(processingPeriod1.getId()));
+    assertThat(fetchedRnr.get(0).getPeriod(), is(processingPeriod1));
     assertThat(fetchedRnr.get(0).getStatus(), is(INITIATED));
     assertThat(fetchedRnr.get(0).getFullSupplyLineItems().size(), is(0));
     assertThat(fetchedRnr.get(0).getNonFullSupplyLineItems().size(), is(0));
