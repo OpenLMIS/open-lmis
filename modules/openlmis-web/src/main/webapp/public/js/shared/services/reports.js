@@ -337,3 +337,7 @@ services.factory('SaveApprovedProductForFacilityType',function($resource){
 services.factory('RemoveApprovedProductForFacilityType', function($resource){
     return $resource('/facilityApprovedProducts/remove/facilityType/:facilityTypeId/program/:programId/product/:productId',{},{});
 });
+
+services.factory("SupplyingFacilities",function($resource)  {
+    return $resource('/facility/supplyingFacilities.json', {}, {});
+});
