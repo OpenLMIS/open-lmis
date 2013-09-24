@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.controller;
@@ -128,7 +130,7 @@ public class RequisitionController extends BaseController {
       return success(messageService.message(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
         submittedRnr.getProgram())));
     } catch (DataException e) {
-      return error(messageService.message(e.getOpenLmisMessage()), BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 
@@ -150,7 +152,7 @@ public class RequisitionController extends BaseController {
       return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
         authorizedRnr.getFacility(), authorizedRnr.getProgram())));
     } catch (DataException e) {
-      return error(messageService.message(e.getOpenLmisMessage()), BAD_REQUEST);
+      return error(e, BAD_REQUEST);
     }
   }
 

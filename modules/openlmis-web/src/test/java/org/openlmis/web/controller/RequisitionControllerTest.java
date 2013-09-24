@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.controller;
@@ -225,10 +227,9 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldNotAuthorizeRnrAndGiveErrorMessage() throws Exception {
+    String errorMessage = "some error";
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    OpenLmisMessage errorMessage = new OpenLmisMessage("");
-    when(messageService.message(errorMessage)).thenReturn("some error");
 
     doThrow(new DataException(errorMessage)).when(requisitionService).authorize(rnr);
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);

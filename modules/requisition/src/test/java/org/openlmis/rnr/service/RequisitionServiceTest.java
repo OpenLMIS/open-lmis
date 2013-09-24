@@ -1240,24 +1240,20 @@ public class RequisitionServiceTest {
   public void shouldNotSubmittedIfRnrAlreadySubmitted() throws Exception {
     Rnr submittedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(this.submittedRnr, CREATE_REQUISITION);
 
-    try {
-      requisitionService.submit(submittedRnr);
-    } catch (DataException e) {
-      assertThat(e.getOpenLmisMessage().getCode(), is(RNR_SUBMISSION_ERROR));
-      assertThat(e.getOpenLmisMessage().getParams()[0], is(SUBMITTED.name()));
-    }
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_SUBMISSION_ERROR);
+
+    requisitionService.submit(submittedRnr);
   }
 
   @Test
   public void shouldNotAuthorizeIfRnrAlreadyAuthorized() throws Exception {
     Rnr authorizedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(this.authorizedRnr, AUTHORIZE_REQUISITION);
 
-    try {
-      requisitionService.authorize(authorizedRnr);
-    } catch (DataException e) {
-      assertThat(e.getOpenLmisMessage().getCode(), is(RNR_AUTHORIZATION_ERROR));
-      assertThat(e.getOpenLmisMessage().getParams()[0], is(AUTHORIZED.name()));
-    }
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_AUTHORIZATION_ERROR);
+
+    requisitionService.authorize(authorizedRnr);
   }
 
   @Test
