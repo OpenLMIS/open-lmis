@@ -101,7 +101,7 @@ ORDER BY f.code, f.name, p.name]]>
 	<pageHeader>
 		<band height="20" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="202" y="0" width="244" height="20"/>
+				<reportElement uuid="9a07393f-5522-4bce-9f72-d87cd57c5a0d" x="203" y="0" width="243" height="20"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -161,7 +161,7 @@ ORDER BY f.code, f.name, p.name]]>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="2d97d1a7-f057-497d-98f4-376032bdf48f" x="38" y="0" width="165" height="20"/>
+				<reportElement uuid="2d97d1a7-f057-497d-98f4-376032bdf48f" x="38" y="0" width="164" height="20"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$F{supervisory_node_code}+'-'+$F{supervisory_node_name}]]></textFieldExpression>
 			</textField>
