@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.dto;
@@ -28,6 +30,7 @@ public class RnrDTO {
   private Long programId;
   private String facilityName;
   private String facilityCode;
+  private boolean emergency;
   private Date submittedDate;
   private Date modifiedDate;
   private Date periodStartDate;
@@ -56,6 +59,12 @@ public class RnrDTO {
     return result;
   }
 
+  public static RnrDTO prepareForOrderView(Rnr requisition) {
+    RnrDTO rnrDTO = prepareDTOWithSupplyingDepot(requisition);
+    rnrDTO.setPeriodName(requisition.getPeriod().getName());
+    return rnrDTO;
+  }
+
   private static RnrDTO prepareDTOWithSupplyingDepot(Rnr requisition) {
     RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
     if (requisition.getSupplyingDepot() != null) {
@@ -64,7 +73,7 @@ public class RnrDTO {
     return rnrDTO;
   }
 
-  public static RnrDTO populateDTOWithRequisition(Rnr requisition) {
+  private static RnrDTO populateDTOWithRequisition(Rnr requisition) {
     RnrDTO rnrDTO = new RnrDTO();
     rnrDTO.id = requisition.getId();
     rnrDTO.programId = requisition.getProgram().getId();
@@ -76,12 +85,7 @@ public class RnrDTO {
     rnrDTO.modifiedDate = requisition.getModifiedDate();
     rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
     rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
-    return rnrDTO;
-  }
-
-  public static RnrDTO prepareForOrderView(Rnr requisition) {
-    RnrDTO rnrDTO = prepareDTOWithSupplyingDepot(requisition);
-    rnrDTO.setPeriodName(requisition.getPeriod().getName());
+    rnrDTO.setEmergency(requisition.getEmergency());
     return rnrDTO;
   }
 }
