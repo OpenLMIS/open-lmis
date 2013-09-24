@@ -85,7 +85,7 @@ public class RnrDTO {
     rnrDTO.modifiedDate = requisition.getModifiedDate();
     rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
     rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
-    rnrDTO.setEmergency(requisition.getEmergency());
+    rnrDTO.emergency = requisition.isEmergency();
     return rnrDTO;
   }
 }

@@ -34,7 +34,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
 
-  private Boolean emergency;
+  private boolean emergency;
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;

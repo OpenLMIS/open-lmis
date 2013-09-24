@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.view.pdf.requisition;
@@ -156,7 +158,7 @@ public class RequisitionPdfModel {
 
     Facility facility = requisition.getFacility();
     addFirstLine(facility, table);
-    addSecondLine(facility, table, requisition.getEmergency());
+    addSecondLine(facility, table, requisition.isEmergency());
     table.setSpacingAfter(PARAGRAPH_SPACING);
     return table;
   }

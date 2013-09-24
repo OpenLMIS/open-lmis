@@ -1,7 +1,9 @@
 /*
- * Copyright � 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.repository.mapper;
@@ -366,7 +368,7 @@ public class RequisitionMapperIT {
     requisition.setSubmittedDate(requisitions.get(index).getSubmittedDate());
     requisition.setProgram(requisitions.get(index).getProgram());
     requisition.setSupplyingDepot(requisitions.get(index).getSupplyingDepot());
-    requisition.setEmergency(requisitions.get(index).getEmergency());
+    requisition.setEmergency(requisitions.get(index).isEmergency());
     requisition.setSupervisoryNodeId(requisitions.get(index).getSupervisoryNodeId());
   }
 
