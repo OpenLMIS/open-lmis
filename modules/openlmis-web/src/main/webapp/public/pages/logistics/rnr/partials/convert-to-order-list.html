@@ -24,24 +24,28 @@
     <h3 openlmis-message = "label.requisition.list"></h3>
 
     <div class = "row-fluid">
-      <div class = "span4 offset7 grid-filters">
-        <input id = "searchRequisition" class = "search-query"
-               type = "text"
-               ng-model = "query" openlmis-message = "placeholder.search"/>
-        <span openlmis-message = "label.in"></span>
-        <select ng-model = "searchField">
-          <option value = "" openlmis-message = "option.value.all"></option>
-          <option value = "programName"
-                  openlmis-message = "option.value.program"></option>
-          <option value = "facilityCode"
-                  openlmis-message = "option.value.facility.code"></option>
-          <option value = "facilityName"
-                  openlmis-message = "option.value.facility.name"></option>
-          <option value = "supplyingDepot"
-                  openlmis-message = "label.supplying.depot"></option>
-        </select>
-        <button type = "submit " class = "btn icon-search"
-                ng-click = "fetchFilteredRequisitions()"></button>
+      <div class = "span5 offset7 search-in-category">
+        <div class = "input-append input-prepend">
+          <div class = "btn-group">
+            <button class = "btn dropdown-toggle">
+              <span ng-bind = "searchField"
+                    openlmis-message = "searchValue"></span>
+              <span class = "caret"></span>
+            </button>
+            <ul class = "dropdown-menu">
+              <li ng-repeat = "searchOption in searchOptions">
+                <a href = "" openlmis-message = "searchOption.value"
+                   ng-click = "selectSearchType(searchOption)"></a>
+              </li>
+            </ul>
+          </div>
+          <input type = "text" class = "span5"
+                 ui-keypress = "{13:'fetchFilteredRequisitions()'}"
+                 ng-model = "query"/>
+          <button class = "btn" ng-click = "fetchFilteredRequisitions()">
+            <i class = "icon-search"></i>
+          </button>
+        </div>
       </div>
     </div>
 

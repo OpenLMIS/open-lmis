@@ -14,6 +14,20 @@ function ConvertToOrderListController($scope, pagedRequisitionList, Orders,
   $scope.message = "";
   $scope.noRequisitionSelectedMessage = "";
   $scope.maxNumberOfPages = 10;
+  $scope.searchValue = "All";
+
+  $scope.searchOptions = [
+    {searchType: "all", value: "option.value.all"},
+    {searchType: "programName", value: "option.value.program"},
+    {searchType: "facilityCode", value: "option.value.facility.code"},
+    {searchType: "facilityName", value: "option.value.facility.name"},
+    {searchType: "supplyingDepot", value: "label.supplying.depot"}
+  ];
+
+  $scope.selectSearchType = function (searchOption) {
+    $scope.searchField = searchOption.searchType;
+    $scope.searchValue = searchOption.value;
+  };
 
   function setCurrentPage() {
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, $scope.maxNumberOfPages) : 1;
