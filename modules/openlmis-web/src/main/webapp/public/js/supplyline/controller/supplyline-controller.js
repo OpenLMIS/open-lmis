@@ -222,7 +222,6 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
         supplylineUnderEdit.description = backupSupplylineRow.description;
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].error = '';
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = '';
-        alert('cancel');
         $scope.setFlags('cancel','cancel');
     };
 
