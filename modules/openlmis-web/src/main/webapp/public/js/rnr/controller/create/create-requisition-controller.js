@@ -120,7 +120,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       }, 3000);
       $scope.saveRnrForm.$setPristine();
     }, function (data) {
-      $scope.error = data.error;
+      if (!preventMessage)
+        $scope.error = data.data.error;
     });
   };
 
