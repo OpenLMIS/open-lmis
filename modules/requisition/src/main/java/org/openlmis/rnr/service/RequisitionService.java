@@ -260,13 +260,6 @@ public class RequisitionService {
     return savedRnr;
   }
 
-  public List<Rnr> getApprovedRequisitions() {
-    List<Rnr> requisitions = requisitionRepository.getApprovedRequisitions();
-    fillFacilityPeriodProgramWithAuditFields(requisitions);
-    fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
-    return requisitions;
-  }
-
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
     requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
     requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);

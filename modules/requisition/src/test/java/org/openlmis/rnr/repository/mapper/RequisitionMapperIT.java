@@ -35,7 +35,9 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -227,7 +229,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetRequisitionsInSubmittedStateForRoleAssignment() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, program, AUTHORIZED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, AUTHORIZED, true);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
     RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1L, program.getId(), supervisoryNode);
@@ -241,6 +243,7 @@ public class RequisitionMapperIT {
     assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
     assertThat(rnr.getId(), is(requisition.getId()));
     assertThat(rnr.getModifiedDate(), is(notNullValue()));
+    assertTrue(rnr.isEmergency());
   }
 
   @Test
@@ -289,7 +292,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, true);
     Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
     insertRequisition(processingPeriod3, program, APPROVED, false);
 
@@ -368,7 +371,6 @@ public class RequisitionMapperIT {
     requisition.setSubmittedDate(requisitions.get(index).getSubmittedDate());
     requisition.setProgram(requisitions.get(index).getProgram());
     requisition.setSupplyingDepot(requisitions.get(index).getSupplyingDepot());
-    requisition.setEmergency(requisitions.get(index).isEmergency());
     requisition.setSupervisoryNodeId(requisitions.get(index).getSupervisoryNodeId());
   }
 

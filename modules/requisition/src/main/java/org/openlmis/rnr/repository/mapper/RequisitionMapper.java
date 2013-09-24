@@ -51,7 +51,7 @@ public interface RequisitionMapper {
   })
   Rnr getById(Long rnrId);
 
-  @Select({"SELECT id, programId, facilityId, periodId, modifiedDate",
+  @Select({"SELECT id, emergency, programId, facilityId, periodId, modifiedDate",
     "FROM requisitions ",
     "WHERE programId =  #{programId}",
     "AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')"})
@@ -164,13 +164,34 @@ public interface RequisitionMapper {
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")
-    public static String getApprovedRequisitionsByCriteria(Map params) {
+    public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
-      sql.append("SELECT DISTINCT R.id, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId, R.modifiedDate as submittedDate FROM Requisitions R ");
-      String searchType = (String) params.get("searchType");
-      String searchVal = ((String) params.get("searchVal")).toLowerCase();
+      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, " +
+        "R.supervisoryNodeId, R.modifiedDate as submittedDate FROM Requisitions R ");
+
+      appendQueryClausesBySearchType(sql, params);
+
       Integer pageNumber = (Integer) params.get("pageNumber");
       Integer pageSize = (Integer) params.get("pageSize");
+
+      return sql.append("ORDER BY R.modifiedDate ").append("LIMIT ").append(pageSize)
+        .append(" OFFSET ").append((pageNumber - 1) * pageSize).toString();
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public static String getCountOfApprovedRequisitionsForCriteria(Map params) {
+
+      StringBuilder sql = new StringBuilder();
+      sql.append("SELECT COUNT(DISTINCT R.id) FROM Requisitions R ");
+
+      appendQueryClausesBySearchType(sql, params);
+
+      return sql.toString();
+    }
+
+    private static void appendQueryClausesBySearchType(StringBuilder sql, Map<String, Object> params) {
+      String searchType = (String) params.get("searchType");
+      String searchVal = ((String) params.get("searchVal")).toLowerCase();
 
       if (searchVal.isEmpty()) {
         sql.append("WHERE ");
@@ -179,7 +200,7 @@ public interface RequisitionMapper {
         sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
         sql.append("INNER JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
         sql.append("WHERE LOWER(P.code) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal +
-          "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
+          "' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
         sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
         sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
@@ -195,45 +216,6 @@ public interface RequisitionMapper {
         sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
       }
       sql.append("R.status = 'APPROVED' ");
-      sql.append("ORDER BY R.modifiedDate ");
-      sql.append("LIMIT " + pageSize + " OFFSET " + (pageNumber - 1) * pageSize);
-
-      return sql.toString();
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public static String getCountOfApprovedRequisitionsForCriteria(Map params) {
-
-      StringBuilder sql = new StringBuilder();
-      sql.append("SELECT COUNT(DISTINCT R.id) FROM Requisitions R ");
-      String searchType = (String) params.get("searchType");
-      String searchVal = ((String) params.get("searchVal")).toLowerCase();
-
-      if (searchVal.isEmpty()) {
-        sql.append("WHERE ");
-      } else if (searchType.isEmpty() || searchType.equalsIgnoreCase(RequisitionService.SEARCH_ALL)) {
-        sql.append("INNER JOIN Programs P ON P.id = R.programId ");
-        sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
-        sql.append("INNER JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
-        sql.append("WHERE LOWER(P.code) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal
-          + "' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
-        sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
-        sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_NAME)) {
-        sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
-        sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_PROGRAM_NAME)) {
-        sql.append("INNER JOIN Programs P ON P.id = R.programId ");
-        sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
-        sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
-        sql.append("INNER JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
-        sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
-      }
-      sql.append("R.status = 'APPROVED' ");
-
-      return sql.toString();
     }
 
   }
