@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.core.repository.mapper;
@@ -34,8 +36,7 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.core.domain.RoleType.*;
 
 @Category(IntegrationTests.class)
@@ -72,7 +73,7 @@ public class RoleAssignmentMapperIT {
   }
 
   @Test
-  public void shouldReturnProgramAvailableForAFacilityForAUserWithGivenRights() throws Exception {
+  public void shouldReturnRoleAssignmentsForUserAndRight() {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
@@ -98,8 +99,78 @@ public class RoleAssignmentMapperIT {
       mapper.getRoleAssignmentsWithGivenRightForAUser(CREATE_REQUISITION, user.getId());
 
     assertEquals(1, roleAssignments.size());
-    RoleAssignment expectedRoleAssignment = new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode);
-    assertThat(roleAssignments.get(0), is(expectedRoleAssignment));
+    assertRoleAssignment(roleAssignments, new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode));
+  }
+
+  private void assertRoleAssignment(List<RoleAssignment> actualRoleAssignments, final RoleAssignment expectedRoleAssignment) {
+    assertTrue(exists(actualRoleAssignments, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RoleAssignment roleAssignment = (RoleAssignment) o;
+        return roleAssignment.getProgramId().equals(expectedRoleAssignment.getProgramId()) &&
+          roleAssignment.getSupervisoryNode().equals(expectedRoleAssignment.getSupervisoryNode());
+      }
+    }));
+  }
+
+  @Test
+  public void shouldNotGetTheSameRoleAssignmentForMultipleRolesWithSameRights() {
+    Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+
+    Role r1 = new Role("r1", REQUISITION, "random description");
+    roleRightsMapper.insertRole(r1);
+
+    Role r2 = new Role("r2", REQUISITION, "random description");
+    roleRightsMapper.insertRole(r2);
+
+    roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, APPROVE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, APPROVE_REQUISITION);
+
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    mapper.insertRoleAssignment(user.getId(), program1.getId(), supervisoryNode.getId(), r1.getId());
+    mapper.insertRoleAssignment(user.getId(), program1.getId(), supervisoryNode.getId(), r2.getId());
+
+    List<RoleAssignment> roleAssignments =
+      mapper.getRoleAssignmentsWithGivenRightForAUser(APPROVE_REQUISITION, user.getId());
+
+    assertEquals(1, roleAssignments.size());
+    assertRoleAssignment(roleAssignments, new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode));
+  }
+
+  @Test
+  public void shouldGetRoleAssignmentsForMultipleRoles() {
+    final Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
+    Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
+
+    Role r1 = new Role("r1", REQUISITION, "random description");
+    roleRightsMapper.insertRole(r1);
+
+    Role r2 = new Role("r2", REQUISITION, "random description");
+    roleRightsMapper.insertRole(r2);
+
+    roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
+    roleRightsMapper.createRoleRight(r1, APPROVE_REQUISITION);
+    roleRightsMapper.createRoleRight(r2, APPROVE_REQUISITION);
+
+    final SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+    supervisoryNode.setFacility(facility);
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    mapper.insertRoleAssignment(user.getId(), program1.getId(), supervisoryNode.getId(), r1.getId());
+    mapper.insertRoleAssignment(user.getId(), program1.getId(), supervisoryNode.getId(), r2.getId());
+    mapper.insertRoleAssignment(user.getId(), program2.getId(), supervisoryNode.getId(), r2.getId());
+
+    List<RoleAssignment> roleAssignments =
+      mapper.getRoleAssignmentsWithGivenRightForAUser(APPROVE_REQUISITION, user.getId());
+
+    assertEquals(2, roleAssignments.size());
+    assertRoleAssignment(roleAssignments, new RoleAssignment(user.getId(), r1.getId(), program1.getId(), supervisoryNode));
+    assertRoleAssignment(roleAssignments, new RoleAssignment(user.getId(), r1.getId(), program2.getId(), supervisoryNode));
+
   }
 
   @Test
