@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function SupplylineController($scope,$location,$dialog,messageService,ReportPrograms, AllFacilites, SupervisoryNodes, Supplylines, Supplyline, SupplylineDelete) {
+function SupplylineController($scope,$location,$dialog,messageService,ReportPrograms, SupplyingFacilities, SupervisoryNodes, Supplylines, Supplyline, SupplylineDelete) {
 
     //initialize
     $scope.supplylinesBackupMap = [];
@@ -29,8 +29,8 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
         //alert(JSON.stringify($scope.programs, null, 4));
     });
 
-    AllFacilites.get(function(data){
-        $scope.facilities = data.allFacilities;
+    SupplyingFacilities.get(function(data){
+        $scope.facilities = data.facilities;
     });
 
     //$scope.facilities  ={};
