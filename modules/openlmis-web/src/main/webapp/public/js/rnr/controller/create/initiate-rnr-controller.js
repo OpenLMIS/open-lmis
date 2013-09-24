@@ -46,7 +46,9 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
     isNavigatedBack = navigateBackService.isNavigatedBack;
     $scope.$watch('programs', function () {
-      if ($scope.programs && $scope.selectedProgram) {
+      isNavigatedBack = navigateBackService.isNavigatedBack;
+      if (!isNavigatedBack) $scope.selectedProgram = undefined;
+      if ($scope.programs && !isUndefined($scope.selectedProgram)) {
         $scope.selectedProgram = _.where($scope.programs, {id: $scope.selectedProgram.id})[0];
         $scope.loadPeriods();
       }
@@ -84,6 +86,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
         }
       }, {});
     } else if (selectedType == 1) { // Supervised facility
+      $scope.selectedFacilityId=null;
       CreateRequisitionProgramList.get({}, function (data) {
         $scope.programs = data.programList;
       }, {});
