@@ -13,6 +13,8 @@ import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewOrdersPage;
+import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.NoSuchElementException;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -46,8 +48,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-
-    testWebDriver.sleep(2000);
     verifyNumberOfPageLinks(51, 50);
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
@@ -78,13 +78,44 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
-
-    testWebDriver.sleep(2000);
     verifyNumberOfPageLinks(49, 50);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
+
+  }
+
+//  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
+    setUpData(program, userSIC);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateConvertToOrder();
+    verifyNumberOfPageLinks(50, 50);
+    verifyPageLinkNotPresent(2);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV");
+    homePage.navigateHomePage();
+    homePage.navigateConvertToOrder();
+    verifyNumberOfPageLinks(51, 50);
+
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void shouldVerifySearch(String program, String userSIC, String password) throws Exception {
+    setUpData(program, userSIC);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
+    verifyNumberOfPageLinks(80, 50);
+    convertOrderPage.searchWithOption("All", "TB");
+    verifyNumberOfPageLinks(40, 50);
+    verifyPageLinkNotPresent(2);
+    convertOrderPage.searchWithOption("All", "MALARIA");
+    verifyNumberOfPageLinks(55, 50);
 
   }
 
@@ -150,6 +181,18 @@ public class ConvertToOrderPagination extends TestCaseHelper {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
       assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
     }
+  }
+
+  public void verifyPageLinkNotPresent(int i) throws Exception {
+    boolean flag = false;
+    try {
+      testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").click();
+    } catch (NoSuchElementException e) {
+      flag = true;
+    } catch (ElementNotVisibleException e) {
+      flag = true;
+    }
+    assertTrue("Link number" + i + " should not appear", flag);
   }
 
   public void verifyNextAndLastLinksEnabled() throws Exception {

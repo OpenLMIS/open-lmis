@@ -53,6 +53,7 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
   private static WebElement noOrderMessage;
 
+
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -89,4 +90,6 @@ public class ViewOrdersPage extends RequisitionPage {
     String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
     SeleneseTestNgHelper.assertEquals(actualProgram, program);
   }
+
+
 }

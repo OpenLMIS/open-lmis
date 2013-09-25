@@ -56,10 +56,20 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
+
+  @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
+  private static WebElement searchTextBox;
+
+  @FindBy(how = How.XPATH, using = "//button[@ng-click='fetchFilteredRequisitions()']")
+  private static WebElement searchButton;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
+  private static WebElement searchOptionButton;
+
   public ConvertOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
+    testWebDriver.setImplicitWait(2);
   }
 
   public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName) throws IOException {
@@ -95,4 +105,14 @@ public class ConvertOrderPage extends RequisitionPage {
     clickOk();
   }
 
+  public void searchWithOption(String searchOption, String searchString)
+  {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    searchOptionButton.click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+searchOption+"')]"));
+    testWebDriver.getElementByXpath("//a[contains(text(),'"+searchOption+"')]").click();
+    sendKeys(searchTextBox,searchString);
+    searchButton.click();
+    testWebDriver.sleep(1000);
+  }
 }
