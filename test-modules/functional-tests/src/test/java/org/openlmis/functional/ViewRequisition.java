@@ -136,7 +136,7 @@ public class ViewRequisition extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testViewRequisitionAndRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+  public void testViewRequisitionRegimenAndEmergencyStatus(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -156,7 +156,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(true);
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatus(SUBMITTED);
     viewRequisitionPage.enterViewSearchCriteria();
@@ -174,18 +174,21 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageAuthorized.enterViewSearchCriteria();
     viewRequisitionPageAuthorized.clickSearch();
     viewRequisitionPageAuthorized.verifyStatus(AUTHORIZED);
+    viewRequisitionPageAuthorized.verifyEmergencyStatus();
     viewRequisitionPageAuthorized.clickRnRList();
 
     HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
     viewRequisitionPageAuthorized.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatus(IN_APPROVAL);
-    ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
+      ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
     viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();
     viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
+    viewRequisitionPageInApproval.verifyEmergencyStatus();
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
+    approvePageTopSNUser.verifyEmergencyStatus();
     approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
     approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
     approvePageTopSNUser.addComments("Dummy Comments");
@@ -199,6 +202,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageApproved.enterViewSearchCriteria();
     viewRequisitionPageApproved.clickSearch();
     viewRequisitionPageApproved.verifyStatus(APPROVED);
+    viewRequisitionPageApproved.verifyEmergencyStatus();
     viewRequisitionPageApproved.clickRnRList();
     viewRequisitionPageApproved.verifyTotalFieldPostAuthorize();
     viewRequisitionPageApproved.verifyComment("Dummy Comments", userSIC, 1);
@@ -209,11 +213,13 @@ public class ViewRequisition extends TestCaseHelper {
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
 
     ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
+    convertOrderPage.verifyEmergencyStatus();
     convertOrderPage.convertToOrder();
     ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
     viewRequisitionPageOrdered.enterViewSearchCriteria();
     viewRequisitionPageOrdered.clickSearch();
     viewRequisitionPageOrdered.verifyStatus(RELEASED);
+    viewRequisitionPageOrdered.verifyEmergencyStatus();
     viewRequisitionPageOrdered.clickRnRList();
     viewRequisitionPageOrdered.verifyTotalFieldPostAuthorize();
     viewRequisitionPageOrdered.verifyFieldsPostApproval("25.00", "1");

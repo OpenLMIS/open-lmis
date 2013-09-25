@@ -771,11 +771,15 @@ public class DBWrapper {
   }
 
 
-  public void insertValuesInRequisition() throws IOException, SQLException {
+  public void insertValuesInRequisition(boolean emergencyRequisitionRequired) throws IOException, SQLException {
     update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate', normalizedconsumption=10, packstoship=1;");
     update("update requisitions set fullsupplyitemssubmittedcost=12.5000, nonfullsupplyitemssubmittedcost=0.0000;");
 
+    if(emergencyRequisitionRequired)
+      update("update requisitions set emergency='true';");
+
   }
+
 
   public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) throws IOException, SQLException {
     update("update regimen_line_items set patientsontreatment='" + patientsontreatment + "', patientstoinitiatetreatment='" + patientstoinitiatetreatment + "', patientsstoppedtreatment='" + patientsstoppedtreatment + "',remarks='" + remarks + "';");

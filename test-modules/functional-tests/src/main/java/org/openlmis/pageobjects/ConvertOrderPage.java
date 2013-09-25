@@ -17,6 +17,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openqa.selenium.support.How.XPATH;
+
 
 public class ConvertOrderPage extends RequisitionPage {
 
@@ -56,7 +59,6 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
-
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
   private static WebElement searchTextBox;
 
@@ -65,6 +67,9 @@ public class ConvertOrderPage extends RequisitionPage {
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
   private static WebElement searchOptionButton;
+
+  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  private static WebElement emergencyIcon;
 
   public ConvertOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -103,6 +108,11 @@ public class ConvertOrderPage extends RequisitionPage {
     clickCheckBoxConvertToOrder();
     clickConvertToOrderButton();
     clickOk();
+  }
+
+  public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
 
   public void searchWithOption(String searchOption, String searchString)
