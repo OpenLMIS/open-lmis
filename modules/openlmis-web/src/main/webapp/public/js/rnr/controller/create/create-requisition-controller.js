@@ -23,6 +23,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.fullScreen = false;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.currency = messageService.get('label.currency.symbol');
+  resetFlags();
 
   var NON_FULL_SUPPLY = 'non-full-supply';
   var FULL_SUPPLY = 'full-supply';
@@ -304,10 +305,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   }
 
   function resetFlags() {
-    $scope.submitError = "";
-    $scope.submitMessage = "";
-    $scope.error = "";
-    $scope.message = "";
+    $scope.submitError = $scope.submitMessage = $scope.error = $scope.message = "";
   }
 
   function removeExtraDataForPostFromRnr() {
