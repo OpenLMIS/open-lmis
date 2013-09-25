@@ -341,3 +341,7 @@ services.factory('RemoveApprovedProductForFacilityType', function($resource){
 services.factory("SupplyingFacilities",function($resource)  {
     return $resource('/facility/supplyingFacilities.json', {}, {});
 });
+
+services.factory("GetRequisitionGroupsForSupervisoryNode", function($resource) {
+    return $resource('/requisitionGroup/getForSupervisoryNode/:supervisoryNodeId.json',{},{});
+});

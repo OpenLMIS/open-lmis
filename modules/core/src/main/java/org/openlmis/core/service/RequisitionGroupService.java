@@ -66,5 +66,9 @@ public class RequisitionGroupService {
       requisitionGroupRepository.removeRequisitionGroup(id);
   }
 
+  public List<RequisitionGroup> getRequisitionGroupsBySupervisoryNodeId(Long supervisoryNodeId) {
+      return requisitionGroupRepository.getRequisitionGroupsBySupervisoryNodeId(supervisoryNodeId);
+  }
+
 
 }

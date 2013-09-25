@@ -86,4 +86,7 @@ public interface RequisitionGroupMapper {
   @Delete("DELETE FROM requisition_groups WHERE ID = #{id}")
   void removeRequisitionGroup(@Param(value="id") Long id);
 
+    @Select("SELECT * FROM requisition_groups where supervisoryNodeId = #{supervisoryNodeIdsAsString}")
+    List<RequisitionGroup> getRequisitionGroupBySupervisoryNodeId(Long supervisoryNodeId);
+
 }

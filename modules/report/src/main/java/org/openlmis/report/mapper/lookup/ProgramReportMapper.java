@@ -19,4 +19,7 @@ public interface ProgramReportMapper {
             "   FROM " +
             "       programs order by name")
     List<Program> getAll();
+
+    @Select("SELECT * FROM Programs where code = #{code}")
+    Program getProgramByCode(String code);
 }

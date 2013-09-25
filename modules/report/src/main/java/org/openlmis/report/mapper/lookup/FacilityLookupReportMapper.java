@@ -20,6 +20,11 @@ public interface FacilityLookupReportMapper {
             "       facilities order by name")
     List<Facility> getAll();
 
+    @Select("SELECT * " +
+            "   FROM " +
+            "       facilities where code = #{code}")
+    Facility getFacilityByCode(String code);
+
 
 
 }

@@ -85,6 +85,10 @@ public class ReportLookupService {
         return productMapper.getFullProductList();
     }
 
+    public Product getProductByCode(String code){
+        return productMapper.getProductByCode(code);
+    }
+
     public List<FacilityType> getFacilityTypes(){
         return facilityTypeMapper.getAll();
     }
@@ -140,6 +144,10 @@ public class ReportLookupService {
         return programMapper.getAll();
     }
 
+    public Program getProgramByCode(String code){
+        return programMapper.getProgramByCode(code);
+    }
+
     public List<Schedule> getAllSchedules(){
         return scheduleMapper.getAll();
     }
@@ -159,6 +167,10 @@ public class ReportLookupService {
 
     public List<Facility> getAllFacilities(){
         return facilityReportMapper.getAll();
+    }
+
+    public Facility getFacilityByCode(String code){
+        return facilityReportMapper.getFacilityByCode(code);
     }
 
     public List<ProcessingPeriod> getAllProcessingPeriods(){

@@ -1,4 +1,4 @@
-function SupervisoryNodeController($scope,$dialog,messageService, ReportFacilityTypes, $routeParams, $location, SupervisoryNodeCompleteList, SaveSupervisoryNode, GetSupervisoryNode, GeographicZoneCompleteList, GetFacilityCompleteList,RemoveSupervisoryNode) {
+function SupervisoryNodeController($scope,$dialog,messageService, ReportFacilityTypes, $routeParams, $location, SupervisoryNodeCompleteList, SaveSupervisoryNode, GetSupervisoryNode, GeographicZoneCompleteList, GetFacilityCompleteList,RemoveSupervisoryNode, GetRequisitionGroupsForSupervisoryNode) {
     $scope.geographicZoneNameInvalid = false;
     $scope.supervisoryNode = {};
     $scope.facilities = {};
@@ -10,7 +10,6 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
             $scope.supervisoryNode = data.supervisoryNode;
         }, {});
     }
-
 
     SupervisoryNodeCompleteList.get(function (data) {
         $scope.supervisoryNodes = data.supervisoryNodes;
@@ -29,6 +28,8 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     });
 
     $scope.saveSupervisoryNode = function () {
+        $scope.validateSupervisoryNodeFacility();
+
         var successHandler = function (response) {
             $scope.supervisoryNode = response.supervisoryNode;
             $scope.showError = false;
@@ -57,6 +58,12 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
         $scope.supervisoryNodeNameInvalid = $scope.supervisoryNode.name == null;
     };
 
+    $scope.validateSupervisoryNodeFacility = function(){
+        if($scope.supervisoryNode.facility == null){
+
+        }
+    }
+
     $scope.associateFacility=function(){
         $scope.allFacilitiesFiltered = $scope.allFacilities;
         $scope.supervisoryNodeMemberModal = true;
@@ -68,6 +75,7 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
         $scope.facilityType = null;
         $scope.allFacilitiesFiltered = null;
         $scope.supervisoryNodeMemberModal = false;
+        $scope.validateSupervisoryNodeFacility();
     };
 
     $scope.filterFacilityList=function(){
@@ -93,12 +101,26 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
 
     $scope.showRemoveSupervisoryNodeMemberConfirmDialog = function () {
         $scope.selectedSupervisoryNode = $scope.supervisoryNode;
-        var options = {
-            id: "removeSupervisoryNodeMemberConfirmDialog",
-            header: "Confirmation",
-            body: "Are you sure you want to remove the supervisory node: " + $scope.selectedSupervisoryNode.name
-        };
-        OpenLmisDialog.newDialog(options, $scope.removeSupervisoryNodeMemberConfirm, $dialog, messageService);
+
+        GetRequisitionGroupsForSupervisoryNode.get({supervisoryNodeId:$scope.supervisoryNode.id}, function(data){
+
+            var requisitionGroupsUnderSN = data.requisitionGroups;
+
+            if(requisitionGroupsUnderSN.length > 0){
+                $scope.showError = true;
+                $scope.error = "Supervisory node has requisition groups under it.  Please first remove the requisition groups!";
+                return false;
+            }
+
+            var options = {
+                id: "removeSupervisoryNodeMemberConfirmDialog",
+                header: "Confirmation",
+                body: "Are you sure you want to remove the supervisory node: " + $scope.selectedSupervisoryNode.name
+            };
+            OpenLmisDialog.newDialog(options, $scope.removeSupervisoryNodeMemberConfirm, $dialog, messageService);
+
+        });
+
     };
 
     $scope.removeSupervisoryNodeMemberConfirm = function (result) {
