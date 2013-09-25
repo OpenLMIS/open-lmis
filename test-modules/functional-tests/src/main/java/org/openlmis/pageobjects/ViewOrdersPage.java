@@ -72,8 +72,21 @@ public class ViewOrdersPage extends RequisitionPage {
     else
       SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
-    public void downloadCSV() throws IOException {
-        testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
-        downloadCSVLink.click();
-        }
+
+  public void downloadCSV() throws IOException {
+    testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
+    downloadCSVLink.click();
+  }
+
+  public int getNumberOfLineItems() throws IOException {
+    int number = 0;
+    number = testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
+    return number;
+  }
+
+  public void verifyProgram(int row, String program) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]"));
+    String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
+    SeleneseTestNgHelper.assertEquals(actualProgram, program);
+  }
 }

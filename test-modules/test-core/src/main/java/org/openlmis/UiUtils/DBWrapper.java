@@ -202,6 +202,21 @@ public class DBWrapper {
     update("update users set password='" + password + "', active=TRUE, verified=TRUE  where email='" + email + "';");
   }
 
+
+  public void insertRequisitionsToBeConvertedToOrder(int numberOfRequisitions, String program) throws SQLException, IOException {
+    int numberOfRequisitionsAlreadyPresent=0;
+    ResultSet rs = query("select count(*) from requisitions;\n");
+    if (rs.next()) {
+      numberOfRequisitionsAlreadyPresent = Integer.parseInt(rs.getString(1));
+    }
+
+    for(int i=numberOfRequisitionsAlreadyPresent+1;i<=numberOfRequisitions+numberOfRequisitionsAlreadyPresent;i++){
+    insertProcessingPeriod("PeriodName"+i,"PeriodDesc"+i,"2012-12-01 00:00:00", "2015-12-01 00:00:00",1,"M");
+    update("insert into requisitions (facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid) " +
+      "values ((Select id from facilities where code='F10'),(Select id from programs where code='"+program+"'),(Select id from processing_periods where name='PeriodName"+i+"'),'APPROVED','false',50.0000,0.0000,(select id from supervisory_nodes where code='N1'));");
+    }
+  }
+
   public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
     String deliveryZoneName = "";
     ResultSet rs = query("select name from delivery_zones where id in(select deliveryzoneid from role_assignments where " +
