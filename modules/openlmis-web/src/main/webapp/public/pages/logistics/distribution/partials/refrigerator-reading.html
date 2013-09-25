@@ -14,8 +14,8 @@
     <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
     <div class="span3">
         <span class="pull-right">
-          <a href="" class="btn btn-small btn-primary"
-             ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber)"
+          <a id="editReading{{$index}}" href="" class="btn btn-small btn-primary"
+             ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber, {{$index}})"
              ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
              openlmis-message="button.edit"></a>
           <a href="" class="btn btn-small btn-danger" openlmis-message="button.delete"

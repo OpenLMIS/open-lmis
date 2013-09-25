@@ -11,11 +11,13 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
 
   $scope.edit = {};
 
-  $scope.setEdit = function (serialNum) {
+  $scope.setEdit = function (serialNum, index) {
     angular.forEach($scope.edit, function (value, key) {
       $scope.edit[key] = false;
     });
     $scope.edit[serialNum] = true;
+    var refrigeratorEditButton = $('#editReading'+index).offset().top;
+    $('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow');
   };
 
   $scope.showRefrigeratorModal = function () {
