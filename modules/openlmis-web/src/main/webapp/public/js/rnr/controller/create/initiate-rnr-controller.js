@@ -122,7 +122,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     }
   };
 
-  var createPeriodWithRnrStatus = function (periods, rnr) {
+  var createPeriodWithRnrStatus = function (periods, rnrs, isEmergency) {
     $scope.periodGridData = [];
     $scope.selectedPeriod = null;
 
@@ -137,16 +137,39 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     $scope.selectedPeriod = periods[0];
     periods.forEach(function (period) {
       periodWithRnrStatus = angular.copy(period);
-      periodWithRnrStatus.rnrStatus = messageService.get("msg.rnr.previous.pending");
-      if (rnr != null && periodWithRnrStatus.id == rnr.period.id) {
-        periodWithRnrStatus.rnrId = rnr.id;
-        periodWithRnrStatus.rnrStatus = rnr.status;
+      if (isEmergency) {
+        periodWithRnrStatus.rnrStatus = messageService.get("msg.rnr.not.started");
+      }
+      else {
+        periodWithRnrStatus.rnrStatus = messageService.get("msg.rnr.previous.pending");
+        if (rnrs != null && rnrs.length > 0 && periodWithRnrStatus.id == rnrs[0].period.id) {
+          periodWithRnrStatus.rnrId = rnrs[0].id;
+          periodWithRnrStatus.rnrStatus = rnrs[0].status;
+        }
       }
       $scope.periodGridData.push(periodWithRnrStatus);
     });
 
     resetValuesForFirstPeriod($scope.periodGridData);
+
+
+    if (isEmergency) {
+      addPreviousRequisitionToPeriodList(rnrs);
+    }
   };
+
+  var addPreviousRequisitionToPeriodList = function (rnrs) {
+    var periodWithRnrStatus;
+    rnrs.forEach(function (rnr) {
+      if (rnr.status == 'INITIATED') {
+        periodWithRnrStatus = angular.copy(rnr.period);
+        periodWithRnrStatus.rnrStatus = rnr.status;
+        periodWithRnrStatus.rnrId = rnr.id;
+        periodWithRnrStatus.activeForRnr = true;
+        $scope.periodGridData.push(periodWithRnrStatus);
+      }
+    });
+  }
 
   $scope.periodGridOptions = { data: 'periodGridData',
     canSelectRows: false,
@@ -193,7 +216,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, emergency: $scope.selectedRnrType.emergency},
       function (data) {
         $scope.error = "";
-        createPeriodWithRnrStatus(data.periods, data.rnr);
+        createPeriodWithRnrStatus(data.periods, data.rnr_list, data.is_emergency);
       },
       function (data) {
         $scope.error = data.data.error;

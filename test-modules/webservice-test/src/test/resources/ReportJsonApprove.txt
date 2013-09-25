@@ -1,5 +1,6 @@
 {
     "requisitionId": "",
+    "emergency" : "false",
     "userId": "",
     "products": [
         {

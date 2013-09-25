@@ -45,7 +45,7 @@ public class RestRequisitionService {
 
     User user = getValidatedUser(report);
 
-    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false);
+    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency());
 
     requisition.setFullSupplyLineItems(report.getProducts());
 

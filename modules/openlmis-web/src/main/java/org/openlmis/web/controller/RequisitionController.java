@@ -63,6 +63,7 @@ public class RequisitionController extends BaseController {
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
   public static final String STATUS_CHANGES = "statusChanges";
+  private String IS_EMERGENCY = "is_emergency";
 
   @Autowired
   private RequisitionService requisitionService;
@@ -70,13 +71,13 @@ public class RequisitionController extends BaseController {
   private RnrTemplateService rnrTemplateService;
   @Autowired
   private RequisitionStatusChangeService requisitionStatusChangeService;
+
   @Autowired
   private RegimenColumnService regimenColumnService;
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
 
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
-
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
 
@@ -205,9 +206,10 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
     try {
       List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
-      List<Rnr> requisitions = isEmpty(periodList) ? null : getRequisitionForCurrentPeriod(criteria, periodList);
+      List<Rnr> requisitions = isEmpty(periodList) ? null : getRequisitionsFor(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
-      response.addData(RNR, requisitions);
+      response.addData(RNR_LIST, requisitions);
+      response.addData(IS_EMERGENCY, criteria.isEmergency());
       return new ResponseEntity<>(response, OK);
     } catch (DataException e) {
       return error(e, CONFLICT);
@@ -222,7 +224,7 @@ public class RequisitionController extends BaseController {
       requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
   }
 
-  private List<Rnr> getRequisitionForCurrentPeriod(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+  private List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
     criteria.setWithoutLineItems(true);
     criteria.setPeriodId(periodList.get(0).getId());
     List<Rnr> rnrList = requisitionService.get(criteria);

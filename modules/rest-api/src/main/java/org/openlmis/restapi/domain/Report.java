@@ -26,6 +26,7 @@ public class Report {
   private Long periodId;
   private String userId;
   private Vendor vendor;
+  private Boolean emergency;
   private List<RnrLineItem> products;
 
   public void validate() {
