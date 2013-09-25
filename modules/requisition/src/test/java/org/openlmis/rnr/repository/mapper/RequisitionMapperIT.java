@@ -274,23 +274,6 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetAllTheApprovedRequisitions() {
-    Rnr requisition = insertRequisition(processingPeriod1, program, APPROVED, false);
-    requisition.setSupervisoryNodeId(supervisoryNode.getId());
-    updateSupplyingDepotForRequisition(requisition);
-
-    List<Rnr> requisitions = mapper.getApprovedRequisitions();
-
-    Rnr rnr = requisitions.get(0);
-    assertThat(requisitions.size(), is(1));
-    assertThat(rnr.getFacility().getId(), is(facility.getId()));
-    assertThat(rnr.getProgram().getId(), is(program.getId()));
-    assertThat(rnr.getPeriod().getId(), is(processingPeriod1.getId()));
-    assertThat(rnr.getId(), is(requisition.getId()));
-    assertThat(rnr.getModifiedDate(), is(notNullValue()));
-  }
-
-  @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() {
     Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, true);
     Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
