@@ -91,14 +91,6 @@ public interface RequisitionMapper {
   Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
                                                  @Param(value = "programId") Long programId);
 
-  @Select("SELECT id, programId, facilityId, periodId, status, supervisoryNodeId, modifiedDate FROM requisitions WHERE STATUS='APPROVED'")
-  @Results(value = {
-    @Result(property = "facility.id", column = "facilityId"),
-    @Result(property = "program.id", column = "programId"),
-    @Result(property = "period.id", column = "periodId")
-  })
-  List<Rnr> getApprovedRequisitions();
-
   @Select({"SELECT * FROM requisitions WHERE",
     "facilityId = #{facility.id} AND",
     "programId = #{program.id} AND ",

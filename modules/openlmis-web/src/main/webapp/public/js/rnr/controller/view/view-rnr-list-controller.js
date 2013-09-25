@@ -36,7 +36,9 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
       {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'status', displayName: messageService.get("label.status")}
+      {field: 'status', displayName: messageService.get("label.status")},
+      {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
+        cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>' }
     ]
   };
 

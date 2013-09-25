@@ -156,10 +156,6 @@ public class RequisitionRepository {
     return requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
-  public List<Rnr> getApprovedRequisitions() {
-    return requisitionMapper.getApprovedRequisitions();
-  }
-
   public List<Rnr> getPostSubmitRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
     return requisitionMapper.getPostSubmitRequisitions(facility, program, commaSeparator.commaSeparateIds(periods));
   }
