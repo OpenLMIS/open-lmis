@@ -107,7 +107,7 @@ public class DBWrapper {
       "prod.primaryname as productName, prod.description as desc, prod.dosesperdispensingunit as unit, " +
       "pg.name as pgName from products prod, programs prog, program_products pp, product_categories pg, " +
       "facility_approved_products fap, facility_types ft where prog.id=pp.programid and pp.productid=prod.id and " +
-      "pg.id=prod.categoryid and fap. programproductid=pp.id and ft.id=fap. Facilitytypeid and prog.code='"+programCode+"' and ft.code='"+facilityCode+"' " +
+      "pg.id=prod.categoryid and fap. programproductid=pp.id and ft.id=fap. Facilitytypeid and prog.code='" + programCode + "' and ft.code='" + facilityCode + "' " +
       "and prod.active='true' and pp.active='true';\n");
 
     while (rs.next()) {
@@ -173,7 +173,7 @@ public class DBWrapper {
   }
 
   public void deleteDeliveryZoneMembers(String facilityCode) throws SQLException, IOException {
-    update("delete from delivery_zone_members where facilityid in (select id from facilities where code ='"+facilityCode+"');");
+    update("delete from delivery_zone_members where facilityid in (select id from facilities where code ='" + facilityCode + "');");
   }
 
   public String getVirtualPropertyOfFacility(String facilityCode) throws SQLException, IOException {
@@ -203,18 +203,29 @@ public class DBWrapper {
   }
 
 
-  public void insertRequisitionsToBeConvertedToOrder(int numberOfRequisitions, String program) throws SQLException, IOException {
-    int numberOfRequisitionsAlreadyPresent=0;
+  public void insertRequisitionsToBeConvertedToOrder(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
+    int numberOfRequisitionsAlreadyPresent = 0;
+    boolean flag = true;
     ResultSet rs = query("select count(*) from requisitions;\n");
     if (rs.next()) {
       numberOfRequisitionsAlreadyPresent = Integer.parseInt(rs.getString(1));
     }
 
-    for(int i=numberOfRequisitionsAlreadyPresent+1;i<=numberOfRequisitions+numberOfRequisitionsAlreadyPresent;i++){
-    insertProcessingPeriod("PeriodName"+i,"PeriodDesc"+i,"2012-12-01 00:00:00", "2015-12-01 00:00:00",1,"M");
-    update("insert into requisitions (facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid) " +
-      "values ((Select id from facilities where code='F10'),(Select id from programs where code='"+program+"'),(Select id from processing_periods where name='PeriodName"+i+"'),'APPROVED','false',50.0000,0.0000,(select id from supervisory_nodes where code='N1'));");
+    for (int i = numberOfRequisitionsAlreadyPresent + 1; i <= numberOfRequisitions + numberOfRequisitionsAlreadyPresent; i++) {
+      insertProcessingPeriod("PeriodName" + i, "PeriodDesc" + i, "2012-12-01 00:00:00", "2015-12-01 00:00:00", 1, "M");
+      update("insert into requisitions (facilityid, programid, periodid, status, emergency, fullsupplyitemssubmittedcost, nonfullsupplyitemssubmittedcost, supervisorynodeid) " +
+        "values ((Select id from facilities where code='F10'),(Select id from programs where code='" + program + "'),(Select id from processing_periods where name='PeriodName" + i + "'),'APPROVED','false',50.0000,0.0000,(select id from supervisory_nodes where code='N1'));");
     }
+    if (withSupplyLine) {
+      ResultSet rs1 = query("select * from supply_lines where supervisorynodeid=(select id from supervisory_nodes where code = 'N1') and programid=(select id from programs where code='" + program + "') and supplyingfacilityid=(select id from facilities where code = 'F10');\n");
+      if (rs1.next()) {
+        flag = false;
+      }
+    }
+    if (flag) {
+      insertSupplyLines("N1", program, "F10");
+    }
+
   }
 
   public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
@@ -756,7 +767,7 @@ public class DBWrapper {
 
   public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
     update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
-      "('supplying node for HIV', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
+      "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
   }
 
 

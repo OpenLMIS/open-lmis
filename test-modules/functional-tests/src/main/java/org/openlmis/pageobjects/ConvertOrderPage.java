@@ -109,6 +109,7 @@ public class ConvertOrderPage extends RequisitionPage {
   {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     searchOptionButton.click();
+    testWebDriver.sleep(250);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+searchOption+"')]"));
     testWebDriver.getElementByXpath("//a[contains(text(),'"+searchOption+"')]").click();
     sendKeys(searchTextBox,searchString);

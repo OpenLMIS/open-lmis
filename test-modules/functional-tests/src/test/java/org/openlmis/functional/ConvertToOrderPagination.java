@@ -43,8 +43,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA");
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB",true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -74,28 +74,28 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA",true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV",true);
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
 
   }
 
-//  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  //  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA",true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV",true);
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
@@ -105,18 +105,19 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearch(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA");
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB",true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(80, 50);
     convertOrderPage.searchWithOption("All", "TB");
     verifyNumberOfPageLinks(40, 50);
+    verifyProgramInGrid(40,50,"TB");
     verifyPageLinkNotPresent(2);
     convertOrderPage.searchWithOption("All", "MALARIA");
     verifyNumberOfPageLinks(55, 50);
-
+    verifyProgramInGrid(55,50,"MALARIA");
   }
 
   private void setUpData(String program, String userSIC) throws SQLException, IOException {
@@ -180,6 +181,21 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     for (int i = 1; i <= numberOfPages; i++) {
       testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
       assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
+    }
+  }
+
+  public void verifyProgramInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String program) throws Exception {
+    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
+    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
+      numberOfPages = numberOfPages + 1;
+    }
+    int trackPages = 0;
+    while (numberOfPages != trackPages) {
+      testWebDriver.getElementByXpath("//a[contains(text(), '" + (trackPages + 1) + "') and @class='ng-binding']").click();
+      testWebDriver.sleep(1000);
+      for (int i = 1; i < testWebDriver.getElementsSizeByXpath("//div[@class='ngCanvas']/div"); i++)
+        assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + i + "]/div[2]/div[2]/div/span").getText().trim(), program);
+        trackPages++;
     }
   }
 
