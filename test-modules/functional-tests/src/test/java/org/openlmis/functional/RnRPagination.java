@@ -30,15 +30,15 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class RnRPagination extends TestCaseHelper {
 
-  private static final String FULL_SUPPLY_BASE_LOCATOR="//table[@id='fullSupplyTable']";
-  private static final String NON_FULL_SUPPLY_BASE_LOCATOR="//table[@id='nonFullSupplyTable']";
+  private static final String FULL_SUPPLY_BASE_LOCATOR = "//table[@id='fullSupplyTable']";
+  private static final String NON_FULL_SUPPLY_BASE_LOCATOR = "//table[@id='nonFullSupplyTable']";
 
   @BeforeMethod(groups = {"requisition"})
   public void setUp() throws Exception {
     super.setup();
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive", enabled = false)
   public void testRnRPaginationAndSpecificDisplayOrder(String program, String userSIC, String userMO, String password, String[] credentials) throws Exception {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");

@@ -5,24 +5,24 @@
   -->
 
 <suite name="Openlmis Requisition Test" verbose="10" allow-return-values="true">
-  <test name="Openlmis requisition test">
-    <groups>
-      <run>
-        <include name="requisition"/>
-      </run>
-    </groups>
-    <classes preserver-order="true">
-      <class name="org.openlmis.functional.ViewRequisition">
-      </class>
-      <class name="org.openlmis.functional.RnRPagination">
-      </class>
-      <class name="org.openlmis.functional.InitiateRnR">
-      </class>
-      <class name="org.openlmis.functional.DownloadOrderFile">
-      </class>
-      <class name="org.openlmis.functional.ConvertToOrderPagination">
-      </class>
-    </classes>
-  </test>
+    <test name="Openlmis requisition test">
+        <groups>
+            <run>
+                <include name="requisition"/>
+            </run>
+        </groups>
+        <classes preserver-order="true">
+            <class name="org.openlmis.functional.ViewRequisition">
+            </class>
+            <class name="org.openlmis.functional.RnRPagination">
+            </class>
+            <class name="org.openlmis.functional.InitiateRnR">
+            </class>
+            <class name="org.openlmis.functional.DownloadOrderFile">
+            </class>
+            <!--<class name="org.openlmis.functional.ConvertToOrderPagination">-->
+            <!--</class>-->
+        </classes>
+    </test>
 </suite>
 
