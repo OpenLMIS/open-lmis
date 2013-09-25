@@ -150,11 +150,13 @@ public class RnrLineItem extends LineItem {
     stockOutDays = 0;
 
     if(template.getApplyDefaultZero()){
-      this.quantityReceived = this.quantityDispensed = 0;
-      if(this.beginningBalance == null){
-        this.beginningBalance = 0;
+      quantityReceived = quantityDispensed = stockInHand = calculatedOrderQuantity = 0;
+
+      if(beginningBalance == null){
+        beginningBalance = 0;
+      } else{
+        stockInHand = beginningBalance;
       }
-      this.stockInHand = beginningBalance;
     }
 
   }
