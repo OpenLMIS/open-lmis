@@ -1,6 +1,5 @@
-function RequisitionGroupListController($scope, $location, navigateBackService, RequisitionGroupCompleteList) {
-    $scope.reloadTheList = false;
-
+function RequisitionGroupListController($scope, sharedSpace, $location, navigateBackService, RequisitionGroupCompleteList) {
+    sharedSpace.setShouldReloadTheList(false);
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
@@ -21,9 +20,10 @@ function RequisitionGroupListController($scope, $location, navigateBackService, 
         return true;
     };
 
-    $scope.editRequisitionGroup = function (id) {
+    $scope.editRequisitionGroup = function (id, programCount) {
         var data = {query: $scope.query};
         navigateBackService.setData(data);
+        sharedSpace.setCountOfPrograms(programCount);
         $location.path('edit/' + id);
     };
 
@@ -58,7 +58,7 @@ function RequisitionGroupListController($scope, $location, navigateBackService, 
         filterRequisitionGroupsByName(query);
     };
 
-    $scope.$watch('reloadTheList',function(){
+    $scope.$watch('sharedSpace.getShouldReloadTheList()',function(){
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
     })

@@ -1,4 +1,4 @@
-function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $location, SupervisoryNodes, SaveRequisitionGroup, GetRequisitionGroup, FacilityCompleteListInRequisitionGroup, GeographicZoneCompleteList, GetFacilityCompleteList, SaveRequisitionGroupMember, RemoveRequisitionGroupMember, $dialog, messageService, RemoveRequisitionGroup) {
+function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $routeParams, $location, SupervisoryNodes, SaveRequisitionGroup, GetRequisitionGroup, FacilityCompleteListInRequisitionGroup, GeographicZoneCompleteList, GetFacilityCompleteList, SaveRequisitionGroupMember, RemoveRequisitionGroupMember, $dialog, messageService, RemoveRequisitionGroup) {
     $scope.geographicZoneNameInvalid = false;
     $scope.requisitionGroup = {};
     $scope.facilities = {};
@@ -146,6 +146,18 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
 
 
     $scope.showRemoveRequisitionGroupConfirmDialog = function () {
+        if($scope.facilities.length > 0) {
+            $scope.showError = true;
+            $scope.error = "Requisition group is associated with facilities.  Please first remove the associated facilities!";
+            return false;
+        }
+
+        if(sharedSpace.getCountOfPrograms() > 0){
+            $scope.showError = true;
+            $scope.error = "Requisition group is associated with programs.  Please first remove the associated programs!";
+            return false;
+        }
+
         $scope.selectedRequisitionGroup = $scope.requisitionGroup;
         var options = {
             id: "removeRequisitionGroupMemberConfirmDialog",
@@ -158,7 +170,7 @@ function RequisitionGroupController($scope, ReportFacilityTypes, $routeParams, $
     $scope.removeRequisitionGroupConfirm = function (result) {
         if (result) {
             $scope.removeRequisitionGroup($scope.selectedRequisitionGroup.id);
-            $scope.$parent.reloadTheList = true;
+            sharedSpace.setShouldReloadTheList(true);
             $scope.$parent.message = "Requisition group: " + $scope.selectedRequisitionGroup.name + " has been successfully removed. ";
             $location.path('#/list');
         }
