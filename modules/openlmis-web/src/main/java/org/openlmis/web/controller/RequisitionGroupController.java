@@ -61,6 +61,12 @@ public class RequisitionGroupController extends BaseController {
         return OpenLmisResponse.response("requisitionGroup",requisitionGroupService.loadRequisitionGroupById(id));
     }
 
+    @RequestMapping(value="/requisitionGroup/getForSupervisoryNode/{supervisoryNodeId}",method = GET,headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
+    public ResponseEntity<OpenLmisResponse> getRequisitionGroupBySupervisoryNode(@PathVariable(value="supervisoryNodeId") Long supervisoryNodeId){
+        return OpenLmisResponse.response("requisitionGroups",requisitionGroupService.getRequisitionGroupsBySupervisoryNodeId(supervisoryNodeId));
+    }
+
     @RequestMapping(value="/requisitionGroup/remove/{id}",method = GET,headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
     public ResponseEntity<OpenLmisResponse> remove(@PathVariable(value="id") Long requisitionGroupId, HttpServletRequest request){
