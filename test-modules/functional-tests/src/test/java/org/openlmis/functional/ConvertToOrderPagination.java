@@ -7,6 +7,10 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
@@ -35,16 +39,43 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class ConvertToOrderPagination extends TestCaseHelper {
 
 
-  @BeforeMethod(groups = {"requisition"})
+  @BeforeMethod(groups = "requisition")
+  @Before
   public void setUp() throws Exception {
     super.setup();
+  }
+
+  @And("^I have \"([^\"]*)\" requisitions for convert to order$")
+  public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws IOException, SQLException {
+    setUpData("HIV", "storeincharge");
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(Integer.parseInt(requisitions), "MALARIA", true);
+  }
+
+  @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
+  public void selectRequisition(String numberOfRequisitions, String page) throws IOException, SQLException {
+    testWebDriver.getElementByXpath("//a[contains(text(), '" + page + "') and @class='ng-binding']").click();
+    selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
+  }
+
+  @And("^I access convert to order$")
+  public void accessConvertToOrder() throws IOException, SQLException {
+    ConvertOrderPage convertOrderPage = new ConvertOrderPage(testWebDriver);
+    convertToOrder(convertOrderPage);
+  }
+
+  @Then("^\"([^\"]*)\" requisition converted to order$")
+  public void requisitionConvertedToOrder(String requisitions) throws IOException, SQLException {
+    HomePage homePage = new HomePage(testWebDriver);
+    ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
+    int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
+    assertTrue("Number of line items on view order screen should be equal to "+Integer.parseInt(requisitions), numberOfLineItems == Integer.parseInt(requisitions));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA",true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -74,12 +105,12 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV", true);
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
@@ -89,13 +120,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   //  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV", true);
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
@@ -105,19 +136,19 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearch(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA",true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB",true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(80, 50);
     convertOrderPage.searchWithOption("All", "TB");
     verifyNumberOfPageLinks(40, 50);
-    verifyProgramInGrid(40,50,"TB");
+    verifyProgramInGrid(40, 50, "TB");
     verifyPageLinkNotPresent(2);
     convertOrderPage.searchWithOption("All", "MALARIA");
     verifyNumberOfPageLinks(55, 50);
-    verifyProgramInGrid(55,50,"MALARIA");
+    verifyProgramInGrid(55, 50, "MALARIA");
   }
 
   private void setUpData(String program, String userSIC) throws SQLException, IOException {
@@ -195,7 +226,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
       testWebDriver.sleep(1000);
       for (int i = 1; i < testWebDriver.getElementsSizeByXpath("//div[@class='ngCanvas']/div"); i++)
         assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + i + "]/div[2]/div[2]/div/span").getText().trim(), program);
-        trackPages++;
+      trackPages++;
     }
   }
 
@@ -240,12 +271,17 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
 
-  @AfterMethod(groups = {"requisition"})
+  @AfterMethod(groups = "requisition")
+  @After
   public void tearDown() throws Exception {
-    HomePage homePage = new HomePage(testWebDriver);
-    homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
-    dbWrapper.closeConnection();
+    testWebDriver.sleep(500);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
+
   }
 
 

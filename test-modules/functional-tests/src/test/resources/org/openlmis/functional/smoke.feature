@@ -544,3 +544,14 @@ Feature: Smoke Tests
     And I am logged in as "storeincharge"
     And I access initiate emergency requisition page
     Then I should see no period available
+
+  @Smoke
+  @ie2
+  Scenario: Selected requisitions across pages should not convert to order
+    Given I have "51" requisitions for convert to order
+    And I am logged in as "storeincharge"
+    When I access convert to order page
+    And I select "1" requisition on page "1"
+    And I select "1" requisition on page "2"
+    And I access convert to order
+    Then "1" requisition converted to order
