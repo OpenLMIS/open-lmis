@@ -40,7 +40,7 @@
             </ul>
           </div>
           <input type = "text" class = "span5"
-                 ui-keypress = "{13:'fetchFilteredRequisitions()'}"
+                 ui-event="{ keypress: 'inputKeypressHandler($event)' }"
                  ng-model = "query"/>
           <button class = "btn" ng-click = "fetchFilteredRequisitions()">
             <i class = "icon-search"></i>

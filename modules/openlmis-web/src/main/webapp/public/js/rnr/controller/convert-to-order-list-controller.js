@@ -88,6 +88,13 @@ function ConvertToOrderListController($scope, pagedRequisitionList, Orders,
     showConfirmModal();
   };
 
+  $scope.inputKeypressHandler = function($event) {
+    if($event.keyCode == 13) {
+      $event.preventDefault();
+      $scope.fetchFilteredRequisitions();
+    }
+  };
+
   $scope.fetchFilteredRequisitions = function () {
     if ($scope.requestInProgress) return;
 
