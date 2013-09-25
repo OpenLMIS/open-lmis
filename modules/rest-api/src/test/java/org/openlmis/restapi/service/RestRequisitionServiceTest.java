@@ -77,7 +77,7 @@ public class RestRequisitionServiceTest {
     user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
-    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false))
+    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency()))
       .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();

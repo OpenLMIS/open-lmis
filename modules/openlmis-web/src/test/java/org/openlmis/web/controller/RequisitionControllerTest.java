@@ -325,7 +325,7 @@ public class RequisitionControllerTest {
 
     verify(requisitionService).getAllPeriodsForInitiatingRequisition(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
-    assertThat((List<Rnr>) response.getBody().getData().get(RNR), is(asList(rnr)));
+    assertThat((List<Rnr>) response.getBody().getData().get(RNR_LIST), is(asList(rnr)));
   }
 
   @Test

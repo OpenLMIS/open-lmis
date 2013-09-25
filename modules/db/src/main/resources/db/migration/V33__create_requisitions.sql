@@ -15,9 +15,9 @@ CREATE TABLE requisitions (
   createdBy                       INTEGER,
   createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy                      INTEGER,
-  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (facilityId, programId, periodId)
+  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE UNIQUE INDEX u_requisitions_facility_program_period ON requisitions (facilityId, programId, periodId) WHERE NOT emergency;
 CREATE INDEX i_requisitions_status ON requisitions (LOWER(status));
 CREATE INDEX i_requisitions_programId_supervisoryNodeId ON requisitions (programId, supervisoryNodeId);

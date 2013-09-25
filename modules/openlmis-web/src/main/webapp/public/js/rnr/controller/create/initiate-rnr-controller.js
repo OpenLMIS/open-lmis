@@ -33,7 +33,6 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     $scope.periodGridData = [];
     $scope.selectedProgram = null;
     $scope.selectedFacilityId = null;
-    $scope.selectedPeriod = null;
     $scope.myFacility = null;
     $scope.programs = null;
     $scope.facilities = null;
@@ -107,7 +106,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   };
 
   var getPeriodSpecificButton = function (activeForRnr) {
-    return '<input type="button" ng-click="initRnr()" openlmis-message="button.proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
+    return '<input type="button" ng-click="initRnr(row.entity)" openlmis-message="button.proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
   };
 
   var optionMessage = function (entity, defaultMessage) {
@@ -122,22 +121,19 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     }
   };
 
-  var createPeriodWithRnrStatus = function (periods, rnrs, isEmergency) {
+  var createPeriodWithRnrStatus = function (periods, rnrs) {
     $scope.periodGridData = [];
-    $scope.selectedPeriod = null;
 
     var periodWithRnrStatus;
     if (periods == null || periods.length == 0) {
       periodWithRnrStatus = {name: messageService.get("msg.no.period.available")};
-      $scope.selectedPeriod = null;
       $scope.periodGridData.push(periodWithRnrStatus);
       return;
     }
 
-    $scope.selectedPeriod = periods[0];
     periods.forEach(function (period) {
       periodWithRnrStatus = angular.copy(period);
-      if (isEmergency) {
+      if ($scope.isEmergency) {
         periodWithRnrStatus.rnrStatus = messageService.get("msg.rnr.not.started");
       }
       else {
@@ -153,7 +149,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     resetValuesForFirstPeriod($scope.periodGridData);
 
 
-    if (isEmergency) {
+    if ($scope.isEmergency) {
       addPreviousRequisitionToPeriodList(rnrs);
     }
   };
@@ -207,7 +203,6 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   };
 
   $scope.loadPeriods = function () {
-    $scope.selectedPeriod = null;
     $scope.periodGridData = [];
     if (!($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedFacilityId)) {
       $scope.error = "";
@@ -216,14 +211,15 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, emergency: $scope.selectedRnrType.emergency},
       function (data) {
         $scope.error = "";
-        createPeriodWithRnrStatus(data.periods, data.rnr_list, data.is_emergency);
+        $scope.isEmergency = data.is_emergency;
+        createPeriodWithRnrStatus(data.periods, data.rnr_list);
       },
       function (data) {
         $scope.error = data.data.error;
       });
   };
 
-  $scope.initRnr = function () {
+  $scope.initRnr = function (selectedPeriod) {
     var data = {selectedType: $scope.selectedType, selectedProgram: $scope.selectedProgram, selectedFacilityId: $scope.selectedFacilityId, isNavigatedBack: true};
     navigateBackService.setData(data);
 
@@ -240,33 +236,29 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
         });
       };
 
-      Requisitions.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
-          periodId: $scope.selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {},
-        function (data) {
-          if ((data.rnr == null || data.rnr == undefined) && !hasPermission('CREATE_REQUISITION')) {
-            $scope.error = messageService.get("error.requisition.not.initiated");
+      if (selectedPeriod.rnrId) {
+        Requisitions.get({id: selectedPeriod.rnrId}, function (data) {
+          if (data.rnr.status != 'SUBMITTED' && !hasPermission('CREATE_REQUISITION')) {
+            $scope.error = messageService.get("error.requisition.not.submitted");
             return;
           }
-          if (data.rnr) {
-            if (data.rnr.status != 'SUBMITTED' && !hasPermission('CREATE_REQUISITION')) {
-              $scope.error = messageService.get("error.requisition.not.submitted");
-              return;
-            }
-            $scope.$parent.rnr = data.rnr;
-            createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
-            $location.url(createRnrPath);
-          }
-          else {
-            Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
-              periodId: $scope.selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {}, function (data) {
-              $scope.$parent.rnr = data.rnr;
-              createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
-              $location.url(createRnrPath);
-            }, function (data) {
-              $scope.error = data.data.error ? data.data.error : messageService.get("error.requisition.not.exist");
-            })
-          }
-        }, {});
+          $scope.$parent.rnr = data.rnr;
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
+          $location.url(createRnrPath);
+        });
+      } else if (hasPermission('CREATE_REQUISITION')) {
+
+        Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
+          periodId: selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {}, function (data) {
+          $scope.$parent.rnr = data.rnr;
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
+          $location.url(createRnrPath);
+        }, function (data) {
+          $scope.error = data.data.error ? data.data.error : messageService.get("error.requisition.not.exist");
+        })
+      } else {
+        $scope.error = messageService.get("error.requisition.not.initiated");
+      }
     }, {});
   };
 }
