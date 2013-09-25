@@ -41,6 +41,7 @@ public class ViewRequisition extends TestCaseHelper {
   public static final String IN_APPROVAL = "IN_APPROVAL";
   public static final String APPROVED = "APPROVED";
   public static final String RELEASED = "RELEASED";
+  public static final String VIEW_ORDER = "VIEW_ORDER";
   public static final String patientsOnTreatment = "100";
   public static final String patientsToInitiateTreatment = "200";
   public static final String patientsStoppedTreatment = "300";
@@ -147,6 +148,7 @@ public class ViewRequisition extends TestCaseHelper {
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
     dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
+    dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -226,6 +228,9 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.verifyApprovedQuantityFieldPresent();
     viewRequisitionPageOrdered.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
+
+    ViewOrdersPage viewOrdersPage=homePageApproved.navigateViewOrders();
+    viewOrdersPage.verifyEmergencyStatus();
   }
 
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) {

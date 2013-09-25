@@ -17,6 +17,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openqa.selenium.support.How.XPATH;
+
 
 public class ViewOrdersPage extends RequisitionPage {
 
@@ -53,6 +56,8 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
   private static WebElement noOrderMessage;
 
+  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  private static WebElement emergencyIcon;
 
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -77,6 +82,11 @@ public class ViewOrdersPage extends RequisitionPage {
   public void downloadCSV() throws IOException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     downloadCSVLink.click();
+  }
+
+  public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
 
   public int getNumberOfLineItems() throws IOException {
