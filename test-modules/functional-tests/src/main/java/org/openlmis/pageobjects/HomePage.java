@@ -172,7 +172,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
   private static WebElement uploadLink;
 
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr()']")
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr(row.entity)']")
   private static WebElement proceedButton;
 
   @FindBy(how = How.ID, using = "facility-tab")
