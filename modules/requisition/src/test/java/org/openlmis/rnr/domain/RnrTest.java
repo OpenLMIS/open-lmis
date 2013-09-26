@@ -124,7 +124,7 @@ public class RnrTest {
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
     facilityTypeApprovedProducts.add(facilityTypeApprovedProduct);
 
-    Rnr requisition = new Rnr(1L, 2L, 3L, facilityTypeApprovedProducts, regimens, 4L, 1L);
+    Rnr requisition = new Rnr(1L, 2L, 3L, false, facilityTypeApprovedProducts, regimens, 4L, 1L);
 
     assertThat(requisition.getRegimenLineItems().size(), is(1));
     assertThat(requisition.getFullSupplyLineItems().size(), is(1));

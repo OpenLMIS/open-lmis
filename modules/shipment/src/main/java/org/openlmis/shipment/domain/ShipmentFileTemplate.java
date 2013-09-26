@@ -9,8 +9,13 @@ package org.openlmis.shipment.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 @Data
 @AllArgsConstructor
@@ -21,10 +26,26 @@ public class ShipmentFileTemplate {
 
   private List<ShipmentFileColumn> shipmentFileColumns;
 
-  public void setModifiedBy(Long userId) {
+  public void validateAndSetModifiedBy(Long userId) {
+    Set<Integer> positions = new HashSet();
+    Integer includedColumnCount = 0;
+    List<String> mandatoryColumnNames = asList("productCode", "orderId", "quantityShipped");
     shipmentConfiguration.setModifiedBy(userId);
-    for (ShipmentFileColumn column : shipmentFileColumns) {
-      column.setModifiedBy(userId);
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+      shipmentFileColumn.validate();
+      if (mandatoryColumnNames.contains(shipmentFileColumn.getName()) && !shipmentFileColumn.getInclude()) {
+        throw new DataException("shipment.file.mandatory.columns.not.included");
+      }
+      if (shipmentFileColumn.getInclude()) {
+        positions.add(shipmentFileColumn.getPosition());
+        includedColumnCount++;
+      }
+      if (positions.size() != includedColumnCount) {
+        throw new DataException("shipment.file.duplicate.position");
+      }
+      shipmentFileColumn.setModifiedBy(userId);
     }
   }
+
+
 }

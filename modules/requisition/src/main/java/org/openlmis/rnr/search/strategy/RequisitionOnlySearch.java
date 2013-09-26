@@ -19,9 +19,10 @@ public class RequisitionOnlySearch implements RequisitionSearchStrategy {
 
   @Override
   public List<Rnr> search() {
-    return asList(requisitionRepository.getRequisitionWithoutLineItems(criteria.getFacilityId(),
-        criteria.getProgramId(),
-        criteria.getPeriodId()));
+    Rnr requisition = requisitionRepository.getRequisitionWithoutLineItems(criteria.getFacilityId(),
+      criteria.getProgramId(),
+      criteria.getPeriodId());
+    return (requisition == null) ? null : asList(requisition);
 
   }
 }

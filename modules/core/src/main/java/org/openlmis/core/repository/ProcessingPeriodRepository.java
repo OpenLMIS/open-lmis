@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +34,9 @@ public class ProcessingPeriodRepository {
     return mapper.getAll(scheduleId);
   }
 
-  public void insert(ProcessingPeriod processingPeriod) {
+  public void insert(ProcessingPeriod processingPeriod) throws ParseException {
     processingPeriod.validate();
+    processingPeriod.includeEntireDuration();
     try {
       validateStartDateGreaterThanLastPeriodEndDate(processingPeriod);
       mapper.insert(processingPeriod);
@@ -63,8 +65,8 @@ public class ProcessingPeriodRepository {
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long scheduleId, Long startPeriodId, Date afterDate, Date beforeDate) {
     return startPeriodId == null ?
-        mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
-        mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
+      mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
+      mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
   public ProcessingPeriod getById(Long id) {
@@ -81,6 +83,10 @@ public class ProcessingPeriodRepository {
 
   public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
     return mapper.getAllPeriodsBefore(scheduleId, beforeDate);
+  }
+
+  public ProcessingPeriod getCurrentPeriod(Long scheduleId, Date programStartDate) {
+    return mapper.getCurrentPeriod(scheduleId, programStartDate);
   }
 
   public List<ProcessingPeriod>  getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {

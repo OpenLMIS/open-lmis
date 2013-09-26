@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.exception.DataException;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -27,4 +28,9 @@ public class ShipmentFileColumn extends BaseModel {
   private String datePattern;
 
 
+  public void validate() {
+    if (position == null || position == 0) {
+      throw new DataException("shipment.file.invalid.position");
+    }
+  }
 }

@@ -6,7 +6,7 @@
  *
  */
 describe('Facility Distribution data', function() {
-  var facilityDistributionData, epiUse, refrigerators, generalObservations;
+  var facilityDistributionData, epiUse, refrigerators, generalObservation;
   var COMPLETE = 'is-complete';
   var INCOMPLETE = 'is-incomplete';
   var EMPTY = 'is-empty';
@@ -15,13 +15,13 @@ describe('Facility Distribution data', function() {
     facilityDistributionData = new FacilityDistributionData({});
     epiUse = facilityDistributionData.epiUse;
     refrigerators = facilityDistributionData.refrigerators;
-    generalObservations = facilityDistributionData.generalObservations;
+    generalObservation = facilityDistributionData.generalObservation;
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE",function(){
     spyOn(epiUse, "computeStatus").andReturn(COMPLETE);
     spyOn(refrigerators, "computeStatus").andReturn(COMPLETE);
-    spyOn(generalObservations, "computeStatus").andReturn(COMPLETE);
+    spyOn(generalObservation, "computeStatus").andReturn(COMPLETE);
 
     expect(facilityDistributionData.computeStatus()).toEqual(COMPLETE);
   });
@@ -29,7 +29,7 @@ describe('Facility Distribution data', function() {
   it("should compute status as empty when all the forms for the facility are empty",function(){
     spyOn(epiUse, "computeStatus").andReturn(EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(EMPTY);
-    spyOn(generalObservations, "computeStatus").andReturn(EMPTY);
+    spyOn(generalObservation, "computeStatus").andReturn(EMPTY);
 
     expect(facilityDistributionData.computeStatus()).toEqual(EMPTY);
   });
@@ -37,7 +37,7 @@ describe('Facility Distribution data', function() {
   it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete",function(){
     spyOn(epiUse, "computeStatus").andReturn(EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(COMPLETE);
-    spyOn(generalObservations, "computeStatus").andReturn(INCOMPLETE);
+    spyOn(generalObservation, "computeStatus").andReturn(INCOMPLETE);
 
     expect(facilityDistributionData.computeStatus()).toEqual(INCOMPLETE);
   });
@@ -45,7 +45,7 @@ describe('Facility Distribution data', function() {
   it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete (another variant)",function(){
     spyOn(epiUse, "computeStatus").andReturn(EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(INCOMPLETE);
-    spyOn(generalObservations, "computeStatus").andReturn(INCOMPLETE);
+    spyOn(generalObservation, "computeStatus").andReturn(INCOMPLETE);
 
     expect(facilityDistributionData.computeStatus()).toEqual(INCOMPLETE);
   });

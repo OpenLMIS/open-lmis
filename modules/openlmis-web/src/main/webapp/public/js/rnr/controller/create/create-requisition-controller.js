@@ -1,10 +1,12 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $rootScope, $dialog, messageService) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService) {
   $scope.visibleTab = $routeParams.supplyType;
   $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
   $scope.pageSize = pageSize;
@@ -21,6 +23,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.fullScreen = false;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.currency = messageService.get('label.currency.symbol');
+  resetFlags();
 
   var NON_FULL_SUPPLY = 'non-full-supply';
   var FULL_SUPPLY = 'full-supply';
@@ -39,6 +42,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
   });
 
+  if ($scope.rnr.emergency) {
+    $scope.requisitionType = "requisition.type.emergency";
+  } else {
+    $scope.requisitionType = "requisition.type.regular";
+  }
   $scope.fillPagedGridData = function () {
     if ($scope.visibleTab == REGIMEN) {
       $scope.numberOfPages = 1;
@@ -118,7 +126,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       }, 3000);
       $scope.saveRnrForm.$setPristine();
     }, function (data) {
-      $scope.error = data.error;
+      if (!preventMessage)
+        $scope.error = data.data.error;
     });
   };
 
@@ -191,7 +200,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       authorizeValidatedRnr();
   };
 
-  showConfirmModal = function () {
+  var showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
       header: messageService.get("label.confirm.action"),
@@ -301,10 +310,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   }
 
   function resetFlags() {
-    $scope.submitError = "";
-    $rootScope.submitMessage = "";
-    $scope.error = "";
-    $scope.message = "";
+    $scope.submitError = $scope.submitMessage = $scope.error = $scope.message = "";
   }
 
   function removeExtraDataForPostFromRnr() {

@@ -17,6 +17,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openqa.selenium.support.How.XPATH;
+
 
 public class ViewOrdersPage extends RequisitionPage {
 
@@ -53,6 +56,9 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
   private static WebElement noOrderMessage;
 
+  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  private static WebElement emergencyIcon;
+
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -72,8 +78,28 @@ public class ViewOrdersPage extends RequisitionPage {
     else
       SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
-    public void downloadCSV() throws IOException {
-        testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
-        downloadCSVLink.click();
-        }
+
+  public void downloadCSV() throws IOException {
+    testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
+    downloadCSVLink.click();
+  }
+
+  public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
+  }
+
+  public int getNumberOfLineItems() throws IOException {
+    int number = 0;
+    number = testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
+    return number;
+  }
+
+  public void verifyProgram(int row, String program) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]"));
+    String actualProgram = testWebDriver.getElementByXpath("(//div[@class='ngCellText ng-scope col2 colt2']/span)[" + row + "]").getText();
+    SeleneseTestNgHelper.assertEquals(actualProgram, program);
+  }
+
+
 }

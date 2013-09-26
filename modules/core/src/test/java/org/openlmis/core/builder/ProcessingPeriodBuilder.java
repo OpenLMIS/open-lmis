@@ -38,7 +38,7 @@ public class ProcessingPeriodBuilder {
 
   static {
     try {
-      START_DATE = DateUtils.parseDate("01-01-12", new String[]{"dd-mm-yy"});
+      START_DATE = DateUtils.parseDate("01-01-12", new String[]{"dd-MM-yy"});
       END_DATE = DateUtils.addMonths(START_DATE, 1);
     } catch (ParseException e) {
       throw new RuntimeException(e);

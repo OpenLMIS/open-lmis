@@ -2,6 +2,7 @@
     "facilityId": "",
     "programId": "",
     "periodId": "",
+    "emergency" : "false",
     "userId": "commTrack",
     "products": [
         {

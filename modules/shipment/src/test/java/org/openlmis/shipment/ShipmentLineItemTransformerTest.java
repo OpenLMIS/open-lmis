@@ -13,21 +13,23 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 
+import java.util.Date;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 public class ShipmentLineItemTransformerTest {
 
-
   public static final String SIMPLE_DATE_FORMAT = "MM/dd/yyyy";
+
   @Rule
   public ExpectedException expectException = ExpectedException.none();
+
   private ShipmentLineItemTransformer transformer = new ShipmentLineItemTransformer();
 
   @Test
   public void shouldTrimAndParseFieldsWithSpaces() throws Exception {
-
     String orderIdWithSpaces = " 11 ";
     String productCodeWithSpaces = " P111 ";
     String quantityShippedWithSpaces = " 22 ";
@@ -38,8 +40,7 @@ public class ShipmentLineItemTransformerTest {
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderIdWithSpaces, productCodeWithSpaces,
       quantityShippedWithSpaces, costWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
 
-
-    ShipmentLineItem lineItem = new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy");
+    ShipmentLineItem lineItem = new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
 
     assertThat(lineItem.getProductCode(), is("P111"));
     assertThat(lineItem.getQuantityShipped(), is(22));
@@ -50,16 +51,54 @@ public class ShipmentLineItemTransformerTest {
   }
 
   @Test
-  public void shouldCreateLineItemIfOnlyMandatoryFieldsArePresent() throws Exception {
+  public void shouldThrowErrorIfPackedDateIsDifferentFromFormat() {
+    String packedDate = "10/10/2013 ";
 
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
+      "12", "34", packedDate, "10/09/2013");
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("wrong.data.type");
+    new ShipmentLineItemTransformer().transform(dto, "MM/dd/yy", "MM/dd/yyyy", new Date());
+  }
+
+  @Test
+  public void shouldThrowErrorIfShippedDateIsDifferentFromFormat() {
+    String shippedDate = "10/10/13 ";
+
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
+      "12", "34", "10/09/2013", shippedDate);
+
+    expectException.expect(DataException.class);
+    expectException.expectMessage("wrong.data.type");
+    new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
+  }
+
+
+  @Test
+  public void shouldCreateLineItemIfOnlyMandatoryFieldsArePresent() throws Exception {
     ShipmentLineItemDTO dto = dtoWithMandatoryFields();
 
-    ShipmentLineItem lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    ShipmentLineItem lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
 
     assertThat(lineItem.getProductCode(), is("P123"));
     assertThat(lineItem.getQuantityShipped(), is(1234));
     assertThat(lineItem.getOrderId(), is(111L));
-    assertNull(lineItem.getPackedDate());
+    assertNull(lineItem.getShippedDate());
+    assertNull(lineItem.getCost());
+  }
+
+  @Test
+  public void shouldSetPackedDateToCreationDateIfPackedDateIsNull() {
+    ShipmentLineItemDTO dto = dtoWithMandatoryFields();
+
+    Date ftpDate = new Date();
+    ShipmentLineItem lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, ftpDate);
+
+    assertThat(lineItem.getProductCode(), is("P123"));
+    assertThat(lineItem.getQuantityShipped(), is(1234));
+    assertThat(lineItem.getOrderId(), is(111L));
+    assertThat(lineItem.getPackedDate(), is(ftpDate));
     assertNull(lineItem.getShippedDate());
     assertNull(lineItem.getCost());
   }
@@ -72,8 +111,7 @@ public class ShipmentLineItemTransformerTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
-
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
 
@@ -85,8 +123,7 @@ public class ShipmentLineItemTransformerTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
-
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -97,8 +134,7 @@ public class ShipmentLineItemTransformerTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
-
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -109,8 +145,7 @@ public class ShipmentLineItemTransformerTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
-
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -121,8 +156,7 @@ public class ShipmentLineItemTransformerTest {
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
 
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
-
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -132,7 +166,7 @@ public class ShipmentLineItemTransformerTest {
 
     expectException.expect(DataException.class);
     expectException.expectMessage("mandatory.field.missing");
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -142,7 +176,7 @@ public class ShipmentLineItemTransformerTest {
 
     expectException.expect(DataException.class);
     expectException.expectMessage("mandatory.field.missing");
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -152,7 +186,7 @@ public class ShipmentLineItemTransformerTest {
 
     expectException.expect(DataException.class);
     expectException.expectMessage("mandatory.field.missing");
-    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
   @Test
@@ -160,27 +194,24 @@ public class ShipmentLineItemTransformerTest {
     ShipmentLineItemDTO dto = dtoWithMandatoryFields();
     dto.setCost("3333.33");
 
-
-    ShipmentLineItem lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    ShipmentLineItem lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
     assertThat(lineItem.getProductCode(), is("P123"));
     assertThat(lineItem.getQuantityShipped(), is(1234));
     assertThat(lineItem.getOrderId(), is(111L));
     assertThat(lineItem.getCost().toString(), is("3333.33"));
 
-
     dto = dtoWithMandatoryFields();
     dto.setPackedDate("01/01/2011");
-    lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
     assertThat(lineItem.getPackedDate().toString(), is("Sat Jan 01 00:00:00 IST 2011"));
 
     dto = dtoWithMandatoryFields();
     dto.setShippedDate("01/01/2012");
-    lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT);
+    lineItem = transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
     assertThat(lineItem.getShippedDate().toString(), is("Sun Jan 01 00:00:00 IST 2012"));
   }
 
   private ShipmentLineItemDTO dtoWithMandatoryFields() {
-
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
     dto.setProductCode("P123");
     dto.setQuantityShipped("1234");
@@ -190,7 +221,6 @@ public class ShipmentLineItemTransformerTest {
   }
 
   private ShipmentLineItemDTO dtoWithAllFields() {
-
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
     dto.setProductCode("P123");
@@ -202,6 +232,4 @@ public class ShipmentLineItemTransformerTest {
 
     return dto;
   }
-
-
 }

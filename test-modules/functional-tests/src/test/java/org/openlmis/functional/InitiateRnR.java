@@ -82,6 +82,18 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
   }
 
+  @Given("^I access initiate emergency requisition page$")
+  public void onInitiateEmergencyRnRScreen() throws IOException, SQLException {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateAndInitiateEmergencyRnr(program);
+  }
+
+  @Then ("I should see no period available$")
+  public void verifyPeriodNotAvailable()throws IOException{
+      HomePage homePage = new HomePage(testWebDriver);
+      assertEquals("No current period defined. Please contact the Admin.", homePage.getFirstPeriod());
+  }
+
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
   public void setupUserWithRightsAndInitiateRequisitionData(String user, String rights) throws IOException, SQLException {
     String[] rightList = rights.split(",");
@@ -101,7 +113,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I populate RnR data$")
   public void enterValuesFromDB() throws IOException, SQLException {
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(false);
   }
 
   @When("^I access regimen tab$")
@@ -152,7 +164,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I click ok$")
   public void clickOk() {
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(1000);
     initiateRnRPage.clickOk();
 
   }
@@ -176,7 +188,7 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
     initiateRnRPage1.clickRegimenTab();
@@ -217,7 +229,7 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
     dbWrapper.updateRequisitionStatus(SUBMITTED);
     dbWrapper.insertApprovedQuantity(10);
@@ -248,7 +260,7 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
     dbWrapper.updateRequisitionStatus(SUBMITTED);
     dbWrapper.insertApprovedQuantity(10);

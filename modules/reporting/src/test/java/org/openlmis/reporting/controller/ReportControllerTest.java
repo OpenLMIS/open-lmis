@@ -65,18 +65,18 @@ public class ReportControllerTest {
   @Test
   public void shouldGenerateReportInRequestedFormat() throws Exception {
     ReportTemplate reportTemplate = new ReportTemplate();
-    when(reportTemplateMapper.getById(1)).thenReturn(reportTemplate);
+    when(reportTemplateMapper.getById(1L)).thenReturn(reportTemplate);
     JasperReportsMultiFormatView mockView = mock(JasperReportsMultiFormatView.class);
     HashMap<String, Object> parameterMap = new HashMap<>();
     parameterMap.put("createdBy", userId);
     when(viewFactory.getJasperReportsView(reportTemplate)).thenReturn(mockView);
     whenNew(HashMap.class).withNoArguments().thenReturn(parameterMap);
 
-    ModelAndView modelAndView = reportController.generateReport(httpServletRequest, 1, "pdf");
+    ModelAndView modelAndView = reportController.generateReport(httpServletRequest, 1L, "pdf");
 
     assertThat((JasperReportsMultiFormatView) modelAndView.getView(), is(mockView));
     verify(viewFactory).getJasperReportsView(reportTemplate);
-    verify(reportTemplateMapper).getById(1);
+    verify(reportTemplateMapper).getById(1L);
   }
 
 

@@ -8,15 +8,16 @@ CREATE TABLE requisitions (
   programId                       INTEGER     NOT NULL REFERENCES programs (id),
   periodId                        INTEGER     NOT NULL REFERENCES processing_periods (id),
   status                          VARCHAR(20) NOT NULL,
+  emergency                       BOOLEAN     NOT NULL DEFAULT FALSE,
   fullSupplyItemsSubmittedCost    NUMERIC(15, 4),
   nonFullSupplyItemsSubmittedCost NUMERIC(15, 4),
   supervisoryNodeId               INTEGER REFERENCES supervisory_nodes (id),
   createdBy                       INTEGER,
   createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy                      INTEGER,
-  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (facilityId, programId, periodId)
+  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE UNIQUE INDEX u_requisitions_facility_program_period ON requisitions (facilityId, programId, periodId) WHERE NOT emergency;
 CREATE INDEX i_requisitions_status ON requisitions (LOWER(status));
 CREATE INDEX i_requisitions_programId_supervisoryNodeId ON requisitions (programId, supervisoryNodeId);

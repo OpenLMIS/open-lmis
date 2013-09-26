@@ -3,6 +3,7 @@
     "programId": "",
     "periodId": "",
     "userId": "commTrack",
+    "emergency" : "false",
     "products": [
         {
             "productCode": "P10",

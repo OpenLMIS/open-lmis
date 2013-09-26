@@ -45,17 +45,25 @@ public class RestRequisitionService {
 
     User user = getValidatedUser(report);
 
-    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
+    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency());
 
-    requisition.setFullSupplyLineItems(report.getProducts());
+    Rnr reportedRequisition = getReportedRequisition(report, requisition);
 
-    requisitionService.save(requisition);
+    requisitionService.save(reportedRequisition);
 
-    requisitionService.submit(requisition);
+    requisitionService.submit(reportedRequisition);
 
     requisitionService.authorize(requisition);
 
     return requisition;
+  }
+
+  private Rnr getReportedRequisition(Report report, Rnr requisition) {
+    Rnr reportedRequisition = new Rnr(requisition.getId());
+    reportedRequisition.setModifiedBy(requisition.getModifiedBy());
+    reportedRequisition.setFullSupplyLineItems(report.getProducts());
+    reportedRequisition.setStatus(requisition.getStatus());
+    return reportedRequisition;
   }
 
   private void fillVendor(Report report) {

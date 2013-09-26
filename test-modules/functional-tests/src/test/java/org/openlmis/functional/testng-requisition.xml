@@ -20,6 +20,8 @@
             </class>
             <class name="org.openlmis.functional.DownloadOrderFile">
             </class>
+            <!--<class name="org.openlmis.functional.ConvertToOrderPagination">-->
+            <!--</class>-->
         </classes>
     </test>
 </suite>

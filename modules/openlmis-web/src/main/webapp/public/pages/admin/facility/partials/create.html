@@ -252,6 +252,7 @@
                                ng-disabled="!supportedProgram.program.id"/></td>
                     <td><input type="text" id="supported-program-start-date" name="supportedProgram"
                                ng-model="supportedProgram.editedStartDate"
+                               readonly
                                ng-change="showConfirmDateChangeWindow(supportedProgram)"
                                value="{{supportedProgram.startDate | date: 'dd/MM/yy'}}"
                                ui-date="{dateFormat:'dd/mm/yy', changeYear: true}"
@@ -272,7 +273,7 @@
     </div>
 </div>
 
-<div id="programProductISA" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':false}"
+<div id="overrideIsaModal" modal="programProductsISAModal" options="{'backdrop':'static', 'escape':false}"
      ng-controller="IsaModalController">
   <form name="IsaProductListForm">
     <div class="modal-header">
@@ -303,7 +304,7 @@
             </div>
           </div>
 
-          <div class="list-container">
+          <div class="list-container ">
             <div ng-class="{'has-overridden-isa': programProduct.overriddenIsa != null || programProduct.overriddenIsa != undefined}"
                  ng-repeat="programProduct in filteredProducts">
               <div class="row-fluid list-row">
