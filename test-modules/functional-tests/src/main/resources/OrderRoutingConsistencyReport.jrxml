@@ -83,11 +83,11 @@ ORDER BY f.code, f.name, p.name]]>
 	<title>
 		<band height="32">
 			<staticText>
-				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="0" y="0" width="710" height="32"/>
+				<reportElement uuid="212194e9-72ca-4321-8f61-a735ab2074b7" x="0" y="0" width="709" height="32"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Order Routing Consistency Check Report]]></text>
+				<text><![CDATA[Order Routing Inconsistencies]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement uuid="2dd094dc-e4b5-43c0-89ab-02f2dda79bb5" x="709" y="0" width="72" height="32"/>
@@ -222,7 +222,7 @@ ORDER BY f.code, f.name, p.name]]>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Order Routing Consistency Check Report]]></text>
+				<text><![CDATA[Order Routing Inconsistencies]]></text>
 			</staticText>
 		</band>
 	</noData>
