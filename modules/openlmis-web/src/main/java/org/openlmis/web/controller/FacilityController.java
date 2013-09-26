@@ -75,7 +75,8 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  //this method is also being used by the reports
   public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
     return response("facility", facilityService.getById(id));
   }
