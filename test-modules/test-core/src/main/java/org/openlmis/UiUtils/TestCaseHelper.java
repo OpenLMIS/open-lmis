@@ -140,7 +140,7 @@ public class TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, user, passwordUsers, "F10", "", vendorName);
     dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
-    dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge", "N2");
+    dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge", "N1");
   }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
