@@ -416,7 +416,12 @@ public class RequisitionService {
     return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
   }
 
-  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber) {
+  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber, Integer totalNumberOfPages) {
+    if (pageNumber.equals(1) && totalNumberOfPages.equals(0)) return new ArrayList<>();
+
+    if (pageNumber <= 0 || pageNumber > totalNumberOfPages)
+      throw new DataException("error.page.not.found");
+
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
@@ -429,7 +434,7 @@ public class RequisitionService {
   public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal) {
     Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
-    return (approvedRequisitionsByCriteria / pageSize) + 1;
+    return (int) Math.ceil(approvedRequisitionsByCriteria.doubleValue() / pageSize.doubleValue());
   }
 
 }

@@ -1,10 +1,12 @@
 <!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
-  ~
-  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~ /*
+  ~  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~  *
+  ~  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~  */
   -->
 
-<h2 openlmis-message = "label.requisition.convertOrder"></h2>
+<h2 openlmis-message="label.requisition.convertOrder"></h2>
 
 <div class = "alert alert-error" id = "saveErrorMsgDiv" ng-show = "error"
      openlmis-message = "error"></div>
@@ -14,44 +16,44 @@
      ng-show = "noRequisitionSelectedMessage"
      openlmis-message = "noRequisitionSelectedMessage"></div>
 
-<div class = "alert alert-info" id = "NoRequisitionsPendingMessage"
-     ng-hide = "requisitions.length">
-  <span openlmis-message = "message.noRnr.pending"></span>
-</div>
-
-<div class = "app-form" ng-show = "requisitions.length">
-  <div class = "form-group">
-    <h3 openlmis-message = "label.requisition.list"></h3>
-
-    <div class = "row-fluid">
-      <div class = "span5 offset7 search-in-category">
-        <div class = "input-append input-prepend">
-          <div class = "btn-group">
-            <button class = "btn dropdown-toggle">
-              <span ng-bind = "searchField"
-                    openlmis-message = "searchValue"></span>
-              <span class = "caret"></span>
-            </button>
-            <ul class = "dropdown-menu">
-              <li ng-repeat = "searchOption in searchOptions">
-                <a href = "" openlmis-message = "searchOption.value"
-                   ng-click = "selectSearchType(searchOption)"></a>
-              </li>
-            </ul>
-          </div>
-          <input type = "text" class = "span5"
-                 ui-event="{ keypress: 'inputKeypressHandler($event)' }"
-                 ng-model = "query"/>
-          <button class = "btn" ng-click = "fetchFilteredRequisitions()">
-            <i class = "icon-search"></i>
+  <div class="row-fluid">
+    <div class="span5 offset7 search-in-category">
+      <div class="input-append input-prepend">
+        <div class="btn-group">
+          <button class="btn dropdown-toggle">
+            <span openlmis-message="selectedSearchOption.name"></span>
+            <span class="caret"></span>
           </button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="searchOption in searchOptions">
+              <a href="" openlmis-message="searchOption.name"
+                 ng-click="selectSearchType(searchOption)"></a>
+            </li>
+          </ul>
         </div>
+        <input type="text" class="span5"
+               ui-keypress="{13:'fetchFilteredRequisitions()'}"
+               ui-event="{ keypress: 'inputKeypressHandler($event)' }"
+               ng-model="query" maxlength="50"/>
+        <button class="btn" ng-click="updateSearchParams()">
+          <i class="icon-search"></i>
+        </button>
       </div>
     </div>
+  </div>
 
-    <div class = "alert alert-info" id = "noSearchResults"
-         ng-hide = "filteredRequisitions.length">
-      <span openlmis-message = "message.no.search.results"></span>
+  <div class="alert alert-info" id="NoRequisitionsPendingMessage"
+       ng-hide="filteredRequisitions.length">
+    <span openlmis-message="message.no.requisitions.found"></span>
+  </div>
+
+<div class="app-form" ng-show="filteredRequisitions.length">
+  <div class="form-group">
+    <h3 openlmis-message="label.requisition.list"></h3>
+
+    <div class="alert alert-info" id="noSearchResults"
+         ng-hide="filteredRequisitions.length">
+      <span openlmis-message="message.no.search.results"></span>
     </div>
     <div class = "gridStyle" ng-grid = "gridOptions"
          ng-show = "filteredRequisitions.length"></div>

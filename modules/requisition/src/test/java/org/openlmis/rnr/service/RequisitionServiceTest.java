@@ -1293,10 +1293,25 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize)).thenReturn(filteredRnrs);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber);
+    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 6);
 
     verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
     assertThat(rnrList, is(filteredRnrs));
+  }
+
+  @Test
+  public void shouldThrowErrorInCasePageNumberRequestedNotAvailable() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.page.not.found");
+
+    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1);
+  }
+
+  @Test
+  public void shouldReturnEmptyListInCaseNotRequisitionsExistAndPage1Requested() throws Exception {
+    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 1, 0);
+
+    assertThat(requisitions.size(), is(0));
   }
 
   @Test
@@ -1311,7 +1326,22 @@ public class RequisitionServiceTest {
 
     Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
 
-    assertThat(count, is(numberOfApprovedRequisitions / pageSize + 1));
+    assertThat(count, is(2));
+  }
+
+  @Test
+  public void shouldReturn2pagesFor6RequisitionsAndPageSize3() throws Exception {
+
+    int numberOfApprovedRequisitions = 6;
+    String searchType = "searchType";
+    String searchVal = "search";
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(numberOfApprovedRequisitions);
+    Integer pageSize = 3;
+    when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
+
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+
+    assertThat(count, is(2));
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

@@ -190,14 +190,14 @@ public class RequisitionController extends BaseController {
                                                                 @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
                                                                 @RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
     try {
-      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page);
       Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page, numberOfPages);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
-      return error(new DataException(e.getMessage()), BAD_REQUEST);
+      return error(new DataException(e.getMessage()), NOT_FOUND);
     }
   }
 

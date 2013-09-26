@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.repository.mapper;
@@ -162,8 +164,8 @@ public interface RequisitionMapper {
     @SuppressWarnings("UnusedDeclaration")
     public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
-      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, " +
-        "R.supervisoryNodeId, R.modifiedDate as submittedDate FROM Requisitions R ");
+      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId, R.modifiedDate as modifiedDate,RSC.modifiedDate as submittedDate " +
+        "FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' ");
 
       appendQueryClausesBySearchType(sql, params);
 
@@ -196,7 +198,7 @@ public interface RequisitionMapper {
         sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
         sql.append("INNER JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
         sql.append("WHERE LOWER(P.code) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal +
-          "' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
+          "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
         sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
         sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
