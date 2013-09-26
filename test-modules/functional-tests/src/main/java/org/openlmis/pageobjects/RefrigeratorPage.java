@@ -347,6 +347,7 @@ public class RefrigeratorPage extends Page {
   }
 
   public void clickDone() {
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(doneButton);
     doneButton.click();
     testWebDriver.sleep(500);

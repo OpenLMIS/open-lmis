@@ -216,7 +216,7 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON("", URL, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Required String parameter programCode is not present\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Required String parameter 'programCode' is not present\"}"));
   }
 
 
