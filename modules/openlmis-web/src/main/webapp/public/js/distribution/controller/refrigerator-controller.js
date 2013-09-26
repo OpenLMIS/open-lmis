@@ -16,8 +16,10 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
       $scope.edit[key] = false;
     });
     $scope.edit[serialNum] = true;
-    var refrigeratorEditButton = $('#editReading'+index).offset().top;
-    $('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow');
+    if (!isUndefined(index)) {
+      var refrigeratorEditButton = angular.element('#editReading'+index).offset().top;
+      angular.element('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow');
+    }
   };
 
   $scope.showRefrigeratorModal = function () {
