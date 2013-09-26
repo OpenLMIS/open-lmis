@@ -30,7 +30,8 @@ function ApproveRnrListController($scope, requisitionList, $location, messageSer
       {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
-        cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>' }
+        cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>',
+        width: 110 }
     ]
   };
 
