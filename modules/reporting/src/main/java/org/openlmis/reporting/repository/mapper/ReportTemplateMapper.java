@@ -17,17 +17,14 @@ import java.util.List;
 @Repository
 public interface ReportTemplateMapper {
 
-  @Select("SELECT * from report_templates WHERE name=#{name}")
-  ReportTemplate getByName(String name);
-
   @Select("SELECT * from report_templates WHERE id=#{id}")
-  ReportTemplate getById(Integer id);
+  ReportTemplate getById(Long id);
 
   @Insert("INSERT INTO report_templates (name, data, commaSeparatedParameters, createdBy, createdDate) " +
     "VALUES (#{name}, #{data}, #{commaSeparatedParameters}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
   void insert(ReportTemplate reportTemplate);
 
-  @Select("SELECT id, name from report_templates")
+  @Select("SELECT id, name from report_templates order by createdDate")
   List<ReportTemplate> getAll();
 }
