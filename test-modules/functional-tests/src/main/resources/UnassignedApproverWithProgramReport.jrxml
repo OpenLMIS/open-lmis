@@ -260,7 +260,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="24" isUnderline="true"/>
 				</textElement>
-				<text><![CDATA[Unassigned Approver With Program Report]]></text>
+				<text><![CDATA[Supervisory Nodes Missing Approve Requisition Role]]></text>
 			</staticText>
 		</band>
 	</noData>
