@@ -151,6 +151,19 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyProgramInGrid(55, 50, "MALARIA");
   }
 
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws Exception {
+    setUpData(program, userSIC);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", false);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
+    convertOrderPage.searchWithIndex(5, "Village Dispensary");
+    verifyNumberOfPageLinks(55, 50);
+    verifySupplyingDepotInGrid(55, 50, "Village Dispensary");
+  }
+
   private void setUpData(String program, String userSIC) throws SQLException, IOException {
     dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
     dbWrapper.insertFacilities("F10", "F11");
@@ -226,6 +239,21 @@ public class ConvertToOrderPagination extends TestCaseHelper {
       testWebDriver.sleep(1000);
       for (int i = 1; i < testWebDriver.getElementsSizeByXpath("//div[@class='ngCanvas']/div"); i++)
         assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + i + "]/div[2]/div[2]/div/span").getText().trim(), program);
+      trackPages++;
+    }
+  }
+
+  public void verifySupplyingDepotInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String supplyingDepot) throws Exception {
+    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
+    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
+      numberOfPages = numberOfPages + 1;
+    }
+    int trackPages = 0;
+    while (numberOfPages != trackPages) {
+      testWebDriver.getElementByXpath("//a[contains(text(), '" + (trackPages + 1) + "') and @class='ng-binding']").click();
+      testWebDriver.sleep(1000);
+      for (int i = 1; i < testWebDriver.getElementsSizeByXpath("//div[@class='ngCanvas']/div"); i++)
+        assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + i + "]/div[9]/div[2]/div/span").getText().trim(), supplyingDepot);
       trackPages++;
     }
   }

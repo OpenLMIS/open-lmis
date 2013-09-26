@@ -115,14 +115,24 @@ public class ConvertOrderPage extends RequisitionPage {
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
 
-  public void searchWithOption(String searchOption, String searchString)
-  {
+  public void searchWithOption(String searchOption, String searchString) {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     searchOptionButton.click();
     testWebDriver.sleep(250);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+searchOption+"')]"));
-    testWebDriver.getElementByXpath("//a[contains(text(),'"+searchOption+"')]").click();
-    sendKeys(searchTextBox,searchString);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'" + searchOption + "')]"));
+    testWebDriver.getElementByXpath("//a[contains(text(),'" + searchOption + "')]").click();
+    sendKeys(searchTextBox, searchString);
+    searchButton.click();
+    testWebDriver.sleep(1000);
+  }
+
+  public void searchWithIndex(int index, String searchString) {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    searchOptionButton.click();
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a"));
+    testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a").click();
+    sendKeys(searchTextBox, searchString);
     searchButton.click();
     testWebDriver.sleep(1000);
   }

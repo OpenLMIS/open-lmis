@@ -222,8 +222,10 @@ public class DBWrapper {
         flag = false;
       }
     }
-    if (flag) {
-      insertSupplyLines("N1", program, "F10");
+    if (withSupplyLine) {
+      if (flag) {
+        insertSupplyLines("N1", program, "F10");
+      }
     }
 
   }
@@ -775,7 +777,7 @@ public class DBWrapper {
     update("update requisition_line_items set beginningbalance=1,  quantityreceived=1, quantitydispensed=1, newpatientcount=1, stockoutdays=1, quantityrequested=10, reasonforrequestedquantity='bad climate', normalizedconsumption=10, packstoship=1;");
     update("update requisitions set fullsupplyitemssubmittedcost=12.5000, nonfullsupplyitemssubmittedcost=0.0000;");
 
-    if(emergencyRequisitionRequired)
+    if (emergencyRequisitionRequired)
       update("update requisitions set emergency='true';");
 
   }
