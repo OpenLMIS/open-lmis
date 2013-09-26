@@ -128,6 +128,9 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     if (periods == null || periods.length == 0) {
       periodWithRnrStatus = {name: messageService.get("msg.no.period.available")};
       $scope.periodGridData.push(periodWithRnrStatus);
+      if ($scope.isEmergency) {
+        addPreviousRequisitionToPeriodList(rnrs);
+      }
       return;
     }
 
@@ -149,13 +152,11 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
     resetValuesForFirstPeriod($scope.periodGridData);
 
 
-    if ($scope.isEmergency) {
-      addPreviousRequisitionToPeriodList(rnrs);
-    }
   };
 
   var addPreviousRequisitionToPeriodList = function (rnrs) {
     var periodWithRnrStatus;
+    if(  rnrs == null || rnrs.length == 0) return;
     rnrs.forEach(function (rnr) {
       if (rnr.status == 'INITIATED') {
         periodWithRnrStatus = angular.copy(rnr.period);
@@ -205,6 +206,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   $scope.loadPeriods = function () {
     $scope.periodGridData = [];
     if (!($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedFacilityId)) {
+      var periods = [];
       $scope.error = "";
       return;
     }

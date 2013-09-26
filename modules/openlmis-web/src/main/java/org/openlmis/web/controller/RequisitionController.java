@@ -206,7 +206,7 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
     try {
       List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
-      List<Rnr> requisitions = isEmpty(periodList) ? null : getRequisitionsFor(criteria, periodList);
+      List<Rnr> requisitions = isEmpty(periodList) && (!criteria.isEmergency()) ? null : getRequisitionsFor(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
       response.addData(RNR_LIST, requisitions);
       response.addData(IS_EMERGENCY, criteria.isEmergency());
@@ -226,7 +226,8 @@ public class RequisitionController extends BaseController {
 
   private List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
     criteria.setWithoutLineItems(true);
-    criteria.setPeriodId(periodList.get(0).getId());
+    if (!criteria.isEmergency())
+      criteria.setPeriodId(periodList.get(0).getId());
     List<Rnr> rnrList = requisitionService.get(criteria);
     return rnrList;
   }
