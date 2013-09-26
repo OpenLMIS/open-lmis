@@ -1208,4 +1208,8 @@ public class DBWrapper {
   public void updateProductToHaveGroup(String product, String productGroup) throws SQLException {
     update("UPDATE products set productGroupId = (SELECT id from product_groups where code = '" + productGroup + "') where code = '" + product + "'");
   }
+
+  public void deleteReport(String reportName) throws SQLException {
+    update("DELETE FROM report_templates where name = '" + reportName + "'");
+  }
 }
