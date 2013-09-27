@@ -42,6 +42,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
   });
 
+  if ($scope.rnr.emergency) {
+    $scope.requisitionType = "requisition.type.emergency";
+  } else {
+    $scope.requisitionType = "requisition.type.regular";
+  }
   $scope.fillPagedGridData = function () {
     if ($scope.visibleTab == REGIMEN) {
       $scope.numberOfPages = 1;

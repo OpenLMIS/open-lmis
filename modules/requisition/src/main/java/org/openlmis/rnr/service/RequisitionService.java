@@ -262,7 +262,8 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
+    if (!requisition.isEmergency())
+      requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
     requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);
   }
 
@@ -270,7 +271,8 @@ public class RequisitionService {
     if (requisition == null) return null;
 
     fillFacilityPeriodProgramWithAuditFields(asList(requisition));
-    fillPreviousRequisitionsForAmc(requisition);
+    if (!requisition.isEmergency())
+      fillPreviousRequisitionsForAmc(requisition);
     return requisition;
   }
 

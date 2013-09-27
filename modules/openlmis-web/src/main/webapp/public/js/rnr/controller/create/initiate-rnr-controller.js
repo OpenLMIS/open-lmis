@@ -151,6 +151,9 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
 
     resetValuesForFirstPeriod($scope.periodGridData);
 
+    if ($scope.isEmergency) {
+      addPreviousRequisitionToPeriodList(rnrs);
+    }
 
   };
 
