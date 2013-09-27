@@ -55,7 +55,7 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
     private LoginPage loginPage;
     private AverageConsumptionReportPage averageConsumptionReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -65,7 +65,7 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
         averageConsumptionReportPage = homePage.navigateViewAverageConsumptionReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -79,20 +79,20 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
 
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         averageConsumptionReportPage.verifyPdfReportOutput();
     }
 
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         averageConsumptionReportPage.verifyXlsReportOutput();
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -114,7 +114,7 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
 
 
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -129,7 +129,7 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
         verifyPagination(templates);
     }
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
