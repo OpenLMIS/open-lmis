@@ -58,11 +58,11 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
         COLUMN_NAME_REORDER_AMOUNT;
     }
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private SummaryReportPage summaryReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -73,7 +73,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
         summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -87,20 +87,20 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
 
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyPdfReportOutput();
     }
 
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyXlsReportOutput();
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         verifySort("ASC", Column.COLUMN_NAME_PRODUCT);
@@ -118,7 +118,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
     }
 
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyPagination();

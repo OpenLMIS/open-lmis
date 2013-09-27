@@ -46,8 +46,8 @@ public class AdjustmentSummaryReport extends ReportTestHelper {
     public static final Integer ADJUSTMENT_TYPE = 5;
     public static final Integer ADJUSTMENT = 6;
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private AdjustmentSummaryReportPage adjustmentSummaryReportPage;
 
     @BeforeMethod(groups = {"report"})

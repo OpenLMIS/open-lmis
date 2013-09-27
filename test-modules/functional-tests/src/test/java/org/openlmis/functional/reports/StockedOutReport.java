@@ -48,8 +48,8 @@ public class StockedOutReport extends ReportTestHelper {
     public static final Integer LOCATION = 5;
     public static final Integer PRODUCT_STOCKED_OUT = 6;
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private StockedOutReportPage stockedOutReportPage;
 
     @BeforeMethod(groups = {"report"})
@@ -119,7 +119,6 @@ public class StockedOutReport extends ReportTestHelper {
 
     @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
-        HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
         //dbWrapper.deleteData();
         dbWrapper.closeConnection();

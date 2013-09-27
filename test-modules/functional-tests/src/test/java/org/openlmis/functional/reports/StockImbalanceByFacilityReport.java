@@ -47,8 +47,8 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     private static final Integer MOS = 6;
     private static final Integer ORDER_QUANITY = 7;
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private StockImbalanceByFacilityPage stockImbalanceByFacilityPage;
 
     @BeforeMethod(groups = {"report"})

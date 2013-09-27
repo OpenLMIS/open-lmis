@@ -47,8 +47,8 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
     public static final Integer AMC = 7;
 
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private AverageConsumptionReportPage averageConsumptionReportPage;
 
     @BeforeMethod(groups = {"report"})

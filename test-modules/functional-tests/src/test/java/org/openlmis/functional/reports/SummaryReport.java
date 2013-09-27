@@ -149,7 +149,7 @@ public class SummaryReport extends ReportTestHelper {
 
     @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
-        HomePage homePage = new HomePage(testWebDriver);
+        ReportHomePage homePage = new ReportHomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
         //dbWrapper.deleteData();
         dbWrapper.closeConnection();

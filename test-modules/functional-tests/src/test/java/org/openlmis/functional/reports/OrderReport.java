@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -51,8 +51,8 @@ public class OrderReport extends ReportTestHelper {
     public static final Integer PACK_QUANITTY = 6;
     public static final Integer DISCREPANCY_OR_DAMAGES = 7;
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private OrderReportPage orderReportPage;
 
     @BeforeMethod(groups = {"functional3"})

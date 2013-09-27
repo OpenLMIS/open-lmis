@@ -40,8 +40,8 @@ public class ReportingRateReport extends ReportTestHelper {
 
 
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private SummaryReportPage summaryReportPage;
 
     @BeforeMethod(groups = {"report"})

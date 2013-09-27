@@ -52,8 +52,8 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
     private static final Integer REORDER_AMOUNT = 12;
 
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private SupplyStatusByFacilityPage supplyStatusByFacilityPage;
 
     @BeforeMethod(groups = {"report"})
