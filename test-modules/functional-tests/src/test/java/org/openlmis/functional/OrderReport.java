@@ -8,6 +8,7 @@ package org.openlmis.functional;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.functional.reports.ReportTestHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.OrderReportPage;

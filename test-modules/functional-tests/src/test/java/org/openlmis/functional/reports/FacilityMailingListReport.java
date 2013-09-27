@@ -9,7 +9,6 @@ package org.openlmis.functional.reports;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.functional.ReportTestHelper;
 import org.openlmis.pageobjects.FacilityMailingListReportPage;
 import org.openlmis.pageobjects.HomePage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -48,7 +47,7 @@ public class FacilityMailingListReport extends ReportTestHelper {
 
     private FacilityMailingListReportPage facilityMailingListReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -60,7 +59,7 @@ public class FacilityMailingListReport extends ReportTestHelper {
     }
 
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
 
         String geoZone = "Ngorongoro";
@@ -82,20 +81,20 @@ public class FacilityMailingListReport extends ReportTestHelper {
         facilityMailingListReportPage.enterFilterValuesInFacilityMailingListReport(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType);
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
         facilityMailingListReportPage.verifyPdfReportOutput();
     }
 
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
         facilityMailingListReportPage.verifyXlsReportOutput();
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
 
@@ -117,7 +116,7 @@ public class FacilityMailingListReport extends ReportTestHelper {
     }
 
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToFacilityMailingListReportingPage(credentials[0], credentials[1]);
 
@@ -136,7 +135,7 @@ public class FacilityMailingListReport extends ReportTestHelper {
 
 
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
@@ -147,7 +146,7 @@ public class FacilityMailingListReport extends ReportTestHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 

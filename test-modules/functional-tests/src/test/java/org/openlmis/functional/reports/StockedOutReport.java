@@ -8,7 +8,6 @@ package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.functional.ReportTestHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.StockedOutReportPage;
@@ -53,7 +52,7 @@ public class StockedOutReport extends ReportTestHelper {
     private LoginPage loginPage;
     private StockedOutReportPage stockedOutReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -64,7 +63,7 @@ public class StockedOutReport extends ReportTestHelper {
         stockedOutReportPage = homePage.navigateViewStockedOutReport();
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToStockedOutReport(credentials[0], credentials[1]);
 
@@ -73,20 +72,20 @@ public class StockedOutReport extends ReportTestHelper {
         SeleneseTestNgHelper.assertTrue(stockedOutReportPage.facilityTypeIsDisplayed());*/
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToStockedOutReport(credentials[0], credentials[1]);
         verifyPdfReportOutput("pdf-button");
     }
 
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToStockedOutReport(credentials[0], credentials[1]);
         verifyXlsReportOutput("xls-button");
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToStockedOutReport(credentials[0], credentials[1]);
         Map<String, String> templates =     new HashMap<String, String>(){{
@@ -104,7 +103,7 @@ public class StockedOutReport extends ReportTestHelper {
     }
 
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToStockedOutReport(credentials[0], credentials[1]);
 
@@ -118,7 +117,7 @@ public class StockedOutReport extends ReportTestHelper {
         verifyPagination(templates);
     }
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
@@ -129,7 +128,7 @@ public class StockedOutReport extends ReportTestHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 

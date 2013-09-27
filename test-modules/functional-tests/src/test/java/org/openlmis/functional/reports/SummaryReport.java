@@ -1,14 +1,13 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
  */
 
 package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.functional.ReportTestHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.SummaryReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -50,7 +49,7 @@ public class SummaryReport extends ReportTestHelper {
 
     private SummaryReportPage summaryReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -60,13 +59,13 @@ public class SummaryReport extends ReportTestHelper {
         summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportMenu(String[] credentials) throws IOException {
         verifyReportMenu(credentials);
     }
 
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -80,20 +79,20 @@ public class SummaryReport extends ReportTestHelper {
 
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyPdfReportOutput();
     }
 
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
         summaryReportPage.verifyXlsReportOutput();
     }
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -118,7 +117,7 @@ public class SummaryReport extends ReportTestHelper {
     }
 
 
-    @Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToSummaryReportPage(credentials[0], credentials[1]);
 
@@ -148,7 +147,7 @@ public class SummaryReport extends ReportTestHelper {
 
 
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
@@ -159,7 +158,7 @@ public class SummaryReport extends ReportTestHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 

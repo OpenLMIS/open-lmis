@@ -9,7 +9,6 @@ package org.openlmis.functional.reports;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.functional.ReportTestHelper;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -264,7 +263,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
     }
 
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
@@ -275,7 +274,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 
