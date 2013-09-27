@@ -4,7 +4,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -188,7 +188,7 @@ public class E2EViewReport extends TestCaseHelper {
 
         ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
         viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
-        dbWrapper.insertValuesInRequisition();
+        dbWrapper.insertValuesInRequisition(false);
         dbWrapper.updateRequisitionStatus(SUBMITTED);
         viewRequisitionPage.enterViewSearchCriteria();
         viewRequisitionPage.clickSearch();

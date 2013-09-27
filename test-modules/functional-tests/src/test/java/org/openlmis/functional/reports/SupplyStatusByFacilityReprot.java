@@ -4,15 +4,15 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.functional.ReportTestHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.StockImbalanceByFacilityPage;
+import org.openlmis.pageobjects.SupplyStatusByFacilityPage;
 import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.Select;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class StockImbalanceByFacilityReport extends ReportTestHelper {
+public class SupplyStatusByFacilityReprot extends ReportTestHelper {
 
     public static final String STORE_IN_CHARGE = "store in-charge";
     public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
@@ -42,59 +42,64 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     public static final String TABLE_CELL_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span";
     public static final String TABLE_SORT_BUTTON_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div";
 
-    private static final Integer SUPPLYING_FACILITY = 1;
-    private static final Integer FACILITY = 2;
+    private static final Integer FACILITY_NAME = 1;
+    private static final Integer FACILITY_CODE = 2;
     private static final Integer PRODUCT = 3;
-    private static final Integer PHYSICAL_COUNT = 4;
-    private static final Integer AMC = 5;
-    private static final Integer MOS = 6;
-    private static final Integer ORDER_QUANITY = 7;
+    private static final Integer OPENING_BALANCE = 4;
+    private static final Integer RECEIPTS = 5;
+    private static final Integer ISSUES = 6;
+    private static final Integer ADJUSTMENTS = 7;
+    private static final Integer CLOSING_BALANCE = 8;
+    private static final Integer MONTHS_OF_STOCK = 9;
+    private static final Integer AMC = 10;
+    private static final Integer MAXIMUM_STOCK = 11;
+    private static final Integer REORDER_AMOUNT = 12;
+
 
     private HomePage homePage;
     private LoginPage loginPage;
-    private StockImbalanceByFacilityPage stockImbalanceByFacilityPage;
+    private SupplyStatusByFacilityPage supplyStatusByFacilityPage;
 
     @BeforeMethod(groups = {"functional3"})
     public void setUp() throws Exception {
         super.setup();
     }
 
-
-    private void navigateToStockImbalanceByFacilityPage(String userName, String passWord) throws IOException {
+    private void navigateToSupplyStatusByFacilityReport(String userName, String passWord) throws IOException {
         login(userName, passWord);
-        stockImbalanceByFacilityPage = homePage.navigateViewStockImbalanceByFacilityPage();
+        supplyStatusByFacilityPage = homePage.navigateViewSupplyStatusByFacilityPage();
     }
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
-        navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
+        navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
 
         System.out.println();
         // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityCodeIsDisplayed());
         // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityNameIsDisplayed());
         // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityTypeIsDisplayed());
 
-        navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
+        navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
         enterFilterValues();
 
     }
 
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
-        navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
-        verifyPdfReportOutput("pdf-button");
+        navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
+        supplyStatusByFacilityPage.verifyPdfReportOutput();
     }
 
 
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
-        navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
-        verifyXlsReportOutput("xls-button");
+        navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
+        supplyStatusByFacilityPage.verifyXlsReportOutput();
     }
 
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
-        navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
+        navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
 
         Map<String, String> templates = new HashMap<String, String>() {{
             put(SORT_BUTTON_ASC_TEMPLATE, "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
@@ -102,21 +107,25 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
 
             put(TABLE_CELL_TEMPLATE, "test");
         }};
-
-        verifySort("ASC", SUPPLYING_FACILITY, templates);
-        verifySort("ASC", FACILITY, templates);
+        verifySort("ASC", FACILITY_NAME, templates);
+        verifySort("ASC", FACILITY_CODE, templates);
         verifySort("ASC", PRODUCT, templates);
-        verifySort("ASC", PHYSICAL_COUNT, templates);
+        verifySort("ASC", OPENING_BALANCE, templates);
+        verifySort("ASC", RECEIPTS, templates);
+        verifySort("ASC", ISSUES, templates);
+        verifySort("ASC", ADJUSTMENTS, templates);
+        verifySort("ASC", CLOSING_BALANCE, templates);
+        verifySort("ASC", MONTHS_OF_STOCK, templates);
         verifySort("ASC", AMC, templates);
-        verifySort("ASC", MOS, templates);
-        verifySort("ASC", ORDER_QUANITY, templates);
+        verifySort("ASC", MAXIMUM_STOCK, templates);
+        verifySort("ASC", REORDER_AMOUNT, templates);
 
     }
 
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
-        navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
+        navigateToSupplyStatusByFacilityReport(credentials[0], credentials[1]);
 
 
         Map<String, String> templates = new HashMap<String, String>() {{
@@ -130,15 +139,14 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     }
 
     public void enterFilterValues() {
-
         testWebDriver.findElement(By.cssSelector("b")).click();
-        new Select(testWebDriver.findElement(By.id("startYear"))).selectByVisibleText("2011");
-        new Select(testWebDriver.findElement(By.id("startMonth"))).selectByVisibleText("Jan");
-        new Select(testWebDriver.findElement(By.name("endYear"))).selectByVisibleText("2011");
-        new Select(testWebDriver.findElement(By.name("endMonth"))).selectByVisibleText("Jan");
-        testWebDriver.findElement(By.name("productCategoryElement")).click();
-        testWebDriver.findElement(By.id("product")).click();
-        testWebDriver.findElement(By.name("facilityTypeElement")).click();
+        testWebDriver.findElement(By.name("program")).click();
+        testWebDriver.findElement(By.name("schedule")).click();
+        testWebDriver.findElement(By.name("period")).click();
+        testWebDriver.findElement(By.name("zone")).click();
+        testWebDriver.findElement(By.id("name")).sendKeys("Facility Name");
+        testWebDriver.findElement(By.id("facility-type")).click();
+        testWebDriver.findElement(By.name("product")).click();
         testWebDriver.findElement(By.name("requisitionGroup")).click();
     }
 

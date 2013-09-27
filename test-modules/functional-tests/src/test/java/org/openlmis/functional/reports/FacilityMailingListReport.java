@@ -4,11 +4,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.functional.ReportTestHelper;
 import org.openlmis.pageobjects.FacilityMailingListReportPage;
 import org.openlmis.pageobjects.HomePage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
