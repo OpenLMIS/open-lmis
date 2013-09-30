@@ -75,7 +75,10 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
       {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")}
+      {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")},
+      {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
+        cellTemplate: "<div class='ngCellText checked'><i ng-class='{\"icon-ok\": row.entity.emergency}'></i></div>",
+        width: 110 }
     ]
   };
 
@@ -116,7 +119,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
 
     var errorHandler = function (response) {
       $scope.message = "";
-      if (response.data.error) {
+      if (response.status === 409) {
         $scope.error = response.data.error;
       } else {
         $scope.error = "msg.error.occurred";

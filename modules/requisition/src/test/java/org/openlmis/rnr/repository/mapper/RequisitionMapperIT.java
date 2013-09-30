@@ -18,10 +18,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,7 +32,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -87,6 +83,8 @@ public class RequisitionMapperIT {
   private CommentMapper commentMapper;
   @Autowired
   SupplyLineMapper supplyLineMapper;
+  @Autowired
+  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
   private SupervisoryNode supervisoryNode;
   private SupplyLine supplyLine;
@@ -275,9 +273,10 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, true);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, true);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_FACILITY_CODE;
     Integer pageNumber = 1;
@@ -292,11 +291,20 @@ public class RequisitionMapperIT {
     assertThat(requisitions.get(1), is(requisition2));
   }
 
+  private void approve(Rnr... requisitions) {
+    for(Rnr requisition : requisitions) {
+      requisition.setStatus(APPROVED);
+      mapper.update(requisition);
+    }
+  }
+
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityName() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_FACILITY_NAME;
     Integer pageNumber = 1;
@@ -313,9 +321,11 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingBySupplyDepotName() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME;
     Integer pageNumber = 1;
@@ -333,9 +343,11 @@ public class RequisitionMapperIT {
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByProgramName() {
 
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_PROGRAM_NAME;
     Integer pageNumber = 1;
@@ -390,6 +402,7 @@ public class RequisitionMapperIT {
     rnr.setProgram(program);
     rnr.setSupplyingDepot(facility);
     mapper.insert(rnr);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
 
     rnr.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(rnr);

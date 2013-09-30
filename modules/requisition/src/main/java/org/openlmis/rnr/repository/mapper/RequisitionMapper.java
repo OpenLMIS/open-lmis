@@ -197,8 +197,7 @@ public interface RequisitionMapper {
         sql.append("INNER JOIN Programs P ON P.id = R.programId ");
         sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
         sql.append("INNER JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
-        sql.append("WHERE LOWER(P.code) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal +
-          "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
+        sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
         sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
         sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
