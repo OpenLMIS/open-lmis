@@ -15,4 +15,4 @@ INSERT INTO roles
   -- allow admin to see all the admin functions too.
   INSERT INTO role_rights
   (roleId, rightName)
-  select (select id from roles where name = 'Admin'), name from rights where righttype = 'ADMIN' and name not in (select rightname from role_rights where roleid = (select id from roles where name = 'Admin') and rightname not like '%UPLOAD%');
+  select (select id from roles where name = 'Admin'), name from rights where righttype = 'ADMIN' and name not in (select rightname from role_rights where roleid = (select id from roles where name = 'Admin') );
