@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -46,15 +46,16 @@ public class FacilityDateRangeSearchTest {
   @Mock
   ProcessingScheduleService processingScheduleService;
 
-
   @Test
   public void shouldSearchRequisitionsWithFacilityAndDateRange() throws Exception {
-    //Arrange
     Date dateRangeStart = new Date(), dateRangeEnd = new Date();
     Long facilityId = 1L, programId = null, userId = 1L;
     Facility facility = new Facility(facilityId);
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, userId, dateRangeStart, dateRangeEnd);
-    FacilityDateRangeSearch strategy = new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);
+    FacilityDateRangeSearch strategy = new FacilityDateRangeSearch(criteria,
+      processingScheduleService,
+      requisitionRepository,
+      programService);
 
     final Program program1 = make(a(ProgramBuilder.defaultProgram));
     final Program program2 = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programCode, "My Program")));
@@ -72,10 +73,8 @@ public class FacilityDateRangeSearchTest {
     when(requisitionRepository.getPostSubmitRequisitions(facility, program1, periodsForProgram1)).thenReturn(requisitions);
     when(requisitionRepository.getPostSubmitRequisitions(facility, program2, periodsForProgram2)).thenReturn(requisitionsForProgram2);
 
-    //Act
     List<Rnr> actualRequisitions = strategy.search();
 
-    //Assert
     requisitions.addAll(requisitionsForProgram2);
     assertThat(actualRequisitions, is(requisitions));
     verify(programService).getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION);

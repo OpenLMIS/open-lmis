@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -22,14 +22,17 @@ import java.util.List;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 @NoArgsConstructor
-public class FacilityDateRangeSearch implements RequisitionSearchStrategy {
+public class FacilityDateRangeSearch extends RequisitionSearchStrategy {
 
   private RequisitionSearchCriteria criteria;
   private ProgramService programService;
   private ProcessingScheduleService processingScheduleService;
   private RequisitionRepository requisitionRepository;
 
-  public FacilityDateRangeSearch(RequisitionSearchCriteria criteria, ProcessingScheduleService processingScheduleService, RequisitionRepository requisitionRepository, ProgramService programService) {
+  public FacilityDateRangeSearch(RequisitionSearchCriteria criteria,
+                                 ProcessingScheduleService processingScheduleService,
+                                 RequisitionRepository requisitionRepository,
+                                 ProgramService programService) {
     this.criteria = criteria;
     this.programService = programService;
     this.processingScheduleService = processingScheduleService;
@@ -37,14 +40,14 @@ public class FacilityDateRangeSearch implements RequisitionSearchStrategy {
   }
 
   @Override
-  public List<Rnr> search() {
+  List<Rnr> findRequisitions() {
     Facility facility = new Facility(criteria.getFacilityId());
     List<Program> programs = programService.getProgramsForUserByFacilityAndRights(criteria.getFacilityId(),
-        criteria.getUserId(), VIEW_REQUISITION);
+      criteria.getUserId(), VIEW_REQUISITION);
     List<Rnr> requisitions = new ArrayList<>();
     for (Program program : programs) {
       List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsForDateRange(facility, program,
-          criteria.getDateRangeStart(), criteria.getDateRangeEnd());
+        criteria.getDateRangeStart(), criteria.getDateRangeEnd());
       requisitions.addAll(requisitionRepository.getPostSubmitRequisitions(facility, program, periods));
     }
     return requisitions;

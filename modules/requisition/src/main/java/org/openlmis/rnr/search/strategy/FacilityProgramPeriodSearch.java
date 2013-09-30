@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -22,7 +22,7 @@ import static java.util.Arrays.asList;
 
 @Data
 @NoArgsConstructor
-public class FacilityProgramPeriodSearch implements RequisitionSearchStrategy {
+public class FacilityProgramPeriodSearch extends RequisitionSearchStrategy {
 
   private RequisitionSearchCriteria criteria;
   private RequisitionRepository requisitionRepository;
@@ -33,7 +33,7 @@ public class FacilityProgramPeriodSearch implements RequisitionSearchStrategy {
   }
 
   @Override
-  public List<Rnr> search() {
+  List<Rnr> findRequisitions() {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
     ProcessingPeriod period = new ProcessingPeriod(criteria.getPeriodId());

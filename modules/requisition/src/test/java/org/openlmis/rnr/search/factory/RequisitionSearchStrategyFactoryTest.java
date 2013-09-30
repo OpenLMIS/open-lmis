@@ -1,5 +1,5 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
@@ -17,6 +17,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.strategy.*;
+import org.openlmis.rnr.service.RequisitionPermissionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -58,13 +59,15 @@ public class RequisitionSearchStrategyFactoryTest {
     Long facilityId = 1L, programId = null;
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
-    whenNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService)
+    whenNew(FacilityDateRangeSearch.class)
+      .withArguments(criteria,processingScheduleService, requisitionRepository, programService)
       .thenReturn(mock(FacilityDateRangeSearch.class));
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
     assertTrue(facilityDateRangeStrategy instanceof FacilityDateRangeSearch);
-    verifyNew(FacilityDateRangeSearch.class).withArguments(criteria, processingScheduleService, requisitionRepository, programService);
+    verifyNew(FacilityDateRangeSearch.class)
+      .withArguments(criteria, processingScheduleService, requisitionRepository, programService);
   }
 
   @Test

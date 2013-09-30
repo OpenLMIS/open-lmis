@@ -1,9 +1,7 @@
 /*
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.rnr.service;
@@ -22,8 +20,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
-import static org.apache.commons.collections.CollectionUtils.containsAny;
 import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -39,7 +35,7 @@ public class RequisitionPermissionService {
 
   public Boolean hasPermission(Long userId, Facility facility, Program program, Right right) {
     Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
-    return containsAny(userRights, asList(right));
+    return userRights.contains(right);
   }
 
   public Boolean hasPermission(Long userId, Rnr rnr, Right right) {
