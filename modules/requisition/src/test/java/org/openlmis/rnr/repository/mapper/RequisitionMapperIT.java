@@ -37,6 +37,7 @@ import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -105,7 +106,7 @@ public class RequisitionMapperIT {
     processingPeriod3 = insertPeriod("Period 3");
     supervisoryNode = insertSupervisoryNode();
     supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
     supplyLineMapper.insert(supplyLine);
   }
 

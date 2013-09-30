@@ -195,8 +195,8 @@ public interface RequisitionMapper {
         sql.append("WHERE ");
       } else if (searchType.isEmpty() || searchType.equalsIgnoreCase(RequisitionService.SEARCH_ALL)) {
         sql.append("INNER JOIN Programs P ON P.id = R.programId ");
-        sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
-        sql.append("INNER JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
+        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
+        sql.append("LEFT JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
         sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
         sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
@@ -208,8 +208,8 @@ public interface RequisitionMapper {
         sql.append("INNER JOIN Programs P ON P.id = R.programId ");
         sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
-        sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
-        sql.append("INNER JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
+        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
+        sql.append("LEFT JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
         sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
       }
       sql.append("R.status = 'APPROVED' ");
