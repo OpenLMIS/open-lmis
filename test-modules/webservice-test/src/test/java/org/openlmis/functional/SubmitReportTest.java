@@ -76,6 +76,24 @@ public class SubmitReportTest extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
+  public void testSubmitReportWithoutHeaders() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setFacilityId(100L);
+    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+
+    ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "",
+      "");
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+    }
+
+  @Test(groups = {"webservice"})
   public void testSubmitReportInvalidProgram() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
