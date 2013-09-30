@@ -537,7 +537,7 @@ Feature: Smoke Tests
   @Smoke
   @ie2
 
-  Scenario: User should be able to see emergency RnR
+  Scenario: User should be able to initiate emergency RnR
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
