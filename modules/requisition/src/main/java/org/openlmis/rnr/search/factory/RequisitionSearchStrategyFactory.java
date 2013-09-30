@@ -41,7 +41,7 @@ public class RequisitionSearchStrategyFactory {
     } else if (criteria.getPeriodId() != null) {
       return new FacilityProgramPeriodSearch(criteria, requisitionRepository);
     } else if (criteria.getProgramId() == null) {
-      return new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);
+      return new FacilityDateRangeSearch(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository, programService);
     }
     return new FacilityProgramDateRangeSearch(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository);
   }

@@ -40,6 +40,9 @@ public class RequisitionSearchStrategyFactoryTest {
   @Mock
   ProgramService programService;
 
+  @Mock
+  private RequisitionPermissionService requisitionPermissionService;
+
   @InjectMocks
   RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -60,14 +63,14 @@ public class RequisitionSearchStrategyFactoryTest {
     Date periodStartDate = new Date(), periodEndDate = new Date();
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
     whenNew(FacilityDateRangeSearch.class)
-      .withArguments(criteria,processingScheduleService, requisitionRepository, programService)
+      .withArguments(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository, programService)
       .thenReturn(mock(FacilityDateRangeSearch.class));
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
     assertTrue(facilityDateRangeStrategy instanceof FacilityDateRangeSearch);
     verifyNew(FacilityDateRangeSearch.class)
-      .withArguments(criteria, processingScheduleService, requisitionRepository, programService);
+      .withArguments(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository, programService);
   }
 
   @Test

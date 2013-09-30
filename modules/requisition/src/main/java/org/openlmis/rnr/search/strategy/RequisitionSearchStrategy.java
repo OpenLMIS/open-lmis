@@ -11,6 +11,7 @@ import org.openlmis.rnr.domain.Rnr;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 public abstract class RequisitionSearchStrategy {
@@ -24,7 +25,7 @@ public abstract class RequisitionSearchStrategy {
       return findRequisitions();
     }
 
-    return null;
+    return emptyList();
   }
 
   abstract List<Rnr> findRequisitions();
