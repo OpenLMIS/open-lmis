@@ -135,6 +135,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupProgramSchedule();
   }
 
+  @And("^I have period \"([^\"]*)\" associated with schedule \"([^\"]*)\"$")
+  public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws Exception {
+    dbWrapper.insertPeriodAndAssociateItWithSchedule(period, schedule);
+  }
+
   @And("^I update \"([^\"]*)\" home facility$")
   public void updateHomeFacility(String user) throws Exception {
     dbWrapper.allocateFacilityToUser(dbWrapper.getUserID(user), facility_code);
@@ -163,6 +168,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
+  }
+
+  @And("^I access proceed$")
+  public void accessProceed() throws Exception {
+    HomePage homePage=new HomePage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
   }
 
   @And("^I add comments$")

@@ -65,6 +65,10 @@ public class DBWrapper {
 
   }
 
+  public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException, IOException {
+    insertProcessingPeriod(period, period, "2013-09-29 14:16:43.498429", "2020-09-30 14:16:43.498429", 66, schedule);
+  }
+
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
     String programName = "";
     String productCode = "";

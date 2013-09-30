@@ -207,7 +207,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "rnrType")
   private static WebElement rnrTypeSelectBox;
 
-  @FindBy(how = How.XPATH, using ="//div/div/div[1]/div[2]/div/span")
+  @FindBy(how = How.XPATH, using = "//div/div/div[1]/div[2]/div/span")
   private static WebElement firstPeriodLabel;
 
   public HomePage(TestWebDriver driver) throws IOException {
@@ -216,7 +216,7 @@ public class HomePage extends Page {
     testWebDriver.setImplicitWait(10);
   }
 
-  public  WebElement getLogoutLink() {
+  public WebElement getLogoutLink() {
     return logoutLink;
   }
 
@@ -328,7 +328,6 @@ public class HomePage extends Page {
 
 
   public InitiateRnRPage clickProceed() throws IOException {
-//    testWebDriver.handleScrollByPixels(0,2000);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);
@@ -444,14 +443,14 @@ public class HomePage extends Page {
     return new DistributionPage(testWebDriver);
   }
 
-    public DistributionPage navigateOfflineDistribution() throws IOException {
-        assertTrue(offlineDistributions.isDisplayed());
-        testWebDriver.waitForElementToAppear(offlineDistributions);
-        testWebDriver.keyPress(offlineDistributions);
-        testWebDriver.waitForElementToAppear(manageMenuItem);
-        testWebDriver.keyPress(manageMenuItem);
-        return new DistributionPage(testWebDriver);
-    }
+  public DistributionPage navigateOfflineDistribution() throws IOException {
+    assertTrue(offlineDistributions.isDisplayed());
+    testWebDriver.waitForElementToAppear(offlineDistributions);
+    testWebDriver.keyPress(offlineDistributions);
+    testWebDriver.waitForElementToAppear(manageMenuItem);
+    testWebDriver.keyPress(manageMenuItem);
+    return new DistributionPage(testWebDriver);
+  }
 
   public ProgramProductISAPage navigateProgramProductISA() throws IOException {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -488,34 +487,33 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
 
-    public void verifyLoggedInUser(String Username) {
-        testWebDriver.waitForElementToAppear(loggedInUserLabel);
-        SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
-    }
+  public void verifyLoggedInUser(String Username) {
+    testWebDriver.waitForElementToAppear(loggedInUserLabel);
+    SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+  }
 
-    public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
-        navigateRnr();
-        String periodDetails = null;
-        myFacilityRadioButton.click();
-        testWebDriver.sleep(2000);
-        testWebDriver.waitForElementToAppear(programDropDown);
-        testWebDriver.selectByVisibleText(programDropDown, program);
-        testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
-        testWebDriver.waitForElementToAppear(startDate);
-    }
+  public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
+    navigateRnr();
+    String periodDetails = null;
+    myFacilityRadioButton.click();
+    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(programDropDown);
+    testWebDriver.selectByVisibleText(programDropDown, program);
+    testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
+    testWebDriver.waitForElementToAppear(startDate);
+  }
 
-    public String getFirstPeriod()
-    {
-        return firstPeriodLabel.getText().trim();
-    }
+  public String getFirstPeriod() {
+    return firstPeriodLabel.getText().trim();
+  }
 
-    public void navigateRnr() throws IOException {
-        testWebDriver.waitForElementToAppear(requisitionsLink);
-        testWebDriver.keyPress(requisitionsLink);
-        testWebDriver.waitForElementToAppear(createLink);
-        testWebDriver.sleep(2000);
-        testWebDriver.keyPress(createLink);
-        testWebDriver.sleep(2000);
-        testWebDriver.waitForElementToAppear(myFacilityRadioButton);
-    }
+  public void navigateRnr() throws IOException {
+    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.keyPress(requisitionsLink);
+    testWebDriver.waitForElementToAppear(createLink);
+    testWebDriver.sleep(2000);
+    testWebDriver.keyPress(createLink);
+    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(myFacilityRadioButton);
+  }
 }

@@ -7,6 +7,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -28,7 +29,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -88,10 +91,15 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateAndInitiateEmergencyRnr(program);
   }
 
-  @Then ("I should see no period available$")
-  public void verifyPeriodNotAvailable()throws IOException{
-      HomePage homePage = new HomePage(testWebDriver);
-      assertEquals("No current period defined. Please contact the Admin.", homePage.getFirstPeriod());
+  @Then("I should see no period available$")
+  public void verifyPeriodNotAvailable() throws IOException {
+    HomePage homePage = new HomePage(testWebDriver);
+    assertEquals("No current period defined. Please contact the Admin.", homePage.getFirstPeriod());
+  }
+
+  @Then("^I should verify \"([^\"]*)\" with status \"([^\"]*)\" in row \"([^\"]*)\"$")
+  public void verifyPeriodNotAvailable(String period, String status, String row) throws IOException {
+    verifyRnRsInGrid(period, status, row);
   }
 
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
@@ -293,7 +301,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     testWebDriver.sleep(2000);
     initiateRnRPage.clickRegimenTab();
-    assertEquals(initiateRnRPage.getRegimenTableColumnCount(), 6);
+    SeleneseTestBase.assertEquals(initiateRnRPage.getRegimenTableColumnCount(), 6);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -316,7 +324,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName, InitiateRnRPage initiateRnRPage) {
     assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
-    assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
+    SeleneseTestBase.assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
 
     assertTrue("Regimen Code should be displayed.", initiateRnRPage.existRegimenCode(regimenCode, 2));
     assertTrue("Regimen Name should be displayed.", initiateRnRPage.existRegimenName(regimenName, 2));
@@ -328,17 +336,22 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) {
-    assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentValue());
-    assertEquals(patientstoinitiatetreatment, initiateRnRPage.getPatientsToInitiateTreatmentValue());
-    assertEquals(patientsstoppedtreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
-    assertEquals(remarks, initiateRnRPage.getRemarksValue());
+    SeleneseTestBase.assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentValue());
+    SeleneseTestBase.assertEquals(patientstoinitiatetreatment, initiateRnRPage.getPatientsToInitiateTreatmentValue());
+    SeleneseTestBase.assertEquals(patientsstoppedtreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
+    SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
   private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) {
-    assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
-    assertEquals(patientstoinitiatetreatment, initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
-    assertEquals(patientsstoppedtreatment, initiateRnRPage.getPatientsStoppedTreatmentInputValue());
-    assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
+    SeleneseTestBase.assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
+    SeleneseTestBase.assertEquals(patientstoinitiatetreatment, initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
+    SeleneseTestBase.assertEquals(patientsstoppedtreatment, initiateRnRPage.getPatientsStoppedTreatmentInputValue());
+    SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
+  }
+
+  private void verifyRnRsInGrid(String period, String rnrStatus, String row) {
+    assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + row + "]/div[1]/div[2]/div/span").getText(), period);
+    assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + row + "]/div[4]/div[2]/div/span").getText(), rnrStatus);
   }
 
 
