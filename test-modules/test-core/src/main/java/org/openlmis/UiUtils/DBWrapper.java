@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.UiUtils;
@@ -797,8 +799,10 @@ public class DBWrapper {
 
   }
 
-  public void updateRequisitionStatus(String status) throws IOException, SQLException {
+  public void updateRequisitionStatus(String status, String username) throws IOException, SQLException {
     update("update requisitions set status='" + status + "';");
+    update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values((select id from requisitions), '" + status + "', " +
+      "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'))");
     update("update requisitions set supervisorynodeid=(select id from supervisory_nodes where code='N1');");
 
   }

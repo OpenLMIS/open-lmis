@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.functional;
@@ -80,7 +82,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I update requisition status to \"([^\"]*)\"$")
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
-    dbWrapper.updateRequisitionStatus(status);
+    dbWrapper.updateRequisitionStatus(status, "storeincharge");
   }
 
   @When("^I type view search criteria$")
@@ -160,12 +162,12 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition(true);
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-    dbWrapper.updateRequisitionStatus(SUBMITTED);
+    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC);
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
     dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus(AUTHORIZED);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
@@ -182,7 +184,7 @@ public class ViewRequisition extends TestCaseHelper {
     HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
     viewRequisitionPageAuthorized.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-    dbWrapper.updateRequisitionStatus(IN_APPROVAL);
+    dbWrapper.updateRequisitionStatus(IN_APPROVAL, userSIC);
       ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
     viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();
