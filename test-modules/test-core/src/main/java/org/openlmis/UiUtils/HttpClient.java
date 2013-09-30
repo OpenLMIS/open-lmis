@@ -1,5 +1,6 @@
 package org.openlmis.UiUtils;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -56,7 +57,7 @@ public class HttpClient {
 
 
     try {
-      return handleRequest(commMethod, json, url);
+      return handleRequest(commMethod, json, url, true);
     } catch (ClientProtocolException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -76,10 +77,9 @@ public class HttpClient {
     authCache.put(targetHost, new BasicScheme());
 
     httpContext.setAttribute(AUTH_CACHE, authCache);
-    httpContext.clear();
 
     try {
-      return handleRequest(commMethod, json, url);
+      return handleRequest(commMethod, json, url, false);
     } catch (ClientProtocolException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -88,16 +88,19 @@ public class HttpClient {
     return null;
   }
 
-  private ResponseEntity handleRequest(String commMethod, String json, String url) throws IOException {
+  private ResponseEntity handleRequest(String commMethod, String json, String url, boolean headersRequired) throws IOException {
     HttpResponse response;
     HttpEntity entity;
     BufferedReader rd;
     String sCurrentLine;
-    String sCompleteResponse="";
+    String sCompleteResponse = "";
 
     HttpRequestBase httpRequest = getHttpRequest(commMethod, url);
 
-    prepareRequestHeaderAndEntity(commMethod, json, httpRequest);
+    if (headersRequired)
+      prepareRequestHeaderAndEntity(commMethod, json, httpRequest, true);
+    else
+      prepareRequestHeaderAndEntity(commMethod, json, httpRequest, false);
 
     response = httpClient.execute(httpRequest, httpContext);
     entity = response.getEntity();
@@ -107,9 +110,9 @@ public class HttpClient {
     ResponseEntity responseEntity = new ResponseEntity();
     responseEntity.setStatus(response.getStatusLine().getStatusCode());
 
-      while ((sCurrentLine = rd.readLine()) != null) {
-          sCompleteResponse= sCompleteResponse + (sCurrentLine);
-      }
+    while ((sCurrentLine = rd.readLine()) != null) {
+      sCompleteResponse = sCompleteResponse + (sCurrentLine);
+    }
     responseEntity.setResponse(sCompleteResponse);
 
     EntityUtils.consume(entity);
@@ -129,13 +132,21 @@ public class HttpClient {
     return null;
   }
 
-  private void prepareRequestHeaderAndEntity(String commMethod, String json, HttpRequestBase httpRequest)
+  private void prepareRequestHeaderAndEntity(String commMethod, String json, HttpRequestBase httpRequest, boolean headerRequired)
     throws UnsupportedEncodingException {
 
     if (commMethod.equals(GET)) return;
 
     httpRequest.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
     ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(new StringEntity(json, UTF_8));
+
+    if (!headerRequired) {
+      Header[] headers = httpRequest.getAllHeaders();
+      for (Header h : headers) {
+        httpRequest.removeHeader(h);
+      }
+    }
+
   }
 
   public void createContext() {

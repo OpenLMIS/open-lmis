@@ -232,7 +232,7 @@ public class ProgramProductAPI extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldVerifyProgramProductWithBlankUserAndPassword() throws Exception {
+  public void shouldVerifyProgramProductWithNoHeaders() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
