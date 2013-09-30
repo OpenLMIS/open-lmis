@@ -9,7 +9,6 @@
 
 function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService, $routeParams, $location) {
   $scope.message = "";
-  $scope.noRequisitionSelectedMessage = "";
   $scope.maxNumberOfPages = 10;
   $scope.selectedItems = [];
   $scope.searchOptions = [
@@ -24,6 +23,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
 
   var refreshGrid = function () {
 
+    $scope.noRequisitionSelectedMessage = "";
     $scope.selectedItems.length = 0;
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
     $scope.selectedSearchOption = _.findWhere($scope.searchOptions, {value: $routeParams.searchType}) || $scope.searchOptions[0];
