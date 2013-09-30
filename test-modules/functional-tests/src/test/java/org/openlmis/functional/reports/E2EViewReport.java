@@ -37,12 +37,12 @@ public class E2EViewReport extends TestCaseHelper {
   public static final String APPROVED = "APPROVED";
   public static final String RELEASED = "RELEASED";
 
-  @BeforeMethod(groups = {"functional"})
+  @BeforeMethod(groups = {"report"})
   public void setUp() throws Exception {
     super.setup();
   }
 
- @Test(groups = {"functional"}, dataProvider = "Data-Provider-Function-Positive")
+ @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyFacilityMailingListReport(String[] credentials) throws Exception {
 
       String geoZone = "Ngorongoro";

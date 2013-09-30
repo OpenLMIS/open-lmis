@@ -55,7 +55,7 @@ public class OrderReport extends ReportTestHelper {
     private ReportLoginPage loginPage;
     private OrderReportPage orderReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -65,7 +65,7 @@ public class OrderReport extends ReportTestHelper {
         orderReportPage = homePage.navigateViewOrderReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToOrderReport(credentials[0], credentials[1]);
 
@@ -147,7 +147,7 @@ public class OrderReport extends ReportTestHelper {
         testWebDriver.findElement(By.name("zone")).click();
     }
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
