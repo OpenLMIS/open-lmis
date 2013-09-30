@@ -8,6 +8,8 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.filter.MailingLabelReportFilter;
+import org.openlmis.report.model.report.MailingLabelReport;
+import org.openlmis.report.model.report.StockImbalanceReport;
 import org.openlmis.report.model.sorter.MailingLabelReportSorter;
 
 import java.util.Map;
@@ -17,11 +19,9 @@ import static org.apache.ibatis.jdbc.SqlBuilder.ORDER_BY;
 import static org.apache.ibatis.jdbc.SqlBuilder.SQL;
 
 /**
- * Created with IntelliJ IDEA.
  * User: user
  * Date: 4/10/13
  * Time: 6:36 AM
- * To change this template use File | Settings | File Templates.
  */
 public class MailingLabelReportQueryBuilder {
 
@@ -35,29 +35,22 @@ public class MailingLabelReportQueryBuilder {
         JOIN("facility_types FT on FT.id = F.typeid");
         LEFT_OUTER_JOIN("geographic_zones GZ on GZ.id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
+        LEFT_OUTER_JOIN("requisition_group_members ON f.id = requisition_group_members.facilityid");
+        LEFT_OUTER_JOIN("requisition_groups ON requisition_groups.id = requisition_group_members.requisitiongroupid");
         LEFT_OUTER_JOIN("Users U on U.facilityId = F.id ");
 
-        ORDER_BY("F.name asc");
-
         if(filter != null){
-            if (filter.getFacilityCode() != "") {
-                // WHERE("F.code like '%101%' ");
-                WHERE("F.code like '%'|| #{filterCriteria.facilityCode} || '%' ");
+           if (filter.getFacilityTypeId() != 0) {
+                WHERE("F.typeid = "+ filter.getFacilityTypeId());
             }
-            if (filter.getFacilityName() != "") {
-                WHERE("F.name like '%'|| #{filterCriteria.facilityName} || '%' ");
-            }
-            if (filter.getFacilityTypeId() != 0) {
-                WHERE("F.typeid = #{filterCriteria.facilityTypeId} ");
+            if(filter.getRgroupId() != 0){
+                WHERE("requisition_groups.id = "+ filter.getRgroupId());
             }
         }
+        Map sortCriteria = (Map) params.get("filterCriteria");
+        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, MailingLabelReport.class, "F.name asc"));
 
-
-        if (filter.getZoneId() != 0) {
-            WHERE("F.geographiczoneid = #{filterCriteria.zoneId}");
-        }
-
-        if(sorter != null){
+       /* if(sorter != null){
             if(sorter.getFacilityName().equalsIgnoreCase("asc")){
                 ORDER_BY("F.name asc");
             }
@@ -78,7 +71,7 @@ public class MailingLabelReportQueryBuilder {
             if(sorter.getFacilityType().equalsIgnoreCase("desc")){
                 ORDER_BY("F.typeid desc");
             }
-        }
+        }*/
 
 
         return SQL();

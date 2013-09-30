@@ -17,11 +17,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
  * User: user
  * Date: 4/10/13
  * Time: 6:33 AM
- * To change this template use File | Settings | File Templates.
  */
 @Repository
 public interface MailingLabelReportMapper {
@@ -48,7 +46,5 @@ public interface MailingLabelReportMapper {
             @Param("filterCriteria") ReportData filterCriteria,
             @Param("SortCriteria") ReportData SortCriteria,
             @Param("RowBounds") RowBounds rowBounds
-            //        @Param("page") int page,
-            //        @Param("pageSize") int pageSize
     );
 }
