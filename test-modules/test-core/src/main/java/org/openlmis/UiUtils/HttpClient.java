@@ -1,6 +1,5 @@
 package org.openlmis.UiUtils;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -55,6 +54,7 @@ public class HttpClient {
 
     httpContext.setAttribute(AUTH_CACHE, authCache);
 
+
     try {
       return handleRequest(commMethod, json, url);
     } catch (ClientProtocolException e) {
@@ -65,6 +65,28 @@ public class HttpClient {
     return null;
   }
 
+  public ResponseEntity SendJSONWithoutHeaders(String json, String url, String commMethod, String username, String password) {
+    HttpHost targetHost = new HttpHost(HOST, PORT, PROTOCOL);
+    AuthScope localhost = new AuthScope(HOST, PORT);
+
+    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
+    httpClient.getCredentialsProvider().setCredentials(localhost, credentials);
+
+    AuthCache authCache = new BasicAuthCache();
+    authCache.put(targetHost, new BasicScheme());
+
+    httpContext.setAttribute(AUTH_CACHE, authCache);
+    httpContext.clear();
+
+    try {
+      return handleRequest(commMethod, json, url);
+    } catch (ClientProtocolException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
 
   private ResponseEntity handleRequest(String commMethod, String json, String url) throws IOException {
     HttpResponse response;

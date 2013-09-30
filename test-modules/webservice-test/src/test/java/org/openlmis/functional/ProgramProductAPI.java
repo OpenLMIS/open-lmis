@@ -232,6 +232,17 @@ public class ProgramProductAPI extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
+  public void shouldVerifyProgramProductWithBlankUserAndPassword() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String programCode = "HIV";
+
+    ResponseEntity responseEntity = client.SendJSONWithoutHeaders("", URL + "?programCode=" + programCode, GET, "", "");
+
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+  }
+
+  @Test(groups = {"webservice"})
   public void shouldVerifyProgramProductWitInvalidUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
