@@ -133,6 +133,10 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisitionWithoutLineItems(facilityId, programId, periodId);
   }
 
+  public List<Rnr> getInitiatedEmergencyRequisition(Long facilityId, Long programId) {
+    return requisitionMapper.getInitiatedEmergencyRequisition(facilityId, programId);
+  }
+
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
@@ -150,10 +154,6 @@ public class RequisitionRepository {
 
   public Rnr getLastRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
     return requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
-  }
-
-  public List<Rnr> getApprovedRequisitions() {
-    return requisitionMapper.getApprovedRequisitions();
   }
 
   public List<Rnr> getPostSubmitRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
@@ -183,6 +183,14 @@ public class RequisitionRepository {
 
   public Rnr getLWById(Long rnrId) {
     return requisitionMapper.getLWById(rnrId);
+  }
+
+  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber, Integer pageSize) {
+    return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+  }
+
+  public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal) {
+    return requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
   }
 }
 

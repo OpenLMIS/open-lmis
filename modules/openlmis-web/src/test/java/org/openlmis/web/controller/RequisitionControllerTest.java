@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.controller;
@@ -23,6 +25,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -89,6 +92,9 @@ public class RequisitionControllerTest {
 
   private Rnr rnr;
 
+  @Mock
+  private StaticReferenceDataService staticReferenceDataService;
+
 
   @Before
   public void setUp() throws Exception {
@@ -105,9 +111,9 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldInitiateRnr() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, 3L, request);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, 3L, false, request);
 
-    verify(requisitionService).initiate(1L, 2L, 3L, USER_ID);
+    verify(requisitionService).initiate(1L, 2L, 3L, USER_ID, false);
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -150,8 +156,8 @@ public class RequisitionControllerTest {
   @Test
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(requisitionService).initiate(1L, 2L, null, USER_ID);
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, null, request);
+    doThrow(new DataException(errorMessage)).when(requisitionService).initiate(1L, 2L, null, USER_ID, false);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, null, false, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
@@ -192,7 +198,9 @@ public class RequisitionControllerTest {
   public void shouldReturnErrorMessageIfRnrNotValid() throws Exception {
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    doThrow(new DataException(new OpenLmisMessage("some error"))).when(requisitionService).submit(rnr);
+    OpenLmisMessage errorMessage = new OpenLmisMessage("some error");
+    when(messageService.message(errorMessage)).thenReturn("some error");
+    doThrow(new DataException(errorMessage)).when(requisitionService).submit(rnr);
 
     ResponseEntity<OpenLmisResponse> response = controller.submit(rnr.getId(), request);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
@@ -227,10 +235,10 @@ public class RequisitionControllerTest {
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
 
-    doThrow(new DataException(new OpenLmisMessage(errorMessage))).when(requisitionService).authorize(rnr);
+    doThrow(new DataException(errorMessage)).when(requisitionService).authorize(rnr);
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
 
-    assertThat(response.getBody().getErrorMsg(), is(errorMessage));
+    assertThat(response.getBody().getErrorMsg(), is("some error"));
   }
 
   @Test
@@ -310,21 +318,25 @@ public class RequisitionControllerTest {
       processingPeriod.getId(), withoutLineItems);
     when(requisitionService.get(criteria)).thenReturn(asList(rnr));
 
-    when(requisitionService.getAllPeriodsForInitiatingRequisition(1L, 2L)).thenReturn(periodList);
+    when(requisitionService.getAllPeriodsForInitiatingRequisition(criteria)).thenReturn(periodList);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1L, 2L);
+    ResponseEntity<OpenLmisResponse> response =
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
 
-    verify(requisitionService).getAllPeriodsForInitiatingRequisition(1L, 2L);
+    verify(requisitionService).getAllPeriodsForInitiatingRequisition(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
-    assertThat((Rnr) response.getBody().getData().get(RNR), is(rnr));
+    assertThat((List<Rnr>) response.getBody().getData().get(RNR_LIST), is(asList(rnr)));
   }
 
   @Test
   public void shouldReturnErrorResponseIfNoPeriodsFoundForInitiatingRequisition() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 2L);
     String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(requisitionService).getAllPeriodsForInitiatingRequisition(1L, 2L);
+    doThrow(new DataException(errorMessage)).when(requisitionService).
+      getAllPeriodsForInitiatingRequisition(criteria);
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(1L, 2L);
+    ResponseEntity<OpenLmisResponse> response =
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
@@ -333,13 +345,19 @@ public class RequisitionControllerTest {
   public void shouldReturnListOfApprovedRequisitionsForConvertingToOrder() {
     ArrayList<Rnr> expectedRequisitions = new ArrayList<>();
     mockStatic(RnrDTO.class);
-    when(requisitionService.getApprovedRequisitions()).thenReturn(expectedRequisitions);
+
+    String searchType = "all";
+    String searchVal = "test";
+    Integer pageNumber = 1;
+
+    when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder();
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber);
 
-    verify(requisitionService).getApprovedRequisitions();
+    verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber);
+
     assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }
 
@@ -421,7 +439,7 @@ public class RequisitionControllerTest {
     ResponseEntity<OpenLmisResponse> responseEntity = controller.getReferenceData();
 
     verify(requisitionService).getLossesAndAdjustmentsTypes();
-    assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get("lossAdjustmentTypes"), is(lossesAndAdjustmentsTypes));
+    assertThat((List<LossesAndAdjustmentsType>) responseEntity.getBody().getData().get(LOSS_ADJUSTMENT_TYPES), is(lossesAndAdjustmentsTypes));
   }
 
   @Test
@@ -432,7 +450,7 @@ public class RequisitionControllerTest {
 
     ModelAndView printModel = controller.printRequisition(1L);
 
-    assertThat((List<RequisitionStatusChange>) printModel.getModel().get("statusChanges"), is(statusChanges));
+    assertThat((List<RequisitionStatusChange>) printModel.getModel().get(STATUS_CHANGES), is(statusChanges));
   }
 
   private Rnr createRequisition() {

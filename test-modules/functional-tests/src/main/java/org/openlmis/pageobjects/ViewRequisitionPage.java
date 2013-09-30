@@ -16,6 +16,8 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.*;
 
 public class ViewRequisitionPage extends RequisitionPage {
@@ -40,6 +42,9 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col7 colt7']/span")
   private static WebElement status;
+
+  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  private static WebElement emergencyIcon;
 
   @FindBy(how = XPATH, using = "//select[@data-handler='selectYear']")
   private static WebElement yearChanger;
@@ -123,7 +128,12 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public void verifyStatus(String statusToBeVerified) throws IOException {
     testWebDriver.waitForElementToAppear(status);
-    SeleneseTestNgHelper.assertEquals(status.getText().trim(), statusToBeVerified.trim());
+    assertEquals(status.getText().trim(), statusToBeVerified.trim());
+  }
+
+  public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
 
   public void clickSearch() {
@@ -155,8 +165,8 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public HomePage verifyFieldsPreApproval(String cost, String newPatientValue) throws IOException {
     testWebDriver.waitForElementToAppear(totalCostPreApproval);
-    SeleneseTestNgHelper.assertEquals(totalCostPreApproval.getText().substring(1), cost);
-    SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
+    assertEquals(totalCostPreApproval.getText().substring(1), cost);
+    assertEquals(newPatient.getText().trim(), newPatientValue);
 
     return new HomePage(testWebDriver);
   }
@@ -164,8 +174,8 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   public HomePage verifyFieldsPostApproval(String cost, String newPatientValue) throws IOException {
     testWebDriver.waitForElementToAppear(totalCostPostApproval);
-    SeleneseTestNgHelper.assertEquals(totalCostPostApproval.getText().substring(1), cost);
-    SeleneseTestNgHelper.assertEquals(newPatient.getText().trim(), newPatientValue);
+    assertEquals(totalCostPostApproval.getText().substring(1), cost);
+    assertEquals(newPatient.getText().trim(), newPatientValue);
 
     return new HomePage(testWebDriver);
   }

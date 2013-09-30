@@ -78,7 +78,7 @@ public class RequisitionGroupMemberService {
         getProgramIDsForRequisitionGroup(requisitionGroupMember.getRequisitionGroup().getId());
 
     if (programIDsForRG.size() == 0)
-      throw new DataException("error.no.program.mapped.requisition.group");
+      throw new DataException("No Program(s) mapped for Requisition Group");
 
     return intersection(requisitionGroupProgramIdsForFacility, programIDsForRG);
   }

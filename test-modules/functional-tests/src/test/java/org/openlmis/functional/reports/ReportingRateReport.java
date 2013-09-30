@@ -4,19 +4,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.functional.reports.ReportTestHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.NonReportingFacilityReportPage;
+import org.openlmis.pageobjects.SummaryReportPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +25,7 @@ import java.util.Map;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class NonReportingFacilitiesReport extends ReportTestHelper {
+public class ReportingRateReport extends ReportTestHelper {
 
     public static final String STORE_IN_CHARGE = "store in-charge";
     public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
@@ -40,73 +38,58 @@ public class NonReportingFacilitiesReport extends ReportTestHelper {
     public static final String TABLE_CELL_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div[2]/div/div[{row}]/div[{column}]/div/span";
     public static final String TABLE_SORT_BUTTON_XPATH_TEMPLATE = "//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div";
 
-    private static final Integer FACILITY_CODE = 1;
-    private static final Integer FACILITY_NAME = 2;
-    private static final Integer FACILITY_TYPE = 3;
-    private static final Integer LOCATION = 4;
 
-    private HomePage homePage;
-    private LoginPage loginPage;
-    private NonReportingFacilityReportPage nonReportingFacilityReportPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
+    private SummaryReportPage summaryReportPage;
+
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
 
-
-    private void navigateViewNonReportingFacilityReport(String userName, String passWord) throws IOException {
+    private void navigateToSummaryReportPage(String userName, String passWord) throws IOException {
         login(userName, passWord);
-        nonReportingFacilityReportPage = homePage.navigateViewNonReportingFacilityReport();
+        summaryReportPage = homePage.navigateViewSummaryReport();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
-        navigateViewNonReportingFacilityReport(credentials[0], credentials[1]);
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
 
         System.out.println();
         // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityCodeIsDisplayed());
         // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityNameIsDisplayed());
         // SeleneseTestNgHelper.assertTrue(summaryReportPage.facilityTypeIsDisplayed());
 
-        navigateViewNonReportingFacilityReport(credentials[0], credentials[1]);
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
         enterFilterValues();
 
     }
 
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
-        navigateViewNonReportingFacilityReport(credentials[0], credentials[1]);
-        verifyPdfReportOutput("pdf-button");
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        summaryReportPage.verifyPdfReportOutput();
     }
 
 
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
-        navigateViewNonReportingFacilityReport(credentials[0], credentials[1]);
-        verifyXlsReportOutput("xls-button");
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
+        summaryReportPage.verifyXlsReportOutput();
     }
 
     ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
-        navigateViewNonReportingFacilityReport(credentials[0], credentials[1]);
-        Map<String, String> templates =     new HashMap<String, String>(){{
-            put(SORT_BUTTON_ASC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
-            put(SORT_BUTTON_DESC_TEMPLATE,"//div[@id='wrap']/div/div/div/div/div[3]/div/div[2]/div/div[{column}]/div/div");
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
 
-            put(TABLE_CELL_TEMPLATE,"test");
-        }};
-
-        verifySort("ASC", FACILITY_CODE,templates);
-        verifySort("ASC", FACILITY_NAME ,templates);
-        verifySort("ASC", FACILITY_TYPE ,templates);
-        verifySort("ASC", LOCATION,templates);
     }
-
 
     //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
-        navigateViewNonReportingFacilityReport(credentials[0], credentials[1]);
+        navigateToSummaryReportPage(credentials[0], credentials[1]);
 
 
         Map<String, String> templates =     new HashMap<String, String>(){{
@@ -120,12 +103,20 @@ public class NonReportingFacilitiesReport extends ReportTestHelper {
     }
 
     public void enterFilterValues(){
-
+        summaryReportPage.selectZoneByVisibleText("Arusha");
+        summaryReportPage.enterName("Uhuru");
+        summaryReportPage.selectFacilityTypeByVisibleText("Dispensary");
+        summaryReportPage.selectProductByVisibleText("3TC/AZT/NVP (30mg/60mg/50mg) Tabs");
+        summaryReportPage.selectRequisitionGroupByVisibleText("Korogwe Requestion group");
+        summaryReportPage.selectProgramByVisibleText("ARV");
+        //summaryReportPage.selectPeriodByVisibleText("");
+        summaryReportPage.selectScheduleByVisibleText("Group A");
+        summaryReportPage.selectPeriodByVisibleText("Oct-Dec");
 
     }
 
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
@@ -136,7 +127,7 @@ public class NonReportingFacilitiesReport extends ReportTestHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 

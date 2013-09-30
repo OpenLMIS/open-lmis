@@ -39,7 +39,7 @@ public class ShipmentFileTemplateController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody ShipmentFileTemplate shipmentFileTemplate,
                                                  HttpServletRequest request) {
-    shipmentFileTemplate.setModifiedBy(loggedInUserId(request));
+    shipmentFileTemplate.validateAndSetModifiedBy(loggedInUserId(request));
     service.update(shipmentFileTemplate);
 
     return success("shipment.file.configuration.success");

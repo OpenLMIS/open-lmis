@@ -17,13 +17,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static java.lang.System.getProperty;
 
 public class TestCaseHelper {
 
   public static DBWrapper dbWrapper;
-  protected String baseUrlGlobal, dburlGlobal;
-  protected String DOWNLOAD_FILE_PATH;
+  protected static String baseUrlGlobal, dburlGlobal;
+  protected static String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
@@ -31,7 +32,6 @@ public class TestCaseHelper {
   //public static final String DEFAULT_BASE_URL = "http://uat.zm.elmis-dev.org";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
-
 
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
@@ -150,7 +150,7 @@ public class TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, user, passwordUsers, "F10", "", vendorName);
     dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
-    dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge", "N2");
+    dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge", "N1");
   }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
@@ -381,14 +381,18 @@ public class TestCaseHelper {
         testWebDriver.sleep(2000);
     }
 
-    public void waitForAppCacheDownload(){
-        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("applicationCache.oncached = function (e) {window.loaded = true;};");
+    public void waitForAppCacheComplete(){
         int count=0;
-        while((Boolean)(((JavascriptExecutor) testWebDriver.getDriver()) .executeScript("window.loaded;"))){
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+        while((((JavascriptExecutor) testWebDriver.getDriver()).executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")){
             testWebDriver.sleep(2000);
-            count=count++;
-            if (count<10)
+            ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+            count++;
+            if (count>10){
+                fail("Appcache not working in 20 sec.");
                 break;
+            }
         }
     }
 }

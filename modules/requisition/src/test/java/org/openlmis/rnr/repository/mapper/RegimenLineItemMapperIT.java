@@ -77,7 +77,7 @@ public class RegimenLineItemMapperIT {
 
     processingPeriodMapper.insert(processingPeriod);
 
-    rnr = new Rnr(facility.getId(), 2L, processingPeriod.getId(), 1L, 1L);
+    rnr = new Rnr(facility.getId(), 2L, processingPeriod.getId(), false, 1L, 1L);
     rnr.setStatus(RnrStatus.INITIATED);
     requisitionMapper.insert(rnr);
     RegimenCategory category = new RegimenCategory("categoryCode", "categoryName", 1);

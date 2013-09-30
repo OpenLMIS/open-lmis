@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -45,6 +46,11 @@ public class LookupController {
     return RestResponse.response("products", lookupService.getFullProductList());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/product-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getProductByCode( Principal principal ,@RequestBody String code) {
+        return RestResponse.response("product", lookupService.getProgramByCode(code));
+    }
+
 
     @RequestMapping(value = "/rest-api/lookup/dosage-units", method = RequestMethod.POST, headers = ACCEPT_JSON)
      public ResponseEntity getDosageUnits( Principal principal) {
@@ -61,9 +67,19 @@ public class LookupController {
         return RestResponse.response("facilities", lookupService.getAllFacilities());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/facility-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getFacilityByCode( Principal principal,@RequestBody String code) {
+        return RestResponse.response("facility", lookupService.getFacilityByCode(code));
+    }
+
     @RequestMapping(value = "/rest-api/lookup/programs", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity getPrograms( Principal principal) {
         return RestResponse.response("programs", lookupService.getAllPrograms());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/program-by-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity getProgramByCode( Principal principal ,@RequestBody String code) {
+        return RestResponse.response("program", lookupService.getProgramByCode(code));
     }
 
     @RequestMapping(value = "/rest-api/lookup/losses-adjustments-types", method = RequestMethod.POST, headers = ACCEPT_JSON)

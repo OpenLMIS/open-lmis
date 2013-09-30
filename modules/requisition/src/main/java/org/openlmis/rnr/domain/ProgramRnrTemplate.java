@@ -58,6 +58,10 @@ public class ProgramRnrTemplate extends Template {
   @Setter
   private Long modifiedBy;
 
+  @Getter
+  @Setter
+  private Boolean ApplyDefaultZero = false;
+
   public ProgramRnrTemplate(Long programId, List<? extends Column> rnrColumns) {
     this.programId = programId;
     this.columns = rnrColumns;

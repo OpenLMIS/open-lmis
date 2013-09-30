@@ -11,11 +11,15 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
 
   $scope.edit = {};
 
-  $scope.setEdit = function (serialNum) {
+  $scope.setEdit = function (serialNum, index) {
     angular.forEach($scope.edit, function (value, key) {
       $scope.edit[key] = false;
     });
     $scope.edit[serialNum] = true;
+    if (!isUndefined(index)) {
+      var refrigeratorEditButton = angular.element('#editReading'+index).offset().top;
+      angular.element('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow');
+    }
   };
 
   $scope.showRefrigeratorModal = function () {
@@ -62,6 +66,16 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog, messageService);
   };
 
+
+}
+
+function showProblemDivAnimation(idSent){
+  $('body,html').animate({
+     scrollTop : parseInt($('#'+idSent).offset().top)+'px'
+  },'fast');
+}
+function showProblemsDiv(idSent){
+  setTimeout(showProblemDivAnimation(idSent),100)
 }
 
 

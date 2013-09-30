@@ -6,12 +6,8 @@ function ListSettingController($scope, $routeParams, $location, $dialog, Setting
 
     $scope.saveSettings = function(){
         SettingUpdator.post({}, $scope.settings, function (data){
-            var dialogOpts = {
-                id: "settingsSavedConfirmation",
-                header: messageService.get('confirm.settings.saved'),
-                body: messageService.get('confirm.settings.saved.detail')
-            };
-            OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog, messageService);
+            $location.path('');
+            $scope.$parent.message = "The configuration changes were successfully updated.";
         });
     }
 }

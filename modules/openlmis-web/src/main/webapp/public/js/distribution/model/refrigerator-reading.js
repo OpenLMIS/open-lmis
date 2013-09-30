@@ -2,16 +2,6 @@ function RefrigeratorReading(refrigeratorReading) {
 
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
-  init.call(this);
-
-  function init() {
-    var _this = this;
-    $.extend(true, this, refrigeratorReading);
-    $(fieldList).each(function (i, fieldName) {
-      _this[fieldName] = _this[fieldName] || {};
-    });
-  }
-
   RefrigeratorReading.prototype.computeStatus = function () {
     var complete = 'is-complete';
     var incomplete = 'is-incomplete';
@@ -61,6 +51,17 @@ function RefrigeratorReading(refrigeratorReading) {
     _this.status = statusClass;
 
     return statusClass;
+  };
+
+  init.call(this);
+
+  function init() {
+    var _this = this;
+    $.extend(true, this, refrigeratorReading);
+    $(fieldList).each(function (i, fieldName) {
+      _this[fieldName] = _this[fieldName] || {};
+    });
+    this.computeStatus();
   }
 
 }

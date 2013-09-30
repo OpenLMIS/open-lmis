@@ -22,6 +22,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
 
     GeographicZoneCompleteList.get(function (data) {
         $scope.geographicZones = data.geographicZones;
+        $scope.geographicZones.push("");
     });
 
     $scope.saveGeographicZone = function () {
@@ -44,6 +45,10 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
             $scope.showError = true;
             $scope.error = response.data.error;
         };
+
+        if($scope.geographicZone.parent.id == null){
+            $scope.geographicZone.parent = null;
+        }
 
         SetGeographicZone.save($scope.geographicZone,successHandler,errorHandler);
 

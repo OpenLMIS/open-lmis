@@ -1,10 +1,10 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
@@ -43,12 +43,12 @@ public class ReportTestHelper extends TestCaseHelper {
     public static final String PAGINATION_BUTTON_FIRST_TEMPLATE = "paginationButtonFirstTemplate";
     public static final String PAGINATION_BUTTON_LAST_TEMPLATE = "paginationButtonLastTemplate";
 
-    protected LoginPage loginPage;
-    protected HomePage homePage;
+    protected ReportLoginPage loginPage;
+    protected ReportHomePage homePage;
 
 
     protected void login(String userName, String passWord) throws IOException {
-        loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
         homePage = loginPage.loginAs(userName, passWord);
     }
 

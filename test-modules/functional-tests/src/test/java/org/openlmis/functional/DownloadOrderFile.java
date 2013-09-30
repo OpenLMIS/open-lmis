@@ -178,7 +178,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     homePage.clickProceed();
     testWebDriver.sleep(2000);
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
     dbWrapper.updateRequisitionStatus("SUBMITTED");
     dbWrapper.updateRequisitionStatus("AUTHORIZED");

@@ -1,10 +1,10 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
  */
 
-package org.openlmis.functional;
+package org.openlmis.functional.reports;
 
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
@@ -15,10 +15,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,11 +47,11 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     private static final Integer MOS = 6;
     private static final Integer ORDER_QUANITY = 7;
 
-    private HomePage homePage;
-    private LoginPage loginPage;
+    private ReportHomePage homePage;
+    private ReportLoginPage loginPage;
     private StockImbalanceByFacilityPage stockImbalanceByFacilityPage;
 
-    @BeforeMethod(groups = {"functional3"})
+    @BeforeMethod(groups = {"report"})
     public void setUp() throws Exception {
         super.setup();
     }
@@ -65,7 +62,7 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
         stockImbalanceByFacilityPage = homePage.navigateViewStockImbalanceByFacilityPage();
     }
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyReportFiltersRendered(String[] credentials) throws Exception {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
 
@@ -79,20 +76,20 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
 
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPDFOUtput(String[] credentials) throws Exception {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
         verifyPdfReportOutput("pdf-button");
     }
 
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyXLSOUtput(String[] credentials) throws Exception {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
         verifyXlsReportOutput("xls-button");
     }
 
-    ////@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifySorting(String[] credentials) throws IOException {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
 
@@ -114,7 +111,7 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     }
 
 
-    //@Test(groups = {"functional3"}, dataProvider = "Data-Provider-Function-Positive")
+    @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive")
     public void verifyPagination(String[] credentials) throws Exception {
         navigateToStockImbalanceByFacilityPage(credentials[0], credentials[1]);
 
@@ -143,7 +140,7 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     }
 
 
-    @AfterMethod(groups = {"functional"})
+    @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
         HomePage homePage = new HomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
@@ -154,7 +151,7 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     @DataProvider(name = "Data-Provider-Function-Positive")
     public Object[][] parameterIntTestProviderPositive() {
         return new Object[][]{
-                {new String[]{"msolomon", "Admin123", "storeincharge", "Admin123"}}
+                {new String[]{"Admin123", "Admin123", "storeincharge", "Admin123"}}
         };
     }
 

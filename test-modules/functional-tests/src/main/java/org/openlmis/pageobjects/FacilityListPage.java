@@ -7,6 +7,7 @@
 package org.openlmis.pageobjects;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -27,10 +28,10 @@ public class FacilityListPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//h2[contains(text(),'No facility selected')]")
   private static WebElement noFacilitySelectedHeader;
 
-  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/h2[1]")
+  @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div/h2[1]")
   private static WebElement facilityPageHeader;
 
-  @FindBy(how = XPATH, using = "//a[@class='select2-choice']/span")
+  @FindBy(how = XPATH, using = "//*[@id='s2id_selectFacility']/a")
   private static WebElement facilityListSelect;
 
   @FindBy(how = ID, using = "selectFacility")
@@ -41,6 +42,12 @@ public class FacilityListPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li/ul/li/div/div")
   private static WebElement facilityListSelectField;
+
+  @FindBy(how = ID, using = "facilityIndicator")
+  private static WebElement facilityOverAllIndicator;
+
+  @FindBy(how = XPATH, using = "//div[@class='select2-result-label']/div/span[@class='status-icon']")
+  private static WebElement firstFacilityIndicator;
 
 
 
@@ -71,10 +78,9 @@ public class FacilityListPage extends RequisitionPage {
 
   public void verifyGeographicZoneOrder(String geoZoneFirst, String geoZoneSecond)
   {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']"));
-    assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[2][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
-    assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//ul[@class='select2-results']/li[3][@class='select2-results-dept-0 select2-result select2-result-unselectable select2-result-with-children']/div[@class='select2-result-label']").getText());
+    testWebDriver.sleep(1500);
+    assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").getText());
+    assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[2]/div").getText());
   }
 
   public void selectFacility(String facilityCode)
@@ -85,6 +91,7 @@ public class FacilityListPage extends RequisitionPage {
     facilityListTextField.sendKeys(facilityCode);
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
+    testWebDriver.sleep(250);
   }
 
   public void clickFacilityListDropDown() {
@@ -101,7 +108,26 @@ public class FacilityListPage extends RequisitionPage {
     assertTrue("Facility name incorrect in header.",facilityPageHeader.getText().contains(facilityName));
   }
 
+  public void verifyFacilityIndicatorColor(String whichIcon, String color) {
+    testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
+    if(color.toLowerCase().equals("RED".toLowerCase()))
+      color="rgba(203, 64, 64, 1)";
+    else if(color.toLowerCase().equals("GREEN".toLowerCase()))
+      color="rgba(82, 168, 30, 1)";
+    else if(color.toLowerCase().equals("AMBER".toLowerCase()))
+      color="rgba(240, 165, 19, 1)";
 
+    if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+      SeleneseTestBase.assertEquals(color, facilityOverAllIndicator.getCssValue("background-color"));
+    else if(whichIcon.toLowerCase().equals("Individual".toLowerCase())){
+      clickFacilityListDropDown();
+      testWebDriver.waitForElementToAppear(facilityListTextField);
+      testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
+      SeleneseTestBase.assertEquals(color, firstFacilityIndicator.getCssValue("background-color"));
+      clickFacilityListDropDown();
+    }
+
+  }
 
 
 }

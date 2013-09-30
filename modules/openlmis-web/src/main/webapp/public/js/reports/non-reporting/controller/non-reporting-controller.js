@@ -184,7 +184,7 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
                 { field: 'location', displayName: 'Location', width: "*" }
             ],
         enablePaging: true,
-        enableSorting :true,
+        enableSorting :false,
         showFooter: true,
         selectWithCheckboxOnly :false,
         pagingOptions: $scope.pagingOptions,

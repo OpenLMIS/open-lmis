@@ -553,7 +553,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                // if(value != undefined)
                    // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
             });
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+           // $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
 
         }, true);
 
@@ -563,7 +563,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             [
 
                 { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-                { field: 'facilityName', displayName: 'Facility', width : "*"},
+                { field: 'facilityName', displayName: 'Facility', width : "**"},
                 { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "*" },
                 { field: 'productDescription', displayName: 'Product Description', width: "**" },
                 { field: 'adjustmentType', displayName: 'Adjustment Type', width : "*"},
@@ -571,7 +571,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
             ],
         enablePaging: true,
-        enableSorting :true,
+        enableSorting :false,
         showFooter: true,
         selectWithCheckboxOnly :false,
         pagingOptions: $scope.pagingOptions,

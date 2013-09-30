@@ -75,7 +75,8 @@ public class FacilityController extends BaseController {
   }
 
   @RequestMapping(value = "/facilities/{id}", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  //@PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_FACILITY')")
+  //this method is also being used by the reports
   public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
     return response("facility", facilityService.getById(id));
   }
@@ -191,12 +192,17 @@ public class FacilityController extends BaseController {
   }
 
     @RequestMapping(value = "/facilities/facilityType/{facilityTypeId}", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
     public ResponseEntity<OpenLmisResponse> getFacilityListForAFacilityType(@PathVariable("facilityTypeId") Long facilityTypeId) {
 
       return OpenLmisResponse.response("facilities",facilityService.getFacilitiesListForAFacilityType(facilityTypeId));
 
     }
 
+    @RequestMapping(value = "/facility/supplyingFacilities", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+    public ResponseEntity<OpenLmisResponse> getSupplyingFacilitiesCompleteList() {
+        return OpenLmisResponse.response("facilities",facilityService.getSupplyingFacilitiesCompleteList());
+    }
 
 }

@@ -26,5 +26,27 @@
     .run(function ($rootScope, AuthorizationService) {
       $rootScope.requisitionGroupSelected = "selected";
       AuthorizationService.preAuthorize('MANAGE_REQUISITION_GROUP');
-    });
+    })
+      .service('sharedSpace',function(){
+          var programCount;
+          var reloadTheList = false;
+
+          return {
+              getCountOfPrograms: function() {
+                  return programCount;
+              },
+
+              setCountOfPrograms: function(value){
+                  programCount = value;
+              },
+
+              getShouldReloadTheList: function() {
+                  return reloadTheList;
+              },
+
+              setShouldReloadTheList: function(value){
+                  reloadTheList = value;
+              }
+          }
+      });
 

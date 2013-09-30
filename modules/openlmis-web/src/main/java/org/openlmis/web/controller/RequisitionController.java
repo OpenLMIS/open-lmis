@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.controller;
@@ -10,8 +12,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RegimenColumnService;
 import org.openlmis.rnr.service.RequisitionService;
@@ -34,10 +38,14 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
+import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
+import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -55,6 +63,7 @@ public class RequisitionController extends BaseController {
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
   public static final String STATUS_CHANGES = "statusChanges";
+  private String IS_EMERGENCY = "is_emergency";
 
   @Autowired
   private RequisitionService requisitionService;
@@ -62,11 +71,13 @@ public class RequisitionController extends BaseController {
   private RnrTemplateService rnrTemplateService;
   @Autowired
   private RequisitionStatusChangeService requisitionStatusChangeService;
+
   @Autowired
   private RegimenColumnService regimenColumnService;
+  @Autowired
+  private StaticReferenceDataService staticReferenceDataService;
 
   public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
-
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
 
@@ -74,9 +85,10 @@ public class RequisitionController extends BaseController {
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
                                                       @RequestParam("programId") Long programId,
                                                       @RequestParam("periodId") Long periodId,
+                                                      @RequestParam("emergency") Boolean emergency,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request)));
+      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request), emergency));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -174,34 +186,50 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
-  public ResponseEntity<OpenLmisResponse> listForConvertToOrder() {
-    List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitions();
-    return response(RNR_LIST, prepareForListApproval(approvedRequisitions));
+  public ResponseEntity<OpenLmisResponse> listForConvertToOrder(@RequestParam(value = "searchType", required = false, defaultValue = SEARCH_ALL) String searchType,
+                                                                @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
+                                                                @RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
+    try {
+      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page);
+      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+      List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
+      OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
+      response.addData(NUMBER_OF_PAGES, numberOfPages);
+      return new ResponseEntity<>(response, HttpStatus.OK);
+    } catch (Exception e) {
+      return error(new DataException(e.getMessage()), BAD_REQUEST);
+    }
   }
 
-  @RequestMapping(value = "/logistics/facility/{facilityId}/program/{programId}/periods", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-    @PathVariable("facilityId") Long facilityId,
-    @PathVariable("programId") Long programId) {
+  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
     try {
-      List<ProcessingPeriod> periodList = requisitionService.getAllPeriodsForInitiatingRequisition(facilityId, programId);
-      Rnr currentRequisition = getRequisitionForCurrentPeriod(facilityId, programId, periodList);
+      List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
+      List<Rnr> requisitions = isEmpty(periodList) && (!criteria.isEmergency()) ? null : getRequisitionsFor(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
-      response.addData(RNR, currentRequisition);
-      return new ResponseEntity<>(response, HttpStatus.OK);
+      response.addData(RNR_LIST, requisitions);
+      response.addData(IS_EMERGENCY, criteria.isEmergency());
+      return new ResponseEntity<>(response, OK);
     } catch (DataException e) {
       return error(e, CONFLICT);
     }
   }
 
-  private Rnr getRequisitionForCurrentPeriod(Long facilityId, Long programId, List<ProcessingPeriod> periodList) {
-    if (periodList == null || periodList.isEmpty()) return null;
-    boolean withoutLineItems = true;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId,
-      periodList.get(0).getId(), withoutLineItems);
+  private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
+    ProcessingPeriod currentPeriod;
+    return criteria.isEmergency() ?
+      (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ?
+        asList(currentPeriod) : null :
+      requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
+  }
+
+  private List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+    criteria.setWithoutLineItems(true);
+    if (!criteria.isEmergency())
+      criteria.setPeriodId(periodList.get(0).getId());
     List<Rnr> rnrList = requisitionService.get(criteria);
-    return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
+    return rnrList;
   }
 
   @RequestMapping(value = "/requisitions/{id}", method = GET)

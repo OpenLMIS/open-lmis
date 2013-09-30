@@ -41,6 +41,10 @@ public class RequisitionGroupRepository {
     return mapper.getRequisitionGroupBySupervisoryNodes(commaSeparator.commaSeparateIds(supervisoryNodes));
   }
 
+  public List<RequisitionGroup> getRequisitionGroupsBySupervisoryNodeId(Long supervisoryNodeId) {
+      return mapper.getRequisitionGroupBySupervisoryNodeId(supervisoryNodeId);
+  }
+
 
   public RequisitionGroup getRequisitionGroupForProgramAndFacility(Program program, Facility facility) {
     return mapper.getRequisitionGroupForProgramAndFacility(program, facility);

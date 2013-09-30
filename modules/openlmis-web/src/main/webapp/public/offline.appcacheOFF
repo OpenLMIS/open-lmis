@@ -47,6 +47,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/epi-use.html
 /public/pages/logistics/distribution/partials/refrigerator-reading.html
 /public/pages/logistics/distribution/partials/refrigerator.html
+/public/pages/logistics/distribution/partials/general-observation.html
 
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
@@ -56,6 +57,9 @@ CACHE:
 /public/js/distribution/model/epi-use.js
 /public/js/distribution/model/refrigerator-reading.js
 /public/js/distribution/model/general-observation.js
+/public/js/distribution/model/facility-distribution-data.js
+
+
 /public/js/distribution/service/shared-distributions.js
 /public/js/distribution/service/distribution-service.js
 
@@ -82,7 +86,7 @@ CACHE:
 /public/js/program-product/model/program-product-ISA.js
 
 /public/lib/jquery/jquery-ui-1.9.2.custom.min.js
-/public/lib/angular-ui/bootstrap/ui-bootstrap-0.6.0.min.js
+/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js
 /public/lib/underscore/underscore-min.js
 /public/js/shared/util.js
 

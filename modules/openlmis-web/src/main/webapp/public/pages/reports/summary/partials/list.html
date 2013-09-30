@@ -64,7 +64,7 @@
                                 </div>
 
                                 <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Zone</label>
+                                    <label class="labels">Geographic Zone</label>
 
                                     <div class="form-field">
                                         <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone" ng-change="filterGrid()" >
@@ -93,7 +93,7 @@
                                 </div>
                                 <!-- Facility-->
                                 <div class="form-cell horizontalFilters">
-                                    <label class="labels">Facility Name<span  class="label-required"> *</span></label>
+                                    <label class="labels">Facility Name</label>
                                     <div class="form-field">
                                         <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" >
                                             <option  ng-repeat="option in facilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
@@ -120,7 +120,7 @@
                     <td data-title="'Code'" sortable="code" filter="{ 'code': 'text' }">{{ row.code }}</td>
                     <td data-title="'Product'" sortable="product" filter="{ 'product': 'text' }">{{ row.product }}</td>
                     <td class="number" sortable="openingBalance" data-title="'Opening Balance'" filter="{ 'action': 'button' }">{{ row.openingBalance | number}}</td>
-                    <td class="number" sortable="receipts" data-title="'Recipts'">{{ row.receipts | number}}</td>
+                    <td class="number" sortable="receipts" data-title="'Receipt'">{{ row.receipts | number}}</td>
                     <td class="number" sortable="issues" data-title="'Issues'">{{ row.issues | number}}</td>
                     <td class="number" sortable="adjustements" data-title="'Adjustments'">{{ row.adjustments | number}}</td>
                     <td class="number" sortable="closingBalance" data-title="'Closing Balance'">{{ row.closingBalance | number}}</td>

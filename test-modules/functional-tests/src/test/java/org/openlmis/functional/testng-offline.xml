@@ -12,7 +12,7 @@
       </run>
     </groups>
     <classes preserver-order="true">
-      <class name="org.openlmis.functional.RecordEPIUse">
+      <class name="org.openlmis.functional.E2EDistributionTest">
       </class>
     </classes>
   </test>
