@@ -43,6 +43,13 @@
             <br/>
             <a class="rnr-column-formula" href="" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
           </span>
+
+          <span class="tpl-source" ng-show="rnrColumn.formula && rnrColumn.options.formulas != undefined">
+               {{ rnrColumn.calculationOption }}
+              <select ng-model="rnrColumn.calculationOption">
+                  <option ng-repeat="option in rnrColumn.options.formulas" value="{{ option.id }}">{{option.name}}</option>
+            </select>
+          </span>
           <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
             <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
           </span>
