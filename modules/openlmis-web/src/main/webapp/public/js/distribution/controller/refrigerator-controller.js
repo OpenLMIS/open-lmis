@@ -18,7 +18,9 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     $scope.edit[serialNum] = true;
     if (!isUndefined(index)) {
       var refrigeratorEditButton = angular.element('#editReading'+index).offset().top;
-      angular.element('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow');
+      angular.element('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow',function(){
+        $('input[name^="temperature"]:visible').focus();
+      });
     }
   };
 
