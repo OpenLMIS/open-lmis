@@ -16,3 +16,6 @@ INSERT INTO roles
   INSERT INTO role_rights
   (roleId, rightName)
   select (select id from roles where name = 'Admin'), name from rights where righttype = 'ADMIN' and name not in (select rightname from role_rights where roleid = (select id from roles where name = 'Admin') );
+
+  DELETE from role_rights
+  where roleId = 1 and rightName = 'UPLOAD_REPORT';
