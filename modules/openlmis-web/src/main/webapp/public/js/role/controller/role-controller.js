@@ -8,7 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog, messageService) {
+function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
+                        messageService) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights: []};
@@ -30,6 +31,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     $scope.adminRights = _.where($scope.rights, {"type": "ADMIN"});
     $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
     $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
+    $scope.shipmentRights = _.where($scope.rights, {"type": "SHIPMENT"});
   }, {});
 
 
@@ -63,8 +65,8 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   $scope.areRelatedFieldsSelected = function (right) {
     if (right.right == 'VIEW_REQUISITION') {
       return ($scope.contains('CREATE_REQUISITION') ||
-              $scope.contains('AUTHORIZE_REQUISITION') ||
-              $scope.contains('APPROVE_REQUISITION'));
+        $scope.contains('AUTHORIZE_REQUISITION') ||
+        $scope.contains('APPROVE_REQUISITION'));
     }
 
     if (right.right == 'VIEW_REPORT') {
@@ -118,7 +120,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   };
 
   $scope.showRoleTypeModal = function (selectedRoleType) {
-    if(selectedRoleType == $scope.previousType) {
+    if (selectedRoleType == $scope.previousType) {
       return;
     } else {
       $scope.role.type = selectedRoleType;

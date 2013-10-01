@@ -44,7 +44,8 @@ public enum Right {
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
-  MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4);
+  MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
+  FACILITY_FILL_SHIPMENT("right.facility.fill.shipment", SHIPMENT, "Permission to fill shipment data for facility", 19);
 
   @Getter
   private final String rightName;
