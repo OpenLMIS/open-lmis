@@ -26,12 +26,11 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 @EqualsAndHashCode(callSuper = false)
 public class Role extends BaseModel {
   private String name;
-  private RoleType type;
   private String description;
   private Set<Right> rights;
 
-  public Role(String name, RoleType type, String description) {
-    this(name, type, description, null);
+  public Role(String name, String description) {
+    this(name, description, null);
   }
 
   public void validate() {

@@ -9,14 +9,13 @@
 --
 
 CREATE TABLE roles (
-  id SERIAL PRIMARY KEY,
-  type VARCHAR(50) NOT NULL,
-  name VARCHAR(50) NOT NULL UNIQUE,
-  description VARCHAR(250),
-  createdBy INTEGER,
-  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy INTEGER,
+  id           SERIAL PRIMARY KEY,
+  name         VARCHAR(50) NOT NULL UNIQUE,
+  description  VARCHAR(250),
+  createdBy    INTEGER,
+  createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy   INTEGER,
   modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE UNIQUE INDEX uc_roles_lower_name ON roles(LOWER(name));
+CREATE UNIQUE INDEX uc_roles_lower_name ON roles (LOWER(name));

@@ -39,7 +39,6 @@ import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.domain.RoleType.*;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -79,10 +78,10 @@ public class RoleAssignmentMapperIT {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", REQUISITION, "random description");
+    Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
@@ -119,10 +118,10 @@ public class RoleAssignmentMapperIT {
   public void shouldNotGetTheSameRoleAssignmentForMultipleRolesWithSameRights() {
     Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
 
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", REQUISITION, "random description");
+    Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
@@ -148,10 +147,10 @@ public class RoleAssignmentMapperIT {
     final Program program1 = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program program2 = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
 
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", REQUISITION, "random description");
+    Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);
@@ -177,10 +176,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetSupervisorRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", REQUISITION, "random description");
+    Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -201,10 +200,10 @@ public class RoleAssignmentMapperIT {
 
   @Test
   public void shouldGetHomeFacilityRolesForAUser() throws Exception {
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
-    Role r2 = new Role("r2", REQUISITION, "random description");
+    Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
 
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
@@ -228,9 +227,9 @@ public class RoleAssignmentMapperIT {
   @Test
   public void shouldGetHomeFacilityRolesForAUserOnAGivenProgramWithRights() throws Exception {
     Long programId = 1L;
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
-    Role r2 = new Role("r2", REQUISITION, "random description");
+    Role r2 = new Role("r2", "random description");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2, Right.CREATE_REQUISITION);
 
@@ -264,10 +263,12 @@ public class RoleAssignmentMapperIT {
   public void shouldGetAdminRolesForUser() throws Exception {
     Long userId = user.getId();
 
-    final Role adminRole = new Role("r1", ADMIN, "admin role");
+    final Role adminRole = new Role("r1", "admin role");
     roleRightsMapper.insertRole(adminRole);
-    Role nonAdminRole = new Role("r2", REQUISITION, "non admin role");
+    roleRightsMapper.createRoleRight(adminRole, MANAGE_FACILITY);
+    Role nonAdminRole = new Role("r2", "non admin role");
     roleRightsMapper.insertRole(nonAdminRole);
+    roleRightsMapper.createRoleRight(adminRole, CREATE_REQUISITION);
 
     mapper.insertRoleAssignment(userId, null, null, adminRole.getId());
     mapper.insertRoleAssignment(userId, 2L, null, nonAdminRole.getId());
@@ -296,10 +297,12 @@ public class RoleAssignmentMapperIT {
     DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
     deliverZoneMapper.insert(deliveryZone);
 
-    Role adminRole = new Role("r1", ADMIN, "admin role");
+    Role adminRole = new Role("r1", "admin role");
     roleRightsMapper.insertRole(adminRole);
-    Role nonAdminRole = new Role("r2", REQUISITION, "non admin role");
+    roleRightsMapper.createRoleRight(adminRole, MANAGE_FACILITY);
+    Role nonAdminRole = new Role("r2", "non admin role");
     roleRightsMapper.insertRole(nonAdminRole);
+    roleRightsMapper.createRoleRight(nonAdminRole, CREATE_REQUISITION);
 
     mapper.insert(user.getId(), programId, supervisoryNode, null, nonAdminRole.getId());
     mapper.insert(user.getId(), null, null, null, adminRole.getId());
@@ -315,10 +318,12 @@ public class RoleAssignmentMapperIT {
   public void shouldGetAllocationRolesForUser() throws Exception {
     Long userId = user.getId();
 
-    final Role allocationRole = new Role("r1", ALLOCATION, "allocation role");
+    final Role allocationRole = new Role("r1", "allocation role");
     roleRightsMapper.insertRole(allocationRole);
-    Role adminRole = new Role("r2", ADMIN, "non admin role");
+    roleRightsMapper.createRoleRight(allocationRole, MANAGE_DISTRIBUTION);
+    Role adminRole = new Role("r2", "non admin role");
     roleRightsMapper.insertRole(adminRole);
+    roleRightsMapper.createRoleRight(allocationRole, CREATE_REQUISITION);
     DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
     deliverZoneMapper.insert(deliveryZone);
 

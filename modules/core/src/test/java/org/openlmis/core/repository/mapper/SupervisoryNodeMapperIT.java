@@ -41,7 +41,6 @@ import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -136,10 +135,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", REQUISITION, "random description");
+    Role createRole = new Role("create role", "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", REQUISITION, "random description");
+    Role configureRnrRole = new Role("configure rnr", "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);
@@ -175,10 +174,10 @@ public class SupervisoryNodeMapperIT {
 
     User user = insertUser();
 
-    Role createRole = new Role("create role", REQUISITION, "random description");
+    Role createRole = new Role("create role", "random description");
     roleRightsMapper.insertRole(createRole);
 
-    Role configureRnrRole = new Role("configure rnr", REQUISITION, "random description");
+    Role configureRnrRole = new Role("configure rnr", "random description");
     roleRightsMapper.insertRole(configureRnrRole);
 
     roleRightsMapper.createRoleRight(createRole, CREATE_REQUISITION);

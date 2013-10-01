@@ -36,7 +36,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -56,7 +55,7 @@ public class RoleRightsRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", REQUISITION, "role description");
+    role = new Role("role name", "role description");
     roleRightsRepository = new RoleRightsRepository(roleRightsMapper, commaSeparator);
   }
 
@@ -94,7 +93,7 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldNotUpdateToDuplicateRoleName() {
-    Role role = new Role("Name", REQUISITION, "Desc");
+    Role role = new Role("Name", "Desc");
     role.setId(123L);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 

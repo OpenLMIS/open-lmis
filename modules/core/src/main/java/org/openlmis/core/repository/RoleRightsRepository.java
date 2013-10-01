@@ -11,10 +11,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.RoleRightsMapper;
@@ -97,5 +94,9 @@ public class RoleRightsRepository {
 
   public List<Right> getRightsForUserOnHomeFacilityAndProgram(Long userId, Program program) {
     return roleRightsMapper.getRightsForUserOnHomeFacilityAndProgram(userId, program);
+  }
+
+  public RightType getRightTypeForRoleId(Long roleId) {
+    return roleRightsMapper.getRightTypeForRoleId(roleId);
   }
 }

@@ -41,6 +41,7 @@ public class RoleRightsController extends BaseController {
   public static final String ROLE = "role";
   public static final String ROLES = "roles";
   public static final String RIGHTS = "rights";
+  public static final String RIGHT_TYPE = "right_type";
 
   @Autowired
   public RoleRightsController(RoleRightsService roleRightsService) {
@@ -77,8 +78,9 @@ public class RoleRightsController extends BaseController {
   @RequestMapping(value = "/roles/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
-    Role role = roleRightsService.getRole(id);
-    return response(ROLE, role);
+    ResponseEntity<OpenLmisResponse> response = response(ROLE, roleRightsService.getRole(id));
+    response.getBody().addData(RIGHT_TYPE, roleRightsService.getRightTypeForRoleId(id));
+    return response;
   }
 
   @RequestMapping(value = "/roles/{id}", method = PUT, headers = ACCEPT_JSON)

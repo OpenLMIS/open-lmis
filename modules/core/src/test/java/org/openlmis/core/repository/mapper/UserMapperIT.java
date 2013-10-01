@@ -43,7 +43,6 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -150,7 +149,7 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldReturnNullWhenUserIsVerifiedButDisabled(){
+  public void shouldReturnNullWhenUserIsVerifiedButDisabled() {
     String nullString = null;
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString),
       with(verified, true)));
@@ -297,7 +296,7 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldNotGetDisabledUserData(){
+  public void shouldNotGetDisabledUserData() {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
 
@@ -378,7 +377,7 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldDisableAUser(){
+  public void shouldDisableAUser() {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     user.setModifiedDate(truncate(new Date(), YEAR));
     userMapper.insert(user);
@@ -395,7 +394,7 @@ public class UserMapperIT {
   }
 
   private Role insertRole() {
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
     return r1;
   }

@@ -89,4 +89,8 @@ public class RoleRightsService {
     }
     return Collections.emptyList();
   }
+
+  public RightType getRightTypeForRoleId(Long roleId) {
+    return roleRightsRepository.getRightTypeForRoleId(roleId);
+  }
 }

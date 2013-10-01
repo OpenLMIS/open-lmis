@@ -17,13 +17,13 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   if ($routeParams.id) {
     Roles.get({id: $routeParams.id}, function (data) {
       $scope.role = data.role;
-      $scope.role.type = data.role.type;
-      $scope.previousType = $scope.role.type;
+      $scope.currentRightType = data.right_type;
+      $scope.previousRightType = $scope.currentRightType;
     });
   }
   else {
-    $scope.role.type = "ADMIN";
-    $scope.previousType = $scope.role.type;
+    $scope.currentRightType = "ADMIN";
+    $scope.previousRightType = $scope.currentRightType;
   }
 
   Rights.get({}, function (data) {
@@ -113,17 +113,17 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   $scope.dialogCloseCallback = function (result) {
     if (result) {
       $scope.role.rights = [];
-      $scope.previousType = $scope.role.type;
+      $scope.previousRightType = $scope.currentRightType;
     } else {
-      $scope.role.type = $scope.previousType;
+      $scope.currentRightType = $scope.previousRightType;
     }
   };
 
   $scope.showRoleTypeModal = function (selectedRoleType) {
-    if (selectedRoleType == $scope.previousType) {
+    if (selectedRoleType == $scope.previousRightType) {
       return;
     } else {
-      $scope.role.type = selectedRoleType;
+      $scope.currentRightType = selectedRoleType;
       $scope.showRightError = false;
       $scope.error = "";
       var options = {

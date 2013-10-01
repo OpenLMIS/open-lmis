@@ -375,8 +375,8 @@ public class DBWrapper {
     ResultSet rs = query("Select id from roles;");
 
     update("INSERT INTO roles\n" +
-      " (name,type, description) VALUES\n" +
-      " ('" + role + "', '" + type + "', '" + description + "');");
+      " (name, description) VALUES\n" +
+      " ('" + role + "', '" + description + "');");
 
   }
 
@@ -803,7 +803,7 @@ public class DBWrapper {
 
   public void updateRequisitionStatus(String status, String username, String program) throws IOException, SQLException {
     update("update requisitions set status='" + status + "';");
-    ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='"+program+"');");
+    ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='" + program + "');");
     while (rs.next()) {
       update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");

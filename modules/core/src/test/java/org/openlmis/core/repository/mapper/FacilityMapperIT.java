@@ -325,7 +325,7 @@ public class FacilityMapperIT {
     requisitionGroupProgramSchedule.setModifiedBy(1L);
     requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
 
-    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram,with(programCode, "Random"))));
+    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram, with(programCode, "Random"))));
 
     requisitionGroupProgramSchedule.setRequisitionGroup(rg1);
     requisitionGroupProgramSchedule.setDirectDelivery(true);
@@ -423,7 +423,7 @@ public class FacilityMapperIT {
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
 
-    Role r1 = new Role("r1", RoleType.REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);

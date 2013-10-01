@@ -42,8 +42,6 @@ import static org.openlmis.core.builder.SupervisoryNodeBuilder.code;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.domain.RoleType.ADMIN;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -116,7 +114,7 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
-    Role role = new Role("role name", REQUISITION, "description", null);
+    Role role = new Role("role name", "description", null);
     roleRightsMapper.insertRole(role);
 
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
@@ -136,15 +134,15 @@ public class RoleRightsMapperIT {
   @Test(expected = DuplicateKeyException.class)
   public void shouldThrowDuplicateKeyExceptionIfDuplicateRoleName() throws Exception {
     String duplicateRoleName = "role name";
-    Role role = new Role(duplicateRoleName, REQUISITION, "");
-    Role role2 = new Role(duplicateRoleName, REQUISITION, "any other description");
+    Role role = new Role(duplicateRoleName, "");
+    Role role2 = new Role(duplicateRoleName, "any other description");
     roleRightsMapper.insertRole(role);
     roleRightsMapper.insertRole(role2);
   }
 
   @Test
   public void shouldReturnAllRolesInSystem() throws Exception {
-    Role role = new Role("role name", REQUISITION, "");
+    Role role = new Role("role name", "");
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
@@ -161,14 +159,13 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldUpdateRole() {
-    Role role = new Role("Right Name", REQUISITION, "Right Desc", null);
+    Role role = new Role("Right Name", "Right Desc", null);
     roleRightsMapper.insertRole(role);
 
     role.setName("Right2");
     role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
     role.setDescription("Right Description Changed");
     role.setModifiedBy(222L);
-    role.setType(ADMIN);
 
     roleRightsMapper.updateRole(role);
 
@@ -176,12 +173,11 @@ public class RoleRightsMapperIT {
     assertThat(updatedRole.getName(), is("Right2"));
     assertThat(updatedRole.getDescription(), is("Right Description Changed"));
     assertThat(updatedRole.getModifiedBy(), is(222L));
-    assertThat(updatedRole.getType(), is(ADMIN));
   }
 
   @Test
   public void shouldDeleteRights() throws Exception {
-    Role role = new Role("Right Name", REQUISITION, "Right Desc", null);
+    Role role = new Role("Right Name", "Right Desc", null);
     roleRightsMapper.insertRole(role);
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role, UPLOADS);
@@ -241,14 +237,27 @@ public class RoleRightsMapperIT {
 
   @Test
   public void shouldInsertRole() throws Exception {
-    Role r1 = new Role("rolename", REQUISITION, "description");
+    Role r1 = new Role("rolename", "description");
     roleRightsMapper.insertRole(r1);
 
     assertThat(roleRightsMapper.getRole(r1.getId()).getName(), is("rolename"));
   }
 
+  @Test
+  public void shouldGetRightTypeForRoleId() throws Exception {
+    Role role = new Role("rolename", "description");
+    roleRightsMapper.insertRole(role);
+
+    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
+
+    RightType rightTypeForRoleId = roleRightsMapper.getRightTypeForRoleId(role.getId());
+
+    assertThat(rightTypeForRoleId, is(CREATE_REQUISITION.getType()));
+
+  }
+
   private Role insertRole(String name, String description) {
-    Role r1 = new Role(name, REQUISITION, description);
+    Role r1 = new Role(name, description);
     roleRightsMapper.insertRole(r1);
     return r1;
   }

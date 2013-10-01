@@ -35,7 +35,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -59,7 +58,7 @@ public class RoleRightsServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", REQUISITION, "role description");
+    role = new Role("role name", "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
@@ -84,7 +83,8 @@ public class RoleRightsServiceTest {
       CREATE_REQUISITION,
       VIEW_REQUISITION,
       VIEW_ORDER,
-      CONFIGURE_EDI);
+      CONFIGURE_EDI,
+      FACILITY_FILL_SHIPMENT);
 
     assertThat(allRights, is(alphabeticalRights));
   }

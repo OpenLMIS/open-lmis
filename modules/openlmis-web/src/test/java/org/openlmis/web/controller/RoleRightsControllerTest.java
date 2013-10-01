@@ -17,10 +17,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.Role;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.RoleRightsService;
@@ -45,7 +42,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.facilityMatcher;
 import static org.openlmis.core.matchers.Matchers.programMatcher;
 import static org.openlmis.web.controller.RoleRightsController.*;
@@ -74,7 +70,7 @@ public class RoleRightsControllerTest {
     MockHttpSession mockHttpSession = new MockHttpSession();
     httpServletRequest.setSession(mockHttpSession);
     mockHttpSession.setAttribute(USER_ID, LOGGED_IN_USERID);
-    role = new Role("test role", REQUISITION, "test role description");
+    role = new Role("test role", "test role description");
   }
 
   @Test
@@ -128,8 +124,24 @@ public class RoleRightsControllerTest {
   }
 
   @Test
+  public void shouldGetRightTypeForRoleId() throws Exception {
+    Role role = new Role();
+    Long roleId = 1L;
+    when(roleRightsService.getRole(roleId)).thenReturn(role);
+    when(roleRightsService.getRightTypeForRoleId(roleId)).thenReturn(RightType.ADMIN);
+
+    OpenLmisResponse response = controller.get(roleId).getBody();
+
+    assertThat((Role) response.getData().get(ROLE), is(role));
+    assertThat((RightType) response.getData().get(RIGHT_TYPE), is(RightType.ADMIN));
+
+    verify(roleRightsService).getRole(roleId);
+    verify(roleRightsService).getRightTypeForRoleId(roleId);
+  }
+
+  @Test
   public void shouldUpdateRoleAndRights() throws Exception {
-    Role role = new Role("Role Name", null, "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
+    Role role = new Role("Role Name", "Desc", new HashSet<>(asList(CONFIGURE_RNR)));
     when(messageService.message("message.role.updated.success", "Role Name")).thenReturn("Role Name updated successfully");
 
     OpenLmisResponse response = controller.updateRole(role.getId(), role, httpServletRequest).getBody();
@@ -141,7 +153,7 @@ public class RoleRightsControllerTest {
   @Test
   public void shouldReturnErrorMsgIfUpdateFails() throws Exception {
 
-    Role role = new Role("Role Name", REQUISITION, "Desc", null);
+    Role role = new Role("Role Name", "Desc", null);
 
     doThrow(new DataException("Duplicate Role found")).when(roleRightsService).updateRole(role);
 
