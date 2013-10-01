@@ -99,8 +99,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1380047400000"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":1380133800000"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"Comments\""));
 
