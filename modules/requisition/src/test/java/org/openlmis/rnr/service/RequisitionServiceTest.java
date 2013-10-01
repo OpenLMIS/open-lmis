@@ -372,7 +372,7 @@ public class RequisitionServiceTest {
     expectedException.expectMessage("error.current.rnr.already.post.submit");
 
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentDate.toDate());
-    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentRnr);
+    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentRnr);
     when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate())).thenReturn(currentPeriod);
 
     requisitionService.getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId()));
