@@ -77,7 +77,9 @@ public class RequisitionSearchStrategyFactoryTest {
   public void shouldUseRequisitionOnlyStrategyIfLineItemsAreNotRequired() throws Exception {
     Long facilityId = 1L, programId = null, periodId = 4L;
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
-    whenNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionPermissionService, requisitionRepository).thenReturn(mock(RequisitionOnlySearch.class));
+    whenNew(RequisitionOnlySearch.class)
+      .withArguments(criteria, requisitionPermissionService, requisitionRepository)
+      .thenReturn(mock(RequisitionOnlySearch.class));
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
@@ -90,11 +92,14 @@ public class RequisitionSearchStrategyFactoryTest {
     Long facilityId = 1L, programId = 3L, periodId = 4L;
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
     criteria.setEmergency(true);
-    whenNew(EmergencyRequisitionSearch.class).withArguments(criteria, requisitionRepository).thenReturn(mock(EmergencyRequisitionSearch.class));
+    whenNew(EmergencyRequisitionSearch.class)
+      .withArguments(criteria, requisitionPermissionService, requisitionRepository)
+      .thenReturn(mock(EmergencyRequisitionSearch.class));
 
     RequisitionSearchStrategy emergencyRequisitionSearch = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
     assertTrue(emergencyRequisitionSearch instanceof EmergencyRequisitionSearch);
-    verifyNew(EmergencyRequisitionSearch.class).withArguments(criteria, requisitionRepository);
+    verifyNew(EmergencyRequisitionSearch.class)
+      .withArguments(criteria, requisitionPermissionService, requisitionRepository);
   }
 }

@@ -9,22 +9,20 @@ package org.openlmis.rnr.search.strategy;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.service.RequisitionPermissionService;
 
 import java.util.List;
 
-public class EmergencyRequisitionSearch extends RequisitionSearchStrategy {
+public class EmergencyRequisitionSearch extends RequisitionOnlySearch {
 
-  private RequisitionSearchCriteria criteria;
-  private RequisitionRepository requisitionRepository;
-
-  public EmergencyRequisitionSearch(RequisitionSearchCriteria criteria, RequisitionRepository requisitionRepository) {
-    this.criteria = criteria;
-    this.requisitionRepository = requisitionRepository;
+  public EmergencyRequisitionSearch(RequisitionSearchCriteria criteria,
+                                    RequisitionPermissionService requisitionPermissionService,
+                                    RequisitionRepository requisitionRepository) {
+    super(criteria, requisitionPermissionService, requisitionRepository);
   }
 
   @Override
   List<Rnr> findRequisitions() {
-    return requisitionRepository.getInitiatedEmergencyRequisition(criteria.getFacilityId(),
-      criteria.getProgramId());
+    return requisitionRepository.getInitiatedEmergencyRequisition(criteria.getFacilityId(), criteria.getProgramId());
   }
 }

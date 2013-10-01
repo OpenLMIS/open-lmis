@@ -19,10 +19,10 @@ import java.util.List;
 import static java.util.Arrays.asList;
 
 public class RequisitionOnlySearch extends RequisitionSearchStrategy {
-  private RequisitionSearchCriteria criteria;
+  RequisitionSearchCriteria criteria;
 
-  private RequisitionPermissionService requisitionPermissionService;
-  private RequisitionRepository requisitionRepository;
+  RequisitionPermissionService requisitionPermissionService;
+  RequisitionRepository requisitionRepository;
 
   public RequisitionOnlySearch(RequisitionSearchCriteria criteria,
                                RequisitionPermissionService requisitionPermissionService,
@@ -36,6 +36,7 @@ public class RequisitionOnlySearch extends RequisitionSearchStrategy {
   boolean isSearchable(Right right) {
     Facility facility = new Facility(criteria.getFacilityId());
     Program program = new Program(criteria.getProgramId());
+
     return requisitionPermissionService.hasPermission(criteria.getUserId(), facility, program, right);
   }
 

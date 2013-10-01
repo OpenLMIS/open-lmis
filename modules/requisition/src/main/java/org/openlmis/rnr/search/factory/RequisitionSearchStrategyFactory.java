@@ -35,7 +35,7 @@ public class RequisitionSearchStrategyFactory {
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
     if (criteria.isEmergency()) {
-      return new EmergencyRequisitionSearch(criteria, requisitionRepository);
+      return new EmergencyRequisitionSearch(criteria, requisitionPermissionService, requisitionRepository);
     } else if (criteria.isWithoutLineItems()) {
       return new RequisitionOnlySearch(criteria, requisitionPermissionService, requisitionRepository);
     } else if (criteria.getPeriodId() != null) {
