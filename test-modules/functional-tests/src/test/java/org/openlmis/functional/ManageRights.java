@@ -56,30 +56,6 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testUserTryToAuthorizeUnSubmittedRnR(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
-
-    dbWrapper.updateRoleRight("CREATE_REQUISITION", "AUTHORIZE_REQUISITION");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    String[] expectedMenuItem = {"Create / Authorize", "View"};
-    homePage.verifySubMenuItems(expectedMenuItem);
-    homePage.navigateAndInitiateRnr(program);
-    homePage.clickProceed();
-    homePage.verifyErrorMessage();
-
-    dbWrapper.insertValuesInRequisition(false);
-    dbWrapper.updateRequisitionStatus("INITIATED", userSIC);
-
-    homePage.navigateAndInitiateRnr(program);
-    homePage.clickProceed();
-    homePage.verifyErrorMessage();
-  }
-
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
