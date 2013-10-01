@@ -35,12 +35,6 @@ describe('Distribution', function () {
     expect(distribution.computeStatus()).toEqual(EMPTY);
   });
 
-  it('should return empty if no data is recorded for any facilities', function () {
-    distribution.facilityDistributionData = undefined;
-
-    expect(distribution.computeStatus()).toEqual(EMPTY);
-  });
-
   it('should return empty if no facility is available', function () {
     spyOn(dispensaryData, "computeStatus").andReturn(EMPTY);
     spyOn(level3HospitalData, "computeStatus").andReturn(EMPTY);
