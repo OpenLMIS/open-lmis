@@ -6,7 +6,12 @@
  *
  */
 
-function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
+function InitiateRnrController($scope, $location, Requisitions,
+                               PeriodsForFacilityAndProgram, UserFacilityList,
+                               CreateRequisitionProgramList,
+                               UserSupervisedFacilitiesForProgram,
+                               FacilityProgramRights, navigateBackService,
+                               messageService) {
   $scope.fullScreen = false;
   $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
@@ -123,17 +128,18 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
   };
 
   var createPeriodWithRnrStatus = function (periods, rnrs) {
-    $scope.periodGridData = [];
 
-    var periodWithRnrStatus;
     if (periods == null || periods.length == 0) {
-      periodWithRnrStatus = {name: messageService.get("msg.no.period.available")};
-      $scope.periodGridData.push(periodWithRnrStatus);
+      $scope.error = messageService.get("msg.no.period.available");
       if ($scope.isEmergency) {
         addPreviousRequisitionToPeriodList(rnrs);
       }
       return;
     }
+
+    $scope.periodGridData = [];
+
+    var periodWithRnrStatus = undefined;
 
     periods.forEach(function (period) {
       periodWithRnrStatus = angular.copy(period);
@@ -160,7 +166,7 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
 
   var addPreviousRequisitionToPeriodList = function (rnrs) {
     var periodWithRnrStatus;
-    if(  rnrs == null || rnrs.length == 0) return;
+    if (rnrs == null || rnrs.length == 0) return;
     rnrs.forEach(function (rnr) {
       if (rnr.status == 'INITIATED') {
         periodWithRnrStatus = angular.copy(rnr.period);
@@ -210,7 +216,6 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
   $scope.loadPeriods = function () {
     $scope.periodGridData = [];
     if (!($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedFacilityId)) {
-      var periods = [];
       $scope.error = "";
       return;
     }
@@ -221,6 +226,11 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
         createPeriodWithRnrStatus(data.periods, data.rnr_list);
       },
       function (data) {
+        if (data.data.error == 'error.current.rnr.already.post.submit') {
+          $scope.error = $scope.selectedType ? messageService.get("msg.no.rnr.awaiting.authorization") :
+            messageService.get("msg.rnr.current.period.already.submitted");
+          return;
+        }
         $scope.error = data.data.error;
       });
   };

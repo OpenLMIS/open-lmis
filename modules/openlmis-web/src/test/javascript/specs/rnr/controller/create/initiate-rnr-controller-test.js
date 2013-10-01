@@ -10,7 +10,9 @@ describe('InitiateRnrController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
-  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, _messageService_, _navigateBackService_) {
+  beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,
+                              $location, _messageService_,
+                              _navigateBackService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     rootScope.hasPermission = function () {
@@ -144,7 +146,7 @@ describe('InitiateRnrController', function () {
       return "Requisition not submitted yet";
     });
 
-    scope.initRnr({"id": 3, rnrId : 1});
+    scope.initRnr({"id": 3, rnrId: 1});
     $httpBackend.flush();
 
     expect(messageService.get).toHaveBeenCalledWith('error.requisition.not.submitted');
@@ -300,12 +302,9 @@ describe('InitiateRnrController', function () {
       scope.loadPeriods();
       $httpBackend.flush();
 
-      expect(scope.periodGridData).toEqual([
-        {"name": "No period(s) available"}
-      ]);
+      expect(scope.error).toEqual("No period(s) available");
       expect(messageService.get).toHaveBeenCalledWith('msg.no.period.available');
       expect(scope.selectedPeriod).toEqual(null);
-      expect(scope.error).toEqual('');
     });
 
     it('should not load periods if facility selected but program not selected', function () {
@@ -337,5 +336,28 @@ describe('InitiateRnrController', function () {
       expect(scope.periodGridData).toEqual([]);
       expect(scope.selectedPeriod).toEqual(null);
     });
+
+    it('should not load periods and set already submitted error if selected type is my facility', function () {
+      scope.selectedType = 0;
+
+      $httpBackend.expectGET('/logistics/periods.json?emergency=false&facilityId=20&programId=10').respond(400, {"error": "error.current.rnr.already.post.submit"});
+
+      scope.loadPeriods();
+      $httpBackend.flush();
+
+      expect(scope.error).toEqual("msg.rnr.current.period.already.submitted");
+    });
+
+    it('should not load periods and set already submitted error if selected type is my supervised facility', function () {
+      scope.selectedType = 1;
+
+      $httpBackend.expectGET('/logistics/periods.json?emergency=false&facilityId=20&programId=10').respond(400, {"error": "error.current.rnr.already.post.submit"});
+
+      scope.loadPeriods();
+      $httpBackend.flush();
+
+      expect(scope.error).toEqual("msg.no.rnr.awaiting.authorization");
+    });
+
   });
 });

@@ -301,6 +301,13 @@ public class RequisitionService {
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
       null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
+    if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
+      ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
+      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow == currentPeriod.getId()) {
+        throw new DataException("error.current.rnr.already.post.submit");
+      }
+    }
+
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate,
       periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
@@ -416,7 +423,8 @@ public class RequisitionService {
   }
 
   public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber, Integer totalNumberOfPages) {
-    if (pageNumber.equals(1) && totalNumberOfPages.equals(0)) return new ArrayList<>();
+    if (pageNumber.equals(1) && totalNumberOfPages.equals(0))
+      return new ArrayList<>();
 
     if (pageNumber <= 0 || pageNumber > totalNumberOfPages)
       throw new DataException("error.page.not.found");
