@@ -37,7 +37,7 @@ public class RequisitionSearchStrategyFactory {
     if (criteria.isEmergency()) {
       return new EmergencyRequisitionSearch(criteria, requisitionRepository);
     } else if (criteria.isWithoutLineItems()) {
-      return new RequisitionOnlySearch(criteria, requisitionRepository);
+      return new RequisitionOnlySearch(criteria, requisitionPermissionService, requisitionRepository);
     } else if (criteria.getPeriodId() != null) {
       return new FacilityProgramPeriodSearch(criteria, requisitionRepository);
     } else if (criteria.getProgramId() == null) {

@@ -77,12 +77,12 @@ public class RequisitionSearchStrategyFactoryTest {
   public void shouldUseRequisitionOnlyStrategyIfLineItemsAreNotRequired() throws Exception {
     Long facilityId = 1L, programId = null, periodId = 4L;
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
-    whenNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionRepository).thenReturn(mock(RequisitionOnlySearch.class));
+    whenNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionPermissionService, requisitionRepository).thenReturn(mock(RequisitionOnlySearch.class));
 
     RequisitionSearchStrategy facilityDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
     assertTrue(facilityDateRangeStrategy instanceof RequisitionOnlySearch);
-    verifyNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionRepository);
+    verifyNew(RequisitionOnlySearch.class).withArguments(criteria, requisitionPermissionService, requisitionRepository);
   }
 
   @Test
