@@ -207,7 +207,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1500);
     String baseXpath = "(//input[@class='ngSelectionCheckbox'])";
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]"));
     testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]").click();
