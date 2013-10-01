@@ -182,10 +182,10 @@ public class DownloadOrderFile extends TestCaseHelper {
     testWebDriver.sleep(2000);
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName);
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName, true);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName, true);
     dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName);
+    dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName, true);
 
     homePage.logout(baseUrlGlobal);
     loginPage.loginAs("lmu", password);

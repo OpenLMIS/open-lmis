@@ -62,7 +62,7 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
   private static WebElement searchTextBox;
 
-  @FindBy(how = How.XPATH, using = "//button[@ng-click='fetchFilteredRequisitions()']")
+  @FindBy(how = How.XPATH, using = "//button[@ng-click='updateSearchParams()']")
   private static WebElement searchButton;
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
@@ -130,8 +130,8 @@ public class ConvertOrderPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     searchOptionButton.click();
     testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a"));
-    testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a").click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li["+index+"]/a"));
+    testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li["+index+"]/a").click();
     sendKeys(searchTextBox, searchString);
     searchButton.click();
     testWebDriver.sleep(1000);

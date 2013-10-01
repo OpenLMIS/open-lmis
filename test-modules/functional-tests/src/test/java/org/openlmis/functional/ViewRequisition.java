@@ -82,7 +82,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I update requisition status to \"([^\"]*)\"$")
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
-    dbWrapper.updateRequisitionStatus(status, "storeincharge");
+    dbWrapper.updateRequisitionStatus(status, "storeincharge", true);
   }
 
   @When("^I type view search criteria$")
@@ -162,12 +162,12 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
     dbWrapper.insertValuesInRequisition(true);
     dbWrapper.insertValuesInRegimenLineItems(patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC);
+    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, true);
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyNoRequisitionFound();
     dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, true);
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.clickRnRList();
     viewRequisitionPage.verifyTotalFieldPostAuthorize();
@@ -184,7 +184,7 @@ public class ViewRequisition extends TestCaseHelper {
     HomePage homePageInApproval = viewRequisitionPageAuthorized.verifyFieldsPreApproval("12.50", "1");
     viewRequisitionPageAuthorized.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
-    dbWrapper.updateRequisitionStatus(IN_APPROVAL, userSIC);
+    dbWrapper.updateRequisitionStatus(IN_APPROVAL, userSIC, true);
       ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
     viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();

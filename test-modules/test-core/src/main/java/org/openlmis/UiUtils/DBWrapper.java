@@ -799,12 +799,17 @@ public class DBWrapper {
 
   }
 
-  public void updateRequisitionStatus(String status, String username) throws IOException, SQLException {
+  public void updateRequisitionStatus(String status, String username, boolean requisitionStatusChangesRequired) throws IOException, SQLException {
     update("update requisitions set status='" + status + "';");
-    update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values((select id from requisitions), '" + status + "', " +
-      "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'))");
+    if (requisitionStatusChangesRequired) {
+      ResultSet rs = query("select id from requisitions;");
+      while (rs.next()) {
+        update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
+          "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+      }
+    }
     update("update requisitions set supervisorynodeid=(select id from supervisory_nodes where code='N1');");
-
+    update("update requisitions set createdBy= (select id from users where username = '" + username + "') , modifiedBy= (select id from users where username = '" + username + "');");
   }
 
   public String getSupplyFacilityName(String supervisoryNode, String programCode) throws IOException, SQLException {

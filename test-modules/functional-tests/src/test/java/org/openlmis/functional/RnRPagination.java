@@ -87,7 +87,7 @@ public class RnRPagination extends TestCaseHelper {
 
     initiateRnRPage.submitRnR();
 
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, true);
     ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
