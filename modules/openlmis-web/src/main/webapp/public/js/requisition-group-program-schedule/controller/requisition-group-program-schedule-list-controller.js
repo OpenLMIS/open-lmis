@@ -134,6 +134,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
             if($scope.selectedRequisitionGroupProgramSchedule==null){
                 $scope.message = "No schedule configured for " + $scope.selectedRequisitionGroup.name + " in program: " + $scope.selectedProgram.name;
                 $scope.showMessage = true;
+                $scope.setOriginallySelectedSchedule(null);
             }
             else{
                 $scope.message="";
@@ -145,11 +146,16 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     };
 
     $scope.setOriginallySelectedSchedule = function (schedule){
-        angular.forEach($scope.schedules,function(scheduleEntry){
-            if(scheduleEntry.id == schedule.id){
-                $scope.selectedSchedule = scheduleEntry;
-            }
-        });
+        if(schedule == null){
+            $scope.selectedSchedule = null;
+        }
+        else {
+            angular.forEach($scope.schedules, function (scheduleEntry) {
+                if (scheduleEntry.id == schedule.id) {
+                    $scope.selectedSchedule = scheduleEntry;
+                }
+            });
+        }
     }
 
     $scope.setSelectedSchedule = function(schedule){
@@ -169,6 +175,11 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
             $scope.showError = true;
             $scope.error = response.data.error;
         };
+
+        if($scope.selectedRequisitionGroupProgramSchedule == null){
+            $scope.selectedRequisitionGroupProgramSchedule = {};
+            $scope.selectedRequisitionGroupProgramSchedule.directDelivery = true;
+        }
 
         $scope.selectedRequisitionGroupProgramSchedule.requisitionGroup = $scope.selectedRequisitionGroup;
         $scope.selectedRequisitionGroupProgramSchedule.program = $scope.selectedProgram;

@@ -37,6 +37,30 @@
                             <tr class="gradient-header">
                                 <th>Code
                                 </th>
+                                <th>Program Name
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="program in programs" ng-click="setSelectedProgram(program)"
+                                style="{{getProgramColor(program)}}">
+                                <td>
+                                    <div>{{program.code}}</div>
+                                </td>
+                                <td>
+                                    <div>{{program.name}}</div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td style="vertical-align: top">
+                        <table class="table table-hover table-bordered">
+                            <thead>
+                            <tr class="gradient-header">
+                                <th>Code
+                                </th>
                                 <th>Requisition Group
                                 </th>
                             </tr>
@@ -56,30 +80,7 @@
                         </table>
                     </td>
                     <td>&nbsp;</td>
-                    <td style="vertical-align: top">
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                            <tr class="gradient-header">
-                                <th>Code
-                                </th>
-                                <th>Program Name
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="program in programs" ng-click="setSelectedProgram(program)"
-                                style="{{getProgramColor(program)}}">
-                                <td>
-                                    <div>{{program.code}}</div>
-                                </td>
-                                <td>
-                                    <div>{{program.name}}</div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                    <td>&nbsp;</td>
+
                     <td style="vertical-align: top">
                         <table class="table table-hover table-bordered">
                             <thead>
