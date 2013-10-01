@@ -173,8 +173,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(150, "MALARIA", true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "TB", false);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
