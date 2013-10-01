@@ -15,16 +15,19 @@ describe('DistributionListController', function () {
   beforeEach(inject(function ($rootScope, $location, $controller) {
     scope = $rootScope.$new();
     location = $location;
-    var controller = $controller;
     sharedDistribution = {update: function () {
     }};
 
     spyOn(sharedDistribution, 'update');
 
-    controller(DistributionListController, {$scope: scope, $location: location, SharedDistributions: sharedDistribution })
+    $controller(DistributionListController, {$scope: scope, $location: location, SharedDistributions: sharedDistribution })
   }));
 
   it('should set distributions in scope', function() {
     expect(scope.sharedDistributions).toBe(sharedDistribution);
-  })
+  });
+
+  it('should refresh shared distributions on load', function() {
+    expect(sharedDistribution.update).toHaveBeenCalled();
+  });
 });

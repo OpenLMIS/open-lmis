@@ -19,6 +19,11 @@ INSERT INTO roles
   ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Norte'), (SELECT id FROM programs WHERE name = 'VACCINES')),
   ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Centro'),(SELECT id FROM programs WHERE name = 'VACCINES')),
   ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Sul'), (SELECT id FROM programs WHERE name = 'VACCINES')),
+
+  ((SELECT id FROM USERS WHERE username='superuser'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Norte'), (SELECT id FROM programs WHERE name = 'VACCINES')),
+  ((SELECT id FROM USERS WHERE username='superuser'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Centro'), (SELECT id FROM programs WHERE name = 'VACCINES')),
+  ((SELECT id FROM USERS WHERE username='superuser'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='Sul'), (SELECT id FROM programs WHERE name = 'VACCINES')),
+
   ((SELECT id FROM USERS WHERE username='FieldCoordinator'), (SELECT id FROM roles WHERE name = 'FieldCoordinator'), (SELECT id FROM delivery_zones WHERE code='DZ1'), (SELECT id FROM programs WHERE name = 'VACCINES'));
 
 

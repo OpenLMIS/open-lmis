@@ -24,26 +24,22 @@ function Distribution(distributionJson) {
   };
 
   Distribution.prototype.computeStatus = function () {
-    var status;
-    if (this.facilityDistributionData) {
-      $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
-        if (facilityDistributionData.computeStatus() === COMPLETE && (status == COMPLETE || !status)) {
-          status = COMPLETE;
-        } else if (facilityDistributionData.computeStatus() === EMPTY && (!status || status == EMPTY)) {
-          status = EMPTY;
-        } else if (facilityDistributionData.computeStatus() === INCOMPLETE ||
-          (facilityDistributionData.computeStatus() === EMPTY && status === COMPLETE) ||
-          (facilityDistributionData.computeStatus() === COMPLETE && status === EMPTY))
-        {
-          status = INCOMPLETE;
-          return false;
-        }
-        return true;
-      });
-    } else {
-      status = EMPTY;
-    }
-    return status;
+    var overallStatus;
+    $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
+      var computedStatus = facilityDistributionData.computeStatus();
+      if (computedStatus === COMPLETE && (overallStatus == COMPLETE || !overallStatus)) {
+        overallStatus = COMPLETE;
+      } else if (computedStatus === EMPTY && (!overallStatus || overallStatus == EMPTY)) {
+        overallStatus = EMPTY;
+      } else if (computedStatus === INCOMPLETE ||
+        (computedStatus === EMPTY && overallStatus === COMPLETE) ||
+        (computedStatus === COMPLETE && overallStatus === EMPTY)) {
+        overallStatus = INCOMPLETE;
+        return false;
+      }
+      return true;
+    });
+    return overallStatus;
   };
   return this;
 }

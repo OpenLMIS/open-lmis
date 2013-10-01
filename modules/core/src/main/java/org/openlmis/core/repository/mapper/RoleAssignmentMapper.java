@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.core.repository.mapper;
@@ -18,7 +20,7 @@ import java.util.List;
 @Repository
 public interface RoleAssignmentMapper {
 
-  @Select({"SELECT RA.*",
+  @Select({"SELECT DISTINCT RA.programId, RA.supervisoryNodeId",
     "FROM role_assignments RA, role_rights RR, supervisory_nodes SN WHERE",
     "RA.supervisoryNodeId = SN.id",
     "AND RA.roleId = RR.roleId",

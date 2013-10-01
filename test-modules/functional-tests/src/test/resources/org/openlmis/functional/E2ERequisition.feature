@@ -56,6 +56,8 @@ Feature: End to end requisition flow
     Then I should see pending order list
     When I convert to order
     And I access view orders page
-    Then I should see ordered list
+    Then I should see ordered list with download link
     When I do not have anything to pack to ship
-    Then I should not see download link
+    And I access view orders page
+    Then I should see ordered list without download link
+

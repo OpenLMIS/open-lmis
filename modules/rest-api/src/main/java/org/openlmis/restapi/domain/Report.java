@@ -21,11 +21,14 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
   private Long requisitionId;
+  private String facilityCode;
   private Long facilityId;
+  private String programCode;
   private Long programId;
   private Long periodId;
   private String userId;
   private Vendor vendor;
+  private Boolean emergency;
   private List<RnrLineItem> products;
 
   public void validate() {

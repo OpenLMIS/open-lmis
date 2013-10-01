@@ -42,7 +42,7 @@ public class ReportTemplateMapperIT {
   public void shouldGetById() throws Exception {
     ReportTemplate reportTemplate = createReportTemplate("Sample Report");
 
-    ReportTemplate returnedTemplate = reportTemplateMapper.getByName("Sample Report");
+    ReportTemplate returnedTemplate = reportTemplateMapper.getById(reportTemplate.getId());
 
     Assert.assertThat(returnedTemplate.getName(), is(reportTemplate.getName()));
     Assert.assertThat(returnedTemplate.getData(), is(reportTemplate.getData()));
@@ -80,14 +80,15 @@ public class ReportTemplateMapperIT {
   }
 
   @Test
-  public void shouldGetAllReportTemplates() throws Exception {
+  public void shouldGetAllReportTemplatesAccordingToCreatedDate() throws Exception {
     ReportTemplate reportTemplate1 = createReportTemplate("report1");
     createReportTemplate("report2");
 
     List<ReportTemplate> result = reportTemplateMapper.getAll();
 
-    Assert.assertThat(result.size(), CoreMatchers.is(2));
-    Assert.assertThat(result.get(0).getName(), CoreMatchers.is("report1"));
-    Assert.assertThat(result.get(0).getId(), is(reportTemplate1.getId()));
+    Assert.assertThat(result.size(), CoreMatchers.is(9));
+    Assert.assertThat(result.get(0).getName(), CoreMatchers.is("Facilities Missing Supporting Requisition Group"));
+    Assert.assertThat(result.get(7).getName(), CoreMatchers.is("report1"));
+    Assert.assertThat(result.get(7).getId(), is(reportTemplate1.getId()));
   }
 }

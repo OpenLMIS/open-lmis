@@ -28,7 +28,9 @@ public class RequisitionSearchStrategyFactory {
 
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
-    if (criteria.isWithoutLineItems()) {
+    if (criteria.isEmergency()) {
+      return new EmergencyRequisitionSearch(criteria, requisitionRepository);
+    } else if (criteria.isWithoutLineItems()) {
       return new RequisitionOnlySearch(criteria, requisitionRepository);
     } else if (criteria.getPeriodId() != null) {
       return new FacilityProgramPeriodSearch(criteria, requisitionRepository);
@@ -36,6 +38,5 @@ public class RequisitionSearchStrategyFactory {
       return new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);
     }
     return new FacilityProgramDateRangeSearch(criteria, processingScheduleService, requisitionRepository);
-
   }
 }

@@ -9,6 +9,9 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreType;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @Data
 @NoArgsConstructor
@@ -22,6 +25,10 @@ public class RnrColumn extends Column {
   private String indicator;
   private boolean used;
   private boolean mandatory;
+  private String calculationOption;
+
+  private FormulaOption options;
+
   private String description;
   private boolean formulaValidationRequired = true;
   private Long createdBy;
@@ -29,6 +36,11 @@ public class RnrColumn extends Column {
   @SuppressWarnings(value = "unused")
   public void setSourceString(String sourceString) {
     this.source = RnRColumnSource.getValueOf(sourceString);
+  }
+
+  @SuppressWarnings(value = "unused")
+  public void setCalculationOptions(String opt){
+    this.options = new FormulaOption(opt);
   }
 
   @Override

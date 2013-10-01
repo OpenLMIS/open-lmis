@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.domain;
@@ -32,6 +34,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
 
+  private boolean emergency;
   private Facility facility;
   private Program program;
   private ProcessingPeriod period;
@@ -52,20 +55,21 @@ public class Rnr extends BaseModel {
   private Date submittedDate;
   private List<Comment> comments = new ArrayList<>();
 
-  public Rnr(Long facilityId, Long programId, Long periodId, Long modifiedBy, Long createdBy) {
+  public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, Long modifiedBy, Long createdBy) {
     facility = new Facility();
     facility.setId(facilityId);
     program = new Program();
     program.setId(programId);
     period = new ProcessingPeriod();
     period.setId(periodId);
+    this.emergency = emergency;
     this.modifiedBy = modifiedBy;
     this.createdBy = createdBy;
   }
 
-  public Rnr(Long facilityId, Long programId, Long periodId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
+  public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
              List<Regimen> regimens, Long modifiedBy, Long createdBy) {
-    this(facilityId, programId, periodId, modifiedBy, createdBy);
+    this(facilityId, programId, periodId, emergency, modifiedBy, createdBy);
     fillLineItems(facilityTypeApprovedProducts);
     fillActiveRegimenLineItems(regimens);
   }
@@ -323,6 +327,10 @@ public class Rnr extends BaseModel {
   public void approveAndAssignToNextSupervisoryNode(SupervisoryNode parent) {
     status = IN_APPROVAL;
     supervisoryNodeId = parent.getId();
+  }
+
+  public boolean isApprovable() {
+    return status == AUTHORIZED || status == IN_APPROVAL;
   }
 }
 

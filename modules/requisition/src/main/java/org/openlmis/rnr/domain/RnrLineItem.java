@@ -44,6 +44,7 @@ public class RnrLineItem extends LineItem {
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
   public static final MathContext mathContext = new MathContext(12, RoundingMode.HALF_UP);
 
+
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
   private Integer productDisplayOrder;
@@ -147,6 +148,17 @@ public class RnrLineItem extends LineItem {
       totalLossesAndAdjustments = 0;
     newPatientCount = 0;
     stockOutDays = 0;
+
+    if(template.getApplyDefaultZero()){
+      quantityReceived = quantityDispensed = stockInHand = calculatedOrderQuantity = 0;
+
+      if(beginningBalance == null){
+        beginningBalance = 0;
+      } else{
+        stockInHand = beginningBalance;
+      }
+    }
+
   }
 
 

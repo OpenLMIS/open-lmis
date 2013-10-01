@@ -36,6 +36,9 @@ public interface ProductReportMapper {
             "order by tracer,name")
     List<Product> getProductListByCategory(@Param("categoryId") Integer categoryId);
 
+    @Select("SELECT * FROM products WHERE code = #{code}")
+    Product getProductByCode(String code);
+
 
 
 

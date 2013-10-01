@@ -4,12 +4,45 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-function ConvertToOrderListController($scope, requisitionList, Orders, RequisitionForConvertToOrder, $dialog, messageService) {
-  $scope.requisitions = requisitionList;
-  $scope.filteredRequisitions = $scope.requisitions;
+function ConvertToOrderListController($scope, pagedRequisitionList, Orders,
+                                      RequisitionForConvertToOrder, $dialog,
+                                      messageService, $routeParams, $location) {
+  $scope.requisitions = pagedRequisitionList.rnr_list;
+  $scope.filteredRequisitions = pagedRequisitionList.rnr_list;
+  $scope.numberOfPages = pagedRequisitionList.number_of_pages;
   $scope.selectedItems = [];
   $scope.message = "";
   $scope.noRequisitionSelectedMessage = "";
+  $scope.maxNumberOfPages = 10;
+  $scope.searchValue = "All";
+
+  $scope.searchOptions = [
+    {searchType: "all", value: "option.value.all"},
+    {searchType: "programName", value: "option.value.program"},
+    {searchType: "facilityCode", value: "option.value.facility.code"},
+    {searchType: "facilityName", value: "option.value.facility.name"},
+    {searchType: "supplyingDepot", value: "label.supplying.depot"}
+  ];
+
+  $scope.selectSearchType = function (searchOption) {
+    $scope.searchField = searchOption.searchType;
+    $scope.searchValue = searchOption.value;
+  };
+
+  function setCurrentPage() {
+    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, $scope.maxNumberOfPages) : 1;
+  }
+
+  setCurrentPage();
+
+  $scope.$on('$routeUpdate', function () {
+    setCurrentPage();
+    $scope.fetchFilteredRequisitions();
+  });
+
+  $scope.$watch("currentPage", function () {
+    $location.search("page", $scope.currentPage);
+  });
 
   $scope.gridOptions = { data: 'filteredRequisitions',
     selectedItems: $scope.selectedItems,
@@ -24,21 +57,11 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
       {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
       {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")}
+      {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")},
+      {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
+        cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>',
+        width: 110 }
     ]
-  };
-
-  $scope.filterRequisitions = function () {
-    $scope.filteredRequisitions = [];
-    $scope.gridOptions.selectedItems.length = 0;
-    var query = $scope.query || "";
-    var searchField = $scope.searchField;
-
-    $scope.filteredRequisitions = $.grep($scope.requisitions, function (rnr) {
-      return (searchField) ? contains(rnr[searchField], query) : matchesAnyField(query, rnr);
-    });
-
-    $scope.resultCount = $scope.filteredRequisitions.length;
   };
 
   $scope.dialogCloseCallback = function (result) {
@@ -47,7 +70,7 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     }
   };
 
-  showConfirmModal = function () {
+  var showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
       header: messageService.get("label.confirm.action"),
@@ -66,52 +89,58 @@ function ConvertToOrderListController($scope, requisitionList, Orders, Requisiti
     showConfirmModal();
   };
 
-  var fetchPendingRequisitions = function () {
-    RequisitionForConvertToOrder.get({}, function (data) {
-      $scope.requisitions = data.rnr_list;
+  $scope.inputKeypressHandler = function($event) {
+    if($event.keyCode == 13) {
+      $event.preventDefault();
+      $scope.fetchFilteredRequisitions();
+    }
+  };
+
+  $scope.fetchFilteredRequisitions = function () {
+    if ($scope.requestInProgress) return;
+
+    $scope.requestInProgress = true;
+    RequisitionForConvertToOrder.get({page: $scope.currentPage,
+      searchType: $scope.searchField, searchVal: $scope.query}, function (data) {
+
+      $scope.filteredRequisitions = data.rnr_list;
+      $scope.numberOfPages = data.number_of_pages;
       $scope.selectedItems.length = 0;
-      $scope.filterRequisitions();
+      $scope.resultCount = $scope.filteredRequisitions.length;
+      $scope.requestInProgress = false;
     });
   };
 
   var convert = function () {
     var successHandler = function () {
-      fetchPendingRequisitions();
+      $scope.fetchFilteredRequisitions();
       $scope.message = "msg.rnr.converted.to.order";
       $scope.error = "";
 
     };
 
     var errorHandler = function (response) {
-      $scope, message = "";
+      $scope.message = "";
       if (response.data.error) {
         $scope.error = response.data.error;
       } else {
         $scope.error = "msg.error.occurred";
       }
 
-      fetchPendingRequisitions();
+      $scope.fetchFilteredRequisitions();
     };
 
     Orders.post({}, $scope.gridOptions.selectedItems, successHandler, errorHandler);
   };
-
-  function contains(string, query) {
-    return string.toLowerCase().indexOf(query.toLowerCase()) != -1;
-  }
-
-  function matchesAnyField(query, rnr) {
-    var rnrString = "|" + rnr.programName + "|" + rnr.facilityCode + "|" + "|" + rnr.facilityName + "|" + "|" + rnr.supplyingDepotName + "|";
-    return contains(rnrString, query);
-  }
 }
 
 ConvertToOrderListController.resolve = {
-  requisitionList: function ($q, $timeout, RequisitionForConvertToOrder) {
+  pagedRequisitionList: function ($q, $timeout, $route,
+                                  RequisitionForConvertToOrder) {
     var deferred = $q.defer();
     $timeout(function () {
-      RequisitionForConvertToOrder.get({}, function (data) {
-        deferred.resolve(data.rnr_list);
+      RequisitionForConvertToOrder.get({page: $route.current.params.page ? $route.current.params.page : 1}, function (data) {
+        deferred.resolve(data);
       }, {});
     }, 100);
     return deferred.promise;

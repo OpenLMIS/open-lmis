@@ -111,8 +111,8 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    assertTrue(feedJSONList.get(1).contains("\"active\":true"));
-    assertTrue(feedJSONList.get(1).contains("\"active\":false"));
+    assertTrue("responseEntity.getResponse() : "+responseEntity.getResponse(),feedJSONList.get(1).contains("\"active\":true"));
+    assertTrue("responseEntity.getResponse() : "+responseEntity.getResponse(),feedJSONList.get(1).contains("\"active\":false"));
 
     deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -122,10 +122,11 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
 
     Thread.sleep(5000);
     responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    assertTrue(feedJSONList.get(2).contains("\"active\":false"));
-    assertFalse(feedJSONList.get(2).contains("\"active\":true"));
+    assertTrue("feedJSONList.get(2) : "+feedJSONList.get(2),feedJSONList.get(2).contains("\"active\":false"));
+    assertFalse("feedJSONList.get(2) : "+feedJSONList.get(2),feedJSONList.get(2).contains("\"active\":true"));
 
     deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -137,8 +138,8 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    assertTrue(feedJSONList.get(3).contains("\"active\":true"));
-    assertFalse(feedJSONList.get(3).contains("\"active\":false"));
+    assertTrue("responseEntity.getResponse() : "+responseEntity.getResponse(),feedJSONList.get(3).contains("\"active\":true"));
+    assertFalse("responseEntity.getResponse() : "+responseEntity.getResponse(),feedJSONList.get(3).contains("\"active\":false"));
 
   }
 

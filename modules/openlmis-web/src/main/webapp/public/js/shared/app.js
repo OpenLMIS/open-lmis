@@ -8,34 +8,48 @@
 
 /* App Module */
 var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'],
-    function ($httpProvider) {
-      var interceptor = ['$rootScope', '$q', '$window', function (scope, $q, $window) {
-        function success(response) {
-          angular.element('#loader').hide();
-          return response;
-        }
+  function ($httpProvider) {
+    var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
+      function responseSuccess(response) {
+        angular.element('#loader').hide();
+        return response;
+      }
 
-        function error(response) {
-          angular.element('#loader').hide();
-          switch (response.status) {
-            case 403:
-              $window.location = "/public/pages/access-denied.html";
-              break;
-            case 401:
-              scope.modalShown = true;
-              break;
-            default:
-              break;
-          }
-          return $q.reject(response);
+      function responseError(response) {
+        angular.element('#loader').hide();
+        switch (response.status) {
+          case 403:
+            $window.location = "/public/pages/access-denied.html";
+            break;
+          case 401:
+            loginConfig.preventReload = (response.config.method != 'GET');
+            loginConfig.modalShown = true;
+            break;
+          default:
+            break;
         }
+        return $q.reject(response);
+      }
 
-        return function (promise) {
-          return promise.then(success, error);
-        };
-      }];
-      $httpProvider.responseInterceptors.push(interceptor);
-    });
+      var spinnerFunction = function (data) {
+        angular.element('#loader').show();
+        return data;
+      };
+
+      return {
+        'request': function (config) {
+          config.transformRequest.push(spinnerFunction);
+          config.headers["X-Requested-With"] = "XMLHttpRequest";
+          return config;
+        },
+        'response': responseSuccess,
+        'responseError': responseError
+      }
+    }];
+    $httpProvider.interceptors.push(interceptor);
+  });
+
+app.value("loginConfig", {modalShown: false, preventReload: false});
 
 app.directive('dateValidator', function () {
   return {
@@ -169,15 +183,6 @@ app.positiveInteger = function (value, errorHolder) {
 
   return valid;
 };
-
-app.config(function ($httpProvider) {
-  var spinnerFunction = function (data) {
-    angular.element('#loader').show();
-    return data;
-  };
-  $httpProvider.defaults.transformRequest.push(spinnerFunction);
-  $httpProvider.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-});
 
 app.run(function ($rootScope) {
   $rootScope.$on('$routeChangeStart', function () {

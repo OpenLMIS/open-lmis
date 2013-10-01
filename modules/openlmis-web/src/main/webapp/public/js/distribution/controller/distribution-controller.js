@@ -5,7 +5,7 @@
  */
 
 
-function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, IndexedDB, navigateBackService, $http, $dialog, $scope, $location, SharedDistributions, $q) {
+function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $scope, $location, $q, distributionService) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
   var NONE_ASSIGNED_LABEL = messageService.get('label.noneAssigned');
@@ -53,16 +53,9 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
   $scope.initiateDistribution = function () {
 
     var message;
+    var distribution = {deliveryZone: $scope.selectedZone, program: $scope.selectedProgram, period: $scope.selectedPeriod};
 
-    function isCached() {
-      return !!_.find(SharedDistributions.distributionList, function (distribution) {
-        return distribution.deliveryZone.id == $scope.selectedZone.id &&
-          distribution.program.id == $scope.selectedProgram.id &&
-          distribution.period.id == $scope.selectedPeriod.id;
-      });
-    }
-
-    if (isCached()) {
+    if (distributionService.isCached(distribution)) {
       $scope.message = messageService.get("message.distribution.already.cached",
         $scope.selectedZone.name, $scope.selectedProgram.name, $scope.selectedPeriod.name);
       return;
@@ -70,19 +63,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 
     var distributionDefer = $q.defer();
 
-    cacheDistribution();
-
-    function cacheDistribution() {
-      $scope.distributionInitiatedCallback = function (result) {
-        if (result) {
-          distributionDefer.resolve(distribution);
-        } else {
-          distributionDefer.reject();
-        }
-      };
-
-      var distribution = {deliveryZone: $scope.selectedZone, program: $scope.selectedProgram, period: $scope.selectedPeriod};
-
+    (function cacheDistribution() {
       $http.post('/distributions.json', distribution).success(onInitSuccess);
 
       function onInitSuccess(data, status) {
@@ -96,10 +77,20 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
             header: messageService.get('label.distribution.initiated'),
             body: data.message
           };
-          OpenLmisDialog.newDialog(dialogOpts, $scope.distributionInitiatedCallback, $dialog, messageService);
+          OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
         }
       }
-    }
+
+      function callback() {
+        return function (result) {
+          if (result) {
+            distributionDefer.resolve(distribution);
+          } else {
+            distributionDefer.reject();
+          }
+        };
+      }
+    })();
 
     var referenceDataDefer = $q.defer();
 
@@ -119,46 +110,11 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       }
     }
 
-    function prepareDistribution(distribution, referenceData) {
-      distribution.facilityDistributionData = {};
-      $(referenceData.facilities).each(function (index, facility) {
-
-        var productGroups = [];
-        $(facility.supportedPrograms[0].programProducts).each(function (i, programProduct) {
-          if(!programProduct.active || !programProduct.product.active) return;
-          if(!programProduct.product.productGroup) return;
-          if(_.findWhere(productGroups, {id: programProduct.product.productGroup.id})) return;
-
-          productGroups.push(programProduct.product.productGroup);
-        });
-
-        var refrigeratorReadings = [];
-        $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
-          refrigeratorReadings.push({'refrigerator': refrigerator});
-        });
-
-        distribution.facilityDistributionData[facility.id] = {};
-        distribution.facilityDistributionData[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
-        distribution.facilityDistributionData[facility.id].epiUse = {productGroups: productGroups};
-      });
-
-      return distribution;
-    }
-
     $q.all([distributionDefer.promise, referenceDataDefer.promise]).then(function (resolved) {
       var distribution = resolved[0];
       var referenceData = resolved[1];
 
-      distribution = prepareDistribution(distribution, referenceData);
-
-      IndexedDB.put('distributions', distribution, function () {
-      }, {}, function () {
-        SharedDistributions.update();
-      });
-
-      referenceData.distributionId = distribution.id;
-      IndexedDB.put('distributionReferenceData', referenceData, function () {
-      }, {});
+      distributionService.put(distribution, referenceData);
 
       $scope.message = message;
     });

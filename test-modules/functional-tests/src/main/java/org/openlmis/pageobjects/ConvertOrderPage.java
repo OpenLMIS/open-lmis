@@ -17,6 +17,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openqa.selenium.support.How.XPATH;
+
 
 public class ConvertOrderPage extends RequisitionPage {
 
@@ -56,10 +59,22 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
   private static WebElement noRequisitionPendingMessage;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
+  private static WebElement searchTextBox;
+
+  @FindBy(how = How.XPATH, using = "//button[@ng-click='fetchFilteredRequisitions()']")
+  private static WebElement searchButton;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
+  private static WebElement searchOptionButton;
+
+  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  private static WebElement emergencyIcon;
+
   public ConvertOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
+    testWebDriver.setImplicitWait(2);
   }
 
   public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName) throws IOException {
@@ -95,4 +110,30 @@ public class ConvertOrderPage extends RequisitionPage {
     clickOk();
   }
 
+  public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
+  }
+
+  public void searchWithOption(String searchOption, String searchString) {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    searchOptionButton.click();
+    testWebDriver.sleep(250);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'" + searchOption + "')]"));
+    testWebDriver.getElementByXpath("//a[contains(text(),'" + searchOption + "')]").click();
+    sendKeys(searchTextBox, searchString);
+    searchButton.click();
+    testWebDriver.sleep(1000);
+  }
+
+  public void searchWithIndex(int index, String searchString) {
+    testWebDriver.waitForElementToAppear(searchOptionButton);
+    searchOptionButton.click();
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a"));
+    testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a").click();
+    sendKeys(searchTextBox, searchString);
+    searchButton.click();
+    testWebDriver.sleep(1000);
+  }
 }

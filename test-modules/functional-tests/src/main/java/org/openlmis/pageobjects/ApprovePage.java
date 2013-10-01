@@ -102,6 +102,9 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
   private static WebElement approvedSuccessMessage;
 
+  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  private static WebElement emergencyIcon;
+
 
   public ApprovePage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -140,6 +143,11 @@ public class ApprovePage extends RequisitionPage {
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
   }
 
+  public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
+  }
 
   public void verifyApprovedQuantity() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);

@@ -38,7 +38,7 @@ public class ReportController {
 
 
   @RequestMapping(method = RequestMethod.GET, value = "/reports/{id}/{format}")
-  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Integer id
+  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Long id
     , @PathVariable("format") String format) throws Exception {
 
     String viewFormat = format == null ? PDF_VIEW : format;

@@ -85,6 +85,31 @@ public class GeneralObservation extends DistributionTab {
     assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), data.get(CONFIRMED_BY_TITLE));
   }
 
+  public void setObservations(String observations) {
+    testWebDriver.waitForElementToAppear(observationsField);
+    sendKeys(observationsField, observations);
+  }
+
+  public void setConfirmedByName(String confirmedByName) {
+    testWebDriver.waitForElementToAppear(confirmedByNameField);
+    sendKeys(confirmedByNameField, confirmedByName);
+  }
+
+  public void setConfirmedByTitle(String confirmedByTitle) {
+    testWebDriver.waitForElementToAppear(confirmedByTitleField);
+    sendKeys(confirmedByTitleField, confirmedByTitle);
+  }
+
+  public void setVerifiedByName(String verifiedByName) {
+    testWebDriver.waitForElementToAppear(verifiedByNameField);
+    sendKeys(verifiedByNameField, verifiedByName);
+  }
+
+  public void setVerifiedByTitle(String verifiedByTitle) {
+    testWebDriver.waitForElementToAppear(verifiedByTitleField);
+    sendKeys(verifiedByTitleField, verifiedByTitle);
+  }
+
   @Override
   public void navigate() {
     generalObservationTab.click();

@@ -25,6 +25,7 @@ public class ReportBuilder {
       report.setProgramId(lookup.valueOf(programId, 1L));
       report.setPeriodId(lookup.valueOf(periodId, 1L));
       report.setUserId(lookup.valueOf(userId, "1"));
+      report.setEmergency(false);
       Vendor defaultVendor = new Vendor();
       defaultVendor.setId(1L);
       defaultVendor.setName("vendor");

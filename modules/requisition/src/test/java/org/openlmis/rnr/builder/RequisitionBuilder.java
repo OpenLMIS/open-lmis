@@ -24,6 +24,7 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static com.natpryce.makeiteasy.Property.newProperty;
+import static java.lang.Boolean.FALSE;
 
 public class RequisitionBuilder {
 
@@ -34,6 +35,7 @@ public class RequisitionBuilder {
   public static final Property<Rnr, Facility> facility = newProperty();
   public static final Property<Rnr, Program> program = newProperty();
   public static final Property<Rnr, Long> id = newProperty();
+  public static final Property<Rnr, Boolean> emergency = newProperty();
 
   public static final Date SUBMITTED_DATE = new DateTime().withDate(2013, 3, 19).toDate();
   public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3L)));
@@ -57,6 +59,7 @@ public class RequisitionBuilder {
     rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
     rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
     rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
+    rnr.setEmergency(lookup.valueOf(emergency, FALSE));
     RnrLineItem rnrLineItemCost48 = make(a(RnrLineItemBuilder.defaultRnrLineItem));
     rnr.add(rnrLineItemCost48, true);
     rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));

@@ -118,7 +118,7 @@ services.factory('Periods', function ($resource) {
 });
 
 services.factory('PeriodsForFacilityAndProgram', function ($resource) {
-  return $resource('/logistics/facility/:facilityId/program/:programId/periods.json', {}, {});
+  return $resource('/logistics/periods.json', {}, {});
 });
 
 services.factory('Period', function ($resource) {

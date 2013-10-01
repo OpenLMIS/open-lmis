@@ -23,6 +23,10 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
     prepareNewPeriod();
   }, {});
 
+  $scope.updateEndDate = function () {
+    $scope.newPeriod.endDate = new Date($scope.newPeriod.endDate.getTime() + $scope.oneDay - 1000);
+  }
+
   $scope.calculateDays = function (startTime, endTime) {
     var startDate = new Date(startTime);
     var endDate = new Date(endTime);
@@ -82,7 +86,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
 
   var resetNewPeriod = function (endDate) {
     $scope.newPeriod = {};
-    $scope.newPeriod.startDate = new Date(endDate + $scope.oneDay);
+    $scope.newPeriod.startDate = new Date(endDate + 1000);
     $scope.refreshEndDateOffset($scope.newPeriod.startDate.getTime());
   };
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -24,8 +25,7 @@ public class ShipmentLineItemTransformer {
 
   public ShipmentLineItem transform(ShipmentLineItemDTO shipmentLineItemDTO,
                                     String packedDateFormat,
-                                    String shippedDateFormat) throws DataException {
-
+                                    String shippedDateFormat, Date creationDate) throws DataException {
 
     checkMandatory(shipmentLineItemDTO);
 
@@ -33,7 +33,7 @@ public class ShipmentLineItemTransformer {
 
     try {
       setMandatoryFields(lineItem, shipmentLineItemDTO);
-      setOptionalFields(lineItem, shipmentLineItemDTO, packedDateFormat, shippedDateFormat);
+      setOptionalFields(lineItem, shipmentLineItemDTO, packedDateFormat, shippedDateFormat, creationDate);
     } catch (Exception e) {
       throw new DataException("wrong.data.type");
     }
@@ -42,25 +42,31 @@ public class ShipmentLineItemTransformer {
   }
 
   private void setOptionalFields(ShipmentLineItem lineItem, ShipmentLineItemDTO dto,
-                                 String packedDateFormat, String shippedDateFormat)
+                                 String packedDateFormat, String shippedDateFormat, Date creationDate)
     throws ParseException {
 
     if (!isBlank(dto.getCost())) {
       lineItem.setCost(new BigDecimal(dto.getCost().trim()));
     }
 
-    if (!isBlank(dto.getPackedDate())) {
-      lineItem.setPackedDate(new SimpleDateFormat(packedDateFormat).parse(dto.getPackedDate().trim()));
-    }
+    Date packedDate = (!isBlank(dto.getPackedDate())) ? parseDate(packedDateFormat, dto.getPackedDate().trim()) : creationDate;
+    lineItem.setPackedDate(packedDate);
 
     if (!isBlank(dto.getShippedDate())) {
-      lineItem.setShippedDate(new SimpleDateFormat(shippedDateFormat).parse(dto.getShippedDate().trim()));
+      lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate()));
     }
+  }
 
+  private Date parseDate(String dateFormat, String date) throws ParseException {
+    if (dateFormat.length() != date.length()) {
+      throw new DataException("wrong.data.type");
+    }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+    simpleDateFormat.setLenient(false);
+    return simpleDateFormat.parse(date);
   }
 
   private void setMandatoryFields(ShipmentLineItem lineItem, ShipmentLineItemDTO shipmentLineItemDTO) {
-
     lineItem.setProductCode(shipmentLineItemDTO.getProductCode().trim());
     lineItem.setOrderId(Long.valueOf(shipmentLineItemDTO.getOrderId().trim()));
     lineItem.setQuantityShipped(Integer.valueOf(shipmentLineItemDTO.getQuantityShipped().trim()));

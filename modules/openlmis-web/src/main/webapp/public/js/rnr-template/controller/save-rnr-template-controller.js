@@ -19,6 +19,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   };
 
+
   $scope.save = function () {
     updatePosition();
     setRnRTemplateValidateFlag();
@@ -92,6 +93,12 @@ SaveRnrTemplateController.resolve = {
 
     $timeout(function () {
       RnRColumnList.get({programId:id}, function (data) {
+        // deserialize the column options
+//        angular.forEach(data.rnrTemplateForm.rnrColumns, function(col){
+//            if(col.calculationOptions != 'DEFAULT'){
+//                col.calculationOptions = angular.fromJson( col.calculationOptions );
+//            }
+//        });
         deferred.resolve(data.rnrTemplateForm);
       }, function () {
         $location.path('select-program');

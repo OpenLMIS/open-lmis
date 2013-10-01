@@ -1,4 +1,4 @@
-function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes, $http, $routeParams,$location) {
+function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,RequisitionGroups, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -30,41 +30,47 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
 
         //filter form data section
         $scope.filterObject =  {
-             facilityType : $scope.facilityType,
-             facilityNameFilter : $scope.facilityNameFilter,
-             facilityCodeFilter : $scope.facilityCodeFilter
+             facilityTypeId : $scope.facilityTypeId,
+             facilityType : "",
+             rgroupId : $scope.rgroupId,
+             rgroup : ""
         };
+        RequisitionGroups.get(function (data) {
+            $scope.requisitionGroups = data.requisitionGroupList;
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+        });
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': '- Please Select One -'});
+            $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
-        $scope.$watch('facilityNameFilter', function(selection){
-            if(selection != undefined || selection == ""){
-               $scope.filterObject.facilityNameFilter =  selection;
+    $scope.$watch('rgroupId', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.rgroupId = -1;
+        } else if (selection != undefined || selection == "") {
+            $scope.filterObject.rgroupId = selection;
+            $.each($scope.requisitionGroups, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.rgroup = idx.name;
+                }
+            });
+        } else {
+            $scope.filterObject.rgroupId = 0;
+        }
+        $scope.filterGrid();
+    });
 
-            }else{
-                $scope.filterObject.facilityNameFilter = "";
-            }
-            $scope.filterGrid();
-        });
-        $scope.$watch('facilityCodeFilter', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.facilityCodeFilter =  selection;
-
-            }else{
-                $scope.filterObject.facilityCodeFilter = "";
-            }
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('facilityType.value', function(selection){
+    $scope.$watch('facilityTypeId', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.facilityTypeId =  selection;
-
+                $.each($scope.facilityTypes, function(idx,value){
+                   if(selection == idx.id){
+                       $scope.filterObject.facilityType = value.name;
+                   }
+                });
             }else{
                 $scope.filterObject.facilityTypeId =  0;
             }
@@ -101,6 +107,18 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
         });
 
         $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
+        $.each($scope.sortInfo.fields, function(index, value) {
+            if(value != undefined) {
+                $scope.filterObject['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+            }
+        });
+        $scope.$watch('sortInfo', function () {
+            $.each($scope.sortInfo.fields, function (index, value) {
+                if (value != undefined)
+                    $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+            });
+            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
+        }, true);
 
         $scope.setPagingData = function(data, page, pageSize, total){
 
@@ -119,8 +137,8 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
                                                };
                         }
                         $.each($scope.filterObject, function(index, value) {
-                            if(value != undefined)
-                                params[index] = value;
+                           // alert('filter object '+ index+' '+value);
+                           params[index] = value;
                         });
                         MailingLabels.get(params, function(data) {
                             $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
@@ -135,23 +153,6 @@ function ListMailinglabelsController($scope, MailingLabels, ReportFacilityTypes,
 
         $scope.$watch('pagingOptions.pageSize', function () {
             $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
-
-        $scope.$watch('sortInfo', function () {
-
-            //add sorting infro to the filter object
-            $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined) {
-                    //only sort by one of the fields
-                    $scope.filterObject["facilityType"] = undefined;
-                    $scope.filterObject["active"] = undefined;
-                    $scope.filterObject["facilityName"] = undefined;
-                    $scope.filterObject["code"] = undefined;
-                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-
-                }
-            });
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
         }, true);
 
     $scope.gridOptions = {

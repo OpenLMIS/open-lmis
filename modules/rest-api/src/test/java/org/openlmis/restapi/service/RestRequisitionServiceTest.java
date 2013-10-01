@@ -77,8 +77,8 @@ public class RestRequisitionServiceTest {
     user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
-    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId()))
-        .thenReturn(requisition);
+    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency()))
+      .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
   }
@@ -89,13 +89,18 @@ public class RestRequisitionServiceTest {
     products.add(new RnrLineItem());
     report.setProducts(products);
     when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
+    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
+    Rnr reportedRequisition = mock(Rnr.class);
+    whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
     Rnr expectedRequisition = service.submitReport(report);
 
-    verify(requisitionService).initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId());
-    verify(requisitionService).submit(expectedRequisition);
+    verify(requisitionService).initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false);
+    verify(requisitionService).submit(reportedRequisition);
     verify(requisitionService).authorize(expectedRequisition);
+    verify(reportedRequisition).setStatus(requisition.getStatus());
+    verify(reportedRequisition).setModifiedBy(requisition.getModifiedBy());
+    verify(reportedRequisition).setFullSupplyLineItems(products);
     assertThat(expectedRequisition, is(requisition));
-    assertThat(expectedRequisition.getFullSupplyLineItems(), is(products));
   }
 
   @Test

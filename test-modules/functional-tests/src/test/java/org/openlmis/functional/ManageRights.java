@@ -74,7 +74,7 @@ public class ManageRights extends TestCaseHelper {
     homePage.clickProceed();
     homePage.verifyErrorMessage();
 
-    dbWrapper.insertValuesInRequisition();
+    dbWrapper.insertValuesInRequisition(false);
     dbWrapper.updateRequisitionStatus("INITIATED");
 
     homePage.navigateAndInitiateRnr(program);

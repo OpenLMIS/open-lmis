@@ -20,13 +20,13 @@ public interface RnrLineItemMapper {
     "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-    "previousStockInHandAvailable, newPatientCount, stockOutDays,",
+    "previousStockInHandAvailable,stockInHand, newPatientCount, stockOutDays,",
     "modifiedBy, modifiedDate, createdBy)",
     "VALUES (",
     "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
     "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
     "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
-    "#{previousStockInHandAvailable}, #{newPatientCount}, #{stockOutDays},",
+    "#{previousStockInHandAvailable}, #{stockInHand}, #{newPatientCount}, #{stockOutDays},",
     "#{modifiedBy}, #{modifiedDate}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);

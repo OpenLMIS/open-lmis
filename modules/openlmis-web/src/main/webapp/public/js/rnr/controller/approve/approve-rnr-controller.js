@@ -1,7 +1,9 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService) {
@@ -130,7 +132,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
           $scope.error = "";
           setTimeout(fadeSaveMessage, 3000);
         }, function (data) {
-          $scope.error = data.error;
+          $scope.error = data.data.error;
           $scope.message = "";
         });
     $scope.approvalForm.$setPristine();
@@ -167,7 +169,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     }
   };
 
-  showConfirmModal = function () {
+  var showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
       header: messageService.get("label.confirm.action"),
@@ -202,7 +204,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
       $scope.error = "";
       $location.path("rnr-for-approval");
     }, function (data) {
-      $scope.error = data.error;
+      $scope.error = data.data.error;
       $scope.message = "";
     });
   };
