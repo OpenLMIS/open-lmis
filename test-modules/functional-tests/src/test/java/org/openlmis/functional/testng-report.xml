@@ -1,0 +1,41 @@
+<!--
+  ~ Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
+  ~
+  ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
+  -->
+<suite name="eLMIS Funtional Test" verbose="10" allow-return-values="true">
+  <test name="eLMIS functional test">
+    <groups>
+      <run>
+        <include name="report"/>
+      </run>
+    </groups>
+    <classes preserver-order="true">
+      <class name="org.openlmis.functional.reports.ReportPermission">
+      </class>
+      <class name="org.openlmis.functional.reports.FacilityMailingListReport">
+      </class>
+      <class name="org.openlmis.functional.reports.DistrictConsumptionComparison">
+      </class>
+      <class name="org.openlmis.functional.reports.E2EViewReport">
+      </class>
+      <class name="org.openlmis.functional.reports.ConsumptionAverageByProductReport">
+      </class>
+      <class name="org.openlmis.functional.reports.NonReportingFacilitiesReport">
+      </class>
+      <class name="org.openlmis.functional.reports.StockedOutReport">
+      </class>
+      <class name="org.openlmis.functional.reports.StockImbalanceByFacilityReport">
+      </class>
+      <class name="org.openlmis.functional.reports.SummaryReport">
+      </class>
+      <class name="org.openlmis.functional.reports.SupplyStatusByFacilityReprot">
+      </class>
+      <class name="org.openlmis.functional.reports.ReportingRateReport">
+      </class>
+      <class name="org.openlmis.functional.reports.AdjustmentSummaryReport">
+      </class>
+    </classes>
+  </test>
+</suite>
+
