@@ -43,9 +43,9 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   });
 
   if ($scope.rnr.emergency) {
-    $scope.requisitionType = "requisition.type.emergency";
+    $scope.requisitionType = messageService.get("requisition.type.emergency");
   } else {
-    $scope.requisitionType = "requisition.type.regular";
+    $scope.requisitionType = messageService.get("requisition.type.regular");
   }
   $scope.fillPagedGridData = function () {
     if ($scope.visibleTab == REGIMEN) {

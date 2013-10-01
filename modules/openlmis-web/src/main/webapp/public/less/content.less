@@ -2371,3 +2371,97 @@ input[rnr-validator="positiveInteger"]{
 .cell-input input[type="text"].small-width-ie {
   width: 86%;
 }
+
+.padding2px{
+  padding: 2px;
+}
+
+
+
+
+
+
+
+
+
+
+
+.Regular{
+  .right-arrow(#DBDBDB);
+}
+.Regular:after, .Regular:before{
+  .right-arrow-after-before();
+}
+.Regular:after{
+  .right-arrow-after(#DBDBDB);
+}
+
+
+.Emergency{
+  .right-arrow(#D25F5B);
+  color:#fff;
+}
+.Emergency:after, .Emergency:before{
+  .right-arrow-after-before();
+}
+.Emergency:after{
+  .right-arrow-after(#D25F5B);
+}
+
+.pull-left.abcd{
+  width: 90%;
+  margin-left: 0.4%;
+}
+
+@media screen and (min-width: 1024px){
+  .pull-left.abcd{
+    width: 90.5%;
+  }
+}
+
+@media screen and (min-width: 1100px){
+  .pull-left.abcd{
+    width: 88%;
+  }
+}
+
+@media screen and (min-width: 1020px){
+  .pull-left.abcd{
+    width: 87%;
+  }
+}
+
+@media screen and (min-width: 960px){
+  .pull-left.abcd{
+    width: 86%;
+  }
+}
+
+@media screen and (min-width: 840px){
+  .pull-left.abcd{
+    width: 84%;
+  }
+}
+
+@media screen and (min-width: 648px){
+  .pull-left.abcd{
+    width: 82%;
+  }
+}
+
+@media screen and (max-width: 1050px){
+  .Regular{
+    padding: 29px 15px;
+  }
+  .Regular:after{
+    border-width: 39px 0 39px 15px;
+    margin-top: -39px;
+  }
+  .Emergency{
+      padding: 29px 15px;
+    }
+    .Emergency:after{
+      border-width: 39px 0 39px 15px;
+      margin-top: -39px;
+    }
+}
