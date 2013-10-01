@@ -45,6 +45,12 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
   });
 
+  if ($scope.rnr.emergency) {
+    $scope.requisitionType = messageService.get("requisition.type.emergency");
+  } else {
+    $scope.requisitionType = messageService.get("requisition.type.regular");
+  }
+
   $scope.highlightRequired = function (value) {
     if ($scope.approvedQuantityRequiredFlag && (isUndefined(value))) {
       return "required-error";
