@@ -241,9 +241,9 @@ public class InitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
-    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, true);
+    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
     dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, true);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
     approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
@@ -272,9 +272,9 @@ public class InitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
-    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, true);
+    dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
     dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, true);
+    dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
     approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();

@@ -50,8 +50,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     String userSIC = "storeincharge";
     setUpData("HIV", userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(Integer.parseInt(requisitions), "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, true);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
   }
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
@@ -79,8 +79,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, true);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -111,15 +113,15 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, true);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, false);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, false);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
@@ -130,16 +132,16 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, true);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, false);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, false);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
@@ -151,8 +153,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, true);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -171,8 +175,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", false);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, true);
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
