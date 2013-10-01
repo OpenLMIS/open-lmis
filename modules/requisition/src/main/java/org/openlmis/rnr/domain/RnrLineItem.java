@@ -204,7 +204,7 @@ public class RnrLineItem extends LineItem {
     calculateNormalizedConsumption();
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(period);
-      calculateMaxStockQuantity();
+      calculateMaxStockQuantity(template);
       calculateOrderQuantity();
     }
 
@@ -225,8 +225,15 @@ public class RnrLineItem extends LineItem {
     }
   }
 
-  public void calculateMaxStockQuantity() {
-    maxStockQuantity = maxMonthsOfStock * amc;
+  public void calculateMaxStockQuantity(ProgramRnrTemplate template) {
+    RnrColumn column = template.getRnrColumnsMap().get("maxStockQuantity");
+    if(column.getCalculationOption() == "CONSUMPTION_X_2"){
+      maxStockQuantity = normalizedConsumption * 2;
+    } else{
+      // apply the default calculation if there was no other calculation that works here
+      maxStockQuantity = maxMonthsOfStock * amc;
+    }
+
   }
 
   public void calculateOrderQuantity() {

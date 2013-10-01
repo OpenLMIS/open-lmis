@@ -34,7 +34,7 @@ public class PrintRnrLineItem {
     }
     calculateNormalizedConsumption();
     calculateAmc(period);
-    calculateMaxStockQuantity();
+    calculateMaxStockQuantity(template);
     calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
     rnrLineItem.calculateOrderQuantity();
 
@@ -49,9 +49,9 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateMaxStockQuantity() {
+  private void calculateMaxStockQuantity(ProgramRnrTemplate template) {
     try {
-      ((RnrLineItem) lineItem).calculateMaxStockQuantity();
+      ((RnrLineItem) lineItem).calculateMaxStockQuantity(template);
     } catch (NullPointerException e) {
       ((RnrLineItem) lineItem).setMaxStockQuantity(null);
     }

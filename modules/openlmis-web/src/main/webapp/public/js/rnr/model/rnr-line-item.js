@@ -222,7 +222,22 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       this.maxStockQuantity = null;
       return;
     }
-    this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
+    // find the calculation option
+    var maxStockColumnCalculationOption = null;
+    angular.forEach(this.programRnrColumnList, function(item){
+       if(item.name == 'maxStockQuantity') {
+           maxStockColumnCalculationOption = item.calculationOption;
+       }
+    });
+
+    // if not default, apply the formula
+    if(maxStockColumnCalculationOption != null && maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
+        this.maxStockQuantity = this.normalizedConsumption * 2;
+    }else{
+        // if default, do what you used to do
+        this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
+    }
+
   };
 
   RnrLineItem.prototype.calculateCalculatedOrderQuantity = function () {
