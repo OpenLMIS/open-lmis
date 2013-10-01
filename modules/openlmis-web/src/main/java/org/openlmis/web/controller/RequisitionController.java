@@ -1,9 +1,7 @@
 /*
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.web.controller;
@@ -217,19 +215,26 @@ public class RequisitionController extends BaseController {
   }
 
   private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
-    ProcessingPeriod currentPeriod;
-    return criteria.isEmergency() ?
-      (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ?
-        asList(currentPeriod) : null :
-      requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
+    List<ProcessingPeriod> periods = null;
+
+    if (criteria.isEmergency()) {
+      ProcessingPeriod currentPeriod = requisitionService.getCurrentPeriod(criteria);
+      if (currentPeriod != null) {
+        periods = asList(currentPeriod);
+      }
+    } else {
+      periods = requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
+    }
+
+    return periods;
   }
 
   private List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
     criteria.setWithoutLineItems(true);
-    if (!criteria.isEmergency())
+    if (!criteria.isEmergency()) {
       criteria.setPeriodId(periodList.get(0).getId());
-    List<Rnr> rnrList = requisitionService.get(criteria);
-    return rnrList;
+    }
+    return requisitionService.get(criteria);
   }
 
   @RequestMapping(value = "/requisitions/{id}", method = GET)
