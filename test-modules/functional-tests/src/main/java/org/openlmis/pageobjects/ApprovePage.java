@@ -45,7 +45,7 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
   private static WebElement requisitionHeader;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-head-block']/div[1]/span")
   private static WebElement facilityLabel;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
@@ -87,7 +87,7 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
-  @FindBy(how = XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
   private static WebElement reportingPeriodInitRnRScreen;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
@@ -137,7 +137,7 @@ public class ApprovePage extends RequisitionPage {
     String facilityText = testWebDriver.getText(facilityLabel);
     assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
+    assertEquals(reportingPeriodInitRnRScreen.getText().trim(), periodDetails.trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
     assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
