@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
 
@@ -357,6 +359,18 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @Then("^I should see ordered list without download link$")
   public void verifyOrderListWithoutdDownloadLink() throws Exception {
       verifyOrderedList(false);
+  }
+
+  @Then("^I verify Regular RnR Type$")
+  public void verifyRegularRnRText() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertEquals(initiateRnRPage.getRegularLabelText(),"Regular");
+  }
+
+    @Then("^I verify Emergency RnR Type$")
+  public void verifyEmergencyRnRText() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertEquals(initiateRnRPage.getRegularLabelText(),"Emergency");
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {

@@ -21,7 +21,8 @@ Feature: End to end requisition flow
     And I logout
     And I am logged in as "storeincharge"
     And I initiate and submit requisition
-    And I add comments
+    Then I verify Regular RnR Type
+    When I add comments
     And I update & verify ordered quantities
     And I update & verify requested quantities
     And I add non full supply items & verify total cost
@@ -60,4 +61,4 @@ Feature: End to end requisition flow
     When I do not have anything to pack to ship
     And I access view orders page
     Then I should see ordered list without download link
-
+    

@@ -227,6 +227,12 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@openlmis-message='error']")
   private static WebElement configureTemplateErrorDiv;
 
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Emergency']/span")
+  private static WebElement rnrEmergrncyLabel;
+
+  @FindBy(how = XPATH, using ="//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
+  private static WebElement rnrRegularLabel;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
 
@@ -685,4 +691,12 @@ public class InitiateRnRPage extends RequisitionPage {
       assertFalse(approveButtonPresent);
     }
   }
+
+    public String getEmergencyLabelText(){
+        return rnrEmergrncyLabel.getText();
+    }
+
+    public String getRegularLabelText(){
+        return rnrRegularLabel.getText();
+    }
 }
