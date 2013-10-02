@@ -62,7 +62,7 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
         $scope.statuses = [
             {'name': 'All Statuses'},
             {'name': 'Active', 'value': "TRUE"},
-            {'name': 'Inavtive', 'value': "FALSE"}
+            {'name': 'Inactive', 'value': "FALSE"}
         ];
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
