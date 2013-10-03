@@ -160,8 +160,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDuplicateRoleName(String user, String program, String[] credentials) throws Exception {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testVerifyDuplicateRoleName(String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
@@ -170,6 +170,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.createRole(ADMIN, ADMIN,userRoleList, false);
     assertEquals(rolesPage.getSaveErrorMsgDiv().getText().trim(),"Duplicate Role found");
   }
+
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+    public void testVerifyFacilityBasedRole(String[] credentials) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        RolesPage rolesPage = homePage.navigateRoleAssignments();
+        rolesPage.createFacilityBasedRoleWithSuccessMessageExpected("Facility Based Role Name","Facility Based Role Description");
+    }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -347,6 +355,13 @@ public class ManageRolesAndUsers extends TestCaseHelper {
       {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
     };
   }
+
+    @DataProvider(name = "Data-Provider-Role-Function")
+    public Object[][] parameterIntRoleTestProvider() {
+        return new Object[][]{
+                { new String[]{"Admin123", "Admin123"}}
+        };
+    }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {

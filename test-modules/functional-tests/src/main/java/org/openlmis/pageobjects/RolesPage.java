@@ -110,6 +110,11 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
   private static WebElement addNewRoleHeader;
 
+  @FindBy(how = How.ID, using = "shipmentRoleType")
+  private static WebElement facilityBasedRoleType;
+
+  @FindBy(how = How.XPATH, using = "//input[@id='FACILITY_FILL_SHIPMENT']")
+  private static WebElement rightFillShipment;
 
   public RolesPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -251,6 +256,24 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
   }
+
+    public void createFacilityBasedRoleWithSuccessMessageExpected(String roleName, String roleDesc) {
+        testWebDriver.waitForElementToAppear(createNewRoleButton);
+        createNewRoleButton.click();
+
+        facilityBasedRoleType.click();
+        clickContinueButton();
+
+        testWebDriver.sleep(1000);
+
+        roleNameField.sendKeys(roleName);
+        roleDescription.sendKeys(roleDesc);
+        rightFillShipment.click();
+        saveButton.click();
+
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
+    }
 
   public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
