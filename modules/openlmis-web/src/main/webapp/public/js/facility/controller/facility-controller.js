@@ -52,7 +52,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.currentProgram = supportedProgram.program;
     $scope.programProductsISAModal = true;
   };
-
+  $scope.cancelUserSave = function() {
+    $location.path('#/search');
+  };
   function saveAllocationProgramProducts() {
     var promises = [];
 
