@@ -120,6 +120,11 @@ public class TestWebDriver {
     }
   }
 
+  public void refresh()
+  {
+    driver.navigate().refresh();
+  }
+
   public void handleScroll() {
     ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("scroll(0,1000);");
   }

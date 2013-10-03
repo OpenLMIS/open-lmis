@@ -281,6 +281,10 @@ public class DBWrapper {
 
   }
 
+  public void deletePeriod(String periodName) throws IOException, SQLException {
+    update("delete from processing_periods where name='"+periodName+"';");
+  }
+
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
       "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
@@ -372,8 +376,9 @@ public class DBWrapper {
 
 
   public void insertRole(String role, String type, String description) throws SQLException, IOException {
-    ResultSet rs = query("Select id from roles;");
+    ResultSet rs = query("Select id from roles where name='"+role+"';");
 
+    if(!rs.next())
     update("INSERT INTO roles\n" +
       " (name, description) VALUES\n" +
       " ('" + role + "', '" + description + "');");
@@ -794,6 +799,14 @@ public class DBWrapper {
   public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) throws IOException, SQLException {
     update("update regimen_line_items set patientsontreatment='" + patientsontreatment + "', patientstoinitiatetreatment='" + patientstoinitiatetreatment + "', patientsstoppedtreatment='" + patientsstoppedtreatment + "',remarks='" + remarks + "';");
 
+  }
+
+  public void deleteRoleToRightMapping(String role, String right) throws IOException, SQLException {
+    update("delete from role_rights where rightname ='"+right+"' and roleid=(select id from roles where name='"+role+"');");
+  }
+
+  public void insertRoleToRightMapping(String role, String right) throws IOException, SQLException {
+    update("insert into role_rights (roleid, rightname) values ((select id from roles where name='"+role+"'),'"+right+"');");
   }
 
   public void insertApprovedQuantity(Integer quantity) throws IOException, SQLException {

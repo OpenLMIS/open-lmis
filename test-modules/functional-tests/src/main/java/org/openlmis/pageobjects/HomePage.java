@@ -323,6 +323,16 @@ public class HomePage extends Page {
 
   }
 
+  public void navigateInitiateRnRScreenAndSelectingRequiredFields(String program, String type) throws IOException {
+    navigateRnr();
+    myFacilityRadioButton.click();
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(programDropDown);
+    testWebDriver.selectByVisibleText(programDropDown, program);
+    testWebDriver.selectByVisibleText(rnrTypeSelectBox, type);
+    testWebDriver.sleep(500);
+  }
+
   public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
     testWebDriver.waitForElementToAppear(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);

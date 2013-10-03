@@ -61,7 +61,7 @@ public class InitiateRnR extends TestCaseHelper {
   @Before
   public void setUp() throws Exception {
     super.setup();
-
+    dbWrapper.deleteData();
   }
 
   @Given("^I have the following data for regimen:$")
@@ -332,6 +332,141 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse("Regimen tab should not be displayed.", initiateRnRPage.existRegimenTab());
   }
 
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageIfPeriodNotDefinedForRegularType(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period2");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    verifyErrorMessages("No current period defined. Please contact the Admin.");
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageWhileAuthorizingForRegularType(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period2");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    verifyErrorMessages("No current period defined. Please contact the Admin.");
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageWhileAuthorizingForEmergencyType(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    verifyErrorMessages("No current period defined. Please contact the Admin.");
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageIfPeriodNotDefinedForEmergencyType(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    verifyErrorMessages("No current period defined. Please contact the Admin.");
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageForAuthorizerWithRequisitionInitiatedAndSubmittedForCurrentPeriod(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    homePage.clickProceed();
+    dbWrapper.insertValuesInRequisition(false);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
+    initiateRnRPage1.clickSubmitButton();
+    initiateRnRPage1.clickOk();
+
+    initiateRnRPage1.clickAuthorizeButton();
+    initiateRnRPage1.clickOk();
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+
+    verifyErrorMessages("No requisitions awaiting authorization");
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageForSubmitterWithNoRequisitionInitiatedOrSubmittedForCurrentPeriod(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
+    List<String> rightsList1 = new ArrayList<String>();
+    rightsList1.add(AUTHORIZE_REQUISITION);
+    rightsList1.add(VIEW_REQUISITION);
+    createUserAndAssignRoleRights("201","mo","Maar_Doe@openlmis.com","F10","district pharmacist","openLmis",rightsList1);
+
+
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    homePage.clickProceed();
+    dbWrapper.insertValuesInRequisition(false);
+    homePage.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
+    initiateRnRPage1.clickSubmitButton();
+    initiateRnRPage1.clickOk();
+
+    homePage.logout(baseUrlGlobal);
+
+
+    HomePage homePage1 = loginPage.loginAs("mo", password);
+    homePage1.navigateAndInitiateRnr(program);
+    InitiateRnRPage initiateRnRPage2 = homePage1.clickProceed();
+
+    initiateRnRPage2.clickAuthorizeButton();
+    initiateRnRPage2.clickOk();
+
+    homePage1.logout(baseUrlGlobal);
+    HomePage homePage2 = loginPage.loginAs(userSIC, password);
+    homePage2.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    testWebDriver.refresh();
+    testWebDriver.sleep(1000);
+
+    homePage2.navigateViewRequisition();
+    homePage2.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    testWebDriver.refresh();
+    testWebDriver.sleep(1000);
+
+    testWebDriver.selectByVisibleText(testWebDriver.getElementByXpath("//select[@id='programListMyFacility']"), program);
+
+    verifyErrorMessages("R&R for current period already submitted");
+  }
+
+
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName, InitiateRnRPage initiateRnRPage) {
     assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
     SeleneseTestBase.assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
@@ -343,6 +478,11 @@ public class InitiateRnR extends TestCaseHelper {
     assertTrue("Reporting Field 2 should be displayed.", initiateRnRPage.existRegimenReportingField(4, 2));
     assertTrue("Reporting Field 3 should be displayed.", initiateRnRPage.existRegimenReportingField(5, 2));
     assertTrue("Reporting Field 4 should be displayed.", initiateRnRPage.existRegimenReportingField(6, 2));
+  }
+
+  private void verifyErrorMessages(String message) {
+    testWebDriver.sleep(500);
+    assertTrue("Message : " + message + " should show up. Showing : " + testWebDriver.getElementByXpath("//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(), testWebDriver.getElementByXpath("//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText().equalsIgnoreCase(message));
   }
 
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) {

@@ -115,6 +115,15 @@ public class TestCaseHelper {
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
 
+  public void createUserAndAssignRoleRights(String userId, String user,String email,String homeFacility, String role,  String vendorName, List<String> rightsList) throws IOException, SQLException {
+    dbWrapper.insertRole(role, "REQUISITION", "");
+    for (String rights : rightsList)
+      dbWrapper.assignRight(role, rights);
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    dbWrapper.insertUser(userId, user, passwordUsers, homeFacility, email, vendorName);
+    dbWrapper.insertRoleAssignment(userId,role);
+  }
+
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
