@@ -201,7 +201,9 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
+  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria, HttpServletRequest request) {
+    criteria.setUserId(loggedInUserId(request));
+
     try {
       List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
       List<Rnr> requisitions = isEmpty(periodList) && (!criteria.isEmergency()) ? null : getRequisitionsFor(criteria, periodList);

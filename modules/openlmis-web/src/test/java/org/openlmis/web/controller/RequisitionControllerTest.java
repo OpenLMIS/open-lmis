@@ -321,7 +321,7 @@ public class RequisitionControllerTest {
     when(requisitionService.getAllPeriodsForInitiatingRequisition(criteria)).thenReturn(periodList);
 
     ResponseEntity<OpenLmisResponse> response =
-      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
 
     verify(requisitionService).getAllPeriodsForInitiatingRequisition(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
@@ -336,7 +336,7 @@ public class RequisitionControllerTest {
       getAllPeriodsForInitiatingRequisition(criteria);
 
     ResponseEntity<OpenLmisResponse> response =
-      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
