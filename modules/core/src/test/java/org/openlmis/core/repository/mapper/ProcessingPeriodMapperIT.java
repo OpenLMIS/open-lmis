@@ -7,6 +7,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -307,6 +308,38 @@ public class ProcessingPeriodMapperIT {
     ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId(), period1.getStartDate());
 
     assertThat(actualPeriod, is(period1));
+  }
+
+  @Test
+  public void shouldGetCurrentPeriodIfProgramStartDateIsWithinCurrentPeriod() {
+    Date currentDate = new Date();
+    ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
+
+    mapper.insert(period1);
+
+    Date programStartDate = addDays(period1.getStartDate(), 2);
+    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId(), programStartDate);
+
+    assertThat(actualPeriod, is(period1));
+  }
+
+  @Test
+  public void shouldNotGetCurrentPeriodIfProgramStartDateIsAfterCurrentPeriodEndDate() {
+    Date currentDate = new Date();
+    ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
+
+    mapper.insert(period1);
+
+    Date programStartDate = addDays(period1.getStartDate(), 7);
+    ProcessingPeriod actualPeriod = mapper.getCurrentPeriod(schedule.getId(), programStartDate);
+
+    Assert.assertNull(actualPeriod);
   }
 
   @Test
