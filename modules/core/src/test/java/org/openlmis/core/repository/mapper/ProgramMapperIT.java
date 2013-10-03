@@ -12,16 +12,17 @@ package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.service.SpringIntegrationTest;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,11 +45,8 @@ import static org.openlmis.core.builder.UserBuilder.facilityId;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class
-  ProgramMapperIT extends SpringIntegrationTest {
-
-  public static final String PROGRAM_CODE = "HIV";
-  public static final Integer PROGRAM_ID = 1;
+@RunWith(SpringJUnit4ClassRunner.class)
+public class ProgramMapperIT {
 
   @Autowired
   ProgramSupportedMapper programSupportedMapper;
