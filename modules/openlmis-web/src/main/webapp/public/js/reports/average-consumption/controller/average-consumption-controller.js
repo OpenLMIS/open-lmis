@@ -552,7 +552,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             [
                 //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
                 { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-                { field: 'facilityName', displayName: 'Facility', width : "*"},
+                { field: 'facilityName', displayName: 'Facility Name', width : "*"},
                 { field: 'supplyingFacility', displayName: 'Supplying Facility', width : "*"},
                 { field: 'category', displayName: 'Product', width: "*" },
                 { field: 'product', displayName: 'Product Description', width: "**" },
