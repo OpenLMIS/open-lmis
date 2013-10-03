@@ -39,6 +39,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -70,7 +71,12 @@ public class FacilityDateRangeSearchTest {
     facility = new Facility(facilityId);
     userId = 1L;
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, userId, dateRangeStart, dateRangeEnd);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(userIdProperty, userId),
+      with(startDate, dateRangeStart),
+      with(endDate, dateRangeEnd)));
     strategy = new FacilityDateRangeSearch(criteria, requisitionPermissionService, scheduleService,
       repository,
       programService);

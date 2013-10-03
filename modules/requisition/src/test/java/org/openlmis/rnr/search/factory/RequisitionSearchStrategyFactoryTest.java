@@ -27,7 +27,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Date;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.Assert.assertTrue;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
@@ -53,8 +55,12 @@ public class RequisitionSearchStrategyFactoryTest {
   @Test
   public void shouldGetSearchStrategyForFacilityProgramAndDateRange() throws Exception {
     Long facilityId = 1L, programId = 1L;
-    Date periodStartDate = new Date(), periodEndDate = new Date();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
+
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(startDate, new Date()),
+      with(endDate, new Date())));
 
     RequisitionSearchStrategy facilityProgramDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
@@ -64,8 +70,12 @@ public class RequisitionSearchStrategyFactoryTest {
   @Test
   public void shouldGetSearchStrategyForFacilityAndDateRange() throws Exception {
     Long facilityId = 1L, programId = null;
-    Date periodStartDate = new Date(), periodEndDate = new Date();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodStartDate, periodEndDate);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(startDate, new Date()),
+      with(endDate, new Date())));
+
     whenNew(FacilityDateRangeSearch.class)
       .withArguments(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository, programService)
       .thenReturn(mock(FacilityDateRangeSearch.class));
@@ -80,7 +90,12 @@ public class RequisitionSearchStrategyFactoryTest {
   @Test
   public void shouldUseRequisitionOnlyStrategyIfLineItemsAreNotRequired() throws Exception {
     Long facilityId = 1L, programId = null, periodId = 4L;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(periodIdProperty, periodId),
+      with(withoutLineItemFlag, true)));
+
     whenNew(RequisitionOnlySearch.class)
       .withArguments(criteria, requisitionPermissionService, requisitionRepository)
       .thenReturn(mock(RequisitionOnlySearch.class));
@@ -94,7 +109,13 @@ public class RequisitionSearchStrategyFactoryTest {
   @Test
   public void shouldUseEmergencyRequisitionSearchStrategyIfEmergencyIsTrue() throws Exception {
     Long facilityId = 1L, programId = 3L, periodId = 4L;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId, true);
+
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(periodIdProperty, periodId),
+      with(withoutLineItemFlag, true)));
+
     criteria.setEmergency(true);
     whenNew(EmergencyRequisitionSearch.class)
       .withArguments(criteria, requisitionPermissionService, requisitionRepository)

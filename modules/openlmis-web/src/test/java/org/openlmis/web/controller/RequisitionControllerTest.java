@@ -49,8 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -59,6 +58,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.service.RequisitionService.RNR_SUBMITTED_SUCCESSFULLY;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -281,8 +281,12 @@ public class RequisitionControllerTest {
     List<ProcessingPeriod> periodList = asList(processingPeriod);
     Rnr rnr = new Rnr();
 
-    boolean withoutLineItems = true;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1l, 2l, 6l, withoutLineItems);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 2L),
+      with(periodIdProperty, 6L),
+      with(withoutLineItemFlag, true)));
+
     when(requisitionService.getProcessingPeriods(criteria)).thenReturn(periodList);
     when(requisitionService.getRequisitionsFor(criteria, periodList)).thenReturn(asList(rnr));
 
@@ -295,7 +299,8 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldReturnErrorResponseIfNoPeriodsFoundForInitiatingRequisition() throws Exception {
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 2L);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria, with(facilityIdProperty, 1L), with(programIdProperty, 2L)));
+
     String errorMessage = "some error";
     doThrow(new DataException(errorMessage)).when(requisitionService).getProcessingPeriods(criteria);
 
@@ -328,9 +333,12 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRangeAndSetUserIdInSearchCriteria() throws Exception {
-    Date dateRangeStart = new Date();
-    Date dateRangeEnd = new Date();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 1L, dateRangeStart, dateRangeEnd);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 1L),
+      with(startDate, new Date()),
+      with(endDate, new Date())));
+
     List<Rnr> requisitionsReturnedByService = new ArrayList<>();
     when(requisitionService.get(criteria)).thenReturn(requisitionsReturnedByService);
     mockStatic(RnrDTO.class);
@@ -373,7 +381,7 @@ public class RequisitionControllerTest {
   @Test
   public void shouldInsertComment() throws Exception {
     Comment comment = new Comment();
-    List<Comment> comments = new ArrayList<Comment>();
+    List<Comment> comments = new ArrayList<>();
     comments.add(comment);
     when(requisitionService.getCommentsByRnrId(rnr.getId())).thenReturn(comments);
 

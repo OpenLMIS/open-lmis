@@ -39,30 +39,4 @@ public class RequisitionSearchCriteria {
   public Boolean isEmergency() {
     return emergency;
   }
-
-  public RequisitionSearchCriteria(Long facilityId, Long programId, Date periodStartDate, Date periodEndDate) {
-    this(facilityId, programId);
-    this.dateRangeStart = periodStartDate;
-    this.dateRangeEnd = periodEndDate;
-  }
-
-  public RequisitionSearchCriteria(Long facilityId, Long programId, Long userId, Date dateRangeStart, Date dateRangeEnd) {
-    this(facilityId, programId, dateRangeStart, dateRangeEnd);
-    this.userId = userId;
-  }
-
-  public RequisitionSearchCriteria(Long facilityId, Long programId, Long periodId) {
-    this(facilityId, programId);
-    this.periodId = periodId;
-  }
-
-  public RequisitionSearchCriteria(Long facilityId, Long programId, Long periodId, boolean withoutLineItems) {
-    this(facilityId, programId, periodId);
-    this.withoutLineItems = withoutLineItems;
-  }
-
-  public RequisitionSearchCriteria(Long facilityId, Long programId) {
-    this.facilityId = facilityId;
-    this.programId = programId;
-  }
 }

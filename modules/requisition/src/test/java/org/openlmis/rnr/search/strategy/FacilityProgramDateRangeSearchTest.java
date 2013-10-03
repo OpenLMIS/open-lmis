@@ -30,11 +30,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -66,7 +68,11 @@ public class FacilityProgramDateRangeSearchTest {
     facility = new Facility(facilityId);
     program = new Program(programId);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, dateRangeStart, dateRangeEnd);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(startDate, dateRangeStart),
+      with(endDate, dateRangeEnd)));
     criteria.setUserId(userId);
 
     facilityProgramDateRangeSearch = new FacilityProgramDateRangeSearch(criteria,

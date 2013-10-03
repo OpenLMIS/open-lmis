@@ -57,6 +57,7 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RegimenLineItem.*;
@@ -269,7 +270,10 @@ public class RequisitionServiceTest {
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, FACILITY.getId()),
+      with(programIdProperty, PROGRAM.getId()),
+      with(periodIdProperty, PERIOD.getId())));
     Rnr actualRequisition = requisitionService.get(criteria).get(0);
 
     assertThat(actualRequisition, is(requisition));
@@ -304,7 +308,10 @@ public class RequisitionServiceTest {
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, FACILITY.getId()),
+      with(programIdProperty, PROGRAM.getId()),
+      with(periodIdProperty, PERIOD.getId())));
 
     final Rnr actual = requisitionService.get(criteria).get(0);
 
@@ -956,7 +963,12 @@ public class RequisitionServiceTest {
 
     Date dateRangeStart = DateTime.parse("2013-02-01").toDate();
     Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), dateRangeStart, dateRangeEnd);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facility.getId()),
+      with(programIdProperty, program.getId()),
+      with(startDate, dateRangeStart),
+      with(endDate, dateRangeEnd)));
+
     RequisitionSearchStrategy searchStrategy = mock(RequisitionSearchStrategy.class);
     RequisitionSearchStrategyFactory spyFactory = spy(requisitionSearchStrategyFactory);
     requisitionService.setRequisitionSearchStrategyFactory(spyFactory);
@@ -1292,7 +1304,10 @@ public class RequisitionServiceTest {
   public void shouldGetCurrentPeriodForFacilityAndProgram() {
     Date programStartDate = new Date();
     when(programService.getProgramStartDate(1L, 2L)).thenReturn(programStartDate);
-    requisitionService.getCurrentPeriod(new RequisitionSearchCriteria(1L, 2L));
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 2L)));
+    requisitionService.getCurrentPeriod(criteria);
 
     verify(processingScheduleService).getCurrentPeriod(1L, 2L, programStartDate);
   }

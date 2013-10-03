@@ -25,12 +25,14 @@ import org.openlmis.rnr.service.RequisitionPermissionService;
 
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -48,8 +50,11 @@ public class RequisitionOnlySearchTest {
     Facility facility = new Facility(facilityId);
     Program program = new Program(programId);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId);
-    criteria.setUserId(userId);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(periodIdProperty, periodId),
+      with(userIdProperty, userId)));
 
     RequisitionOnlySearch requisitionOnlySearch = new RequisitionOnlySearch(criteria, requisitionPermissionService, requisitionRepository);
     Rnr requisition = new Rnr();
@@ -68,8 +73,12 @@ public class RequisitionOnlySearchTest {
     Facility facility = new Facility(facilityId);
     Program program = new Program(programId);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId);
-    criteria.setUserId(userId);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facilityId),
+      with(programIdProperty, programId),
+      with(periodIdProperty, periodId),
+      with(userIdProperty, userId)));
+
     RequisitionOnlySearch requisitionOnlySearch = new RequisitionOnlySearch(criteria, requisitionPermissionService, requisitionRepository);
     when(requisitionPermissionService.hasPermission(userId, facility, program, VIEW_REQUISITION)).thenReturn(false);
 
