@@ -43,11 +43,10 @@ public class RequisitionSearchStrategyFactory {
       return new EmergencyRequisitionSearch(criteria, permissionService, repository);
     } else if (criteria.isWithoutLineItems()) {
       return new RequisitionOnlySearch(criteria, permissionService, repository);
-    } else if (criteria.getPeriodId() != null) {
-      return new FacilityProgramPeriodSearch(criteria, repository);
     } else if (criteria.getProgramId() == null) {
       return new FacilityDateRangeSearch(criteria, permissionService, scheduleService, repository, programService);
+    } else {
+      return new FacilityProgramDateRangeSearch(criteria, permissionService, scheduleService, repository);
     }
-    return new FacilityProgramDateRangeSearch(criteria, permissionService, scheduleService, repository);
   }
 }

@@ -259,67 +259,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetRequisition() throws Exception {
-    Rnr requisition = spy(new Rnr());
-    requisition.setFacility(FACILITY);
-    requisition.setProgram(PROGRAM);
-    requisition.setPeriod(PERIOD);
-
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, new ProcessingPeriod(PERIOD.getId()))).thenReturn(requisition);
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-
-    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
-      with(facilityIdProperty, FACILITY.getId()),
-      with(programIdProperty, PROGRAM.getId()),
-      with(periodIdProperty, PERIOD.getId())));
-    Rnr actualRequisition = requisitionService.get(criteria).get(0);
-
-    assertThat(actualRequisition, is(requisition));
-    verify(requisition).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-  }
-
-
-  @Test
-  public void shouldGetPreviousTwoRequisitionsNormalizedConsumptionsWhileGettingRequisition() throws Exception {
-    final Long lastPeriodId = 2L;
-    final Long secondLastPeriodsId = 3L;
-    ProcessingPeriod lastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, lastPeriodId)));
-
-    Rnr rnr = new Rnr(FACILITY, PROGRAM, PERIOD);
-    final Rnr spyRnr = spy(rnr);
-
-    when(requisitionRepository.getRequisitionWithLineItems(new Facility(FACILITY.getId()), new Program(PROGRAM.getId()), new ProcessingPeriod(PERIOD.getId()))).thenReturn(spyRnr);
-    ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths(), PERIOD.getName());
-    when(processingScheduleService.getPeriodById(10L)).thenReturn(period);
-
-    when(processingScheduleService.getImmediatePreviousPeriod(period)).thenReturn(lastPeriod);
-
-    ProcessingPeriod secondLastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, secondLastPeriodsId)));
-    when(processingScheduleService.getImmediatePreviousPeriod(lastPeriod)).thenReturn(secondLastPeriod);
-
-    Rnr lastPeriodsRnr = new Rnr(FACILITY, PROGRAM, lastPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, lastPeriod)).thenReturn(lastPeriodsRnr);
-
-    Rnr secondLastPeriodsRnr = new Rnr(FACILITY, PROGRAM, secondLastPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, secondLastPeriod)).thenReturn(secondLastPeriodsRnr);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
-      with(facilityIdProperty, FACILITY.getId()),
-      with(programIdProperty, PROGRAM.getId()),
-      with(periodIdProperty, PERIOD.getId())));
-
-    final Rnr actual = requisitionService.get(criteria).get(0);
-
-    assertThat(actual, is(spyRnr));
-    verify(spyRnr).fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
-  }
-
-  @Test
   public void shouldGetAllPeriodsForInitiatingRequisitionWhenThereIsAtLeastOneExistingRequisitionInThePostSubmitFlow() throws Exception {
     DateTime date1 = new DateTime();
     DateTime date2 = date1.minusMonths(1);
@@ -521,7 +460,6 @@ public class RequisitionServiceTest {
 
     verify(requisitionRepository).update(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
-//    assertThat(submittedRnr.getSubmittedDate(), is(notNullValue()));
     assertThat(submittedRnr.getStatus(), is(SUBMITTED));
   }
 
@@ -1381,19 +1319,19 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetNullIfEmptyPeriodListAndNonEmergency() throws Exception {
+  public void shouldGetEmptyListIfEmptyPeriodListAndNonEmergency() throws Exception {
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
     criteria.setEmergency(false);
 
-    assertThat(requisitionService.getRequisitionsFor(criteria, new ArrayList<ProcessingPeriod>()), is(nullValue()));
+    assertThat(requisitionService.getRequisitionsFor(criteria, new ArrayList<ProcessingPeriod>()).size(), is(0));
   }
 
   @Test
-  public void shouldGetNullIfNullPeriodListAndNonEmergency() throws Exception {
+  public void shouldGetEmptyListIfNullPeriodListAndNonEmergency() throws Exception {
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
     criteria.setEmergency(false);
 
-    assertThat(requisitionService.getRequisitionsFor(criteria, null), is(nullValue()));
+    assertThat(requisitionService.getRequisitionsFor(criteria, null).size(), is(0));
   }
 
   @Test

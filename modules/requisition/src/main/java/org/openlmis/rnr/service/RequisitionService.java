@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -453,9 +454,14 @@ public class RequisitionService {
   }
 
   public List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
-    if (isEmpty(periodList) && (!criteria.isEmergency())) return null;
-    if (!criteria.isEmergency())
+    if (isEmpty(periodList) && (!criteria.isEmergency())) {
+      return emptyList();
+    }
+
+    if (!criteria.isEmergency()) {
       criteria.setPeriodId(periodList.get(0).getId());
+    }
+
     criteria.setWithoutLineItems(true);
     return get(criteria);
   }
