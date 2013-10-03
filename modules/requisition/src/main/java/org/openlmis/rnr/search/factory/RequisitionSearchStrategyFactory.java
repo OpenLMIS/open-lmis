@@ -25,28 +25,29 @@ import org.springframework.stereotype.Component;
 public class RequisitionSearchStrategyFactory {
 
   @Autowired
-  private ProcessingScheduleService processingScheduleService;
+  private ProcessingScheduleService scheduleService;
 
   @Autowired
-  private RequisitionRepository requisitionRepository;
+  private RequisitionRepository repository;
 
   @Autowired
   private ProgramService programService;
 
   @Autowired
-  private RequisitionPermissionService requisitionPermissionService;
+  private RequisitionPermissionService permissionService;
 
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
+
     if (criteria.isEmergency()) {
-      return new EmergencyRequisitionSearch(criteria, requisitionPermissionService, requisitionRepository);
+      return new EmergencyRequisitionSearch(criteria, permissionService, repository);
     } else if (criteria.isWithoutLineItems()) {
-      return new RequisitionOnlySearch(criteria, requisitionPermissionService, requisitionRepository);
+      return new RequisitionOnlySearch(criteria, permissionService, repository);
     } else if (criteria.getPeriodId() != null) {
-      return new FacilityProgramPeriodSearch(criteria, requisitionRepository);
+      return new FacilityProgramPeriodSearch(criteria, repository);
     } else if (criteria.getProgramId() == null) {
-      return new FacilityDateRangeSearch(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository, programService);
+      return new FacilityDateRangeSearch(criteria, permissionService, scheduleService, repository, programService);
     }
-    return new FacilityProgramDateRangeSearch(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository);
+    return new FacilityProgramDateRangeSearch(criteria, permissionService, scheduleService, repository);
   }
 }

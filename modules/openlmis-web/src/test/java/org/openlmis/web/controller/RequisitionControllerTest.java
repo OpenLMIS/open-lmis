@@ -55,7 +55,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -119,20 +118,6 @@ public class RequisitionControllerTest {
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
-  @Test
-  public void shouldGetRnrByFacilityProgramAndPeriodIfExists() throws Exception {
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
-    criteria.setFacilityId(1L);
-    criteria.setProgramId(2L);
-    criteria.setPeriodId(3L);
-    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
-
-    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
-
-    verify(requisitionService).get(argThat(criteriaMatcher(1L, 2L, 3L)));
-    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
-  }
-
 
   @Test
   public void shouldGetRequisitionById() throws Exception {
@@ -163,21 +148,6 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
-  @Test
-  public void shouldReturnNullIfGettingRequisitionFails() throws Exception {
-    Rnr expectedRnr = null;
-    Facility facility = new Facility(1L);
-    whenNew(Facility.class).withArguments(1L).thenReturn(facility);
-    Program program = new Program(2L);
-
-    whenNew(Program.class).withArguments(2L).thenReturn(program);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), null);
-    when(requisitionService.get(criteria)).thenReturn(asList(expectedRnr));
-
-    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
-
-    assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
-  }
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
@@ -316,7 +286,7 @@ public class RequisitionControllerTest {
     when(requisitionService.getProcessingPeriods(criteria)).thenReturn(periodList);
     when(requisitionService.getRequisitionsFor(criteria, periodList)).thenReturn(asList(rnr));
 
-    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria,  request);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
 
     verify(requisitionService).getProcessingPeriods(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
