@@ -61,4 +61,30 @@ Feature: End to end requisition flow
     When I do not have anything to pack to ship
     And I access view orders page
     Then I should see ordered list without download link
-    
+    When I logout
+    And I am logged in as "storeincharge"
+    And I initiate and submit emergency requisition
+    Then I verify Emergency RnR Type
+    And I update & verify ordered quantities
+    And I update & verify requested quantities
+    And I add non full supply items & verify total cost
+    And I authorize RnR
+    When I am logged in as "medicalofficer"
+    And I access requisition on approval page
+    When I update approve quantity and verify total cost as "290"
+    When I approve requisition
+    When I logout
+    And I am logged in as "storeincharge"
+    And I access requisition on approval page
+    When I update approve quantity and verify total cost as "100"
+    When I approve requisition
+    When I logout
+    And I am logged in as "lmu"
+    And I access convert to order page
+    Then I should see pending order list
+    When I convert to order
+    And I access view orders page
+    Then I should see ordered list with download link
+    When I do not have anything to pack to ship
+    And I access view orders page
+    Then I should see ordered list without download link

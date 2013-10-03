@@ -186,6 +186,12 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifySubmitSuccessMsg();
   }
 
+    @Then("^I got error message \"([^\"]*)\"$")
+    public void shouldSeeSubmitSuccessfully(String errorMsg) throws IOException{
+        HomePage homePage = new HomePage(testWebDriver);
+        assertEquals(homePage.getErrorMessage(),errorMsg);
+    }
+
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();

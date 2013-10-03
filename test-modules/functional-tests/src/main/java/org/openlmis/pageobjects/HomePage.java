@@ -491,6 +491,11 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
 
+    public String getErrorMessage() {
+        testWebDriver.waitForElementToAppear(errorMsg);
+        return errorMsg.getText().trim();
+    }
+
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);
     SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
@@ -504,7 +509,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
-    testWebDriver.waitForElementToAppear(startDate);
+    //testWebDriver.waitForElementToAppear(startDate);
   }
 
   public String getFirstPeriod() {

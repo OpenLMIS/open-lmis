@@ -176,6 +176,23 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickOk();
   }
 
+  @And("^I initiate and submit emergency requisition$")
+    public void initiateEmergencyRnR() throws Exception {
+      HomePage homePage = new HomePage(testWebDriver);
+
+      homePage.navigateAndInitiateEmergencyRnr(program);
+      InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+      homePage.clickProceed();
+      initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
+      initiateRnRPage.submitRnR();
+      initiateRnRPage.verifySubmitRnrErrorMsg();
+      initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
+      initiateRnRPage.verifyTotalField();
+
+      initiateRnRPage.submitRnR();
+      initiateRnRPage.clickOk();
+  }
+
   @And("^I access proceed$")
   public void accessProceed() throws Exception {
     HomePage homePage=new HomePage(testWebDriver);
@@ -374,7 +391,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     @Then("^I verify Emergency RnR Type$")
   public void verifyEmergencyRnRText() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    assertEquals(initiateRnRPage.getRegularLabelText(), "Emergency");
+    assertEquals(initiateRnRPage.getEmergencyLabelText(),"Emergency");
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
