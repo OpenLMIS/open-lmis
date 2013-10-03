@@ -58,10 +58,15 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     $scope.programLabel = (!$scope.programs.length) ? messageService.get("label.none.assigned") : messageService.get("label.all");
   }
 
+  function setOptions() {
+    $scope.options = ($scope.programs.length) ? [{field: "All", name: "All"}] : [];
+  }
+
   $scope.loadProgramsForFacility = function () {
     ProgramsToViewRequisitions.get({facilityId: $scope.selectedFacilityId},
       function (data) {
         $scope.programs = data.programList;
+        setOptions();
         setProgramsLabel();
       }, function () {
         $scope.programs = [];
