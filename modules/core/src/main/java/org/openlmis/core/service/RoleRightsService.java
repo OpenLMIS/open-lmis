@@ -50,8 +50,18 @@ public class RoleRightsService {
     roleRightsRepository.createRole(role);
   }
 
-  public List<Role> getAllRoles() {
-    return roleRightsRepository.getAllRoles();
+  public Map<String, List<Role>> getAllRolesMap() {
+    Map<String, List<Role>> rolesMap = new HashMap<>();
+    for (Role role : roleRightsRepository.getAllRoles()) {
+      String rightName = getRightTypeForRoleId(role.getId()).name();
+      List<Role> roles = rolesMap.get(rightName);
+      if (roles == null) {
+        roles = new ArrayList<>();
+        rolesMap.put(rightName, roles);
+      }
+      roles.add(role);
+    }
+    return rolesMap;
   }
 
   public Role getRole(Long id) {

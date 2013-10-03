@@ -10,7 +10,7 @@
 
 function ListRoleController($scope, Roles) {
   Roles.get({}, function(data) {
-       $scope.roles = data.roles;
+       $scope.roles = _.flatten(_.values(data.roles_map));
   }, {}
   );
 }

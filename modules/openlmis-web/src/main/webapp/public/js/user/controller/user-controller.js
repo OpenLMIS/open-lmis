@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles, programs, supervisoryNodes, deliveryZones) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -22,9 +22,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   loadUserFacility();
   preparePrograms(programs);
 
-  $scope.rolesMap = _.groupBy(roles, function (role) {
-    return role.type;
-  });
+  $scope.rolesMap = roles_map;
 
   function preparePrograms(programs) {
     if (programs) {
@@ -265,12 +263,12 @@ UserController.resolve = {
     return deferred.promise;
   },
 
-  roles: function ($q, Roles, $timeout) {
+  roles_map: function ($q, Roles, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {
       Roles.get({}, function (data) {
-        deferred.resolve(data.roles);
+        deferred.resolve(data.roles_map);
       }, function () {});
     }, 100);
 

@@ -24,10 +24,7 @@ import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -129,15 +126,6 @@ public class RoleRightsServiceTest {
     verify(roleRightsRepository, never()).createRole(role);
   }
 
-  @Test
-  public void shouldReturnAllRoles() throws Exception {
-    List<Role> allRoles = new ArrayList<>();
-    when(roleRightsRepository.getAllRoles()).thenReturn(allRoles);
-
-    assertThat(roleRightsService.getAllRoles(), is(allRoles));
-
-    verify(roleRightsRepository).getAllRoles();
-  }
 
   @Test
   public void shouldGetRoleById() throws Exception {
@@ -192,5 +180,36 @@ public class RoleRightsServiceTest {
 
     assertThat(result.containsAll(expected), is(true));
     verify(roleRightsRepository).getRightsForUserOnHomeFacilityAndProgram(userId, program);
+  }
+
+  @Test
+  public void shouldGetAllRolesMapByRightType() throws Exception {
+    List<Role> allRoles = new ArrayList<>();
+    Role role1 = new Role();
+    role1.setId(1L);
+    Role role2 = new Role();
+    role2.setId(2L);
+    Role role3 = new Role();
+    role3.setId(3L);
+    Role role4 = new Role();
+    role4.setId(4L);
+
+    allRoles.add(role1);
+    allRoles.add(role2);
+    allRoles.add(role3);
+    allRoles.add(role4);
+
+    when(roleRightsRepository.getAllRoles()).thenReturn(allRoles);
+    when(roleRightsRepository.getRightTypeForRoleId(1L)).thenReturn(RightType.REQUISITION);
+    when(roleRightsRepository.getRightTypeForRoleId(2L)).thenReturn(RightType.ADMIN);
+    when(roleRightsRepository.getRightTypeForRoleId(3L)).thenReturn(RightType.ALLOCATION);
+    when(roleRightsRepository.getRightTypeForRoleId(4L)).thenReturn(RightType.ALLOCATION);
+
+    Map<String, List<Role>> allRolesMap = roleRightsService.getAllRolesMap();
+
+    assertThat(allRolesMap.size(), is(3));
+    assertThat(allRolesMap.get(RightType.ADMIN.name()).size(), is(1));
+    assertThat(allRolesMap.get(RightType.REQUISITION.name()).size(), is(1));
+    assertThat(allRolesMap.get(RightType.ALLOCATION.name()).size(), is(2));
   }
 }

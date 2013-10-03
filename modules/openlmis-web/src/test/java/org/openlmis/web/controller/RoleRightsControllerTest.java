@@ -29,10 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -104,11 +101,13 @@ public class RoleRightsControllerTest {
 
   @Test
   public void shouldGetAllRolesWithRights() throws Exception {
-    List<Role> roles = new ArrayList<>();
-    when(roleRightsService.getAllRoles()).thenReturn(roles);
+    Map<String, List<Role>> roles_map = new HashMap<>();
+    when(roleRightsService.getAllRolesMap()).thenReturn(roles_map);
+
     OpenLmisResponse response = controller.getAll().getBody();
-    assertThat((List<Role>) response.getData().get(ROLES), is(roles));
-    verify(roleRightsService).getAllRoles();
+
+    assertThat((Map<String , List<Role>>) response.getData().get(ROLES_MAP), is(roles_map));
+    verify(roleRightsService).getAllRolesMap();
   }
 
   @Test

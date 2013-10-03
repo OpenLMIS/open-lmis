@@ -26,23 +26,22 @@ describe("User", function () {
       controller = $controller;
       httpBackend = _$httpBackend_;
       location = $location;
-      roles = [
+      roles_map = {"ADMIN": [
         {
           "id": 1,
-          "name": "Admin",
-          "type": "ADMIN"
-        },
+          "name": "Admin"
+        }
+      ], "REQUISITION": [
         {
           "id": 2,
-          "name": "Store In-Charge",
-          "type": "REQUISITION"
-        },
+          "name": "Store In-Charge"
+        }
+      ], "ALLOCATION": [
         {
           "id": 3,
-          "name": "Medical Officer",
-          "type": "ALLOCATION"
+          "name": "Medical Officer"
         }
-      ];
+      ]};
 
       deliveryZones = [
         {id: 1},
@@ -59,28 +58,10 @@ describe("User", function () {
 
       user = {"id": 123, "userName": "User420"};
 
-      ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
+      ctrl = controller(UserController, {$scope: scope, roles_map: roles_map, programs: programs,
         supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
       scope.userForm = {$error: { pattern: "" }};
     }));
-
-    it('should group programs by type', function () {
-      spyOn(messageService, 'get').andCallFake(function (value) {
-        if (value == 'label.active') return "Active"
-        if (value == 'label.inactive') return "Inactive"
-      });
-
-      ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
-        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
-
-      expect(scope.programsMap.pull).toEqual([
-        {"id": 1, active: false, push: false, status: 'Inactive'},
-        {id: 2, active: true, push: false, status: 'Active'}
-      ]);
-      expect(scope.programsMap.push).toEqual([
-        {"id": 3, active: true, push: true, status: 'Active'}
-      ]);
-    })
 
     it('should populate role map in scope', function () {
 
@@ -88,11 +69,8 @@ describe("User", function () {
       expect(scope.rolesMap.REQUISITION.length).toBe(1);
       expect(scope.rolesMap.ALLOCATION.length).toBe(1);
       expect(scope.rolesMap.ADMIN[0].id).toBe(1);
-      expect(scope.rolesMap.ADMIN[0].type).toBe("ADMIN");
       expect(scope.rolesMap.REQUISITION[0].id).toBe(2);
-      expect(scope.rolesMap.REQUISITION[0].type).toBe("REQUISITION");
       expect(scope.rolesMap.ALLOCATION[0].id).toBe(3);
-      expect(scope.rolesMap.ALLOCATION[0].type).toBe("ALLOCATION");
     });
 
     it('should set programs in scope with added status', function () {
@@ -101,7 +79,7 @@ describe("User", function () {
         if (value == 'label.inactive') return "Inactive"
       });
 
-      ctrl = controller(UserController, {$scope: scope, roles: roles, programs: programs,
+      ctrl = controller(UserController, {$scope: scope, roles_map: roles_map, programs: programs,
         supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
 
       expect(scope.programsMap).toEqual({pull: [
@@ -205,29 +183,31 @@ describe("User", function () {
       expect(scope.saveUser()).toEqual(false);
     });
 
-    it("should create a user with role assignments, if all required fields are present, and jump to search user page", function () {
-      var userWithRoleAssignments = {userName: "User 123", homeFacilityRoles: [
-        {programId: 111, roleIds: [1, 2, 3]},
-        {programId: 222, roleIds: [1]}
-      ]};
+    it("should create a user with role assignments, if all required fields are present, and jump to search user page",
+        function () {
+          var userWithRoleAssignments = {userName: "User 123", homeFacilityRoles: [
+            {programId: 111, roleIds: [1, 2, 3]},
+            {programId: 222, roleIds: [1]}
+          ]};
 
-      spyOn(messageService, 'get').andCallFake(function (value) {
-        return "Saved successfully";
-      });
+          spyOn(messageService, 'get').andCallFake(function (value) {
+            return "Saved successfully";
+          });
 
-      scope.userForm = {$error: { required: false}};
-      scope.user = userWithRoleAssignments;
-      location.path("create");
-      httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200, {"success": "Saved successfully", user: {id: 500}});
+          scope.userForm = {$error: { required: false}};
+          scope.user = userWithRoleAssignments;
+          location.path("create");
+          httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200,
+              {"success": "Saved successfully", user: {id: 500}});
 
-      expect(scope.saveUser()).toEqual(true);
-      httpBackend.flush();
-      expect(scope.$parent.message).toEqual("Saved successfully");
-      expect(scope.user).toEqual({id: 500});
-      expect(scope.showError).toBeFalsy();
-      expect(scope.error).toEqual("");
-      expect(location.path()).toBe('/');
-    });
+          expect(scope.saveUser()).toEqual(true);
+          httpBackend.flush();
+          expect(scope.$parent.message).toEqual("Saved successfully");
+          expect(scope.user).toEqual({id: 500});
+          expect(scope.showError).toBeFalsy();
+          expect(scope.error).toEqual("");
+          expect(location.path()).toBe('/');
+        });
 
     it("should create a user without role assignment, if all required fields are present", function () {
       var userWithoutRoleAssignment = {userName: "User 123"};
@@ -238,7 +218,8 @@ describe("User", function () {
 
       scope.userForm = {$error: { required: false}};
       scope.user = userWithoutRoleAssignment;
-      httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200, {"success": "Saved successfully", user: {id: 500}});
+      httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200,
+          {"success": "Saved successfully", user: {id: 500}});
       location.path('/create');
       expect(scope.saveUser()).toEqual(true);
       httpBackend.flush();
@@ -249,34 +230,36 @@ describe("User", function () {
       expect(location.path()).toBe('/');
     });
 
-    it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated', function () {
-      var facility = {id: 74, code: 'F10', name: 'facilityName'};
-      scope.allSupportedPrograms = undefined;
+    it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated',
+        function () {
+          var facility = {id: 74, code: 'F10', name: 'facilityName'};
+          scope.allSupportedPrograms = undefined;
 
-      var data = {};
-      data.facility = facility;
-      httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
+          var data = {};
+          data.facility = facility;
+          httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
 
-      scope.setSelectedFacility(facility);
-      httpBackend.flush();
+          scope.setSelectedFacility(facility);
+          httpBackend.flush();
 
-      expect(scope.facilitySelected).toEqual(facility);
-    });
+          expect(scope.facilitySelected).toEqual(facility);
+        });
 
-    it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are populated', function () {
-      var facility = {id: 74, code: 'F10', name: 'facilityName'};
-      scope.allSupportedPrograms = [
-        {id: 1, code: 'HIV'},
-        {id: 2, code: 'ARV'}
-      ];
+    it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are populated',
+        function () {
+          var facility = {id: 74, code: 'F10', name: 'facilityName'};
+          scope.allSupportedPrograms = [
+            {id: 1, code: 'HIV'},
+            {id: 2, code: 'ARV'}
+          ];
 
-      var data = {};
-      data.facility = facility;
+          var data = {};
+          data.facility = facility;
 
-      scope.setSelectedFacility(facility);
+          scope.setSelectedFacility(facility);
 
-      expect(scope.facilitySelected).toEqual(facility);
-    });
+          expect(scope.facilitySelected).toEqual(facility);
+        });
 
     it('should clear everything including role assignments when user clears facility', function () {
       scope.clearSelectedFacility();
@@ -287,7 +270,7 @@ describe("User", function () {
       expect(scope.user.facilityId).toEqual(null);
     });
 
-    it('should show confirm modal when Admin clicks Disable', function() {
+    it('should show confirm modal when Admin clicks Disable', function () {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(messageService, 'get');
       httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
@@ -297,11 +280,11 @@ describe("User", function () {
       expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
     });
 
-    it('should disable a user if Admin clicks OK in disable confirm modal', function() {
+    it('should disable a user if Admin clicks OK in disable confirm modal', function () {
       user.active = false;
       httpBackend.expectDELETE('/users/123.json').respond(200, {"success": "msg.user.disable.success"});
 
-      spyOn(messageService, 'get').andCallFake(function() {
+      spyOn(messageService, 'get').andCallFake(function () {
         return "User has been disabled";
       });
       scope.disableUserCallback(true);
@@ -313,7 +296,7 @@ describe("User", function () {
       expect(scope.user).toEqual(user);
     });
 
-    it('should show confirm modal when Admin clicks Restore', function() {
+    it('should show confirm modal when Admin clicks Restore', function () {
       spyOn(OpenLmisDialog, 'newDialog');
       spyOn(messageService, 'get');
       httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
@@ -323,10 +306,10 @@ describe("User", function () {
       expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
     });
 
-    it('should restore a user if Admin clicks OK in restore confirm modal', function() {
+    it('should restore a user if Admin clicks OK in restore confirm modal', function () {
       httpBackend.expectPUT('/users/123.json').respond(200);
 
-      spyOn(messageService, 'get').andCallFake(function() {
+      spyOn(messageService, 'get').andCallFake(function () {
         return "User has been restored";
       });
       scope.restoreUserCallback(true);
@@ -383,12 +366,12 @@ describe("User", function () {
       var roles = [
         {id: 1}
       ];
-      httpBackend.expect('GET', "/roles.json").respond({roles: roles});
-      ctrl(UserController.resolve.roles, {$q: $q});
+      httpBackend.expect('GET', "/roles.json").respond({roles_map: roles_map});
+      ctrl(UserController.resolve.roles_map, {$q: $q});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
       httpBackend.flush();
-      expect(deferredObject.resolve).toHaveBeenCalledWith(roles);
+      expect(deferredObject.resolve).toHaveBeenCalledWith(roles_map);
     });
 
     it('should get all programs', function () {
