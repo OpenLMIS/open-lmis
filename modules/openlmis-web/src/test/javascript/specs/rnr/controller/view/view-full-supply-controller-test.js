@@ -17,7 +17,7 @@ describe('View non full supply controller',function(){
   }));
 
   it('should set current line item and set lossesAndAdjustmentsModal to true ',function(){
-    var linItem = new RnrLineItem();
+    var linItem = new RegularRnrLineItem();
 
     scope.showLossesAndAdjustments(linItem);
 

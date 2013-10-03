@@ -91,7 +91,7 @@ describe('CreateRequisitionController', function () {
 
     $rootScope.fixToolBar = function () {
     };
-    rnrLineItem = new RnrLineItem({"fullSupply": true});
+    rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
 
     requisitionRights = [
       {right: 'CREATE_REQUISITION'},
@@ -279,7 +279,7 @@ describe('CreateRequisitionController', function () {
   it('should return cell error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(lineItem, 'getErrorMessage').andReturn("error");
     var errorMsg = scope.getCellErrorClass(lineItem);
@@ -289,7 +289,7 @@ describe('CreateRequisitionController', function () {
   it('should not return cell error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(lineItem, 'getErrorMessage').andReturn("");
     var errorMsg = scope.getCellErrorClass(lineItem);
@@ -299,7 +299,7 @@ describe('CreateRequisitionController', function () {
   it('should return row error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(scope, 'getCellErrorClass').andReturn("error");
     var errorMsg = scope.getRowErrorClass(lineItem);
@@ -309,7 +309,7 @@ describe('CreateRequisitionController', function () {
   it('should not return row error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(scope, 'getCellErrorClass').andReturn("");
     var errorMsg = scope.getRowErrorClass(lineItem);

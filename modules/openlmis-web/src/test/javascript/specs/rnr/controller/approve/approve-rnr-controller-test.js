@@ -44,7 +44,7 @@ describe('Approve Requisition controller', function () {
     ];
     pageSize = 2;
     regimenTemplate = {regimenColumns: regimenColumns};
-    rnrLineItem = new RnrLineItem({"fullSupply": true});
+    rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList,
       regimenTemplate: regimenTemplate, currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams});
   }));

@@ -10,7 +10,7 @@
 
 function CreateNonFullSupplyController($scope, messageService) {
   $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
-    return _.contains(RnrLineItem.visibleForNonFullSupplyColumns, column.name);
+    return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name);
   });
 
   var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
@@ -89,7 +89,7 @@ function CreateNonFullSupplyController($scope, messageService) {
 
   $scope.addNonFullSupplyProductsByCategory = function () {
     prepareNFSLineItemFields();
-    var rnrLineItem = new RnrLineItem($scope.newNonFullSupply, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
+    var rnrLineItem = new RegularRnrLineItem($scope.newNonFullSupply, $scope.rnr.period.numberOfMonths, $scope.programRnrColumnList, $scope.rnr.status);
     $scope.addedNonFullSupplyProducts.push(rnrLineItem);
     $scope.updateNonFullSupplyProductsToDisplay();
     $scope.clearNonFullSupplyProductModalData();

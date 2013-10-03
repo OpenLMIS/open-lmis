@@ -8,13 +8,29 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus) {
-  $.extend(true, this, lineItem);
-  this.numberOfMonths = numberOfMonths;
-  this.rnrStatus = rnrStatus;
-  this.programRnrColumnList = programRnrColumnList;
+var RegularRnrLineItem = base2.Base.extend({
 
-  RnrLineItem.prototype.initLossesAndAdjustments = function () {
+  exports: "visibleForNonFullSupplyColumns",
+  numberOfMonths: undefined,
+  programRnrColumnList: undefined,
+  rnrStatus: undefined,
+
+  constructor: function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus) {
+    $.extend(true, this, lineItem);
+    this.numberOfMonths = numberOfMonths;
+    this.rnrStatus = rnrStatus;
+    this.programRnrColumnList = programRnrColumnList;
+    this.init();
+    if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
+      this.previousNormalizedConsumptions = [];
+
+    if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
+
+    this.reEvaluateTotalLossesAndAdjustments();
+    this.fillConsumptionOrStockInHand();
+  },
+
+  initLossesAndAdjustments: function () {
     var tempLossesAndAdjustments = [];
 
     _.each(this.lossesAndAdjustments, function (lossAndAdjustmentJson) {
@@ -22,13 +38,13 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     });
 
     this.lossesAndAdjustments = tempLossesAndAdjustments;
-  };
+  },
 
-  RnrLineItem.prototype.reduceForApproval = function() {
+  reduceForApproval: function () {
     return _.pick(this, 'id', 'productCode', 'quantityApproved', 'remarks');
-  };
+  },
 
-  RnrLineItem.prototype.init = function () {
+  init: function () {
     this.initLossesAndAdjustments();
     if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
       this.previousNormalizedConsumptions = [];
@@ -36,9 +52,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
     this.calculateCost();
-  };
+  },
 
-  RnrLineItem.prototype.fillConsumptionOrStockInHand = function () {
+  fillConsumptionOrStockInHand: function () {
     this.beginningBalance = utils.getValueFor(this.beginningBalance);
     this.quantityReceived = utils.getValueFor(this.quantityReceived);
     this.quantityDispensed = utils.getValueFor(this.quantityDispensed);
@@ -49,44 +65,45 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.calculateStockInHand();
     this.fillNormalizedConsumption();
     this.calculateTotal();
-  };
+  },
 
-  function statusBeforeAuthorized() {
-    return rnrStatus == 'INITIATED' || rnrStatus == 'SUBMITTED';
-  }
+  statusBeforeAuthorized: function () {
+    return this.rnrStatus == 'INITIATED' || this.rnrStatus == 'SUBMITTED';
+  },
 
-  RnrLineItem.prototype.fillPacksToShip = function () {
+  fillPacksToShip: function () {
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity;
 
-    if (statusBeforeAuthorized()) orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    if (this.statusBeforeAuthorized()) orderQuantity =
+      isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
     else orderQuantity = this.quantityApproved;
 
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
-  };
+  },
 
-  RnrLineItem.prototype.fillNormalizedConsumption = function () {
+  fillNormalizedConsumption: function () {
     this.calculateNormalizedConsumption();
     this.fillAMC();
-  };
+  },
 
-  RnrLineItem.prototype.fillAMC = function () {
+  fillAMC: function () {
     this.calculateAMC();
     this.fillMaxStockQuantity();
-  };
+  },
 
-  RnrLineItem.prototype.fillMaxStockQuantity = function () {
+  fillMaxStockQuantity: function () {
     this.calculateMaxStockQuantity();
     this.fillCalculatedOrderQuantity();
-  };
+  },
 
-  RnrLineItem.prototype.fillCalculatedOrderQuantity = function () {
+  fillCalculatedOrderQuantity: function () {
     this.calculateCalculatedOrderQuantity();
     this.fillPacksToShip();
-  };
+  },
 
-  RnrLineItem.prototype.arithmeticallyInvalid = function () {
+  arithmeticallyInvalid: function () {
     if (this.programRnrColumnList != undefined && this.programRnrColumnList[0].formulaValidationRequired) {
       var beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
       var quantityReceived = utils.parseIntWithBaseTen(this.quantityReceived);
@@ -98,24 +115,24 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
         quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     return false;
-  };
+  },
 
-  RnrLineItem.prototype.reEvaluateTotalLossesAndAdjustments = function () {
+  reEvaluateTotalLossesAndAdjustments: function () {
     this.totalLossesAndAdjustments = 0;
     var rnrLineItem = this;
     $(this.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
       rnrLineItem.updateTotalLossesAndAdjustment(lossAndAdjustmentObject.quantity, lossAndAdjustmentObject.type.additive);
     });
-  };
+  },
 
-  RnrLineItem.prototype.removeLossAndAdjustment = function (lossAndAdjustmentToDelete) {
+  removeLossAndAdjustment: function (lossAndAdjustmentToDelete) {
     this.lossesAndAdjustments = $.grep(this.lossesAndAdjustments, function (lossAndAdjustmentObj) {
       return !(lossAndAdjustmentToDelete.equals(lossAndAdjustmentObj));
     });
     this.updateTotalLossesAndAdjustment(lossAndAdjustmentToDelete.quantity, !lossAndAdjustmentToDelete.type.additive);
-  };
+  },
 
-  RnrLineItem.prototype.addLossAndAdjustment = function (newLossAndAdjustment) {
+  addLossAndAdjustment: function (newLossAndAdjustment) {
     var lossAndAdjustment = new LossAndAdjustment(newLossAndAdjustment);
 
     newLossAndAdjustment.type = undefined;
@@ -123,10 +140,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     this.lossesAndAdjustments.push(lossAndAdjustment);
     this.updateTotalLossesAndAdjustment(lossAndAdjustment.quantity, lossAndAdjustment.type.additive);
-  };
+  },
 
 // TODO: This function should encapsulate the logic to calculate packs to ship based on status
-  RnrLineItem.prototype.calculatePacksToShip = function (quantity) {
+  calculatePacksToShip: function (quantity) {
     if (!utils.isNumber(quantity)) {
       this.packsToShip = null;
       return;
@@ -137,9 +154,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     }
     this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
     this.applyRoundingRulesToPacksToShip(quantity);
-  };
+  },
 
-  RnrLineItem.prototype.applyRoundingRulesToPacksToShip = function (orderQuantity) {
+  applyRoundingRulesToPacksToShip: function (orderQuantity) {
     var remainderQuantity = orderQuantity % utils.parseIntWithBaseTen(this.packSize);
 
     if (remainderQuantity >= this.packRoundingThreshold)
@@ -147,22 +164,22 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     if (this.packsToShip == 0 && !this.roundToZero)
       this.packsToShip = 1;
-  };
+  },
 
-  RnrLineItem.prototype.calculateCost = function () {
+  calculateCost: function () {
     this.cost = !utils.isNumber(this.packsToShip) ? 0 : parseFloat(this.packsToShip * this.price).toFixed(2);
-  };
+  },
 
-  RnrLineItem.prototype.calculateTotal = function () {
+  calculateTotal: function () {
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived)) {
       this.total = this.beginningBalance + this.quantityReceived
     }
     else {
       this.total = null;
     }
-  };
+  },
 
-  RnrLineItem.prototype.calculateConsumption = function () {
+  calculateConsumption: function () {
     if (this.getSource('quantityDispensed') != 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
@@ -170,9 +187,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     } else {
       this.quantityDispensed = null;
     }
-  };
+  },
 
-  RnrLineItem.prototype.calculateStockInHand = function () {
+  calculateStockInHand: function () {
     if (this.getSource('stockInHand') != 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {
@@ -180,9 +197,9 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     } else {
       this.stockInHand = null;
     }
-  };
+  },
 
-  RnrLineItem.prototype.calculateNormalizedConsumption = function () {
+  calculateNormalizedConsumption: function () {
     var numberOfMonthsInPeriod = 3; // will be picked up from the database in future
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
@@ -200,36 +217,36 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
     var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
-  };
+  },
 
-  RnrLineItem.prototype.calculateAMC = function () {
+  calculateAMC: function () {
     if (!utils.isNumber(this.normalizedConsumption)) {
       this.amc = null;
       return;
     }
-    var numberOfMonthsInPeriod = numberOfMonths;
+    var numberOfMonthsInPeriod = this.numberOfMonths;
     var divider = numberOfMonthsInPeriod * (1 + this.previousNormalizedConsumptions.length);
 
     this.amc = Math.round((this.normalizedConsumption + this.sumOfPreviousNormalizedConsumptions()) / divider);
-  };
+  },
 
-  RnrLineItem.prototype.sumOfPreviousNormalizedConsumptions = function () {
+  sumOfPreviousNormalizedConsumptions: function () {
     var total = 0;
     this.previousNormalizedConsumptions.forEach(function (normalizedConsumption) {
       total += normalizedConsumption;
     });
     return total;
-  };
+  },
 
-  RnrLineItem.prototype.calculateMaxStockQuantity = function () {
+  calculateMaxStockQuantity: function () {
     if (!utils.isNumber(this.amc)) {
       this.maxStockQuantity = null;
       return;
     }
     this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
-  };
+  },
 
-  RnrLineItem.prototype.calculateCalculatedOrderQuantity = function () {
+  calculateCalculatedOrderQuantity: function () {
     if (!utils.isNumber(this.maxStockQuantity) || !utils.isNumber(this.stockInHand)) {
       this.calculatedOrderQuantity = null;
       return;
@@ -238,10 +255,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     this.stockInHand = utils.getValueFor(this.stockInHand);
     this.calculatedOrderQuantity = this.maxStockQuantity - this.stockInHand;
     if (this.calculatedOrderQuantity < 0) this.calculatedOrderQuantity = 0;
-  };
+  },
 
 
-  RnrLineItem.prototype.updateTotalLossesAndAdjustment = function (quantity, additive) {
+  updateTotalLossesAndAdjustment: function (quantity, additive) {
     quantity = utils.parseIntWithBaseTen(quantity);
     if (utils.isNumber(quantity)) {
       if (additive) {
@@ -251,10 +268,10 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       }
     }
     this.fillConsumptionOrStockInHand();
-  };
+  },
 
-  //TODO : Does not belong to RnrLineItem
-  RnrLineItem.prototype.getSource = function (name) {
+//TODO : Does not belong to RnrLineItem
+  getSource: function (name) {
     var code = null;
     $(this.programRnrColumnList).each(function (i, column) {
       if (column.name == name) {
@@ -263,23 +280,23 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
       }
     });
     return code;
-  };
+  },
 
-  RnrLineItem.prototype.formulaValid = function () {
+  formulaValid: function () {
     return !(this.stockInHand < 0 || this.quantityDispensed < 0 || this.arithmeticallyInvalid());
-  };
+  },
 
-  RnrLineItem.prototype.validateRequiredFieldsForNonFullSupply = function () {
-    if (_.findWhere(programRnrColumnList, {name:'quantityRequested'}).visible) {
+  validateRequiredFieldsForNonFullSupply: function () {
+    if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
       return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
     }
     return false;
-  };
+  },
 
-  RnrLineItem.prototype.validateRequiredFieldsForFullSupply = function () {
+  validateRequiredFieldsForFullSupply: function () {
     var valid = true;
     var rnrLineItem = this;
-    var visibleColumns = _.where(programRnrColumnList, {"visible":true});
+    var visibleColumns = _.where(this.programRnrColumnList, {"visible": true});
 
     $(visibleColumns).each(function (i, column) {
         var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
@@ -296,40 +313,40 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     );
 
     return valid;
-  };
+  },
 
-  RnrLineItem.prototype.getErrorMessage = function () {
+  getErrorMessage: function () {
     if (this.stockInHand < 0) return "error.stock.on.hand.negative";
     if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
     if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
 
     return "";
-  };
+  },
 
-  RnrLineItem.prototype.expirationDateInvalid = function () {
+  expirationDateInvalid: function () {
     var regExp = /^(0[1-9]|1[012])[/]((2)\d\d\d)$/;
     return !isUndefined(this.expirationDate) && !regExp.test(this.expirationDate);
-  }
+  },
 
-  RnrLineItem.prototype.validateForApproval = function () {
+  validateForApproval: function () {
     return isUndefined(this.quantityApproved) ? false : true;
-  };
+  },
 
-  RnrLineItem.prototype.valid = function () {
-    if (rnrStatus == 'IN_APPROVAL' || rnrStatus == 'AUTHORIZED') return this.validateForApproval();
+  valid: function () {
+    if (this.rnrStatus == 'IN_APPROVAL' || this.rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
     return this.validateRequiredFieldsForNonFullSupply();
-  };
+  },
 
-  RnrLineItem.prototype.validateLossesAndAdjustments = function () {
+  validateLossesAndAdjustments: function () {
     if (isUndefined(this.lossesAndAdjustments)) return true;
 
     return !(_.some(this.lossesAndAdjustments, function (lossAndAdjustment) {
       return !lossAndAdjustment.isQuantityValid();
     }));
-  };
+  },
 
-  RnrLineItem.prototype.compareTo = function (rnrLineItem) {
+  compareTo: function (rnrLineItem) {
     function compareStrings(str1, str2) {
       if (str1 < str2) return -1
       if (str1 > str2) return 1;
@@ -344,11 +361,11 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
 
     if (this.productCategoryDisplayOrder == rnrLineItem.productCategoryDisplayOrder) {
       if (this.productCategory == rnrLineItem.productCategory) {
-        if(isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
+        if (isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
           return compareStrings(this.productCode, rnrLineItem.productCode);
         }
 
-        if(this.productDisplayOrder== rnrLineItem.productDisplayOrder) {
+        if (this.productDisplayOrder == rnrLineItem.productDisplayOrder) {
           return compareStrings(this.productCode, rnrLineItem.productCode);
         }
 
@@ -361,22 +378,15 @@ var RnrLineItem = function (lineItem, numberOfMonths, programRnrColumnList, rnrS
     }
 
     return this.productCategoryDisplayOrder - rnrLineItem.productCategoryDisplayOrder;
-  };
+  },
 
-  this.init();
-
-  RnrLineItem.prototype.validateQuantityRequestedAndReason = function () {
+  validateQuantityRequestedAndReason: function () {
     return (isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
-  };
+  }
+}, {
+  visibleForNonFullSupplyColumns: ['product', 'productCode', 'dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks']
 
-  if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
-    this.previousNormalizedConsumptions = [];
+});
 
-  if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
 
-  this.reEvaluateTotalLossesAndAdjustments();
-  this.fillConsumptionOrStockInHand();
-};
-
-RnrLineItem.visibleForNonFullSupplyColumns = ['product', 'productCode', 'dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks'];
 

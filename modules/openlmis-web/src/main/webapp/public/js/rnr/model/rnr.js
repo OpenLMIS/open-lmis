@@ -138,7 +138,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
 
   Rnr.prototype.calculateTotalLineItemCost = function () {
-   return  parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+    return  parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
   };
 
 
@@ -171,10 +171,14 @@ var Rnr = function (rnr, programRnrColumns) {
     return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
   };
 
-  Rnr.prototype.reduceForApproval = function() {
+  Rnr.prototype.reduceForApproval = function () {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
-    rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
+    rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function (rnrLineItem) {
+      return rnrLineItem.reduceForApproval()
+    });
+    rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function (rnrLineItem) {
+      return rnrLineItem.reduceForApproval()
+    });
     return rnr;
   };
 
@@ -184,10 +188,16 @@ var Rnr = function (rnr, programRnrColumns) {
     function prepareLineItems(lineItems) {
       var lineItemsJson = lineItems;
       lineItems = [];
-      $(lineItemsJson).each(function (i, lineItem) {
-        lineItems.push(new RnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
-      });
 
+      if (rnr.emergency) {
+        $(lineItemsJson).each(function (i, lineItem) {
+          lineItems.push(new EmergencyRnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
+        });
+      } else {
+        $(lineItemsJson).each(function (i, lineItem) {
+          lineItems.push(new RegularRnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
+        });
+      }
       return lineItems;
     }
 

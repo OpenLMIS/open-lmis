@@ -56,7 +56,7 @@ describe('CreateFullSupplyController', function () {
   });
 
   it('should save Losses and Adjustments and close modal if valid', function () {
-    var rnrLineItem = new RnrLineItem({});
+    var rnrLineItem = new RegularRnrLineItem({});
     spyOn(rnrLineItem, 'validateLossesAndAdjustments').andReturn(true);
 
     scope.$parent.rnr.fullSupplyLineItems.push(rnrLineItem);
@@ -78,7 +78,7 @@ describe('CreateFullSupplyController', function () {
   });
 
   it('should not save Losses and Adjustments and not close modal if not valid', function () {
-    var rnrLineItem = new RnrLineItem({});
+    var rnrLineItem = new RegularRnrLineItem({});
     spyOn(rnrLineItem, 'validateLossesAndAdjustments').andReturn(false);
 
     scope.$parent.rnr.fullSupplyLineItems.push(rnrLineItem);

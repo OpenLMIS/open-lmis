@@ -10,7 +10,7 @@
 function ApproveNonFullSupplyController($scope) {
 
   $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
-    return _.contains(RnrLineItem.visibleForNonFullSupplyColumns, column.name) || column.name == 'quantityApproved';
+    return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name) || column.name == 'quantityApproved';
   });
 
 
