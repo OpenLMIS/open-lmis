@@ -1,11 +1,7 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
+ * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.web.controller;
@@ -40,14 +36,12 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
 import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -209,8 +203,8 @@ public class RequisitionController extends BaseController {
     criteria.setUserId(loggedInUserId(request));
 
     try {
-      List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
-      List<Rnr> requisitions = isEmpty(periodList) && (!criteria.isEmergency()) ? null : getRequisitionsFor(criteria, periodList);
+      List<ProcessingPeriod> periodList = requisitionService.getProcessingPeriods(criteria);
+      List<Rnr> requisitions = requisitionService.getRequisitionsFor(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
       response.addData(RNR_LIST, requisitions);
       response.addData(IS_EMERGENCY, criteria.isEmergency());
@@ -218,29 +212,6 @@ public class RequisitionController extends BaseController {
     } catch (DataException e) {
       return error(e, CONFLICT);
     }
-  }
-
-  private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
-    List<ProcessingPeriod> periods = null;
-
-    if (criteria.isEmergency()) {
-      ProcessingPeriod currentPeriod = requisitionService.getCurrentPeriod(criteria);
-      if (currentPeriod != null) {
-        periods = asList(currentPeriod);
-      }
-    } else {
-      periods = requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
-    }
-
-    return periods;
-  }
-
-  private List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
-    criteria.setWithoutLineItems(true);
-    if (!criteria.isEmergency()) {
-      criteria.setPeriodId(periodList.get(0).getId());
-    }
-    return requisitionService.get(criteria);
   }
 
   @RequestMapping(value = "/requisitions/{id}", method = GET)

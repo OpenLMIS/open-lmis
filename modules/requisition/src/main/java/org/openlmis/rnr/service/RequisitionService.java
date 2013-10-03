@@ -31,6 +31,7 @@ import static java.util.Arrays.asList;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 public class RequisitionService {
@@ -306,7 +307,7 @@ public class RequisitionService {
 
     if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
       ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
-      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow == currentPeriod.getId()) {
+      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
         throw new DataException("error.current.rnr.already.post.submit");
       }
     }
@@ -447,5 +448,20 @@ public class RequisitionService {
     return (int) Math.ceil(approvedRequisitionsByCriteria.doubleValue() / pageSize.doubleValue());
   }
 
+  public List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
+    if (!criteria.isEmergency()) {
+      return getAllPeriodsForInitiatingRequisition(criteria);
+    }
+    ProcessingPeriod currentPeriod = getCurrentPeriod(criteria);
+    return currentPeriod == null ? null : asList(currentPeriod);
+  }
+
+  public List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+    if (isEmpty(periodList) && (!criteria.isEmergency())) return null;
+    if (!criteria.isEmergency())
+      criteria.setPeriodId(periodList.get(0).getId());
+    criteria.setWithoutLineItems(true);
+    return get(criteria);
+  }
 }
 

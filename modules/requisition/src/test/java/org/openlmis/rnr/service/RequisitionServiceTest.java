@@ -1366,6 +1366,44 @@ public class RequisitionServiceTest {
     assertThat(count, is(2));
   }
 
+  @Test
+  public void shouldGetNullIfEmptyPeriodListAndNonEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(false);
+
+    assertThat(requisitionService.getRequisitionsFor(criteria, new ArrayList<ProcessingPeriod>()), is(nullValue()));
+  }
+
+  @Test
+  public void shouldGetNullIfNullPeriodListAndNonEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(false);
+
+    assertThat(requisitionService.getRequisitionsFor(criteria, null), is(nullValue()));
+  }
+
+  @Test
+  public void shouldSetPeriodIdOfFirstPeriodOfPeriodListForNonEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(false);
+    ProcessingPeriod processingPeriod = new ProcessingPeriod(3l);
+
+    requisitionService.getRequisitionsFor(criteria, asList(processingPeriod, new ProcessingPeriod(67l)));
+
+    assertThat(criteria.getPeriodId(), is(3l));
+  }
+
+  @Test
+  public void shouldNotSetPeriodIdOfFirstPeriodOfPeriodListForEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(true);
+    ProcessingPeriod processingPeriod = new ProcessingPeriod(3l);
+
+    requisitionService.getRequisitionsFor(criteria, asList(processingPeriod, new ProcessingPeriod(67l)));
+
+    assertThat(criteria.getPeriodId(), is(nullValue()));
+  }
+
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);

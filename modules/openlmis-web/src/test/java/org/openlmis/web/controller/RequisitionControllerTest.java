@@ -311,21 +311,14 @@ public class RequisitionControllerTest {
     List<ProcessingPeriod> periodList = asList(processingPeriod);
     Rnr rnr = new Rnr();
 
-    Facility facility = new Facility(1L);
-    whenNew(Facility.class).withArguments(1L).thenReturn(facility);
-    Program program = new Program(2L);
-    whenNew(Program.class).withArguments(2L).thenReturn(program);
     boolean withoutLineItems = true;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(),
-      processingPeriod.getId(), withoutLineItems);
-    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1l, 2l, 6l, withoutLineItems);
+    when(requisitionService.getProcessingPeriods(criteria)).thenReturn(periodList);
+    when(requisitionService.getRequisitionsFor(criteria, periodList)).thenReturn(asList(rnr));
 
-    when(requisitionService.getAllPeriodsForInitiatingRequisition(criteria)).thenReturn(periodList);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria,  request);
 
-    ResponseEntity<OpenLmisResponse> response =
-      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
-
-    verify(requisitionService).getAllPeriodsForInitiatingRequisition(criteria);
+    verify(requisitionService).getProcessingPeriods(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
     assertThat((List<Rnr>) response.getBody().getData().get(RNR_LIST), is(asList(rnr)));
   }
@@ -334,8 +327,7 @@ public class RequisitionControllerTest {
   public void shouldReturnErrorResponseIfNoPeriodsFoundForInitiatingRequisition() throws Exception {
     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 2L);
     String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(requisitionService).
-      getAllPeriodsForInitiatingRequisition(criteria);
+    doThrow(new DataException(errorMessage)).when(requisitionService).getProcessingPeriods(criteria);
 
     ResponseEntity<OpenLmisResponse> response =
       controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
