@@ -52,7 +52,7 @@ describe('ViewRnrListController', function () {
     scope.startDate = new Date("01/01/2001");
     scope.endDate = new Date("02/01/2001");
     scope.selectedProgramId = 1;
-    var expectedUrl = '/requisitions-list.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
+    var expectedUrl = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
     loadRequisitions(expectedUrl, rnrList);
   });
 
@@ -61,7 +61,7 @@ describe('ViewRnrListController', function () {
     scope.selectedFacilityId = 1;
     scope.startDate = new Date("01/01/2001");
     scope.endDate = new Date("02/01/2001");
-    var urlWithoutProgramId = '/requisitions-list.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1';
+    var urlWithoutProgramId = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1';
     loadRequisitions(urlWithoutProgramId, rnrList);
   });
 
@@ -72,7 +72,7 @@ describe('ViewRnrListController', function () {
     scope.startDate = new Date("01/01/2001");
     scope.endDate = new Date("02/01/2001");
     scope.selectedProgramId = 1;
-    var expectedUrl = '/requisitions-list.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
+    var expectedUrl = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
     loadRequisitions(expectedUrl, rnrList);
     scope.requisitions = rnrList;
     scope.filteredRequisitions = rnrList;
@@ -85,7 +85,7 @@ describe('ViewRnrListController', function () {
     scope.startDate = new Date("01/01/2001");
     scope.endDate = new Date("02/01/2001");
     scope.selectedProgramId = 1;
-    var expectedUrl = '/requisitions-list.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
+    var expectedUrl = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
     var rnrList = {'rnr_list': [
       {'id': 1}
     ]};

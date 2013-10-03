@@ -93,7 +93,7 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
     criteria.setUserId(loggedInUserId(request));

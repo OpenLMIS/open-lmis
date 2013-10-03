@@ -42,7 +42,7 @@ services.factory('UserContext', function ($resource) {
 services.factory('Users', function ($resource) {
   var resource = $resource('/users/:id.json', {id: '@id'}, update);
 
-  resource.disable = function(pathParams, success, error) {
+  resource.disable = function (pathParams, success, error) {
     $resource('/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
   };
 
@@ -102,7 +102,7 @@ services.factory('RequisitionForApproval', function ($resource) {
 });
 
 services.factory('RequisitionsForViewing', function ($resource) {
-  return $resource('/requisitions-list.json', {}, {});
+  return $resource('/requisitions.json', {}, {});
 });
 
 services.factory('RequisitionForConvertToOrder', function ($resource) {
@@ -268,19 +268,19 @@ services.factory('UpdatePassword', function ($resource) {
   return $resource('/admin/resetPassword/:userId.json', {}, update);
 });
 
-services.factory('Refrigerators', function($resource) {
+services.factory('Refrigerators', function ($resource) {
   return $resource('/deliveryZone/:deliveryZoneId/program/:programId/refrigerators.json', {}, {});
 });
 
-services.factory('OrderFileTemplate', function($resource) {
+services.factory('OrderFileTemplate', function ($resource) {
   return $resource('/order-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
-services.factory('DateFormats', function($resource) {
+services.factory('DateFormats', function ($resource) {
   return $resource('/date-formats.json', {}, {});
 });
 
-services.factory('ShipmentFileTemplate', function($resource) {
+services.factory('ShipmentFileTemplate', function ($resource) {
   return $resource('/shipment-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
