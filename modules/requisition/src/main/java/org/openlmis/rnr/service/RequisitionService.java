@@ -293,26 +293,22 @@ public class RequisitionService {
     }
   }
 
-  private List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
-    return getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(facilityId, programId));
-  }
-
-  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(RequisitionSearchCriteria criteria) {
-    Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
+  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
+    Date programStartDate = programService.getProgramStartDate(facilityId, programId);
 
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(
-      criteria.getFacilityId(), criteria.getProgramId());
+      facilityId, programId);
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
       null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
     if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
-      ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
+      ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
       if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
         throw new DataException("error.current.rnr.already.post.submit");
       }
     }
 
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate,
+    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
       periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
@@ -450,7 +446,7 @@ public class RequisitionService {
 
   public List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
     if (!criteria.isEmergency()) {
-      return getAllPeriodsForInitiatingRequisition(criteria);
+      return getAllPeriodsForInitiatingRequisition(criteria.getFacilityId(), criteria.getProgramId());
     }
     ProcessingPeriod currentPeriod = getCurrentPeriod(criteria);
     return currentPeriod == null ? null : asList(currentPeriod);
