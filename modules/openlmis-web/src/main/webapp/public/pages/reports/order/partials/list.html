@@ -74,8 +74,8 @@
                                 <label class="labels">Period<span  class="label-required"> *</span></label>
 
                                 <div class="form-field">
-                                    <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" ng-options="option.id as option.name for option in periods | orderBy:'id'">
-
+                                    <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" >
+                                           <option value="{{option.id}}" ng-repeat="option in periods | orderBy:'id'">{{option.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -86,8 +86,8 @@
                                 <label class="labels">Facility Type</label>
 
                                 <div class="form-field">
-                                    <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                                        <option value="">-- All Facility Types --</option>
+                                    <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType">
+                                         <option value="{{option.id}}" ng-repeat="option in facilityTypes">{{option.name}}</option>
                                     </select>
                                 </div>
                             </div>
