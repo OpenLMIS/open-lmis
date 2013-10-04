@@ -72,8 +72,12 @@ public interface RoleAssignmentMapper {
     "GROUP BY userId"})
   RoleAssignment getAdminRole(Long userId);
 
-  @Select({"SELECT RA.userId, array_agg(RA.roleId) as roleIdsAsString FROM role_assignments RA INNER JOIN roles R ON RA.roleId = R.id",
-    " WHERE userId = #{userId} AND R.type = 'REPORT' group by ra.userId "})
+  @Select({"SELECT DISTINCT RA.userId, array_agg(RA.roleId) as roleIdsAsString",
+      "FROM role_assignments RA",
+      "INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
+      "INNER JOIN rights RT ON RT.name = RR.rightName",
+      "WHERE userId = #{userId} AND RT.rightType = 'REPORT'",
+      "GROUP BY userId"})
   RoleAssignment getReportRole(Long userId);
 
   @Insert("INSERT INTO role_assignments" +

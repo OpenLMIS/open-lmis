@@ -172,13 +172,13 @@
                           openlmis-message = "create.role.selectRightWarning">
                     </span>
                   </td>
-                    <td ng-class = "{'is-disabled': role.type != 'REPORT'}">
+                    <td ng-class = "{'is-disabled': currentRightType != 'REPORT'}">
                         <div>
                             <div id = "reportRights-{{reportRight.right}}" class = "checkbox-list clearfix"
                                  ng-repeat = "reportRight in reportRights" tab-scroll>
                                 <input id = "{{reportRight.right}}" type = "checkbox" ng-checked = "contains(reportRight.right)"
                                        ng-click = "updateRights(checked,reportRight)" ng-model = "checked"
-                                       ng-disabled = "areRelatedFieldsSelected(reportRight) || role.type != 'REPORT'" />
+                                       ng-disabled = "areRelatedFieldsSelected(reportRight) || currentRightType != 'REPORT'" />
                                 <label for = "{{reportRight.right}}" ><span openlmis-message="reportRight.rightName"></span></label >
                             </div >
                         </div>
