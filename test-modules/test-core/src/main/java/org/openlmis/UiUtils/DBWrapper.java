@@ -73,6 +73,10 @@ public class DBWrapper {
     insertProcessingPeriod(period, period, "2013-09-29 14:16:43.498429", "2020-09-30 14:16:43.498429", 66, schedule);
   }
 
+    public void DeleteProcessingPeriods() throws SQLException, IOException {
+        update("delete from processing_periods;");
+    }
+
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
     String programName = "";
     String productCode = "";
@@ -794,7 +798,6 @@ public class DBWrapper {
       update("update requisitions set emergency='true';");
 
   }
-
 
   public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) throws IOException, SQLException {
     update("update regimen_line_items set patientsontreatment='" + patientsontreatment + "', patientstoinitiatetreatment='" + patientstoinitiatetreatment + "', patientsstoppedtreatment='" + patientsstoppedtreatment + "',remarks='" + remarks + "';");

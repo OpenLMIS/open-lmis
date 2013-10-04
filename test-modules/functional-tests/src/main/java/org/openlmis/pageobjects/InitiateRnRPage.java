@@ -237,6 +237,9 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using ="//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
   private static WebElement rnrRegularLabel;
 
+  @FindBy(how = XPATH, using ="//table[@id='fullSupplyTable']/tbody/tr[2]/td[4]/ng-switch/span/ng-switch/span/ng-switch/span/span")
+  private static WebElement beginningBalanceLabel;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
 
@@ -702,5 +705,10 @@ public class InitiateRnRPage extends RequisitionPage {
 
     public String getRegularLabelText(){
         return rnrRegularLabel.getText();
+    }
+
+    public String getBeginningBalance(){
+        testWebDriver.waitForElementToAppear(beginningBalanceLabel);
+        return beginningBalanceLabel.getText();
     }
 }
