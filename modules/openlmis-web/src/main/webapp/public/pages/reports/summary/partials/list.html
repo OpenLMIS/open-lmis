@@ -113,13 +113,13 @@
                 </td>
             </tr>
         </table>
-         <table ng-show="datarows.length > 0" class="table-bordered table table-striped" show-filter="true" ng-table="tableParams">
+         <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
              <tbody>
                 <tr ng-repeat="row in datarows">
-                    <td data-title="'Code'" sortable="code" filter="{ 'code': 'text' }">{{ row.code }}</td>
-                    <td data-title="'Product'" sortable="product" filter="{ 'product': 'text' }">{{ row.product }}</td>
-                    <td class="number" sortable="openingBalance" data-title="'Opening Balance'" filter="{ 'action': 'button' }">{{ row.openingBalance | number}}</td>
+                    <td data-title="'Code'" sortable="code" >{{ row.code }}</td>
+                    <td data-title="'Product'" sortable="product" >{{ row.product }}</td>
+                    <td class="number" sortable="openingBalance" data-title="'Opening Balance'" >{{ row.openingBalance | number}}</td>
                     <td class="number" sortable="receipts" data-title="'Receipt'">{{ row.receipts | number}}</td>
                     <td class="number" sortable="issues" data-title="'Issues'">{{ row.issues | number}}</td>
                     <td class="number" sortable="adjustements" data-title="'Adjustments'">{{ row.adjustments | number}}</td>
