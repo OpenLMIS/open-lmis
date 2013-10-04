@@ -10,7 +10,6 @@
 
 var RegularRnrLineItem = base2.Base.extend({
 
-  exports: "visibleForNonFullSupplyColumns",
   numberOfMonths: undefined,
   programRnrColumnList: undefined,
   rnrStatus: undefined,

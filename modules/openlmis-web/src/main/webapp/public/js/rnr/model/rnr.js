@@ -189,15 +189,9 @@ var Rnr = function (rnr, programRnrColumns) {
       var lineItemsJson = lineItems;
       lineItems = [];
 
-      if (rnr.emergency) {
-        $(lineItemsJson).each(function (i, lineItem) {
-          lineItems.push(new EmergencyRnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
-        });
-      } else {
-        $(lineItemsJson).each(function (i, lineItem) {
-          lineItems.push(new RegularRnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
-        });
-      }
+      $(lineItemsJson).each(function (i, lineItem) {
+        lineItems.push(RnrLineItemFactory.getInstance(lineItem, thisRnr, programRnrColumns))
+      });
       return lineItems;
     }
 

@@ -8,9 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var EmergencyRnrLineItem = RegularRnrLineItem.extend({
 
-  calculateNormalizedConsumption: function () {
-    this.normalizedConsumption = null;
+RnrLineItemFactory = base2.Abstract.extend({
+}, {
+  getInstance: function (lineItem, rnr, programRnrColumns) {
+    if (rnr.emergency)
+      return new EmergencyRnrLineItem(lineItem, rnr.period.numberOfMonths, programRnrColumns, rnr.status);
+    return new RegularRnrLineItem(lineItem, rnr.period.numberOfMonths, programRnrColumns, rnr.status);
   }
 });
