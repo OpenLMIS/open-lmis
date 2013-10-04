@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 
 <!--
-  ~ Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
   ~
-  ~ If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
 <html>
@@ -20,6 +24,7 @@
         src="../../main/webapp/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/lib/angular/angular-resource.min.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/lib/angular-ui/angular-ui.js"></script>
+<script type="text/javascript" src="../../main/webapp/public/lib/base2.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/lib/localstorage/localStorage.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/lib/underscore/underscore-min.js"></script>
 <script type="text/javascript" src="../javascript/lib/jasmine.js"></script>
@@ -31,6 +36,7 @@
 <script type="text/javascript" src="../javascript/lib/webjslint.js"></script>
 <script type="text/javascript" src="../javascript/lib/jasmine-reporters.js"></script>
 <script src="lib/console-runner.js"></script>
+
 
 <!-- include your source files and libraries here... -->
 
@@ -106,7 +112,9 @@
         src="../../main/webapp/public/js/rnr/controller/view/view-rnr-list-controller.js"></script>
 <script type="text/javascript"
         src="../../main/webapp/public/js/order/controller/view-order-list-controller.js"></script>
-<script type="text/javascript" src="../../main/webapp/public/js/rnr/model/rnr-line-item.js"></script>
+<script type="text/javascript" src="../../main/webapp/public/js/rnr/model/regular-rnr-line-item.js"></script>
+<script type="text/javascript" src="../../main/webapp/public/js/rnr/model/emergency-rnr-line-item.js"></script>
+<script type="text/javascript" src="../../main/webapp/public/js/rnr/model/rnr-line-item-factory.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/js/rnr/model/rnr.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/js/rnr/model/loss-and-adjustment.js"></script>
 <script type="text/javascript" src="../../main/webapp/public/js/rnr/module/rnr-module.js"></script>
@@ -217,7 +225,8 @@ attribute. -->
 <script type="text/javascript" src="specs/rnr/controller/create/create-full-supply-controller-test.js"></script>
 <script type="text/javascript" src="specs/rnr/controller/create/create-non-full-supply-controller-test.js"></script>
 <script type="text/javascript" src="specs/rnr/controller/create/create-regimen-line-item-controller-test.js"></script>
-<script type="text/javascript" src="specs/rnr/model/rnr-line-item-test.js"></script>
+<script type="text/javascript" src="specs/rnr/model/regular-rnr-line-item-test.js"></script>
+<script type="text/javascript" src="specs/rnr/model/emergency-rnr-line-item-test.js"></script>
 <script type="text/javascript" src="specs/rnr/model/loss-and-adjustment-test.js"></script>
 <script type="text/javascript" src="specs/rnr/model/rnr-test.js"></script>
 <script type="text/javascript" src="specs/rnr/module/rnr-module-test.js"></script>

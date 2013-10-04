@@ -1,7 +1,10 @@
 /*
  * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.core.service;
@@ -20,10 +23,7 @@ import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.core.repository.RoleRightsRepository;
 import org.openlmis.db.categories.UnitTests;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,7 +31,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -55,7 +54,7 @@ public class RoleRightsServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", REQUISITION, "role description");
+    role = new Role("role name", "role description");
     roleRightsService = new RoleRightsService(roleRightsRepository, supervisoryNodeService, facilityService);
   }
 
@@ -63,9 +62,25 @@ public class RoleRightsServiceTest {
   @Test
   public void shouldGetAllRightsByDisplayOrder() throws Exception {
     List<Right> allRights = new ArrayList<>(new RoleRightsService().getAllRights());
-    List<Right> alphabeticalRights = asList(
-            CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_PROGRAM_PRODUCT, MANAGE_REGIMEN_TEMPLATE, MANAGE_ROLE, MANAGE_SCHEDULE, MANAGE_USER, UPLOADS, MANAGE_DISTRIBUTION, MANAGE_REPORT, VIEW_REPORT, APPROVE_REQUISITION, AUTHORIZE_REQUISITION, CONVERT_TO_ORDER, CREATE_REQUISITION, VIEW_REQUISITION, VIEW_ORDER, CONFIGURE_EDI, ACCESS_ILS_GATEWAY, MANAGE_PRODUCT_ALLOWED_FOR_FACILITY, MANAGE_SETTING, MANAGE_REQ_GRP_PROG_SCHEDULE, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_PRODUCT, MANAGE_SUPPLYLINE, MANAGE_GEOGRAPHIC_ZONES, VIEW_FACILITY_REPORT, VIEW_MAILING_LABEL_REPORT, VIEW_SUMMARY_REPORT, VIEW_CONSUMPTION_REPORT, VIEW_AVERAGE_CONSUMPTION_REPORT, VIEW_REPORTING_RATE_REPORT, VIEW_NON_REPORTING_FACILITIES, VIEW_ADJUSTMENT_SUMMARY_REPORT, VIEW_SUPPLY_STATUS_REPORT, VIEW_STOCKED_OUT_REPORT, VIEW_DISTRICT_CONSUMPTION_REPORT, VIEW_ORDER_REPORT, VIEW_STOCK_IMBALANCE_REPORT, VIEW_RNR_FEEDBACK_REPORT
-    );
+    List<Right> alphabeticalRights = asList(CONFIGURE_RNR,
+      MANAGE_FACILITY,
+      MANAGE_PROGRAM_PRODUCT,
+      MANAGE_REGIMEN_TEMPLATE,
+      MANAGE_ROLE,
+      MANAGE_SCHEDULE,
+      MANAGE_USER,
+      UPLOADS,
+      MANAGE_DISTRIBUTION,
+      MANAGE_REPORT,
+      VIEW_REPORT,
+      APPROVE_REQUISITION,
+      AUTHORIZE_REQUISITION,
+      CONVERT_TO_ORDER,
+      CREATE_REQUISITION,
+      VIEW_REQUISITION,
+      VIEW_ORDER,
+      CONFIGURE_EDI,
+      FACILITY_FILL_SHIPMENT);
 
     assertThat(allRights, is(alphabeticalRights));
   }
@@ -110,15 +125,6 @@ public class RoleRightsServiceTest {
     verify(roleRightsRepository, never()).createRole(role);
   }
 
-  @Test
-  public void shouldReturnAllRoles() throws Exception {
-    List<Role> allRoles = new ArrayList<>();
-    when(roleRightsRepository.getAllRoles()).thenReturn(allRoles);
-
-    assertThat(roleRightsService.getAllRoles(), is(allRoles));
-
-    verify(roleRightsRepository).getAllRoles();
-  }
 
   @Test
   public void shouldGetRoleById() throws Exception {
@@ -173,5 +179,36 @@ public class RoleRightsServiceTest {
 
     assertThat(result.containsAll(expected), is(true));
     verify(roleRightsRepository).getRightsForUserOnHomeFacilityAndProgram(userId, program);
+  }
+
+  @Test
+  public void shouldGetAllRolesMapByRightType() throws Exception {
+    List<Role> allRoles = new ArrayList<>();
+    Role role1 = new Role();
+    role1.setId(1L);
+    Role role2 = new Role();
+    role2.setId(2L);
+    Role role3 = new Role();
+    role3.setId(3L);
+    Role role4 = new Role();
+    role4.setId(4L);
+
+    allRoles.add(role1);
+    allRoles.add(role2);
+    allRoles.add(role3);
+    allRoles.add(role4);
+
+    when(roleRightsRepository.getAllRoles()).thenReturn(allRoles);
+    when(roleRightsRepository.getRightTypeForRoleId(1L)).thenReturn(RightType.REQUISITION);
+    when(roleRightsRepository.getRightTypeForRoleId(2L)).thenReturn(RightType.ADMIN);
+    when(roleRightsRepository.getRightTypeForRoleId(3L)).thenReturn(RightType.ALLOCATION);
+    when(roleRightsRepository.getRightTypeForRoleId(4L)).thenReturn(RightType.ALLOCATION);
+
+    Map<String, List<Role>> allRolesMap = roleRightsService.getAllRolesMap();
+
+    assertThat(allRolesMap.size(), is(3));
+    assertThat(allRolesMap.get(RightType.ADMIN.name()).size(), is(1));
+    assertThat(allRolesMap.get(RightType.REQUISITION.name()).size(), is(1));
+    assertThat(allRolesMap.get(RightType.ALLOCATION.name()).size(), is(2));
   }
 }

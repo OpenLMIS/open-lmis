@@ -1,10 +1,15 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog, messageService) {
+function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
+                        messageService) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights: []};
@@ -12,13 +17,13 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   if ($routeParams.id) {
     Roles.get({id: $routeParams.id}, function (data) {
       $scope.role = data.role;
-      $scope.role.type = data.role.type;
-      $scope.previousType = $scope.role.type;
+      $scope.currentRightType = data.right_type;
+      $scope.previousRightType = $scope.currentRightType;
     });
   }
   else {
-    $scope.role.type = "ADMIN";
-    $scope.previousType = $scope.role.type;
+    $scope.currentRightType = "ADMIN";
+    $scope.previousRightType = $scope.currentRightType;
   }
 
   Rights.get({}, function (data) {
@@ -26,6 +31,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     $scope.adminRights = _.where($scope.rights, {"type": "ADMIN"});
     $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
     $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
+    $scope.shipmentRights = _.where($scope.rights, {"type": "SHIPMENT"});
     $scope.reportRights = _.where($scope.rights, {"type": "REPORT"});
   }, {});
 
@@ -60,8 +66,8 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   $scope.areRelatedFieldsSelected = function (right) {
     if (right.right == 'VIEW_REQUISITION') {
       return ($scope.contains('CREATE_REQUISITION') ||
-              $scope.contains('AUTHORIZE_REQUISITION') ||
-              $scope.contains('APPROVE_REQUISITION'));
+        $scope.contains('AUTHORIZE_REQUISITION') ||
+        $scope.contains('APPROVE_REQUISITION'));
     }
 
     if (right.right == 'VIEW_REPORT') {
@@ -108,17 +114,17 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
   $scope.dialogCloseCallback = function (result) {
     if (result) {
       $scope.role.rights = [];
-      $scope.previousType = $scope.role.type;
+      $scope.previousRightType = $scope.currentRightType;
     } else {
-      $scope.role.type = $scope.previousType;
+      $scope.currentRightType = $scope.previousRightType;
     }
   };
 
   $scope.showRoleTypeModal = function (selectedRoleType) {
-    if(selectedRoleType == $scope.previousType) {
+    if (selectedRoleType == $scope.previousRightType) {
       return;
     } else {
-      $scope.role.type = selectedRoleType;
+      $scope.currentRightType = selectedRoleType;
       $scope.showRightError = false;
       $scope.error = "";
       var options = {

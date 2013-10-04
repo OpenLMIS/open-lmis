@@ -1,23 +1,28 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.core.repository.mapper;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.ProgramSupportedBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.service.SpringIntegrationTest;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,17 +40,13 @@ import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class
-  ProgramMapperIT extends SpringIntegrationTest {
-
-  public static final String PROGRAM_CODE = "HIV";
-  public static final Integer PROGRAM_ID = 1;
+@RunWith(SpringJUnit4ClassRunner.class)
+public class ProgramMapperIT {
 
   @Autowired
   ProgramSupportedMapper programSupportedMapper;
@@ -157,7 +158,7 @@ public class
 
     User user = insertUser(facility);
 
-    Role createRnrRole = new Role("R1", REQUISITION, "Create Requisition");
+    Role createRnrRole = new Role("R1", "Create Requisition");
     roleRightsMapper.insertRole(createRnrRole);
     roleRightsMapper.createRoleRight(createRnrRole, Right.CREATE_REQUISITION);
     insertRoleAssignments(activeProgramWithCreateRight, user, createRnrRole, supervisoryNode);
@@ -165,7 +166,7 @@ public class
     insertRoleAssignments(activeProgramForHomeFacility, user, createRnrRole, null);
     insertRoleAssignments(activePushProgramWithCreateRight, user, createRnrRole, supervisoryNode);
 
-    Role configureRnrRole = new Role("R2", REQUISITION, "View Rnr Role");
+    Role configureRnrRole = new Role("R2", "View Rnr Role");
     roleRightsMapper.insertRole(configureRnrRole);
     roleRightsMapper.createRoleRight(configureRnrRole, Right.CONFIGURE_RNR);
     insertRoleAssignments(activeProgramWithConfigureRight, user, configureRnrRole, supervisoryNode);
@@ -188,11 +189,11 @@ public class
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1, Right.CREATE_REQUISITION);
 
-    Role r2 = new Role("r2", REQUISITION, "authorize role");
+    Role r2 = new Role("r2", "authorize role");
     roleRightsMapper.insertRole(r2);
     roleRightsMapper.createRoleRight(r2, Right.AUTHORIZE_REQUISITION);
 
@@ -226,7 +227,7 @@ public class
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1, Right.APPROVE_REQUISITION);
 
@@ -269,7 +270,7 @@ public class
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
 
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
     roleRightsMapper.createRoleRight(r1, Right.VIEW_REQUISITION);
 

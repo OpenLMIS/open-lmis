@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.pageobjects;
@@ -106,6 +110,11 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
   private static WebElement addNewRoleHeader;
 
+  @FindBy(how = How.ID, using = "shipmentRoleType")
+  private static WebElement facilityBasedRoleType;
+
+  @FindBy(how = How.XPATH, using = "//input[@id='FACILITY_FILL_SHIPMENT']")
+  private static WebElement rightFillShipment;
 
   public RolesPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -247,6 +256,24 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
   }
+
+    public void createFacilityBasedRoleWithSuccessMessageExpected(String roleName, String roleDesc) {
+        testWebDriver.waitForElementToAppear(createNewRoleButton);
+        createNewRoleButton.click();
+
+        facilityBasedRoleType.click();
+        clickContinueButton();
+
+        testWebDriver.sleep(1000);
+
+        roleNameField.sendKeys(roleName);
+        roleDescription.sendKeys(roleDesc);
+        rightFillShipment.click();
+        saveButton.click();
+
+        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+        assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
+    }
 
   public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);

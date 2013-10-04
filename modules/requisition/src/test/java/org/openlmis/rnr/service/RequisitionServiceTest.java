@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.rnr.service;
@@ -55,6 +57,7 @@ import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.rnr.domain.RegimenLineItem.*;
@@ -256,61 +259,6 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetRequisition() throws Exception {
-    Rnr requisition = spy(new Rnr());
-    requisition.setFacility(FACILITY);
-    requisition.setProgram(PROGRAM);
-    requisition.setPeriod(PERIOD);
-
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, new ProcessingPeriod(PERIOD.getId()))).thenReturn(requisition);
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
-    Rnr actualRequisition = requisitionService.get(criteria).get(0);
-
-    assertThat(actualRequisition, is(requisition));
-    verify(requisition).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
-  }
-
-
-  @Test
-  public void shouldGetPreviousTwoRequisitionsNormalizedConsumptionsWhileGettingRequisition() throws Exception {
-    final Long lastPeriodId = 2L;
-    final Long secondLastPeriodsId = 3L;
-    ProcessingPeriod lastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, lastPeriodId)));
-
-    Rnr rnr = new Rnr(FACILITY, PROGRAM, PERIOD);
-    final Rnr spyRnr = spy(rnr);
-
-    when(requisitionRepository.getRequisitionWithLineItems(new Facility(FACILITY.getId()), new Program(PROGRAM.getId()), new ProcessingPeriod(PERIOD.getId()))).thenReturn(spyRnr);
-    ProcessingPeriod period = new ProcessingPeriod(PERIOD.getId(), PERIOD.getStartDate(), PERIOD.getEndDate(), PERIOD.getNumberOfMonths(), PERIOD.getName());
-    when(processingScheduleService.getPeriodById(10L)).thenReturn(period);
-
-    when(processingScheduleService.getImmediatePreviousPeriod(period)).thenReturn(lastPeriod);
-
-    ProcessingPeriod secondLastPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, secondLastPeriodsId)));
-    when(processingScheduleService.getImmediatePreviousPeriod(lastPeriod)).thenReturn(secondLastPeriod);
-
-    Rnr lastPeriodsRnr = new Rnr(FACILITY, PROGRAM, lastPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, lastPeriod)).thenReturn(lastPeriodsRnr);
-
-    Rnr secondLastPeriodsRnr = new Rnr(FACILITY, PROGRAM, secondLastPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, secondLastPeriod)).thenReturn(secondLastPeriodsRnr);
-
-    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
-
-    final Rnr actual = requisitionService.get(criteria).get(0);
-
-    assertThat(actual, is(spyRnr));
-    verify(spyRnr).fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
-  }
-
-  @Test
   public void shouldGetAllPeriodsForInitiatingRequisitionWhenThereIsAtLeastOneExistingRequisitionInThePostSubmitFlow() throws Exception {
     DateTime date1 = new DateTime();
     DateTime date2 = date1.minusMonths(1);
@@ -327,13 +275,12 @@ public class RequisitionServiceTest {
     createRequisition(processingPeriod3.getId(), INITIATED);
 
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
-    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
+    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
       thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods =
-      requisitionService.getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(FACILITY.getId(),
-        PROGRAM.getId()));
+      requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
     assertThat(periods.size(), is(2));
     assertThat(periods.get(0), is(processingPeriod3));
@@ -349,15 +296,35 @@ public class RequisitionServiceTest {
     ProcessingPeriod processingPeriod2 = createProcessingPeriod(20L, date2);
 
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
-    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
+    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
       thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
-    List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId()));
+    List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
     assertThat(periods.size(), is(2));
     assertThat(periods.get(0), is(processingPeriod1));
     assertThat(periods.get(1), is(processingPeriod2));
+  }
+
+  @Test
+  public void shouldThrowExceptionIfLastPostSubmitRequisitionIsOfCurrentPeriod() throws Exception {
+    DateTime currentDate = new DateTime();
+
+    ProcessingPeriod currentPeriod = createProcessingPeriod(10L, currentDate);
+
+    Rnr currentRnr = createRequisition(currentPeriod.getId(), AUTHORIZED);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.current.rnr.already.post.submit");
+
+    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentDate.toDate());
+    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(currentRnr);
+    when(processingScheduleService.getCurrentPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate())).thenReturn(currentPeriod);
+
+    requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
+
+    verify(processingScheduleService, never()).getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), currentDate.toDate(), null);
   }
 
   private Rnr createRequisition(Long periodId, RnrStatus status) {
@@ -403,7 +370,7 @@ public class RequisitionServiceTest {
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), USER_ID, false);
 
     verify(programService).getProgramStartDate(FACILITY.getId(), PROGRAM.getId());
-    verify(requisitionRepository).getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId());
+    verify(requisitionRepository).getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId());
     verify(processingScheduleService).getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, validPeriod.getId());
   }
 
@@ -457,7 +424,7 @@ public class RequisitionServiceTest {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
-    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
+    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
       thenReturn(Arrays.asList(validPeriod));
   }
@@ -467,7 +434,7 @@ public class RequisitionServiceTest {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date);
-    when(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
+    when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(requisition);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date, PERIOD.getId())).
       thenReturn(asList(PERIOD));
   }
@@ -493,7 +460,6 @@ public class RequisitionServiceTest {
 
     verify(requisitionRepository).update(savedRnr);
     verify(requisitionRepository).logStatusChange(savedRnr);
-//    assertThat(submittedRnr.getSubmittedDate(), is(notNullValue()));
     assertThat(submittedRnr.getStatus(), is(SUBMITTED));
   }
 
@@ -830,7 +796,7 @@ public class RequisitionServiceTest {
 
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
     when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    when(requisitionRepository.getRegularRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
     List<Regimen> regimens = new ArrayList<>();
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
@@ -893,7 +859,7 @@ public class RequisitionServiceTest {
 
     when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
     when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    when(requisitionRepository.getRegularRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
     List<Regimen> regimens = new ArrayList<>();
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
@@ -935,7 +901,12 @@ public class RequisitionServiceTest {
 
     Date dateRangeStart = DateTime.parse("2013-02-01").toDate();
     Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), dateRangeStart, dateRangeEnd);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, facility.getId()),
+      with(programIdProperty, program.getId()),
+      with(startDate, dateRangeStart),
+      with(endDate, dateRangeEnd)));
+
     RequisitionSearchStrategy searchStrategy = mock(RequisitionSearchStrategy.class);
     RequisitionSearchStrategyFactory spyFactory = spy(requisitionSearchStrategyFactory);
     requisitionService.setRequisitionSearchStrategyFactory(spyFactory);
@@ -1271,7 +1242,10 @@ public class RequisitionServiceTest {
   public void shouldGetCurrentPeriodForFacilityAndProgram() {
     Date programStartDate = new Date();
     when(programService.getProgramStartDate(1L, 2L)).thenReturn(programStartDate);
-    requisitionService.getCurrentPeriod(new RequisitionSearchCriteria(1L, 2L));
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 2L)));
+    requisitionService.getCurrentPeriod(criteria);
 
     verify(processingScheduleService).getCurrentPeriod(1L, 2L, programStartDate);
   }
@@ -1293,10 +1267,25 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize)).thenReturn(filteredRnrs);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber);
+    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 6);
 
     verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
     assertThat(rnrList, is(filteredRnrs));
+  }
+
+  @Test
+  public void shouldThrowErrorInCasePageNumberRequestedNotAvailable() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.page.not.found");
+
+    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1);
+  }
+
+  @Test
+  public void shouldReturnEmptyListInCaseNotRequisitionsExistAndPage1Requested() throws Exception {
+    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 1, 0);
+
+    assertThat(requisitions.size(), is(0));
   }
 
   @Test
@@ -1311,7 +1300,60 @@ public class RequisitionServiceTest {
 
     Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
 
-    assertThat(count, is(numberOfApprovedRequisitions / pageSize + 1));
+    assertThat(count, is(2));
+  }
+
+  @Test
+  public void shouldReturn2pagesFor6RequisitionsAndPageSize3() throws Exception {
+
+    int numberOfApprovedRequisitions = 6;
+    String searchType = "searchType";
+    String searchVal = "search";
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(numberOfApprovedRequisitions);
+    Integer pageSize = 3;
+    when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
+
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+
+    assertThat(count, is(2));
+  }
+
+  @Test
+  public void shouldGetEmptyListIfEmptyPeriodListAndNonEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(false);
+
+    assertThat(requisitionService.getRequisitionsFor(criteria, new ArrayList<ProcessingPeriod>()).size(), is(0));
+  }
+
+  @Test
+  public void shouldGetEmptyListIfNullPeriodListAndNonEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(false);
+
+    assertThat(requisitionService.getRequisitionsFor(criteria, null).size(), is(0));
+  }
+
+  @Test
+  public void shouldSetPeriodIdOfFirstPeriodOfPeriodListForNonEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(false);
+    ProcessingPeriod processingPeriod = new ProcessingPeriod(3l);
+
+    requisitionService.getRequisitionsFor(criteria, asList(processingPeriod, new ProcessingPeriod(67l)));
+
+    assertThat(criteria.getPeriodId(), is(3l));
+  }
+
+  @Test
+  public void shouldNotSetPeriodIdOfFirstPeriodOfPeriodListForEmergency() throws Exception {
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setEmergency(true);
+    ProcessingPeriod processingPeriod = new ProcessingPeriod(3l);
+
+    requisitionService.getRequisitionsFor(criteria, asList(processingPeriod, new ProcessingPeriod(67l)));
+
+    assertThat(criteria.getPeriodId(), is(nullValue()));
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

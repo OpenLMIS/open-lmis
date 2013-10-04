@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.rnr.repository.mapper;
@@ -81,6 +85,7 @@ public interface RequisitionMapper {
     "WHERE facilityId = #{facilityId}",
     "AND programId = #{programId} ",
     "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+    "AND emergency = false",
     "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC",
     "LIMIT 1"})
   @Results(value = {
@@ -88,8 +93,8 @@ public interface RequisitionMapper {
     @Result(property = "program.id", column = "programId"),
     @Result(property = "period.id", column = "periodId")
   })
-  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
-                                                 @Param(value = "programId") Long programId);
+  Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
+                                                        @Param(value = "programId") Long programId);
 
   @Select({"SELECT * FROM requisitions WHERE",
     "facilityId = #{facility.id} AND",
@@ -129,6 +134,17 @@ public interface RequisitionMapper {
   })
   Rnr getLWById(Long rnrId);
 
+  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id} AND emergency = false")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "period.id", column = "periodId"),
+    @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+  })
+  Rnr getRegularRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
+
   @Select({"SELECT * FROM requisitions WHERE",
     "facilityId = #{facilityId} AND",
     "programId = #{programId} AND",
@@ -162,8 +178,8 @@ public interface RequisitionMapper {
     @SuppressWarnings("UnusedDeclaration")
     public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
-      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, " +
-        "R.supervisoryNodeId, R.modifiedDate as submittedDate FROM Requisitions R ");
+      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId, R.modifiedDate as modifiedDate,RSC.modifiedDate as submittedDate " +
+        "FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' ");
 
       appendQueryClausesBySearchType(sql, params);
 
@@ -193,10 +209,9 @@ public interface RequisitionMapper {
         sql.append("WHERE ");
       } else if (searchType.isEmpty() || searchType.equalsIgnoreCase(RequisitionService.SEARCH_ALL)) {
         sql.append("INNER JOIN Programs P ON P.id = R.programId ");
-        sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
-        sql.append("INNER JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
-        sql.append("WHERE LOWER(P.code) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal +
-          "' OR LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
+        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
+        sql.append("LEFT JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
+        sql.append("WHERE (LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%') AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
         sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
         sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
@@ -207,8 +222,8 @@ public interface RequisitionMapper {
         sql.append("INNER JOIN Programs P ON P.id = R.programId ");
         sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
-        sql.append("INNER JOIN Supply_lines SL ON SL.supervisoryNodeId = R.supervisoryNodeId ");
-        sql.append("INNER JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
+        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
+        sql.append("LEFT JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
         sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
       }
       sql.append("R.status = 'APPROVED' ");

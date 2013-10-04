@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.functional;
@@ -99,11 +103,8 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1380047400000"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":1380133800000"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"Comments\""));
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -120,19 +121,16 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"online\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"gln\":\"Testing Gln\""));
-//    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"type\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"operatedBy\":\"" + operatedBy + "\""));
-//    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":true"));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"type\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"operatedBy\":\"" + operatedBy + "\""));
-//    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"modifiedDate\""));
 
     deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -201,12 +199,11 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1352572200000"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":-2592106200000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"fc\""));
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
 
     uploadPage.uploadFacilities("QA_facilities_Subsequent_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -221,10 +218,8 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"sdp\":true"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"online\":true"));
-//        assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"parentFacility\":\"" + parentFacilityCode + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"gln\":\"G7645\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
 
     homePage.logout(baseUrlGlobal);
   }
@@ -258,7 +253,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
 
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsOnline\":"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectricity\":"));
@@ -275,7 +269,6 @@ public class FacilityFeed extends TestCaseHelper {
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
-//    assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"modifiedDate\""));
     assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsOnline\":"));
     assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"hasElectricity\":"));
     assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"hasElectronicSCC\":"));
@@ -286,11 +279,31 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testFacilityFeedUsingCommTrackWithoutHeaders() throws Exception {
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+    Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
+    agentJson.setAgentCode(DEFAULT_AGENT_CODE);
+    agentJson.setAgentName(DEFAULT_AGENT_NAME);
+    agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
+    agentJson.setPhoneNumber(PHONE_NUMBER);
+    agentJson.setActive(ACTIVE_STATUS);
+
+    ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(agentJson),
+      CREATE_URL,
+      POST,
+      "",
+      "");
+
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+
   }
 
   @Test(groups = {"webservice"})
@@ -322,7 +335,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
@@ -338,11 +350,9 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 
   @Test(groups = {"webservice"})
@@ -374,7 +384,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
@@ -390,11 +399,9 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"active\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"sdp\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 
   @Test(groups = {"webservice"})
@@ -426,7 +433,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityGoLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"SatelliteParent\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
-//    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\""));
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
@@ -442,11 +448,9 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsActive\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"facilityIsSDP\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(0), feedJSONList.get(0).contains("\"modifiedDate\""));
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"facilityIsActive\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":true"));
-//    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"modifiedDate\""));
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")

@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.pageobjects;
@@ -34,7 +38,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
   private static WebElement requisitionHeader;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[1]/div[1]/span")
   private static WebElement facilityLabel;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
@@ -143,7 +147,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//span[@class='alert alert-warning warning-alert']")
   private static WebElement requestedQtyWarningMessage;
 
-  @FindBy(how = XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
   private static WebElement reportingPeriodInitRnRScreen;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
@@ -227,6 +231,15 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@openlmis-message='error']")
   private static WebElement configureTemplateErrorDiv;
 
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Emergency']/span")
+  private static WebElement rnrEmergrncyLabel;
+
+  @FindBy(how = XPATH, using ="//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
+  private static WebElement rnrRegularLabel;
+
+  @FindBy(how = XPATH, using ="//table[@id='fullSupplyTable']/tbody/tr[2]/td[4]/ng-switch/span/ng-switch/span/ng-switch/span/span")
+  private static WebElement beginningBalanceLabel;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
 
@@ -245,7 +258,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String facilityText = testWebDriver.getText(facilityLabel);
     assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
+    assertEquals(reportingPeriodInitRnRScreen.getText().trim(), periodDetails.trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
     assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
@@ -383,9 +396,14 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
   }
 
-  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H, Integer I) {
+  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H,
+                                                          Integer I, boolean emergency) {
     enterValuesCalculatedOrderQuantity(F, X);
-    VerifyCalculatedOrderQuantity(N, P, H, I);
+    if (emergency)
+        VerifyCalculatedOrderQuantityForEmergencyRnR(N, P, H, I);
+    else
+        VerifyCalculatedOrderQuantity(N, P, H, I);
+
     testWebDriver.sleep(1000);
   }
 
@@ -412,10 +430,21 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-  public void verifyPacksToShip(Integer V) {
+    public void VerifyCalculatedOrderQuantityForEmergencyRnR(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+        String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
+        verifyFieldValue("", actualAdjustedTotalConsumption);
+        String actualAmc = testWebDriver.getText(amc);
+        verifyFieldValue("", actualAmc.trim());
+        String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
+        verifyFieldValue("", actualMaximumStockQuantity.trim());
+        String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
+        verifyFieldValue("", actualCalculatedOrderQuantity.trim());
+    }
+
+  public void verifyPacksToShip(String V) {
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
-    verifyFieldValue(V.toString(), actualPacksToShip.trim());
+    verifyFieldValue(V, actualPacksToShip.trim());
     testWebDriver.sleep(500);
 
   }
@@ -685,4 +714,17 @@ public class InitiateRnRPage extends RequisitionPage {
       assertFalse(approveButtonPresent);
     }
   }
+
+    public String getEmergencyLabelText(){
+        return rnrEmergrncyLabel.getText();
+    }
+
+    public String getRegularLabelText(){
+        return rnrRegularLabel.getText();
+    }
+
+    public String getBeginningBalance(){
+        testWebDriver.waitForElementToAppear(beginningBalanceLabel);
+        return beginningBalanceLabel.getText();
+    }
 }

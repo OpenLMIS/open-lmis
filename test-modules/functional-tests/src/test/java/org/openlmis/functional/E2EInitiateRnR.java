@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.functional;
@@ -26,6 +30,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -135,6 +141,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.insertRequisitionGroupProgramSchedule();
   }
 
+  @And("^I have period \"([^\"]*)\" associated with schedule \"([^\"]*)\"$")
+  public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws Exception {
+    dbWrapper.insertPeriodAndAssociateItWithSchedule(period, schedule);
+  }
+
   @And("^I update \"([^\"]*)\" home facility$")
   public void updateHomeFacility(String user) throws Exception {
     dbWrapper.allocateFacilityToUser(dbWrapper.getUserID(user), facility_code);
@@ -165,6 +176,31 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickOk();
   }
 
+  @And("^I initiate and submit emergency requisition$")
+    public void initiateEmergencyRnR() throws Exception {
+      HomePage homePage = new HomePage(testWebDriver);
+
+      homePage.navigateAndInitiateEmergencyRnr(program);
+      InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+      homePage.clickProceed();
+      initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails,
+              geoZone, parentGeoZone, operatedBy, facilityType);
+      initiateRnRPage.submitRnR();
+      initiateRnRPage.verifySubmitRnrErrorMsg();
+      initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
+      initiateRnRPage.verifyTotalField();
+
+      initiateRnRPage.submitRnR();
+      initiateRnRPage.clickOk();
+  }
+
+  @And("^I access proceed$")
+  public void accessProceed() throws Exception {
+    HomePage homePage=new HomePage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
+  }
+
   @And("^I add comments$")
   public void addComments() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
@@ -182,15 +218,22 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
-    initiateRnRPage.verifyPacksToShip(15);
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142,false);
+    initiateRnRPage.verifyPacksToShip("15");
+  }
+
+  @And("^I update & verify ordered quantities for emergency RnR$")
+  public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142,true);
+    initiateRnRPage.verifyPacksToShip("");
   }
 
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
-    initiateRnRPage.verifyPacksToShip(1);
+    initiateRnRPage.verifyPacksToShip("1");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
   }
@@ -345,6 +388,18 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @Then("^I should see ordered list without download link$")
   public void verifyOrderListWithoutdDownloadLink() throws Exception {
       verifyOrderedList(false);
+  }
+
+  @Then("^I verify Regular RnR Type$")
+  public void verifyRegularRnRText() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertEquals(initiateRnRPage.getRegularLabelText(),"Regular");
+  }
+
+    @Then("^I verify Emergency RnR Type$")
+  public void verifyEmergencyRnRText() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertEquals(initiateRnRPage.getEmergencyLabelText(),"Emergency");
   }
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {

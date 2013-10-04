@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.pageobjects;
@@ -62,7 +66,7 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
   private static WebElement searchTextBox;
 
-  @FindBy(how = How.XPATH, using = "//button[@ng-click='fetchFilteredRequisitions()']")
+  @FindBy(how = How.XPATH, using = "//button[@ng-click='updateSearchParams()']")
   private static WebElement searchButton;
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
@@ -130,8 +134,8 @@ public class ConvertOrderPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(searchOptionButton);
     searchOptionButton.click();
     testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a"));
-    testWebDriver.getElementByXpath("html/body/div[1]/div/div[5]/div/div[1]/div/div/div/ul/li["+index+"]/a").click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li["+index+"]/a"));
+    testWebDriver.getElementByXpath("html/body/div[1]/div/div[4]/div/div/div/ul/li["+index+"]/a").click();
     sendKeys(searchTextBox, searchString);
     searchButton.click();
     testWebDriver.sleep(1000);

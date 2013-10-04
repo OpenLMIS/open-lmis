@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 var services = angular.module('openlmis.services', ['ngResource']);
@@ -38,7 +42,7 @@ services.factory('UserContext', function ($resource) {
 services.factory('Users', function ($resource) {
   var resource = $resource('/users/:id.json', {id: '@id'}, update);
 
-  resource.disable = function(pathParams, success, error) {
+  resource.disable = function (pathParams, success, error) {
     $resource('/users/:id.json', {}, {update: {method: 'DELETE'}}).update(pathParams, {}, success, error);
   };
 
@@ -98,7 +102,7 @@ services.factory('RequisitionForApproval', function ($resource) {
 });
 
 services.factory('RequisitionsForViewing', function ($resource) {
-  return $resource('/requisitions-list.json', {}, {});
+  return $resource('/requisitions.json', {}, {});
 });
 
 services.factory('RequisitionForConvertToOrder', function ($resource) {
@@ -264,19 +268,19 @@ services.factory('UpdatePassword', function ($resource) {
   return $resource('/admin/resetPassword/:userId.json', {}, update);
 });
 
-services.factory('Refrigerators', function($resource) {
+services.factory('Refrigerators', function ($resource) {
   return $resource('/deliveryZone/:deliveryZoneId/program/:programId/refrigerators.json', {}, {});
 });
 
-services.factory('OrderFileTemplate', function($resource) {
+services.factory('OrderFileTemplate', function ($resource) {
   return $resource('/order-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
-services.factory('DateFormats', function($resource) {
+services.factory('DateFormats', function ($resource) {
   return $resource('/date-formats.json', {}, {});
 });
 
-services.factory('ShipmentFileTemplate', function($resource) {
+services.factory('ShipmentFileTemplate', function ($resource) {
   return $resource('/shipment-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 

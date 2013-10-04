@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 var Rnr = function (rnr, programRnrColumns) {
@@ -134,7 +138,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
 
   Rnr.prototype.calculateTotalLineItemCost = function () {
-   return  parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+    return  parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
   };
 
 
@@ -167,10 +171,14 @@ var Rnr = function (rnr, programRnrColumns) {
     return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
   };
 
-  Rnr.prototype.reduceForApproval = function() {
+  Rnr.prototype.reduceForApproval = function () {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
-    rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function(rnrLineItem){ return rnrLineItem.reduceForApproval() });
+    rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function (rnrLineItem) {
+      return rnrLineItem.reduceForApproval()
+    });
+    rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function (rnrLineItem) {
+      return rnrLineItem.reduceForApproval()
+    });
     return rnr;
   };
 
@@ -180,10 +188,10 @@ var Rnr = function (rnr, programRnrColumns) {
     function prepareLineItems(lineItems) {
       var lineItemsJson = lineItems;
       lineItems = [];
-      $(lineItemsJson).each(function (i, lineItem) {
-        lineItems.push(new RnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status))
-      });
 
+      $(lineItemsJson).each(function (i, lineItem) {
+        lineItems.push(RnrLineItemFactory.getInstance(lineItem, thisRnr, programRnrColumns))
+      });
       return lineItems;
     }
 

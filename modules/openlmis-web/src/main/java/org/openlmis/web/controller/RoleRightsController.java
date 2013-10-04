@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.web.controller;
@@ -35,8 +39,9 @@ public class RoleRightsController extends BaseController {
   private RoleRightsService roleRightsService;
 
   public static final String ROLE = "role";
-  public static final String ROLES = "roles";
+  public static final String ROLES_MAP = "roles_map";
   public static final String RIGHTS = "rights";
+  public static final String RIGHT_TYPE = "right_type";
 
   @Autowired
   public RoleRightsController(RoleRightsService roleRightsService) {
@@ -65,7 +70,7 @@ public class RoleRightsController extends BaseController {
   @RequestMapping(value = "/roles", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getAll() {
-    OpenLmisResponse response = new OpenLmisResponse(ROLES, roleRightsService.getAllRoles());
+    OpenLmisResponse response = new OpenLmisResponse(ROLES_MAP, roleRightsService.getAllRolesMap());
     return new ResponseEntity<>(response, HttpStatus.OK);
   }
 
@@ -73,8 +78,9 @@ public class RoleRightsController extends BaseController {
   @RequestMapping(value = "/roles/{id}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_ROLE')")
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
-    Role role = roleRightsService.getRole(id);
-    return response(ROLE, role);
+    ResponseEntity<OpenLmisResponse> response = response(ROLE, roleRightsService.getRole(id));
+    response.getBody().addData(RIGHT_TYPE, roleRightsService.getRightTypeForRoleId(id));
+    return response;
   }
 
   @RequestMapping(value = "/roles/{id}", method = PUT, headers = ACCEPT_JSON)

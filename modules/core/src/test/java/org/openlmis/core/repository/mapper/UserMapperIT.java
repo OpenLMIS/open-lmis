@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.core.repository.mapper;
@@ -39,7 +43,6 @@ import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -146,7 +149,7 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldReturnNullWhenUserIsVerifiedButDisabled(){
+  public void shouldReturnNullWhenUserIsVerifiedButDisabled() {
     String nullString = null;
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString),
       with(verified, true)));
@@ -293,7 +296,7 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldNotGetDisabledUserData(){
+  public void shouldNotGetDisabledUserData() {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
 
@@ -374,7 +377,7 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldDisableAUser(){
+  public void shouldDisableAUser() {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     user.setModifiedDate(truncate(new Date(), YEAR));
     userMapper.insert(user);
@@ -391,7 +394,7 @@ public class UserMapperIT {
   }
 
   private Role insertRole() {
-    Role r1 = new Role("r1", REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
     return r1;
   }

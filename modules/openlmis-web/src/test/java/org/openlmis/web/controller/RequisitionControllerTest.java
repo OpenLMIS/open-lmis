@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.web.controller;
@@ -47,17 +49,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.service.RequisitionService.RNR_SUBMITTED_SUCCESSFULLY;
 import static org.openlmis.web.controller.RequisitionController.*;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -117,20 +118,6 @@ public class RequisitionControllerTest {
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
-  @Test
-  public void shouldGetRnrByFacilityProgramAndPeriodIfExists() throws Exception {
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
-    criteria.setFacilityId(1L);
-    criteria.setProgramId(2L);
-    criteria.setPeriodId(3L);
-    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
-
-    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
-
-    verify(requisitionService).get(argThat(criteriaMatcher(1L, 2L, 3L)));
-    assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
-  }
-
 
   @Test
   public void shouldGetRequisitionById() throws Exception {
@@ -161,21 +148,6 @@ public class RequisitionControllerTest {
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
-  @Test
-  public void shouldReturnNullIfGettingRequisitionFails() throws Exception {
-    Rnr expectedRnr = null;
-    Facility facility = new Facility(1L);
-    whenNew(Facility.class).withArguments(1L).thenReturn(facility);
-    Program program = new Program(2L);
-
-    whenNew(Program.class).withArguments(2L).thenReturn(program);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(), null);
-    when(requisitionService.get(criteria)).thenReturn(asList(expectedRnr));
-
-    ResponseEntity<OpenLmisResponse> response = controller.get(criteria, request);
-
-    assertThat((Rnr) response.getBody().getData().get(RNR), is(expectedRnr));
-  }
 
   @Test
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
@@ -309,34 +281,31 @@ public class RequisitionControllerTest {
     List<ProcessingPeriod> periodList = asList(processingPeriod);
     Rnr rnr = new Rnr();
 
-    Facility facility = new Facility(1L);
-    whenNew(Facility.class).withArguments(1L).thenReturn(facility);
-    Program program = new Program(2L);
-    whenNew(Program.class).withArguments(2L).thenReturn(program);
-    boolean withoutLineItems = true;
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facility.getId(), program.getId(),
-      processingPeriod.getId(), withoutLineItems);
-    when(requisitionService.get(criteria)).thenReturn(asList(rnr));
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 2L),
+      with(periodIdProperty, 6L),
+      with(withoutLineItemFlag, true)));
 
-    when(requisitionService.getAllPeriodsForInitiatingRequisition(criteria)).thenReturn(periodList);
+    when(requisitionService.getProcessingPeriods(criteria)).thenReturn(periodList);
+    when(requisitionService.getRequisitionsFor(criteria, periodList)).thenReturn(asList(rnr));
 
-    ResponseEntity<OpenLmisResponse> response =
-      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
+    ResponseEntity<OpenLmisResponse> response = controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
 
-    verify(requisitionService).getAllPeriodsForInitiatingRequisition(criteria);
+    verify(requisitionService).getProcessingPeriods(criteria);
     assertThat((List<ProcessingPeriod>) response.getBody().getData().get(PERIODS), is(periodList));
     assertThat((List<Rnr>) response.getBody().getData().get(RNR_LIST), is(asList(rnr)));
   }
 
   @Test
   public void shouldReturnErrorResponseIfNoPeriodsFoundForInitiatingRequisition() throws Exception {
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 2L);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria, with(facilityIdProperty, 1L), with(programIdProperty, 2L)));
+
     String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(requisitionService).
-      getAllPeriodsForInitiatingRequisition(criteria);
+    doThrow(new DataException(errorMessage)).when(requisitionService).getProcessingPeriods(criteria);
 
     ResponseEntity<OpenLmisResponse> response =
-      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria);
+      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
@@ -350,22 +319,26 @@ public class RequisitionControllerTest {
     String searchVal = "test";
     Integer pageNumber = 1;
 
-    when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber)).thenReturn(expectedRequisitions);
+    when(requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(1);
+    when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 1)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber);
 
-    verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber);
+    verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 1);
 
     assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }
 
   @Test
   public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRangeAndSetUserIdInSearchCriteria() throws Exception {
-    Date dateRangeStart = new Date();
-    Date dateRangeEnd = new Date();
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(1L, 1L, dateRangeStart, dateRangeEnd);
+    RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 1L),
+      with(startDate, new Date()),
+      with(endDate, new Date())));
+
     List<Rnr> requisitionsReturnedByService = new ArrayList<>();
     when(requisitionService.get(criteria)).thenReturn(requisitionsReturnedByService);
     mockStatic(RnrDTO.class);
@@ -408,7 +381,7 @@ public class RequisitionControllerTest {
   @Test
   public void shouldInsertComment() throws Exception {
     Comment comment = new Comment();
-    List<Comment> comments = new ArrayList<Comment>();
+    List<Comment> comments = new ArrayList<>();
     comments.add(comment);
     when(requisitionService.getCommentsByRnrId(rnr.getId())).thenReturn(comments);
 

@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.pageobjects;
@@ -232,7 +236,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "rnrType")
   private static WebElement rnrTypeSelectBox;
 
-  @FindBy(how = How.XPATH, using ="//div/div/div[1]/div[2]/div/span")
+  @FindBy(how = How.XPATH, using = "//div/div/div[1]/div[2]/div/span")
   private static WebElement firstPeriodLabel;
 
 
@@ -242,7 +246,7 @@ public class HomePage extends Page {
     testWebDriver.setImplicitWait(10);
   }
 
-  public  WebElement getLogoutLink() {
+  public WebElement getLogoutLink() {
     return logoutLink;
   }
 
@@ -351,6 +355,16 @@ public class HomePage extends Page {
 
   }
 
+  public void navigateInitiateRnRScreenAndSelectingRequiredFields(String program, String type) throws IOException {
+    navigateRnr();
+    myFacilityRadioButton.click();
+    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(programDropDown);
+    testWebDriver.selectByVisibleText(programDropDown, program);
+    testWebDriver.selectByVisibleText(rnrTypeSelectBox, type);
+    testWebDriver.sleep(500);
+  }
+
   public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
     testWebDriver.waitForElementToAppear(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
@@ -360,7 +374,6 @@ public class HomePage extends Page {
 
 
   public InitiateRnRPage clickProceed() throws IOException {
-//    testWebDriver.handleScrollByPixels(0,2000);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);
@@ -522,14 +535,14 @@ public class HomePage extends Page {
     return new DistributionPage(testWebDriver);
   }
 
-    public DistributionPage navigateOfflineDistribution() throws IOException {
-        assertTrue(offlineDistributions.isDisplayed());
-        testWebDriver.waitForElementToAppear(offlineDistributions);
-        testWebDriver.keyPress(offlineDistributions);
-        testWebDriver.waitForElementToAppear(manageMenuItem);
-        testWebDriver.keyPress(manageMenuItem);
-        return new DistributionPage(testWebDriver);
-    }
+  public DistributionPage navigateOfflineDistribution() throws IOException {
+    assertTrue(offlineDistributions.isDisplayed());
+    testWebDriver.waitForElementToAppear(offlineDistributions);
+    testWebDriver.keyPress(offlineDistributions);
+    testWebDriver.waitForElementToAppear(manageMenuItem);
+    testWebDriver.keyPress(manageMenuItem);
+    return new DistributionPage(testWebDriver);
+  }
 
   public ProgramProductISAPage navigateProgramProductISA() throws IOException {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
@@ -575,23 +588,26 @@ public class HomePage extends Page {
     public void verifyLoggedInUser(String Username) {
         testWebDriver.waitForElementToAppear(loggedInUserLabel);
         SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+    public String getErrorMessage() {
+        testWebDriver.waitForElementToAppear(errorMsg);
+        return errorMsg.getText().trim();
     }
 
-    public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
-        navigateRnr();
-        String periodDetails = null;
-        myFacilityRadioButton.click();
-        testWebDriver.sleep(2000);
-        testWebDriver.waitForElementToAppear(programDropDown);
-        testWebDriver.selectByVisibleText(programDropDown, program);
-        testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
-        testWebDriver.waitForElementToAppear(startDate);
-    }
+  public void verifyLoggedInUser(String Username) {
+    testWebDriver.waitForElementToAppear(loggedInUserLabel);
+    SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+  }
 
-    public String getFirstPeriod()
-    {
-        return firstPeriodLabel.getText().trim();
-    }
+  public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
+    navigateRnr();
+    String periodDetails = null;
+    myFacilityRadioButton.click();
+    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(programDropDown);
+    testWebDriver.selectByVisibleText(programDropDown, program);
+    testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
+    //testWebDriver.waitForElementToAppear(startDate);
+  }
 
     public void navigateRnr() throws IOException {
         testWebDriver.waitForElementToAppear(requisitionsLink);
@@ -609,4 +625,17 @@ public class HomePage extends Page {
     public boolean adminReportMenuItemIsDisplayed(){
         return AdministrationMenuItem.isDisplayed();
     }
+  public String getFirstPeriod() {
+    return firstPeriodLabel.getText().trim();
+  }
+
+  public void navigateRnr() throws IOException {
+    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.keyPress(requisitionsLink);
+    testWebDriver.waitForElementToAppear(createLink);
+    testWebDriver.sleep(2000);
+    testWebDriver.keyPress(createLink);
+    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(myFacilityRadioButton);
+  }
 }

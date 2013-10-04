@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.UiUtils;
@@ -29,7 +33,6 @@ public class TestCaseHelper {
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
   public static final String DEFAULT_BROWSER = "firefox";
-  //public static final String DEFAULT_BASE_URL = "http://uat.zm.elmis-dev.org";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
 
@@ -110,6 +113,15 @@ public class TestCaseHelper {
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
+  }
+
+  public void createUserAndAssignRoleRights(String userId, String user,String email,String homeFacility, String role,  String vendorName, List<String> rightsList) throws IOException, SQLException {
+    dbWrapper.insertRole(role, "REQUISITION", "");
+    for (String rights : rightsList)
+      dbWrapper.assignRight(role, rights);
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    dbWrapper.insertUser(userId, user, passwordUsers, homeFacility, email, vendorName);
+    dbWrapper.insertRoleAssignment(userId,role);
   }
 
     public void setupUserRoleRights(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {

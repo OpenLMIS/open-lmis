@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 describe('CreateRequisitionController', function () {
@@ -87,7 +91,7 @@ describe('CreateRequisitionController', function () {
 
     $rootScope.fixToolBar = function () {
     };
-    rnrLineItem = new RnrLineItem({"fullSupply": true});
+    rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
 
     requisitionRights = [
       {right: 'CREATE_REQUISITION'},
@@ -275,7 +279,7 @@ describe('CreateRequisitionController', function () {
   it('should return cell error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(lineItem, 'getErrorMessage').andReturn("error");
     var errorMsg = scope.getCellErrorClass(lineItem);
@@ -285,7 +289,7 @@ describe('CreateRequisitionController', function () {
   it('should not return cell error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(lineItem, 'getErrorMessage').andReturn("");
     var errorMsg = scope.getCellErrorClass(lineItem);
@@ -295,7 +299,7 @@ describe('CreateRequisitionController', function () {
   it('should return row error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(scope, 'getCellErrorClass').andReturn("error");
     var errorMsg = scope.getRowErrorClass(lineItem);
@@ -305,7 +309,7 @@ describe('CreateRequisitionController', function () {
   it('should not return row error class', function () {
     var lineItem = { "beginningBalance": 1, totalLossesAndAdjustments: 1, quantityDispensed: 2,
       quantityReceived: 1, stockInHand: 1};
-    jQuery.extend(true, lineItem, new RnrLineItem());
+    jQuery.extend(true, lineItem, new RegularRnrLineItem());
 
     spyOn(scope, 'getCellErrorClass').andReturn("");
     var errorMsg = scope.getRowErrorClass(lineItem);

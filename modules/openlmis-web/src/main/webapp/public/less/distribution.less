@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 .record-facility-data {
@@ -178,9 +182,7 @@
       }
     }
     input[type="text"] {
-      padding: 0;
-      height: 28px;
-      width: 112px;
+      width: 100px;
       margin-right: 5px;
     }
     input[type="checkbox"] {
@@ -262,9 +264,7 @@
     min-width: 70px;
   }
   input[type="text"] {
-    padding: 0;
-    width: 98%;
-    height: 28px;
+    width: 85%;
     margin-bottom: 3px;
   }
   input[type="checkbox"] {
@@ -328,4 +328,33 @@
 .delivery-zone-status {
   float: left;
   padding-left: 4%;
+}
+
+
+//responsive styles
+@media screen and (max-width: 910px){
+  .general-observation-container {
+    min-width: 0px;
+    width: 92%;
+  }
+  .general-observation-container textarea {
+    width: 99%;
+  }
+  .general-observation-container .signatures .details-container {
+    margin-left: 0px!important;
+    margin-top: 40px;
+  }
+  .facility-info{
+    margin-left: 205px;
+  }
+  .left-navigation {
+    width: 205px;
+    ul{
+      li{
+        a{
+          font-size: 1.1em;
+        }
+      }
+    }
+  }
 }

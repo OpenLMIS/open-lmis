@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.web.controller;
@@ -12,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,14 +40,12 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForListApproval;
 import static org.openlmis.rnr.dto.RnrDTO.prepareForView;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
 import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -63,21 +63,21 @@ public class RequisitionController extends BaseController {
   public static final String REGIMEN_TEMPLATE = "regimen_template";
   public static final String LOSS_ADJUSTMENT_TYPES = "lossAdjustmentTypes";
   public static final String STATUS_CHANGES = "statusChanges";
-  private String IS_EMERGENCY = "is_emergency";
+  public static final String IS_EMERGENCY = "is_emergency";
+  public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
 
   @Autowired
   private RequisitionService requisitionService;
+
   @Autowired
   private RnrTemplateService rnrTemplateService;
+
   @Autowired
   private RequisitionStatusChangeService requisitionStatusChangeService;
 
   @Autowired
   private RegimenColumnService regimenColumnService;
-  @Autowired
-  private StaticReferenceDataService staticReferenceDataService;
 
-  public static final String LOSSES_AND_ADJUSTMENT_TYPES = "lossesAndAdjustmentTypes";
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
 
 
@@ -94,17 +94,7 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> get(RequisitionSearchCriteria criteria, HttpServletRequest request) {
-    criteria.setUserId(loggedInUserId(request));
-
-    List<Rnr> rnrs = requisitionService.get(criteria);
-    Rnr requisition = (rnrs == null || rnrs.isEmpty()) ? null : rnrs.get(0);
-    return response(RNR, requisition);
-  }
-
-  @RequestMapping(value = "/requisitions-list", method = GET, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/requisitions", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
     criteria.setUserId(loggedInUserId(request));
@@ -190,23 +180,27 @@ public class RequisitionController extends BaseController {
                                                                 @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
                                                                 @RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
     try {
-      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page);
       Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page, numberOfPages);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);
       return new ResponseEntity<>(response, HttpStatus.OK);
     } catch (Exception e) {
-      return error(new DataException(e.getMessage()), BAD_REQUEST);
+      return error(new DataException(e.getMessage()), NOT_FOUND);
     }
   }
 
   @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(RequisitionSearchCriteria criteria) {
+  public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
+    RequisitionSearchCriteria criteria, HttpServletRequest request) {
+
+    criteria.setUserId(loggedInUserId(request));
+
     try {
-      List<ProcessingPeriod> periodList = getProcessingPeriods(criteria);
-      List<Rnr> requisitions = isEmpty(periodList) && (!criteria.isEmergency()) ? null : getRequisitionsFor(criteria, periodList);
+      List<ProcessingPeriod> periodList = requisitionService.getProcessingPeriods(criteria);
+      List<Rnr> requisitions = requisitionService.getRequisitionsFor(criteria, periodList);
       OpenLmisResponse response = new OpenLmisResponse(PERIODS, periodList);
       response.addData(RNR_LIST, requisitions);
       response.addData(IS_EMERGENCY, criteria.isEmergency());
@@ -216,50 +210,40 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  private List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
-    ProcessingPeriod currentPeriod;
-    return criteria.isEmergency() ?
-      (currentPeriod = requisitionService.getCurrentPeriod(criteria)) != null ?
-        asList(currentPeriod) : null :
-      requisitionService.getAllPeriodsForInitiatingRequisition(criteria);
-  }
-
-  private List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
-    criteria.setWithoutLineItems(true);
-    if (!criteria.isEmergency())
-      criteria.setPeriodId(periodList.get(0).getId());
-    List<Rnr> rnrList = requisitionService.get(criteria);
-    return rnrList;
-  }
-
   @RequestMapping(value = "/requisitions/{id}", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
     try {
       return response(RNR, requisitionService.getFullRequisitionById(id));
     } catch (DataException dataException) {
-      return error(dataException, HttpStatus.NOT_FOUND);
+      return error(dataException, NOT_FOUND);
     }
   }
 
   @RequestMapping(value = "/requisitions/{id}/print", method = GET, headers = ACCEPT_PDF)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.model.get(\"rnr\"), 'VIEW_REQUISITION')")
   public ModelAndView printRequisition(@PathVariable Long id) {
     ModelAndView modelAndView = new ModelAndView("requisitionPDF");
+
     Rnr requisition = requisitionService.getFullRequisitionById(id);
+
     modelAndView.addObject(RNR, requisition);
     modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
+
     Long programId = requisition.getProgram().getId();
     modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
     modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
     modelAndView.addObject(STATUS_CHANGES, requisitionStatusChangeService.getByRnrId(id));
+
     return modelAndView;
   }
 
 
   @RequestMapping(value = "/requisitions/{id}/comments", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-  public ResponseEntity<OpenLmisResponse> insertComment(@RequestBody Comment comment, @PathVariable("id") Long id, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> insertComment(@RequestBody Comment comment,
+                                                        @PathVariable("id") Long id,
+                                                        HttpServletRequest request) {
     comment.setRnrId(id);
     User author = new User();
     author.setId(loggedInUserId(request));

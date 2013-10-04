@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 describe('CreateNonFullSupplyController', function () {
@@ -83,7 +87,7 @@ describe('CreateNonFullSupplyController', function () {
     };
     scope.$parent.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[], "fillPacksToShip":fillPacksToShip};
 
-    scope.addedNonFullSupplyProducts = [new RnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":20, "reasonForRequestedQuantity":"rain", "isNonNumeric":false})];
+    scope.addedNonFullSupplyProducts = [new RegularRnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":20, "reasonForRequestedQuantity":"rain", "isNonNumeric":false})];
     scope.addNonFullSupplyLineItemsToRnr();
 
     expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(1);
@@ -101,9 +105,9 @@ describe('CreateNonFullSupplyController', function () {
     };
     scope.$parent.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[], "fillPacksToShip":fillPacksToShip};
 
-    var rnrLineItem1 = new RnrLineItem({productCategoryDisplayOrder:2});
-    var rnrLineItem2 = new RnrLineItem({productCategoryDisplayOrder:1});
-    var rnrLineItem3 = new RnrLineItem({productCategoryDisplayOrder:3});
+    var rnrLineItem1 = new RegularRnrLineItem({productCategoryDisplayOrder:2});
+    var rnrLineItem2 = new RegularRnrLineItem({productCategoryDisplayOrder:1});
+    var rnrLineItem3 = new RegularRnrLineItem({productCategoryDisplayOrder:3});
 
     scope.addedNonFullSupplyProducts = [rnrLineItem1, rnrLineItem2, rnrLineItem3];
 
@@ -127,14 +131,14 @@ describe('CreateNonFullSupplyController', function () {
     scope.nonFullSupplyProductsModal = true;
     scope.$parent.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[], "fillPacksToShip":fillPacksToShip};
 
-    scope.addedNonFullSupplyProducts = [new RnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":"", "reasonForRequestedQuantity":"rain", "isNonNumeric":false})];
+    scope.addedNonFullSupplyProducts = [new RegularRnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":"", "reasonForRequestedQuantity":"rain", "isNonNumeric":false})];
 
     scope.addNonFullSupplyLineItemsToRnr();
 
     expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(0);
     expect(scope.nonFullSupplyProductsModal).toBeTruthy();
 
-    scope.addedNonFullSupplyProducts = [new RnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":"3", "reasonForRequestedQuantity":"", "isNonNumeric":false})];
+    scope.addedNonFullSupplyProducts = [new RegularRnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":"3", "reasonForRequestedQuantity":"", "isNonNumeric":false})];
 
     scope.addNonFullSupplyLineItemsToRnr();
 
@@ -181,7 +185,7 @@ describe('CreateNonFullSupplyController', function () {
     scope.nonFullSupplyProductCategory = {displayOrder:5};
 
     scope.facilityApprovedProduct = facilityApprovedProduct1;
-    scope.newNonFullSupply = new RnrLineItem({"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"});
+    scope.newNonFullSupply = new RegularRnrLineItem({"quantityRequested":20, "reasonForRequestedQuantity":"Bad Weather"});
     scope.addedNonFullSupplyProducts = [];
     spyOn(scope, 'updateNonFullSupplyProductsToDisplay').andReturn(true);
     scope.addNonFullSupplyProductsByCategory();

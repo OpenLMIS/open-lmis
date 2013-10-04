@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.functional;
@@ -180,10 +184,10 @@ public class DownloadOrderFile extends TestCaseHelper {
     testWebDriver.sleep(2000);
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "Regimens data filled");
-    dbWrapper.updateRequisitionStatus("SUBMITTED");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSICUserName, "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSICUserName, "HIV");
     dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.updateRequisitionStatus("APPROVED");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSICUserName, "HIV");
 
     homePage.logout(baseUrlGlobal);
     loginPage.loginAs("lmu", password);

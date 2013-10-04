@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.pageobjects;
@@ -45,7 +49,7 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
   private static WebElement requisitionHeader;
 
-  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div[@class='info-box']/div[@class='row-fluid'][1]/div[1]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-head-block']/div[1]/span")
   private static WebElement facilityLabel;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
@@ -87,7 +91,7 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMsgDiv;
 
-  @FindBy(how = XPATH, using = "//div[@class='info-box']/div[2]/div[3]")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
   private static WebElement reportingPeriodInitRnRScreen;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
@@ -137,7 +141,7 @@ public class ApprovePage extends RequisitionPage {
     String facilityText = testWebDriver.getText(facilityLabel);
     assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    assertEquals(reportingPeriodInitRnRScreen.getText().trim().substring("Reporting Period: ".length()), periodDetails.trim());
+    assertEquals(reportingPeriodInitRnRScreen.getText().trim(), periodDetails.trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
     assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());

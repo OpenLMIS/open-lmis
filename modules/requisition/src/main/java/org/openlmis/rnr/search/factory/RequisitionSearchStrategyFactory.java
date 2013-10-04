@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.rnr.search.factory;
@@ -12,6 +16,7 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.strategy.*;
+import org.openlmis.rnr.service.RequisitionPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,23 +25,28 @@ import org.springframework.stereotype.Component;
 public class RequisitionSearchStrategyFactory {
 
   @Autowired
-  private ProcessingScheduleService processingScheduleService;
+  private ProcessingScheduleService scheduleService;
+
   @Autowired
-  private RequisitionRepository requisitionRepository;
+  private RequisitionRepository repository;
+
   @Autowired
   private ProgramService programService;
 
+  @Autowired
+  private RequisitionPermissionService permissionService;
+
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
+
     if (criteria.isEmergency()) {
-      return new EmergencyRequisitionSearch(criteria, requisitionRepository);
+      return new EmergencyRequisitionSearch(criteria, permissionService, repository);
     } else if (criteria.isWithoutLineItems()) {
-      return new RequisitionOnlySearch(criteria, requisitionRepository);
-    } else if (criteria.getPeriodId() != null) {
-      return new FacilityProgramPeriodSearch(criteria, requisitionRepository);
+      return new RequisitionOnlySearch(criteria, permissionService, repository);
     } else if (criteria.getProgramId() == null) {
-      return new FacilityDateRangeSearch(criteria, processingScheduleService, requisitionRepository, programService);
+      return new FacilityDateRangeSearch(criteria, permissionService, scheduleService, repository, programService);
+    } else {
+      return new FacilityProgramDateRangeSearch(criteria, permissionService, scheduleService, repository);
     }
-    return new FacilityProgramDateRangeSearch(criteria, processingScheduleService, requisitionRepository);
   }
 }

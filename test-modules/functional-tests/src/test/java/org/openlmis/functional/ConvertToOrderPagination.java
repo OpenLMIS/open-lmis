@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.functional;
@@ -47,8 +51,11 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   @And("^I have \"([^\"]*)\" requisitions for convert to order$")
   public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws IOException, SQLException {
-    setUpData("HIV", "storeincharge");
+    String userSIC = "storeincharge";
+    setUpData("HIV", userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(Integer.parseInt(requisitions), "MALARIA", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
   }
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
@@ -68,7 +75,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
-    assertTrue("Number of line items on view order screen should be equal to "+Integer.parseInt(requisitions), numberOfLineItems == Integer.parseInt(requisitions));
+    assertTrue("Number of line items on view order screen should be equal to " + Integer.parseInt(requisitions), numberOfLineItems == Integer.parseInt(requisitions));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -76,6 +83,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -106,27 +117,35 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
 
   }
 
-  //  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(51, 50);
@@ -138,6 +157,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -156,6 +179,10 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     setUpData(program, userSIC);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
     dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", false);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -184,7 +211,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1500);
     String baseXpath = "(//input[@class='ngSelectionCheckbox'])";
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]"));
     testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]").click();
@@ -218,6 +245,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
+    testWebDriver.sleep(1500);
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;

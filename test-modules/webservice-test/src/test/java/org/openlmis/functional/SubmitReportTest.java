@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.functional;
@@ -74,6 +78,24 @@ public class SubmitReportTest extends TestCaseHelper {
     assertEquals(responseEntity.getStatus(), 400);
     assertEquals(response, "{\"error\":\"User does not have rights to save this R&R\"}");
   }
+
+  @Test(groups = {"webservice"})
+  public void testSubmitReportWithoutHeaders() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setFacilityId(100L);
+    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+
+    ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "",
+      "");
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+    }
 
   @Test(groups = {"webservice"})
   public void testSubmitReportInvalidProgram() throws Exception {

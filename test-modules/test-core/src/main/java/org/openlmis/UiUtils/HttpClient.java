@@ -1,6 +1,16 @@
+/*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ */
+
 package org.openlmis.UiUtils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -55,8 +65,9 @@ public class HttpClient {
 
     httpContext.setAttribute(AUTH_CACHE, authCache);
 
+
     try {
-      return handleRequest(commMethod, json, url);
+      return handleRequest(commMethod, json, url, true);
     } catch (ClientProtocolException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -65,17 +76,41 @@ public class HttpClient {
     return null;
   }
 
+  public ResponseEntity SendJSONWithoutHeaders(String json, String url, String commMethod, String username, String password) {
+    HttpHost targetHost = new HttpHost(HOST, PORT, PROTOCOL);
+    AuthScope localhost = new AuthScope(HOST, PORT);
 
-  private ResponseEntity handleRequest(String commMethod, String json, String url) throws IOException {
+    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
+    httpClient.getCredentialsProvider().setCredentials(localhost, credentials);
+
+    AuthCache authCache = new BasicAuthCache();
+    authCache.put(targetHost, new BasicScheme());
+
+    httpContext.setAttribute(AUTH_CACHE, authCache);
+
+    try {
+      return handleRequest(commMethod, json, url, false);
+    } catch (ClientProtocolException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private ResponseEntity handleRequest(String commMethod, String json, String url, boolean headersRequired) throws IOException {
     HttpResponse response;
     HttpEntity entity;
     BufferedReader rd;
     String sCurrentLine;
-    String sCompleteResponse="";
+    String sCompleteResponse = "";
 
     HttpRequestBase httpRequest = getHttpRequest(commMethod, url);
 
-    prepareRequestHeaderAndEntity(commMethod, json, httpRequest);
+    if (headersRequired)
+      prepareRequestHeaderAndEntity(commMethod, json, httpRequest, true);
+    else
+      prepareRequestHeaderAndEntity(commMethod, json, httpRequest, false);
 
     response = httpClient.execute(httpRequest, httpContext);
     entity = response.getEntity();
@@ -85,9 +120,9 @@ public class HttpClient {
     ResponseEntity responseEntity = new ResponseEntity();
     responseEntity.setStatus(response.getStatusLine().getStatusCode());
 
-      while ((sCurrentLine = rd.readLine()) != null) {
-          sCompleteResponse= sCompleteResponse + (sCurrentLine);
-      }
+    while ((sCurrentLine = rd.readLine()) != null) {
+      sCompleteResponse = sCompleteResponse + (sCurrentLine);
+    }
     responseEntity.setResponse(sCompleteResponse);
 
     EntityUtils.consume(entity);
@@ -107,13 +142,21 @@ public class HttpClient {
     return null;
   }
 
-  private void prepareRequestHeaderAndEntity(String commMethod, String json, HttpRequestBase httpRequest)
+  private void prepareRequestHeaderAndEntity(String commMethod, String json, HttpRequestBase httpRequest, boolean headerRequired)
     throws UnsupportedEncodingException {
 
     if (commMethod.equals(GET)) return;
 
     httpRequest.setHeader(new BasicHeader("Content-Type", "application/json;charset=UTF-8"));
     ((HttpEntityEnclosingRequestBase) httpRequest).setEntity(new StringEntity(json, UTF_8));
+
+    if (!headerRequired) {
+      Header[] headers = httpRequest.getAllHeaders();
+      for (Header h : headers) {
+        httpRequest.removeHeader(h);
+      }
+    }
+
   }
 
   public void createContext() {

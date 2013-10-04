@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.core.repository.mapper;
@@ -321,7 +325,7 @@ public class FacilityMapperIT {
     requisitionGroupProgramSchedule.setModifiedBy(1L);
     requisitionGroupProgramSchedule.setModifiedDate(new Date(0));
 
-    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram,with(programCode, "Random"))));
+    requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram, with(programCode, "Random"))));
 
     requisitionGroupProgramSchedule.setRequisitionGroup(rg1);
     requisitionGroupProgramSchedule.setDirectDelivery(true);
@@ -419,7 +423,7 @@ public class FacilityMapperIT {
     Facility homeFacility = make(a(defaultFacility));
     mapper.insert(homeFacility);
 
-    Role r1 = new Role("r1", RoleType.REQUISITION, "random description");
+    Role r1 = new Role("r1", "random description");
     roleRightsMapper.insertRole(r1);
 
     roleRightsMapper.createRoleRight(r1, CREATE_REQUISITION);

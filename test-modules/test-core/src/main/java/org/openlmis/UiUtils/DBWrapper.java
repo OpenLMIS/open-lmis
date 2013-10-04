@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.UiUtils;
@@ -64,6 +68,14 @@ public class DBWrapper {
 
 
   }
+
+  public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException, IOException {
+    insertProcessingPeriod(period, period, "2013-09-29 14:16:43.498429", "2020-09-30 14:16:43.498429", 66, schedule);
+  }
+
+    public void DeleteProcessingPeriods() throws SQLException, IOException {
+        update("delete from processing_periods;");
+    }
 
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
     String programName = "";
@@ -273,6 +285,10 @@ public class DBWrapper {
 
   }
 
+  public void deletePeriod(String periodName) throws IOException, SQLException {
+    update("delete from processing_periods where name='"+periodName+"';");
+  }
+
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
       "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
@@ -364,11 +380,12 @@ public class DBWrapper {
 
 
   public void insertRole(String role, String type, String description) throws SQLException, IOException {
-    ResultSet rs = query("Select id from roles;");
+    ResultSet rs = query("Select id from roles where name='"+role+"';");
 
+    if(!rs.next())
     update("INSERT INTO roles\n" +
-      " (name,type, description) VALUES\n" +
-      " ('" + role + "', '" + type + "', '" + description + "');");
+      " (name, description) VALUES\n" +
+      " ('" + role + "', '" + description + "');");
 
   }
 
@@ -782,10 +799,17 @@ public class DBWrapper {
 
   }
 
-
   public void insertValuesInRegimenLineItems(String patientsontreatment, String patientstoinitiatetreatment, String patientsstoppedtreatment, String remarks) throws IOException, SQLException {
     update("update regimen_line_items set patientsontreatment='" + patientsontreatment + "', patientstoinitiatetreatment='" + patientstoinitiatetreatment + "', patientsstoppedtreatment='" + patientsstoppedtreatment + "',remarks='" + remarks + "';");
 
+  }
+
+  public void deleteRoleToRightMapping(String role, String right) throws IOException, SQLException {
+    update("delete from role_rights where rightname ='"+right+"' and roleid=(select id from roles where name='"+role+"');");
+  }
+
+  public void insertRoleToRightMapping(String role, String right) throws IOException, SQLException {
+    update("insert into role_rights (roleid, rightname) values ((select id from roles where name='"+role+"'),'"+right+"');");
   }
 
   public void insertApprovedQuantity(Integer quantity) throws IOException, SQLException {
@@ -793,10 +817,15 @@ public class DBWrapper {
 
   }
 
-  public void updateRequisitionStatus(String status) throws IOException, SQLException {
+  public void updateRequisitionStatus(String status, String username, String program) throws IOException, SQLException {
     update("update requisitions set status='" + status + "';");
+    ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='" + program + "');");
+    while (rs.next()) {
+      update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
+        "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+    }
     update("update requisitions set supervisorynodeid=(select id from supervisory_nodes where code='N1');");
-
+    update("update requisitions set createdBy= (select id from users where username = '" + username + "') , modifiedBy= (select id from users where username = '" + username + "');");
   }
 
   public String getSupplyFacilityName(String supervisoryNode, String programCode) throws IOException, SQLException {

@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 @heading-green: #17888F;
@@ -909,10 +913,10 @@ table td.cell-input .cell-text {
 }
 
 .search-box-gap {
-  margin-bottom : 10px;
- .search-query {
-   margin-top : 0px;
- }
+  margin-bottom: 10px;
+  .search-query {
+    margin-top: 0px;
+  }
 }
 
 .form-tip {
@@ -1571,6 +1575,7 @@ table td.delete-button {
     width: 88%;
   }
 }
+
 .ngCellText.checked {
   padding-left: 20px;
   font-size: 1.2em;
@@ -1880,9 +1885,7 @@ input[placeholder].placeholder {
       margin: 0 0 10px;
     }
     input[type="text"] {
-      padding: 0;
-      height: 28px;
-      width: 218px;
+      padding: 4px 6px;
     }
     .label {
       font-size: 1.1em;
@@ -2077,7 +2080,7 @@ input[placeholder].placeholder {
 .rights-table {
   tr {
     th, td {
-      width: 33.33%;
+      width: 25%;
       padding: 20px 9px 20px 20px;
       background-color: white;
     }
@@ -2120,10 +2123,6 @@ input[placeholder].placeholder {
       }
     }
   }
-}
-
-#quantityRequested {
-  padding-right: 0px !important;
 }
 
 .configure-program-table {
@@ -2343,31 +2342,117 @@ input[placeholder].placeholder {
   }
 }
 
-#shipmentFileColumns {
-  input[type="text"] {
-    padding: 0;
-    height: 28px;
-    width: 55px;
-  }
-}
-
 .select2-drop-mask {
   max-width: 100%;
   max-height: 100%;
 }
 
-.emergency-icon{
+.emergency-icon {
   max-width: 110px;
   border: 1px solid red;
-  .ngHeaderSortColumn{
+  .ngHeaderSortColumn {
     width: 100%;
   }
 }
 
-input[rnr-validator="positiveInteger"]{
+input[rnr-validator="positiveInteger"] {
   text-align: right;
 }
 
 .cell-input input[type="text"].small-width-ie {
   width: 86%;
+}
+
+.padding2px {
+  padding: 2px;
+}
+
+#requisition-head-block {
+  padding: 8px 0px 0px
+}
+
+.Regular {
+  .right-arrow(#DBDBDB);
+}
+
+.Regular:after, .Regular:before {
+  .right-arrow-after-before();
+}
+
+.Regular:after {
+  .right-arrow-after(#DBDBDB);
+}
+
+.Emergency {
+  .right-arrow(#D25F5B);
+  color: #fff;
+}
+
+.Emergency:after, .Emergency:before {
+  .right-arrow-after-before();
+}
+
+.Emergency:after {
+  .right-arrow-after(#D25F5B);
+}
+
+.pull-left.requisition-head-block {
+  width: 90%;
+  margin-left: 0.4%;
+}
+
+@media screen and (min-width: 1024px) {
+  .pull-left.requisition-head-block {
+    width: 90.5%;
+  }
+}
+
+@media screen and (min-width: 1100px) {
+  .pull-left.requisition-head-block {
+    width: 88%;
+  }
+}
+
+@media screen and (min-width: 1020px) {
+  .pull-left.requisition-head-block {
+    width: 87%;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .pull-left.requisition-head-block {
+    width: 86%;
+  }
+}
+
+@media screen and (min-width: 840px) {
+  .pull-left.requisition-head-block {
+    width: 84%;
+  }
+}
+
+@media screen and (min-width: 648px) {
+  .pull-left.requisition-head-block {
+    width: 82%;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .Regular {
+    padding: 29px 15px;
+  }
+
+  .Regular:after {
+    border-width: 39px 0 39px 15px;
+    margin-top: -39px;
+  }
+
+  .Emergency {
+    padding: 29px 15px;
+  }
+
+  .Emergency:after {
+    border-width: 39px 0 39px 15px;
+    margin-top: -39px;
+  }
 }

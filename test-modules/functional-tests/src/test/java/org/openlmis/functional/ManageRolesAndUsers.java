@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.functional;
@@ -156,8 +160,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDuplicateRoleName(String user, String program, String[] credentials) throws Exception {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testVerifyDuplicateRoleName(String[] credentials) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
@@ -166,6 +170,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.createRole(ADMIN, ADMIN,userRoleList, false);
     assertEquals(rolesPage.getSaveErrorMsgDiv().getText().trim(),"Duplicate Role found");
   }
+
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+    public void testVerifyFacilityBasedRole(String[] credentials) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        RolesPage rolesPage = homePage.navigateRoleAssignments();
+        rolesPage.createFacilityBasedRoleWithSuccessMessageExpected("Facility Based Role Name","Facility Based Role Description");
+    }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -343,6 +355,13 @@ public class ManageRolesAndUsers extends TestCaseHelper {
       {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
     };
   }
+
+    @DataProvider(name = "Data-Provider-Role-Function")
+    public Object[][] parameterIntRoleTestProvider() {
+        return new Object[][]{
+                { new String[]{"Admin123", "Admin123"}}
+        };
+    }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {

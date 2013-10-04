@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.rnr.repository.mapper;
@@ -18,10 +20,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,12 +34,12 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -87,6 +86,8 @@ public class RequisitionMapperIT {
   private CommentMapper commentMapper;
   @Autowired
   SupplyLineMapper supplyLineMapper;
+  @Autowired
+  RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
   private SupervisoryNode supervisoryNode;
   private SupplyLine supplyLine;
@@ -107,7 +108,7 @@ public class RequisitionMapperIT {
     processingPeriod3 = insertPeriod("Period 3");
     supervisoryNode = insertSupervisoryNode();
     supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
     supplyLineMapper.insert(supplyLine);
   }
 
@@ -198,6 +199,16 @@ public class RequisitionMapperIT {
   }
 
   @Test
+  public void shouldGetOnlyRegularRequisitions() throws Exception {
+    Rnr regularRnr = insertRequisition(processingPeriod1, program, INITIATED, false);
+    insertRequisition(processingPeriod1, program, INITIATED, true);
+
+    Rnr regularRequisition = mapper.getRegularRequisitionWithLineItems(facility, program, processingPeriod1);
+
+    assertThat(regularRequisition.getId(), is(regularRnr.getId()));
+  }
+
+  @Test
   public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
     Product product = insertProduct(true, "P1");
@@ -247,7 +258,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetTheLastRequisitionToEnterThePostSubmitFlow() throws Exception {
+  public void shouldGetTheLastRegularRequisitionToEnterThePostSubmitFlow() throws Exception {
     DateTime date1 = now();
     DateTime date2 = date1.plusMonths(1);
 
@@ -268,16 +279,27 @@ public class RequisitionMapperIT {
 
     insertRequisition(processingPeriod3, program, INITIATED, false);
 
-    Rnr lastRequisitionToEnterThePostSubmitFlow = mapper.getLastRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
+    Rnr lastRequisitionToEnterThePostSubmitFlow = mapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
 
     assertThat(lastRequisitionToEnterThePostSubmitFlow.getId(), is(rnr2.getId()));
   }
 
   @Test
+  public void shouldNotGetEmergencyRequisitionsForPostSubmitFlow() throws Exception {
+    insertRequisition(processingPeriod1, program, INITIATED, false);
+    insertRequisition(processingPeriod1, program, AUTHORIZED, true);
+
+    Rnr lastRequisition = mapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
+
+    assertThat(lastRequisition, is(nullValue()));
+  }
+
+  @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, true);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, true);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_FACILITY_CODE;
     Integer pageNumber = 1;
@@ -292,11 +314,20 @@ public class RequisitionMapperIT {
     assertThat(requisitions.get(1), is(requisition2));
   }
 
+  private void approve(Rnr... requisitions) {
+    for (Rnr requisition : requisitions) {
+      requisition.setStatus(APPROVED);
+      mapper.update(requisition);
+    }
+  }
+
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityName() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_FACILITY_NAME;
     Integer pageNumber = 1;
@@ -313,9 +344,11 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingBySupplyDepotName() {
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME;
     Integer pageNumber = 1;
@@ -333,9 +366,11 @@ public class RequisitionMapperIT {
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByProgramName() {
 
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, APPROVED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, APPROVED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+
+    approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_PROGRAM_NAME;
     Integer pageNumber = 1;
@@ -390,6 +425,7 @@ public class RequisitionMapperIT {
     rnr.setProgram(program);
     rnr.setSupplyingDepot(facility);
     mapper.insert(rnr);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
 
     rnr.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(rnr);

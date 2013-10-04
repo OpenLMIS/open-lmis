@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.core.repository;
@@ -32,7 +36,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.core.domain.RoleType.REQUISITION;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -52,7 +55,7 @@ public class RoleRightsRepositoryTest {
 
   @Before
   public void setUp() throws Exception {
-    role = new Role("role name", REQUISITION, "role description");
+    role = new Role("role name", "role description");
     roleRightsRepository = new RoleRightsRepository(roleRightsMapper, commaSeparator);
   }
 
@@ -90,7 +93,7 @@ public class RoleRightsRepositoryTest {
 
   @Test
   public void shouldNotUpdateToDuplicateRoleName() {
-    Role role = new Role("Name", REQUISITION, "Desc");
+    Role role = new Role("Name", "Desc");
     role.setId(123L);
     doThrow(DuplicateKeyException.class).when(roleRightsMapper).updateRole(role);
 

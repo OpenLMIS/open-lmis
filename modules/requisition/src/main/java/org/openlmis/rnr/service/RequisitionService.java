@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.rnr.service;
@@ -26,9 +28,11 @@ import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 public class RequisitionService {
@@ -133,12 +137,15 @@ public class RequisitionService {
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId());
 
-    if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr))
+    if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
-    if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL)
+    }
+
+    if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
-    else
+    } else {
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate);
+    }
 
     requisitionRepository.update(savedRnr);
   }
@@ -217,8 +224,9 @@ public class RequisitionService {
   public List<Rnr> get(RequisitionSearchCriteria criteria) {
     RequisitionSearchStrategy strategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
     List<Rnr> requisitions = strategy.search();
-    if (requisitions != null)
+    if (requisitions != null) {
       fillSupportingInfo(requisitions);
+    }
     return requisitions;
   }
 
@@ -262,8 +270,7 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    if (!requisition.isEmergency())
-      requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
+    requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
     requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);
   }
 
@@ -290,19 +297,22 @@ public class RequisitionService {
     }
   }
 
-  private List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
-    return getAllPeriodsForInitiatingRequisition(new RequisitionSearchCriteria(facilityId, programId));
-  }
+  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
+    Date programStartDate = programService.getProgramStartDate(facilityId, programId);
 
-  public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(RequisitionSearchCriteria criteria) {
-    Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
-
-    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
-      criteria.getFacilityId(), criteria.getProgramId());
+    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(
+      facilityId, programId);
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
       null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate,
+    if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
+      ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
+      if (currentPeriod != null && periodIdOfLastRequisitionToEnterPostSubmitFlow.equals(currentPeriod.getId())) {
+        throw new DataException("error.current.rnr.already.post.submit");
+      }
+    }
+
+    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
       periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
@@ -311,7 +321,7 @@ public class RequisitionService {
       requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
-      previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
+      previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
         requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
@@ -416,7 +426,13 @@ public class RequisitionService {
     return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
   }
 
-  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber) {
+  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber, Integer totalNumberOfPages) {
+    if (pageNumber.equals(1) && totalNumberOfPages.equals(0))
+      return new ArrayList<>();
+
+    if (pageNumber <= 0 || pageNumber > totalNumberOfPages)
+      throw new DataException("error.page.not.found");
+
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
@@ -429,8 +445,28 @@ public class RequisitionService {
   public Integer getNumberOfPagesOfApprovedRequisitionsForCriteria(String searchType, String searchVal) {
     Integer approvedRequisitionsByCriteria = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
-    return (approvedRequisitionsByCriteria / pageSize) + 1;
+    return (int) Math.ceil(approvedRequisitionsByCriteria.doubleValue() / pageSize.doubleValue());
   }
 
+  public List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
+    if (!criteria.isEmergency()) {
+      return getAllPeriodsForInitiatingRequisition(criteria.getFacilityId(), criteria.getProgramId());
+    }
+    ProcessingPeriod currentPeriod = getCurrentPeriod(criteria);
+    return currentPeriod == null ? null : asList(currentPeriod);
+  }
+
+  public List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+    if (isEmpty(periodList) && (!criteria.isEmergency())) {
+      return emptyList();
+    }
+
+    if (!criteria.isEmergency()) {
+      criteria.setPeriodId(periodList.get(0).getId());
+    }
+
+    criteria.setWithoutLineItems(true);
+    return get(criteria);
+  }
 }
 

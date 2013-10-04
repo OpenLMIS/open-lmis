@@ -1,11 +1,19 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function InitiateRnrController($scope, $location, $rootScope, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
-
+function InitiateRnrController($scope, $location, Requisitions,
+                               PeriodsForFacilityAndProgram, UserFacilityList,
+                               CreateRequisitionProgramList,
+                               UserSupervisedFacilitiesForProgram,
+                               FacilityProgramRights, navigateBackService,
+                               messageService) {
   $scope.fullScreen = false;
   $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
@@ -122,17 +130,18 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   };
 
   var createPeriodWithRnrStatus = function (periods, rnrs) {
-    $scope.periodGridData = [];
 
-    var periodWithRnrStatus;
     if (periods == null || periods.length == 0) {
-      periodWithRnrStatus = {name: messageService.get("msg.no.period.available")};
-      $scope.periodGridData.push(periodWithRnrStatus);
+      $scope.error = messageService.get("msg.no.period.available");
       if ($scope.isEmergency) {
         addPreviousRequisitionToPeriodList(rnrs);
       }
       return;
     }
+
+    $scope.periodGridData = [];
+
+    var periodWithRnrStatus = undefined;
 
     periods.forEach(function (period) {
       periodWithRnrStatus = angular.copy(period);
@@ -159,7 +168,7 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
 
   var addPreviousRequisitionToPeriodList = function (rnrs) {
     var periodWithRnrStatus;
-    if(  rnrs == null || rnrs.length == 0) return;
+    if (rnrs == null || rnrs.length == 0) return;
     rnrs.forEach(function (rnr) {
       if (rnr.status == 'INITIATED') {
         periodWithRnrStatus = angular.copy(rnr.period);
@@ -209,7 +218,6 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
   $scope.loadPeriods = function () {
     $scope.periodGridData = [];
     if (!($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedFacilityId)) {
-      var periods = [];
       $scope.error = "";
       return;
     }
@@ -220,6 +228,11 @@ function InitiateRnrController($scope, $location, $rootScope, Requisitions, Peri
         createPeriodWithRnrStatus(data.periods, data.rnr_list);
       },
       function (data) {
+        if (data.data.error == 'error.current.rnr.already.post.submit') {
+          $scope.error = $scope.selectedType ? messageService.get("msg.no.rnr.awaiting.authorization") :
+            messageService.get("msg.rnr.current.period.already.submitted");
+          return;
+        }
         $scope.error = data.data.error;
       });
   };

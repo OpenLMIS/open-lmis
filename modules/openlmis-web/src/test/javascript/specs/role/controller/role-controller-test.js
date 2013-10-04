@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 describe("Role", function () {
@@ -12,7 +16,8 @@ describe("Role", function () {
 
   describe("Create Role", function () {
     var ctrl, scope, $httpBackend, rights, dialog, messageService;
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, _$dialog_, _messageService_) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller,
+                                _$dialog_, _messageService_) {
       scope = $rootScope.$new();
       dialog = _$dialog_;
       $httpBackend = _$httpBackend_;
@@ -21,7 +26,8 @@ describe("Role", function () {
         {"right": "CONFIGURE_RNR", "name": "configure rnr", "type": "ADMIN"},
         {"right": "MANAGE_FACILITY", "name": "manage facility", "type": "ADMIN"},
         {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
-        {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
+        {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"},
+        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "SHIPMENT"}
       ];
       $httpBackend.when('GET', '/rights.json').respond(200, {"rights": rights});
       ctrl = $controller(RoleController, {$scope: scope, $dialog: dialog});
@@ -37,6 +43,9 @@ describe("Role", function () {
       expect(scope.requisitionRights).toEqual([
         {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
         {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
+      ]);
+      expect(scope.shipmentRights).toEqual([
+        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "SHIPMENT"}
       ]);
     });
 
@@ -85,11 +94,12 @@ describe("Role", function () {
 
     var ctrl, scope, httpBackend, location;
     it('should update a role', function () {
-      inject(function ($rootScope, _$httpBackend_, $controller, $location, _$dialog_) {
+      inject(function ($rootScope, _$httpBackend_, $controller, $location,
+                       _$dialog_) {
         scope = $rootScope.$new();
         httpBackend = _$httpBackend_;
         location = $location;
-        httpBackend.expectGET('/roles/123.json').respond({"role": {"name": "test role", "adminRole": false}});
+        httpBackend.expectGET('/roles/123.json').respond({"role": {"name": "test role", "adminRole": false}, "right_type": 'ADMIN'});
         httpBackend.expectGET('/rights.json').respond({"rights": "test Rights"});
         ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123}, $location: location, $dialog: _$dialog_});
       });
@@ -121,11 +131,12 @@ describe("Role", function () {
       ];
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('/roles/123.json').respond({"role": role});
+      $httpBackend.expectGET('/roles/123.json').respond({"role": role, "right_type": 'ADMIN'});
       $httpBackend.expectGET('/rights.json').respond({"rights": rightList});
       ctrl = $controller(RoleController, {$scope: scope, $routeParams: {id: 123} });
       $httpBackend.flush();
       expect(scope.role).toEqual(role);
+      expect(scope.currentRightType).toEqual('ADMIN');
       expect(scope.rights).toEqual(rightList);
     }));
 
@@ -181,6 +192,8 @@ describe("Role", function () {
       expect(scope.role.rights[2]).toEqual(rightList[3]);
       expect(scope.role.rights[3]).toEqual(rightList[2]);
     });
+
+    it('should ')
 
   });
 });

@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.rnr.domain;
@@ -31,11 +35,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
+import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -183,6 +185,19 @@ public class RnrTest {
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
+  @Test
+  public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInInitiatedState() throws Exception {
+    rnr.setBeginningBalances(make(a(defaultRnr, with(status, INITIATED))), false);
+
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
+  }
+
+  @Test
+  public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInSubmittedState() throws Exception {
+    rnr.setBeginningBalances(make(a(defaultRnr, with(status, SUBMITTED))), false);
+
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
+  }
 
   @Test
   public void testCalculatePacksToShip() throws Exception {
