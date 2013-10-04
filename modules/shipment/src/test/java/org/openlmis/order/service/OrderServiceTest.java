@@ -255,7 +255,7 @@ public class OrderServiceTest {
     when(orderRepository.getById(orderId)).thenReturn(order);
     when(requisitionService.getFullRequisitionById(rnr.getId())).thenReturn(rnr);
 
-    Order expectedOrder = orderService.getOrderForDownload(orderId);
+    Order expectedOrder = orderService.getOrder(orderId);
 
     verify(orderRepository).getById(orderId);
     verify(requisitionService).getFullRequisitionById(rnr.getId());

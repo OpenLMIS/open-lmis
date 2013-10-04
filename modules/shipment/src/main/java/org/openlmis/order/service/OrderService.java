@@ -88,7 +88,7 @@ public class OrderService {
     return orders;
   }
 
-  public Order getOrderForDownload(Long id) {
+  public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
     removeUnorderedProducts(requisition);

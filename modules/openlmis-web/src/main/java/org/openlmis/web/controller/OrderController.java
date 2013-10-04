@@ -69,7 +69,7 @@ public class OrderController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ModelAndView downloadOrderCsv(@PathVariable Long id) {
     ModelAndView modelAndView;
-    Order order = orderService.getOrderForDownload(id);
+    Order order = orderService.getOrder(id);
     OrderFileTemplateDTO orderFileTemplate = orderService.getOrderFileTemplateDTO();
     modelAndView = new ModelAndView("orderCsvView");
     modelAndView.addObject(ORDER, order);

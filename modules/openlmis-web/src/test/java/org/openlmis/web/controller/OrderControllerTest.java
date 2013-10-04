@@ -113,7 +113,7 @@ public class OrderControllerTest {
   public void shouldDownloadOrderCsv() {
     Long orderId = 1L;
     Order expectedOrder = new Order();
-    when(orderService.getOrderForDownload(orderId)).thenReturn(expectedOrder);
+    when(orderService.getOrder(orderId)).thenReturn(expectedOrder);
     OrderFileTemplateDTO expectedOrderFileTemplateDTO =
       new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
     when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
@@ -122,7 +122,7 @@ public class OrderControllerTest {
     OrderFileTemplateDTO orderFileTemplate = (OrderFileTemplateDTO) modelAndView.getModel().get(ORDER_FILE_TEMPLATE);
     assertThat(order, is(expectedOrder));
     assertThat(orderFileTemplate, is(expectedOrderFileTemplateDTO));
-    verify(orderService).getOrderForDownload(orderId);
+    verify(orderService).getOrder(orderId);
     verify(orderService).getOrderFileTemplateDTO();
   }
 

@@ -72,7 +72,7 @@ public class OrderFtpTask {
   @ServiceActivator(inputChannel = "orderInputChannel")
   public void processOrder(List<Order> orders) {
     for (Order order : orders) {
-      order = orderService.getOrderForDownload(order.getId());
+      order = orderService.getOrder(order.getId());
 
       SupplyLine supplyLine = order.getSupplyLine();
 

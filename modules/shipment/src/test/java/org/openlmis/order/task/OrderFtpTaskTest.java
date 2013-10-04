@@ -82,7 +82,7 @@ public class OrderFtpTaskTest {
   @Test
   public void shouldProcessOrders() throws Exception {
     SupplyLine supplyLine = mock(SupplyLine.class);
-    when(orderService.getOrderForDownload(order.getId())).thenReturn(fullOrder);
+    when(orderService.getOrder(order.getId())).thenReturn(fullOrder);
     when(fullOrder.getId()).thenReturn(1l);
     when(fullOrder.getSupplyLine()).thenReturn(supplyLine);
     Long supplyLineId = 1l;
@@ -116,7 +116,7 @@ public class OrderFtpTaskTest {
   @Test
   public void shouldUpdateOrderAsTransferFailedIfFacilityFtpDetailsDoesNotExist() {
     SupplyLine supplyLine = mock(SupplyLine.class);
-    when(orderService.getOrderForDownload(order.getId())).thenReturn(fullOrder);
+    when(orderService.getOrder(order.getId())).thenReturn(fullOrder);
     when(fullOrder.getSupplyLine()).thenReturn(supplyLine);
     Long supplyLineId = 1l;
     when(supplyLine.getId()).thenReturn(supplyLineId);
