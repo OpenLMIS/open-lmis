@@ -11,6 +11,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.mapper.lookup.RequisitionGroupReportMapper;
 import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.dto.NameCount;
 import org.openlmis.report.model.report.MasterReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -66,7 +67,26 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         List<MasterReport> reportList = new ArrayList<MasterReport>();
         MasterReport report = new MasterReport();
         report.details =  reportMapper.getReport(filterCriteria,rowBounds);
-        report.summary = reportMapper.getReportSummary(filterCriteria);
+        List<NameCount> summary = reportMapper.getReportSummary(filterCriteria);
+
+        // TODO: move this to other section of the application
+        NameCount percentage = new NameCount();
+        percentage.setName("Percentage not-reporting");
+
+        String totalFacilities = reportMapper.getTotalFacilities( filterCriteria ).get(0).toString();
+        String nonReporting = reportMapper.getNonReportingTotalFacilities( filterCriteria ).get(0).toString();
+
+        // Assume by default that the 100% of facilities didn't report
+        Long percent = Long.parseLong("100");
+        if(totalFacilities != "0"){
+          percent = Math.round((Double.parseDouble(nonReporting) /  Double.parseDouble(totalFacilities)) * 100);
+        }
+
+        percentage.setCount( percent.toString() );
+        summary.add(0, percentage);
+
+        report.summary = summary;
+
         reportList.add( report );
 
         List<? extends ReportData> list;
@@ -88,7 +108,6 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         Long percent = Long.parseLong("100");
         if(totalFacilities != "0"){
             percent = Math.round((Double.parseDouble(nonReporting) /  Double.parseDouble(totalFacilities)) * 100);
-
         }
         result.put("PERCENTAGE_NON_REPORTING",percent.toString());
 
