@@ -18,6 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.builder.UserBuilder;
@@ -60,7 +61,6 @@ import static org.openlmis.rnr.domain.RegimenLineItem.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -158,7 +158,9 @@ public class RequisitionServiceTest {
     List<RegimenLineItem> regimenLineItems = new ArrayList<>();
     regimenLineItems.add(new RegimenLineItem(null, null, 1L, 1L));
     requisition.setRegimenLineItems(regimenLineItems);
+
     Rnr spyRequisition = spy(requisition);
+
     Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
@@ -170,8 +172,10 @@ public class RequisitionServiceTest {
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), false, facilityTypeApprovedProducts, regimens, USER_ID, USER_ID).thenReturn(spyRequisition);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), false);
-    doReturn(asList(spyRequisition)).when(spyRequisitionService).get(criteria);
+    when(requisitionRepository.getById(requisition.getId())).thenReturn(spyRequisition);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
 
     Rnr rnr = spyRequisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, false);
 
@@ -354,7 +358,10 @@ public class RequisitionServiceTest {
   }
 
   private Rnr createRequisition(Long periodId, RnrStatus status) {
+    Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
+    defaultFacility.setId(1L);
     return make(a(RequisitionBuilder.defaultRnr,
+      with(RequisitionBuilder.facility, defaultFacility),
       with(RequisitionBuilder.periodId, periodId),
       with(RequisitionBuilder.status, status)));
   }
@@ -428,9 +435,10 @@ public class RequisitionServiceTest {
     whenNew(Rnr.class).withArguments(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), true, facilityTypeApprovedProducts, regimens, USER_ID, USER_ID).thenReturn(spyRequisition);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId());
-    criteria.setEmergency(true);
-    doReturn(asList(spyRequisition)).when(spyRequisitionService).get(criteria);
+    when(requisitionRepository.getById(requisition.getId())).thenReturn(spyRequisition);
+    when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
+    when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
 
     Rnr rnr = spyRequisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, true);
 

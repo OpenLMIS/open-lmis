@@ -110,11 +110,9 @@ public class RequisitionService {
 
     insert(requisition);
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria(facilityId, programId, periodId);
-    criteria.setEmergency(emergency);
-
-    List<Rnr> rnrList = get(criteria);
-    return (rnrList == null || rnrList.isEmpty()) ? null : rnrList.get(0);
+    requisition = requisitionRepository.getById(requisition.getId());
+    fillSupportingInfo(requisition);
+    return requisition;
   }
 
   @Transactional
