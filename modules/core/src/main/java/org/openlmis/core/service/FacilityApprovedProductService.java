@@ -14,6 +14,7 @@ import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -82,12 +83,17 @@ public class FacilityApprovedProductService {
     }
   }
 
-  public void save_ext(FacilityTypeApprovedProduct facilityTypeApprovedProduct){
+  public void save_ext(FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long userID){
+      facilityTypeApprovedProduct.setModifiedBy(userID);
+      facilityTypeApprovedProduct.setModifiedDate(new Date());
+
+
       if (facilityTypeApprovedProduct.getId() != null) {
           repository.update(facilityTypeApprovedProduct);
       } else {
         FacilityTypeApprovedProduct fproduct = repository.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeApprovedProduct.getFacilityType().getId(), facilityTypeApprovedProduct.getProgramProduct().getProgram().getId(), facilityTypeApprovedProduct.getProgramProduct().getProduct().getId() );
         if(fproduct == null){
+          facilityTypeApprovedProduct.setCreatedBy(userID);
           repository.insert(facilityTypeApprovedProduct);
         } else{
           fproduct.setMaxMonthsOfStock( facilityTypeApprovedProduct.getMaxMonthsOfStock() );

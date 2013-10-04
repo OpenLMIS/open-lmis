@@ -95,7 +95,7 @@ public class FacilityApprovedProductController extends BaseController {
   public ResponseEntity<OpenLmisResponse> saveANewFacilityTypeApprovedProduct(@RequestBody FacilityTypeApprovedProduct facilityTypeApprovedProduct, HttpServletRequest request){
       ResponseEntity<OpenLmisResponse> successResponse;
       try{
-          facilityApprovedProductService.save_ext(facilityTypeApprovedProduct);
+          facilityApprovedProductService.save_ext(facilityTypeApprovedProduct,loggedInUserId(request));
       }
       catch (DataException e) {
         return error(e, HttpStatus.BAD_REQUEST);
