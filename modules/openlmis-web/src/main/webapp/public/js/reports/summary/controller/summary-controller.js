@@ -6,7 +6,7 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
         $scope.tableParams = new ngTableParams({
             page: 1,            // show first page
             total: 0,           // length of data
-            count: 10           // count per page
+            count: 25           // count per page
         });
 
         $scope.paramsChanged = function(params) {
