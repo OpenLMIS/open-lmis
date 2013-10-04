@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -210,7 +211,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.body.data.get(\"rnr\"), 'VIEW_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
     try {
       return response(RNR, requisitionService.getFullRequisitionById(id));
@@ -220,7 +221,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/{id}/print", method = GET, headers = ACCEPT_PDF)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.model.get(\"rnr\"), 'VIEW_REQUISITION')")
   public ModelAndView printRequisition(@PathVariable Long id) {
     ModelAndView modelAndView = new ModelAndView("requisitionPDF");
 
