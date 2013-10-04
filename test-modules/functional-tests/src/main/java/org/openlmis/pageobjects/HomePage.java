@@ -579,19 +579,14 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
 
-
   public void goBack(){
       TestWebDriver.getDriver().navigate().back();
   }
 
-
-    public void verifyLoggedInUser(String Username) {
-        testWebDriver.waitForElementToAppear(loggedInUserLabel);
-        SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
-    public String getErrorMessage() {
-        testWebDriver.waitForElementToAppear(errorMsg);
-        return errorMsg.getText().trim();
-    }
+  public String getErrorMessage() {
+      testWebDriver.waitForElementToAppear(errorMsg);
+      return errorMsg.getText().trim();
+  }
 
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);
@@ -629,13 +624,4 @@ public class HomePage extends Page {
     return firstPeriodLabel.getText().trim();
   }
 
-  public void navigateRnr() throws IOException {
-    testWebDriver.waitForElementToAppear(requisitionsLink);
-    testWebDriver.keyPress(requisitionsLink);
-    testWebDriver.waitForElementToAppear(createLink);
-    testWebDriver.sleep(2000);
-    testWebDriver.keyPress(createLink);
-    testWebDriver.sleep(2000);
-    testWebDriver.waitForElementToAppear(myFacilityRadioButton);
-  }
 }
