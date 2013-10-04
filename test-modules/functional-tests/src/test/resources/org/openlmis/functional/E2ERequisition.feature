@@ -65,7 +65,7 @@ Feature: End to end requisition flow
     And I am logged in as "storeincharge"
     And I initiate and submit emergency requisition
     Then I verify Emergency RnR Type
-    And I update & verify ordered quantities
+    And I update & verify ordered quantities for emergency RnR
     And I update & verify requested quantities
     And I add non full supply items & verify total cost
     And I authorize RnR

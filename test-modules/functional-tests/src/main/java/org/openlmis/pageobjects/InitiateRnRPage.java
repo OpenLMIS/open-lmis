@@ -396,9 +396,14 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
   }
 
-  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H, Integer I) {
+  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H,
+                                                          Integer I, boolean emergency) {
     enterValuesCalculatedOrderQuantity(F, X);
-    VerifyCalculatedOrderQuantity(N, P, H, I);
+    if (emergency)
+        VerifyCalculatedOrderQuantityForEmergencyRnR(N, P, H, I);
+    else
+        VerifyCalculatedOrderQuantity(N, P, H, I);
+
     testWebDriver.sleep(1000);
   }
 
@@ -425,10 +430,21 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-  public void verifyPacksToShip(Integer V) {
+    public void VerifyCalculatedOrderQuantityForEmergencyRnR(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+        String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
+        verifyFieldValue("", actualAdjustedTotalConsumption);
+        String actualAmc = testWebDriver.getText(amc);
+        verifyFieldValue("", actualAmc.trim());
+        String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
+        verifyFieldValue("", actualMaximumStockQuantity.trim());
+        String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
+        verifyFieldValue("", actualCalculatedOrderQuantity.trim());
+    }
+
+  public void verifyPacksToShip(String V) {
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
-    verifyFieldValue(V.toString(), actualPacksToShip.trim());
+    verifyFieldValue(V, actualPacksToShip.trim());
     testWebDriver.sleep(500);
 
   }

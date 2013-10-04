@@ -183,7 +183,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
       homePage.navigateAndInitiateEmergencyRnr(program);
       InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
       homePage.clickProceed();
-      initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
+      initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails,
+              geoZone, parentGeoZone, operatedBy, facilityType);
       initiateRnRPage.submitRnR();
       initiateRnRPage.verifySubmitRnrErrorMsg();
       initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
@@ -217,15 +218,22 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142);
-    initiateRnRPage.verifyPacksToShip(15);
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142,false);
+    initiateRnRPage.verifyPacksToShip("15");
+  }
+
+  @And("^I update & verify ordered quantities for emergency RnR$")
+  public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142,true);
+    initiateRnRPage.verifyPacksToShip("");
   }
 
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
-    initiateRnRPage.verifyPacksToShip(1);
+    initiateRnRPage.verifyPacksToShip("1");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
   }
