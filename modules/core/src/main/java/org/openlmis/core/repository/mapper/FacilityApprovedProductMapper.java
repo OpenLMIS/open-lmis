@@ -180,7 +180,6 @@ public interface FacilityApprovedProductMapper {
     @Select({"select fap.*,pp.*, p.code as product_code " +
             "from program_products pp ",
             "JOIN products p on pp.productId = p.id ",
-            "JOIN facility_approved_products fap on pp.id = fap.programProductId ",
             "WHERE ",
             "pp.programId = #{programId} ",
             "AND p.active = TRUE ",

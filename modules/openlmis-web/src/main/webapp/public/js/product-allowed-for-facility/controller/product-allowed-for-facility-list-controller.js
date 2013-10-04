@@ -125,12 +125,12 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
             GetFacilityTypeProgramProductAlreadyAllowedList.get({facilityTypeId:$scope.selectedFacilityType.id, programId:$scope.selectedProgram.id},function(data){
                 $scope.alreadyAllowedProducts = data.products;
 
-                angular.forEach($scope.products, function (product) {
+                angular.forEach($scope.products, function (pProduct) {
                     angular.forEach($scope.alreadyAllowedProducts, function(allowedProducts){
-                        if (allowedProducts.programProduct.product.id  == product.id) {
-                            product.isSelected = true;
-                            product.maxMonthsOfStock = allowedProducts.maxMonthsOfStock;
-                            product.minMonthsOfStock = allowedProducts.minMonthsOfStock;
+                        if (allowedProducts.programProduct.product.id  == pProduct.product.id) {
+                            pProduct.isSelected = true;
+                            pProduct.maxMonthsOfStock = allowedProducts.maxMonthsOfStock;
+                            pProduct.minMonthsOfStock = allowedProducts.minMonthsOfStock;
                         }
                     });
 
