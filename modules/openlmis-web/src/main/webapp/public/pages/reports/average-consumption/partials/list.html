@@ -152,16 +152,33 @@
                                 </div>
                             </div>
                             <div class="span9">
-                                <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+
 
                                 <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
                                     <tr>
                                         <td>No data to show under selected filters</td>
                                     </tr>
                                 </table>
-                                <div id="center-footer-div" ng-show="data.length > 0" style="position: fixed; bottom: 0px; z-index: 20; left: 50%;">
-                                    <span class="report-label">Min Mos : {{MinMos}}</span>  <span class="report-data">Max Mos : {{MaxMos}}</span>
+
+                                <div ng-show="datarows.length > 0">
+                                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+
+                                        <tbody>
+                                        <tr ng-repeat="row in datarows">
+                                            <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                                            <td data-title="'Facility Type'" style="width:100px" sortable="facilityType" >{{ row.facilityType }}</td>
+                                            <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
+                                            <td data-title="'Supplying Facility'" style="width:120px" sortable="supplyingFacility" >{{ row.supplyingFacility }}</td>
+                                            <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                                            <td data-title="'Product Code'" style="width:100px" sortable="productCode"  >{{ row.productCode }}</td>
+                                            <td data-title="'Product Description'" style="width:30%" sortable="productDescription"  >{{ row.productDescription }}</td>
+                                            <td data-title="'Average'" class="number" style="width:80px" sortable="average"  >{{ row.average | number }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+
                             </div>
                         </div>
 

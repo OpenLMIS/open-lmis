@@ -1,4 +1,4 @@
-function AverageConsumptionReportController($scope, $window, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope,$filter, $window, ngTableParams, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -15,12 +15,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         // lookups and references
 
-        $scope.pagingOptions = {
-            pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 20,
-            totalServerItems: 0,
-            currentPage: 1
-        };
+
 
     $scope.startYears = [];
     OperationYears.get(function(data){
@@ -85,7 +80,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.push({'name':'-- All Requisition Groups --'});
         });
 
     // copy over the start month and end months
@@ -119,7 +114,7 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                 $scope.errorShown = true;
                 //return;
             }
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            $scope.getPagedDataAsync(0, 0);
 
         };
 
@@ -156,17 +151,17 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
+            $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
         });
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({'name': 'All Products'});
+            $scope.products.unshift({'name': '-- All Products --'});
         });
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.unshift({'name': 'All Product Categories'});
+            $scope.productCategories.unshift({'name': '-- All Product Categories --'});
         });
 
 
@@ -174,12 +169,12 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.unshift({'name': 'All Geographic Zones'});
+            $scope.zones.unshift({'name': '-- All Geographic Zones --'});
         });
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'Select Programs'});
+            $scope.programs.unshift({'name':'-- Select Programs --'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -387,18 +382,6 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             if(selection != undefined || selection == ""){
                 $scope.filterObject.periodType =  selection;
 
-               /* if(selection == "quarterly"){
-
-                }
-
-                else if(selection == "semi-anual"){
-
-                }
-
-                else if(selection == "annual"){
-
-                }*/
-
             }else{
                 $scope.filterObject.periodType =  "monthly";
             }
@@ -458,41 +441,46 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
             $scope.$window.open(url);
         }
 
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
-
-        $scope.$watch("currentPage", function () {  //good watch no problem
-
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-              //when clicked using the links they have done updated the paging info no problem here
-               //or using the url page param
-              //$scope.pagingOptions.currentPage = $scope.currentPage;
-                $location.search("page", $scope.currentPage);
-            }
+        // the grid options
+        $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            total: 0,           // length of data
+            count: 25           // count per page
         });
 
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
+        $scope.paramsChanged = function(params) {
+
+            // slice array data on pages
+            if($scope.data == undefined ){
+                $scope.datarows = [];
+                params.total = 0;
+            }else{
+                var data = $scope.data;
+                var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+                orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+                params.total = orderedData.length;
+                $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+                var i = 0;
+                var baseIndex = params.count * (params.page - 1) + 1;
+                while(i < $scope.datarows.length){
+                    $scope.datarows[i].no = baseIndex + i;
+                    i++;
+                }
             }
-        });
-
-
-
-        $scope.sortInfo = { fields:["facilityName"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data;
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
         };
+
+        // watch for changes of parameters
+        $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+
 
         $scope.getPagedDataAsync = function (pageSize, page) {
-
+                        pageSize = 50000;
+                        page = 1;
+                        // Clear the results on the screen
+                        $scope.datarows = [];
+                        $scope.data = [];
                         var params  = {};
                         if(pageSize != undefined && page != undefined ){
                                 var params =  {
@@ -507,71 +495,18 @@ function AverageConsumptionReportController($scope, $window, AverageConsumptionR
                         });
 
 
-                        // Add the sorting parameters
-                        $.each($scope.sortInfo.fields, function(index, value) {
-                            if(value != undefined) {
-                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                            }
-                        });
-
                         $scope.data = [];
                         AverageConsumptionReport.get(params, function(data) {
                             if(data.pages != undefined && data.pages.rows != undefined ){
-                                $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total) ;
                                 $scope.MinMos = data.pages.rows[0].minMOS;
                                 $scope.MaxMos=data.pages.rows[0].maxMOS;
                                 $scope.data = data.pages.rows;
+                                $scope.paramsChanged($scope.tableParams);
                             }
                         });
 
         };
 
-        $scope.$watch('pagingOptions.currentPage', function () {
-            if($scope.currentPage != $scope.pagingOptions.currentPage)  {
-                $scope.currentPage = $scope.pagingOptions.currentPage;
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }
 
-        }, true);
-
-        $scope.$watch('pagingOptions.pageSize', function () {
-            if($scope.pageSize != $scope.pagingOptions.pageSize)  {
-               $scope.pageSize = $scope.pagingOptions.pageSize;
-               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }
-
-        }, true);
-
-        $scope.$watch('sortInfo', function () {
-            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }, true);
-
-    $scope.gridOptions = {
-        data: 'myData',
-        columnDefs:
-            [
-                //{ field: 'reportingGroup', displayName: 'Reporting Group', width : "*"},
-                { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-                { field: 'facilityName', displayName: 'Facility Name', width : "*"},
-                { field: 'supplyingFacility', displayName: 'Supplying Facility', width : "*"},
-                { field: 'category', displayName: 'Product', width: "*" },
-                { field: 'product', displayName: 'Product Description', width: "**" },
-                { field: 'productCode', displayName: 'Product Code', width: "*" },
-                { field: 'average', displayName: 'AMC', width : "*"}
-            ],
-        enablePaging: true,
-        enableSorting :true,
-        showFooter: true,
-        selectWithCheckboxOnly :false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-
-    };
 
 }

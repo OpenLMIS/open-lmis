@@ -1,4 +1,4 @@
-angular.module('averageconsumption', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('averageconsumption', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller:AverageConsumptionReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
