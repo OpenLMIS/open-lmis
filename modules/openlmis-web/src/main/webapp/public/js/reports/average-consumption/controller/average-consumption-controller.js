@@ -80,7 +80,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'-- All Requisition Groups --'});
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
         });
 
     // copy over the start month and end months
