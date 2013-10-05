@@ -1,4 +1,4 @@
-function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
+function AdjustmentSummaryReportController($scope, $filter , ngTableParams , AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -11,14 +11,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             return section == id;
         };
 
-        // lookups and references
 
-        $scope.pagingOptions = {
-            pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 20,
-            totalServerItems: 0,
-            currentPage: 1
-        };
 
         // default to the monthly period type
         $scope.periodType = 'monthly';
@@ -80,7 +73,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
         });
 
 
@@ -111,9 +104,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
+            $scope.getPagedDataAsync(0, 0);
         };
 
         //filter form data section
@@ -152,22 +143,22 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
+            $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
         });
 
         AdjustmentTypes.get(function(data){
             $scope.adjustmentTypes = data.adjustmentTypeList;
-            $scope.adjustmentTypes.unshift({'description': 'All Adjustment Types'});
+            $scope.adjustmentTypes.unshift({'description': '--All Adjustment Types --'});
          });
 
         Products.get(function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({'name': 'All Products'});
+            $scope.products.unshift({'name': '-- All Products --'});
         });
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.unshift({'name': 'All Product Categories'});
+            $scope.productCategories.unshift({'name': '-- All Categories --'});
         });
 
 
@@ -180,12 +171,12 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.unshift({'name': 'All Geographic Zones'});
+            $scope.zones.unshift({'name': '-- All Geographic Zones --'});
         });
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'Select Programs'});
+            $scope.programs.unshift({'name':'-- Select Programs --'});
         });
 
         $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
@@ -193,7 +184,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         $scope.$watch('zone.value', function(selection){
             if(selection != undefined || selection == ""){
                $scope.filterObject.zoneId =  selection;
-               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
             }else{
                 $scope.filterObject.zoneId = 0;
             }
@@ -203,7 +194,6 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
         $scope.$watch('status.value', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.statusId =  selection;
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
                 $scope.filterObject.statusId ='';
             }
@@ -217,8 +207,7 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                         $scope.filterObject.facilityType = idx.name;
                     }
                 });
-                //skillsSelect.options[skillsSelect.selectedIndex].text
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+
             }else{
                 $scope.filterObject.facilityTypeId =  0;
                 $scope.filterObject.facilityType = "";
@@ -469,39 +458,42 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
             window.location.href = url;
         };
 
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
 
-        $scope.$watch("currentPage", function () {  //good watch no problem
+            // the grid options
+            $scope.tableParams = new ngTableParams({
+                page: 1,            // show first page
+                total: 0,           // length of data
+                count: 25           // count per page
+            });
 
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-              //when clicked using the links they have done updated the paging info no problem here
-               //or using the url page param
-              //$scope.pagingOptions.currentPage = $scope.currentPage;
-                $location.search("page", $scope.currentPage);
-            }
-        });
+            $scope.paramsChanged = function(params) {
 
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
-            }
-        });
+                // slice array data on pages
+                if($scope.data == undefined ){
+                    $scope.datarows = [];
+                    params.total = 0;
+                }else{
+                    var data = $scope.data;
+                    var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+                    orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
 
+                    params.total = orderedData.length;
+                    $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+                    var i = 0;
+                    var baseIndex = params.count * (params.page - 1) + 1;
+                    while(i < $scope.datarows.length){
+                        $scope.datarows[i].no = baseIndex + i;
+                        i++;
+                    }
+                }
+            };
 
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data;
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-        };
+        // watch for changes of parameters
+        $scope.$watch('tableParams', $scope.paramsChanged , true);
 
         $scope.getPagedDataAsync = function (pageSize, page) {
+                    pageSize = 6000;
+                    page = 1;
                         var params  = {};
                         if($scope.program == null || $scope.program == undefined || $scope.program == ''){
                             // do not send a request to the server before the basic selection was done.
@@ -519,70 +511,19 @@ function AdjustmentSummaryReportController($scope, AdjustmentSummaryReport, Prod
                                 params[index] = value;
                         });
 
-                        // Add the sorting parameters
-                        $.each($scope.sortInfo.fields, function(index, value) {
-                            if(value != undefined) {
-                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                            }
-                        });
+
                         // clear existing data
                         $scope.data = [];
 
                         // try to load the new data based on the selected parameters
                         AdjustmentSummaryReport.get(params, function(data) {
                             if(data.pages != undefined){
-                                $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
                                 $scope.data = data.pages.rows;
+                                $scope.paramsChanged($scope.tableParams);
                             }
                         });
 
         };
 
-        $scope.$watch('pagingOptions.currentPage', function () {
-            $scope.currentPage = $scope.pagingOptions.currentPage;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
-
-        $scope.$watch('pagingOptions.pageSize', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
-
-        $scope.$watch('sortInfo', function () {
-
-            $.each($scope.sortInfo.fields, function(index, value) {
-               // if(value != undefined)
-                   // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            });
-           // $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-
-        }, true);
-
-    $scope.gridOptions = {
-        data: 'myData',
-        columnDefs:
-            [
-
-                { field: 'facilityType', displayName: 'Facility Type', width : "*"},
-                { field: 'facilityName', displayName: 'Facility', width : "**"},
-                { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "*" },
-                { field: 'productDescription', displayName: 'Product Description', width: "**" },
-                { field: 'adjustmentType', displayName: 'Adjustment Type', width : "*"},
-                { field: 'adjustment', displayName: 'Adjustment', width : "*"}
-
-            ],
-        enablePaging: true,
-        enableSorting :false,
-        showFooter: true,
-        selectWithCheckboxOnly :false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-
-    };
 
 }
