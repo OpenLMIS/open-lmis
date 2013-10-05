@@ -53,7 +53,7 @@ public class RequisitionService {
   public static final String SEARCH_FACILITY_CODE = "facilityCode";
   public static final String SEARCH_FACILITY_NAME = "facilityName";
   public static final String SEARCH_SUPPLYING_DEPOT_NAME = "supplyingDepot";
-  public static final String CONVERT_TO_ORDER_PAGE_SIZE = "convert.to.order.page.size";
+  public static final String CONVERT_TO_ORDER_PAGE_SIZE = "order.page.size";
   public static final String NUMBER_OF_PAGES = "number_of_pages";
 
 

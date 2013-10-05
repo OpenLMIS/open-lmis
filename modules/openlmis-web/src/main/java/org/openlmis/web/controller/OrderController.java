@@ -13,7 +13,6 @@ package org.openlmis.web.controller;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
-import org.openlmis.order.dto.OrderDTO;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.web.form.RequisitionList;
@@ -31,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
+import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -63,7 +63,7 @@ public class OrderController extends BaseController {
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
-    return response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrdersForPage(page)));
+    return response(ORDERS, getOrdersForView(orderService.getOrdersForPage(page)));
   }
 
   @RequestMapping(value = "/orders/{id}/download.csv", method = GET, headers = ACCEPT_CSV)

@@ -55,7 +55,7 @@ public class OrderService {
   private int pageSize;
 
   @Autowired
-  public void setPageSize(@Value("${convert.to.order.page.size}") String pageSize) {
+  public void setPageSize(@Value("${order.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
   }
 
