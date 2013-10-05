@@ -1,4 +1,4 @@
-angular.module('non_reporting', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('non_reporting', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:NonReportingController, templateUrl:'partials/list.html',reloadOnSearch:false}).

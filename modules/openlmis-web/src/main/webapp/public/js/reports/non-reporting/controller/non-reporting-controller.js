@@ -1,4 +1,4 @@
-function NonReportingController($scope, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, ReportSchedules, ReportFacilityTypes , ReportPeriods, ReportPrograms, $http, $routeParams,$location) {
+function NonReportingController($scope,ngTableParams, $filter, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, ReportSchedules, ReportFacilityTypes , ReportPeriods, ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -11,35 +11,13 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
         };
         // lookups and references
 
-        $scope.pagingOptions = {
-            pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 10,
-            totalServerItems: 0,
-            currentPage: 1
-        };
-
 
 
         $scope.filterGrid = function (){
-           $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        };
-
-        //filter form data section
-        $scope.filterOptions = {
-            period: $scope.period,
-            ftype: $scope.facilityType,
-            rgroup: $scope.rgroup,
-            filterText: "",
-            useExternalFilter: false
+           $scope.getPagedDataAsync(50000, 1);
         };
 
 
-
-        //filter form data section
-        $scope.filterObject =  {
-             facilityType : $scope.period
-
-        };
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
@@ -79,8 +57,6 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
 
         $scope.ChangeSchedule();
 
-        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
-
         $scope.exportReport   = function (type){
 
             var param = $scope.getParams(1, 1);
@@ -89,51 +65,15 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
             window.open(url);
         }
 
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
-
-        $scope.$watch("currentPage", function () {  //good watch no problem
-
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-               //when clicked using the links they have done updated the paging info no problem here
-               $location.search("page", $scope.currentPage);
-            }
-        });
-
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
-            }
-        });
-
-
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data;
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-        };
-
 
         $scope.getParams = function(pageSize, page){
             var params  = {};
             if(pageSize != undefined && page != undefined ){
                 var params =  {
-                    "max" : pageSize,
-                    "page" : page
+                    "max" : 50000,
+                    "page" : 1
                 };
             }
-
-            $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined) {
-                    params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                }
-            });
 
             params.period   = $scope.period;
             params.rgroup   = $scope.rgroup;
@@ -143,59 +83,50 @@ function NonReportingController($scope, RequisitionGroupsByProgramSchedule , Req
             return params;
         }
 
+        // the grid options
+        $scope.tableParams = new ngTableParams({
+            page: 1,            // show first page
+            total: 0,           // length of data
+            count: 25           // count per page
+        });
+
+        $scope.paramsChanged = function(params) {
+
+            // slice array data on pages
+            if($scope.data == undefined ){
+                $scope.datarows = [];
+                params.total = 0;
+            }else{
+                var data = $scope.data;
+                var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+                orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+                params.total = orderedData.length;
+                $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+                var i = 0;
+                var baseIndex = params.count * (params.page - 1) + 1;
+                while(i < $scope.datarows.length){
+                     $scope.datarows[i].no = baseIndex + i;
+                    i++;
+                }
+            }
+        };
+
+        // watch for changes of parameters
+        $scope.$watch('tableParams', $scope.paramsChanged , true);
+
         $scope.getPagedDataAsync = function (pageSize, page) {
             var params = $scope.getParams(pageSize, page);
             $scope.data = [];
             NonReportingFacilities.get(params, function(data) {
                 if(data.pages != undefined){
-                    $scope.setPagingData(data.pages.rows[0].details,page,pageSize,data.pages.total);
                     $scope.summaries    =  data.pages.rows[0].summary;
                     $scope.data = data.pages.rows[0].details;
+                    $scope.paramsChanged( $scope.tableParams );
                 }
             });
-
         };
 
-        $scope.$watch('pagingOptions.currentPage', function () {
-            $scope.currentPage = $scope.pagingOptions.currentPage;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
 
-        $scope.$watch('pagingOptions.pageSize', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
-
-        $scope.$watch('sortInfo', function () {
-
-            $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined)
-                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            });
-          //  $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }, true);
-
-    $scope.gridOptions = {
-        data: 'myData',
-        columnDefs:
-            [
-                { field: 'code', displayName: 'Code', width: "*" },
-                { field: 'name', displayName: 'Facility Name', width: "***", resizable: false},
-                { field: 'facilityType', displayName: 'Facility Type', width: "*", resizable: false},
-                { field: 'location', displayName: 'Location', width: "*" }
-            ],
-        enablePaging: true,
-        enableSorting :false,
-        showFooter: true,
-        selectWithCheckboxOnly :false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-
-    };
 
 }
