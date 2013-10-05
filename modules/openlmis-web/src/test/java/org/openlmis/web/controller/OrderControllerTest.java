@@ -94,18 +94,18 @@ public class OrderControllerTest {
   }
 
   @Test
-  public void shouldReturnAllOrders() throws Exception {
+  public void shouldReturnAllOrdersForPage() throws Exception {
     List<Order> orders = new ArrayList<Order>() {{
       new Order();
     }};
     mockStatic(OrderDTO.class);
-    when(orderService.getOrders()).thenReturn(orders);
+    when(orderService.getOrdersForPage(2)).thenReturn(orders);
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrders();
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
 
-    verify(orderService).getOrders();
+    verify(orderService).getOrdersForPage(2);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
   }
 

@@ -27,7 +27,7 @@ public interface OrderMapper {
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 
-  @Select("SELECT * FROM orders ORDER BY createdDate DESC")
+  @Select("SELECT * FROM orders ORDER BY createdDate DESC LIMIT #{limit} OFFSET #{offset}")
   @Results({
     @Result(property = "rnr.id", column = "rnrId"),
     @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
@@ -35,7 +35,7 @@ public interface OrderMapper {
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getAll();
+  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset);
 
   @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({

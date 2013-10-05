@@ -175,6 +175,7 @@ public class OrderServiceTest {
 
   @Test
   public void shouldGetOrdersFilledWithRequisition() throws Exception {
+    orderService.setPageSize("3");
     Rnr rnr1 = make(a(defaultRnr, with(id, 78L)));
     final Order order1 = new Order();
     order1.setRnr(rnr1);
@@ -189,13 +190,14 @@ public class OrderServiceTest {
       add(order2);
     }};
 
-    when(orderRepository.getOrders()).thenReturn(expectedOrders);
+    when(orderRepository.getOrdersForPage(2, 3)).thenReturn(expectedOrders);
     when(requisitionService.getFullRequisitionById(rnr1.getId())).thenReturn(rnr1);
     when(requisitionService.getFullRequisitionById(rnr2.getId())).thenReturn(rnr2);
 
-    List<Order> orders = orderService.getOrders();
+    List<Order> orders = orderService.getOrdersForPage(2);
+
     assertThat(orders, is(expectedOrders));
-    verify(orderRepository).getOrders();
+    verify(orderRepository).getOrdersForPage(2, 3);
     verify(requisitionService).getFullRequisitionById(rnr1.getId());
     verify(requisitionService).getFullRequisitionById(rnr2.getId());
   }

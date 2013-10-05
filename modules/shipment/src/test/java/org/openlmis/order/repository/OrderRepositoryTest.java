@@ -57,13 +57,13 @@ public class OrderRepositoryTest {
   }
 
   @Test
-  public void shouldGetOrders() {
+  public void shouldGetOrdersGivenPageNumberAndSize() {
     List<Order> expectedOrders = new ArrayList<>();
-    when(orderMapper.getAll()).thenReturn(expectedOrders);
+    when(orderMapper.getOrders(3, 3)).thenReturn(expectedOrders);
 
-    List<Order> orders = orderRepository.getOrders();
+    List<Order> orders = orderRepository.getOrdersForPage(2, 3);
 
-    verify(orderMapper).getAll();
+    verify(orderMapper).getOrders(3, 3);
     assertThat(orders, is(expectedOrders));
   }
 

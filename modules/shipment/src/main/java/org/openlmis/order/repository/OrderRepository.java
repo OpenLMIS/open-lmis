@@ -35,8 +35,8 @@ public class OrderRepository {
     }
   }
 
-  public List<Order> getOrders() {
-    return orderMapper.getAll();
+  public List<Order> getOrdersForPage(int page, int pageSize) {
+    return orderMapper.getOrders(pageSize, (page - 1) * pageSize);
   }
 
   public Order getById(Long id) {

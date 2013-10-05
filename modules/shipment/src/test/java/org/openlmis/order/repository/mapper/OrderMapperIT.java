@@ -10,7 +10,6 @@
 
 package org.openlmis.order.repository.mapper;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -45,7 +44,6 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -117,25 +115,17 @@ public class OrderMapperIT {
   }
 
   @Test
-  public void shouldGetAllOrders() throws Exception {
-    Order order1 = insertOrder(3L);
-    Order order2 = insertOrder(1L);
+  public void shouldGetOrdersForAPageGivenLimitAndOffset() throws Exception {
+    insertOrder(1L);
+    insertOrder(2L);
+    Order order3 = insertOrder(3L);
+    Order order4 = insertOrder(4L);
 
-    Date today = DateTime.now().toDate();
-    Date oneYearBack = DateTime.now().minusYears(1).toDate();
+    List<Order> orders = mapper.getOrders(2, 2);
 
-    updateOrderCreatedTime(order1, oneYearBack);
-    updateOrderCreatedTime(order2, today);
-
-    List<Order> orders = mapper.getAll();
     assertThat(orders.size(), is(2));
-    assertThat(orders.get(1).getId(), is(order1.getId()));
-    assertThat(orders.get(1).getRnr().getId(), is(order1.getRnr().getId()));
-    assertThat(orders.get(1).getShipmentFileInfo(), is(nullValue()));
-    assertThat(orders.get(0).getId(), is(order2.getId()));
-    assertThat(orders.get(0).getSupplyLine().getId(), is(supplyLine.getId()));
-    assertThat(orders.get(1).getSupplyLine().getId(), is(supplyLine.getId()));
-
+    assertThat(orders.get(0).getId(), is(order3.getId()));
+    assertThat(orders.get(1).getId(), is(order4.getId()));
   }
 
   @Test
@@ -154,7 +144,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
 
-    List<Order> orders = mapper.getAll();
+    List<Order> orders = mapper.getOrders(1, 0);
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
     assertThat(orders.get(0).getShipmentFileInfo().isProcessingError(), is(false));
   }

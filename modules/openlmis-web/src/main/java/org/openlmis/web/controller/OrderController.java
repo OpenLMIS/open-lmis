@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,8 +62,8 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getOrders() {
-    return response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrders()));
+  public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
+    return response(ORDERS, OrderDTO.getOrdersForView(orderService.getOrdersForPage(page)));
   }
 
   @RequestMapping(value = "/orders/{id}/download.csv", method = GET, headers = ACCEPT_CSV)
