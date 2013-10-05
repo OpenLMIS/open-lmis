@@ -19,18 +19,18 @@ function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsBySc
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'Select a Program'});
+            $scope.programs.unshift({'name':'-- Select a Program --'});
         });
 
         $scope.years = [];
         OperationYears.get(function (data) {
             $scope.years = data.years;
-            $scope.years.unshift('-- All Years --');
+            $scope.years.unshift('-- All --');
         });
 
         ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
-            $scope.schedules.unshift({'name':'Select a Schedule'});
+            $scope.schedules.unshift({'name':'-- Select a Schedule --'});
         });
 
         $scope.ChangeSchedule = function(){
@@ -49,7 +49,7 @@ function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsBySc
 
             RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
-                $scope.requisitionGroups.unshift({'name':'All requsition groups'});
+                $scope.requisitionGroups.unshift({'name':'-- All requsition groups --'});
             });
         }
 
@@ -76,7 +76,7 @@ function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsBySc
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': 'All Facility Types'});
+            $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
         });
 
         $scope.ChangeSchedule();
