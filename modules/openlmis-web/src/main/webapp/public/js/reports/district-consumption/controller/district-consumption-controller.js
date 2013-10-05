@@ -1,4 +1,4 @@
-function DistrictConsumptionReportController($scope, DistrictConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears,Months, $http, $routeParams,$location) {
+function DistrictConsumptionReportController($scope, $filter , ngTableParams ,DistrictConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears,Months, $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -13,12 +13,6 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
 
         // lookups and references
 
-        $scope.pagingOptions = {
-            pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 20,
-            totalServerItems: 0,
-            currentPage: 1
-        };
 
         // default to the monthly period type
         $scope.periodType = 'monthly';
@@ -111,10 +105,7 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
             return $scope.periodType == 'semi-anual';
         };
         $scope.filterGrid = function (){
-            //fixes ngGrid footer alignment
-            //$(".ngFooterPanel").css("margin-left",$(".span3").width() + ($(".span3").width()/3)) ;
-
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            $scope.getPagedDataAsync(0, 0);
         };
 
         //filter form data section
@@ -476,7 +467,43 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
 
         };
 
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function(params) {
+
+        // slice array data on pages
+        if($scope.data == undefined ){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
+            }
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+
         $scope.getPagedDataAsync = function (pageSize, page) {
+                        pageSize = 10000;
+                        page = 1;
+                        $scope.data = $scope.datarows = [];
                         var params  = {};
                         if(pageSize != undefined && page != undefined ){
                                 var params =  {
@@ -490,62 +517,13 @@ function DistrictConsumptionReportController($scope, DistrictConsumptionReport, 
                                 params[index] = value;
                         });
 
-                        // Add the sorting parameters
-                        $.each($scope.sortInfo.fields, function(index, value) {
-                            if(value != undefined) {
-                                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
+                        DistrictConsumptionReport.get(params, function(data) {
+                            if(data.pages != undefined){
+                                $scope.data = data.pages.rows;
+                                $scope.paramsChanged($scope.tableParams);
                             }
                         });
 
-                        DistrictConsumptionReport.get(params, function(data) {
-                            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
-                        });
-
         };
-
-        $scope.$watch('pagingOptions.currentPage', function () {
-            $scope.currentPage = $scope.pagingOptions.currentPage;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
-
-        $scope.$watch('pagingOptions.pageSize', function () {
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-        }, true);
-
-        $scope.$watch('sortInfo', function () {
-
-            $.each($scope.sortInfo.fields, function(index, value) {
-               // if(value != undefined)
-                   // $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            });
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }, true);
-
-    $scope.gridOptions = {
-        data: 'myData',
-        columnDefs:
-            [
-
-                { field: 'product', displayName: 'Product', width : "*"},
-                { field: 'district', displayName: 'Level', width : "*"},
-                { field: 'district', displayName: 'District', width: "*" },
-                { field: 'consumption', displayName: 'Consumption', width: "*" },
-                { field: 'totalPercentage', displayName: '% of Total', width : "*"}
-
-            ],
-        enablePaging: true,
-        enableSorting :true,
-        showFooter: true,
-        selectWithCheckboxOnly :false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-
-    };
 
 }

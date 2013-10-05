@@ -155,7 +155,29 @@
                 </div>
             </div>
             <div class="content-body" >
-                <div class="gridStyleReport" ng-grid="gridOptions"></div>
+                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <tr>
+                        <td>No data to show under selected filters</td>
+                    </tr>
+                </table>
+
+                <div ng-show="datarows.length > 0">
+                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+
+                        <tbody>
+                        <tr ng-repeat="row in datarows">
+                            <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                            <td data-title="'Facility Type'" style="width:100px" sortable="facilityType" >{{ row.facilityType }}</td>
+                            <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
+                            <td data-title="'Supplying Facility'" style="width:120px" sortable="supplyingFacility" >{{ row.supplyingFacility }}</td>
+                            <td data-title="'Product'" style="width:30%" sortable="productDescription"  >{{ row.productDescription }}</td>
+                            <td data-title="'Adjustment Type'" style="width:100px" sortable="adjustmentType"  >{{ row.adjustmentType }}</td>
+                            <td data-title="'Adjustment'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustment | number }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
           </div>
    </div>
