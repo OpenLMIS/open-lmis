@@ -40,7 +40,16 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Year <span class="label-required"></span></label>
 
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:90px;" class="input-small" ng-required="true" ng-change="LoadPeriods();"  name="year" id="year" ng-model="year">
+                                            <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Period <span class="label-required">*</span></label>
 
@@ -95,7 +104,7 @@
                 </table>
                 <div ng-show="datarows.length > 0">
                     <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
-                    <table  class="table-bordered table table-striped" ng-table="tableParams">
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
                         <tbody>
                         <tr ng-repeat="row in datarows">

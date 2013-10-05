@@ -1,4 +1,4 @@
-function NonReportingController($scope,ngTableParams, $filter, RequisitionGroupsByProgramSchedule , RequisitionGroups, NonReportingFacilities, ReportSchedules, ReportFacilityTypes , ReportPeriods, ReportPrograms, $http, $routeParams,$location) {
+function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsByScheduleAndYear,RequisitionGroupsByProgramSchedule ,OperationYears, RequisitionGroups, NonReportingFacilities, ReportSchedules, ReportFacilityTypes , ReportPeriods, ReportPrograms, $http, $routeParams,$location) {
         //to minimize and maximize the filter section
         var section = 1;
 
@@ -17,12 +17,16 @@ function NonReportingController($scope,ngTableParams, $filter, RequisitionGroups
            $scope.getPagedDataAsync(50000, 1);
         };
 
-
-
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
             $scope.programs.unshift({'name':'Select a Program'});
-        })
+        });
+
+        $scope.years = [];
+        OperationYears.get(function (data) {
+            $scope.years = data.years;
+            $scope.years.unshift('-- All Years --');
+        });
 
         ReportSchedules.get(function(data){
             $scope.schedules = data.schedules;
@@ -36,18 +40,38 @@ function NonReportingController($scope,ngTableParams, $filter, RequisitionGroups
                 $scope.requisitionGroups = [];
                 $scope.periods.push({name:'<--'});
                 $scope.requisitionGroups.push({name:'<--'});
+                $scope.period = '';
+
                 return;
             }
 
-            ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
-                $scope.periods = data.periods;
-                $scope.periods.unshift({'name': 'Select Period'});
-            });
+            $scope.LoadPeriods();
 
             RequisitionGroupsByProgramSchedule.get({program: $scope.program, schedule:$scope.schedule}, function(data){
                 $scope.requisitionGroups = data.requisitionGroupList;
                 $scope.requisitionGroups.unshift({'name':'All requsition groups'});
             });
+        }
+
+        $scope.LoadPeriods = function (){
+            if($scope.schedule == undefined || $scope.schedule == '') {
+                return;
+            }
+            $scope.period = '';
+            $scope.datarows = [];
+            if($scope.year != 0 ){
+                ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.schedule, year: $scope.year}, function(data){
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':''});
+
+                });
+            }else{
+                ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
+                    $scope.periods = data.periods;
+                    $scope.periods.unshift({'name': '-- Select Period --', id : ''});
+                });
+            }
+
         }
 
         ReportFacilityTypes.get(function(data) {
@@ -116,8 +140,14 @@ function NonReportingController($scope,ngTableParams, $filter, RequisitionGroups
         $scope.$watch('tableParams', $scope.paramsChanged , true);
 
         $scope.getPagedDataAsync = function (pageSize, page) {
+            // clear the data that is showing up now.
+            $scope.data = $scope.datarows = [];
+            // if period or schedule group is not selected, there is no reason to ask the server
+            if($scope.period == '' || $scope.program == '' || $scope.schedule == ''){
+                return;
+            }
             var params = $scope.getParams(pageSize, page);
-            $scope.data = [];
+
             NonReportingFacilities.get(params, function(data) {
                 if(data.pages != undefined){
                     $scope.summaries    =  data.pages.rows[0].summary;
