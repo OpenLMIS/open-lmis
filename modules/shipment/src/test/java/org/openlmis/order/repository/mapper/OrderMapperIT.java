@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.order.repository.mapper;
@@ -36,9 +34,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -236,11 +232,16 @@ public class OrderMapperIT {
     assertThat(status, is(order.getStatus()));
   }
 
-  private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
-    List paramList = new ArrayList();
-    paramList.add(new java.sql.Date(date.getTime()));
-    paramList.add(order.getId());
-    return queryExecutor.executeUpdate("UPDATE orders SET createdDate = ? WHERE id = ?", paramList);
+  @Test
+  public void shouldGet2PagesForGivenPageSizeOf3And4ROrders() throws Exception {
+    insertOrder(1L);
+    insertOrder(2L);
+    insertOrder(3L);
+    insertOrder(4L);
+
+    Integer numberOfPages = mapper.getNumberOfPages(3);
+
+    assertThat(numberOfPages, is(2));
   }
 
   private Order insertOrder(Long programId) {
