@@ -30,6 +30,7 @@ import static org.openlmis.web.response.OpenLmisResponse.ERROR;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -61,6 +62,7 @@ public class DistributionController extends BaseController {
     return openLmisResponse.response(CREATED);
   }
 
+  @RequestMapping(value = "/distributions", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sync(Long distributionId, FacilityDistributionData facilityDistributionData) {
     try {
       distributionService.sync(distributionId, facilityDistributionData);

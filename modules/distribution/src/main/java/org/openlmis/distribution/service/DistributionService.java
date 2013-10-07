@@ -12,12 +12,16 @@ package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.GeneralObservation;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DistributionService {
+
+  @Autowired
+  GeneralObservationService generalObservationService;
 
   @Autowired
   DistributionRepository repository;
@@ -31,6 +35,12 @@ public class DistributionService {
   }
 
   public void sync(Long distributionId, FacilityDistributionData facilityDistributionData) {
-    //To change body of created methods use File | Settings | File Templates.
+
+    GeneralObservation generalObservation = facilityDistributionData.getGeneralObservation();
+    generalObservation.setDistributionId(distributionId);
+    generalObservation.setFacilityId(facilityDistributionData.getFacilityId());
+
+    generalObservationService.save(generalObservation);
+
   }
 }

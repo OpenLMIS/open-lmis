@@ -18,12 +18,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.GeneralObservation;
 import org.openlmis.distribution.repository.DistributionRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -31,6 +32,9 @@ public class DistributionServiceTest {
 
   @InjectMocks
   DistributionService service;
+
+  @Mock
+  GeneralObservationService generalObservationService;
 
   @Mock
   DistributionRepository repository;
@@ -46,6 +50,22 @@ public class DistributionServiceTest {
     verify(repository).create(distribution);
     assertThat(initiatedDistribution, is(expectedDistribution));
 
+  }
+
+  @Test
+  public void shouldSyncFacilityDistributionData() {
+    Long distributionId = 1l;
+    Long facilityId = 1l;
+    FacilityDistributionData facilityDistributionData = mock(FacilityDistributionData.class);
+    GeneralObservation generalObservation = mock(GeneralObservation.class);
+    when(facilityDistributionData.getFacilityId()).thenReturn(facilityId);
+    when(facilityDistributionData.getGeneralObservation()).thenReturn(generalObservation);
+
+    service.sync(distributionId, facilityDistributionData);
+
+    verify(generalObservation).setDistributionId(distributionId);
+    verify(generalObservation).setFacilityId(facilityId);
+    verify(generalObservationService).save(facilityDistributionData.getGeneralObservation());
   }
 
   @Test
