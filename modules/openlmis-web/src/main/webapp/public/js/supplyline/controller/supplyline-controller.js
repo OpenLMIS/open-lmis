@@ -228,8 +228,8 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
     $scope.showConfirmSupplylineDeleteWindow = function (supplylineUnderDelete) {
         var dialogOpts = {
             id: "deleteSupplylineDialog",
-            header: messageService.get('Delete supplyline'),
-            body: messageService.get('delete.facility.confirm', supplylineUnderDelete.description, supplylineUnderDelete.id)
+            header: "Delete supply line",
+            body: "Please confirm that you want to delete the supply line with the ID: " + supplylineUnderDelete.id + " and Description: " + supplylineUnderDelete.description
         };
         $scope.supplylineUnderDelete = supplylineUnderDelete;
         OpenLmisDialog.newDialog(dialogOpts, $scope.deleteSupplylineCallBack, $dialog, messageService);
