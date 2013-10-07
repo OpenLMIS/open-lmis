@@ -11,6 +11,7 @@
 package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,9 @@ public class DistributionService {
 
   public Distribution get(Distribution distribution) {
     return repository.get(distribution);
+  }
+
+  public void sync(Long distributionId, FacilityDistributionData facilityDistributionData) {
+    //To change body of created methods use File | Settings | File Templates.
   }
 }

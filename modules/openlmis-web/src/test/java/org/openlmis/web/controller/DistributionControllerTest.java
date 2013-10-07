@@ -23,8 +23,10 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
@@ -37,8 +39,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.builder.DistributionBuilder.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.distribution.builder.DistributionBuilder.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -121,5 +123,14 @@ public class DistributionControllerTest {
       is("Distribution already initiated by XYZ at 2013-05-03 12:10"));
     assertThat((Distribution) responseData.get("distribution"), is(existingDistribution));
     assertThat((String) response.getBody().getData().get("success"), is("Distribution created successfully"));
+  }
+
+  @Test
+  public void shouldSyncFacilityDistributionData() {
+    Long distributionId = 1l;
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    ResponseEntity<OpenLmisResponse> response = controller.sync(distributionId, facilityDistributionData);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    verify(service).sync(distributionId, facilityDistributionData);
   }
 }
