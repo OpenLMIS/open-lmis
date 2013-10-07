@@ -32,6 +32,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.ProductBuilder.*;
@@ -314,6 +315,15 @@ public class RnrLineItemTest {
     lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
+  }
+
+  @Test
+  public void shouldReturnNormalizedConsumptionAsNullForEmergencyRequisition() throws Exception {
+    RnrCalcStrategy emergencyCalcStrategy = new EmergencyRnrCalcStrategy();
+
+    lineItem.calculateNormalizedConsumption(emergencyCalcStrategy);
+
+    assertThat(lineItem.getNormalizedConsumption(), is(nullValue()));
   }
 
   @Test
