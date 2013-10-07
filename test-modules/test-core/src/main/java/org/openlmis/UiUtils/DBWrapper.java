@@ -1241,4 +1241,12 @@ public class DBWrapper {
   public void deleteReport(String reportName) throws SQLException {
     update("DELETE FROM report_templates where name = '" + reportName + "'");
   }
+
+    public void insertOrders(String status, String username, String program) throws IOException, SQLException {
+        ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='" + program + "');");
+        while (rs.next()) {
+            update("insert into orders(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
+                    "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+        }
+        }
 }
