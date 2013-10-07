@@ -8,8 +8,8 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DROP TABLE IF EXISTS general_observations;
-CREATE TABLE general_observations (
+DROP TABLE IF EXISTS facility_visits;
+CREATE TABLE facility_visits (
   id               SERIAL PRIMARY KEY,
   distributionId   INTEGER REFERENCES distributions (id),
   facilityId       INTEGER REFERENCES facilities (id),

@@ -4,7 +4,7 @@ import lombok.Data;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
-public class GeneralObservation extends BaseModel {
+public class FacilityVisit extends BaseModel {
 
   private Long distributionId;
   private Long facilityId;

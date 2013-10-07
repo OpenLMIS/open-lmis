@@ -9,7 +9,8 @@ import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.Facilitator;
-import org.openlmis.distribution.domain.GeneralObservation;
+import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,10 +34,10 @@ import static org.openlmis.distribution.builder.DistributionBuilder.*;
 @ContextConfiguration(locations = "classpath*:test-applicationContext-distribution.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Transactional
-public class GeneralObservationMapperIT {
+public class FacilityVisitMapperIT {
 
   @Autowired
-  GeneralObservationMapper mapper;
+  FacilityVisitMapper mapper;
 
   @Autowired
   FacilityMapper facilityMapper;
@@ -75,7 +76,7 @@ public class GeneralObservationMapperIT {
   }
 
   @Test
-  public void shouldInsertGeneralObservation() {
+  public void shouldInsertFacilityVisit() {
 
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
@@ -87,23 +88,23 @@ public class GeneralObservationMapperIT {
 
     distributionMapper.insert(distribution);
 
-    GeneralObservation generalObservation = new GeneralObservation();
+    FacilityVisit facilityVisit = new FacilityVisit();
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
 
-    generalObservation.setConfirmedBy(confirmedBy);
-    generalObservation.setVerifiedBy(verifiedBy);
+    facilityVisit.setConfirmedBy(confirmedBy);
+    facilityVisit.setVerifiedBy(verifiedBy);
 
-    generalObservation.setObservation("I observed something");
+    facilityVisit.setObservation("I observed something");
 
-    generalObservation.setDistributionId(distribution.getId());
-    generalObservation.setFacilityId(facility.getId());
+    facilityVisit.setDistributionId(distribution.getId());
+    facilityVisit.setFacilityId(facility.getId());
 
-    mapper.insert(generalObservation);
+    mapper.insert(facilityVisit);
 
-    GeneralObservation expectedGeneralObservation = mapper.getByDistributionAndFacility(generalObservation.getDistributionId(), generalObservation.getFacilityId());
+    FacilityVisit expectedFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
 
-    assertThat(expectedGeneralObservation, is(generalObservation));
+    assertThat(expectedFacilityVisit, is(facilityVisit));
   }
 
 }

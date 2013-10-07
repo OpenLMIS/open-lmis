@@ -6,6 +6,6 @@ import lombok.Data;
 public class FacilityDistributionData {
 
   private Long facilityId;
-  private GeneralObservation generalObservation;
+  private FacilityVisit facilityVisit;
 
 }
