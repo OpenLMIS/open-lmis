@@ -74,9 +74,14 @@ public class ReportLookupController extends BaseController {
     }
 
 
-    @RequestMapping(value="/products", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value="/products.json", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<Product> getProducts(){
           return this.reportLookupService.getAllProducts();
+    }
+
+    @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
+    public List<Product> getProgramProducts( @PathVariable("programId") Long programId){
+      return this.reportLookupService.getProductsActiveUnderProgram(programId);
     }
 
     @RequestMapping(value="/products_by_category", method = GET, headers = BaseController.ACCEPT_JSON)

@@ -74,6 +74,10 @@ public class ReportLookupService {
         return productMapper.getAll();
     }
 
+    public List<Product> getProductsActiveUnderProgram(Long programId){
+        return productMapper.getProductsForProgram(programId);
+    }
+
     public List<Product> getProductListByCategory(Integer categoryId){
         if(categoryId == null || categoryId == -1 || categoryId == 0){
             return productMapper.getAll();

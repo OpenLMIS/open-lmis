@@ -330,6 +330,11 @@ services.factory('GetProductsCompleteListForAProgram',function($resource){
     return $resource('/programProducts/program/:programId/all.json',{},{});
 });
 
+services.factory('ReportProductsByProgram',function($resource){
+    return $resource('/reports/program-products/:programId.json',{},{});
+});
+
+
 services.factory('GetApprovedProductForFacilityTypeDetail', function($resource){
     return $resource('/facilityApprovedProducts/facilityType/:facilityTypeId/program/:programId/product/:productId',{},{});
 });

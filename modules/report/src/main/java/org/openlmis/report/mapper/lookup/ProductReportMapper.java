@@ -39,7 +39,11 @@ public interface ProductReportMapper {
     @Select("SELECT * FROM products WHERE code = #{code}")
     Product getProductByCode(String code);
 
-
+  @Select("SELECT p.id, p.primaryName as name, p.code " +
+      "     from products p " +
+      "         join program_products pp on p.id = pp.productId " +
+      "     where pp.programId = #{programId} and pp.active = true order by p.primaryName")
+  List<Product> getProductsForProgram(Long programId);
 
 
 }
