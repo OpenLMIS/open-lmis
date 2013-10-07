@@ -49,7 +49,8 @@
                                     <label class="labels">Period<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="filterObject.period" required="true">
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  ng-change="filterGrid();" name="period" ng-model="filterObject.period" required="true">
+
                                             <option  ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
@@ -60,7 +61,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-change="loadFacilities()" ng-model="filterObject.facilityType" >
+                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-change="loadFacilities();filterGrid();" ng-model="filterObject.facilityType" >
 
                                             <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
@@ -116,7 +117,7 @@
                             <td data-title="'Category'" style="width:150px" sortable="category" >{{ row.category }}</td>
                             <td data-title="'Product Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
                             <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                            <td data-title="'Beginning Balance'" class="number" style="width:80px" sortable="recipts"  >{{ row.openingBalance | number }}</td>
+                            <td data-title="'Beginning Balance'" class="number" style="width:80px" sortable="openingBalance"  >{{ row.openingBalance | number }}</td>
                             <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts"  >{{ row.receipts | number }}</td>
                             <td data-title="'Issues'" class="number" style="width:80px" sortable="issues"  >{{ row.issues | number }}</td>
                             <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustments | number }}</td>

@@ -27,14 +27,6 @@ function SupplyStatusController($scope, $filter, ngTableParams
         $scope.getPagedDataAsync(0, 0);
     };
 
-    //filter form data section
-    $scope.filterOptions = {
-        period:$scope.period,
-        filterText: "",
-        useExternalFilter: false
-    };
-
-
 
     //filter form data section
     $scope.filterObject =  {
