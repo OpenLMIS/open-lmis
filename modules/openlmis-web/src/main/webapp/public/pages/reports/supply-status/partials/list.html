@@ -109,7 +109,7 @@
 
                 <div ng-show="datarows.length > 0">
                     <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
-                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
 
                         <tbody>
                         <tr ng-repeat="row in datarows">

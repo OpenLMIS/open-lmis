@@ -78,6 +78,7 @@
                                          </select>
                                     </div>
                                 </div>
+
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Facility Type</label>
 
@@ -87,6 +88,7 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Requisition Groups</label>
 
@@ -96,21 +98,14 @@
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="clearfix"></div>
-                                <br />
-                                <div class="form-cell horizontalFilters pull-right legend" style="text-align: center">
-                                     <span ng-repeat="summary in summaries">
-                                         <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
-                                     </span>
 
-                                </div>
                             </div>
                          </form>
                 </div>
 
             </div>
-                <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
+
                 <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
                     <tr>
                         <td>No data to show under selected filters</td>
@@ -118,7 +113,12 @@
                 </table>
 
                 <div ng-show="datarows.length > 0">
-                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                        <br />
+                        <span ng-repeat="summary in summaries">
+                             <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                         </span>
+                    </div>
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
                         <tbody>
@@ -134,8 +134,6 @@
                                 <span ng-show="row.amc == 0" class="icon-warning-sign" tooltip="AMC is 0, which indicates that there may not be enough data to interprate this status."></span>
                                 {{ row.status }}
                             </div></td>
-
-
                         </tr>
                         </tbody>
                     </table>

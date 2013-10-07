@@ -19,7 +19,7 @@
         <div class="box-content container-fluid"  ng-show="show(1)">
 
             <div class="row-fluid">
-                <div class="span3">
+                <div class="sidebar">
 
                     <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
@@ -96,7 +96,7 @@
                             <div class="form-cell horizontalFilters">
                                 <label class="labels">Facility Name<span  class="label-required"> *</span></label>
                                 <div class="form-field">
-                                    <select ui-select2 style="width:250px;" id="facility-name"  name="facility" ng-model="facility">
+                                    <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility">
                                         <option ng-repeat="option in allFacilities" value="{{option.id}}">{{option.code}}-{{option.name}}</option>
                                     </select>
                                 </div>
@@ -109,7 +109,7 @@
                                 <label class="labels">Product</label>
 
                                 <div class="form-field">
-                                    <select ui-select2 style="width:250px;" name="product"  ng-model="product" >
+                                    <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
                                         <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
 
                                     </select>
@@ -126,7 +126,7 @@
                     </div>
 
                 </div>
-                <div class="span9">
+                <div class="content-body">
                     <div class="gridStyleReport" ng-grid="gridOptions"></div>
                 </div>
             </div>

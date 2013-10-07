@@ -156,7 +156,7 @@
                                          <label class="labels">Requisition Groups</label>
 
                                          <div class="form-field">
-                                             <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" >
+                                             <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="rgroup" >
                                                  <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
                                              </select>
                                          </div>
@@ -176,7 +176,7 @@
 
                          <div ng-show="datarows.length > 0">
                              <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
-                             <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                             <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
 
                                  <tbody>
                                  <tr ng-repeat="row in datarows">
