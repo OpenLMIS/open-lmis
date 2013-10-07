@@ -17,6 +17,7 @@ public class GeographicZone {
 
     private Integer id;
     private String name;
+    private String parent;
     private String code;
 
 }
