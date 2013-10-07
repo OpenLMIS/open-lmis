@@ -1,4 +1,5 @@
-function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
+function StockImbalanceController($scope, $filter, ngTableParams,
+                                  StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
@@ -29,15 +30,8 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
     // lookups and references
 
 
-    $scope.pagingOptions = {
-        pageSizes: [ 20, 40, 50, 100],
-        pageSize: 20,
-        totalServerItems: 0,
-        currentPage: 1
-    };
-
     $scope.filterGrid = function () {
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        $scope.getPagedDataAsync(0, 0);
     };
 
     $scope.startYears = [];
@@ -263,7 +257,6 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         }
     });
 
-     $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
     $scope.exportReport = function (type) {
         //$scope.message ="";
@@ -278,34 +271,7 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         //}
     }
 
-    $scope.goToPage = function (page, event) {
-        angular.element(event.target).parents(".dropdown").click();
-        $location.search('page', page);
-    };
 
-    $scope.$watch("currentPage", function () {  //good watch no problem
-
-        if ($scope.currentPage != undefined && $scope.currentPage != 1) {
-            //when clicked using the links they have done updated the paging info no problem here
-            //or using the url page param
-            //$scope.pagingOptions.currentPage = $scope.currentPage;
-            $location.search("page", $scope.currentPage);
-        }
-    });
-
-    $scope.$on('$routeUpdate', function () {
-        if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-            $location.search('page', 1);
-            return;
-        }
-    });
-
-    $scope.setPagingData = function (data, page, pageSize, total) {
-        $scope.myData = data;
-        $scope.pagingOptions.totalServerItems = total;
-        $scope.numberOfPages = ( Math.ceil(total / pageSize)) ? Math.ceil(total / pageSize) : 1;
-
-    };
 
 
     //filter form data section
@@ -335,10 +301,42 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
         useExternalFilter: false
     };
 
-    $scope.stockImbalance = {};
-    $scope.stockImbalance = angular.copy($scope.filterObject);
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function(params) {
+
+        // slice array data on pages
+        if($scope.data == undefined ){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
+            }
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
 
     $scope.getPagedDataAsync = function (pageSize, page) {
+
+        pageSize = 10000;
+        page = 1;
         var params = {};
         //alert('xxx');
         if (pageSize != undefined && page != undefined) {
@@ -347,157 +345,24 @@ function StockImbalanceController($scope, StockImbalanceReport,RequisitionGroups
                 "page": page
             };
         }
-        localStorageService.remove(localStorageKeys.REPORTS.STOCK_IMBALANCE);
-        localStorageService.add(localStorageKeys.REPORTS.STOCK_IMBALANCE, JSON.stringify($scope.filterObject));
+
         $.each($scope.filterObject, function (index, value) {
             //if(value != undefined)
             params[index] = value;
         });
 
         StockImbalanceReport.get(params, function (data) {
-            $scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
+            $scope.data = data.pages.rows;
+            $scope.paramsChanged($scope.tableParams);
         });
 
     };
 
-    $scope.$watch('pagingOptions.currentPage', function () {
-        $scope.currentPage = $scope.pagingOptions.currentPage;
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-    }, true);
 
-    $scope.$watch('pagingOptions.pageSize', function () {
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-    }, true);
-
-    $scope.sortInfo = { fields: ["supplyingfacility", "facility","product"], directions: ["ASC","ASC","ASC"]};
-    // put default sort criteria
-    $.each($scope.sortInfo.fields, function(index, value) {
-        if(value != undefined) {
-            $scope.filterObject['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-        }
-    });
-    $scope.$watch('sortInfo', function () {
-        $.each($scope.sortInfo.fields, function (index, value) {
-            if (value != undefined)
-                $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-        });
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-    }, true);
 
     $scope.formatNumber = function (value, format) {
         return utils.formatNumber(value, format);
     }
-
-
-    $scope.gridOptions = {
-        data: 'myData',
-        columnDefs: [
-        { field: 'supplyingFacility', displayName: 'Supplying Facility', width: "180px;"},
-            { field: 'facility', displayName: 'Facility', width: "150px;", resizable: false},
-            { field: 'product', displayName: 'Product', width: "300px;" },
-            { field: 'physicalCount', displayName: 'Physical Count', width: "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right; padding-right: 5px;" ng-class="col.colIndex()"><span ng-cell-text style="margin-right: 45px;">{{formatNumber(COL_FIELD,"0,000")}}</span></div>'},
-            { field: 'amc', displayName: 'AMC', width: "90px;", cellTemplate: '<div class="ngCellText" style="text-align:right; padding-right: 5px;" ng-class="col.colIndex()"><span ng-cell-text style="margin-right: 45px;">{{formatNumber(COL_FIELD,"0,000")}}</span></div>'},
-            { field: 'months', displayName: 'MOS', width: "90px;", cellTemplate: '<div class="ngCellText" style="text-align:right; padding-right: 5px;" ng-class="col.colIndex()"><span ng-cell-text style="margin-right: 45px;">{{formatNumber(COL_FIELD,"0,000")}}</span></div>'},
-            { field: 'orderQuantity', displayName: 'Order Quantity', width: "150px;", cellTemplate: '<div class="ngCellText" style="text-align:right; padding-right: 5px;" ng-class="col.colIndex()"><span ng-cell-text style="margin-right: 45px;">{{formatNumber(COL_FIELD,"0,000")}}</span></div>'},
-            { field: 'status', displayName: 'Status', width: "150px;"}
-        ],
-        enablePaging: true,
-        enableSorting: true,
-        showFooter: true,
-        selectWithCheckboxOnly: false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-
-    };
-
-  /*  var checkrequired = function () {
-        var reqMsg = "Please fill the required fields."
-        var check = "x";
-
-        if (check != "") {
-            check = document.getElementById('periodType').value;
-            $scope.message = check == "" ? reqMsg : "";
-        }
-
-        if (check != "") {
-            check = document.getElementById('startYear').value;
-            //alert('Year' + check);
-            $scope.message = check == "" ? reqMsg : "";
-        }
-
-        if (check != "") {
-            //next required
-            if ($scope.reporting == "monthly") {
-                check = document.getElementById('startMonth').value;
-            } else {
-                check = document.getElementById('startQuarter').value;
-            }
-            //alert('Month' + check);
-            $scope.message = check == "" ? reqMsg : "";
-        }
-
-        if (check != "") {
-            check = document.getElementById('product').value;
-            //alert('Product' + check);
-            $scope.message = check == "" ? reqMsg : "";
-        }
-
-    }*/
-
-    /*function parseJsonDate(jsonDate) {
-        var offset = new Date().getTimezoneOffset() * 60000;
-        var parts = /\/Date\((-?\d+)([+-]\d{2})?(\d{2})?.*//*.exec(jsonDate);
-        if (parts[2] == undefined) parts[2] = 0;
-        if (parts[3] == undefined) parts[3] = 0;
-        return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
-    };*/
-
-
-    /*var init = function () {
-
-        $scope.periodType = $scope.defaultSettings('P');
-
-        if ($scope.periodType == 'quarterly') {
-            $scope.startQuarter = $scope.defaultSettings('Q');
-        } else {
-            $scope.startMonth = $scope.defaultSettings('M');
-        }
-        $scope.startYear = $scope.defaultSettings('Y');
-    };
-    init();*/
-
-    $scope.$on('$viewContentLoaded', function(){
-
-        var recentFilter = localStorageService.get(localStorageKeys.REPORTS.STOCK_IMBALANCE);
-
-
-         eval('var obj='+recentFilter);
-         if(recentFilter != undefined){
-         $scope.stockImbalance = angular.copy(obj);
-         //recentFilter = JSON.parse(recentFilter);
-         //var params = {};
-
-        /* $.each(obj, function (index, value) {
-             if(index == 'periodId'){
-                 $scope.period = value;
-             }else if(index == 'scheduleId'){
-                 $scope.schedule = value;
-             }
-         });*/
-
-
-         //StockImbalanceReport.get(params, function (data) {
-         //$scope.setPagingData(data.pages.rows, page, pageSize, data.pages.total);
-         //});
-         }
-    });
-
 
 
 }
