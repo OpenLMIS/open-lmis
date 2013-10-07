@@ -287,28 +287,23 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         }
         $scope.filterGrid();
     });
-        $scope.$watch('startMonth', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection-1;
-                adjustEndMonths();
-            }else{
-                $scope.startMonth = (date.getMonth()+1 ).toString();
-                $scope.filterObject.fromMonth =  (date.getMonth()+1);
-            }
-            $scope.filterGrid();
-        });
 
-        $scope.$watch('endMonth', function(selection){
+
+    $scope.$watch('startMonth', function(selection){
+        if($scope.startMonth != undefined || $scope.startMonth == ""){
+            adjustEndMonths();
+        }else{
             var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toMonth =  selection-1;
-            }else{
-                $scope.endMonth = (date.getMonth() +1 ).toString();
-                $scope.filterObject.toMonth =  (date.getMonth()+1);
-            }
-            $scope.filterGrid();
-        });
+            $scope.endMonth = $scope.startMonth = (date.getMonth()+1 ).toString();
+        }
+        $scope.filterObject.fromMonth = $scope.startMonth;
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('endMonth', function(selection){
+        $scope.filterObject.toMonth = $scope.endMonth;
+        $scope.filterGrid();
+    });
 
     var adjustEndMonths = function(){
         if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
@@ -318,11 +313,6 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
                     $scope.endMonths.push({'name':obj.name, 'value': obj.value});
                 }
             });
-            if($scope.endMonth < $scope.startMonth){
-                $scope.endMonth = $scope.startMonth;
-            }
-        }else{
-            $scope.endMonths = $scope.startMonths;
         }
     }
 

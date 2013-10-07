@@ -292,47 +292,35 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         $scope.filterGrid();
     });
 
-        $scope.$watch('startMonth', function(selection){
-
+    $scope.$watch('startMonth', function(selection){
+        if($scope.startMonth != undefined || $scope.startMonth == ""){
+            adjustEndMonths();
+        }else{
             var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromMonth =  selection-1;
-                adjustEndMonths();
-            }else{
-                $scope.startMonth = (date.getMonth()+1 );
-                $scope.filterObject.fromMonth =  (date.getMonth()+1);
-            }
-            $scope.filterGrid();
-        });
-
-
-        $scope.$watch('endMonth', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toMonth =  selection-1;
-            }else{
-                $scope.endMonth = (date.getMonth() +1 );
-                $scope.filterObject.toMonth =  (date.getMonth()+1);
-            }
-            $scope.filterGrid();
-
-        });
-
-        var adjustEndMonths = function(){
-            if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
-                $scope.endMonths = [];
-                $.each($scope.startMonths,function(idx,obj){
-                    if( obj.value >= $scope.startMonth){
-                        $scope.endMonths.push({'name':obj.name, 'value': obj.value});
-                    }
-                });
-                if($scope.endMonth < $scope.startMonth){
-                    $scope.endMonth = $scope.startMonth;
-                }
-            }else{
-                $scope.endMonths = $scope.startMonths;
-            }
+            $scope.endMonth = $scope.startMonth = (date.getMonth()+1 ).toString();
         }
+        $scope.filterObject.fromMonth = $scope.startMonth;
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('endMonth', function(selection){
+        $scope.filterObject.toMonth = $scope.endMonth;
+        $scope.filterGrid();
+    });
+
+    var adjustEndMonths = function(){
+        if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
+            $scope.endMonths = [];
+            $.each($scope.startMonths,function(idx,obj){
+                if(obj.value >= $scope.startMonth){
+                    $scope.endMonths.push({'name':obj.name, 'value': obj.value});
+                }
+            });
+        }
+    }
+
+
+
         var adjustEndSemiAnnuals = function(){
 
             if($scope.startYear == $scope.endYear){
