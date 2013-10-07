@@ -180,7 +180,9 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         // load products
         ReportProductsByProgram.get({programId: $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({id: '',name: '-- Select Product --'});
+            $scope.products.unshift({id: '',name: '-- Indicator / Tracer Product --', id:'0'});
+            $scope.products.unshift({id: '',name: '-- All Products --', id:'-1'});
+
         });
         // load facilities
         FacilitiesByProgramParams.get({
@@ -189,7 +191,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
                 type: 0
             }, function(data){
                 $scope.facilities = data.facilities;
-                $scope.facilities.unshift({name:'-- Select a Facility --'});
+                $scope.facilities.unshift({name:'-- All Facilities --'});
             }
         );
 
