@@ -6,25 +6,57 @@
 	<style name="err_open" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_open_balance} == 1]]></conditionExpression>
-			<style backcolor="#FFFFFF" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
+				<box>
+					<pen lineWidth="0.25" lineColor="#000000"/>
+					<topPen lineWidth="0.25" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineColor="#000000"/>
+				</box>
+			</style>
 		</conditionalStyle>
 	</style>
 	<style name="err_received" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_received} == 1]]></conditionExpression>
-			<style backcolor="#FFFFFF" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
+				<box>
+					<pen lineWidth="0.25" lineColor="#000000"/>
+					<topPen lineWidth="0.25" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineColor="#000000"/>
+				</box>
+			</style>
 		</conditionalStyle>
 	</style>
 	<style name="err_required" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_required} == 1]]></conditionExpression>
-			<style backcolor="#FFFFFF" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
+				<box>
+					<pen lineWidth="0.25" lineColor="#000000"/>
+					<topPen lineWidth="0.25" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineColor="#000000"/>
+				</box>
+			</style>
 		</conditionalStyle>
 	</style>
 	<style name="err_soh" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_stockinhand} == 1]]></conditionExpression>
-			<style mode="Transparent" backcolor="#FFFFFF" fill="Solid" pattern="" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="true"/>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
+				<box>
+					<pen lineWidth="0.25" lineColor="#000000"/>
+					<topPen lineWidth="0.25" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineColor="#000000"/>
+				</box>
+			</style>
 		</conditionalStyle>
 	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
