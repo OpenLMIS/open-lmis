@@ -155,4 +155,8 @@ public class OrderService {
   public Integer getNumberOfPages() {
     return orderRepository.getNumberOfPages(pageSize);
   }
+
+  public Integer getPageSize() {
+    return pageSize;
+  }
 }

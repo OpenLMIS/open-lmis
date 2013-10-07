@@ -98,6 +98,7 @@ public class OrderControllerTest {
     List<Order> orders = new ArrayList<Order>() {{
       new Order();
     }};
+
     mockStatic(OrderDTO.class);
     when(orderService.getOrdersForPage(2)).thenReturn(orders);
     List<OrderDTO> orderDTOs = new ArrayList<>();
@@ -107,6 +108,24 @@ public class OrderControllerTest {
 
     verify(orderService).getOrdersForPage(2);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
+  }
+
+  @Test
+  public void shouldAddPageInfoForOrders() throws Exception {
+    when(orderService.getPageSize()).thenReturn(3);
+
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+
+    assertThat((Integer) fetchedOrders.getBody().getData().get("pageSize"), is(3));
+  }
+
+  @Test
+  public void shouldAddTotalNumberOfPagesForOrders() throws Exception {
+    when(orderService.getNumberOfPages()).thenReturn(5);
+
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+
+    assertThat((Integer) fetchedOrders.getBody().getData().get("numberOfPages"), is(5));
   }
 
   @Test
@@ -124,15 +143,6 @@ public class OrderControllerTest {
     assertThat(orderFileTemplate, is(expectedOrderFileTemplateDTO));
     verify(orderService).getOrder(orderId);
     verify(orderService).getOrderFileTemplateDTO();
-  }
-
-  @Test
-  public void shouldGetNumberOfPagesForViewOrders() throws Exception {
-    when(orderService.getNumberOfPages()).thenReturn(5);
-
-    ResponseEntity<OpenLmisResponse> numberOfPages = orderController.getNumberOfPages();
-
-    assertThat((Integer) numberOfPages.getBody().getData().get("numberOfPages"), is(5));
   }
 
   @Test

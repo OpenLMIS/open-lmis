@@ -43,6 +43,8 @@ public class OrderController extends BaseController {
   public static final String ORDER = "order";
   public static final String ORDER_FILE_TEMPLATE = "orderFileTemplate";
   public static final String DATE_FORMATS = "dateFormats";
+  public static final String PAGE_SIZE = "pageSize";
+  public static final String NUMBER_OF_PAGES = "numberOfPages";
 
   @Autowired
   private OrderService orderService;
@@ -61,7 +63,10 @@ public class OrderController extends BaseController {
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
-    return response(ORDERS, getOrdersForView(orderService.getOrdersForPage(page)));
+    ResponseEntity<OpenLmisResponse> response = response(ORDERS, getOrdersForView(orderService.getOrdersForPage(page)));
+    response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+    response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    return response;
   }
 
   @RequestMapping(value = "/orders/{id}/download.csv", method = GET, headers = ACCEPT_CSV)
@@ -94,11 +99,5 @@ public class OrderController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllDateFormats() {
     Set<DateFormat> dateFormats = orderService.getAllDateFormats();
     return response(DATE_FORMATS, dateFormats);
-  }
-
-  @RequestMapping(value = "/orders/number-of-pages", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getNumberOfPages() {
-    return OpenLmisResponse.response("numberOfPages", orderService.getNumberOfPages());
   }
 }

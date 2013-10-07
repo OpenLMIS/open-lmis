@@ -317,7 +317,14 @@ public class OrderServiceTest {
 
   }
 
+  @Test
+  public void shouldGetPageSize() throws Exception {
+    orderService.setPageSize("4");
 
+    Integer pageSize = orderService.getPageSize();
+
+    assertThat(pageSize, is(4));
+  }
 
   @Test
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
