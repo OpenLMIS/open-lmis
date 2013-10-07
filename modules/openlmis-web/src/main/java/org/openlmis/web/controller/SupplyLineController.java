@@ -136,6 +136,7 @@ public class SupplyLineController extends BaseController {
     // save/update
     private ResponseEntity<OpenLmisResponse> saveSupplyline(SupplyLine supplyLine, boolean createOperation) {
         try {
+            supplyLine.setExportOrders(true);
             supplyLineService.save(supplyLine);
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success("'" + supplyLine.getDescription() + "' "+ (createOperation?"created":"updated") +" successfully");
 
