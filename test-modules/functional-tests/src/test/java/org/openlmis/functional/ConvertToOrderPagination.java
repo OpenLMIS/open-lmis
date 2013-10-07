@@ -102,7 +102,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
     selectRequisitionToBeConvertedToOrder(1);
     testWebDriver.getElementByXpath("//a[contains(text(), '1') and @class='ng-binding']").click();
-    selectRequisitionToBeConvertedToOrder(2);
+    selectRequisitionToBeConvertedToOrder(1);
     convertToOrder(convertOrderPage);
 
     verifyNumberOfPageLinks(49, 50);
@@ -211,7 +211,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(2000);
     String baseXpath = "(//input[@class='ngSelectionCheckbox'])";
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]"));
     testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]").click();
