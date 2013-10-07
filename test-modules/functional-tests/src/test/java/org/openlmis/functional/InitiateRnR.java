@@ -408,6 +408,8 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyErrorMessages("No current period defined. Please contact the Admin.");
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    homePage.clickProceed();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -443,17 +445,20 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
 
     verifyErrorMessages("No requisitions awaiting authorization");
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    homePage.clickProceed();
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testRnRErrorMessageForSubmitterWithRequisitionAlreadyAuthorized(String program,
-                                                                                                   String userSIC,
-                                                                                                   String categoryCode,
-                                                                                                   String password,
-                                                                                                   String regimenCode,
-                                                                                                   String regimenName,
-                                                                                                   String regimenCode2,
-                                                                                                   String regimenName2) throws Exception {
+                                                                              String userSIC,
+                                                                              String categoryCode,
+                                                                              String password,
+                                                                              String regimenCode,
+                                                                              String regimenName,
+                                                                              String regimenCode2,
+                                                                              String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -500,6 +505,36 @@ public class InitiateRnR extends TestCaseHelper {
       program);
 
     verifyErrorMessages("R&R for current period already submitted");
+
+    homePage2.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    homePage2.clickProceed();
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testRnRErrorMessageForAuthorizerWhenNoPeriodDefined(String program,
+                                                                  String userSIC,
+                                                                  String categoryCode,
+                                                                  String password,
+                                                                  String regimenCode,
+                                                                  String regimenName,
+                                                                  String regimenCode2,
+                                                                  String regimenName2) throws Exception {
+    String errorMessage = "No current period defined. Please contact the Admin.";
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
+
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    verifyErrorMessages(errorMessage);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    verifyErrorMessages(errorMessage);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
