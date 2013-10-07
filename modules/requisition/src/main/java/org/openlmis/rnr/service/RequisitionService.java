@@ -263,6 +263,7 @@ public class RequisitionService {
 
   public Rnr getFullRequisitionById(Long id) {
     Rnr savedRnr = requisitionRepository.getById(id);
+    savedRnr.setCalcStrategy(savedRnr.isEmergency() ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy());
     fillSupportingInfo(savedRnr);
     fillSupplyingDepot(savedRnr);
     savedRnr.setSubmittedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.SUBMITTED.toString()));

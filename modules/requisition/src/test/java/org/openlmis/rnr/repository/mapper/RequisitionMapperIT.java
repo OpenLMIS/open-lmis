@@ -407,7 +407,7 @@ public class RequisitionMapperIT {
   public void shouldOnlyLoadEmergencyRequisitionDataForGivenQuery() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, true);
 
-    List<Rnr> fetchedRnr = mapper.getInitiatedEmergencyRequisition(facility.getId(), program.getId());
+    List<Rnr> fetchedRnr = mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
 
     assertThat(fetchedRnr.get(0).getId(), is(requisition.getId()));
     assertThat(fetchedRnr.get(0).getPeriod(), is(processingPeriod1));

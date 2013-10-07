@@ -21,6 +21,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -60,6 +61,8 @@ public class RnrLineItemTest {
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
   ProgramRnrTemplate template;
 
+  private RnrCalcStrategy calcStrategy;
+
   @Before
   public void setUp() throws Exception {
     period = new ProcessingPeriod() {{
@@ -75,6 +78,7 @@ public class RnrLineItemTest {
     LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
     lossesAndAdjustmentsList = asList(
       new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
+    calcStrategy = new RnrCalcStrategy();
   }
 
   private void addVisibleColumns(List<RnrColumn> templateColumns) {
@@ -294,7 +298,7 @@ public class RnrLineItemTest {
     lineItem.setQuantityDispensed(29);
 
 
-    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(25));
   }
@@ -307,7 +311,7 @@ public class RnrLineItemTest {
     lineItem.setDosesPerDispensingUnit(10);
     lineItem.setNormalizedConsumption(37345);
 
-    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getNormalizedConsumption(), is(37));
   }
@@ -317,10 +321,10 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(45);
 
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
     period.setNumberOfMonths(3);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(15));
   }
@@ -328,13 +332,13 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateAMCAndMaxStockQuantityAndOrderedQuantityOnlyWhenAuthorized() throws Exception {
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
-    verify(spyLineItem).calculateAmc(period);
-    verify(spyLineItem).calculateMaxStockQuantity();
-    verify(spyLineItem).calculateOrderQuantity();
+    verify(spyLineItem).calculateAmc(calcStrategy, period);
+    verify(spyLineItem).calculateMaxStockQuantity(calcStrategy);
+    verify(spyLineItem).calculateOrderQuantity(calcStrategy);
   }
 
   @Test
@@ -342,10 +346,10 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(45);
     lineItem.setPreviousNormalizedConsumptions(asList(12));
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(14));
   }
@@ -355,10 +359,10 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(45);
     lineItem.setPreviousNormalizedConsumptions(asList(12, 13));
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -368,10 +372,10 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(45);
     lineItem.setPreviousNormalizedConsumptions(asList(12));
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(29));
   }
@@ -380,10 +384,10 @@ public class RnrLineItemTest {
   public void shouldCalculateAmcWhenNumberOfMonthsInPeriodIsOneAndOnlyNoPreviousConsumptionsAreAvailable() throws Exception {
     lineItem.setNormalizedConsumption(45);
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
     period.setNumberOfMonths(1);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(45));
   }
@@ -393,10 +397,10 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(45);
 
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption");
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
     period.setNumberOfMonths(2);
 
-    spyLineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(spyLineItem.getAmc(), is(23));
   }
@@ -410,7 +414,7 @@ public class RnrLineItemTest {
     lineItem.setNormalizedConsumption(37345);
     lineItem.setMaxMonthsOfStock(10);
 
-    lineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getMaxStockQuantity(), is(370));
   }
@@ -426,7 +430,7 @@ public class RnrLineItemTest {
     lineItem.setMaxStockQuantity(370);
     lineItem.setStockInHand(300);
 
-    lineItem.calculateForFullSupply(period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getCalculatedOrderQuantity(), is(366));
   }
@@ -525,7 +529,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(99);
-    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getStockInHand(), is(4));
   }
@@ -538,7 +542,7 @@ public class RnrLineItemTest {
     }};
     ProgramRnrTemplate template = new ProgramRnrTemplate(columns);
     lineItem.setStockInHand(66);
-    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getStockInHand(), is(66));
   }
@@ -551,7 +555,7 @@ public class RnrLineItemTest {
     }};
     ProgramRnrTemplate template = new ProgramRnrTemplate(columns);
     lineItem.setQuantityDispensed(4);
-    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getQuantityDispensed(), is(10));
   }
@@ -564,7 +568,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(0);
-    lineItem.calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
 
     assertThat(lineItem.getQuantityDispensed(), is(0));
   }

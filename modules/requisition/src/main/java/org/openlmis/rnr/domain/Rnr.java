@@ -36,303 +36,306 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @EqualsAndHashCode(callSuper = false)
 public class Rnr extends BaseModel {
 
-  private boolean emergency;
-  private Facility facility;
-  private Program program;
-  private ProcessingPeriod period;
-  private RnrStatus status;
-  private Money fullSupplyItemsSubmittedCost = new Money("0");
-  private Money nonFullSupplyItemsSubmittedCost = new Money("0");
+    private boolean emergency;
+    private Facility facility;
+    private Program program;
+    private ProcessingPeriod period;
+    private RnrStatus status;
+    private Money fullSupplyItemsSubmittedCost = new Money("0");
+    private Money nonFullSupplyItemsSubmittedCost = new Money("0");
 
-  private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
-  private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
-  private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
+    private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
+    private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
+    private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
 
-  @Transient
-  @JsonIgnore
-  private List<RnrLineItem> allLineItems = new ArrayList<>();
+    @Transient
+    @JsonIgnore
+    private List<RnrLineItem> allLineItems = new ArrayList<>();
 
-  private Facility supplyingDepot;
-  private Long supervisoryNodeId;
-  private Date submittedDate;
-  private List<Comment> comments = new ArrayList<>();
+    private Facility supplyingDepot;
+    private Long supervisoryNodeId;
+    private Date submittedDate;
+    private List<Comment> comments = new ArrayList<>();
 
-  public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, Long modifiedBy, Long createdBy) {
-    facility = new Facility();
-    facility.setId(facilityId);
-    program = new Program();
-    program.setId(programId);
-    period = new ProcessingPeriod();
-    period.setId(periodId);
-    this.emergency = emergency;
-    this.modifiedBy = modifiedBy;
-    this.createdBy = createdBy;
-  }
+    @JsonIgnore
+    private RnrCalcStrategy calcStrategy;
 
-  public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
-             List<Regimen> regimens, Long modifiedBy, Long createdBy) {
-    this(facilityId, programId, periodId, emergency, modifiedBy, createdBy);
-    fillLineItems(facilityTypeApprovedProducts);
-    fillActiveRegimenLineItems(regimens);
-  }
-
-  private void fillActiveRegimenLineItems(List<Regimen> regimens) {
-    for (Regimen regimen : regimens) {
-      if (regimen.getActive()) {
-        RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
-        regimenLineItem.setCode(regimen.getCode());
-        regimenLineItem.setName(regimen.getName());
-        regimenLineItems.add(regimenLineItem);
-      }
+    public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, Long modifiedBy, Long createdBy) {
+        facility = new Facility();
+        facility.setId(facilityId);
+        program = new Program();
+        program.setId(programId);
+        period = new ProcessingPeriod();
+        period.setId(periodId);
+        this.emergency = emergency;
+        this.modifiedBy = modifiedBy;
+        this.createdBy = createdBy;
     }
-  }
 
-  public Rnr(Facility facility, Program program, ProcessingPeriod period) {
-    this.facility = facility;
-    this.program = program;
-    this.period = period;
-  }
-
-  public Rnr(Long id) {
-    this.id = id;
-  }
-
-  public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
-    if (fullSupply) {
-      fullSupplyLineItems.add(rnrLineItem);
-    } else {
-      nonFullSupplyLineItems.add(rnrLineItem);
+    public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
+               List<Regimen> regimens, Long modifiedBy, Long createdBy) {
+        this(facilityId, programId, periodId, emergency, modifiedBy, createdBy);
+        fillLineItems(facilityTypeApprovedProducts);
+        fillActiveRegimenLineItems(regimens);
     }
-  }
 
-  public void calculateForApproval() {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculatePacksToShip();
+    private void fillActiveRegimenLineItems(List<Regimen> regimens) {
+        for (Regimen regimen : regimens) {
+            if (regimen.getActive()) {
+                RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
+                regimenLineItem.setCode(regimen.getCode());
+                regimenLineItem.setName(regimen.getName());
+                regimenLineItems.add(regimenLineItem);
+            }
+        }
     }
-    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculatePacksToShip();
+
+    public Rnr(Facility facility, Program program, ProcessingPeriod period) {
+        this.facility = facility;
+        this.program = program;
+        this.period = period;
     }
-    this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
-    this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
-  }
 
-  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
-    calculateForFullSupply(template, lossesAndAdjustmentsTypes);
-    calculateForNonFullSupply();
-  }
-
-  private void calculateForNonFullSupply() {
-    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.validateNonFullSupply();
-      lineItem.calculatePacksToShip();
-      this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+    public Rnr(Long id) {
+        this.id = id;
     }
-  }
 
-  private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.validateMandatoryFields(template);
-      lineItem.calculateForFullSupply(period, template, this.getStatus(), lossesAndAdjustmentsTypes);
-      lineItem.validateCalculatedFields(template);
-      this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+    public void add(RnrLineItem rnrLineItem, Boolean fullSupply) {
+        if (fullSupply) {
+            fullSupplyLineItems.add(rnrLineItem);
+        } else {
+            nonFullSupplyLineItems.add(rnrLineItem);
+        }
     }
-  }
 
-  private Money calculateCost(List<RnrLineItem> lineItems) {
-    Money totalFullSupplyCost = new Money("0");
-    for (RnrLineItem lineItem : lineItems) {
-      Money costPerItem = lineItem.calculateCost();
-      totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
+    public void calculateForApproval() {
+        for (RnrLineItem lineItem : fullSupplyLineItems) {
+            lineItem.calculatePacksToShip(calcStrategy);
+        }
+        for (RnrLineItem lineItem : nonFullSupplyLineItems) {
+            lineItem.calculatePacksToShip(calcStrategy);
+        }
+        this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
+        this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
     }
-    return totalFullSupplyCost;
-  }
 
-  public void fillLineItems(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
-    for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
-      RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityTypeApprovedProduct, modifiedBy, createdBy);
-      add(requisitionLineItem, true);
+    public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+        this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
+        calculateForFullSupply(template, lossesAndAdjustmentsTypes);
+        calculateForNonFullSupply();
     }
-  }
 
-  public void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
-    if (previousRequisition == null || previousRequisition.status == INITIATED || previousRequisition.status == SUBMITTED) {
-      if (!beginningBalanceVisible) resetBeginningBalances();
-      return;
+    private void calculateForNonFullSupply() {
+        for (RnrLineItem lineItem : nonFullSupplyLineItems) {
+            lineItem.validateNonFullSupply();
+            lineItem.calculatePacksToShip(calcStrategy);
+            this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+        }
     }
-    for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
-      RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
-      currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
+
+    private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+        for (RnrLineItem lineItem : fullSupplyLineItems) {
+            lineItem.validateMandatoryFields(template);
+            lineItem.calculateForFullSupply(calcStrategy, period, template, this.getStatus(), lossesAndAdjustmentsTypes);
+            lineItem.validateCalculatedFields(template);
+            this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
+        }
     }
-  }
 
-  private void resetBeginningBalances() {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.setBeginningBalance(0);
+    private Money calculateCost(List<RnrLineItem> lineItems) {
+        Money totalFullSupplyCost = new Money("0");
+        for (RnrLineItem lineItem : lineItems) {
+            Money costPerItem = lineItem.calculateCost();
+            totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
+        }
+        return totalFullSupplyCost;
     }
-  }
 
-  public void fillLastTwoPeriodsNormalizedConsumptions(Rnr lastPeriodsRnr, Rnr secondLastPeriodsRnr) {
-    addPreviousNormalizedConsumptionFrom(lastPeriodsRnr);
-    addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
-  }
-
-  public void setDefaultApprovedQuantity() {
-    for (RnrLineItem item : fullSupplyLineItems) {
-      item.setDefaultApprovedQuantity();
+    public void fillLineItems(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
+        for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
+            RnrLineItem requisitionLineItem = new RnrLineItem(null, facilityTypeApprovedProduct, modifiedBy, createdBy);
+            add(requisitionLineItem, true);
+        }
     }
-    for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.setDefaultApprovedQuantity();
+
+    public void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
+        if (previousRequisition == null || previousRequisition.status == INITIATED || previousRequisition.status == SUBMITTED) {
+            if (!beginningBalanceVisible) resetBeginningBalances();
+            return;
+        }
+        for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
+            RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
+            currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
+        }
     }
-  }
 
-  private List<RnrLineItem> getAllLineItems() {
-    if (this.allLineItems.isEmpty()) {
-      this.allLineItems.addAll(this.getFullSupplyLineItems());
-      this.allLineItems.addAll(this.getNonFullSupplyLineItems());
+    private void resetBeginningBalances() {
+        for (RnrLineItem lineItem : fullSupplyLineItems) {
+            lineItem.setBeginningBalance(0);
+        }
     }
-    return allLineItems;
-  }
 
-  public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
-    this.program = program.basicInformation();
-    this.period = period.basicInformation();
-    this.facility = facility.basicInformation();
-  }
-
-  private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
-    if (rnr == null) return;
-    for (RnrLineItem currentLineItem : fullSupplyLineItems) {
-      RnrLineItem previousLineItem = rnr.findCorrespondingLineItem(currentLineItem);
-      currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
+    public void fillLastTwoPeriodsNormalizedConsumptions(Rnr lastPeriodsRnr, Rnr secondLastPeriodsRnr) {
+        addPreviousNormalizedConsumptionFrom(lastPeriodsRnr);
+        addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
     }
-  }
 
-  private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
-    return (RnrLineItem) find(this.getAllLineItems(), new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        RnrLineItem lineItem = (RnrLineItem) o;
-        return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
-      }
-    });
-  }
-
-  private RegimenLineItem findCorrespondingRegimenLineItem(final RegimenLineItem regimenLineItem) {
-    return (RegimenLineItem) find(this.regimenLineItems, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        RegimenLineItem regimenLineItem1 = (RegimenLineItem) o;
-        return regimenLineItem1.getCode().equalsIgnoreCase(regimenLineItem.getCode());
-      }
-    });
-  }
-
-  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
-    for (RnrLineItem lineItem : this.fullSupplyLineItems) {
-      lineItem.setLineItemFieldsAccordingToTemplate(template);
+    public void setDefaultApprovedQuantity() {
+        for (RnrLineItem item : fullSupplyLineItems) {
+            item.setDefaultApprovedQuantity();
+        }
+        for (RnrLineItem item : nonFullSupplyLineItems) {
+            item.setDefaultApprovedQuantity();
+        }
     }
-    if (regimenTemplate.getColumns().isEmpty()) return;
-    for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
-      regimenLineItem.setRegimenFieldsAccordingToTemplate(regimenTemplate);
+
+    private List<RnrLineItem> getAllLineItems() {
+        if (this.allLineItems.isEmpty()) {
+            this.allLineItems.addAll(this.getFullSupplyLineItems());
+            this.allLineItems.addAll(this.getNonFullSupplyLineItems());
+        }
+        return allLineItems;
     }
-  }
 
-  public void convertToOrder(Long userId) {
-    this.status = RELEASED;
-    this.modifiedBy = userId;
-  }
-
-  public void fillFullSupplyCost() {
-    this.fullSupplyItemsSubmittedCost = calculateCost(this.fullSupplyLineItems);
-  }
-
-  public void fillNonFullSupplyCost() {
-    this.nonFullSupplyItemsSubmittedCost = calculateCost(this.nonFullSupplyLineItems);
-  }
-
-  public void validateForApproval() {
-    validateLineItemsForApproval(fullSupplyLineItems);
-    validateLineItemsForApproval(nonFullSupplyLineItems);
-  }
-
-  private void validateLineItemsForApproval(List<RnrLineItem> lineItems) {
-    for (RnrLineItem lineItem : lineItems) {
-      lineItem.validateForApproval();
+    public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
+        this.program = program.basicInformation();
+        this.period = period.basicInformation();
+        this.facility = facility.basicInformation();
     }
-  }
 
-  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    this.modifiedBy = rnr.getModifiedBy();
-    copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
-    copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate);
-    copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
-  }
-
-  private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
-    for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
-      RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
-      if (savedRegimenLineItem != null)
-        savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
-      savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+    private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
+        if (rnr == null) return;
+        for (RnrLineItem currentLineItem : fullSupplyLineItems) {
+            RnrLineItem previousLineItem = rnr.findCorrespondingLineItem(currentLineItem);
+            currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
+        }
     }
-  }
 
-  private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {
-    for (RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
-      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null) {
-        lineItem.setModifiedBy(rnr.getModifiedBy());
-        this.nonFullSupplyLineItems.add(lineItem);
-      } else {
-        savedLineItem.setModifiedBy(rnr.getModifiedBy());
-        savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
-      }
+    private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
+        return (RnrLineItem) find(this.getAllLineItems(), new Predicate() {
+            @Override
+            public boolean evaluate(Object o) {
+                RnrLineItem lineItem = (RnrLineItem) o;
+                return lineItem.getProductCode().equalsIgnoreCase(item.getProductCode());
+            }
+        });
     }
-  }
 
-  private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
-    for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
-      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null)
-        throw new DataException("product.code.invalid");
-      savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
-      savedLineItem.setModifiedBy(rnr.getModifiedBy());
+    private RegimenLineItem findCorrespondingRegimenLineItem(final RegimenLineItem regimenLineItem) {
+        return (RegimenLineItem) find(this.regimenLineItems, new Predicate() {
+            @Override
+            public boolean evaluate(Object o) {
+                RegimenLineItem regimenLineItem1 = (RegimenLineItem) o;
+                return regimenLineItem1.getCode().equalsIgnoreCase(regimenLineItem.getCode());
+            }
+        });
     }
-  }
 
-  public void copyApproverEditableFields(Rnr rnr, ProgramRnrTemplate template) {
-    this.modifiedBy = rnr.modifiedBy;
-    copyApproverEditableFieldsToLineItems(rnr, template, rnr.fullSupplyLineItems);
-    copyApproverEditableFieldsToLineItems(rnr, template, rnr.nonFullSupplyLineItems);
-  }
-
-  private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
-    for (RnrLineItem lineItem : lineItems) {
-      RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
-      if (savedLineItem == null)
-        throw new DataException("product.code.invalid");
-      savedLineItem.setModifiedBy(rnr.modifiedBy);
-      savedLineItem.copyApproverEditableFields(lineItem, template);
+    public void setFieldsAccordingToTemplate(ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+        for (RnrLineItem lineItem : this.fullSupplyLineItems) {
+            lineItem.setLineItemFieldsAccordingToTemplate(template);
+        }
+        if (regimenTemplate.getColumns().isEmpty()) return;
+        for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
+            regimenLineItem.setRegimenFieldsAccordingToTemplate(regimenTemplate);
+        }
     }
-  }
 
-  public void setAuditFieldsForRequisition(Long modifiedBy, RnrStatus status) {
-    this.status = status;
-    this.modifiedBy = modifiedBy;
-  }
+    public void convertToOrder(Long userId) {
+        this.status = RELEASED;
+        this.modifiedBy = userId;
+    }
 
-  public void prepareForFinalApproval() {
-    this.status = APPROVED;
-  }
+    public void fillFullSupplyCost() {
+        this.fullSupplyItemsSubmittedCost = calculateCost(this.fullSupplyLineItems);
+    }
 
-  public void approveAndAssignToNextSupervisoryNode(SupervisoryNode parent) {
-    status = IN_APPROVAL;
-    supervisoryNodeId = parent.getId();
-  }
+    public void fillNonFullSupplyCost() {
+        this.nonFullSupplyItemsSubmittedCost = calculateCost(this.nonFullSupplyLineItems);
+    }
 
-  public boolean isApprovable() {
-    return status == AUTHORIZED || status == IN_APPROVAL;
-  }
+    public void validateForApproval() {
+        validateLineItemsForApproval(fullSupplyLineItems);
+        validateLineItemsForApproval(nonFullSupplyLineItems);
+    }
+
+    private void validateLineItemsForApproval(List<RnrLineItem> lineItems) {
+        for (RnrLineItem lineItem : lineItems) {
+            lineItem.validateForApproval();
+        }
+    }
+
+    public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+        this.modifiedBy = rnr.getModifiedBy();
+        copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
+        copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate);
+        copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
+    }
+
+    private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
+        for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
+            RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
+            if (savedRegimenLineItem != null)
+                savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
+            savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+        }
+    }
+
+    private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {
+        for (RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
+            RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+            if (savedLineItem == null) {
+                lineItem.setModifiedBy(rnr.getModifiedBy());
+                this.nonFullSupplyLineItems.add(lineItem);
+            } else {
+                savedLineItem.setModifiedBy(rnr.getModifiedBy());
+                savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
+            }
+        }
+    }
+
+    private void copyCreatorEditableFieldsForFullSupply(Rnr rnr, ProgramRnrTemplate template) {
+        for (RnrLineItem lineItem : rnr.fullSupplyLineItems) {
+            RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+            if (savedLineItem == null)
+                throw new DataException("product.code.invalid");
+            savedLineItem.copyCreatorEditableFieldsForFullSupply(lineItem, template);
+            savedLineItem.setModifiedBy(rnr.getModifiedBy());
+        }
+    }
+
+    public void copyApproverEditableFields(Rnr rnr, ProgramRnrTemplate template) {
+        this.modifiedBy = rnr.modifiedBy;
+        copyApproverEditableFieldsToLineItems(rnr, template, rnr.fullSupplyLineItems);
+        copyApproverEditableFieldsToLineItems(rnr, template, rnr.nonFullSupplyLineItems);
+    }
+
+    private void copyApproverEditableFieldsToLineItems(Rnr rnr, ProgramRnrTemplate template, List<RnrLineItem> lineItems) {
+        for (RnrLineItem lineItem : lineItems) {
+            RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
+            if (savedLineItem == null)
+                throw new DataException("product.code.invalid");
+            savedLineItem.setModifiedBy(rnr.modifiedBy);
+            savedLineItem.copyApproverEditableFields(lineItem, template);
+        }
+    }
+
+    public void setAuditFieldsForRequisition(Long modifiedBy, RnrStatus status) {
+        this.status = status;
+        this.modifiedBy = modifiedBy;
+    }
+
+    public void prepareForFinalApproval() {
+        this.status = APPROVED;
+    }
+
+    public void approveAndAssignToNextSupervisoryNode(SupervisoryNode parent) {
+        status = IN_APPROVAL;
+        supervisoryNodeId = parent.getId();
+    }
+
+    public boolean isApprovable() {
+        return status == AUTHORIZED || status == IN_APPROVAL;
+    }
 }
 

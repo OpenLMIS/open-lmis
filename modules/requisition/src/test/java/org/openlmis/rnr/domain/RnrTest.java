@@ -48,10 +48,14 @@ public class RnrTest {
   private Rnr rnr;
   List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
+  private RnrCalcStrategy calcStrategy;
+
   @Before
   public void setUp() throws Exception {
     initMocks(this);
     rnr = make(a(defaultRnr));
+    calcStrategy = new RnrCalcStrategy();
+    rnr.setCalcStrategy(calcStrategy);
     lossesAndAdjustmentsTypes = mock(ArrayList.class);
   }
 
@@ -171,10 +175,10 @@ public class RnrTest {
 
     rnr.calculate(template, lossesAndAdjustmentsTypes);
 
-    verify(firstLineItem).calculateForFullSupply(period, template, SUBMITTED, lossesAndAdjustmentsTypes);
+    verify(firstLineItem).calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsTypes);
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
-    verify(secondLineItem).calculatePacksToShip();
+    verify(secondLineItem).calculatePacksToShip(calcStrategy);
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("10")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("20")));
   }
