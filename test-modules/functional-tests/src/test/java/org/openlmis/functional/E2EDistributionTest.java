@@ -143,13 +143,13 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyIndicator("GREEN");
 
 
-    GeneralObservation generalObservation = new GeneralObservation(testWebDriver);
-    generalObservation.navigate();
-    generalObservation.setObservations("Some observations");
-    generalObservation.setConfirmedByName("samuel");
-    generalObservation.setConfirmedByTitle("Doe");
-    generalObservation.setVerifiedByName("Mai ka");
-    generalObservation.setVerifiedByTitle("Laal");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.setObservations("Some observations");
+    generalObservationPage.setConfirmedByName("samuel");
+    generalObservationPage.setConfirmedByTitle("Doe");
+    generalObservationPage.setVerifiedByName("Mai ka");
+    generalObservationPage.setVerifiedByTitle("Laal");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
