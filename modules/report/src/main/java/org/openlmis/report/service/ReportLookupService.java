@@ -173,6 +173,23 @@ public class ReportLookupService {
         return facilityReportMapper.getFacilityByCode(code);
     }
 
+    public List<Facility> getFacilities(Long program, Long schedule, Long type){
+      // this method does not work if no program is specified
+      if(program == 0){
+        return null;
+      }
+
+      if(schedule == 0 && type == 0){
+        return facilityReportMapper.getFacilitiesByProgram(program);
+      }
+
+      if(type == 0){
+        return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule);
+      }
+
+      return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program,schedule,type);
+    }
+
     public List<ProcessingPeriod> getAllProcessingPeriods(){
         return processingPeriodMapper.getAll();
     }

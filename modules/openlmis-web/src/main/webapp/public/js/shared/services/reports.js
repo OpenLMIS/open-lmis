@@ -250,6 +250,10 @@ services.factory("AllFacilites",function($resource)  {
     return   $resource('/reports/allFacilities.json', {}, {});
 });
 
+services.factory("FacilitiesByProgramParams",function($resource)  {
+    return   $resource('/reports/facilities/program/:program/schedule/:schedule/type/:type.json', {}, {});
+});
+
 services.factory('SupervisoryNodeCompleteList',function($resource){
     return $resource('/supervisoryNode/getList.json',{},{});
 });
