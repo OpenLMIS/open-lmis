@@ -7,11 +7,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Wolde
- * Date: 8/24/13
- * Time: 3:45 AM
- */
 public class SupplyStatusQueryBuilder {
 
     public String getSupplyStatus(Map params){
@@ -37,14 +32,14 @@ public class SupplyStatusQueryBuilder {
 
     private static String writePredicates(Map params){
         String predicate = "WHERE r_status in ('APPROVED', 'RELEASED') ";
-        String facilityTypeId =  params.get("facilityTypeId") == null ? null :((String[])params.get("facilityTypeId"))[0];
-        String facilityId = params.get("facilityId") == null ? null : ((String[])params.get("facilityId"))[0];
-        String period =    params.get("periodId") == null ? null : ((String[])params.get("periodId"))[0];
-        String program =   params.get("programId") == null ? null : ((String[])params.get("programId"))[0];
-        String product =   params.get("productId") == null ? null : ((String[])params.get("productId"))[0];
-        String zone =     params.get("zoneId") == null ? null : ((String[])params.get("zoneId"))[0];
-        String rgroup =     params.get("rgroupId") == null ? null : ((String[])params.get("rgroupId"))[0];
-        String schedule = params.get("scheduleId") == null ? null : ((String[])params.get("scheduleId"))[0];
+        String facilityTypeId =  params.get("facilityType") == null ? null :((String[])params.get("facilityType"))[0];
+        String facilityId = params.get("facility") == null ? null : ((String[])params.get("facility"))[0];
+        String period =    params.get("period") == null ? null : ((String[])params.get("period"))[0];
+        String program =   params.get("program") == null ? null : ((String[])params.get("program"))[0];
+        String product =   params.get("product") == null ? null : ((String[])params.get("product"))[0];
+        String zone =     params.get("zone") == null ? null : ((String[])params.get("zone"))[0];
+        String rgroup =     params.get("rgroup") == null ? null : ((String[])params.get("rgroup"))[0];
+        String schedule = params.get("schedule") == null ? null : ((String[])params.get("schedule"))[0];
 
         predicate += " and pp_id = "+ period;
 
@@ -70,10 +65,10 @@ public class SupplyStatusQueryBuilder {
 
             predicate += " and rgm_id = "+ rgroup;
         }
-        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1")) {
-
-            predicate += " and ft_id = "+ facilityTypeId;
-        }
+//        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1") && !facilityTypeId.equals("All")) {
+//
+//            predicate += " and ft_id = "+ facilityTypeId;
+//        }
 
 
         return predicate;

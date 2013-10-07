@@ -29,7 +29,7 @@
                                     <label class="labels">Program<span class="label-required"> *</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program"  required="true">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model=" filterObject.program" ng-change="ProgramChanged()"  required="true">
                                             <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
@@ -39,7 +39,7 @@
                                     <label class="labels">Schedule<span class="label-required"> *</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="schedule" required="true">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="filterObject.schedule" required="true">
                                             <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
@@ -49,7 +49,7 @@
                                     <label class="labels">Period<span class="label-required"> *</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="period" required="true">
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="filterObject.period" required="true">
                                             <option  ng-repeat="option in periods" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
@@ -60,7 +60,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" >
+                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-change="loadFacilities()" ng-model="filterObject.facilityType" >
 
                                             <option  ng-repeat="option in facilityTypes" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
@@ -69,37 +69,30 @@
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Facility Name<span class="label-required"> *</span></label>
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" required="true">
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="filterObject.facility" ng-change="filterGrid();" required="true">
                                             <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                         </select>
                                     </div>
 
                                 </div>
-                                <br style="clear: both">
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Zone</label>
-
-                                    <div class="form-field">
-                                        <select  ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone" >
-                                            <option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
+                                <!--<br style="clear: both">-->
+                                <!--<div class="form-cell horizontalFilters" >-->
+                                    <!--<label class="labels">Zone</label>-->
+                                    <!--<div class="form-field">-->
+                                        <!--<select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="filterObject.zone" ng-options="option.id as option.name group by option.parent for option in zones">-->
+                                            <!--<option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
 
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Product</label>
-
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
+                                        <select ui-select2 style="width:200px;" name="product" ng-change="filterGrid();"  ng-model="filterObject.product" >
                                             <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
-                                           <!-- <option value=" {{IndicatorProductsDescription}}">-- {{IndicatorProductsDescription}} --</option>-->
                                         </select>
                                     </div>
                                 </div>
-
-
-
-
                             </div>
                          </form>
 
@@ -107,13 +100,39 @@
                 </div>
             </div>
 
-          <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
+                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <tr>
+                        <td>No data to show under selected filters</td>
+                    </tr>
+                </table>
 
-          <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-              <tr>
-                  <td>No data to show under selected filters</td>
-              </tr>
-          </table>
-   </div>
+                <div ng-show="datarows.length > 0">
+                    <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+
+                        <tbody>
+                        <tr ng-repeat="row in datarows">
+                            <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                            <td data-title="'Category'" style="width:150px" sortable="category" >{{ row.category }}</td>
+                            <td data-title="'Product Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
+                            <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                            <td data-title="'Beginning Balance'" class="number" style="width:80px" sortable="recipts"  >{{ row.openingBalance | number }}</td>
+                            <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts"  >{{ row.receipts | number }}</td>
+                            <td data-title="'Issues'" class="number" style="width:80px" sortable="issues"  >{{ row.issues | number }}</td>
+                            <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustments | number }}</td>
+                            <td data-title="'Closing Balance'" class="number" style="width:80px" sortable="closingBalance"  >{{ row.closingBalance | number }}</td>
+                            <td data-title="'MOS'" class="number" style="width:80px" sortable="monthsOfStock"  >{{ row.monthsOfStock | number }}</td>
+                            <td data-title="'AMC'" class="number" style="width:80px" sortable="averageMonthlyConsumption"  >{{ row.averageMonthlyConsumption | number }}</td>
+                            <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock"  >{{ row.maximumStock | number }}</td>
+                            <td data-title="'Reorder Amount'" class="number" style="width:80px" sortable="reorderAmount"  >{{ row.reorderAmount | number }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+
+            </div>
   </div>
 

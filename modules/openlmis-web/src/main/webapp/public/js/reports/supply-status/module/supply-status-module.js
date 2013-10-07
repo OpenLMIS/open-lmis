@@ -1,4 +1,4 @@
-angular.module('supply_status', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('supply_status', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:SupplyStatusController, templateUrl:'partials/list.html',reloadOnSearch:false}).
