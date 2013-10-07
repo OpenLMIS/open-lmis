@@ -399,7 +399,7 @@ public class HomePage extends Page {
     assertTrue(reportMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
-    testWebDriver.waitForElementsToAppear(otherReportItem);
+    testWebDriver.waitForElementToAppear(otherReportItem);
     assertTrue(otherReportItem.isDisplayed());
     testWebDriver.keyPress(otherReportItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
