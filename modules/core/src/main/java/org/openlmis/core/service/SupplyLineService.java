@@ -50,12 +50,16 @@ public class SupplyLineService {
     }
 
 
-    public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
-    return supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
+  public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
+        return supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
   }
 
   public void save(SupplyLine supplyLine) {
     validateIfSupervisoryNodeIsTopmostNode(supplyLine);
+
+    if(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(),supplyLine.getProgram())!= null){
+        throw new DataException("Supply line already exists for the chosen program and supervisory node combination.");
+    }
 
     if (supplyLine.getId() == null) {
       this.supplyLineRepository.insert(supplyLine);
