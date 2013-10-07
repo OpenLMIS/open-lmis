@@ -52,6 +52,9 @@ public class HomePage extends Page {
   @FindBy(how = How.ID, using = "reports-menu")
   private static WebElement reportMenuItem;
 
+  @FindBy(how = How.ID, using ="other-reports-menu")
+  private static WebElement otherReportItem;
+
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
   private static WebElement reportsTitle;
 
@@ -396,6 +399,9 @@ public class HomePage extends Page {
     assertTrue(reportMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
+    testWebDriver.waitForElementsToAppear(otherReportItem);
+    assertTrue(otherReportItem.isDisplayed());
+    testWebDriver.keyPress(otherReportItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
     return new ReportPage(testWebDriver);
   }

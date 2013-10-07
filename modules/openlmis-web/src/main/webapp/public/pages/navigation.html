@@ -53,12 +53,11 @@
 
     </li>
 
-    <li >
-        <a href="javascript: void(0)" openlmis-message="link.reports"></a>
+    <li>
+        <a id="reports-menu" href="javascript: void(0)" openlmis-message="link.reports"></a>
 
       <div class="submenu">
           <ul>
-
               <li class="has-children">
                   <a href="javascript: void(0);">Admin</a>
 
@@ -121,7 +120,7 @@
               </li>
 
               <li ng-show="hasPermission('VIEW_REPORT')">
-                  <a id="reports-menu" href="/public/pages/report/index.html">Other</a>
+                  <a id="other-reports-menu" href="/public/pages/report/index.html">Other</a>
               </li>
               <li class="beak"></li>
 
