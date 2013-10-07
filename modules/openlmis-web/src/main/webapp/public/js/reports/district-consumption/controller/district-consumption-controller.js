@@ -1,4 +1,6 @@
-function DistrictConsumptionReportController($scope, $filter , ngTableParams ,DistrictConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears,Months, $http, $routeParams,$location) {
+function DistrictConsumptionReportController($scope, $filter , ngTableParams
+                                            ,DistrictConsumptionReport, ReportProductsByProgram , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears,Months
+                                            , $http, $routeParams,$location) {
 
         //to minimize and maximize the filter section
         var section = 1;
@@ -74,7 +76,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams ,Di
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.push({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.unshift({'name':'All Reporting Groups'});
         });
 
 
@@ -141,17 +143,13 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams ,Di
 
         ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.push({'name': 'All Facility Types'});
+            $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
         });
 
-        Products.get(function(data){
-            $scope.products = data.productList;
-            $scope.products.push({'name': 'All Products'});
-        });
 
         ProductCategories.get(function(data){
             $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.push({'name': 'All Product Categories'});
+            $scope.productCategories.unshift({'name': '-- All Product Categories --'});
         });
 
 
@@ -164,15 +162,24 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams ,Di
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.unshift({'name': 'All Geographic Zones'});
+            $scope.zones.unshift({'name': '-- All Geographic Zones --'});
         });
 
         ReportPrograms.get(function(data){
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'Select Programs'});
+            $scope.programs.unshift({'name':'-- Select Programs --'});
+
+            $scope.products = [];
+            $scope.products.push({name:'-- Select Product --'});
         });
 
-        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+        $scope.ProgramChanged = function(){
+            ReportProductsByProgram.get({programId: $scope.program}, function(data){
+                $scope.products = data.productList;
+                $scope.products.unshift({id: '',name: '-- Select Product --'});
+            });
+        }
+
 
         $scope.$watch('zone.value', function(selection){
             if(selection != undefined || selection == ""){
@@ -282,7 +289,8 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams ,Di
         }
         $scope.filterGrid();
     });
-        $scope.$watch('startMonth', function(selection){
+
+    $scope.$watch('startMonth', function(selection){
             var date = new Date();
             if(selection != undefined || selection == ""){
                 $scope.filterObject.fromMonth =  selection-1;
@@ -294,7 +302,8 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams ,Di
             $scope.filterGrid();
         });
 
-        $scope.$watch('endMonth', function(selection){
+
+    $scope.$watch('endMonth', function(selection){
             var date = new Date();
             if(selection != undefined || selection == ""){
                 $scope.filterObject.toMonth =  selection-1;
@@ -431,41 +440,8 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams ,Di
             $scope.filterObject.pdformat =1;
             var params = jQuery.param($scope.filterObject);
             var url = '/reports/download/district_consumption/' + type +'?' + params;
-            window.location.href = url;
+            window.open(url);
         }
-
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
-
-        $scope.$watch("currentPage", function () {  //good watch no problem
-
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-              //when clicked using the links they have done updated the paging info no problem here
-               //or using the url page param
-              //$scope.pagingOptions.currentPage = $scope.currentPage;
-                $location.search("page", $scope.currentPage);
-            }
-        });
-
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
-            }
-        });
-
-
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data;
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-
-        };
 
     // the grid options
     $scope.tableParams = new ngTableParams({

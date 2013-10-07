@@ -13,10 +13,6 @@ import java.util.Map;
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
-/**
- * User: Wolde
- * Date: 5/24/13
- */
 public class DistrictConsumptionQueryBuilder {
 
     public static String SelectFilteredSortedPagedRecords(Map params){

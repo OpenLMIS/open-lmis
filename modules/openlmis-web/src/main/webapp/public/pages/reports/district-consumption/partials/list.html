@@ -26,7 +26,7 @@
                                         <label class="labels">Program</label>
 
                                         <div class="form-fields">
-                                            <select ui-select2 style="width:200px;" class="input-medium" name="program"  ng-model="program" >
+                                            <select ui-select2 style="width:200px;" class="input-medium" name="program" ng-change="ProgramChanged()"  ng-model="program" >
                                                 <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
                                             </select>
                                         </div>
@@ -168,12 +168,10 @@
                         <tbody>
                         <tr ng-repeat="row in datarows">
                             <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                            <td data-title="'Facility Type'" style="width:100px" sortable="facilityType" >{{ row.facilityType }}</td>
-                            <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
-                            <td data-title="'Supplying Facility'" style="width:120px" sortable="supplyingFacility" >{{ row.supplyingFacility }}</td>
-                            <td data-title="'Product'" style="width:30%" sortable="productDescription"  >{{ row.productDescription }}</td>
-                            <td data-title="'Adjustment Type'" style="width:100px" sortable="adjustmentType"  >{{ row.adjustmentType }}</td>
-                            <td data-title="'Adjustment'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustment | number }}</td>
+                            <td data-title="'District'" style="width:150px" sortable="district" >{{ row.district }}</td>
+                            <td data-title="'Product Name'" style="width:30%" sortable="product" >{{ row.product }}</td>
+                            <td data-title="'Consumption'" class="number" style="width:80px" sortable="consumption"  >{{ row.consumption | number }}</td>
+                            <td data-title="'Percentage'" class="number" style="width:80px" sortable="totalPercentage"  >{{ row.totalPercentage | number }}</td>
                         </tr>
                         </tbody>
                     </table>

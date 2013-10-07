@@ -211,38 +211,6 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
 
         }
 
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
-
-        $scope.$watch("currentPage", function () {  //good watch no problem
-
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-              //when clicked using the links they have done updated the paging info no problem here
-               //or using the url page param
-              //$scope.pagingOptions.currentPage = $scope.currentPage;
-                $location.search("page", $scope.currentPage);
-            }
-        });
-
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
-            }
-        });
-
-
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data;
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-
-        };
-
         $scope.getPagedDataAsync = function (pageSize, page) {
                         if($scope.period == undefined){
                             return;
