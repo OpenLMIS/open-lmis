@@ -129,7 +129,7 @@ public class DistributionControllerTest {
   public void shouldSyncFacilityDistributionData() {
     Long distributionId = 1l;
     FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
-    ResponseEntity<OpenLmisResponse> response = controller.sync(distributionId, facilityDistributionData);
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     verify(service).sync(distributionId, facilityDistributionData);
   }

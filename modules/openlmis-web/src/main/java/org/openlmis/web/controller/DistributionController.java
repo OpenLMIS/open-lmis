@@ -20,6 +20,7 @@ import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -62,8 +63,8 @@ public class DistributionController extends BaseController {
     return openLmisResponse.response(CREATED);
   }
 
-  @RequestMapping(value = "/distributions", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> sync(Long distributionId, FacilityDistributionData facilityDistributionData) {
+  @RequestMapping(value = "/facilityDistributionData/{distributionId}", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionData facilityDistributionData, @PathVariable(value = "distributionId") Long distributionId) {
     try {
       distributionService.sync(distributionId, facilityDistributionData);
       return OpenLmisResponse.success(SUCCESS);

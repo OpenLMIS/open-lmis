@@ -125,6 +125,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
   };
 
 
+
   var optionMessage = function (entity, defaultMessage) {
     return entity == null || entity.length == 0 ? NONE_ASSIGNED_LABEL : defaultMessage;
   };

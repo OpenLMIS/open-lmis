@@ -1,6 +1,7 @@
 package org.openlmis.distribution.domain;
 
 import lombok.Data;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
