@@ -115,7 +115,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   private void clickPageNumberLink(int pageNumber) {
     testWebDriver.getElementByXpath("//a[contains(text(), '"+pageNumber+"') and @class='ng-binding']").click();
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.sleep(2000);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
