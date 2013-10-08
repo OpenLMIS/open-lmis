@@ -448,6 +448,141 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();
+
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testValidRnRSubmittedAndVerifyStateOfFields(String program,
+                                                          String userSIC,
+                                                          String categoryCode,
+                                                          String password,
+                                                          String regimenCode,
+                                                          String regimenName,
+                                                          String regimenCode2,
+                                                          String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("100");
+    initiateRnRPage.enterQuantityReceived("100");
+    initiateRnRPage.enterQuantityDispensed("100");
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    verifyRnRsInGrid("current Period", "Not yet started", "1");
+    verifyRnRsInGrid("current Period", "INITIATED", "2");
+    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
+    initiateRnRPage1.enterBeginningBalance("100");
+    initiateRnRPage1.enterQuantityReceived("100");
+    initiateRnRPage1.enterQuantityDispensed("100");
+    initiateRnRPage1.clickSubmitButton();
+    initiateRnRPage1.clickOk();
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    verifyRnRsInGrid("current Period", "Not yet started", "1");
+    verifyRnRsInGrid("current Period", "INITIATED", "3");
+    verifyRnRsInGrid("current Period", "SUBMITTED", "2");
+
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testValidationsOnStockOnHandRnRField(String program,
+                                                   String userSIC,
+                                                   String categoryCode,
+                                                   String password,
+                                                   String regimenCode,
+                                                   String regimenName,
+                                                   String regimenCode2,
+                                                   String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("100");
+    initiateRnRPage.enterQuantityReceived("0");
+    initiateRnRPage.enterQuantityDispensed("1000");
+    verifyStockOnHandErrorMessage();
+
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testValidationsOnTotalConsumedQuantityRnRField(String program,
+                                                             String userSIC,
+                                                             String categoryCode,
+                                                             String password,
+                                                             String regimenCode,
+                                                             String regimenName,
+                                                             String regimenCode2,
+                                                             String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.updateSourceOfAProgramTemplate("HIV", "Total Consumed Quantity", "C");
+    dbWrapper.updateSourceOfAProgramTemplate("HIV", "Stock on Hand", "U");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("100");
+    initiateRnRPage.enterQuantityReceived("0");
+    initiateRnRPage.enterStockOnHand("1000");
+    verifyTotalQuantityConsumedErrorMessage();
+
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testVerifyAllStatusOfRequisitions(String program,
+                                                String userSIC,
+                                                String categoryCode,
+                                                String password,
+                                                String regimenCode,
+                                                String regimenName,
+                                                String regimenCode2,
+                                                String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("100");
+    initiateRnRPage.enterQuantityReceived("100");
+    initiateRnRPage.enterQuantityDispensed("100");
+    initiateRnRPage.clickSubmitButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitRnrSuccessMsg();
+    initiateRnRPage.verifyAllFieldsDisabled();
+    initiateRnRPage.verifySaveButtonDisabled();
+    initiateRnRPage.calculateAndVerifyTotalCost();
+
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -620,6 +755,16 @@ public class InitiateRnR extends TestCaseHelper {
       "//div[@class='ngCanvas']/div[" + row + "]/div[1]/div[2]/div/span").getText(), period);
     assertEquals(testWebDriver.getElementByXpath(
       "//div[@class='ngCanvas']/div[" + row + "]/div[4]/div[2]/div/span").getText(), rnrStatus);
+  }
+
+  private void verifyStockOnHandErrorMessage() {
+    testWebDriver.waitForPageToLoad();
+    assertTrue("Error message 'verifyStockOnHandErrorMessage' should show up", testWebDriver.getElementByXpath("//span[contains(text(),'Stock On Hand is calculated to be negative, please validate entries')]").isDisplayed());
+  }
+
+  private void verifyTotalQuantityConsumedErrorMessage() {
+    testWebDriver.waitForPageToLoad();
+    assertTrue("Error message 'verifyStockOnHandErrorMessage' should show up", testWebDriver.getElementByXpath("//span[contains(text(),'Total Quantity Consumed is calculated to be negative, please validate entries')]").isDisplayed());
   }
 
 
