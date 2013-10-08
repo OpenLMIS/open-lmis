@@ -262,6 +262,27 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickViewLoadAmount();
   }
 
+  @When("^I sync recorded data$")
+  public void clickSyncLink() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickSyncDistribution();
+  }
+
+  @Then("^I verify sync message as \"([^\"]*)\"$")
+  public void verifySyncMessage(String message) throws IOException {
+      DistributionPage distributionPage = new DistributionPage(testWebDriver);
+      assertEquals(distributionPage.getSyncMessage(),message);
+  }
+
+  @When("^I view observations data in DB:$")
+    public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
+      List<Map<String, String>> data = tableData.asMaps();
+      for (Map map : data)
+          dbWrapper.verifyFacilityVisits(map.get("observations").toString(), map.get("confirmedByName").toString(),
+                  map.get("confirmedByTitle").toString(), map.get("verifiedByName").toString(),
+                  map.get("verifiedByTitle").toString());
+  }
+
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);

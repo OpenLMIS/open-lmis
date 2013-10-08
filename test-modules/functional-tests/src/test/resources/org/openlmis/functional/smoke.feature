@@ -533,6 +533,12 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
     Then I see overall distribution icon as "GREEN"
+    When I sync recorded data
+    Then I verify sync message as "Village Dispensary-F10, have been successfully synced"
+    And I view observations data in DB:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               | mai ka         | lal             |
+
 
   @Smoke
   @ie2

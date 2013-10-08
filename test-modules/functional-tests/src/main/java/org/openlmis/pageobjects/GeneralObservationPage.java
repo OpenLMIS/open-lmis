@@ -54,10 +54,10 @@ public class GeneralObservationPage extends DistributionTab {
 
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(OBSERVATIONS, observationsField);
-    put(CONFIRMED_BY_NAME, verifiedByNameField);
-    put(CONFIRMED_BY_TITLE, verifiedByTitleField);
-    put(VERIFIED_BY_TITLE, confirmedByTitleField);
-    put(VERIFIED_BY_NAME, confirmedByNameField);
+    put(CONFIRMED_BY_NAME, confirmedByNameField);
+    put(CONFIRMED_BY_TITLE, confirmedByTitleField);
+    put(VERIFIED_BY_TITLE, verifiedByTitleField);
+    put(VERIFIED_BY_NAME, verifiedByNameField);
   }};
 
   public GeneralObservationPage(TestWebDriver driver) {
