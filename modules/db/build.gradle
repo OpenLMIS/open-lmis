@@ -51,7 +51,10 @@ dependencies {
 
 }
 
-task setupDB(dependsOn: [{createDB}, clean]) << {
+task setupDB << {
+    tasks.dropDB.execute()
+    tasks.createDB.execute()
+
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
@@ -59,25 +62,22 @@ task setupDB(dependsOn: [{createDB}, clean]) << {
     tasks.migrateDB.execute()
 }
 
-task createDB(dependsOn: {dropDB}) << {
+task createDB << {
     println("Creating Database..")
-    executeSqlOnDatabase('create database ' + dbName, dbUser)
-    executeSqlOnDatabase('create schema ' + atomfeedDbSchema, dbName)
-    executeSqlOnDatabase('grant all on schema ' + atomfeedDbSchema + ' to  ' + dbUser, dbName)
-
+    executeSql('create database ' + dbName)
 }
 
-task dropDB() << {
+task dropDB << {
     println("Dropping Database..")
-    if (!dropIfInUse(dbName, "procpid")) {
-        dropIfInUse(dbName, "pid")
+    if (!dropIfInUse("procpid")) {
+        dropIfInUse("pid")
     }
 }
 
-boolean dropIfInUse(String dbName, String pid) {
+def boolean dropIfInUse(String pid) {
     try {
-        executeSqlOnDatabase('SELECT pg_terminate_backend(' + pid + ') FROM pg_stat_activity WHERE datname=\'' + dbName + '\'', dbUser)
-        executeSqlOnDatabase('DROP DATABASE IF EXISTS ' + dbName, dbUser)
+        executeSql('SELECT pg_terminate_backend(' + pid + ') FROM pg_stat_activity WHERE datname=\'' + dbName + '\'')
+        executeSql('DROP DATABASE IF EXISTS ' + dbName)
         return true
     } catch (Exception e) {
         return false
@@ -105,14 +105,14 @@ task seed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
-def executeSqlOnDatabase(String statement, String database) {
+def executeSql(String statement) {
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
     ext.driverName = 'org.postgresql.Driver'
     Class.forName(driverName)
     Sql sql = (Sql) Sql.newInstance(
-            "jdbc:postgresql://$databaseHostName:$databasePort/" + database,
+            "jdbc:postgresql://$databaseHostName:$databasePort",
             dbUser,
             dbPassword,
             driverName
