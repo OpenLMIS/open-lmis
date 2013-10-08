@@ -147,7 +147,7 @@
                                 ng-model="supplyline.supervisoryNode.id"
                                 ng-options="sn.id as sn.name for sn in supervisoryNodes" ng-required="true"
                                 ng-disabled="supplyline.dataReportable == 'false'"
-                                ng-show="supplylinesBackupMap[supplyline.id].edit">>
+                                ng-show="supplylinesBackupMap[supplyline.id].edit">
                             <option value="">--- Select Supervisory Node ---</option>
                         </select>
                         <span ng-show="supplylinesBackupMap[supplyline.id].edit" class="label-required">*</span>
@@ -192,7 +192,7 @@
                        id="lstEditBtn_{{$index}}"
                        class="btn btn-mini pull-right"
                        value="Edit"
-                       ng-click="startSupplylineEdit(sl, backupSupplylineRow); supplylinesBackupMap[sl.id].edit=true;"/>
+                       ng-click="startSupplylineEdit(sl)"/>
 
            </div>
 
