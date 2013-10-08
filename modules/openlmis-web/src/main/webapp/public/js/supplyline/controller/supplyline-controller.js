@@ -242,7 +242,15 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
             return;
         }
 
-          SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, $scope.supplyline, function (data) {
+        var errorHandler = function (response) {
+            $scope.showDelError = true;
+            $scope.delError = response.data.error;
+        };
+
+        SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, function (data) {
+          $scope.showDelError = false;
+          $scope.delError = "";
+
           $scope.message = data.success;
           setTimeout(function() {
                 $scope.$apply(function() {
@@ -250,12 +258,14 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
                     $scope.message = "";
                 });
             }, 4000);
-            $scope.error = "";
             $scope.newSupplyline = {};
             $scope.editSupplyline = {};
             $scope.setFlags('delete','delete');
-
-         });
+            if(data.success != null ){
+                $scope.showDelError = false;
+                $scope.delError = "";
+            }
+         },errorHandler);
 
     };
 

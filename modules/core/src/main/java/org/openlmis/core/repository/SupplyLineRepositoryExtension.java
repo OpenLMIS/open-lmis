@@ -45,4 +45,8 @@ public class SupplyLineRepositoryExtension  {
         supplyLineMapperExt.deleteById(supplylineId);
     }
 
+    public int getOrderCountById(Long supplyLineId){
+        return supplyLineMapperExt.getOrderCountById(supplyLineId);
+    }
+
 }

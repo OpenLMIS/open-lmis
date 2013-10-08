@@ -55,6 +55,9 @@ public interface SupplyLineMapperExtension {
 
 
     @Delete("DELETE FROM supply_lines where id = #{supplylineId}")
-  int deleteById(Long supplylineId);
+    int deleteById(Long supplylineId);
+
+    @Select("SELECT Count(Id) FROM orders where supplyLineId = #{id}")
+    int getOrderCountById(Long id);
 
 }
