@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestBase.fail;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 
 public class TestCaseHelper {
@@ -397,6 +399,67 @@ public class TestCaseHelper {
                 break;
             }
         }
+    }
+
+    public void verifyPageLinksFromLastPage() throws Exception {
+        verifyNextAndLastLinksDisabled();
+        verifyPreviousAndFirstLinksEnabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
+        verifyNextAndLastLinksEnabled();
+        verifyPreviousAndFirstLinksDisabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
+        verifyNextAndLastLinksDisabled();
+        verifyPreviousAndFirstLinksEnabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
+        verifyNextAndLastLinksEnabled();
+        verifyPreviousAndFirstLinksDisabled();
+
+        testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
+        verifyNextAndLastLinksDisabled();
+        verifyPreviousAndFirstLinksEnabled();
+    }
+
+    public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
+        testWebDriver.sleep(1500);
+        int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
+        if (numberOfProducts % numberOfLineItemsPerPage != 0) {
+            numberOfPages = numberOfPages + 1;
+        }
+        for (int i = 1; i <= numberOfPages; i++) {
+            testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
+            assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
+        }
+    }
+
+    public void verifyNextAndLastLinksEnabled() throws Exception {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    }
+
+    public void verifyPreviousAndFirstLinksEnabled() throws Exception {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '<')]"));
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    }
+
+    public void verifyNextAndLastLinksDisabled() throws Exception {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+    }
+
+    public void verifyPreviousAndFirstLinksDisabled() throws Exception {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '«')]"));
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
     }
 }
 
