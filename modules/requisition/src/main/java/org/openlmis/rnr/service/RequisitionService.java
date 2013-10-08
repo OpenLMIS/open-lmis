@@ -85,7 +85,8 @@ public class RequisitionService {
   private RegimenService regimenService;
   @Autowired
   private RegimenColumnService regimenColumnService;
-
+  @Autowired
+  private ProgramProductService programProductService;
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
 
@@ -144,7 +145,8 @@ public class RequisitionService {
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     } else {
-      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate);
+      List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
+      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
     }
 
     requisitionRepository.update(savedRnr);

@@ -110,4 +110,8 @@ public class ProgramProductService {
     }
     return programProductRepository.getProgramProductsBy(programRepository.getIdByCode(trimToEmpty(programCode)), facilityType.getCode());
   }
+
+  public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
+    return programProductRepository.getNonFullSupplyProductsForProgram(program);
+  }
 }

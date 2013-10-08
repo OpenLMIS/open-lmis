@@ -34,8 +34,7 @@ import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.ProductBuilder.code;
-import static org.openlmis.core.builder.ProductBuilder.displayOrder;
+import static org.openlmis.core.builder.ProductBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 
 @Category(IntegrationTests.class)
@@ -149,6 +148,19 @@ public class ProgramProductMapperIT {
   }
 
   @Test
+  public void shouldGetNonFullSuppProgramProductsByProgram() {
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, "P2"), with(fullSupply, false)));
+    productMapper.insert(product1);
+    ProgramProduct programProduct = new ProgramProduct(program, product1, 10, true);
+    programProductMapper.insert(programProduct);
+
+    List<ProgramProduct> programProducts = programProductMapper.getNonFullSupplyProductsForProgram(program);
+
+    assertThat(programProducts.size(), is(1));
+    assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
+  }
+
+  @Test
   public void shouldGetById() throws Exception {
 
     ProgramProduct programProduct = new ProgramProduct(program, product, 10, true);
@@ -224,6 +236,7 @@ public class ProgramProductMapperIT {
     assertContainsProgramProduct(returnedProducts, programProduct);
     assertContainsProgramProduct(returnedProducts, programProduct2);
   }
+
 
   private void assertContainsProgramProduct(List<ProgramProduct> returnedProducts, final ProgramProduct programProduct) {
     boolean exists = exists(returnedProducts, new Predicate() {
