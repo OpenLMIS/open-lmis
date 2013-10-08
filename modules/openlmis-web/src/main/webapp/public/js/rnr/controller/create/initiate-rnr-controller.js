@@ -170,7 +170,7 @@ function InitiateRnrController($scope, $location, Requisitions,
     var periodWithRnrStatus;
     if (rnrs == null || rnrs.length == 0) return;
     rnrs.forEach(function (rnr) {
-      if (rnr.status == 'INITIATED') {
+      if (rnr.status == 'INITIATED' || rnr.status == 'SUBMITTED') {
         periodWithRnrStatus = angular.copy(rnr.period);
         periodWithRnrStatus.rnrStatus = rnr.status;
         periodWithRnrStatus.rnrId = rnr.id;

@@ -98,8 +98,9 @@ public class RequisitionPdfModel {
       }
 
       if (lineItem.isRnrLineItem()) {
-        PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem(lineItem);
-        printRnrLineItem.calculate(requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
+        PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem)lineItem);
+        RnrCalcStrategy calcStrategy = (requisition.isEmergency()) ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy();
+        printRnrLineItem.calculate(calcStrategy, requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
       List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));

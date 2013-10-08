@@ -256,6 +256,10 @@ services.factory('Distributions', function ($resource) {
   return $resource('/distributions.json', {}, {});
 });
 
+services.factory('SyncFacilityDistributionData', function ($resource) {
+  return $resource('/facilityDistributionData/:distributionId.json', {}, update);
+});
+
 services.factory('Locales', function ($resource) {
   return $resource('/locales.json', {}, {});
 });

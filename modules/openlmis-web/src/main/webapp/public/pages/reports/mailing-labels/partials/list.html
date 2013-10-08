@@ -16,10 +16,9 @@
                         <a id="pdf-button" href="#list" ng-click="exportReport('pdf')" class='btn-small btn-info'>PDF</a>
                         <a id="xls-button" href="#list" ng-click="exportReport('xls')" class='btn-small btn-info'>Excel</a>
                         <a id="mailing-button" href="#list" ng-click="exportReport('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
-
                     </div>
                 </div>
-            <div class="box-content" ng-show="show(1)">
+            <div >
                 <div class="app-form" style="padding: 10px;">
                         <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div class="form-row clearfix ">
@@ -27,7 +26,7 @@
                                     <label class="labels">Requisition Groups</label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="rgroupId">
+                                        <select ui-select2 style="width:200px;" name="requisitionGroup" ng-change="filterGrid()" ng-model="rgroupId">
                                             <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
@@ -36,7 +35,7 @@
                                     <label class="labels">Facility Type</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityTypeId">
+                                        <select ui-select2 style="width:200px;" id="facility-type" ng-change="filterGrid()" name="facilityType" ng-model="facilityTypeId">
                                              <option ng-repeat ="option in facilityTypes" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
@@ -47,7 +46,31 @@
                 </div>
             </div>
 
-         <div class="gridStyleReport" ng-grid="gridOptions"></div>
+            <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <tr>
+                    <td>No data to show under selected filters</td>
+                </tr>
+            </table>
+
+            <div ng-show="datarows.length > 0">
+                <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
+
+                    <tbody>
+                    <tr ng-repeat="row in datarows">
+                        <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                        <td data-title="'Facility Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
+                        <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
+                        <td data-title="'Facility Type'" style="width:120px" sortable="facilityType" >{{ row.facilityType }}</td>
+                        <td data-title="'Region / Zone'" style="width:80px" sortable="region"  >{{ row.region }}</td>
+                        <td data-title="'Phone'" style="width:100px" sortable="phoneNumber"  >{{ row.phoneNumber }}</td>
+                        <td data-title="'Owner'" style="width:100px" sortable="owner"  >{{ row.owner }}</td>
+                        <td data-title="'Active'" style="width:100px" sortable="active"  >{{ row.active == true?'Yes':'No' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
    </div>
   </div>
 </div>

@@ -23,8 +23,8 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/epi-use',
       {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
-      when('/record-facility-data/:distribution/:facility/general-observation',
-      {controller: GeneralObservationController, templateUrl: 'partials/general-observation.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/facility-visit',
+      {controller: FacilityVisitController, templateUrl: 'partials/facility-visit.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});
 
   }]).config(function (IndexedDBProvider) {
@@ -50,7 +50,7 @@ distributionModule.directive('notRecorded', function ($timeout) {
             scope[attrs.notRecorded](ctrl.$modelValue);
           }
 
-          if(!ctrl.$modelValue) return;
+          if (!ctrl.$modelValue) return;
 
           var evaluatedVar = scope;
           var ngModel = $(associatedElement).attr('ng-model').split('.');
@@ -64,6 +64,25 @@ distributionModule.directive('notRecorded', function ($timeout) {
           });
         });
       });
+    }
+  };
+});
+
+
+distributionModule.directive('disableForm', function ($timeout) {
+  return {
+    require: '?ngModel',
+    link: function (scope, element) {
+
+      $timeout(function () {
+        var tabbables = element.find(':tabbable');
+        if (element.attr('disable-form') === "true") {
+          $.each(tabbables, function (index, tabable) {
+            $(tabable).prop('disabled', true);
+          });
+        }
+      });
+
     }
   };
 });

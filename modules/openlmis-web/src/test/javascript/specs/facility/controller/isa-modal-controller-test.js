@@ -32,16 +32,10 @@ describe("ISA Controller", function () {
       expect(scope.$parent.facilityProgramProductsList[scope.currentProgram.id].length).toEqual(2);
     });
 
-    it('should return immediately if modal is closed', function() {
-      scope.$parent.programProductsISAModal = false;
-      scope.currentProgram = {id : 1};
-      scope.$apply();
-      httpBackend.verifyNoOutstandingRequest();
-    });
-
     it('should return immediately if current program is null', function() {
-      scope.$parent.programProductsISAModal = true;
+      scope.programProductsISAModal = true;
       scope.currentProgram = null;
+      scope.$broadcast('showISAEditModal');
       scope.$apply();
       httpBackend.verifyNoOutstandingRequest();
     });
@@ -52,7 +46,7 @@ describe("ISA Controller", function () {
         {programProductId: 2, facilityId: 1, overriddenIsa: 45}];
       scope.$parent.facility = {catchmentPopulation : 89};
       scope.$parent.facilityProgramProductsList[scope.currentProgram.id] = currentProducts;
-      scope.$parent.programProductsISAModal = true;
+      scope.$broadcast('showISAEditModal');
       scope.$apply();
       httpBackend.verifyNoOutstandingRequest();
       expect(scope.currentProgramProducts).toEqual(currentProducts);
@@ -65,7 +59,7 @@ describe("ISA Controller", function () {
       routeParams.facilityId = 1;
       scope.$parent.facility = {id:1, catchmentPopulation : 100};
       scope.$parent.facilityProgramProductsList[scope.currentProgram.id] = null;
-      scope.$parent.programProductsISAModal = true;
+      scope.$broadcast('showISAEditModal');
       var programProductList = {programProductList: currentProducts};
       httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
       scope.$apply();
@@ -83,7 +77,7 @@ describe("ISA Controller", function () {
       routeParams.facilityId = 1;
       scope.$parent.facility = {id:1, catchmentPopulation : null};
       scope.$parent.facilityProgramProductsList[scope.currentProgram.id] = null;
-      scope.$parent.programProductsISAModal = true;
+      scope.$broadcast('showISAEditModal');
       var programProductList = {programProductList: currentProducts};
       httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
       scope.$apply();
@@ -115,7 +109,7 @@ describe("ISA Controller", function () {
       routeParams.facilityId = 1;
       scope.$parent.facility = {id:1, catchmentPopulation : 1000};
       scope.$parent.facilityProgramProductsList[scope.currentProgram.id] = null;
-      scope.$parent.programProductsISAModal = true;
+      scope.$broadcast('showISAEditModal');
       var programProductList = {programProductList: currentProducts};
       httpBackend.expectGET('/facility/1/program/1/isa.json').respond(programProductList, 200);
       scope.$apply();

@@ -125,4 +125,8 @@ public class ProgramProductRepository {
   public List<ProgramProduct> getProgramProductsBy(Long programId, String facilityTypeCode) {
     return mapper.getByProgramIdAndFacilityCode(programId, facilityTypeCode);
   }
+
+  public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
+    return mapper.getNonFullSupplyProductsForProgram(program);
+  }
 }

@@ -13,16 +13,16 @@
   <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info">
-    <div class="general-observation-container">
+    <div class="facility-visit-container">
       <h3>
         <span openlmis-message="label.observations.signatures"></span>
       </h3>
 
-      <form auto-save="distribution" object-store="distributions">
+      <form auto-save="distribution" object-store="distributions" disable-form="{{distribution.facilityDistributionData[selectedFacility].status === 'is-synced'}}">
         <div class="row-fluid">
           <div>
             <textarea id="observations" maxlength="1000"
-                      ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.observations"></textarea>
+                      ng-model="distribution.facilityDistributionData[selectedFacility].facilityVisit.observations"></textarea>
           </div>
         </div>
         <div class="signatures clearfix">
@@ -32,11 +32,11 @@
             <div>
               <label openlmis-message="label.name" for="verifiedByName"></label>
               <input type="text" maxlength="50"
-                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.verifiedBy.name"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].facilityVisit.verifiedBy.name"
                      id="verifiedByName"/>
               <label openlmis-message="label.title" for="verifiedByTitle"></label>
               <input type="text" maxlength="50"
-                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.verifiedBy.title"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].facilityVisit.verifiedBy.title"
                      id="verifiedByTitle"/>
             </div>
           </div>
@@ -47,11 +47,11 @@
             <div>
               <label openlmis-message="label.name" for="confirmedByName"></label>
               <input type="text" maxlength="50"
-                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.confirmedBy.name"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].facilityVisit.confirmedBy.name"
                      id="confirmedByName"/>
               <label openlmis-message="label.title" for="confirmedByTitle"></label>
               <input type="text" maxlength="50"
-                     ng-model="distribution.facilityDistributionData[selectedFacility].generalObservation.confirmedBy.title"
+                     ng-model="distribution.facilityDistributionData[selectedFacility].facilityVisit.confirmedBy.title"
                      id="confirmedByTitle"/>
             </div>
           </div>

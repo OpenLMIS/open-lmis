@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.order.repository.mapper;
@@ -27,7 +25,7 @@ public interface OrderMapper {
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 
-  @Select("SELECT * FROM orders ORDER BY createdDate DESC")
+  @Select("SELECT * FROM orders ORDER BY createdDate DESC LIMIT #{limit} OFFSET #{offset}")
   @Results({
     @Result(property = "rnr.id", column = "rnrId"),
     @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
@@ -35,7 +33,7 @@ public interface OrderMapper {
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getAll();
+  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset);
 
   @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({
@@ -70,4 +68,7 @@ public interface OrderMapper {
 
   @Select("SELECT status FROM orders WHERE id = #{id}")
   OrderStatus getStatus(Long id);
+
+  @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
+  Integer getNumberOfPages(int pageSize);
 }

@@ -91,9 +91,9 @@ public class MailingLabelReportDataProvider extends ReportDataProvider {
         MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
         if(filterCriteria != null){
             mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-            mailingLabelReportFilter.setFacilityType((filterCriteria.get("facilityType")[0]));
+            //mailingLabelReportFilter.setFacilityType((filterCriteria.get("facilityType")[0]));
             mailingLabelReportFilter.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
-            mailingLabelReportFilter.setRgroup((filterCriteria.get("rgroup")[0]));
+            //mailingLabelReportFilter.setRgroup((filterCriteria.get("rgroup")[0]));
 
         }
 

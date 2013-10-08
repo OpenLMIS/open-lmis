@@ -11,12 +11,18 @@
 package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DistributionService {
+
+  @Autowired
+  FacilityVisitService facilityVisitService;
 
   @Autowired
   DistributionRepository repository;
@@ -27,5 +33,15 @@ public class DistributionService {
 
   public Distribution get(Distribution distribution) {
     return repository.get(distribution);
+  }
+
+  public void sync(Long distributionId, FacilityDistributionData facilityDistributionData) {
+
+    FacilityVisit facilityVisit = facilityDistributionData.getFacilityVisit();
+    facilityVisit.setDistributionId(distributionId);
+    facilityVisit.setFacilityId(facilityDistributionData.getFacilityId());
+
+    facilityVisitService.save(facilityVisit);
+
   }
 }

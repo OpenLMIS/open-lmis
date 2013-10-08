@@ -34,9 +34,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.$watch('fullScreen', function () {
     angular.element(window).scrollTop(0);
     if (!$.browser.msie) {
-      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
-      }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
-      });
+      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp({'duration': 'slow', 'progress' :fixToolbarWidth }) :
+        angular.element('.toggleFullScreen').slideDown({ 'duration': 'slow', 'progress' :fixToolbarWidth });
     }
     else {
       $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();

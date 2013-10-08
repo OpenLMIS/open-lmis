@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.service;
@@ -117,6 +115,9 @@ public class RequisitionServiceTest {
 
   @Mock
   private UserService userService;
+
+  @Mock
+  private ProgramProductService programProductService;
 
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
@@ -572,7 +573,8 @@ public class RequisitionServiceTest {
     Mockito.when(requisitionRepository.getById(savedRnr.getId())).thenReturn(savedRnr);
     when(rnrTemplateService.fetchProgramTemplate(initiatedRnr.getProgram().getId())).thenReturn(template);
     Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(regimenTemplate);
-    Mockito.doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate);
+    List<ProgramProduct> programProducts = new ArrayList<>();
+    Mockito.doNothing().when(savedRnr).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate, programProducts);
     Mockito.doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
     initiatedRnr.setModifiedBy(USER_ID);
@@ -1171,15 +1173,18 @@ public class RequisitionServiceTest {
     Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(savedRequisition.getProgram().getId(), new ArrayList<RegimenColumn>());
+    List<ProgramProduct> programProductsList = asList(new ProgramProduct());
 
-    doNothing().when(savedRequisition).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate);
+    doNothing().when(savedRequisition).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate, programProductsList);
     when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+    Mockito.when(programProductService.getNonFullSupplyProductsForProgram(PROGRAM)).thenReturn(programProductsList);
     Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(regimenTemplate);
 
     requisitionService.save(initiatedRnr);
 
-    verify(savedRequisition).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate);
+    verify(savedRequisition).copyCreatorEditableFields(initiatedRnr, template, regimenTemplate, programProductsList);
     verify(requisitionRepository).update(savedRequisition);
+    verify(programProductService).getNonFullSupplyProductsForProgram(PROGRAM);
   }
 
   @Test
@@ -1356,8 +1361,28 @@ public class RequisitionServiceTest {
     assertThat(criteria.getPeriodId(), is(nullValue()));
   }
 
+  @Test
+  public void shouldSetCalcStrategyForEmergencyRnr() throws Exception {
+    Long requisitionId = 1L;
+    Rnr emergencyRequisition = spy(new Rnr());
+    emergencyRequisition.setFacility(FACILITY);
+    emergencyRequisition.setProgram(PROGRAM);
+    emergencyRequisition.setPeriod(PERIOD);
+    emergencyRequisition.setId(requisitionId);
+    emergencyRequisition.setEmergency(true);
+    when(requisitionRepository.getById(requisitionId)).thenReturn(emergencyRequisition);
+    Mockito.doNothing().when(emergencyRequisition).fillBasicInformation(any(Facility.class), any(Program.class), any(ProcessingPeriod.class));
+
+    Rnr result = requisitionService.getFullRequisitionById(emergencyRequisition.getId());
+
+    verify(requisitionRepository).getById(emergencyRequisition.getId());
+
+    assertThat(result, is(emergencyRequisition));
+  }
+
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
+    doNothing().when(savedRnr).calculateForApproval();
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, right)).thenReturn(true);
     when(programService.getById(savedRnr.getProgram().getId())).thenReturn(PROGRAM);
@@ -1366,5 +1391,6 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     return savedRnr;
   }
+
 }
 

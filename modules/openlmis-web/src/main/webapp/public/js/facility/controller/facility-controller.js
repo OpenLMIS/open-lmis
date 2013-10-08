@@ -50,11 +50,13 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.showISAEditModal = function (supportedProgram) {
     $scope.currentProgram = supportedProgram.program;
-    $scope.programProductsISAModal = true;
+    $scope.$broadcast('showISAEditModal');
   };
+
   $scope.cancelUserSave = function() {
     $location.path('#/search');
   };
+
   function saveAllocationProgramProducts() {
     var promises = [];
 

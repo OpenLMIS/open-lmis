@@ -73,9 +73,9 @@ public class DBWrapper {
     insertProcessingPeriod(period, period, "2013-09-29 14:16:43.498429", "2020-09-30 14:16:43.498429", 66, schedule);
   }
 
-    public void DeleteProcessingPeriods() throws SQLException, IOException {
-        update("delete from processing_periods;");
-    }
+  public void DeleteProcessingPeriods() throws SQLException, IOException {
+    update("delete from processing_periods;");
+  }
 
   public List<String> getProductDetailsForProgram(String programCode) throws SQLException {
     String programName = "";
@@ -286,7 +286,7 @@ public class DBWrapper {
   }
 
   public void deletePeriod(String periodName) throws IOException, SQLException {
-    update("delete from processing_periods where name='"+periodName+"';");
+    update("delete from processing_periods where name='" + periodName + "';");
   }
 
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
@@ -312,6 +312,11 @@ public class DBWrapper {
 
   public void allocateFacilityToUser(String userId, String facilityCode) throws IOException, SQLException {
     update("update users set facilityId = (Select id from facilities where code='" + facilityCode + "') where id='" + userId + "';");
+
+  }
+
+  public void updateSourceOfAProgramTemplate(String program, String label, String source) throws IOException, SQLException {
+    update(" update program_rnr_columns set source='" + source + "' where programid = (select id from programs where code='" + program + "') and label='" + label + "';");
 
   }
 
@@ -380,12 +385,12 @@ public class DBWrapper {
 
 
   public void insertRole(String role, String type, String description) throws SQLException, IOException {
-    ResultSet rs = query("Select id from roles where name='"+role+"';");
+    ResultSet rs = query("Select id from roles where name='" + role + "';");
 
-    if(!rs.next())
-    update("INSERT INTO roles\n" +
-      " (name, description) VALUES\n" +
-      " ('" + role + "', '" + description + "');");
+    if (!rs.next())
+      update("INSERT INTO roles\n" +
+        " (name, description) VALUES\n" +
+        " ('" + role + "', '" + description + "');");
 
   }
 
@@ -805,11 +810,11 @@ public class DBWrapper {
   }
 
   public void deleteRoleToRightMapping(String role, String right) throws IOException, SQLException {
-    update("delete from role_rights where rightname ='"+right+"' and roleid=(select id from roles where name='"+role+"');");
+    update("delete from role_rights where rightname ='" + right + "' and roleid=(select id from roles where name='" + role + "');");
   }
 
   public void insertRoleToRightMapping(String role, String right) throws IOException, SQLException {
-    update("insert into role_rights (roleid, rightname) values ((select id from roles where name='"+role+"'),'"+right+"');");
+    update("insert into role_rights (roleid, rightname) values ((select id from roles where name='" + role + "'),'" + right + "');");
   }
 
   public void insertApprovedQuantity(Integer quantity) throws IOException, SQLException {
@@ -1251,5 +1256,13 @@ public class DBWrapper {
 
   public void deleteReport(String reportName) throws SQLException {
     update("DELETE FROM report_templates where name = '" + reportName + "'");
+  }
+
+  public void insertOrders(String status, String username, String program) throws IOException, SQLException {
+    ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='" + program + "');");
+    while (rs.next()) {
+      update("insert into orders(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
+        "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+    }
   }
 }

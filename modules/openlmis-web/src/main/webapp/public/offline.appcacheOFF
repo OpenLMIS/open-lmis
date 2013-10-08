@@ -47,7 +47,7 @@ CACHE:
 /public/pages/logistics/distribution/partials/epi-use.html
 /public/pages/logistics/distribution/partials/refrigerator-reading.html
 /public/pages/logistics/distribution/partials/refrigerator.html
-/public/pages/logistics/distribution/partials/general-observation.html
+/public/pages/logistics/distribution/partials/facility-visit.html
 
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
@@ -56,7 +56,7 @@ CACHE:
 /public/js/distribution/model/refrigerators.js
 /public/js/distribution/model/epi-use.js
 /public/js/distribution/model/refrigerator-reading.js
-/public/js/distribution/model/general-observation.js
+/public/js/distribution/model/facility-visit.js
 /public/js/distribution/model/facility-distribution-data.js
 
 
@@ -70,7 +70,7 @@ CACHE:
 /public/js/distribution/controller/record-facility-data-controller.js
 /public/js/distribution/controller/refrigerator-controller.js
 /public/js/distribution/controller/epi-use-controller.js
-/public/js/distribution/controller/general-observation-controller.js
+/public/js/distribution/controller/facility-visit-controller.js
 
 /public/js/shared/directives/auto-save.js
 /public/js/shared/controller/locale-controller.js

@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.service;
@@ -53,7 +51,7 @@ public class RequisitionService {
   public static final String SEARCH_FACILITY_CODE = "facilityCode";
   public static final String SEARCH_FACILITY_NAME = "facilityName";
   public static final String SEARCH_SUPPLYING_DEPOT_NAME = "supplyingDepot";
-  public static final String CONVERT_TO_ORDER_PAGE_SIZE = "convert.to.order.page.size";
+  public static final String CONVERT_TO_ORDER_PAGE_SIZE = "order.page.size";
   public static final String NUMBER_OF_PAGES = "number_of_pages";
 
 
@@ -85,7 +83,8 @@ public class RequisitionService {
   private RegimenService regimenService;
   @Autowired
   private RegimenColumnService regimenColumnService;
-
+  @Autowired
+  private ProgramProductService programProductService;
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
 
@@ -144,7 +143,8 @@ public class RequisitionService {
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     } else {
-      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate);
+      List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
+      savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
     }
 
     requisitionRepository.update(savedRnr);

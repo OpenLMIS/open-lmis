@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.builder;
+package org.openlmis.distribution.builder;
 
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;

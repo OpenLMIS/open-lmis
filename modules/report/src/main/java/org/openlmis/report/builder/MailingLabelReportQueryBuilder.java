@@ -47,33 +47,6 @@ public class MailingLabelReportQueryBuilder {
                 WHERE("requisition_groups.id = "+ filter.getRgroupId());
             }
         }
-        Map sortCriteria = (Map) params.get("filterCriteria");
-        ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, MailingLabelReport.class, "F.name asc"));
-
-       /* if(sorter != null){
-            if(sorter.getFacilityName().equalsIgnoreCase("asc")){
-                ORDER_BY("F.name asc");
-            }
-            if(sorter.getFacilityName().equalsIgnoreCase("desc")){
-                ORDER_BY("F.name desc");
-            }
-
-            if(sorter.getCode().equalsIgnoreCase("asc")){
-                ORDER_BY("F.code asc");
-            }
-            if(sorter.getCode().equalsIgnoreCase("desc")){
-                ORDER_BY("F.code desc");
-            }
-
-            if(sorter.getFacilityType().equalsIgnoreCase("asc")){
-                ORDER_BY("F.typeid asc");
-            }
-            if(sorter.getFacilityType().equalsIgnoreCase("desc")){
-                ORDER_BY("F.typeid desc");
-            }
-        }*/
-
-
         return SQL();
     }
 }

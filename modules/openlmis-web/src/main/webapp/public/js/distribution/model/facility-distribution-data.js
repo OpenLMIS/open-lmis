@@ -12,14 +12,19 @@ function FacilityDistributionData(facilityDistributionData) {
   var COMPLETE = 'is-complete';
   var EMPTY = 'is-empty';
   var INCOMPLETE = 'is-incomplete';
+  var SYNCED = 'is-synced';
+
 
   this.epiUse = new EpiUse(facilityDistributionData.epiUse);
   this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
-  this.generalObservation = new GeneralObservation(facilityDistributionData.generalObservation);
-
+  this.facilityVisit = new FacilityVisit(facilityDistributionData.facilityVisit);
+  this.status = facilityDistributionData.status;
   FacilityDistributionData.prototype.computeStatus = function () {
-    var forms = [this.epiUse, this.refrigerators, this.generalObservation];
+    var forms = [this.epiUse, this.refrigerators, this.facilityVisit];
     var overallStatus;
+    if(this.status === SYNCED) {
+      return this.status;
+    }
     $.each(forms, function (index, form) {
       var computedStatus = form.computeStatus();
       if (computedStatus === COMPLETE && (overallStatus === COMPLETE || !overallStatus)) {

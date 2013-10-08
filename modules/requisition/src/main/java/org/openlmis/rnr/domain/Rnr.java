@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.domain;
@@ -106,34 +104,41 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateForApproval() {
+    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculatePacksToShip();
+      lineItem.calculatePacksToShip(calcStrategy);
     }
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculatePacksToShip();
+      lineItem.calculatePacksToShip(calcStrategy);
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
-    calculateForFullSupply(template, lossesAndAdjustmentsTypes);
-    calculateForNonFullSupply();
+  private RnrCalcStrategy getRnrCalcStrategy() {
+    return emergency ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy();
   }
 
-  private void calculateForNonFullSupply() {
+  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
+
+    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
+    calculateForFullSupply(calcStrategy, template, lossesAndAdjustmentsTypes);
+    calculateForNonFullSupply(calcStrategy);
+  }
+
+  private void calculateForNonFullSupply(RnrCalcStrategy calcStrategy) {
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
       lineItem.validateNonFullSupply();
-      lineItem.calculatePacksToShip();
+      lineItem.calculatePacksToShip(calcStrategy);
       this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
     }
   }
 
-  private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  private void calculateForFullSupply(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.validateMandatoryFields(template);
-      lineItem.calculateForFullSupply(period, template, this.getStatus(), lossesAndAdjustmentsTypes);
+      lineItem.calculateForFullSupply(calcStrategy, period, template, this.getStatus(), lossesAndAdjustmentsTypes);
       lineItem.validateCalculatedFields(template);
       this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
     }
@@ -262,10 +267,10 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+  public void copyCreatorEditableFields(Rnr rnr, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate, List<ProgramProduct> programProducts) {
     this.modifiedBy = rnr.getModifiedBy();
     copyCreatorEditableFieldsForFullSupply(rnr, rnrTemplate);
-    copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate);
+    copyCreatorEditableFieldsForNonFullSupply(rnr, rnrTemplate, programProducts);
     copyCreatorEditableFieldsForRegimen(rnr, regimenTemplate);
   }
 
@@ -278,12 +283,21 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template) {
-    for (RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
+  private void copyCreatorEditableFieldsForNonFullSupply(Rnr rnr, ProgramRnrTemplate template, List<ProgramProduct> programProducts) {
+    for (final RnrLineItem lineItem : rnr.nonFullSupplyLineItems) {
       RnrLineItem savedLineItem = this.findCorrespondingLineItem(lineItem);
       if (savedLineItem == null) {
-        lineItem.setModifiedBy(rnr.getModifiedBy());
-        this.nonFullSupplyLineItems.add(lineItem);
+        ProgramProduct programProduct = (ProgramProduct) find(programProducts, new Predicate() {
+          @Override
+          public boolean evaluate(Object o) {
+            ProgramProduct programProduct = (ProgramProduct) o;
+            return programProduct.getProduct().getCode().equalsIgnoreCase(lineItem.getProductCode());
+          }
+        });
+        if (programProduct != null) {
+          lineItem.setModifiedBy(rnr.getModifiedBy());
+          this.nonFullSupplyLineItems.add(lineItem);
+        }
       } else {
         savedLineItem.setModifiedBy(rnr.getModifiedBy());
         savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
