@@ -117,13 +117,13 @@ public class TestCaseHelper {
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com", vendorName);
   }
 
-  public void createUserAndAssignRoleRights(String userId, String user,String email,String homeFacility, String role,  String vendorName, List<String> rightsList) throws IOException, SQLException {
+  public void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, String vendorName, List<String> rightsList) throws IOException, SQLException {
     dbWrapper.insertRole(role, "REQUISITION", "");
     for (String rights : rightsList)
       dbWrapper.assignRight(role, rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, user, passwordUsers, homeFacility, email, vendorName);
-    dbWrapper.insertRoleAssignment(userId,role);
+    dbWrapper.insertRoleAssignment(userId, role);
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user, String userId, String vendorName, List<String> rightsList) throws IOException, SQLException {
@@ -374,93 +374,93 @@ public class TestCaseHelper {
       throw new IllegalArgumentException("Delete: deletion failed");
   }
 
-    public void switchOffNetwork() throws IOException {
-        testWebDriver.sleep(2000);
-        Runtime.getRuntime().exec("sudo ifconfig en1 down");
-        testWebDriver.sleep(2000);
+  public void switchOffNetwork() throws IOException {
+    testWebDriver.sleep(2000);
+    Runtime.getRuntime().exec("sudo ifconfig en1 down");
+    testWebDriver.sleep(2000);
+  }
+
+  public void switchOnNetwork() throws IOException {
+    testWebDriver.sleep(2000);
+    Runtime.getRuntime().exec("sudo ifconfig en1 up");
+    testWebDriver.sleep(2000);
+  }
+
+  public void waitForAppCacheComplete() {
+    int count = 0;
+    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
+    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+    while ((((JavascriptExecutor) testWebDriver.getDriver()).executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")) {
+      testWebDriver.sleep(2000);
+      ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+      count++;
+      if (count > 10) {
+        fail("Appcache not working in 20 sec.");
+        break;
+      }
     }
+  }
 
-    public void switchOnNetwork() throws IOException {
-        testWebDriver.sleep(2000);
-        Runtime.getRuntime().exec("sudo ifconfig en1 up");
-        testWebDriver.sleep(2000);
+  public void verifyPageLinksFromLastPage() throws Exception {
+    verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
+
+    testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
+    verifyNextAndLastLinksEnabled();
+    verifyPreviousAndFirstLinksDisabled();
+
+    testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
+    verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
+
+    testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
+    verifyNextAndLastLinksEnabled();
+    verifyPreviousAndFirstLinksDisabled();
+
+    testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
+    verifyNextAndLastLinksDisabled();
+    verifyPreviousAndFirstLinksEnabled();
+  }
+
+  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
+    testWebDriver.waitForPageToLoad();
+    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
+    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
+      numberOfPages = numberOfPages + 1;
     }
-
-    public void waitForAppCacheComplete(){
-        int count=0;
-        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
-        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
-        while((((JavascriptExecutor) testWebDriver.getDriver()).executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")){
-            testWebDriver.sleep(2000);
-            ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
-            count++;
-            if (count>10){
-                fail("Appcache not working in 20 sec.");
-                break;
-            }
-        }
+    for (int i = 1; i <= numberOfPages; i++) {
+      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
+      assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
     }
+  }
 
-    public void verifyPageLinksFromLastPage() throws Exception {
-        verifyNextAndLastLinksDisabled();
-        verifyPreviousAndFirstLinksEnabled();
+  public void verifyNextAndLastLinksEnabled() throws Exception {
+    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+  }
 
-        testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
-        verifyNextAndLastLinksEnabled();
-        verifyPreviousAndFirstLinksDisabled();
+  public void verifyPreviousAndFirstLinksEnabled() throws Exception {
+    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '<')]"));
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+  }
 
-        testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
-        verifyNextAndLastLinksDisabled();
-        verifyPreviousAndFirstLinksEnabled();
+  public void verifyNextAndLastLinksDisabled() throws Exception {
+    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+  }
 
-        testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
-        verifyNextAndLastLinksEnabled();
-        verifyPreviousAndFirstLinksDisabled();
-
-        testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
-        verifyNextAndLastLinksDisabled();
-        verifyPreviousAndFirstLinksEnabled();
-    }
-
-    public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
-        testWebDriver.sleep(1500);
-        int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
-        if (numberOfProducts % numberOfLineItemsPerPage != 0) {
-            numberOfPages = numberOfPages + 1;
-        }
-        for (int i = 1; i <= numberOfPages; i++) {
-            testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
-            assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
-        }
-    }
-
-    public void verifyNextAndLastLinksEnabled() throws Exception {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-    }
-
-    public void verifyPreviousAndFirstLinksEnabled() throws Exception {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '<')]"));
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-    }
-
-    public void verifyNextAndLastLinksDisabled() throws Exception {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-    }
-
-    public void verifyPreviousAndFirstLinksDisabled() throws Exception {
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '«')]"));
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-        assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-    }
+  public void verifyPreviousAndFirstLinksDisabled() throws Exception {
+    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '«')]"));
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+  }
 }
 
 
