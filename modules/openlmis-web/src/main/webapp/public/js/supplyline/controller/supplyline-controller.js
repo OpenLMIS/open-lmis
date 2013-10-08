@@ -129,14 +129,20 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
         return !($scope.supplylines == undefined || $scope.supplylines == null);
     };
 
+    $scope.clearErrorsOnPage = function(){
+        $scope.showDelError = false;
+        $scope.delError = "";
+        $scope.showError = false;
+        $scope.message = "";
+        $scope.creationError = "";
+        $scope.error = "";
+    }
 
     //
     $scope.startSupplylineEdit = function (supplylineUnderEdit) {
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = "supplyline-form-active";
-        Supplyline.get({id: supplylineUnderEdit.id}, function (data) {
-        $scope.supplyline = data.supplyline;
-            //alert(JSON.stringify($scope.supplyline, null, 4));
-        }, {});
+        $scope.supplylinesBackupMap[supplylineUnderEdit.id].edit = true;
+        $scope.clearErrorsOnPage();
         $scope.setFlags('edit','start');
     };
     // update
@@ -245,6 +251,7 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
         var errorHandler = function (response) {
             $scope.showDelError = true;
             $scope.delError = response.data.error;
+            $scope.supplylinesBackupMap[$scope.supplylineUnderDelete.id].deleted = false;
         };
 
         SupplylineDelete.get({id : $scope.supplylineUnderDelete.id }, function (data) {
@@ -307,9 +314,4 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
      }
 
  }
-
-
-    //
-
-
-};
+}
