@@ -134,6 +134,24 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickRegimenTab();
   }
 
+  @When("^I enter beginning balance \"([^\"]*)\"$")
+  public void enterBeginningBalance(String beginningBalance) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterBeginningBalance(beginningBalance);
+  }
+
+  @When("^I enter quantity received \"([^\"]*)\"$")
+  public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterQuantityReceived(quantityReceived);
+  }
+
+  @When("^I enter quantity dispensed \"([^\"]*)\"$")
+  public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterQuantityDispensed(quantityDispensed);
+  }
+
   @Then("^I should see regimen fields$")
   public void shouldSeeRegimenFields() {
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
@@ -170,13 +188,15 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @When("^I click submit$")
-  public void clickSubmit() {
+  public void clickSubmit() throws IOException {
+    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
     initiateRnRPage.clickSubmitButton();
     testWebDriver.sleep(250);
   }
 
   @When("^I click ok$")
-  public void clickOk() {
+  public void clickOk() throws IOException {
+    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
     testWebDriver.sleep(1000);
     initiateRnRPage.clickOk();
 

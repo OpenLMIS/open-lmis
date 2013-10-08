@@ -537,7 +537,7 @@ Feature: Smoke Tests
   @Smoke
   @ie2
 
-  Scenario: User should be able to initiate emergency RnR
+  Scenario: User should be able to initiate and submit emergency RnR
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
@@ -554,6 +554,19 @@ Feature: Smoke Tests
     And I access initiate emergency requisition page
     Then I should verify "currentPeriod" with status "INITIATED" in row "2"
     And I should verify "currentPeriod" with status "Not yet started" in row "1"
+    When I access proceed
+    And I enter beginning balance "100"
+    And I enter quantity dispensed "100"
+    And I enter quantity received "100"
+    And I click submit
+    And I click ok
+    And I access home page
+    And I access initiate requisition page
+    And I access initiate emergency requisition page
+    Then I should verify "currentPeriod" with status "INITIATED" in row "3"
+    Then I should verify "currentPeriod" with status "SUBMITTED" in row "2"
+    And I should verify "currentPeriod" with status "Not yet started" in row "1"
+
 
 
   @Smoke
