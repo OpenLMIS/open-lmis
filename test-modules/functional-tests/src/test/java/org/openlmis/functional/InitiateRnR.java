@@ -20,10 +20,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ApprovePage;
-import org.openlmis.pageobjects.HomePage;
-import org.openlmis.pageobjects.InitiateRnRPage;
-import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.*;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -472,7 +469,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testValidRnRSubmittedAuthorizedAndVerifyStateOfFields(String program,
+  public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program,
                                                           String userSIC,
                                                           String categoryCode,
                                                           String password,
@@ -534,9 +531,25 @@ public class InitiateRnR extends TestCaseHelper {
     clickProceed(3);
     verifyErrorMessages("Requisition not submitted yet");
 
-    homePage1.navigateInitiateRnRScreenAndSelectingRequiredFields(program,"Regular");
+    clickProceed(2);
+    initiateRnRPage1.clickAuthorizeButton();
+    initiateRnRPage1.clickOk();
+    initiateRnRPage1.verifyAuthorizeRnrSuccessMsg();
+
+    homePage1.navigateAndInitiateEmergencyRnr(program);
+
+    verifyRnRsInGrid("current Period", "Not yet started", "1");
+    verifyRnRsInGrid("current Period", "INITIATED", "2");
+
+    homePage1.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     clickProceed(1);
     verifyErrorMessages("Requisition not initiated yet");
+
+    ViewRequisitionPage viewRequisitionPage= homePage1.navigateViewRequisition();
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.verifyEmergencyStatus();
+    viewRequisitionPage.verifyStatus("AUTHORIZED");
 
   }
 
