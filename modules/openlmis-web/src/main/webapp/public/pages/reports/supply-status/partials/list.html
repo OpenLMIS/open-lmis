@@ -20,7 +20,7 @@
                         </div>
                     </div>
 
-            <div class="box-content"  ng-show="show(1)">
+            <div ng-show="show(1)">
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()" name="filterForm" >
                             <div class="clearfix ">
@@ -109,31 +109,30 @@
 
                 <div ng-show="datarows.length > 0">
                     <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
-                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
-
-                        <tbody>
-                        <tr ng-repeat="row in datarows">
-                            <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                            <td data-title="'Category'" style="width:150px" sortable="category" >{{ row.category }}</td>
-                            <td data-title="'Product Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
-                            <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                            <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance"  >{{ row.openingBalance | number }}</td>
-                            <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts"  >{{ row.receipts | number }}</td>
-                            <td data-title="'Issues'" class="number" style="width:80px" sortable="issues"  >{{ row.issues | number }}</td>
-                            <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustments | number }}</td>
-                            <td data-title="'C. Balance'" class="number" style="width:80px" sortable="closingBalance"  >{{ row.closingBalance | number }}</td>
-                            <td data-title="'MOS'" class="number" style="width:80px" sortable="monthsOfStock"  >{{ row.monthsOfStock | number }}</td>
-                            <td data-title="'AMC'" class="number" style="width:80px" sortable="averageMonthlyConsumption"  >{{ row.averageMonthlyConsumption | number }}</td>
-                            <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock"  >{{ row.maximumStock | number }}</td>
-                            <td data-title="'Order Amount'" class="number" style="width:80px" sortable="reorderAmount"  >{{ row.reorderAmount | number }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="report-container pull-right">
+                        <div class="clearfix">
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                            <tbody>
+                            <tr ng-repeat="row in datarows">
+                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                                <td data-title="'Category'" style="width:150px" sortable="category" >{{ row.category }}</td>
+                                <td data-title="'Product Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
+                                <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                                <td data-title="'B. Balance'" class="number" style="width:80px" sortable="openingBalance"  >{{ row.openingBalance | number }}</td>
+                                <td data-title="'Reciepts'" class="number" style="width:80px" sortable="recipts"  >{{ row.receipts | number }}</td>
+                                <td data-title="'Issues'" class="number" style="width:80px" sortable="issues"  >{{ row.issues | number }}</td>
+                                <td data-title="'Adjustments'" class="number" style="width:80px" sortable="adjustment"  >{{ row.adjustments | number }}</td>
+                                <td data-title="'C. Balance'" class="number" style="width:80px" sortable="closingBalance"  >{{ row.closingBalance | number }}</td>
+                                <td data-title="'MOS'" class="number" style="width:80px" sortable="monthsOfStock"  >{{ row.monthsOfStock | number }}</td>
+                                <td data-title="'AMC'" class="number" style="width:80px" sortable="averageMonthlyConsumption"  >{{ row.averageMonthlyConsumption | number }}</td>
+                                <td data-title="'Max Stock'" class="number" style="width:80px" sortable="maximumStock"  >{{ row.maximumStock | number }}</td>
+                                <td data-title="'Order Amount'" class="number" style="width:80px" sortable="reorderAmount"  >{{ row.reorderAmount | number }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-
-
-
-
-            </div>
   </div>
 

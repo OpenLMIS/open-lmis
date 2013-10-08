@@ -322,46 +322,32 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     $scope.$watch('startMonth', function(selection){
-
-        var date = new Date();
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.fromMonth =  selection-1;
+        if($scope.startMonth != undefined || $scope.startMonth == ""){
             adjustEndMonths();
         }else{
-            $scope.startMonth = (date.getMonth()+1 );
-            $scope.filterObject.fromMonth =  (date.getMonth()+1);
+            var date = new Date();
+            $scope.endMonth = $scope.startMonth = (date.getMonth()+1 ).toString();
         }
+        $scope.filterObject.fromMonth = $scope.startMonth;
         $scope.filterGrid();
     });
 
-
     $scope.$watch('endMonth', function(selection){
-        var date = new Date();
-        if(selection != undefined || selection == ""){
-            $scope.filterObject.toMonth =  selection-1;
-        }else{
-            $scope.endMonth = (date.getMonth() +1 );
-            $scope.filterObject.toMonth =  (date.getMonth()+1);
-        }
+        $scope.filterObject.toMonth = $scope.endMonth;
         $scope.filterGrid();
-
     });
 
     var adjustEndMonths = function(){
         if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
             $scope.endMonths = [];
             $.each($scope.startMonths,function(idx,obj){
-                if( obj.value >= $scope.startMonth){
+                if(obj.value >= $scope.startMonth){
                     $scope.endMonths.push({'name':obj.name, 'value': obj.value});
                 }
             });
-            if($scope.endMonth < $scope.startMonth){
-                $scope.endMonth = $scope.startMonth;
-            }
-        }else{
-            $scope.endMonths = $scope.startMonths;
         }
     }
+
     var adjustEndSemiAnnuals = function(){
 
         if($scope.startYear == $scope.endYear){
