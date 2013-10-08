@@ -50,6 +50,8 @@ dependencies {
     }
 
 }
+def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/$dbName"
+def driver = 'org.postgresql.Driver'
 
 task setupDB << {
     tasks.dropDB.execute()
@@ -57,7 +59,7 @@ task setupDB << {
 
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+    ant.flywayInit(driver: driver, url: connectionString, user: dbUser, password: dbPassword)
 
     tasks.migrateDB.execute()
 }
@@ -92,7 +94,7 @@ task migrateDB() << {
     println("migrateDB:")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+    ant.flywayMigrate(driver: driver, url: connectionString, user: dbUser, password: dbPassword)
 }
 
 task testSeed(type: Exec) {
