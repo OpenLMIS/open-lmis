@@ -210,6 +210,9 @@
             <div id="lstsupervisorynode_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supervisoryNode.name}}</div>
             <div id="lstdescription_{{$index}}" class="span3" style="overflow: visible;"> {{sl.description}}</div>
         </div>
+        <div form-toolbar id="action_buttons" class="action-buttons" ng-show="showDelError">
+            <div class="toolbar-error" id="deleteErrorMsgDiv" ng-bind="delError" ng-show="showDelError"/>
+        </div>
     </div>
 </div>
 
