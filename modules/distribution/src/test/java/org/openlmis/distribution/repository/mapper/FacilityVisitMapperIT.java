@@ -95,7 +95,7 @@ public class FacilityVisitMapperIT {
     facilityVisit.setConfirmedBy(confirmedBy);
     facilityVisit.setVerifiedBy(verifiedBy);
 
-    facilityVisit.setObservation("I observed something");
+    facilityVisit.setObservations("I observed something");
 
     facilityVisit.setDistributionId(distribution.getId());
     facilityVisit.setFacilityId(facility.getId());

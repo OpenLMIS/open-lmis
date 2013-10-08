@@ -8,52 +8,63 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 function DistributionListController($scope, SharedDistributions, IndexedDB, SyncFacilityDistributionData) {
-  SharedDistributions.update();
-  $scope.sharedDistributions = SharedDistributions;
+  var updateSharedDistribution = function () {
+    SharedDistributions.update();
+    $scope.sharedDistributions = SharedDistributions;
+  }
+  updateSharedDistribution();
   var COMPLETE = 'is-complete';
   var SYNCED = 'is-synced';
 
 
+  $scope.message = null;
   $scope.syncDistribution = function (distributionId) {
+
     var facilitiesSynced = [];
     var facilitySelected;
-    var distributionData;
+    var distributionData = _.findWhere(SharedDistributions.distributionList, {id: distributionId});
     var facilities;
 
     var syncFacility = function () {
-      $.each(distributionData, function (index, facilityDistributionData) {
+      var index = 0;
+      $.each(distributionData.facilityDistributionData, function (key, facilityDistributionData) {
+        index++;
         var computedStatus = new FacilityDistributionData(facilityDistributionData).computeStatus();
         if (computedStatus === COMPLETE) {
-
-          SyncFacilityDistributionData.update({distributionId: distributionId },{facilityDistributionData: facilityDistributionData},
+          facilityDistributionData.facilityId = key;
+          SyncFacilityDistributionData.update({distributionId: distributionId }, facilityDistributionData,
             function () {
-              facilitySelected = _.findWhere(facilities, {id: utils.parseIntWithBaseTen(facilityDistributionData.key)});
+              facilitySelected = _.findWhere(facilities, {id: utils.parseIntWithBaseTen(key)});
               facilitiesSynced.push(facilitySelected.name + "-" + facilitySelected.code);
               facilityDistributionData.status = SYNCED;
-            }, {});
+              updateStatus(index);
+            }, function () {
+              updateStatus(index);
+            });
         }
       });
+      updateStatus(index);
+    }
+
+    var updateStatus = function (index) {
+      if (index != _.size(distributionData.facilityDistributionData))
+        return;
       if (facilitiesSynced.length == 0) {
         $scope.message = "No Facility for the chosen zone program and period is ready to be synced";
       } else {
         var message = "";
-        $.each(facilitiesSynced, function (facility) {
+        $.each(facilitiesSynced, function (index, facility) {
           message = message + facility + ","
         });
-        $scope.message = message + "have been successfully synced";
+        $scope.message = message + " have been successfully synced";
+        IndexedDB.put('distributions', distributionData, null, null, updateSharedDistribution);
       }
     }
 
     IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen(distributionId), function (event) {
       facilities = event.target.result.facilities;
-    }, {});
-
-    IndexedDB.get('distributions', utils.parseIntWithBaseTen(distributionId), function (event) {
-      distributionData = event.target.result.facilityDistributionData;
       syncFacility();
     }, {});
-
-
   }
 };
 

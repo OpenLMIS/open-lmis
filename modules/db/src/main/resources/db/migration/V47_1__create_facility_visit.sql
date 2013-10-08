@@ -17,7 +17,7 @@ CREATE TABLE facility_visits (
   confirmedByTitle VARCHAR(50),
   verifiedByName   VARCHAR(50),
   verifiedByTitle  VARCHAR(50),
-  observation      TEXT,
+  observations      TEXT,
   createdBy        INTEGER,
   createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy       INTEGER,

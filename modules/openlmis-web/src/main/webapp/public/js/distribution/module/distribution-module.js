@@ -23,8 +23,8 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/epi-use',
       {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
-      when('/record-facility-data/:distribution/:facility/general-observation',
-      {controller: GeneralObservationController, templateUrl: 'partials/general-observation.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/facility-visit',
+      {controller: FacilityVisitController, templateUrl: 'partials/facility-visit.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});
 
   }]).config(function (IndexedDBProvider) {

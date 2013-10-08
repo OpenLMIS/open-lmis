@@ -15,11 +15,14 @@
     <span openlmis-message="message.no.distribution.initiated"></span>
   </div>
 
+  <div class="alert alert-info" ng-show="message"><span ng-bind="message"></span></div>
+
   <div ng-show="sharedDistributions.distributionList.length">
     <div id="cachedDistributions">
       <div class="list-header-container">
         <div class="row-fluid list-header">
           <span class="span1"></span>
+
           <div class="span2">
             <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
           </div>
@@ -36,6 +39,7 @@
           <span ng-class="distribution.computeStatus()" class="delivery-zone-status span1">
             <span id="indicator{{ $index }}" class="status-icon"></span>
           </span>
+
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>
           </div>
@@ -44,7 +48,8 @@
           <div class="span2" ng-bind="distribution.status"></div>
           <div class="span2"><a href="javascript:void(0)" openlmis-message="label.record.data"
                                 ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
-          <div class="span1"><a href="javascript:void(0)" openlmis-message="label.sync" ng-click="syncDistribution(distribution.id)"></a></div>
+          <div class="span1"><a href="javascript:void(0)" openlmis-message="label.sync"
+                                ng-click="syncDistribution(distribution.id)"></a></div>
         </div>
       </div>
     </div>
