@@ -30,7 +30,7 @@ public class PrintRnrLineItem {
     if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed(calcStrategy);
     calculateNormalizedConsumption(calcStrategy);
     calculateAmc(calcStrategy, period);
-    calculateMaxStockQuantity(calcStrategy);
+    calculateMaxStockQuantity(calcStrategy,template);
     calculateLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
     rnrLineItem.calculateOrderQuantity(calcStrategy);
 
