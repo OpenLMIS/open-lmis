@@ -45,9 +45,9 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy) {
+  private void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
     try {
-      rnrLineItem.calculateMaxStockQuantity(calcStrategy);
+      rnrLineItem.calculateMaxStockQuantity(calcStrategy, template);
     } catch (NullPointerException e) {
       rnrLineItem.setMaxStockQuantity(null);
     }
