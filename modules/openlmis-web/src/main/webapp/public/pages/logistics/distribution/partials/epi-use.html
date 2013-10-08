@@ -30,7 +30,7 @@
 
       <div id = "epiUseTable" tab-scroll bottom-offset = "180"
            ng-show = "distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
-        <form auto-save = "distribution" object-store = "distributions">
+        <form auto-save = "distribution" object-store = "distributions" disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
           <table class = "table table-bordered">
             <thead>
               <tr>
