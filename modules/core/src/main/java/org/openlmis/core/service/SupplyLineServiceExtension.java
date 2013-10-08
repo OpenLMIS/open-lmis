@@ -40,8 +40,16 @@ public class SupplyLineServiceExtension {
         return supplyLineRepositoryExt.getSupplylineDetailById(id);
     }
 
+    public boolean doesSupplyLineHaveAssociatedOrders(Long id){
+        return supplyLineRepositoryExt.getOrderCountById(id) > 0;
+    }
+
     public void deleteById(Long supplyLineId) {
+        if(this.doesSupplyLineHaveAssociatedOrders(supplyLineId)){
+            throw new DataException("Supply line has associated RNRs and cannot be deleted.");
+        }
         this.supplyLineRepositoryExt.deleteById(supplyLineId);
+
     }
 
 
