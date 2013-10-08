@@ -480,8 +480,6 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
                     params[index] = value;
             });
 
-            alert($scope.filterObject.fromMonth);
-
             // clear existing data
             $scope.data = [];
 
