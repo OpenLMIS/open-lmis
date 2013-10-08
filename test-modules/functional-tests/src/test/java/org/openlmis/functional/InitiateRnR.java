@@ -472,7 +472,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testValidRnRSubmittedAndVerifyStateOfFields(String program,
+  public void testValidRnRSubmittedAuthorizedAndVerifyStateOfFields(String program,
                                                           String userSIC,
                                                           String categoryCode,
                                                           String password,
@@ -484,6 +484,13 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
+    List<String> rightsList1 = new ArrayList<String>();
+    rightsList1.add(AUTHORIZE_REQUISITION);
+    rightsList1.add(VIEW_REQUISITION);
+    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
+      rightsList1);
+
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
@@ -510,6 +517,26 @@ public class InitiateRnR extends TestCaseHelper {
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "3");
     verifyRnRsInGrid("current Period", "SUBMITTED", "2");
+
+    homePage.logout(baseUrlGlobal);
+
+
+    HomePage homePage1 = loginPage.loginAs("mo", password);
+    homePage1.navigateAndInitiateEmergencyRnr(program);
+
+    verifyRnRsInGrid("current Period", "Not yet started", "1");
+    verifyRnRsInGrid("current Period", "INITIATED", "3");
+    verifyRnRsInGrid("current Period", "SUBMITTED", "2");
+
+    clickProceed(1);
+    verifyErrorMessages("Requisition not initiated yet");
+
+    clickProceed(3);
+    verifyErrorMessages("Requisition not submitted yet");
+
+    homePage1.navigateInitiateRnRScreenAndSelectingRequiredFields(program,"Regular");
+    clickProceed(1);
+    verifyErrorMessages("Requisition not initiated yet");
 
   }
 
@@ -785,6 +812,12 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyTotalQuantityConsumedErrorMessage() {
     testWebDriver.waitForPageToLoad();
     assertTrue("Error message 'verifyStockOnHandErrorMessage' should show up", testWebDriver.getElementByXpath("//span[contains(text(),'Total Quantity Consumed is calculated to be negative, please validate entries')]").isDisplayed());
+  }
+
+  private void clickProceed(int row)
+  {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//input[@value='Proceed'])["+row+"]"));
+    testWebDriver.getElementByXpath("(//input[@value='Proceed'])["+row+"]").click();
   }
 
 
