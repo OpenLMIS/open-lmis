@@ -23,11 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Wolde
- * Date: 5/10/13
- * Time: 2:37 PM
- */
+
 @Component
 @NoArgsConstructor
 public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
@@ -109,11 +105,19 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
             calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearFrom());
             calendar.set(Calendar.MONTH, monthFrom);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
             adjustmentSummaryReportFilter.setStartDate(calendar.getTime());
 
             calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearTo());
             calendar.set(Calendar.MONTH, monthTo);
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            calendar.set(Calendar.HOUR, 23);
+            calendar.set(Calendar.MINUTE, 59);
+            calendar.set(Calendar.SECOND, 59);
+            calendar.set(Calendar.MILLISECOND, 0);
             adjustmentSummaryReportFilter.setEndDate(calendar.getTime());
 
         }
