@@ -1,33 +1,8 @@
-function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, GeographicZones, RequisitionGroups, $http, $routeParams, $location) {
+function ListFacilitiesController($scope,$filter,ngTableParams, FacilityList, ReportFacilityTypes, GeographicZones, RequisitionGroups, $http, $routeParams, $location) {
 
-        //to minimize and maximize the filter section
-        var section = 1;
-
-        $scope.section = function (id) {
-            section = id;
-        };
-
-        $scope.show = function (id) {
-            return section == id;
-        };
 
         $scope.filterGrid = function (){
-            //forget the current page and go to the first page while filtering
-            $scope.pagingOptions.currentPage = 1;
-            $scope.getPagedDataAsync($scope.pagingOptions.pageSize, 1);//
-        };
-
-        //filter form data section
-        $scope.filterOptions = {
-            filterText: "",
-            useExternalFilter: false
-        };
-
-        $scope.pagingOptions = {
-            pageSizes: [5, 10, 20, 40, 50, 100],
-            pageSize: 10,
-            totalServerItems: 0,
-            currentPage: 1
+            $scope.getPagedDataAsync(0, 0);//
         };
 
         //filter form data section
@@ -45,19 +20,14 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
 
          ReportFacilityTypes.get(function(data) {
             $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': 'All Facility Types', id:'0'});
+            $scope.facilityTypes.unshift({'name': '-- All Facility Types --', id:'0'});
         });
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
-            $scope.zones.unshift({'name': 'All Zones', id:'0'});
+            $scope.zones.unshift({'name': '-- All Zones --', id:'0'});
         });
-           // [
-           // ,
-           // {'name': 'District Health Office', 'value': 3},
-           // {'name': 'District', 'value': 2},
-           // {'name': 'Province', 'value': 1}
-        //];
+
 
         $scope.statuses = [
             {'name': 'All Statuses'},
@@ -65,17 +35,13 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             {'name': 'Inactive', 'value': "FALSE"}
         ];
 
-        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
         $scope.exportReport   = function (type){
             var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
             window.open(url);
         }
 
-        $scope.goToPage = function (page, event) {
-            angular.element(event.target).parents(".dropdown").click();
-            $location.search('page', page);
-        };
+
 
         $scope.$watch('rgroupId', function (selection) {
             if (selection == "All") {
@@ -93,118 +59,64 @@ function ListFacilitiesController($scope, FacilityList, ReportFacilityTypes, Geo
             $scope.filterGrid();
         });
 
-        $scope.$watch("currentPage", function () {  //good watch no problem
 
-            if($scope.currentPage != undefined && $scope.currentPage != 1){
-              //when clicked using the links they have done updated the paging info no problem here
-               //or using the url page param
-              //$scope.pagingOptions.currentPage = $scope.currentPage;
-                $location.search("page", $scope.currentPage);
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function(params) {
+
+        // slice array data on pages
+        if($scope.data == undefined ){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
             }
-        });
-
-        $scope.$on('$routeUpdate', function () {
-            if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-                $location.search('page', 1);
-                return;
-            }
-        });
-
-        $scope.sortInfo = { fields:["code","facilityType"], directions: ["ASC"]};
-
-        $scope.setPagingData = function(data, page, pageSize, total){
-            $scope.myData = data; 
-            $scope.pagingOptions.totalServerItems = total;
-            $scope.numberOfPages = ( Math.ceil( total / pageSize))  ? Math.ceil( total / pageSize) : 1 ;
-        };
-
-        $scope.getPagedDataAsync = function (pageSize, page) {
-                        var params  = {};
-                        if(pageSize != undefined && page != undefined ){
-                                var params =  {
-                                                "max" : pageSize,
-                                                "page" : page
-                                               };
-                        }
-
-
-                        params['zoneId'] = $scope.zone;
-                        params['facilityTypeId'] = $scope.facilityType;
-                        params['statusId'] = $scope.status;
-                        params['rgroupId'] =$scope.filterObject.rgroupId;
-
-                        $scope.data = [];
-
-                        FacilityList.get(params, function(data) {
-                            //if(data.pages != undefined){
-                                $scope.data = data.pages.rows;
-                                $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
-                            //}
-
-                        });
-        };
-
-
-        $scope.$watch('pagingOptions.currentPage', function () {
-            if($scope.currentPage = $scope.pagingOptions.currentPage) {
-                $scope.currentPage = $scope.pagingOptions.currentPage;
-                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }
-
-        }, true);
-
-        $scope.$watch('pagingOptions.pageSize', function () {
-            if($scope.pageSize != $scope.pagingOptions.pageSize){
-                $scope.pageSize = $scope.pagingOptions.pageSize;
-                $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }
-
-        }, true);
-        
-        $scope.$watch('sortInfo', function () {
-           
-            $.each($scope.sortInfo.fields, function(index, value) {
-                if(value != undefined) {
-                    
-                    $scope.filterObject["facilityType"] = undefined;
-                    $scope.filterObject["active"] = undefined;
-                    $scope.filterObject["facilityName"] = undefined;
-                    $scope.filterObject["code"] = undefined;
-                    $scope.filterObject[$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-                    
-                }
-            });
-
-            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-        }, true);
-
-    $scope.gridOptions = {
-        data: 'myData',
-     
-        columnDefs:
-            [
-            { field: 'code', displayName: 'Facility Code', width: "*", resizable: false},
-            { field: 'facilityName', displayName: 'Facility Name', width: "**" },
-            { field: 'facilityType', displayName: 'Facility Type', width: "*" },
-            { field: 'region', displayName: 'Zone', width : "*"},
-            { field: 'contact', displayName: 'Contact', width : "*"},
-            { field: 'phoneNumber', displayName: 'Phone', width : "*"},
-            { field: 'owner', displayName: 'Operator', width : "*"},
-            { field: 'active', displayName: 'Active', width : "*"}
-
-            ],
-        enablePaging: true,
-        enableSorting :true,
-        showFooter: true,
-        selectWithCheckboxOnly :false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        showFilter: true,
-        autoFit :true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-      
+        }
     };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        pageSize = 10000;
+        page = 1;
+        var params  = {};
+        if(pageSize != undefined && page != undefined ){
+            var params =  {
+                            "max" : pageSize,
+                            "page" : page
+                           };
+        }
+
+
+        params['zoneId'] = $scope.zone;
+        params['facilityTypeId'] = $scope.facilityType;
+        params['statusId'] = $scope.status;
+        params['rgroupId'] =$scope.filterObject.rgroupId;
+
+        $scope.data = $scope.datarows = [];
+
+        FacilityList.get(params, function(data) {
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged( $scope.tableParams );
+            });
+        };
+
+
+
 }

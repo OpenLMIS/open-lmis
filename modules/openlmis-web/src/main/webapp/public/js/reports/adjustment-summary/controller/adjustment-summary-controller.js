@@ -440,78 +440,77 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
     });
 
 
-        $scope.exportReport   = function (type){
+    $scope.exportReport   = function (type){
 
-            $scope.filterObject.pdformat =1;
-            var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/adjustment_summary/' + type +'?' + params;
-            window.location.href = url;
-        };
+        $scope.filterObject.pdformat =1;
+        var params = jQuery.param($scope.filterObject);
+        var url = '/reports/download/adjustment_summary/' + type +'?' + params;
+        window.location.href = url;
+    };
 
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
 
-        // the grid options
-        $scope.tableParams = new ngTableParams({
-            page: 1,            // show first page
-            total: 0,           // length of data
-            count: 25           // count per page
-        });
+    $scope.paramsChanged = function(params) {
 
-        $scope.paramsChanged = function(params) {
+        // slice array data on pages
+        if($scope.data == undefined ){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
 
-            // slice array data on pages
-            if($scope.data == undefined ){
-                $scope.datarows = [];
-                params.total = 0;
-            }else{
-                var data = $scope.data;
-                var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-                orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
-
-                params.total = orderedData.length;
-                $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
-                var i = 0;
-                var baseIndex = params.count * (params.page - 1) + 1;
-                while(i < $scope.datarows.length){
-                    $scope.datarows[i].no = baseIndex + i;
-                    i++;
-                }
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
             }
-        };
+        }
+    };
 
     // watch for changes of parameters
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
-        $scope.getPagedDataAsync = function (pageSize, page) {
-                    pageSize = 6000;
-                    page = 1;
-                        var params  = {};
-                        if($scope.program == null || $scope.program == undefined || $scope.program == ''){
-                            // do not send a request to the server before the basic selection was done.
-                            return;
-                        }
-                        if(pageSize != undefined && page != undefined ){
-                                var params =  {
-                                                "max" : pageSize,
-                                                "page" : page
-                                               };
-                        }
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        pageSize = 6000;
+        page = 1;
+            var params  = {};
+            if($scope.program == null || $scope.program == undefined || $scope.program == ''){
+                // do not send a request to the server before the basic selection was done.
+                return;
+            }
+            if(pageSize != undefined && page != undefined ){
+                    var params =  {
+                                    "max" : pageSize,
+                                    "page" : page
+                                   };
+            }
 
-                        $.each($scope.filterObject, function(index, value) {
-                             if(value != undefined)
-                                params[index] = value;
-                        });
+            $.each($scope.filterObject, function(index, value) {
+                 if(value != undefined)
+                    params[index] = value;
+            });
 
 
-                        // clear existing data
-                        $scope.data = [];
+            // clear existing data
+            $scope.data = [];
 
-                        // try to load the new data based on the selected parameters
-                        AdjustmentSummaryReport.get(params, function(data) {
-                            if(data.pages != undefined){
-                                $scope.data = data.pages.rows;
-                                $scope.paramsChanged($scope.tableParams);
-                            }
-                        });
+            // try to load the new data based on the selected parameters
+            AdjustmentSummaryReport.get(params, function(data) {
+                if(data.pages != undefined){
+                    $scope.data = data.pages.rows;
+                    $scope.paramsChanged($scope.tableParams);
+                }
+            });
 
         };
 

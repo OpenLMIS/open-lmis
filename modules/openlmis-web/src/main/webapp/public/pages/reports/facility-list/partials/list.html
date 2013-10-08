@@ -9,12 +9,8 @@
     <div class="box span12">
         <div class="box-header">
             <h2><i class="icon-edit"></i><span class="break"></span>Facility List</h2>
-            <div class="box-icon">
-                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
-                <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
-            </div>
         </div>
-        <div class="box-content" ng-show="show(1)">
+        <div >
             <div class="app-form"  style="padding: 5px;">
                 <form ng-submit="filterGrid()" name="filterForm" novalidate>
                     <div class="form-row clearfix ">
@@ -59,13 +55,31 @@
             </div>
         </div>
 
-        <div class="gridStyleReport" ng-show="data.length > 0" ng-grid="gridOptions"></div>
-
         <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
             <tr>
                 <td>No data to show under selected filters</td>
             </tr>
         </table>
+
+        <div ng-show="datarows.length > 0">
+            <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+            <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
+
+                <tbody>
+                <tr ng-repeat="row in datarows">
+                    <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                    <td data-title="'Facility Code'" style="width:80px" sortable="code" >{{ row.code }}</td>
+                    <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
+                    <td data-title="'Facility Type'" style="width:120px" sortable="facilityType" >{{ row.facilityType }}</td>
+                    <td data-title="'Region / Zone'" style="width:80px" sortable="region"  >{{ row.region }}</td>
+                    <td data-title="'Phone'" style="width:100px" sortable="phoneNumber"  >{{ row.phoneNumber }}</td>
+                    <td data-title="'Owner'" style="width:100px" sortable="owner"  >{{ row.owner }}</td>
+                    <td data-title="'Active'" style="width:100px" sortable="active"  >{{ row.active == true?'Yes':'No' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
