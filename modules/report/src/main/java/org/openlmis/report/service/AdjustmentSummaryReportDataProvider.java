@@ -103,7 +103,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
 
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearFrom());
-            calendar.set(Calendar.MONTH, monthFrom);
+            calendar.set(Calendar.MONTH, monthFrom - 1);
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.set(Calendar.HOUR, 0);
             calendar.set(Calendar.MINUTE, 0);
@@ -112,9 +112,9 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
             adjustmentSummaryReportFilter.setStartDate(calendar.getTime());
 
             calendar.set(Calendar.YEAR, adjustmentSummaryReportFilter.getYearTo());
-            calendar.set(Calendar.MONTH, monthTo);
+            calendar.set(Calendar.MONTH, monthTo - 1);
             calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-            calendar.set(Calendar.HOUR, 23);
+            calendar.set(Calendar.HOUR, 12);
             calendar.set(Calendar.MINUTE, 59);
             calendar.set(Calendar.SECOND, 59);
             calendar.set(Calendar.MILLISECOND, 0);

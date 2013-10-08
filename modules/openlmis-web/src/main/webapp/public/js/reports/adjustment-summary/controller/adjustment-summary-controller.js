@@ -1,18 +1,5 @@
 function AdjustmentSummaryReportController($scope, $filter , ngTableParams , AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
 
-        //to minimize and maximize the filter section
-        var section = 1;
-
-        $scope.section = function (id) {
-            section = id;
-        };
-
-        $scope.show = function (id) {
-            return section == id;
-        };
-
-
-
         // default to the monthly period type
         $scope.periodType = 'monthly';
 
@@ -106,14 +93,6 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         $scope.filterGrid = function (){
             $scope.getPagedDataAsync(0, 0);
         };
-
-        //filter form data section
-        $scope.filterOptions = {
-            filterText: "",
-            useExternalFilter: false
-        };
-
-
 
         //filter form data section
         $scope.filterObject =  {
@@ -290,13 +269,14 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
 
     $scope.$watch('startMonth', function(selection){
+        $scope.filterObject.fromMonth = $scope.startMonth;
         if($scope.startMonth != undefined || $scope.startMonth == ""){
             adjustEndMonths();
         }else{
             var date = new Date();
             $scope.endMonth = $scope.startMonth = (date.getMonth()+1 ).toString();
         }
-        $scope.filterObject.fromMonth = $scope.startMonth;
+
         $scope.filterGrid();
     });
 
@@ -500,6 +480,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
                     params[index] = value;
             });
 
+            alert($scope.filterObject.fromMonth);
 
             // clear existing data
             $scope.data = [];

@@ -20,11 +20,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Wolde
- * Date: 5/10/13
- * Time: 3:18 PM
- */
+
 @Repository
 public interface AdjustmentSummaryReportMapper {
     @SelectProvider(type=AdjustmentSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecords")

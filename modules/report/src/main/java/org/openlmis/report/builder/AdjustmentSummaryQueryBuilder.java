@@ -21,10 +21,10 @@ public class AdjustmentSummaryQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType, SUM(totallossesandadjustments) adjustment,supplying_facility_name supplyingFacility");
+        SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType, SUM(totallossesandadjustments) adjustment,supplying_facility_name supplyingFacility");
         FROM("vw_requisition_adjustment");
         writePredicates(filter);
-        GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name");
+        GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name, processing_periods_name");
       ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
 
       // write the query to a variable, this is to make it easier to debug the query.
@@ -57,7 +57,7 @@ public class AdjustmentSummaryQueryBuilder {
             if(filter.getProgramId() != -1){  //Unless All programs selected
                 WHERE("program_id = #{filterCriteria.programId}");
             }
-            if(!filter.getAdjustmentTypeId().equals("-1") && filter.getAdjustmentTypeId().equals("0") ){
+            if(!filter.getAdjustmentTypeId().equals("-1") && !filter.getAdjustmentTypeId().equals("0") && !filter.getAdjustmentTypeId().equals("") ){
                 WHERE("adjustment_type = #{filterCriteria.adjustmentTypeId}");
             }
         }
