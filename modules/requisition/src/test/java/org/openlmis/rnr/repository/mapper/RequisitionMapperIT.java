@@ -33,6 +33,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -405,15 +406,23 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldOnlyLoadEmergencyRequisitionDataForGivenQuery() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, true);
+    Rnr initiatedRequisition = insertRequisition(processingPeriod1, program, INITIATED, true);
+    Rnr submitteddRequisition = insertRequisition(processingPeriod1, program, SUBMITTED, true);
 
-    List<Rnr> fetchedRnr = mapper.getInitiatedEmergencyRequisition(facility.getId(), program.getId());
+    List<Rnr> actualRequisitions = 
+            mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
+      
+    verifyRequisition(initiatedRequisition, actualRequisitions.get(0), INITIATED);
+    verifyRequisition(submitteddRequisition, actualRequisitions.get(1), SUBMITTED);
 
-    assertThat(fetchedRnr.get(0).getId(), is(requisition.getId()));
-    assertThat(fetchedRnr.get(0).getPeriod(), is(processingPeriod1));
-    assertThat(fetchedRnr.get(0).getStatus(), is(INITIATED));
-    assertThat(fetchedRnr.get(0).getFullSupplyLineItems().size(), is(0));
-    assertThat(fetchedRnr.get(0).getNonFullSupplyLineItems().size(), is(0));
+  }
+    
+  private void verifyRequisition(Rnr expectedRequisition, Rnr actualRequisition, RnrStatus expectedStatus) {
+      assertThat(actualRequisition.getId(), is(expectedRequisition.getId()));
+      assertThat(actualRequisition.getPeriod(), is(processingPeriod1));
+      assertThat(actualRequisition.getStatus(), is(expectedStatus));
+      assertThat(actualRequisition.getFullSupplyLineItems().size(), is(0));
+      assertThat(actualRequisition.getNonFullSupplyLineItems().size(), is(0));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency) {

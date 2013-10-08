@@ -1,16 +1,13 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.order.repository.mapper;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -37,15 +34,12 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -117,25 +111,17 @@ public class OrderMapperIT {
   }
 
   @Test
-  public void shouldGetAllOrders() throws Exception {
-    Order order1 = insertOrder(3L);
-    Order order2 = insertOrder(1L);
+  public void shouldGetOrdersForAPageGivenLimitAndOffset() throws Exception {
+    insertOrder(1L);
+    insertOrder(2L);
+    Order order3 = insertOrder(3L);
+    Order order4 = insertOrder(4L);
 
-    Date today = DateTime.now().toDate();
-    Date oneYearBack = DateTime.now().minusYears(1).toDate();
+    List<Order> orders = mapper.getOrders(2, 2);
 
-    updateOrderCreatedTime(order1, oneYearBack);
-    updateOrderCreatedTime(order2, today);
-
-    List<Order> orders = mapper.getAll();
     assertThat(orders.size(), is(2));
-    assertThat(orders.get(1).getId(), is(order1.getId()));
-    assertThat(orders.get(1).getRnr().getId(), is(order1.getRnr().getId()));
-    assertThat(orders.get(1).getShipmentFileInfo(), is(nullValue()));
-    assertThat(orders.get(0).getId(), is(order2.getId()));
-    assertThat(orders.get(0).getSupplyLine().getId(), is(supplyLine.getId()));
-    assertThat(orders.get(1).getSupplyLine().getId(), is(supplyLine.getId()));
-
+    assertThat(orders.get(0).getId(), is(order3.getId()));
+    assertThat(orders.get(1).getId(), is(order4.getId()));
   }
 
   @Test
@@ -154,7 +140,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
 
-    List<Order> orders = mapper.getAll();
+    List<Order> orders = mapper.getOrders(1, 0);
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
     assertThat(orders.get(0).getShipmentFileInfo().isProcessingError(), is(false));
   }
@@ -246,11 +232,16 @@ public class OrderMapperIT {
     assertThat(status, is(order.getStatus()));
   }
 
-  private long updateOrderCreatedTime(Order order, Date date) throws SQLException {
-    List paramList = new ArrayList();
-    paramList.add(new java.sql.Date(date.getTime()));
-    paramList.add(order.getId());
-    return queryExecutor.executeUpdate("UPDATE orders SET createdDate = ? WHERE id = ?", paramList);
+  @Test
+  public void shouldGet2PagesForGivenPageSizeOf3And4ROrders() throws Exception {
+    insertOrder(1L);
+    insertOrder(2L);
+    insertOrder(3L);
+    insertOrder(4L);
+
+    Integer numberOfPages = mapper.getNumberOfPages(3);
+
+    assertThat(numberOfPages, is(2));
   }
 
   private Order insertOrder(Long programId) {

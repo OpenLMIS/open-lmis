@@ -1,15 +1,14 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.rnr.domain.*;
@@ -20,68 +19,61 @@ import static org.openlmis.rnr.domain.ProgramRnrTemplate.QUANTITY_DISPENSED;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.STOCK_IN_HAND;
 
 @Data
+@AllArgsConstructor
 public class PrintRnrLineItem {
 
-  private LineItem lineItem;
+  private RnrLineItem rnrLineItem;
 
-  public PrintRnrLineItem(LineItem lineItem) {
-    this.lineItem = lineItem;
-  }
-
-
-  public void calculate(ProcessingPeriod period, List<? extends Column> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculate(RnrCalcStrategy calcStrategy, ProcessingPeriod period, List<? extends Column> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    RnrLineItem rnrLineItem = (RnrLineItem) this.lineItem;
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) {
-      rnrLineItem.calculateQuantityDispensed();
-    }
-    calculateNormalizedConsumption();
-    calculateAmc(period);
-    calculateMaxStockQuantity(template);
-    calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
-    rnrLineItem.calculateOrderQuantity();
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(calcStrategy);
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed(calcStrategy);
+    calculateNormalizedConsumption(calcStrategy);
+    calculateAmc(calcStrategy, period);
+    calculateMaxStockQuantity(calcStrategy);
+    calculateLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
+    rnrLineItem.calculateOrderQuantity(calcStrategy);
 
-    rnrLineItem.calculatePacksToShip();
+    rnrLineItem.calculatePacksToShip(calcStrategy);
   }
 
-  private void calculateStockInHand() {
+  private void calculateStockInHand(RnrCalcStrategy calcStrategy) {
     try {
-      ((RnrLineItem) lineItem).calculateStockInHand();
+      rnrLineItem.calculateStockInHand(calcStrategy);
     } catch (NullPointerException e) {
-      ((RnrLineItem) lineItem).setStockInHand(null);
+      rnrLineItem.setStockInHand(null);
     }
   }
 
-  private void calculateMaxStockQuantity(ProgramRnrTemplate template) {
+  private void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy) {
     try {
-      ((RnrLineItem) lineItem).calculateMaxStockQuantity(template);
+      rnrLineItem.calculateMaxStockQuantity(calcStrategy);
     } catch (NullPointerException e) {
-      ((RnrLineItem) lineItem).setMaxStockQuantity(null);
+      rnrLineItem.setMaxStockQuantity(null);
     }
   }
 
-  private void calculateAmc(ProcessingPeriod period) {
+  private void calculateAmc(RnrCalcStrategy calcStrategy, ProcessingPeriod period) {
     try {
-      ((RnrLineItem) lineItem).calculateAmc(period);
+      rnrLineItem.calculateAmc(calcStrategy, period);
     } catch (NullPointerException e) {
-      ((RnrLineItem) lineItem).setAmc(null);
+      rnrLineItem.setAmc(null);
     }
   }
 
-  private void calculateNormalizedConsumption() {
+  private void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy) {
     try {
-      ((RnrLineItem) lineItem).calculateNormalizedConsumption();
+      rnrLineItem.calculateNormalizedConsumption(calcStrategy);
     } catch (NullPointerException e) {
-      ((RnrLineItem) lineItem).setNormalizedConsumption(null);
+      rnrLineItem.setNormalizedConsumption(null);
     }
   }
 
-  private void calculateLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  private void calculateLossesAndAdjustments(RnrCalcStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     try {
-      ((RnrLineItem) lineItem).calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
+      rnrLineItem.calculateTotalLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
     } catch (NullPointerException e) {
-      ((RnrLineItem) lineItem).setTotalLossesAndAdjustments(null);
+      rnrLineItem.setTotalLossesAndAdjustments(null);
     }
   }
 

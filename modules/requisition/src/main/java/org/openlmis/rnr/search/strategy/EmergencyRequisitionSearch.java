@@ -27,6 +27,6 @@ public class EmergencyRequisitionSearch extends RequisitionOnlySearch {
 
   @Override
   List<Rnr> findRequisitions() {
-    return requisitionRepository.getInitiatedEmergencyRequisition(criteria.getFacilityId(), criteria.getProgramId());
+    return requisitionRepository.getInitiatedOrSubmittedEmergencyRequisitions(criteria.getFacilityId(), criteria.getProgramId());
   }
 }

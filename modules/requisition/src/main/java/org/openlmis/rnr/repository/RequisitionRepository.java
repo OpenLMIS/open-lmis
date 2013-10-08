@@ -141,10 +141,9 @@ public class RequisitionRepository {
     return requisitionMapper.getRegularRequisitionWithLineItems(facility, program, period);
   }
 
-  public List<Rnr> getInitiatedEmergencyRequisition(Long facilityId, Long programId) {
-    return requisitionMapper.getInitiatedEmergencyRequisition(facilityId, programId);
+  public List<Rnr> getInitiatedOrSubmittedEmergencyRequisitions(Long facilityId, Long programId) {
+    return requisitionMapper.getInitiatedOrSubmittedEmergencyRequisitions(facilityId, programId);
   }
-
 
   public List<LossesAndAdjustmentsType> getLossesAndAdjustmentsTypes() {
     return lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();

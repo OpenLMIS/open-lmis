@@ -95,14 +95,14 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyPreviousAndFirstLinksDisabled();
 
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '2') and @class='ng-binding']").click();
+    clickPageNumberLink(2);
     verifyPageLinksFromLastPage();
     verifyPreviousAndFirstLinksEnabled();
     verifyNextAndLastLinksDisabled();
 
     selectRequisitionToBeConvertedToOrder(1);
-    testWebDriver.getElementByXpath("//a[contains(text(), '1') and @class='ng-binding']").click();
-    selectRequisitionToBeConvertedToOrder(2);
+    clickPageNumberLink(1);
+    selectRequisitionToBeConvertedToOrder(1);
     convertToOrder(convertOrderPage);
 
     verifyNumberOfPageLinks(49, 50);
@@ -111,6 +111,11 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();
     assertTrue("Number of line items on view order screen should be equal to 1", numberOfLineItems == 1);
     viewOrdersPage.verifyProgram(1, "MALARIA");
+  }
+
+  private void clickPageNumberLink(int pageNumber) {
+    testWebDriver.getElementByXpath("//a[contains(text(), '"+pageNumber+"') and @class='ng-binding']").click();
+    testWebDriver.sleep(2000);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -211,7 +216,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.sleep(1500);
+    testWebDriver.waitForPageToLoad();
     String baseXpath = "(//input[@class='ngSelectionCheckbox'])";
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]"));
     testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]").click();
@@ -223,39 +228,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     convertOrderPage.clickOk();
   }
 
-  public void verifyPageLinksFromLastPage() throws Exception {
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
-
-    testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
-
-    testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
-
-    testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
-    verifyNextAndLastLinksEnabled();
-    verifyPreviousAndFirstLinksDisabled();
-
-    testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
-    verifyNextAndLastLinksDisabled();
-    verifyPreviousAndFirstLinksEnabled();
-  }
-
-  public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
-    testWebDriver.sleep(1500);
-    int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
-    if (numberOfProducts % numberOfLineItemsPerPage != 0) {
-      numberOfPages = numberOfPages + 1;
-    }
-    for (int i = 1; i <= numberOfPages; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
-      assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
-    }
-  }
-
   public void verifyProgramInGrid(int numberOfProducts, int numberOfLineItemsPerPage, String program) throws Exception {
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
@@ -264,7 +236,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     int trackPages = 0;
     while (numberOfPages != trackPages) {
       testWebDriver.getElementByXpath("//a[contains(text(), '" + (trackPages + 1) + "') and @class='ng-binding']").click();
-      testWebDriver.sleep(1000);
+      testWebDriver.waitForPageToLoad();
       for (int i = 1; i < testWebDriver.getElementsSizeByXpath("//div[@class='ngCanvas']/div"); i++)
         assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + i + "]/div[2]/div[2]/div/span").getText().trim(), program);
       trackPages++;
@@ -279,7 +251,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     int trackPages = 0;
     while (numberOfPages != trackPages) {
       testWebDriver.getElementByXpath("//a[contains(text(), '" + (trackPages + 1) + "') and @class='ng-binding']").click();
-      testWebDriver.sleep(1000);
+      testWebDriver.waitForPageToLoad();
       for (int i = 1; i < testWebDriver.getElementsSizeByXpath("//div[@class='ngCanvas']/div"); i++)
         assertEquals(testWebDriver.getElementByXpath("//div[@class='ngCanvas']/div[" + i + "]/div[9]/div[2]/div/span").getText().trim(), supplyingDepot);
       trackPages++;
@@ -296,34 +268,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
       flag = true;
     }
     assertTrue("Link number" + i + " should not appear", flag);
-  }
-
-  public void verifyNextAndLastLinksEnabled() throws Exception {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-  }
-
-  public void verifyPreviousAndFirstLinksEnabled() throws Exception {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '<')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-  }
-
-  public void verifyNextAndLastLinksDisabled() throws Exception {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-  }
-
-  public void verifyPreviousAndFirstLinksDisabled() throws Exception {
-    testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '«')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
 

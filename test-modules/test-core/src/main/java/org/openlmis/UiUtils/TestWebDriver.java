@@ -125,6 +125,21 @@ public class TestWebDriver {
     driver.navigate().refresh();
   }
 
+  public void waitForPageToLoad()
+  {
+    try {
+      Thread.sleep(500);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver d) {
+        return (((org.openqa.selenium.JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete"));
+      }
+    });
+  }
+
+
   public void handleScroll() {
     ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("scroll(0,1000);");
   }

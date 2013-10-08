@@ -116,6 +116,12 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "reasonForRequestedQuantity_0")
   private static WebElement requestedQuantityExplanation;
 
+  @FindBy(how = ID, using = "expirationDate_0")
+  private static WebElement expirationDate;
+
+  @FindBy(how = ID, using = "remarks_0")
+  private static WebElement remarks;
+
   @FindBy(how = ID, using = "stockOutDays_0")
   private static WebElement totalStockOutDays;
 
@@ -234,10 +240,10 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Emergency']/span")
   private static WebElement rnrEmergrncyLabel;
 
-  @FindBy(how = XPATH, using ="//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
+  @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
   private static WebElement rnrRegularLabel;
 
-  @FindBy(how = XPATH, using ="//table[@id='fullSupplyTable']/tbody/tr[2]/td[4]/ng-switch/span/ng-switch/span/ng-switch/span/span")
+  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[4]/ng-switch/span/ng-switch/span/ng-switch/span/span")
   private static WebElement beginningBalanceLabel;
 
   String successText = "R&R saved successfully!";
@@ -278,11 +284,23 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(A, beginningBalanceValue);
   }
 
+  public void enterStockOnHand(String E) {
+    String stockOnHand = submitStockOnHand(E);
+    verifyFieldValue(E, stockOnHand);
+  }
+
   public String submitBeginningBalance(String A) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalance);
     beginningBalance.sendKeys(A);
     return testWebDriver.getAttribute(beginningBalance, "value");
+  }
+
+  public String submitStockOnHand(String E) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(stockInHand);
+    stockInHand.sendKeys(E);
+    return testWebDriver.getAttribute(stockInHand, "value");
   }
 
   public void verifyFieldValue(String Expected, String Actual) {
@@ -400,9 +418,9 @@ public class InitiateRnRPage extends RequisitionPage {
                                                           Integer I, boolean emergency) {
     enterValuesCalculatedOrderQuantity(F, X);
     if (emergency)
-        VerifyCalculatedOrderQuantityForEmergencyRnR(N, P, H, I);
+      VerifyCalculatedOrderQuantityForEmergencyRnR(N, P, H, I);
     else
-        VerifyCalculatedOrderQuantity(N, P, H, I);
+      VerifyCalculatedOrderQuantity(N, P, H, I);
 
     testWebDriver.sleep(1000);
   }
@@ -430,16 +448,16 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-    public void VerifyCalculatedOrderQuantityForEmergencyRnR(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
-        String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
-        verifyFieldValue("", actualAdjustedTotalConsumption);
-        String actualAmc = testWebDriver.getText(amc);
-        verifyFieldValue("", actualAmc.trim());
-        String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
-        verifyFieldValue("", actualMaximumStockQuantity.trim());
-        String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
-        verifyFieldValue("", actualCalculatedOrderQuantity.trim());
-    }
+  public void VerifyCalculatedOrderQuantityForEmergencyRnR(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+    String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
+    verifyFieldValue("", actualAdjustedTotalConsumption);
+    String actualAmc = testWebDriver.getText(amc);
+    verifyFieldValue("", actualAmc.trim());
+    String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
+    verifyFieldValue("", actualMaximumStockQuantity.trim());
+    String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
+    verifyFieldValue("", actualCalculatedOrderQuantity.trim());
+  }
 
   public void verifyPacksToShip(String V) {
     testWebDriver.waitForElementToAppear(packsToShip);
@@ -460,7 +478,10 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualPacksToShip = testWebDriver.getText(packsToShip);
     testWebDriver.waitForElementToAppear(pricePerPack);
     String actualPricePerPack = testWebDriver.getText(pricePerPack).substring(1);
-    return parseFloat(actualPacksToShip) * parseFloat(actualPricePerPack);
+    if (actualPacksToShip.trim().equals(""))
+      return parseFloat("0");
+    else
+      return parseFloat(actualPacksToShip) * parseFloat(actualPricePerPack);
   }
 
   public void calculateAndVerifyTotalCostNonFullSupply() {
@@ -671,6 +692,27 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(250);
   }
 
+  public void verifyAllFieldsDisabled() {
+
+    assertFalse("beginningBalance should be disabled", beginningBalance.isEnabled());
+    assertFalse("quantityReceived should be disabled", quantityReceived.isEnabled());
+    assertFalse("quantityDispensed should be disabled", quantityDispensed.isEnabled());
+    assertFalse("newPatient should be disabled", newPatient.isEnabled());
+    assertFalse("totalStockOutDays should be disabled", totalStockOutDays.isEnabled());
+    assertFalse("requestedQuantity should be disabled", requestedQuantity.isEnabled());
+    assertFalse("requestedQuantityExplanation should be disabled", requestedQuantityExplanation.isEnabled());
+    assertFalse("expirationDate should be disabled", expirationDate.isEnabled());
+    assertFalse("remarks should be disabled", remarks.isEnabled());
+  }
+
+  public void verifySaveButtonDisabled() {
+    assertFalse("saveButton should be disabled", saveButton.isEnabled());
+  }
+
+  public void verifySubmitButtonDisabled() {
+    assertFalse("submitButton should be disabled", submitButton.isEnabled());
+  }
+
   public void verifySubmitRnrSuccessMsg() {
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
   }
@@ -715,16 +757,16 @@ public class InitiateRnRPage extends RequisitionPage {
     }
   }
 
-    public String getEmergencyLabelText(){
-        return rnrEmergrncyLabel.getText();
-    }
+  public String getEmergencyLabelText() {
+    return rnrEmergrncyLabel.getText();
+  }
 
-    public String getRegularLabelText(){
-        return rnrRegularLabel.getText();
-    }
+  public String getRegularLabelText() {
+    return rnrRegularLabel.getText();
+  }
 
-    public String getBeginningBalance(){
-        testWebDriver.waitForElementToAppear(beginningBalanceLabel);
-        return beginningBalanceLabel.getText();
-    }
+  public String getBeginningBalance() {
+    testWebDriver.waitForElementToAppear(beginningBalanceLabel);
+    return beginningBalanceLabel.getText();
+  }
 }

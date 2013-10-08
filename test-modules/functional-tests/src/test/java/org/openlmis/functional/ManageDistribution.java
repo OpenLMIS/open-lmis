@@ -62,7 +62,7 @@ public class ManageDistribution extends TestCaseHelper {
     super.setup();
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", new EPIUse(testWebDriver));
-      put("general observation", new GeneralObservation(testWebDriver));
+      put("general observation", new GeneralObservationPage(testWebDriver));
     }};
   }
 
@@ -223,7 +223,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I navigate to general observations tab$")
   public void navigateToGeneralObservationsTab() throws IOException {
-    GeneralObservation observation = new GeneralObservation(testWebDriver);
+    GeneralObservationPage observation = new GeneralObservationPage(testWebDriver);
     observation.navigate();
   }
 

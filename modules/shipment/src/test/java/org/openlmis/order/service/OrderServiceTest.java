@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.order.service;
@@ -175,6 +173,7 @@ public class OrderServiceTest {
 
   @Test
   public void shouldGetOrdersFilledWithRequisition() throws Exception {
+    orderService.setPageSize("3");
     Rnr rnr1 = make(a(defaultRnr, with(id, 78L)));
     final Order order1 = new Order();
     order1.setRnr(rnr1);
@@ -189,13 +188,14 @@ public class OrderServiceTest {
       add(order2);
     }};
 
-    when(orderRepository.getOrders()).thenReturn(expectedOrders);
+    when(orderRepository.getOrdersForPage(2, 3)).thenReturn(expectedOrders);
     when(requisitionService.getFullRequisitionById(rnr1.getId())).thenReturn(rnr1);
     when(requisitionService.getFullRequisitionById(rnr2.getId())).thenReturn(rnr2);
 
-    List<Order> orders = orderService.getOrders();
+    List<Order> orders = orderService.getOrdersForPage(2);
+
     assertThat(orders, is(expectedOrders));
-    verify(orderRepository).getOrders();
+    verify(orderRepository).getOrdersForPage(2, 3);
     verify(requisitionService).getFullRequisitionById(rnr1.getId());
     verify(requisitionService).getFullRequisitionById(rnr2.getId());
   }
@@ -317,7 +317,14 @@ public class OrderServiceTest {
 
   }
 
+  @Test
+  public void shouldGetPageSize() throws Exception {
+    orderService.setPageSize("4");
 
+    Integer pageSize = orderService.getPageSize();
+
+    assertThat(pageSize, is(4));
+  }
 
   @Test
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
@@ -335,5 +342,15 @@ public class OrderServiceTest {
 
     verify(orderRepository, times(4)).getStatus(123L);
 
+  }
+
+  @Test
+  public void shouldGetNumberOfPages() throws Exception {
+    orderService.setPageSize("3");
+    when(orderRepository.getNumberOfPages(3)).thenReturn(1);
+
+    Integer numberOfPages = orderService.getNumberOfPages();
+
+    assertThat(numberOfPages, is(1));
   }
 }

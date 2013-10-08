@@ -394,9 +394,9 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldLoadEmergencyRequisitionInInitiatedState(){
     List<Rnr> requisitionList = new ArrayList<>();
-    when(requisitionMapper.getInitiatedEmergencyRequisition(1l, 2l)).thenReturn(requisitionList);
+    when(requisitionMapper.getInitiatedOrSubmittedEmergencyRequisitions(1l, 2l)).thenReturn(requisitionList);
 
-    List<Rnr> emergencyRequisitions = requisitionRepository.getInitiatedEmergencyRequisition(1l, 2l);
+    List<Rnr> emergencyRequisitions = requisitionRepository.getInitiatedOrSubmittedEmergencyRequisitions(1l, 2l);
 
     assertThat(emergencyRequisitions, is(requisitionList));
   }

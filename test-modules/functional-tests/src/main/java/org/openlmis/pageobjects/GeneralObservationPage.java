@@ -22,7 +22,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
-public class GeneralObservation extends DistributionTab {
+public class GeneralObservationPage extends DistributionTab {
 
   public static final String VERIFIED_BY_NAME = "verifiedByName";
   public static final String VERIFIED_BY_TITLE = "verifiedByTitle";
@@ -60,7 +60,7 @@ public class GeneralObservation extends DistributionTab {
     put(VERIFIED_BY_NAME, confirmedByNameField);
   }};
 
-  public GeneralObservation(TestWebDriver driver) {
+  public GeneralObservationPage(TestWebDriver driver) {
     super(driver);
   }
 

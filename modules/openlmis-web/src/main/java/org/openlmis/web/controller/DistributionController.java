@@ -14,22 +14,24 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.text.SimpleDateFormat;
 
+import static org.openlmis.web.response.OpenLmisResponse.ERROR;
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -61,6 +63,17 @@ public class DistributionController extends BaseController {
     return openLmisResponse.response(CREATED);
   }
 
+  @RequestMapping(value = "/facilityDistributionData/{distributionId}", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionData facilityDistributionData, @PathVariable(value = "distributionId") Long distributionId) {
+    try {
+      distributionService.sync(distributionId, facilityDistributionData);
+      return OpenLmisResponse.success(SUCCESS);
+    } catch (Exception e) {
+      return OpenLmisResponse.error(ERROR, BAD_REQUEST);
+    }
+  }
+
+
   private ResponseEntity<OpenLmisResponse> returnInitiatedDistribution(Distribution distribution, Distribution existingDistribution) {
     existingDistribution.setDeliveryZone(distribution.getDeliveryZone());
     existingDistribution.setPeriod(distribution.getPeriod());
@@ -74,6 +87,4 @@ public class DistributionController extends BaseController {
       distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
     return openLmisResponse.response(OK);
   }
-
-
 }

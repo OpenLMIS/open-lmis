@@ -149,7 +149,7 @@ public interface RequisitionMapper {
     "facilityId = #{facilityId} AND",
     "programId = #{programId} AND",
     "emergency = TRUE AND",
-    "status='INITIATED' ORDER BY createdDate DESC"
+    "status IN ('INITIATED', 'SUBMITTED') ORDER BY createdDate DESC"
   })
   @Results(value = {
     @Result(property = "facility.id", column = "facilityId"),
@@ -157,8 +157,8 @@ public interface RequisitionMapper {
     @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById"))
   })
-  List<Rnr> getInitiatedEmergencyRequisition(@Param("facilityId") Long facilityId,
-                                             @Param("programId") Long programId);
+  List<Rnr> getInitiatedOrSubmittedEmergencyRequisitions(@Param("facilityId") Long facilityId,
+                                                         @Param("programId") Long programId);
 
   @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getApprovedRequisitionsByCriteria")
   @Results(value = {

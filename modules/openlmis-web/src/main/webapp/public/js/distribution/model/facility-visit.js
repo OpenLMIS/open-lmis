@@ -8,14 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function GeneralObservation(generalObservationJson) {
-  $.extend(true, this, generalObservationJson);
+function FacilityVisit(facilityVisitJson) {
+  $.extend(true, this, facilityVisitJson);
   var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy'];
   var COMPLETE = 'is-complete';
   var EMPTY = 'is-empty';
   var INCOMPLETE = 'is-incomplete';
 
-  GeneralObservation.prototype.computeStatus = function () {
+  FacilityVisit.prototype.computeStatus = function () {
     var _this = this;
     var status;
 

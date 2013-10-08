@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.web.controller;
@@ -42,9 +40,11 @@ import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.web.controller.OrderController.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -94,19 +94,38 @@ public class OrderControllerTest {
   }
 
   @Test
-  public void shouldReturnAllOrders() throws Exception {
+  public void shouldReturnAllOrdersForPage() throws Exception {
     List<Order> orders = new ArrayList<Order>() {{
       new Order();
     }};
+
     mockStatic(OrderDTO.class);
-    when(orderService.getOrders()).thenReturn(orders);
+    when(orderService.getOrdersForPage(2)).thenReturn(orders);
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrders();
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
 
-    verify(orderService).getOrders();
+    verify(orderService).getOrdersForPage(2);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
+  }
+
+  @Test
+  public void shouldAddPageInfoForOrders() throws Exception {
+    when(orderService.getPageSize()).thenReturn(3);
+
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+
+    assertThat((Integer) fetchedOrders.getBody().getData().get("pageSize"), is(3));
+  }
+
+  @Test
+  public void shouldAddTotalNumberOfPagesForOrders() throws Exception {
+    when(orderService.getNumberOfPages()).thenReturn(5);
+
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+
+    assertThat((Integer) fetchedOrders.getBody().getData().get("numberOfPages"), is(5));
   }
 
   @Test
