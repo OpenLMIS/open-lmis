@@ -18,15 +18,19 @@ import java.util.List;
 public interface SupplyLineMapperExtension {
 
     @Select("SELECT " +
-            "sl.id, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisorynodeName " +
+            "sl.id, sl.programId, sl.supervisoryNodeId, sl.supplyingFacilityId, sl.description, p.name AS programName,f.name AS facilityName, n.name As supervisoryNodeName " +
             "FROM supply_lines AS sl " +
-            "JOIN programs AS p ON p.id = sl.programid " +
-            "JOIN facilities AS f ON f.id = sl.supplyingfacilityid " +
-            "INNER JOIN supervisory_nodes AS n ON n.id = sl.supervisorynodeid")
+            "JOIN programs AS p ON p.id = sl.programId " +
+            "JOIN facilities AS f ON f.id = sl.supplyingFacilityId " +
+            "INNER JOIN supervisory_nodes AS n ON n.id = sl.supervisoryNodeId " +
+            "ORDER BY p.name, n.name, f.name")
     @Results(value={
-            @Result(property = "supervisoryNode.name", column = "supervisorynodeName"),
+            @Result(property = "supervisoryNode.name", column = "supervisoryNodeName"),
             @Result(property = "supplyingFacility.name", column = "facilityName"),
             @Result(property = "program.name", column = "programName"),
+            @Result(property = "supervisoryNode.id", column = "supervisoryNodeId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
     })
     List<SupplyLine> getAllSupplyLine();
 
