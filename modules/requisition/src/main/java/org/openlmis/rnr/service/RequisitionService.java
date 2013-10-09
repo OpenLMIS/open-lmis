@@ -183,7 +183,7 @@ public class RequisitionService {
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
       requisitionRepository.getLossesAndAdjustmentsTypes());
-    savedRnr.setDefaultApprovedQuantity();
+    savedRnr.calculateDefaultApprovedQuantity();
 
     return update(savedRnr);
   }

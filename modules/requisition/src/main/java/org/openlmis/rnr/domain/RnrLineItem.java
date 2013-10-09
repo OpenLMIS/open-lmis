@@ -124,7 +124,11 @@ public class RnrLineItem extends LineItem {
 
   }
 
-  public void setDefaultApprovedQuantity() {
+  public void calculateDefaultApprovedQuantity(RnrCalcStrategy calcStrategy) {
+    quantityApproved = calcStrategy.calculateDefaultApprovedQuantity(fullSupply, calculatedOrderQuantity, quantityRequested);
+  }
+
+  public void setDefaultApprovedQuantity(boolean emergency) {
     quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
@@ -229,10 +233,10 @@ public class RnrLineItem extends LineItem {
   }
 
   public Money calculateCost() {
-      if (packsToShip != null) {
-          return price.multiply(valueOf(packsToShip));
-      }
-      return new Money("0");
+    if (packsToShip != null) {
+      return price.multiply(valueOf(packsToShip));
+    }
+    return new Money("0");
   }
 
   private void copyField(String fieldName, RnrLineItem lineItem, ProgramRnrTemplate template) {

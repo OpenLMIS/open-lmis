@@ -1092,11 +1092,11 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
-    doNothing().when(savedRnr).setDefaultApprovedQuantity();
+    doNothing().when(savedRnr).calculateDefaultApprovedQuantity();
 
     requisitionService.authorize(submittedRnr);
 
-    verify(savedRnr).setDefaultApprovedQuantity();
+    verify(savedRnr).calculateDefaultApprovedQuantity();
   }
 
   @Test

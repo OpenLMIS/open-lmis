@@ -177,6 +177,14 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldCalculateDefaultApprovedQuantity() {
+    lineItem.calculateDefaultApprovedQuantity(calcStrategy);
+
+    verify(calcStrategy).calculateDefaultApprovedQuantity(lineItem.getFullSupply(), lineItem.getCalculatedOrderQuantity(),
+      lineItem.getQuantityRequested());
+  }
+
+  @Test
   public void shouldConstructRnrLineItem() {
 
     Program program = make(a(defaultProgram));
@@ -354,25 +362,6 @@ public class RnrLineItemTest {
   @Test
   public void shouldNotThrowErrorIfAllMandatoryFieldsPresent() throws Exception {
     lineItem.validateMandatoryFields(template);
-  }
-
-  @Test
-  public void shouldSetCalculatedOrderQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
-    final int expected = 1;
-    lineItem.setCalculatedOrderQuantity(expected);
-    lineItem.setDefaultApprovedQuantity();
-    final Integer actual = lineItem.getQuantityApproved();
-    assertThat(actual, is(expected));
-  }
-
-  @Test
-  public void shouldSetRequestedQuantityAsApprovedQuantityForNonFullSupplyItems() throws Exception {
-    lineItem.setFullSupply(false);
-    final int expected = 1;
-    lineItem.setQuantityRequested(expected);
-    lineItem.setDefaultApprovedQuantity();
-    final Integer actual = lineItem.getQuantityApproved();
-    assertThat(actual, is(expected));
   }
 
   @Test
