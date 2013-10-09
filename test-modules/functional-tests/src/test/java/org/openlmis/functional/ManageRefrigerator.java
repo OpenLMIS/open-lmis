@@ -169,7 +169,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I should see Edit button$")
   public void shouldSeeEditButton() throws IOException, SQLException {
-    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).editButton.isDisplayed());
+    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).showButton.isDisplayed());
   }
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")

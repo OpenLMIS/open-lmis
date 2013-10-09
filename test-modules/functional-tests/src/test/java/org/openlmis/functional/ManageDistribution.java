@@ -197,12 +197,6 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
   }
 
-  @Then("^I see overall distribution icon as \"([^\"]*)\"$")
-  public void verifyOverAllDistributionIndicator(String color) throws IOException {
-    DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.verifyDistributionColor(color);
-  }
-
   @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
   public void verifyOverAllFacilityIndicator(String whichIcon,String color) throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
@@ -277,7 +271,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify sync message as \"([^\"]*)\"$")
   public void verifySyncMessage(String message) throws IOException {
       DistributionPage distributionPage = new DistributionPage(testWebDriver);
-      assertEquals(distributionPage.getSyncMessage(),message);
+      assertEquals(message, distributionPage.getSyncMessage());
   }
 
   @When("^I view observations data in DB:$")

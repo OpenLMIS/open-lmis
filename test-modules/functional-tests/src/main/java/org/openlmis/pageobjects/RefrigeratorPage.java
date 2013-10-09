@@ -22,13 +22,13 @@ import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends Page {
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Add New')]")
+  @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Edit')]")
-  public static WebElement editButton;
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Show')]")
+  public static WebElement showButton;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Delete')]")
+  @FindBy(how = XPATH, using = "//input[contains(text(),'Delete')]")
   private static WebElement deleteButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
@@ -254,7 +254,7 @@ public class RefrigeratorPage extends Page {
   public void clickDoneOnModal() {
     testWebDriver.waitForElementToAppear(doneButtonOnModal);
     doneButtonOnModal.click();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Edit')])[1]"));
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
   }
 
   public void clickCancelOnModal() {
@@ -299,8 +299,8 @@ public class RefrigeratorPage extends Page {
   }
 
   public void clickEdit() {
-    testWebDriver.waitForElementToAppear(editButton);
-    editButton.click();
+    testWebDriver.waitForElementToAppear(showButton);
+    showButton.click();
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
   }
 

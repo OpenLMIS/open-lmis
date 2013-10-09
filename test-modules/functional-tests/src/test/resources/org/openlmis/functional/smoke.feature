@@ -494,7 +494,6 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    Then I see overall distribution icon as "AMBER"
     When I record data
     And I choose facility "F10"
     Then I see "Overall" facility icon as "AMBER"
@@ -507,7 +506,6 @@ Feature: Smoke Tests
     Then I see "Overall" facility icon as "RED"
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
-    Then I see overall distribution icon as "RED"
     When I sync recorded data
     Then I verify sync message as "No Facility for the chosen zone program and period is ready to be synced"
     When I record data
@@ -534,9 +532,8 @@ Feature: Smoke Tests
     Then I see "Overall" facility icon as "GREEN"
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
-    Then I see overall distribution icon as "GREEN"
     When I sync recorded data
-    Then I verify sync message as "Village Dispensary-F10, have been successfully synced"
+    Then I verify sync message as "Village Dispensary-F10 synced successfully"
     And I view observations data in DB:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |

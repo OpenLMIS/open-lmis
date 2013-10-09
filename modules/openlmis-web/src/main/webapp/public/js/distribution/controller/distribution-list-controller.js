@@ -55,7 +55,7 @@ function DistributionListController($scope, SharedDistributions, IndexedDB, Sync
         $(resolves).each(function (index, resolve) {
           if (resolve.facilityDistributionData.status != SYNCED) return;
           $scope.message += resolve.facility.name + '-' + resolve.facility.code;
-          if (index < resolve.length - 1) $scope.message += ',';
+          if (index < resolves.length - 1) $scope.message += ', ';
         });
         $scope.message = messageService.get("message.facility.synced.successfully", $scope.message);
         IndexedDB.put('distributions', distributionData, null, null, $scope.sharedDistributions.update);
