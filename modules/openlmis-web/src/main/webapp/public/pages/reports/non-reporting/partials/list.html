@@ -16,8 +16,8 @@
                         </div>
                     </div>
 
-            <div class="box-content"  ng-show="show(1)">
-                <div class="app-form" style="padding: 5px;">
+            <div>
+                <div class="app-form">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                             <div class="clearfix ">
 
@@ -79,20 +79,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="clearfix"></div>
-
-                                <div ng-show="summaries.length > 0">
-                                     <br />
-                                     <div class="clearfix"></div>
-                                        <div class="form-cell">
-                                         <div ng-repeat="summary in summaries">
-                                             <div class="pull-right">
-                                                <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
-                                             </div>
-                                         </div>
-                                        </div>
-                                </div>
-
                             </div>
                          </form>
                 </div>
@@ -104,6 +90,11 @@
                 </table>
                 <div ng-show="datarows.length > 0">
                     <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
+                    <div ng-repeat="summary in summaries">
+                        <div class="pull-right legend">
+                            <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                        </div>
+                    </div>
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
 
                         <tbody>
