@@ -225,7 +225,9 @@ public class RnrLineItem extends LineItem {
   public void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
     RnrColumn column = template.getRnrColumnsMap().get("maxStockQuantity");
     if(column.getCalculationOption() == "CONSUMPTION_X_2"){
-      maxStockQuantity = normalizedConsumption * 2;
+      maxStockQuantity = this.normalizedConsumption * 2;
+    }else if(column.getCalculationOption() == "DISPENSED_X_2"){
+      maxStockQuantity = this.quantityDispensed * 2;
     } else{
       // apply the default calculation if there was no other calculation that works here
       maxStockQuantity = calcStrategy.calculateMaxStockQuantity(maxMonthsOfStock, amc);
@@ -236,8 +238,16 @@ public class RnrLineItem extends LineItem {
     calculatedOrderQuantity = calcStrategy.calculateOrderQuantity(maxStockQuantity, stockInHand);
   }
 
-  public void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy) {
-    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit);
+  public void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
+    RnrColumn column = template.getRnrColumnsMap().get("normalizedConsumption");
+    if(column.getCalculationOption() == "DISPENSED_PLUS_NEW_PATIENTS"){
+      // ONLY GOD AND I KNOW THAT THIS DOES NOT MAKE SENSE.
+      // I WONDER WHY THE CONTRY PEOPLE ARE PUSHING FOR THIS.
+      normalizedConsumption = quantityDispensed + newPatientCount;
+    } else{
+      normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit);
+    }
+
   }
 
   public void calculateTotalLossesAndAdjustments(RnrCalcStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {

@@ -204,18 +204,34 @@ var RegularRnrLineItem = base2.Base.extend({
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
     if (this.getSource('newPatientCount') == null) this.newPatientCount = 0;
 
-    if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.stockOutDays) || !utils.isNumber(this.newPatientCount)) {
+    if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.newPatientCount)) {
       this.normalizedConsumption = null;
       return;
     }
+    // find the calculation option
+    var normalizedConsumptionCalcOption = null;
+    angular.forEach(this.programRnrColumnList, function(item){
+        if(item.name == 'maxStockQuantity') {
+            normalizedConsumptionCalcOption = item.calculationOption;
+        }
+    });
 
-    this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
-    var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
-    var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-      this.quantityDispensed :
-      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
-    var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
-    this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
+    if(normalizedConsumptionCalcOption == 'DISPENSED_PLUS_NEW_PATIENTS'){
+       this.normalizedConsumption = this.quantityDispensed  + this.newPatientCount;
+     }else{
+
+        if(!utils.isNumber(this.stockOutDays)){
+          return;
+        }
+
+        this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
+        var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
+        var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
+          this.quantityDispensed :
+          (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+        var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
+        this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
+     }
   },
 
   calculateAMC: function () {
@@ -251,9 +267,12 @@ var RegularRnrLineItem = base2.Base.extend({
       });
 
       // if not default, apply the formula
-      if(maxStockColumnCalculationOption != null && maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
+      if( maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
           this.maxStockQuantity = this.normalizedConsumption * 2;
-      }else{
+      }else if( maxStockColumnCalculationOption == 'DISPENSED_X_2'){
+          this.maxStockQuantity = this.quantityDispensed * 2;
+      }
+      else{
           // if default, do what you used to do
           this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
       }
