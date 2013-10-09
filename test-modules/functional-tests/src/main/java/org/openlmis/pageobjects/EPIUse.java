@@ -11,6 +11,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -96,6 +97,7 @@ public class EPIUse extends DistributionTab {
     rownumber = rownumber - 1;
     WebElement expirationDate = testWebDriver.getElementByName("expirationDate" + rownumber);
     sendKeys(expirationDate, value);
+    expirationDate.sendKeys(Keys.TAB);
   }
 
   public void checkUncheckStockAtFirstOfMonthNotRecorded(int rownumber) {
