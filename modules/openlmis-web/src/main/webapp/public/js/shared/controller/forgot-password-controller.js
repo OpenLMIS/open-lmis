@@ -8,14 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ForgotPasswordController($scope, ForgotPassword,messageService) {
+function ForgotPasswordController($scope, ForgotPassword, messageService) {
 
   $scope.user = {};
   $scope.submitButtonLabel = messageService.get('button.submit');
   $scope.submitDisabled = false;
-    $scope.sendForgotPasswordEmail = function(){
+  $scope.sendForgotPasswordEmail = function () {
     if (!$scope.user.userName && !$scope.user.email) {
-           $scope.error= messageService.get('enter.emailInfo');
+      $scope.error = messageService.get('enter.emailInfo');
     } else {
       $scope.submitButtonLabel = messageService.get('sending.label');
       $scope.submitDisabled = true;
@@ -26,10 +26,10 @@ function ForgotPasswordController($scope, ForgotPassword,messageService) {
         $scope.submitButtonLabel = messageService.get('button.submit');
         $scope.error = data.data.error;
       });
-      }
     }
+  };
 
-  $scope.goToLogin = function() {
+  $scope.goToLogin = function () {
     window.location = "login.html";
-  }
+  };
 }

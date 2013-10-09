@@ -73,8 +73,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       }, function () {
         deferred.reject({error: "error.facility.allocation.product.save", program: program.name});
       });
-
-    })
+    });
 
     return promises;
   }
@@ -105,7 +104,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
         $scope.message = "";
         $scope.error = error.error;
         $scope.errorProgram = error.program;
-      })
+      });
     };
 
     if (!$scope.isEdit) {
@@ -165,11 +164,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.removeSupportedProgramConfirm = function (result) {
     if (result) {
-      $scope.removeSupportedProgram()
+      $scope.removeSupportedProgram();
     }
     $scope.selectedSupportedProgram = undefined;
-  }
-
+  };
 
   $scope.removeSupportedProgram = function () {
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
@@ -248,22 +246,20 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
     var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), "id");
     $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
-      return _.contains(supportedProgramIds, supportedProgram.id)
+      return _.contains(supportedProgramIds, supportedProgram.id);
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
-
 }
 
 var populateFlags = function ($scope) {
   $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'enabled']).each(function (index, field) {
     var value = $scope.facility[field];
-    $scope.facility[field] = (value == null) ? "" : value.toString();
+    $scope.facility[field] = ($.isEmptyObject(value)) ? "" : value.toString();
   });
 };
 
 FacilityController.resolve = {
-
   facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
@@ -275,7 +271,7 @@ FacilityController.resolve = {
   },
 
   facility: function ($q, $timeout, Facility, $route) {
-    if ($route.current.params.facilityId == undefined) return undefined;
+    if ($route.current.params.facilityId === undefined) return undefined;
 
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;

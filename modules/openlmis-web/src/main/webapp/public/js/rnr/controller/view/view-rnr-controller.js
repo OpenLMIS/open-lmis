@@ -49,7 +49,7 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
 
   fillPageData();
 
-  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+  $scope.currentPage = ($routeParams.page) ? utils.parseIntWithBaseTen($routeParams.page) || 1 : 1;
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);

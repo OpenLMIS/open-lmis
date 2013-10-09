@@ -50,5 +50,5 @@ function FacilityVisit(facilityVisitJson) {
     _this.status = status;
 
     return status;
-  }
+  };
 }

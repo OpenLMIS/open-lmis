@@ -16,11 +16,13 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route, 
   $scope.resetPassword = function () {
     var reWhiteSpace = new RegExp("\\s");
     var digits = new RegExp("\\d");
-    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) || reWhiteSpace.test($scope.password1)) {
+    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
+      reWhiteSpace.test($scope.password1))
+    {
       $scope.error = messageService.get("error.password.invalid");
       return;
     }
-    if ($scope.password1 != $scope.password2) {
+    if ($scope.password1 !== $scope.password2) {
       $scope.error = messageService.get('error.password.mismatch');
       return;
     }
@@ -30,8 +32,7 @@ function ResetPasswordController($scope, UpdateUserPassword, $location, $route, 
     }, function (data) {
       window.location = 'access-denied.html';
     });
-
-  }
+  };
 }
 
 function ValidateTokenController() {
@@ -40,8 +41,8 @@ function ValidateTokenController() {
 function ResetCompleteController($scope) {
 
   $scope.goToLoginPage = function () {
-    window.location = 'login.html'
-  }
+    window.location = 'login.html';
+  };
 
 }
 
@@ -58,11 +59,9 @@ ValidateTokenController.resolve = {
     }, 100);
     return deferred.promise;
   }
-
-}
+};
 
 ResetPasswordController.resolve = {
-
   tokenValid:function ($q, $timeout, ValidatePasswordToken, $route, $location) {
     var deferred = $q.defer();
     $timeout(function () {
@@ -74,5 +73,4 @@ ResetPasswordController.resolve = {
     }, 100);
     return deferred.promise;
   }
-
-}
+};

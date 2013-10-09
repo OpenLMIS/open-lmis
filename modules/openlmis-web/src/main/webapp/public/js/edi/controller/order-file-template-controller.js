@@ -47,9 +47,8 @@
     $scope.orderFileColumns.forEach(function (orderFileColumn, index) {
       orderFileColumn.position = index + 1;
     });
-  };
-
-};
+  }
+}
 
 OrderFileTemplateController.resolve = {
   orderFileTemplate: function ($q, $timeout, OrderFileTemplate) {

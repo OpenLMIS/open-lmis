@@ -38,5 +38,5 @@ services.factory('messageService', function (Messages, localStorageService, $roo
   return{
     populate:populate,
     get:get
-  }
+  };
 });

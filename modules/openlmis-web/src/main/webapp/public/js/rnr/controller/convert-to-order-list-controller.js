@@ -8,7 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
 function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService, $routeParams, $location) {
   $scope.message = "";
   $scope.maxNumberOfPages = 10;
@@ -96,7 +95,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
         if (result) {
           convert();
         }
-      }
+      };
     }
 
     OpenLmisDialog.newDialog(options, callBack(), $dialog, messageService);
@@ -105,7 +104,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
   $scope.convertToOrder = function () {
     $scope.message = "";
     $scope.noRequisitionSelectedMessage = "";
-    if ($scope.selectedItems.length == 0) {
+    if ($scope.selectedItems.length === 0) {
       $scope.noRequisitionSelectedMessage = "msg.select.atleast.one.rnr";
       return;
     }

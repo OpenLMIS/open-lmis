@@ -9,7 +9,6 @@
  */
 
 function RecordFacilityMenuController($scope, $location, $routeParams, distributionService) {
-
   $scope.distributionData = distributionService.distribution.facilityDistributionData[$routeParams.facility];
 
   $scope.changeRoute = function (routeName) {
@@ -26,6 +25,5 @@ function RecordFacilityMenuController($scope, $location, $routeParams, distribut
     if (routeName == route) {
       return 'selected';
     }
-  }
-
+  };
 }

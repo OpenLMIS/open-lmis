@@ -33,5 +33,5 @@ function Refrigerators(refrigerators) {
 
   Refrigerators.prototype.addRefrigerator = function (reading) {
     this.refrigeratorReadings.push(new RefrigeratorReading(reading));
-  }
+  };
 }

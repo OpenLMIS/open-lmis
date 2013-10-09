@@ -81,6 +81,5 @@ function FacilitySearchController($scope, Facility, $location, navigateBackServi
         $scope.facilityList.push(facility);
       }
     });
-  }
+  };
 }
-

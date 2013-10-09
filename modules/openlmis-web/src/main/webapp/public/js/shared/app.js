@@ -8,8 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-'use strict';
-
 /* App Module */
 var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'],
   function ($httpProvider) {
@@ -48,7 +46,7 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
         },
         'response': responseSuccess,
         'responseError': responseError
-      }
+      };
     }];
     $httpProvider.interceptors.push(interceptor);
   });
@@ -85,7 +83,7 @@ app.directive('numericValidator', function () {
       });
       ctrl.$parsers.unshift(function (viewValue) {
         if (validationFunction(viewValue, getErrorHolder(), integerPartLength, fractionalPartLength)) {
-          if (viewValue == "")  viewValue = undefined;
+          if (viewValue === "")  viewValue = undefined;
           return viewValue;
         } else {
           ctrl.$viewValue = ctrl.$modelValue;
@@ -135,27 +133,29 @@ app.numericValue = function (value, errorHolder, integerPartLength, fractionalPa
   str = '^-?\\d*\\.?\\d{1,' + fractionalPartLength + '}$';
   var NUMBER_REGEXP = new RegExp(str);
 
-  var valid = (value == undefined || value.length == 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  var valid = (value === undefined || value.length === 0) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
 
-  if (errorHolder != undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) != true) {
-    document.getElementById(errorHolder).style.display = ((value == undefined || value.length == 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+  if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
+    document.getElementById(errorHolder).style.display =
+      ((value === undefined || value.length === 0) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
 };
 
 app.positiveNumericValue = function (value, errorHolder, integerPartLength, fractionalPartLength) {
-  var str = '^(\\d{0,' + integerPartLength + '}\\.\\d{0,' + fractionalPartLength + '}|\\d{0,' + integerPartLength + '})$';
+  var str = '^(\\d{0,'.concat(integerPartLength).concat('}\\.\\d{0,').concat(fractionalPartLength)
+    .concat('}|\\d{0,').concat(integerPartLength).concat('})$');
   var NUMERIC_REGEXP_FIXED_PRECISION = new RegExp(str);
-  str = '\\.\\d{' + fractionalPartLength + '}.$';
+  str = '\\.\\d{'.concat(fractionalPartLength).concat('}.$');
   var REGEX_FOR_DIGITS_AFTER_DECIMAL = new RegExp(str);
-  str = '^\\d*\\.?\\d{1,' + fractionalPartLength + '}$';
+  str = '^\\d*\\.?\\d{1,'.concat(fractionalPartLength).concat('}$');
   var NUMBER_REGEXP = new RegExp(str);
 
-  var valid = (value == undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
+  var valid = (value === undefined) ? true : NUMERIC_REGEXP_FIXED_PRECISION.test(value);
 
-  if (errorHolder != undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) != true) {
-    document.getElementById(errorHolder).style.display = ((value == undefined) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
+  if (errorHolder !== undefined && REGEX_FOR_DIGITS_AFTER_DECIMAL.test(value) === false) {
+    document.getElementById(errorHolder).style.display = ((value === undefined) ? true : (NUMBER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
@@ -164,12 +164,12 @@ app.positiveNumericValue = function (value, errorHolder, integerPartLength, frac
 
 app.integer = function (value, errorHolder) {
   var INTEGER_REGEXP_FIXED_LENGTH = /^[-]?\d{0,6}$/;
-  var REGEX_FOR_SIX_DIGITS = /\d{6}.$/
+  var REGEX_FOR_SIX_DIGITS = /\d{6}.$/;
   var INTEGER_REGEXP = /^[-]?\d*$/;
-  var valid = (value == undefined) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
+  var valid = (value === undefined) ? true : INTEGER_REGEXP_FIXED_LENGTH.test(value);
 
-  if (errorHolder != undefined && REGEX_FOR_SIX_DIGITS.test(value) != true) {
-    document.getElementById(errorHolder).style.display = ((value == undefined) ? true : (INTEGER_REGEXP.test(value))) ? 'none' : 'block';
+  if (errorHolder !== undefined && REGEX_FOR_SIX_DIGITS.test(value) === false) {
+    document.getElementById(errorHolder).style.display = ((value === undefined) ? true : (INTEGER_REGEXP.test(value))) ? 'none' : 'block';
   }
 
   return valid;
@@ -179,9 +179,9 @@ app.integer = function (value, errorHolder) {
 app.positiveInteger = function (value, errorHolder) {
   var POSITIVE_INTEGER_REGEXP_FIXED_LENGTH = /^\d*$/;
 
-  var valid = (value == undefined) ? true : POSITIVE_INTEGER_REGEXP_FIXED_LENGTH.test(value);
+  var valid = (value === undefined) ? true : POSITIVE_INTEGER_REGEXP_FIXED_LENGTH.test(value);
 
-  if (errorHolder != undefined && document.getElementById(errorHolder) != null) {
+  if (errorHolder !== undefined && document.getElementById(errorHolder) !== null) {
     document.getElementById(errorHolder).style.display = (valid) ? 'none' : 'block';
   }
 
@@ -200,7 +200,7 @@ app.run(function ($rootScope) {
 });
 
 function isUndefined(value) {
-  return (value == null || value == undefined || value.toString().trim().length == 0);
+  return (value === null || value === undefined || value.toString().trim().length === 0);
 }
 
 

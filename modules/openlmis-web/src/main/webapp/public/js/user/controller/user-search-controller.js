@@ -12,10 +12,10 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
   $scope.showUserSearchResults = function () {
     var query = $scope.query;
 
-    var len = (query == undefined) ? 0 : query.length;
+    var len = (query === undefined) ? 0 : query.length;
 
     if (len >= 3) {
-      if ($scope.previousQuery.substr(0, 3) == query.substr(0, 3)) {
+      if ($scope.previousQuery.substr(0, 3) === query.substr(0, 3)) {
         $scope.previousQuery = query;
         filterUserByName(query);
         return true;
@@ -53,24 +53,27 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
   $scope.updatePassword = function () {
     var reWhiteSpace = new RegExp("\\s");
     var digits = new RegExp("\\d");
-    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) || reWhiteSpace.test($scope.password1)) {
+    if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
+      reWhiteSpace.test($scope.password1))
+    {
       $scope.error = messageService.get("error.password.invalid");
       return;
     }
+
     if ($scope.password1 != $scope.password2) {
       $scope.error = messageService.get('error.password.mismatch');
       return;
     }
+
     UpdatePassword.update({userId: $scope.user.id}, $scope.password1, function (data) {
       $scope.message = data.success;
     }, {});
-
-  }
+  };
 
   $scope.resetPasswordModal = function () {
     $scope.changePasswordModal = false;
     $scope.user = undefined;
-  }
+  };
 
   $scope.clearSearch = function () {
     $scope.query = "";
@@ -89,8 +92,8 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
         user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
         fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
         user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0
-        ) {
+        user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0)
+      {
         $scope.filteredUsers.push(user);
       }
     });

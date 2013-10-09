@@ -139,17 +139,16 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     var valid = true;
     $scope.error = "";
     $scope.showRightError = false;
-    if ($scope.role.name == undefined) {
+    if ($scope.role.name === undefined) {
       $scope.showError = true;
       $scope.error = "form.error";
       valid = false;
     }
-    if ($scope.role.rights.length == 0) {
+    if ($scope.role.rights.length === 0) {
       $scope.showRightError = true;
       $scope.error = "form.error";
       valid = false;
     }
     return valid;
-  }
-
+  };
 }

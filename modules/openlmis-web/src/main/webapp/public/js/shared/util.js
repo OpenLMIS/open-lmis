@@ -10,20 +10,19 @@
 
 var utils = {
   getFormattedDate: function (date) {
-    return ('0' + date.getDate()).slice(-2) + '/'
-      + ('0' + (date.getMonth() + 1)).slice(-2) + '/'
-      + date.getFullYear();
+    return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) +
+      '/' + date.getFullYear();
   },
 
   isNullOrUndefined: function (obj) {
-    return obj == undefined || obj == null;
+    return obj === undefined || obj === null;
   },
 
   isNumber: function (numberValue) {
     if (this.isNullOrUndefined(numberValue)) return false;
     var number = numberValue.toString();
 
-    if (number.trim() == '') return false;
+    if (number.trim() === '') return false;
     return !isNaN(number);
   },
 
@@ -42,7 +41,7 @@ var utils = {
   },
 
   isEmpty: function (value) {
-    return (value == null || value == undefined || value.toString().trim().length == 0);
+    return (value === null || value === undefined || value.toString().trim().length === 0);
   }
 
 };

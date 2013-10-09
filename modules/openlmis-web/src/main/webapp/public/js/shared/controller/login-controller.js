@@ -13,11 +13,11 @@ function LoginController($scope, $http, localStorageService, messageService) {
   var FORGOT_PASSWORD = "/public/pages/forgot-password.html";
 
   var validateLoginForm = function () {
-    if ($scope.username == undefined || $scope.username.trim() == '') {
+    if ($scope.username === undefined || $scope.username.trim() === '') {
       $scope.loginError = messageService.get("error.login.username");
       return false;
     }
-    if ($scope.password == undefined) {
+    if ($scope.password === undefined) {
       $scope.loginError = messageService.get("error.login.password");
       return false;
     }
