@@ -20,7 +20,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.domain.FacilityVisit;
-import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -62,15 +61,17 @@ public class DistributionServiceTest {
     when(facilityDistributionData.getFacilityId()).thenReturn(facilityId);
     when(facilityDistributionData.getFacilityVisit()).thenReturn(facilityVisit);
 
-    service.sync(distributionId, facilityDistributionData);
+    service.sync(distributionId, facilityDistributionData, 2l);
 
     verify(facilityVisit).setDistributionId(distributionId);
     verify(facilityVisit).setFacilityId(facilityId);
+    verify(facilityVisit).setCreatedBy(2l);
+    verify(facilityVisit).setModifiedBy(2l);
     verify(facilityVisitService).save(facilityDistributionData.getFacilityVisit());
   }
 
   @Test
-  public void itShouldGetDistributionIfExists() throws Exception {
+  public void shouldGetDistributionIfExists() throws Exception {
     service.get(new Distribution());
 
     verify(repository).get(new Distribution());

@@ -99,12 +99,16 @@ public class FacilityVisitMapperIT {
 
     facilityVisit.setDistributionId(distribution.getId());
     facilityVisit.setFacilityId(facility.getId());
+    facilityVisit.setCreatedBy(1l);
+    facilityVisit.setModifiedBy(1l);
 
     mapper.insert(facilityVisit);
 
-    FacilityVisit expectedFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+    FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
 
-    assertThat(expectedFacilityVisit, is(facilityVisit));
+    assertThat(actualFacilityVisit, is(facilityVisit));
+    assertThat(actualFacilityVisit.getCreatedBy(), is(1l));
+    assertThat(actualFacilityVisit.getModifiedBy(), is(1l));
   }
 
 }

@@ -64,10 +64,11 @@ public class DistributionController extends BaseController {
   }
 
   @RequestMapping(value = "/distributions/{id}/facilities/{facilityId}", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionData facilityDistributionData, @PathVariable Long id, @PathVariable Long facilityId) {
+  public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionData facilityDistributionData, @PathVariable Long id,
+                                               @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
     facilityDistributionData.setFacilityId(facilityId);
     try {
-      distributionService.sync(id, facilityDistributionData);
+      distributionService.sync(id, facilityDistributionData, loggedInUserId(httpServletRequest));
       return OpenLmisResponse.success(SUCCESS);
     } catch (Exception e) {
       return OpenLmisResponse.error(ERROR, BAD_REQUEST);

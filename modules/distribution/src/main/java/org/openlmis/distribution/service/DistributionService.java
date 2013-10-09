@@ -35,11 +35,13 @@ public class DistributionService {
     return repository.get(distribution);
   }
 
-  public void sync(Long distributionId, FacilityDistributionData facilityDistributionData) {
+  public void sync(Long distributionId, FacilityDistributionData facilityDistributionData, Long userId) {
 
     FacilityVisit facilityVisit = facilityDistributionData.getFacilityVisit();
     facilityVisit.setDistributionId(distributionId);
     facilityVisit.setFacilityId(facilityDistributionData.getFacilityId());
+    facilityVisit.setCreatedBy(userId);
+    facilityVisit.setModifiedBy(userId);
 
     facilityVisitService.save(facilityVisit);
 

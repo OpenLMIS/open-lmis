@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FacilityVisitMapper {
 
-  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, confirmedByName, confirmedByTitle, verifiedByName, verifiedByTitle, observations)",
-    "VALUES (#{distributionId}, #{facilityId}, #{confirmedBy.name}, #{confirmedBy.title}, #{verifiedBy.name}, #{verifiedBy.title}, #{observations})"})
+  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, confirmedByName, confirmedByTitle, verifiedByName, verifiedByTitle, observations, createdBy, modifiedBy)",
+    "VALUES (#{distributionId}, #{facilityId}, #{confirmedBy.name}, #{confirmedBy.title}, #{verifiedBy.name}, #{verifiedBy.title}, #{observations}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityVisit facilityVisit);
 

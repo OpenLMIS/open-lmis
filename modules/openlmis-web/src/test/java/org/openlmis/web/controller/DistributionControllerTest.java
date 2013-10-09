@@ -48,6 +48,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RunWith(MockitoJUnitRunner.class)
 public class DistributionControllerTest {
 
+  public static final Long USER_ID = 1l;
   @Mock
   DistributionService service;
 
@@ -70,7 +71,7 @@ public class DistributionControllerTest {
     httpServletRequest = new MockHttpServletRequest();
     session = new MockHttpSession();
     httpServletRequest.setSession(session);
-
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, USER_ID);
   }
 
   @Test
@@ -131,10 +132,10 @@ public class DistributionControllerTest {
     Long facilityId = 3l;
     FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
 
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId);
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    verify(service).sync(distributionId, facilityDistributionData);
+    verify(service).sync(distributionId, facilityDistributionData, USER_ID);
     assertThat(facilityDistributionData.getFacilityId(), is(facilityId));
   }
 }

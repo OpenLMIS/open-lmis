@@ -30,18 +30,20 @@ function DistributionListController($scope, SharedDistributions, IndexedDB, Sync
 
     function syncFacilities() {
       $.each(distributionData.facilityDistributionData, function (facilityId, facilityDistributionData) {
+        facilityId = utils.parseIntWithBaseTen(facilityId);
         var computedStatus = facilityDistributionData.computeStatus();
         if (computedStatus != COMPLETE)  return;
 
         var defer = $q.defer();
         promises.push(defer.promise);
 
-        facilitySelected = _.findWhere(facilities, {id: utils.parseIntWithBaseTen(facilityId)});
         SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistributionData,
           function (data) {
             facilityDistributionData.status = SYNCED;
+            facilitySelected = _.findWhere(facilities, {id: facilityId});
             defer.resolve({facility: facilitySelected, facilityDistributionData: facilityDistributionData});
           }, function (data) {
+            facilitySelected = _.findWhere(facilities, {id: facilityId});
             defer.resolve({facility: facilitySelected, status: 'error'});
           });
       });
@@ -54,7 +56,7 @@ function DistributionListController($scope, SharedDistributions, IndexedDB, Sync
         $scope.message = '';
         $(resolves).each(function (index, resolve) {
           if (resolve.facilityDistributionData.status != SYNCED) return;
-          $scope.message += resolve.facility.name + '-' + resolve.facility.code;
+          $scope.message += resolve.facility.code + ' - ' + resolve.facility.name;
           if (index < resolves.length - 1) $scope.message += ', ';
         });
         $scope.message = messageService.get("message.facility.synced.successfully", $scope.message);
