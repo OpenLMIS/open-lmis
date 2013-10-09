@@ -128,9 +128,13 @@ public class DistributionControllerTest {
   @Test
   public void shouldSyncFacilityDistributionData() {
     Long distributionId = 1l;
+    Long facilityId = 3l;
     FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId);
+
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId);
+
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     verify(service).sync(distributionId, facilityDistributionData);
+    assertThat(facilityDistributionData.getFacilityId(), is(facilityId));
   }
 }

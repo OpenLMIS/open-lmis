@@ -257,7 +257,7 @@ services.factory('Distributions', function ($resource) {
 });
 
 services.factory('SyncFacilityDistributionData', function ($resource) {
-  return $resource('/facilityDistributionData/:distributionId.json', {}, update);
+  return $resource('/distributions/:id/facilities/:facilityId.json', {}, update);
 });
 
 services.factory('Locales', function ($resource) {

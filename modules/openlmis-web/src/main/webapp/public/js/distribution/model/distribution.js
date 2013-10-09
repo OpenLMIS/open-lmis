@@ -27,24 +27,6 @@ function Distribution(distributionJson) {
     this.facilityDistributionData[facilityId].epiUse.setNotRecorded();
   };
 
-  Distribution.prototype.computeStatus = function () {
-    var overallStatus;
-    $.each(this.facilityDistributionData, function (index, facilityDistributionData) {
-      var computedStatus = facilityDistributionData.computeStatus();
-      if (computedStatus === COMPLETE && (overallStatus == COMPLETE || !overallStatus)) {
-        overallStatus = COMPLETE;
-      } else if (computedStatus === EMPTY && (!overallStatus || overallStatus == EMPTY)) {
-        overallStatus = EMPTY;
-      } else if (computedStatus === INCOMPLETE ||
-        (computedStatus === EMPTY && overallStatus === COMPLETE) ||
-        (computedStatus === COMPLETE && overallStatus === EMPTY)) {
-        overallStatus = INCOMPLETE;
-        return false;
-      }
-      return true;
-    });
-    return overallStatus;
-  };
   return this;
 }
 
