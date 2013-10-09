@@ -50,7 +50,10 @@ dependencies {
     }
 
 }
-def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/$dbName"
+
+String connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/$dbName"
+connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+
 
 task setupDB << {
     tasks.dropDB.execute()
@@ -70,9 +73,10 @@ task createDB << {
 
 task dropDB << {
     println("Dropping Database..")
-    if (!dropIfInUse("procpid")) {
-        dropIfInUse("pid")
+    if (!closeActiveConnections("procpid")) {
+        closeActiveConnections("pid")
     }
+    executeSql("DROP DATABASE IF EXISTS $dbName")
 }
 
 task dropSchemas << {
@@ -80,10 +84,14 @@ task dropSchemas << {
     executeSql('drop schema atomfeed cascade ', true)
 }
 
-def boolean dropIfInUse(String pid) {
+task createSchemas << {
+    executeSql('create schema public', true)
+    executeSql('create schema atomfeed', true)
+}
+
+def boolean closeActiveConnections(String pid) {
     try {
         executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
-        executeSql("DROP DATABASE IF EXISTS $dbName")
         return true
     } catch (Exception e) {
         return false
@@ -95,7 +103,7 @@ jar.doFirst {
 }
 
 task migrateDB() << {
-    println("migrateDB:")
+    println("Migrating database..")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
@@ -113,9 +121,10 @@ task seed(type: Exec) {
 
 def executeSql(String statement, Boolean includeDbName = false) {
     def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort"
-    if (includeDbName) {
-        connectionString += "/$dbName"
-    }
+
+    connectionString += (includeDbName) ? "/$dbName" : ""
+
+    connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
 
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
