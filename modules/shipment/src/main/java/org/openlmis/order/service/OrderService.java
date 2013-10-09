@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -47,6 +48,8 @@ public class OrderService {
   private RequisitionService requisitionService;
   @Autowired
   private SupplyLineService supplyLineService;
+  @Autowired
+  private ProgramService programService;
 
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
@@ -96,6 +99,7 @@ public class OrderService {
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
+    requisition.setProgram(programService.getById(requisition.getProgram().getId()));
     removeUnorderedProducts(requisition);
     order.setRnr(requisition);
     return order;
