@@ -21,7 +21,6 @@
                          <div class="app-form "  style="padding: 5px;">
                              <form ng-submit="filterGrid()"  name="filterForm" novalidate>
                                  <div class="clearfix ">
-
                                      <div class="form-cell horizontalFilters">
                                          <div >
                                              <label class="labels">Program <span class="label-required">*</span></label>
@@ -179,7 +178,7 @@
                              <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
                                  <tbody>
                                  <tr ng-repeat="row in datarows">
-                                     <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                                     <td data-title="'#'" class="number" style="width:20px;" >{{ row.no }}</td>
                                      <td data-title="'Facility Type'" style="width:100px" sortable="facilityType" >{{ row.facilityType }}</td>
                                      <td data-title="'Facility Name'" style="width:150px" sortable="facilityName" >{{ row.facilityName }}</td>
                                      <td data-title="'Supplying Facility'" style="width:120px" sortable="supplyingFacility" >{{ row.supplyingFacility }}</td>

@@ -10,8 +10,8 @@
         <div class="box-header">
             <h2><i class="icon-edit"></i><span class="break"></span>Facility List</h2>
         </div>
-        <div >
-            <div class="app-form"  style="padding: 5px;">
+        <div>
+            <div class="app-form"  style="padding: 1px;">
                 <form ng-submit="filterGrid()" name="filterForm" novalidate>
                     <div class="form-row clearfix ">
                         <div class="form-cell horizontalFilters">
@@ -60,7 +60,6 @@
                 <td>No data to show under selected filters</td>
             </tr>
         </table>
-
         <div ng-show="datarows.length > 0">
             <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}} </div>
             <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
