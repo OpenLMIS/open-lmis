@@ -58,6 +58,7 @@ connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgre
 task setupDB << {
     tasks.dropDB.execute()
     tasks.createDB.execute()
+    executeSql('create schema atomfeed', true)
 
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
