@@ -76,4 +76,11 @@ INSERT INTO processing_periods
                                                                   WHERE code='M'), (SELECT
                                                                                       id
                                                                                     FROM users
+                                                                                    LIMIT 1)),
+('Current Period', 'Current Period', '2013-06-01', '2016-06-30 23:59:59', 1, (SELECT
+                                                                    id
+                                                                  FROM processing_schedules
+                                                                  WHERE code='M'), (SELECT
+                                                                                      id
+                                                                                    FROM users
                                                                                     LIMIT 1));
