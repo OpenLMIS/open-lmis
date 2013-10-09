@@ -52,7 +52,7 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public List<Facility> get(@RequestParam(value = "searchParam", required = false) String searchParam,
-                            @RequestParam(value = "virtualFacility", required = false)Boolean virtualFacility) {
+                            @RequestParam(value = "virtualFacility", required = false) Boolean virtualFacility) {
     if (searchParam != null) {
       return facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(searchParam, virtualFacility);
     } else {
@@ -169,10 +169,19 @@ public class FacilityController extends BaseController {
     return response("facilities", facilities);
   }
 
+  @RequestMapping(value = "/warehouses", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
+  public ResponseEntity<OpenLmisResponse> getWarehouses() {
+    List<Facility> wareshouses = facilityService.getWareshouses();
+
+    return response("warehouses", wareshouses);
+  }
+
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {
     ResponseEntity<OpenLmisResponse> response;
     response = error(exception, HttpStatus.BAD_REQUEST);
     response.getBody().addData("facility", facility);
     return response;
   }
+
 }

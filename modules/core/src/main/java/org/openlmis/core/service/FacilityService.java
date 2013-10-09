@@ -164,4 +164,8 @@ public class FacilityService {
     }
     return facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
   }
+
+  public List<Facility> getWareshouses() {
+    return facilityRepository.getWarehouses();
+  }
 }

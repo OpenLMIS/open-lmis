@@ -177,4 +177,7 @@ public interface FacilityMapper {
       many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))})
   List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
 
+
+  @Select({"SELECT * from facilities where id in (SELECT supplyingfacilityid from supply_lines)"})
+  List<Facility> getWarehouses();
 }
