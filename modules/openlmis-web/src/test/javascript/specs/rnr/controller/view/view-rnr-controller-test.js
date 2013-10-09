@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrController', function () {
-  var scope, httpBackend, controller, routeParams, requisition, location;
+  var scope, httpBackend, controller, routeParams, requisition, location, messageService;
   var columns = [
     {"id": 1, "name": "productCode", "position": 1, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product Code", "formula": "", "indicator": "O", "used": true, "visible": true, "mandatory": true, "description": "Unique identifier for each commodity", "formulaValidationRequired": true},
     {"id": 2, "name": "product", "position": 2, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product", "formula": "", "indicator": "R", "used": true, "visible": true, "mandatory": true, "description": "Primary name of the product", "formulaValidationRequired": true},
@@ -23,7 +23,7 @@ describe('ViewRnrController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_) {
     routeParams = {'programId': 2, 'rnr': 1, 'supplyType': 'full-supply'};
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
@@ -32,6 +32,7 @@ describe('ViewRnrController', function () {
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 3}};
     scope.pageSize = 2;
     routeParams.page = 1;
+    messageService = _messageService_;
   }));
 
 
@@ -68,6 +69,39 @@ describe('ViewRnrController', function () {
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
     expect(rnr.fullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
+  });
+
+  it('should set requisition type as Regular for regular requisition', function() {
+    var regular = "Regular";
+    var rnr = {emergency: false, fullSupplyLineItems: [
+      {'id': 1}
+    ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
+
+    routeParams.supplyType = 'full-supply';
+
+    spyOn(messageService, "get").andReturn(regular);
+
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+
+    expect(scope.requisitionType).toEqual(regular);
+  });
+
+
+  it('should set requisition type as Emergency for emergency requisition', function() {
+    var emergency = "Emergency";
+    var rnr = {emergency: true, fullSupplyLineItems: [
+      {'id': 1}
+    ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
+
+    routeParams.supplyType = 'full-supply';
+
+    spyOn(messageService, "get").andReturn(emergency);
+
+    controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
+      pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
+
+    expect(scope.requisitionType).toEqual(emergency);
   });
 
   it('should assign non full supply line items based on supply type', function () {
