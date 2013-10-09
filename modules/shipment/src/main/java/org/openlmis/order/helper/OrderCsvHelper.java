@@ -17,6 +17,7 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -29,6 +30,10 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Component
 public class OrderCsvHelper {
+
+  // apply the windows line break
+  // TODO: take this to the configuration
+  String lineSeparator = "\r\n";
 
   public void writeCsvFile(Order order, OrderFileTemplateDTO orderFileTemplateDTO, Writer writer) throws IOException {
     List<OrderFileColumn> orderFileColumns = orderFileTemplateDTO.getOrderFileColumns();
@@ -55,7 +60,7 @@ public class OrderCsvHelper {
       if (columnLabel == null) columnLabel = "";
       writer.write(columnLabel);
       if (orderFileColumns.indexOf(column) == (orderFileColumns.size() - 1)) {
-        writer.write(System.getProperty("line.separator"));
+        writer.write(lineSeparator);
         break;
       }
       writer.write(",");
@@ -65,7 +70,7 @@ public class OrderCsvHelper {
   private void writeLineItems(Order order, List<RnrLineItem> fullSupplyLineItems, List<OrderFileColumn> orderFileColumns, Writer writer) throws IOException {
     for (RnrLineItem rnrLineItem : fullSupplyLineItems) {
       writeCsvLineItem(order, rnrLineItem, orderFileColumns, writer);
-      writer.write(System.getProperty("line.separator"));
+      writer.write(lineSeparator);
     }
   }
 
