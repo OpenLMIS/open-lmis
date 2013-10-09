@@ -120,6 +120,8 @@ public class FacilityListPage extends RequisitionPage {
       color="rgba(82, 168, 30, 1)";
     else if(color.toLowerCase().equals("AMBER".toLowerCase()))
       color="rgba(240, 165, 19, 1)";
+    else if (color.toLowerCase().equals("Blue".toLowerCase()))
+      color="rgba(75, 169, 253, 1)";
 
     if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
       SeleneseTestBase.assertEquals(color, facilityOverAllIndicator.getCssValue("background-color"));

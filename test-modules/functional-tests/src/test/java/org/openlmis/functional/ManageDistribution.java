@@ -227,6 +227,12 @@ public class ManageDistribution extends TestCaseHelper {
     observation.navigate();
   }
 
+  @Then("^I see general observations fields disabled$")
+  public void verifyObservationFieldsDisabled() throws IOException {
+    GeneralObservationPage observation = new GeneralObservationPage(testWebDriver);
+    observation.verifyAllFieldsDisabled();
+  }
+
   @Then("^Verify \"([^\"]*)\" indicator should be \"([^\"]*)\"$")
   public void shouldVerifyIndicatorColor(String tabName, String color) throws IOException, SQLException {
     tabMap.get(tabName).verifyIndicator(color);

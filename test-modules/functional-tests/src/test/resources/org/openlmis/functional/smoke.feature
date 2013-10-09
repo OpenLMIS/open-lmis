@@ -508,6 +508,8 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
     Then I see overall distribution icon as "RED"
+    When I sync recorded data
+    Then I verify sync message as "No Facility for the chosen zone program and period is ready to be synced"
     When I record data
 
     And I choose facility "F10"
@@ -538,7 +540,12 @@ Feature: Smoke Tests
     And I view observations data in DB:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |
-
+    When I record data
+    And I choose facility "F10"
+    Then I see "Overall" facility icon as "BLUE"
+    And I see "Individual" facility icon as "BLUE"
+    When I navigate to general observations tab
+    And I see general observations fields disabled
 
   @Smoke
   @ie2

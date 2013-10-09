@@ -186,6 +186,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(distributionPage.getSyncMessage(),"Village Dispensary-F10, have been successfully synced");
 
     dbWrapper.verifyFacilityVisits("Some observations","samuel","Doe","Mai ka","Laal");
+    distributionPage.clickRecordData();
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    generalObservationPage.navigate();
+    generalObservationPage.verifyAllFieldsDisabled();
 
   }
 
