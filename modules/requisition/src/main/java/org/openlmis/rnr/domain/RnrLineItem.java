@@ -204,7 +204,7 @@ public class RnrLineItem extends LineItem {
     calculateTotalLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(calcStrategy);
     if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed(calcStrategy);
-    calculateNormalizedConsumption(calcStrategy);
+    calculateNormalizedConsumption(calcStrategy, template);
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(calcStrategy, period);
       calculateMaxStockQuantity(calcStrategy,template);
