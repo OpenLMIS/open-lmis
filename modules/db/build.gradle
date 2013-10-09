@@ -65,7 +65,7 @@ task setupDB << {
 
 task createDB << {
     println("Creating Database..")
-    executeSql('create database ' + dbName)
+    executeSql("create database $dbName")
 }
 
 task dropDB << {
@@ -75,10 +75,15 @@ task dropDB << {
     }
 }
 
+task dropSchemas << {
+    executeSql('drop schema public cascade ', true)
+    executeSql('drop schema atomfeed cascade ', true)
+}
+
 def boolean dropIfInUse(String pid) {
     try {
-        executeSql('SELECT pg_terminate_backend(' + pid + ') FROM pg_stat_activity WHERE datname=\'' + dbName + '\'')
-        executeSql('DROP DATABASE IF EXISTS ' + dbName)
+        executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
+        executeSql("DROP DATABASE IF EXISTS $dbName")
         return true
     } catch (Exception e) {
         return false
@@ -106,18 +111,18 @@ task seed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
-def executeSql(String statement) {
+def executeSql(String statement, Boolean includeDbName = false) {
+    def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort"
+    if (includeDbName) {
+        connectionString += "/$dbName"
+    }
+
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
-    Class.forName(dbDriver)
-    Sql sql = (Sql) Sql.newInstance(
-            "jdbc:postgresql://$databaseHostName:$databasePort",
-            dbUser,
-            dbPassword,
-            dbDriver
-    )
 
-    sql.execute(statement)
+    Class.forName(dbDriver)
+
+    Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }
 
