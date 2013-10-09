@@ -21,8 +21,6 @@
     <div id="cachedDistributions">
       <div class="list-header-container">
         <div class="row-fluid list-header">
-          <span class="span1"></span>
-
           <div class="span2">
             <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
           </div>
@@ -36,9 +34,6 @@
 
       <div class="list-container">
         <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
-          <span ng-class="distribution.computeStatus()" class="delivery-zone-status span1">
-            <span id="indicator{{ $index }}" class="status-icon"></span>
-          </span>
 
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>

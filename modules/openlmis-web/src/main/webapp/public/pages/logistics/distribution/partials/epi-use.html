@@ -15,10 +15,10 @@
       src = "'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class = "facility-info">
-    <div class = "refrigerator-container">
+    <div class = "refrigerator-container" disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
       <h3>
         <span openlmis-message = "header.epi.use"></span>
-        <a href = "javascript:void(0)" ng-click = "applyNRAll()"
+        <input type="button" ng-click = "applyNRAll()"
            class = "pull-right btn"
            openlmis-message = "button.apply.nr.all"></a>
       </h3>
@@ -30,7 +30,7 @@
 
       <div id = "epiUseTable" tab-scroll bottom-offset = "180"
            ng-show = "distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
-        <form auto-save = "distribution" object-store = "distributions" disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
+        <form auto-save = "distribution" object-store = "distributions">
           <table class = "table table-bordered">
             <thead>
               <tr>
