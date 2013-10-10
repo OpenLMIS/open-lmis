@@ -221,10 +221,34 @@ public class ManageDistribution extends TestCaseHelper {
     observation.navigate();
   }
 
+  @Then("^I navigate to refrigerator tab$")
+  public void navigateToRefrigeratorTab() throws IOException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.navigateToRefrigeratorTab();
+  }
+
+  @Then("^I access show$")
+  public void accessShow() throws IOException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickShow();
+  }
+
   @Then("^I see general observations fields disabled$")
   public void verifyObservationFieldsDisabled() throws IOException {
     GeneralObservationPage observation = new GeneralObservationPage(testWebDriver);
     observation.verifyAllFieldsDisabled();
+  }
+
+  @Then("^I see refrigerator fields disabled$")
+  public void verifyRefrigeratorFieldsDisabled() throws IOException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.verifyAllFieldsDisabled();
+  }
+
+  @Then("^I see epi fields disabled$")
+  public void verifyEpiFieldsDisabled() throws IOException {
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.verifyAllFieldsDisabled();
   }
 
   @Then("^Verify \"([^\"]*)\" indicator should be \"([^\"]*)\"$")

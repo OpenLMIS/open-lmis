@@ -117,11 +117,12 @@ public class GeneralObservationPage extends DistributionTab {
   public void navigate() {
     generalObservationTab.click();
   }
-    public void verifyAllFieldsDisabled(){
-        assertFalse("Observation field enabled.", observationsField.isEnabled());
-        assertFalse("ConfirmedBy name field enabled.", confirmedByNameField.isEnabled());
-        assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
-        assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
-        assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
-    }
+
+  public void verifyAllFieldsDisabled() {
+    assertFalse("Observation field enabled.", observationsField.isEnabled());
+    assertFalse("ConfirmedBy name field enabled.", confirmedByNameField.isEnabled());
+    assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
+    assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
+    assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
+  }
 }

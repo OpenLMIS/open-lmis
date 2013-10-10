@@ -63,6 +63,24 @@ public class EPIUse extends DistributionTab {
     epiUseTab.click();
   }
 
+  public void verifyAllFieldsDisabled() {
+    assertFalse("stockAtFirstOfMonth field enabled.", testWebDriver.getElementByName("stockAtFirstOfMonth0").isEnabled());
+    assertFalse("received field enabled.", testWebDriver.getElementByName("received0").isEnabled());
+    assertFalse("distributed field enabled.", testWebDriver.getElementByName("distributed0").isEnabled());
+    assertFalse("loss field enabled.", testWebDriver.getElementByName("loss0").isEnabled());
+    assertFalse("stockAtEndOfMonth Field enabled.", testWebDriver.getElementByName("stockAtEndOfMonth0").isEnabled());
+    assertFalse("expirationDate Field enabled.", testWebDriver.getElementByName("expirationDate0").isEnabled());
+
+    assertFalse("stockAtFirstOfMonth field NR enabled.", testWebDriver.getElementById("stockAtFirstOfMonth0").isEnabled());
+    assertFalse("received field NR enabled.", testWebDriver.getElementById("received0").isEnabled());
+    assertFalse("distributed field NR enabled.", testWebDriver.getElementById("distributed0").isEnabled());
+    assertFalse("loss field NR enabled.", testWebDriver.getElementById("loss0").isEnabled());
+    assertFalse("stockAtEndOfMonth Field NR enabled.", testWebDriver.getElementById("stockAtEndOfMonth0").isEnabled());
+    assertFalse("expirationDate Field NR enabled.", testWebDriver.getElementById("expirationDate0").isEnabled());
+
+    assertFalse("applyNRToAllFieldsCheckbox NR enabled.", applyNRToAllFieldsCheckbox.isEnabled());
+  }
+
   public void enterValueInStockAtFirstOfMonth(String value, int rownumber) {
     rownumber = rownumber - 1;
     WebElement stockAtFirstOfMonth = testWebDriver.getElementByName("stockAtFirstOfMonth" + rownumber);

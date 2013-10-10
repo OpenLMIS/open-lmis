@@ -533,7 +533,7 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
     When I sync recorded data
-    Then I verify sync message as "Village Dispensary-F10 synced successfully"
+    Then I verify sync message as "F10 - Village Dispensary synced successfully"
     And I view observations data in DB:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |
@@ -543,6 +543,11 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "BLUE"
     When I navigate to general observations tab
     And I see general observations fields disabled
+    When Navigate to EPI tab
+    Then I see epi fields disabled
+    When I navigate to refrigerator tab
+    And I access show
+    Then I see refrigerator fields disabled
 
   @Smoke
   @ie2

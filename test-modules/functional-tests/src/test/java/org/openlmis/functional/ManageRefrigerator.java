@@ -105,7 +105,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   @And("^I edit refrigerator")
   public void clickEdit() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickEdit();
+    refrigeratorPage.clickShow();
   }
 
   @When("^I confirm delete$")
