@@ -17,6 +17,7 @@ import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DistributionService {
@@ -35,6 +36,7 @@ public class DistributionService {
     return repository.get(distribution);
   }
 
+  @Transactional
   public void sync(FacilityDistributionData facilityDistributionData) {
     facilityVisitService.save(facilityDistributionData.constructFacilityVisit());
   }

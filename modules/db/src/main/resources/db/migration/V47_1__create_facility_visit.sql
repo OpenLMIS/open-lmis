@@ -19,5 +19,8 @@ CREATE TABLE facility_visits (
   verifiedByTitle  VARCHAR(50),
   observations      TEXT,
   createdBy        INTEGER,
-  createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  UNIQUE (distributionId, facilityId)
 );
+

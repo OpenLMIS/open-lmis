@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
@@ -39,12 +40,10 @@ import java.util.Map;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -140,5 +139,19 @@ public class DistributionControllerTest {
     verify(service).sync(facilityDistributionData);
     assertThat(facilityDistributionData.getFacilityId(), is(facilityId));
     assertThat(facilityDistributionData.getDistributionId(), is(distributionId));
+  }
+
+  @Test
+  public void shouldReturnErrorIfAlreadySynced() throws Exception {
+    Long distributionId = 1l;
+    Long facilityId = 3l;
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    String errorMessage = "some error";
+    doThrow(new DataException(errorMessage)).when(service).sync(facilityDistributionData);
+
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
+
+    assertThat(response.getStatusCode(),is(CONFLICT));
+    assertThat(response.getBody().getErrorMsg(),is(errorMessage));
   }
 }
