@@ -31,7 +31,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     $scope.adminRights = _.where($scope.rights, {"type": "ADMIN"});
     $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
     $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
-    $scope.shipmentRights = _.where($scope.rights, {"type": "SHIPMENT"});
+    $scope.shipmentRights = _.where($scope.rights, {"type": "FULFILLMENT"});
   }, {});
 
 

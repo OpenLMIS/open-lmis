@@ -74,7 +74,7 @@ public class ShipmentRoleAssignmentMapperIT {
     Role role = new Role("r1", "random description");
     roleRightsMapper.insertRole(role);
 
-    queryExecutor.executeUpdate("INSERT INTO shipment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
 
     List<ShipmentRoleAssignment> expectedShipmentRoleAssignments = shipmentRoleAssignmentMapper.getShipmentRolesForUser(user.getId());
 

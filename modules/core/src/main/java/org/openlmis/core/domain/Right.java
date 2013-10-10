@@ -39,13 +39,13 @@ public enum Right {
   CREATE_REQUISITION("right.create.requisition", REQUISITION, "Permission to create, edit, submit and recall requisitions", 15, VIEW_REQUISITION),
   AUTHORIZE_REQUISITION("right.authorize.requisition", REQUISITION, "Permission to edit, authorize and recall requisitions", 13, VIEW_REQUISITION),
   APPROVE_REQUISITION("right.approve.requisition", REQUISITION, "Permission to approve requisitions", 12, VIEW_REQUISITION),
-  CONVERT_TO_ORDER("right.convert.to.order", SHIPMENT, "Permission to convert requisitions to order", 14),
-  VIEW_ORDER("right.view.order", SHIPMENT, "Permission to view orders", 17),
+  CONVERT_TO_ORDER("right.convert.to.order", FULFILLMENT, "Permission to convert requisitions to order", 14),
+  VIEW_ORDER("right.view.order", FULFILLMENT, "Permission to view orders", 17),
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
-  FACILITY_FILL_SHIPMENT("right.facility.fill.shipment", SHIPMENT, "Permission to fill shipment data for facility", 19);
+  FACILITY_FILL_SHIPMENT("right.facility.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19);
 
   @Getter
   private final String rightName;

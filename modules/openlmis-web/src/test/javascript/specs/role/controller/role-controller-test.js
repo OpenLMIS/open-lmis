@@ -27,7 +27,7 @@ describe("Role", function () {
         {"right": "MANAGE_FACILITY", "name": "manage facility", "type": "ADMIN"},
         {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
         {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"},
-        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "SHIPMENT"}
+        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "FULFILLMENT"}
       ];
       $httpBackend.when('GET', '/rights.json').respond(200, {"rights": rights});
       ctrl = $controller(RoleController, {$scope: scope, $dialog: dialog});
@@ -45,7 +45,7 @@ describe("Role", function () {
         {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
       ]);
       expect(scope.shipmentRights).toEqual([
-        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "SHIPMENT"}
+        {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "FULFILLMENT"}
       ]);
     });
 

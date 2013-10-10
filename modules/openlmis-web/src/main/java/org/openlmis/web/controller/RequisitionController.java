@@ -12,6 +12,7 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Comment;
@@ -178,10 +179,10 @@ public class RequisitionController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder(@RequestParam(value = "searchType", required = false, defaultValue = SEARCH_ALL) String searchType,
                                                                 @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
-                                                                @RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
+                                                                @RequestParam(value = "page", required = true, defaultValue = "1") Integer page, HttpServletRequest request) {
     try {
-      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
-      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page, numberOfPages);
+      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER);
+      List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, page, numberOfPages,  loggedInUserId(request), Right.CONVERT_TO_ORDER);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);

@@ -23,7 +23,7 @@ import java.util.List;
 @Repository
 public interface ShipmentRoleAssignmentMapper {
 
-  @Select({"SELECT userId, facilityId, array_agg(roleId) as roleAsString FROM shipment_role_assignments WHERE userId = #{userId} GROUP BY userId,facilityId"})
+  @Select({"SELECT userId, facilityId, array_agg(roleId) as roleAsString FROM fulfillment_role_assignments WHERE userId = #{userId} GROUP BY userId,facilityId"})
   List<ShipmentRoleAssignment> getShipmentRolesForUser(Long userId);
 
 }

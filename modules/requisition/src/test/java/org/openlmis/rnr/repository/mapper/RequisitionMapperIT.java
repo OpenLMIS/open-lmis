@@ -17,6 +17,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -28,12 +29,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -42,6 +45,7 @@ import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessin
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
+import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -61,6 +65,12 @@ public class RequisitionMapperIT {
   private ProcessingPeriod processingPeriod3;
   private Program program;
 
+  @Autowired
+  private UserMapper userMapper;
+  @Autowired
+  private RoleRightsMapper roleRightsMapper;
+  @Autowired
+  private QueryExecutor queryExecutor;
   @Autowired
   private FacilityMapper facilityMapper;
   @Autowired
@@ -296,7 +306,9 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() {
+  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() throws SQLException {
+    Long userId = insertUserAndRoleForApprovedRequisitions();
+
     Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, true);
     Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
     Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
@@ -306,7 +318,7 @@ public class RequisitionMapperIT {
     Integer pageNumber = 1;
     Integer pageSize = 2;
 
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber, pageSize);
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -323,7 +335,9 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityName() {
+  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityName() throws SQLException {
+    Long userId = insertUserAndRoleForApprovedRequisitions();
+
     Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
     Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
     Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
@@ -334,7 +348,7 @@ public class RequisitionMapperIT {
     Integer pageNumber = 1;
     Integer pageSize = 2;
 
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber, pageSize);
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -343,8 +357,24 @@ public class RequisitionMapperIT {
     assertThat(requisitions.get(1), is(requisition2));
   }
 
+  private Long insertUserAndRoleForApprovedRequisitions() throws SQLException {
+    Long userId = 1l;
+
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    userMapper.insert(someUser);
+
+    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.CONVERT_TO_ORDER, Right.VIEW_ORDER)));
+    Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
+    role.setId(roleId);
+
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facility.getId(), role.getId()));
+    return userId;
+  }
+
   @Test
-  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingBySupplyDepotName() {
+  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingBySupplyDepotName() throws SQLException {
+    Long userId = insertUserAndRoleForApprovedRequisitions();
+
     Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
     Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
     Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
@@ -355,7 +385,7 @@ public class RequisitionMapperIT {
     Integer pageNumber = 1;
     Integer pageSize = 2;
 
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber, pageSize);
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -365,7 +395,9 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByProgramName() {
+  public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByProgramName() throws SQLException {
+
+    Long userId = insertUserAndRoleForApprovedRequisitions();
 
     Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
     Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
@@ -377,7 +409,7 @@ public class RequisitionMapperIT {
     Integer pageNumber = 1;
     Integer pageSize = 2;
 
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber, pageSize);
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -407,22 +439,22 @@ public class RequisitionMapperIT {
   @Test
   public void shouldOnlyLoadEmergencyRequisitionDataForGivenQuery() throws Exception {
     Rnr initiatedRequisition = insertRequisition(processingPeriod1, program, INITIATED, true);
-    Rnr submitteddRequisition = insertRequisition(processingPeriod1, program, SUBMITTED, true);
+    Rnr submittedRequisition = insertRequisition(processingPeriod1, program, SUBMITTED, true);
 
-    List<Rnr> actualRequisitions = 
-            mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
-      
+    List<Rnr> actualRequisitions =
+      mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
+
     verifyRequisition(initiatedRequisition, actualRequisitions.get(0), INITIATED);
-    verifyRequisition(submitteddRequisition, actualRequisitions.get(1), SUBMITTED);
+    verifyRequisition(submittedRequisition, actualRequisitions.get(1), SUBMITTED);
 
   }
-    
+
   private void verifyRequisition(Rnr expectedRequisition, Rnr actualRequisition, RnrStatus expectedStatus) {
-      assertThat(actualRequisition.getId(), is(expectedRequisition.getId()));
-      assertThat(actualRequisition.getPeriod(), is(processingPeriod1));
-      assertThat(actualRequisition.getStatus(), is(expectedStatus));
-      assertThat(actualRequisition.getFullSupplyLineItems().size(), is(0));
-      assertThat(actualRequisition.getNonFullSupplyLineItems().size(), is(0));
+    assertThat(actualRequisition.getId(), is(expectedRequisition.getId()));
+    assertThat(actualRequisition.getPeriod(), is(processingPeriod1));
+    assertThat(actualRequisition.getStatus(), is(expectedStatus));
+    assertThat(actualRequisition.getFullSupplyLineItems().size(), is(0));
+    assertThat(actualRequisition.getNonFullSupplyLineItems().size(), is(0));
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency) {

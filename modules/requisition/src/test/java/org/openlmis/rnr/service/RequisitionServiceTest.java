@@ -1269,12 +1269,12 @@ public class RequisitionServiceTest {
 
     List<Rnr> filteredRnrs = Arrays.asList(rnr);
 
-    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize)).thenReturn(filteredRnrs);
+    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER)).thenReturn(filteredRnrs);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 6);
+    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 6, 1l, Right.CONVERT_TO_ORDER);
 
-    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
     assertThat(rnrList, is(filteredRnrs));
   }
 
@@ -1283,12 +1283,12 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.page.not.found");
 
-    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1);
+    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l, Right.CONVERT_TO_ORDER);
   }
 
   @Test
   public void shouldReturnEmptyListInCaseNotRequisitionsExistAndPage1Requested() throws Exception {
-    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 1, 0);
+    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 1, 0, 1l, Right.CONVERT_TO_ORDER);
 
     assertThat(requisitions.size(), is(0));
   }
@@ -1299,11 +1299,11 @@ public class RequisitionServiceTest {
     int numberOfApprovedRequisitions = 5;
     String searchType = "searchType";
     String searchVal = "search";
-    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(numberOfApprovedRequisitions);
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }
@@ -1314,11 +1314,11 @@ public class RequisitionServiceTest {
     int numberOfApprovedRequisitions = 6;
     String searchType = "searchType";
     String searchVal = "search";
-    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(numberOfApprovedRequisitions);
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal,  1l, Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal);
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal,  1l, Right.CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }

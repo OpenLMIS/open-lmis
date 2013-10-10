@@ -19,8 +19,8 @@ INSERT INTO rights (name, rightType, description) VALUES
 ('APPROVE_REQUISITION', 'REQUISITION', 'Permission to approve requisitions'),
 ('AUTHORIZE_REQUISITION', 'REQUISITION', 'Permission to edit, authorize and recall requisitions'),
 ('MANAGE_USER', 'ADMIN', 'Permission to create and view users'),
-('CONVERT_TO_ORDER', 'SHIPMENT', 'Permission to convert requisitions to order'),
-('VIEW_ORDER', 'SHIPMENT', 'Permission to view orders'),
+('CONVERT_TO_ORDER', 'FULFILLMENT', 'Permission to convert requisitions to order'),
+('VIEW_ORDER', 'FULFILLMENT', 'Permission to view orders'),
 ('VIEW_REQUISITION', 'REQUISITION', 'Permission to view requisition'),
 ('VIEW_REPORT', 'ADMIN', 'Permission to view reports'),
 ('MANAGE_REPORT', 'ADMIN', 'Permission to manage reports'),
@@ -28,4 +28,4 @@ INSERT INTO rights (name, rightType, description) VALUES
 ('MANAGE_DISTRIBUTION', 'ALLOCATION', 'Permission to manage an distribution'),
 ('CONFIGURE_EDI', 'ADMIN', 'Permission to configure Electronic Data Interchange (EDI)'),
 ('MANAGE_REGIMEN_TEMPLATE', 'ADMIN', 'Permission to manage a regimen template'),
-('FACILITY_FILL_SHIPMENT', 'SHIPMENT', 'Permission to fill shipment data for facility');
+('FACILITY_FILL_SHIPMENT', 'FULFILLMENT', 'Permission to fill shipment data for facility');
