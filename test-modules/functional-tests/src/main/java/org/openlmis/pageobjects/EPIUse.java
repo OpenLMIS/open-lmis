@@ -30,7 +30,7 @@ public class EPIUse extends DistributionTab {
   @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[4]/a/span[1][@class='status-icon']")
   public static WebElement overallEPIUseIcon;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Apply NR to all fields')]")
+  @FindBy(how = How.XPATH, using = "//input[@value='Apply NR to all fields']")
   private static WebElement applyNRToAllFieldsCheckbox;
 
   @FindBy(how = ID, using = "button_OK")
