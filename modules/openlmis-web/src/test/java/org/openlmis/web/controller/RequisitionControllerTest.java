@@ -320,14 +320,14 @@ public class RequisitionControllerTest {
     String searchVal = "test";
     Integer pageNumber = 1;
 
-    when(requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER)).thenReturn(1);
-    when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 1, 1l, Right.CONVERT_TO_ORDER)).thenReturn(expectedRequisitions);
+    when(requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, USER_ID, Right.CONVERT_TO_ORDER)).thenReturn(1);
+    when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 1, USER_ID, Right.CONVERT_TO_ORDER)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber, request);
 
-    verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 1, 1l, Right.CONVERT_TO_ORDER);
+    verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 1, USER_ID, Right.CONVERT_TO_ORDER);
 
     assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }

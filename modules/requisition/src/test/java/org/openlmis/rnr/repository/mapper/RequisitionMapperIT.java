@@ -366,6 +366,9 @@ public class RequisitionMapperIT {
     Role role = new Role("r1", "random description", new HashSet<>(asList(Right.CONVERT_TO_ORDER, Right.VIEW_ORDER)));
     Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
     role.setId(roleId);
+    for (Right right : role.getRights()) {
+      roleRightsMapper.createRoleRight(role, right);
+    }
 
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facility.getId(), role.getId()));
     return userId;

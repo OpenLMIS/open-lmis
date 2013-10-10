@@ -34,10 +34,13 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -45,6 +48,9 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
+import static org.openlmis.core.builder.UserBuilder.active;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
@@ -57,6 +63,8 @@ public class OrderMapperIT {
 
   @Autowired
   private OrderMapper mapper;
+  @Autowired
+  private UserMapper userMapper;
   @Autowired
   private FacilityMapper facilityMapper;
   @Autowired
@@ -75,8 +83,10 @@ public class OrderMapperIT {
   SupplyLineMapper supplyLineMapper;
 
   @Autowired
-  SupervisoryNodeMapper supervisoryNodeMapper;
+  private RoleRightsMapper roleRightsMapper;
 
+  @Autowired
+  SupervisoryNodeMapper supervisoryNodeMapper;
   private ProcessingSchedule processingSchedule;
   private Facility facility;
   private ProcessingPeriod processingPeriod;
@@ -117,12 +127,16 @@ public class OrderMapperIT {
     Order order3 = insertOrder(3L);
     Order order4 = insertOrder(4L);
 
-    List<Order> orders = mapper.getOrders(2, 2);
+    Long userId = insertUserAndRoleForOrders();
+
+    List<Order> orders = mapper.getOrders(2, 2, userId, Right.VIEW_ORDER);
 
     assertThat(orders.size(), is(2));
     assertThat(orders.get(0).getId(), is(order3.getId()));
     assertThat(orders.get(1).getId(), is(order4.getId()));
   }
+
+
 
   @Test
   public void shouldGetShipmentFileInfoWhileFetchingOrders() throws Exception {
@@ -139,8 +153,8 @@ public class OrderMapperIT {
 
 
     mapper.updateShipmentAndStatus(order.getId(), RELEASED, shipmentFileInfo.getId());
-
-    List<Order> orders = mapper.getOrders(1, 0);
+    Long userId = insertUserAndRoleForOrders();
+    List<Order> orders = mapper.getOrders(1, 0, userId, Right.VIEW_ORDER);
     assertThat(orders.get(0).getShipmentFileInfo().getFileName(), is("abc.csv"));
     assertThat(orders.get(0).getShipmentFileInfo().isProcessingError(), is(false));
   }
@@ -221,6 +235,24 @@ public class OrderMapperIT {
     assertThat(savedOrder.getStatus(), is(TRANSFER_FAILED));
     assertThat(savedOrder.getFtpComment(), is(ftpComment));
   }
+
+  private Long insertUserAndRoleForOrders() throws SQLException {
+    Long userId = 1l;
+
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    userMapper.insert(someUser);
+
+    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.VIEW_ORDER)));
+    Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
+    role.setId(roleId);
+    for(Right right : role.getRights()) {
+      roleRightsMapper.createRoleRight(role, right);
+    }
+
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facility.getId(), role.getId()));
+    return userId;
+  }
+
 
   @Test
   public void shouldGetOrderStatusById() throws Exception {

@@ -233,7 +233,7 @@ public interface RequisitionMapper {
         sql.append("LEFT JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
         sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
       } else if (userId != null && right != null) {
-        sql.append("WHERE FRA.userid = "+ userId + " AND RR.rightName = " + right.getRightName());
+        sql.append("WHERE FRA.userid = "+ userId + " AND RR.rightName = " + right);
       }
       sql.append("R.status = 'APPROVED'");
     }
