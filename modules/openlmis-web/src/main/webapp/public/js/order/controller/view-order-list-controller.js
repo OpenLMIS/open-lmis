@@ -44,13 +44,12 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
       {field: 'status', displayName: messageService.get("label.order.status"),
         cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"orderStatus\"><a href='' class='custom-tooltip shipment-error'><i class='icon-warning-sign' ng-show='row.entity.shipmentError'></i><span class='custom-tooltip-msg' openlmis-message='error.shipment.file'></span></a>  <span ng-bind=\"getStatus(row.entity.status)\"></span></div> "},
       {field: 'ftpComment', displayName: messageService.get("label.comment"),
-        cellTemplate: "<div class='ngCellText'><span ng-cell-text><div id=\"ftpComment\" class='ngCellText'> <span ng-show='row.entity.ftpComment' openlmis-message='row.entity.ftpComment'></span></div>"},
+        cellTemplate: "<div class=''><span ng-cell-text><div id=\"ftpComment\" class='ngCellText'> <span ng-show='row.entity.ftpComment' openlmis-message='row.entity.ftpComment'></span></div>"},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
       {cellTemplate: "<div class='ngCellText'><a ng-show=\"row.entity.productsOrdered\" ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a>" +
-        "<span ng-show=\"!row.entity.productsOrdered\" openlmis-message='msg.no.product.in.order' ng-cell-text></span></div>", width: 180},
-      {cellTemplate: "", width: '1%'}
+        "<span ng-show=\"!row.entity.productsOrdered\" openlmis-message='msg.no.product.in.order' ng-cell-text></span></div>", width: 180}
     ]
   };
 
@@ -62,3 +61,9 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     $location.search('page', $scope.currentPage);
   });
 }
+
+var resizeWindow = function(){
+  setTimeout('$(window).trigger("resize")',700);
+}
+
+resizeWindow();
