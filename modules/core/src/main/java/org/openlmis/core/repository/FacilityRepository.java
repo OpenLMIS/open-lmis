@@ -209,4 +209,8 @@ public class FacilityRepository {
   public List<Facility> getSupplyingFacilitiesCompleteList() {
       return mapper.getSupplyingFacilitiesCompleteList();
   }
+
+  public List<Facility> getWarehouses() {
+    return mapper.getWarehouses();
+  }
 }

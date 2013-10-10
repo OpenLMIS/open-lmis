@@ -39,6 +39,7 @@ function FacilityDistributionData(facilityDistributionData) {
       return true;
     });
 
+    this.status = overallStatus;
     return overallStatus;
   };
 }

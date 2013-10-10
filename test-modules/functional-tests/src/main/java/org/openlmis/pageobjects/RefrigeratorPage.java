@@ -18,17 +18,18 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends Page {
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Add New')]")
+  @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Edit')]")
-  public static WebElement editButton;
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Show')]")
+  public static WebElement showButton;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Delete')]")
+  @FindBy(how = XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
@@ -58,13 +59,13 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
   private static WebElement functioningCorrectlyDontKnowRadio;
 
-  @FindBy(how = ID, using = "functioningCorrectlyNR0")
+  @FindBy(how = ID, using = "functioningCorrectly0")
   private static WebElement functioningCorrectlyNR;
 
-  @FindBy(how = ID, using = "lowAlarmEventNR0")
+  @FindBy(how = ID, using = "lowAlarmEvent0")
   private static WebElement lowAlarmEventNR;
 
-  @FindBy(how = ID, using = "highAlarmEventNR0")
+  @FindBy(how = ID, using = "highAlarmEvent0")
   private static WebElement highAlarmEventNR;
 
   @FindBy(how = ID, using = "problemSinceLastVisitYes0")
@@ -76,7 +77,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
   private static WebElement problemSinceLastVisitDontKnowRadio;
 
-  @FindBy(how = ID, using = "problemSinceLastVisitNR0")
+  @FindBy(how = ID, using = "problemSinceLastVisit0")
   private static WebElement problemSinceLastVisitNR;
 
   @FindBy(how = ID, using = "operatorError0")
@@ -171,6 +172,30 @@ public class RefrigeratorPage extends Page {
     refrigeratorTab.click();
   }
 
+  public void verifyAllFieldsDisabled() {
+    assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
+    assertFalse("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());
+
+    assertFalse("functioningCorrectlyDontKnowRadio enabled.", functioningCorrectlyDontKnowRadio.isEnabled());
+    assertFalse("functioningCorrectlyNoRadio enabled.", functioningCorrectlyNoRadio.isEnabled());
+    assertFalse("functioningCorrectlyNR enabled.", functioningCorrectlyNR.isEnabled());
+    assertFalse("functioningCorrectlyYesRadio enabled.", functioningCorrectlyYesRadio.isEnabled());
+
+    assertFalse("lowAlarmEventsTextField enabled.", lowAlarmEventsTextField.isEnabled());
+    assertFalse("lowAlarmEventNR enabled.", lowAlarmEventNR.isEnabled());
+
+    assertFalse("highAlarmEventsTextField enabled.", highAlarmEventsTextField.isEnabled());
+    assertFalse("highAlarmEventNR enabled.", highAlarmEventNR.isEnabled());
+
+    assertFalse("problemSinceLastVisitDontKnowRadio enabled.", problemSinceLastVisitDontKnowRadio.isEnabled());
+    assertFalse("problemSinceLastVisitNoRadio enabled.", problemSinceLastVisitNoRadio.isEnabled());
+    assertFalse("problemSinceLastVisitNR enabled.", problemSinceLastVisitNR.isEnabled());
+    assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());
+
+    assertFalse("notesTextArea enabled.", notesTextArea.isEnabled());
+
+  }
+
   public void clickProblemSinceLastVisitNoRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNoRadio);
     problemSinceLastVisitNoRadio.click();
@@ -254,7 +279,7 @@ public class RefrigeratorPage extends Page {
   public void clickDoneOnModal() {
     testWebDriver.waitForElementToAppear(doneButtonOnModal);
     doneButtonOnModal.click();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Edit')])[1]"));
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
   }
 
   public void clickCancelOnModal() {
@@ -298,13 +323,14 @@ public class RefrigeratorPage extends Page {
     testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
-  public void clickEdit() {
-    testWebDriver.waitForElementToAppear(editButton);
-    editButton.click();
+  public void clickShow() {
+    testWebDriver.waitForElementToAppear(showButton);
+    showButton.click();
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
   }
 
   public void clickDelete() {
+    testWebDriver.sleep(250);
     testWebDriver.waitForElementToAppear(deleteButton);
     deleteButton.click();
   }

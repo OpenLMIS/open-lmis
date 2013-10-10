@@ -18,6 +18,7 @@ import org.openqa.selenium.support.How;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -54,10 +55,10 @@ public class GeneralObservationPage extends DistributionTab {
 
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(OBSERVATIONS, observationsField);
-    put(CONFIRMED_BY_NAME, verifiedByNameField);
-    put(CONFIRMED_BY_TITLE, verifiedByTitleField);
-    put(VERIFIED_BY_TITLE, confirmedByTitleField);
-    put(VERIFIED_BY_NAME, confirmedByNameField);
+    put(CONFIRMED_BY_NAME, confirmedByNameField);
+    put(CONFIRMED_BY_TITLE, confirmedByTitleField);
+    put(VERIFIED_BY_TITLE, verifiedByTitleField);
+    put(VERIFIED_BY_NAME, verifiedByNameField);
   }};
 
   public GeneralObservationPage(TestWebDriver driver) {
@@ -115,5 +116,13 @@ public class GeneralObservationPage extends DistributionTab {
   @Override
   public void navigate() {
     generalObservationTab.click();
+  }
+
+  public void verifyAllFieldsDisabled() {
+    assertFalse("Observation field enabled.", observationsField.isEnabled());
+    assertFalse("ConfirmedBy name field enabled.", confirmedByNameField.isEnabled());
+    assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
+    assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
+    assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
   }
 }

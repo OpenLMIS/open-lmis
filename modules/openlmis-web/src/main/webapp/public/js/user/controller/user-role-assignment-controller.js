@@ -110,7 +110,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   $scope.showHomeFacilityRoleAssignmentOptions = function () {
-    return ($scope.user != null && $scope.user.facilityId != null)
+    return ($scope.user !== null && $scope.user.facilityId !== null);
   };
 
   $scope.addHomeFacilityRole = function () {
@@ -138,7 +138,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   $scope.checkSupervisoryRolesDuplicacy = function () {
     var result = _.find($scope.user.supervisorRoles, function (roleAssignment) {
-      return (roleAssignment.programId == $scope.selectedProgramIdToSupervise && roleAssignment.supervisoryNode.id == $scope.selectedSupervisoryNodeIdToSupervise)
+      return (roleAssignment.programId === $scope.selectedProgramIdToSupervise &&
+        roleAssignment.supervisoryNode.id === $scope.selectedSupervisoryNodeIdToSupervise);
     });
 
     if (result) {
@@ -175,12 +176,14 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
       }
       $scope.user.supervisorRoles.push(newRoleAssignment);
     }
-  }
+  };
 
   function validate() {
     var valid = true;
     $($scope.user.allocationRoles).each(function (index, role) {
-      if (role.deliveryZone.id == $scope.deliveryZoneRole.deliveryZone.id && role.programId == $scope.deliveryZoneRole.programId) {
+      if (role.deliveryZone.id === $scope.deliveryZoneRole.deliveryZone.id &&
+        role.programId === $scope.deliveryZoneRole.programId)
+      {
         valid = false;
         return false;
       }
@@ -202,7 +205,11 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.user.allocationRoles = $scope.user.allocationRoles ? $scope.user.allocationRoles : [];
     $scope.showAllocationError = true;
 
-    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) return;
+    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId ||
+      !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length)
+    {
+      return;
+    }
 
     if ($scope.checkDeliveryZoneAndProgramDuplicacy()) {
       return;
@@ -231,6 +238,6 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   var isPresent = function (obj) {
-    return obj != undefined && obj != "" && obj != [] && obj != null;
+    return obj !== undefined && obj !== "" && obj !== [] && obj !== null;
   };
 }

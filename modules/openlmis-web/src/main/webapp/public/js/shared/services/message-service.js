@@ -25,7 +25,7 @@ services.factory('messageService', function (Messages, localStorageService, $roo
   var get = function () {
     var keyWithArgs = Array.prototype.slice.call(arguments);
     var displayMessage =  localStorageService.get('message.' + keyWithArgs[0]);
-    if(keyWithArgs.length > 1) {
+    if(keyWithArgs.length > 1 && displayMessage) {
       $.each(keyWithArgs, function (index, arg) {
         if (index > 0) {
           displayMessage = displayMessage.replace("{" + (index-1) + "}", arg);
@@ -38,5 +38,5 @@ services.factory('messageService', function (Messages, localStorageService, $roo
   return{
     populate:populate,
     get:get
-  }
+  };
 });

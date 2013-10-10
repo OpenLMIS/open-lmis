@@ -26,7 +26,7 @@ describe('Approve Requisition controller', function () {
         return '$';
       }
       return ':P';
-    })
+    });
     routeParams = {"rnr": "1", "program": "1", "supplyType": "full-supply"};
     lineItems = [];
     nonFullSupplyLineItems = [];

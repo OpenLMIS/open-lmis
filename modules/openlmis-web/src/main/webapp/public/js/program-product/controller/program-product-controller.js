@@ -32,7 +32,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
         programProduct.formula = programProduct.programProductIsa.getIsaFormula();
       }
     });
-  }
+  };
 
   $scope.filterProducts = function () {
     $scope.filteredProducts = [];
@@ -41,7 +41,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     $scope.filteredProducts = $.grep($scope.programProducts, function (programProduct) {
       return programProduct.product.primaryName.toLowerCase().indexOf(query.toLowerCase()) != -1;
     });
-  }
+  };
 
   $scope.showProductISA = function (programProduct) {
     $scope.inputClass = false;
@@ -49,19 +49,19 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
     $scope.isaValue = 0;
     $scope.error = null;
     angular.element(".form-error").hide();
-    if (programProduct.programProductIsa == undefined || programProduct.programProductIsa.id == undefined)
+    if (programProduct.programProductIsa === undefined || programProduct.programProductIsa.id === undefined)
       programProduct.programProductIsa = new ProgramProductISA();
 
     $scope.currentProgramProduct = angular.copy(programProduct);
     $scope.programProductISAModal = true;
-  }
+  };
 
   $scope.clearAndCloseProgramProductISAModal = function () {
     $scope.population = 0;
     $scope.inputClass = false;
     $scope.currentProgramProduct = null;
     $scope.programProductISAModal = false;
-  }
+  };
 
   $scope.highlightRequired = function (value) {
     if ($scope.inputClass && (isUndefined(value))) {
@@ -120,7 +120,7 @@ function ProgramProductController($scope, programs, ProgramProducts, ProgramProd
       return;
     if (programProductIsa.isPresent())
       $scope.isaValue = programProductIsa.calculate($scope.population);
-  }
+  };
 }
 
 ProgramProductController.resolve = {

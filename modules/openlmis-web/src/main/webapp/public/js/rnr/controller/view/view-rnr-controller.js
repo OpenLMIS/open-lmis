@@ -24,6 +24,9 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
   var FULL_SUPPLY = 'full-supply';
   var REGIMEN = 'regimen';
 
+  $scope.requisitionType =
+    messageService.get($scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular");
+
   if (!($scope.rnr.status == APPROVED || $scope.rnr.status == RELEASED))
     $scope.visibleColumns = _.filter($scope.visibleColumns, function (column) {
       return column.name != "quantityApproved";
@@ -46,7 +49,7 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
 
   fillPageData();
 
-  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+  $scope.currentPage = ($routeParams.page) ? utils.parseIntWithBaseTen($routeParams.page) || 1 : 1;
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);

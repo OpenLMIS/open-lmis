@@ -9,85 +9,83 @@
  */
 function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $routeParams) {
 
-    function calculateIsa(products) {
-        $(products).each(function (index, product) {
+  function calculateIsa(products) {
+    $(products).each(function (index, product) {
 
-            var population = $scope.$parent.facility.catchmentPopulation;
+      var population = $scope.$parent.facility.catchmentPopulation;
 
-            if (isUndefined(population) || isUndefined(product.programProductIsa)) {
-                product.calculatedIsa = "--";
-                return;
-            }
-            var programProductIsa = new ProgramProductISA();
-            programProductIsa.init(product.programProductIsa);
+      if (isUndefined(population) || isUndefined(product.programProductIsa)) {
+        product.calculatedIsa = "--";
+        return;
+      }
+      var programProductIsa = new ProgramProductISA();
+      programProductIsa.init(product.programProductIsa);
 
-            product.calculatedIsa = programProductIsa.calculate(population);
-        });
-    }
-
-    $scope.$on('showISAEditModal', function () {
-
-        if (!$scope.currentProgram) return;
-
-        $scope.currentProgramProducts = [];
-
-        function calculateISAAndShowModel() {
-            calculateIsa($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
-            $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
-            $scope.programProductsISAModal = true;
-        }
-
-        if ($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]) {
-            calculateISAAndShowModel();
-            return;
-        }
-
-        var successFunc = function (data) {
-            $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = data.programProductList;
-            calculateISAAndShowModel();
-        };
-
-        if ($routeParams.facilityId) {
-            FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {
-            });
-        } else {
-            ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {
-            });
-        }
-
+      product.calculatedIsa = programProductIsa.calculate(population);
     });
+  }
 
-    $scope.updateISA = function () {
-        $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = angular.copy($scope.currentProgramProducts);
-        $scope.programProductsISAModal = false;
+  $scope.$on('showISAEditModal', function () {
+
+    if (!$scope.currentProgram) return;
+
+    $scope.currentProgramProducts = [];
+
+    function calculateISAAndShowModel() {
+      calculateIsa($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
+      $scope.filteredProducts = $scope.currentProgramProducts = angular.copy($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]);
+      $scope.programProductsISAModal = true;
     }
 
-    $scope.resetISAModal = function () {
-        $scope.programProductsISAModal = false;
+    if ($scope.$parent.facilityProgramProductsList[$scope.currentProgram.id]) {
+      calculateISAAndShowModel();
+      return;
     }
 
-    $scope.resetAllToCalculatedIsa = function () {
-        $($scope.currentProgramProducts).each(function (index, product) {
-            product.overriddenIsa = null;
-        });
+    var successFunc = function (data) {
+      $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = data.programProductList;
+      calculateISAAndShowModel();
+    };
+
+    if ($routeParams.facilityId) {
+      FacilityProgramProducts.get({programId: $scope.currentProgram.id, facilityId: $routeParams.facilityId}, successFunc, function (data) {
+      });
+    } else {
+      ProgramProducts.get({programId: $scope.currentProgram.id}, successFunc, function (data) {
+      });
     }
 
-    $scope.updateCurrentProgramProducts = function () {
-        $scope.filteredProducts = [];
-        $scope.query = $scope.query.trim();
+  });
 
-        if (!$scope.query.length) {
-            $scope.filteredProducts = $scope.currentProgramProducts;
-            return;
-        }
+  $scope.updateISA = function () {
+    $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = angular.copy($scope.currentProgramProducts);
+    $scope.programProductsISAModal = false;
+  };
 
-        $($scope.currentProgramProducts).each(function (index, product) {
-            var searchString = $scope.query.toLowerCase();
-            if (product.product.primaryName.toLowerCase().indexOf(searchString) >= 0) {
-                $scope.filteredProducts.push(product);
-            }
-        });
+  $scope.resetISAModal = function () {
+    $scope.programProductsISAModal = false;
+  };
 
+  $scope.resetAllToCalculatedIsa = function () {
+    $($scope.currentProgramProducts).each(function (index, product) {
+      product.overriddenIsa = null;
+    });
+  };
+
+  $scope.updateCurrentProgramProducts = function () {
+    $scope.filteredProducts = [];
+    $scope.query = $scope.query.trim();
+
+    if (!$scope.query.length) {
+      $scope.filteredProducts = $scope.currentProgramProducts;
+      return;
     }
 
+    $($scope.currentProgramProducts).each(function (index, product) {
+      var searchString = $scope.query.toLowerCase();
+      if (product.product.primaryName.toLowerCase().indexOf(searchString) >= 0) {
+        $scope.filteredProducts.push(product);
+      }
+    });
+  };
 }

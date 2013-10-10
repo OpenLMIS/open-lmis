@@ -33,4 +33,4 @@ var migrationFunc = function (event) {
     var distributionReferenceDataStore = connection.createObjectStore("distributionReferenceData", {"keyPath": "distributionId"});
     distributionReferenceDataStore.createIndex("index_reference_data", "distributionId", {"unique": true});
   }
-}
+};

@@ -18,5 +18,5 @@ var LossAndAdjustment = function (lossAndAdjustmentJSon) {
 
   LossAndAdjustment.prototype.equals = function(lossAndAdjustment) {
     return this.type.name == lossAndAdjustment.type.name;
-  }
+  };
 };

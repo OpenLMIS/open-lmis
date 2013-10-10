@@ -25,7 +25,7 @@ function NavigationController($scope, localStorageService, $rootScope) {
   }();
 
   $rootScope.hasPermission = function (permission) {
-    return (($rootScope.rights != undefined) && ($rootScope.rights.indexOf(permission) > -1));
+    return (($rootScope.rights !== undefined) && ($rootScope.rights.indexOf(permission) > -1));
   };
 
 }

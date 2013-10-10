@@ -16,7 +16,7 @@ public enum RightType {
   ADMIN,
   ALLOCATION,
   REQUISITION,
-  SHIPMENT, 
+  FULFILLMENT, 
   REPORT
 
 };

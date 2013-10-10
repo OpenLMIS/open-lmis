@@ -33,10 +33,10 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ModelMap;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -191,7 +191,7 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilities = Arrays.asList(new Facility());
+    List<Facility> facilities = asList(new Facility());
     Boolean virtualFacility = false;
     when(facilityService.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("searchParam", virtualFacility)).thenReturn(facilities);
 
@@ -257,6 +257,22 @@ public class FacilityControllerTest {
 
     verify(facilityService).getAllForDeliveryZoneAndProgram(1l, 1l);
     assertThat((List<Facility>) responseEntity.getBody().getData().get("facilities"), is(facilities));
+  }
+
+  @Test
+  public void shouldGetWarehouses() throws Exception {
+
+    List<Facility> facilities = new ArrayList<>();
+    facilities.add(new Facility());
+    facilities.add(new Facility());
+
+    when(facilityService.getWareshouses()).thenReturn(facilities);
+
+    ResponseEntity<OpenLmisResponse> warehouses = facilityController.getWarehouses();
+
+    verify(facilityService).getWareshouses();
+    assertThat((List<Facility>) warehouses.getBody().getData().get("warehouses"), is(facilities));
+
   }
 
   private MockHttpServletRequest httpRequest() {

@@ -369,12 +369,12 @@ public class RequisitionRepositoryTest {
     String searchVal = "test";
     Integer pageNumber = 2;
     Integer pageSize = 2;
-    when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize)).thenReturn(expected);
+    when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER)).thenReturn(expected);
 
-    List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+    List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
 
     assertThat(rnrList, is(expected));
-    verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize);
+    verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
   }
 
   @Test
@@ -383,16 +383,16 @@ public class RequisitionRepositoryTest {
     Integer requisitionCount = 5;
     String searchType = SEARCH_ALL;
     String searchVal = "test";
-    when(requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal)).thenReturn(requisitionCount);
+    when(requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER)).thenReturn(requisitionCount);
 
-    Integer result = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
+    Integer result = requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
 
     assertThat(result, is(requisitionCount));
-    verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal);
+    verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
   }
 
   @Test
-  public void shouldLoadEmergencyRequisitionInInitiatedState(){
+  public void shouldLoadEmergencyRequisitionInInitiatedState() {
     List<Rnr> requisitionList = new ArrayList<>();
     when(requisitionMapper.getInitiatedOrSubmittedEmergencyRequisitions(1l, 2l)).thenReturn(requisitionList);
 

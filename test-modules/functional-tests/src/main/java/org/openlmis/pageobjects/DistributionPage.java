@@ -57,6 +57,11 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "indicator0")
   private static WebElement distributionIndicator;
 
+  @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[6]/a")
+  private static WebElement syncLink;
+
+  @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
+  private static WebElement syncMessage;
 
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -92,6 +97,17 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
      testWebDriver.sleep(200);
+  }
+
+  public void clickSyncDistribution() {
+    testWebDriver.waitForElementToAppear(syncLink);
+    syncLink.click();
+    testWebDriver.sleep(200);
+  }
+
+  public String getSyncMessage() {
+    testWebDriver.waitForElementToAppear(syncMessage);
+      return syncMessage.getText();
   }
 
   public FacilityListPage clickRecordData() throws IOException {

@@ -83,8 +83,9 @@ function CreateNonFullSupplyController($scope, messageService) {
   };
 
   $scope.shouldDisableAddButton = function () {
-    return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested && $scope.newNonFullSupply.reasonForRequestedQuantity
-      && $scope.facilityApprovedProduct);
+    return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested &&
+      $scope.newNonFullSupply.reasonForRequestedQuantity &&
+      $scope.facilityApprovedProduct);
   };
 
   $scope.addNonFullSupplyProductsByCategory = function () {
@@ -96,11 +97,13 @@ function CreateNonFullSupplyController($scope, messageService) {
   };
 
   $scope.updateNonFullSupplyProductsToDisplay = function () {
-    var addedNonFullSupplyProductList = _.pluck($scope.addedNonFullSupplyProducts, 'productCode').concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
-    if ($scope.nonFullSupplyProductCategory != undefined) {
+    var addedNonFullSupplyProductList =
+      _.pluck($scope.addedNonFullSupplyProducts, 'productCode')
+        .concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
+    if ($scope.nonFullSupplyProductCategory !== undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
-        return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1
-          && $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) == 0;
+        return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1 &&
+          $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
       });
     }
   };
@@ -125,14 +128,14 @@ function CreateNonFullSupplyController($scope, messageService) {
 
   function populateProductInformation() {
     var product = {};
-    if ($scope.facilityApprovedProduct != undefined) {
+    if ($scope.facilityApprovedProduct !== undefined) {
       angular.copy($scope.facilityApprovedProduct.programProduct.product, product);
       $scope.newNonFullSupply.productCode = product.code;
       $scope.newNonFullSupply.productName = product.primaryName;
-      $scope.newNonFullSupply.product = (product.primaryName == null ? "" : (product.primaryName + " ")) +
-        (product.form.code == null ? "" : (product.form.code + " ")) +
-        (product.strength == null ? "" : (product.strength + " ")) +
-        (product.dosageUnit.code == null ? "" : product.dosageUnit.code);
+      $scope.newNonFullSupply.product = (product.primaryName === null ? "" : (product.primaryName + " ")) +
+        (product.form.code === null ? "" : (product.form.code + " ")) +
+        (product.strength === null ? "" : (product.strength + " ")) +
+        (product.dosageUnit.code === null ? "" : product.dosageUnit.code);
       $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
         $scope.newNonFullSupply[field] = product[field];
       });

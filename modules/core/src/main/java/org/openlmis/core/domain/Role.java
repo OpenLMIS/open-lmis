@@ -19,6 +19,7 @@ import org.openlmis.core.exception.DataException;
 import java.util.Set;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.openlmis.core.domain.Right.VIEW_REQUISITION;
 
 @Data
 @AllArgsConstructor
@@ -37,5 +38,21 @@ public class Role extends BaseModel {
     if (isBlank(name)) throw new DataException("error.role.without.name");
     if (rights == null || rights.isEmpty())
       throw new DataException("error.role.without.rights");
+    validateForRelatedRights();
+  }
+
+  private void validateForRelatedRights() {
+    if ((rights.contains(Right.CREATE_REQUISITION) ||
+      rights.contains(Right.APPROVE_REQUISITION) ||
+      rights.contains(Right.AUTHORIZE_REQUISITION)) && !rights.contains(VIEW_REQUISITION)) {
+      throw new DataException("error.role.related.right.not.selected");
+    }
+
+    if (rights.contains(Right.MANAGE_REPORT) && !rights.contains(Right.VIEW_REPORT)) {
+      throw new DataException("error.role.related.right.not.selected");
+    }
+    if (rights.contains(Right.CONVERT_TO_ORDER) && !rights.contains(Right.VIEW_ORDER)) {
+      throw new DataException("error.role.related.right.not.selected");
+    }
   }
 }

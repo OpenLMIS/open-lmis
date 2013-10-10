@@ -379,7 +379,7 @@ public class RnrTest {
     rnr.copyCreatorEditableFields(newRnr, template, regimenTemplate, programProducts);
 
     assertThat(rnr.getNonFullSupplyLineItems(), hasItem(lineItem3));
-    assertThat(rnr.getNonFullSupplyLineItems().size(),is(1));
+    assertThat(rnr.getNonFullSupplyLineItems().size(), is(1));
   }
 
   @Test
@@ -500,4 +500,44 @@ public class RnrTest {
     assertThat(rnr.getModifiedBy(), is(1l));
     assertThat(rnr.getStatus(), is(SUBMITTED));
   }
+
+  @Test
+  public void shouldCalculateDefaultApprovedQuantityForRegularRequisitionUsingRegularCalcStrategy() {
+    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
+
+    rnr.setFullSupplyLineItems(asList(rnrLineItem1));
+    rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
+
+    rnr.calculateDefaultApprovedQuantity();
+
+    ArgumentCaptor<RnrCalcStrategy> captor = ArgumentCaptor.forClass(RnrCalcStrategy.class);
+
+    verify(rnrLineItem1).calculateDefaultApprovedQuantity(captor.capture());
+    assertThat(captor.getValue().getClass(), is(RnrCalcStrategy.class.getClass()));
+
+    verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
+    assertThat(captor.getValue().getClass(), is(RnrCalcStrategy.class.getClass()));
+  }
+
+  @Test
+  public void shouldCalculateDefaultApprovedQuantityForEmergencyRequisitionUsingEmergencyCalcStrategy() {
+    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
+    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
+
+    rnr.setFullSupplyLineItems(asList(rnrLineItem1));
+    rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
+
+    rnr.calculateDefaultApprovedQuantity();
+    rnr.setEmergency(true);
+
+    ArgumentCaptor<RnrCalcStrategy> captor = ArgumentCaptor.forClass(RnrCalcStrategy.class);
+
+    verify(rnrLineItem1).calculateDefaultApprovedQuantity(captor.capture());
+    assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
+
+    verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
+    assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
+  }
+
 }

@@ -8,7 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
 function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZones, DeliveryZoneActivePrograms, messageService, DeliveryZoneProgramPeriods, navigateBackService, $http, $dialog, $scope, $location, $q, distributionService) {
   $scope.deliveryZones = deliveryZones;
   var DELIVERY_ZONE_LABEL = messageService.get('label.select.deliveryZone');
@@ -127,7 +126,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
 
 
   var optionMessage = function (entity, defaultMessage) {
-    return entity == null || entity.length == 0 ? NONE_ASSIGNED_LABEL : defaultMessage;
+    return utils.isEmpty(entity) ? NONE_ASSIGNED_LABEL : defaultMessage;
   };
 
   $scope.viewLoadAmount = function () {
@@ -137,14 +136,14 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       period: $scope.selectedPeriod
     };
     navigateBackService.setData(data);
-    $location.path("/view-load-amounts/" + $scope.selectedZone.id + "/" + +$scope.selectedProgram.id + "/" + $scope.selectedPeriod.id);
-  }
-
+    var path = "/view-load-amounts/".concat($scope.selectedZone.id).concat("/")
+      .concat($scope.selectedProgram.id).concat("/").concat($scope.selectedPeriod.id);
+    $location.path(path);
+  };
 }
 
 DistributionController.resolve = {
   deliveryZones: function (UserDeliveryZones, $timeout, $q) {
-
     var deferred = $q.defer();
     $timeout(function () {
       UserDeliveryZones.get({}, function (data) {

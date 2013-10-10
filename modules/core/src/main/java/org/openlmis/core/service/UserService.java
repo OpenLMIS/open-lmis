@@ -39,6 +39,8 @@ public class UserService {
   private RoleAssignmentService roleAssignmentService;
   @Autowired
   private MessageService messageService;
+  @Autowired
+  private ShipmentRoleService shipmentRoleService;
 
   @Transactional
   public void create(User user, String resetPasswordLink) {
@@ -130,6 +132,7 @@ public class UserService {
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
+    user.setShipmentRoleAssignments(shipmentRoleService.getRolesForUser(id));
     user.setReportRoles(roleAssignmentService.getReportRole(id));
     return user;
   }

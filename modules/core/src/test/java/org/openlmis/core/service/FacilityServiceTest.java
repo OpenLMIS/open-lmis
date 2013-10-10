@@ -50,6 +50,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -343,4 +344,15 @@ public class FacilityServiceTest {
     assertThat(facility, is(expectedFacility));
   }
 
+  @Test
+  public void shouldGetWarehouses() throws Exception {
+
+    List<Facility> warehouses = asList(new Facility());
+    when(facilityRepository.getWarehouses()).thenReturn(warehouses);
+
+    List<Facility> wareshouses = facilityService.getWareshouses();
+
+    verify(facilityRepository).getWarehouses();
+    assertThat(warehouses,is(warehouses));
+  }
 }

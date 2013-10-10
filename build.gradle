@@ -12,6 +12,7 @@
 
 apply plugin: 'idea'
 apply plugin: 'versions'
+apply plugin: 'properties'
 
 
 idea {
@@ -29,6 +30,8 @@ buildscript {
     dependencies {
         classpath "net.saliman:gradle-cobertura-plugin:1.2.0"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
+        classpath 'net.saliman:gradle-properties-plugin:1.1.1'
+
 
     }
 }
@@ -89,14 +92,3 @@ configure(subprojects.findAll { it.name != 'db' }) {
         testCompile project(path: ':modules:db', configuration: 'testFixtures')
     }
 }
-
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'net.saliman:gradle-properties-plugin:1.1.0'
-    }
-}
-apply plugin: 'properties'
