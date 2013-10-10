@@ -28,7 +28,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'Show')]")
   public static WebElement showButton;
 
-  @FindBy(how = XPATH, using = "//input[contains(text(),'Delete')]")
+  @FindBy(how = XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
@@ -305,6 +305,7 @@ public class RefrigeratorPage extends Page {
   }
 
   public void clickDelete() {
+    testWebDriver.sleep(250);
     testWebDriver.waitForElementToAppear(deleteButton);
     deleteButton.click();
   }
