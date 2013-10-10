@@ -22,6 +22,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.ShipmentRoleRepository;
 import org.openlmis.db.categories.UnitTests;
 
@@ -30,7 +31,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 
 @Category(UnitTests.class)
@@ -54,8 +55,16 @@ public class ShipmentRoleServiceTest {
     verify(shipmentRoleRepository).getShipmentRolesForUser(userId);
 
     assertThat(expectedShipmentRoleAssignments, is(shipmentRoleAssignments));
-
   }
 
+  @Test
+  public void shouldSaveShipmentRolesForUser() throws Exception {
+    List<ShipmentRoleAssignment> shipmentRoleAssignments = asList(new ShipmentRoleAssignment());
+    User user = new User();
 
+    user.setShipmentRoles(shipmentRoleAssignments);
+    shipmentRoleService.saveShipmentRoles(user);
+
+    verify(shipmentRoleRepository).insertShipmentRoles(user);
+  }
 }

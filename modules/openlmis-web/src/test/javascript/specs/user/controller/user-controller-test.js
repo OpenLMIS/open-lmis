@@ -50,6 +50,12 @@ describe("User", function () {
         {id: 4}
       ];
 
+      warehouses = [
+        {id: 1},
+        {id: 2},
+        {id: 3}
+      ]
+
       programs = [
         {"id": 1, active: false, push: false},
         {id: 2, active: true, push: false},
@@ -59,7 +65,7 @@ describe("User", function () {
       user = {"id": 123, "userName": "User420"};
 
       ctrl = controller(UserController, {$scope: scope, roles_map: roles_map, programs: programs,
-        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones, warehouses: warehouses}, location);
       scope.userForm = {$error: { pattern: "" }};
     }));
 
@@ -80,7 +86,7 @@ describe("User", function () {
       });
 
       ctrl = controller(UserController, {$scope: scope, roles_map: roles_map, programs: programs,
-        supervisoryNodes: [], user: user, deliveryZones: deliveryZones}, location);
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones, warehouses: warehouses}, location);
 
       expect(scope.programsMap).toEqual({pull: [
         {"id": 1, active: false, status: 'Inactive', push: false},
@@ -183,31 +189,42 @@ describe("User", function () {
       expect(scope.saveUser()).toEqual(false);
     });
 
+    it("should not create a user with empty role", function () {
+      var userWithoutRole = {shipmentRoles: [
+        {facilityId: 111, roleIds: [1]},
+        {facilityId: 222, roleIds: []}
+      ]};
+      scope.userForm = {$error: { required: false}};
+      scope.user = userWithoutRole;
+
+      expect(scope.saveUser()).toEqual(false);
+    });
+
     it("should create a user with role assignments, if all required fields are present, and jump to search user page",
-        function () {
-          var userWithRoleAssignments = {userName: "User 123", homeFacilityRoles: [
-            {programId: 111, roleIds: [1, 2, 3]},
-            {programId: 222, roleIds: [1]}
-          ]};
+      function () {
+        var userWithRoleAssignments = {userName: "User 123", homeFacilityRoles: [
+          {programId: 111, roleIds: [1, 2, 3]},
+          {programId: 222, roleIds: [1]}
+        ]};
 
-          spyOn(messageService, 'get').andCallFake(function (value) {
-            return "Saved successfully";
-          });
-
-          scope.userForm = {$error: { required: false}};
-          scope.user = userWithRoleAssignments;
-          location.path("create");
-          httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200,
-              {"success": "Saved successfully", user: {id: 500}});
-
-          expect(scope.saveUser()).toEqual(true);
-          httpBackend.flush();
-          expect(scope.$parent.message).toEqual("Saved successfully");
-          expect(scope.user).toEqual({id: 500});
-          expect(scope.showError).toBeFalsy();
-          expect(scope.error).toEqual("");
-          expect(location.path()).toBe('/');
+        spyOn(messageService, 'get').andCallFake(function (value) {
+          return "Saved successfully";
         });
+
+        scope.userForm = {$error: { required: false}};
+        scope.user = userWithRoleAssignments;
+        location.path("create");
+        httpBackend.expectPOST('/users.json', userWithRoleAssignments).respond(200,
+          {"success": "Saved successfully", user: {id: 500}});
+
+        expect(scope.saveUser()).toEqual(true);
+        httpBackend.flush();
+        expect(scope.$parent.message).toEqual("Saved successfully");
+        expect(scope.user).toEqual({id: 500});
+        expect(scope.showError).toBeFalsy();
+        expect(scope.error).toEqual("");
+        expect(location.path()).toBe('/');
+      });
 
     it("should create a user without role assignment, if all required fields are present", function () {
       var userWithoutRoleAssignment = {userName: "User 123"};
@@ -219,7 +236,7 @@ describe("User", function () {
       scope.userForm = {$error: { required: false}};
       scope.user = userWithoutRoleAssignment;
       httpBackend.expectPOST('/users.json', userWithoutRoleAssignment).respond(200,
-          {"success": "Saved successfully", user: {id: 500}});
+        {"success": "Saved successfully", user: {id: 500}});
       location.path('/create');
       expect(scope.saveUser()).toEqual(true);
       httpBackend.flush();
@@ -231,35 +248,35 @@ describe("User", function () {
     });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are not populated',
-        function () {
-          var facility = {id: 74, code: 'F10', name: 'facilityName'};
-          scope.allSupportedPrograms = undefined;
+      function () {
+        var facility = {id: 74, code: 'F10', name: 'facilityName'};
+        scope.allSupportedPrograms = undefined;
 
-          var data = {};
-          data.facility = facility;
-          httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
+        var data = {};
+        data.facility = facility;
+        httpBackend.expectGET('/facilities/' + facility.id + '.json').respond(data);
 
-          scope.setSelectedFacility(facility);
-          httpBackend.flush();
+        scope.setSelectedFacility(facility);
+        httpBackend.flush();
 
-          expect(scope.facilitySelected).toEqual(facility);
-        });
+        expect(scope.facilitySelected).toEqual(facility);
+      });
 
     it('should set facilitySelected in scope, whenever user selects a facility as "My Facility" when supported programs are populated',
-        function () {
-          var facility = {id: 74, code: 'F10', name: 'facilityName'};
-          scope.allSupportedPrograms = [
-            {id: 1, code: 'HIV'},
-            {id: 2, code: 'ARV'}
-          ];
+      function () {
+        var facility = {id: 74, code: 'F10', name: 'facilityName'};
+        scope.allSupportedPrograms = [
+          {id: 1, code: 'HIV'},
+          {id: 2, code: 'ARV'}
+        ];
 
-          var data = {};
-          data.facility = facility;
+        var data = {};
+        data.facility = facility;
 
-          scope.setSelectedFacility(facility);
+        scope.setSelectedFacility(facility);
 
-          expect(scope.facilitySelected).toEqual(facility);
-        });
+        expect(scope.facilitySelected).toEqual(facility);
+      });
 
     it('should clear everything including role assignments when user clears facility', function () {
       scope.clearSelectedFacility();
@@ -411,6 +428,19 @@ describe("User", function () {
       httpBackend.flush();
       expect(deferredObject.resolve).toHaveBeenCalledWith(deliveryZones);
     });
+
+    it('should get warehouses', function () {
+      var warehouses = [
+        {id: 1},
+        {id: 2}
+      ];
+      httpBackend.expect('GET', "/warehouses.json").respond({"warehouses": warehouses});
+      ctrl(UserController.resolve.warehouses, {$q: $q});
+      expect($q.defer).toHaveBeenCalled();
+      $timeout.flush();
+      httpBackend.flush();
+      expect(deferredObject.resolve).toHaveBeenCalledWith(warehouses);
+    })
 
 
   })

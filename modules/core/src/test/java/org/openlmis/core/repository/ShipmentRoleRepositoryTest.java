@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.mapper.ShipmentRoleAssignmentMapper;
 import org.openlmis.db.categories.UnitTests;
 
@@ -53,5 +54,28 @@ public class ShipmentRoleRepositoryTest {
 
     verify(shipmentRoleAssignmentMapper).getShipmentRolesForUser(userId);
     assertThat(expectedShipmentRoleAssignments, is(shipmentRoleAssignments));
+  }
+
+  @Test
+  public void shouldDeleteShipmentRolesForUserBeforeInsert() throws Exception {
+    User user = new User();
+    ShipmentRoleAssignment shipmentRoleAssignment = new ShipmentRoleAssignment(1L, 2L, asList(3L));
+    user.setShipmentRoles(asList(shipmentRoleAssignment));
+
+    shipmentRoleRepository.insertShipmentRoles(user);
+
+    verify(shipmentRoleAssignmentMapper).deleteAllShipmentRoles(user);
+  }
+
+  @Test
+  public void shouldSaveShipmentRolesForUser() throws Exception {
+    User user = new User();
+    ShipmentRoleAssignment shipmentRoleAssignment = new ShipmentRoleAssignment(1L, 2L, asList(3L));
+    user.setShipmentRoles(asList(shipmentRoleAssignment));
+
+    shipmentRoleRepository.insertShipmentRoles(user);
+
+    verify(shipmentRoleAssignmentMapper).insertShipmentRole(user.getId(), shipmentRoleAssignment.getFacilityId(),
+      shipmentRoleAssignment.getRoleIds().get(0));
   }
 }

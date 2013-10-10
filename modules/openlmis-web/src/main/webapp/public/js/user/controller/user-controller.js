@@ -1,4 +1,4 @@
-       /*
+/*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
  *
@@ -8,15 +8,17 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, warehouses) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
   $scope.user = user || {homeFacilityRoles: []};
   $scope.supervisoryNodes = supervisoryNodes;
+  $scope.warehouses = warehouses;
   $scope.deliveryZones = deliveryZones;
   $scope.$parent.userId = null;
   $scope.message = "";
+
   var originalUser = $.extend(true, {}, user);
 
   loadUserFacility();
@@ -57,9 +59,22 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
-        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
-      {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
+        valid = false;
+        return false;
+      }
+    });
+    return valid;
+  }
+
+  function validateShipmentRoles(user) {
+    if (!user.shipmentRoles) {
+      return true;
+    }
+
+    var valid = true;
+    $.each(user.shipmentRoles, function (index, roleAssignment) {
+      if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
         valid = false;
         return false;
       }
@@ -68,7 +83,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   }
 
   var validateRoleAssignment = function (user) {
-    return validateHomeFacilityRoles(user) && validateSupervisorRoles(user);
+    return validateHomeFacilityRoles(user) && validateSupervisorRoles(user) && validateShipmentRoles(user);
   };
 
   $scope.saveUser = function () {
@@ -125,7 +140,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     if (len >= 3) {
       if (len == 3) {
-        Facility.get({searchParam: query, virtualFacility : false}, function (data) {
+        Facility.get({searchParam: query, virtualFacility: false}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -193,7 +208,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     });
   };
 
-  $scope.cancelUserSave = function() {
+  $scope.cancelUserSave = function () {
     $location.path('#/search');
   };
 
@@ -229,7 +244,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.user.active = false;
   };
 
-  $scope.showConfirmUserRestoreModal = function() {
+  $scope.showConfirmUserRestoreModal = function () {
     var dialogOpts = {
       id: "restoreUserDialog",
       header: messageService.get('enable.user.header'),
@@ -271,7 +286,8 @@ UserController.resolve = {
     $timeout(function () {
       Roles.get({}, function (data) {
         deferred.resolve(data.roles_map);
-      }, function () {});
+      }, function () {
+      });
     }, 100);
 
     return deferred.promise;
@@ -314,9 +330,20 @@ UserController.resolve = {
     }, 100);
 
     return deferred.promise;
+  },
+
+  warehouses: function ($q, Warehouse, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      Warehouse.get({}, function (data) {
+        deferred.resolve(data.warehouses);
+      }, function () {
+      });
+    }, 100);
+
+    return deferred.promise;
   }
-
-
 
 };
 

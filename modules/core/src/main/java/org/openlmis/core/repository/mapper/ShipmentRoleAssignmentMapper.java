@@ -14,8 +14,9 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,7 +24,14 @@ import java.util.List;
 @Repository
 public interface ShipmentRoleAssignmentMapper {
 
-  @Select({"SELECT userId, facilityId, array_agg(roleId) as roleAsString FROM fulfillment_role_assignments WHERE userId = #{userId} GROUP BY userId,facilityId"})
+  @Select({"SELECT userId, facilityId, array_agg(roleId) as roleAsString FROM shipment_role_assignments WHERE userId = #{userId} GROUP BY userId,facilityId"})
   List<ShipmentRoleAssignment> getShipmentRolesForUser(Long userId);
 
+  @Insert({"INSERT INTO shipment_role_assignments(userId, facilityId, roleId) VALUES(#{userId}, #{facilityId}, #{roleId})"})
+  void insertShipmentRole(@Param("userId") Long userId,
+                          @Param("facilityId") Long facilityId,
+                          @Param("roleId") Long roleId);
+
+  @Delete({"DELETE FROM shipment_role_assignments WHERE userId = #{id}"})
+  void deleteAllShipmentRoles(User user);
 }

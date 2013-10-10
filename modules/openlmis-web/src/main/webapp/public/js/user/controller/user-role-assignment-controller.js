@@ -12,6 +12,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   $scope.selectSuperviseProgramMessage = 'label.select.program';
   $scope.selectSupervisoryNodeMessage = 'label.select.node';
+  $scope.selectWarehouseMessage = 'label.select.warehouse';
 
   $("#adminRoles").on("change", function (e) {
     if (e.removed) {
@@ -38,7 +39,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
     $scope.deliveryZonePrograms = $scope.deliveryZoneRoles = [];
     $scope.deliveryZoneRole.programId = undefined;
-    $scope.checkDeliveryZoneAndProgramDuplicacy();
+    $scope.checkDeliveryZoneAndProgramDuplicity();
 
     if (isUndefined($scope.deliveryZoneRole.deliveryZone.id)) return;
 
@@ -51,11 +52,20 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     });
   };
 
+  function getBodyMsgKey(roleList) {
+    if (roleList == 'shipmentRoles') {
+      return 'msg.roles.shipment.delete.warning';
+    }
+    else {
+      return roleList == 'allocationRoles' ? 'msg.roles.delivery.zone.deletion' : "create.user.homeRoles.delete.warning";
+    }
+  }
+
   $scope.deleteCurrentRow = function (rowNum, roleList) {
     var dialogOpts = {
       id: "deleteRolesModal",
       header: messageService.get("create.user.deleteRoles"),
-      body: roleList == 'allocationRoles' ? messageService.get('msg.roles.delivery.zone.deletion') : messageService.get("create.user.homeRoles.delete.warning")
+      body: messageService.get(getBodyMsgKey(roleList))
     };
 
     OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRole, $dialog, messageService);
@@ -88,6 +98,15 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     return programsToDisplay;
   };
 
+  $scope.availableWarehouses = function () {
+    var assignedWarehouseId = _.map($scope.user.shipmentRoles, function (role) {
+      return role.facilityId;
+    });
+    return _.reject($scope.warehouses, function (warehouse) {
+      return _.contains(assignedWarehouseId, warehouse.id);
+    });
+  }
+
   $scope.showHomeFacilityRoleAssignmentOptions = function () {
     return ($scope.user !== null && $scope.user.facilityId !== null);
   };
@@ -115,7 +134,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
   };
 
-  $scope.checkSupervisoryRolesDuplicacy = function () {
+  $scope.checkSupervisoryRolesDuplicity = function () {
     var result = _.find($scope.user.supervisorRoles, function (roleAssignment) {
       return (roleAssignment.programId === $scope.selectedProgramIdToSupervise &&
         roleAssignment.supervisoryNode.id === $scope.selectedSupervisoryNodeIdToSupervise);
@@ -130,9 +149,12 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   $scope.addSupervisoryRole = function () {
-    if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) && isPresent($scope.selectedRoleIdsToSupervise)) {
-      var newRoleAssignment = {programId: $scope.selectedProgramIdToSupervise, supervisoryNode: {id: $scope.selectedSupervisoryNodeIdToSupervise}, roleIds: $scope.selectedRoleIdsToSupervise};
-      if ($scope.checkSupervisoryRolesDuplicacy()) {
+    if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise)
+      && isPresent($scope.selectedRoleIdsToSupervise)) {
+      var newRoleAssignment = {programId: $scope.selectedProgramIdToSupervise,
+        supervisoryNode: {id: $scope.selectedSupervisoryNodeIdToSupervise},
+        roleIds: $scope.selectedRoleIdsToSupervise};
+      if ($scope.checkSupervisoryRolesDuplicity()) {
         return;
       }
       addSupervisoryRole(newRoleAssignment);
@@ -171,7 +193,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     return valid;
   }
 
-  $scope.checkDeliveryZoneAndProgramDuplicacy = function () {
+  $scope.checkDeliveryZoneAndProgramDuplicity = function () {
     if (!validate()) {
       $scope.duplicateAllocationRoleError = 'error.delivery.zone.program.combination';
       return true;
@@ -184,13 +206,17 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.user.allocationRoles = $scope.user.allocationRoles ? $scope.user.allocationRoles : [];
     $scope.showAllocationError = true;
 
+    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId
+      || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) {
+      return;
+    }
     if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId ||
       !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length)
     {
       return;
     }
 
-    if ($scope.checkDeliveryZoneAndProgramDuplicacy()) {
+    if ($scope.checkDeliveryZoneAndProgramDuplicity()) {
       return;
     }
 
@@ -198,6 +224,17 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.showAllocationError = $scope.deliveryZoneRole = $scope.duplicateAllocationRoleError = undefined;
   };
 
+  $scope.addShipmentRole = function () {
+    $scope.user.shipmentRoles = $scope.user.shipmentRoles ? $scope.user.shipmentRoles : [];
+    if (!$scope.warehouseRole || !isPresent($scope.warehouseRole.facilityId) || !isPresent($scope.warehouseRole.roleIds)) {
+      $scope.warehouseRoleMappingError = true;
+      return;
+    }
+
+    $scope.user.shipmentRoles.push(angular.copy($scope.warehouseRole));
+    $scope.warehouseRole = null;
+    $scope.warehouseRoleMappingError = false;
+  }
 
   // WHO WROTE THIS? THIS IS AWESOME!
   $scope.getProgramName = function (programId) {
@@ -210,6 +247,10 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   $scope.getSupervisoryNodeName = function (supervisoryNodeId) {
     return _.findWhere($scope.supervisoryNodes, {id: supervisoryNodeId}).name;
+  };
+
+  $scope.getWarehouseName = function (facilityId) {
+    return _.findWhere($scope.warehouses, {id: facilityId}).name;
   };
 
   $scope.hasMappingError = function (mappingErrorFlag, field) {

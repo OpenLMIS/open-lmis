@@ -168,12 +168,12 @@ describe("User", function () {
     });
 
     it('should not load programs if delivery zone is undefined', function () {
-      spyOn(scope,'checkDeliveryZoneAndProgramDuplicacy');
+      spyOn(scope, 'checkDeliveryZoneAndProgramDuplicity');
       scope.deliveryZoneRole = {deliveryZone: {id: undefined}};
       scope.loadProgramsForDeliveryZone();
       scope.$apply();
       $httpBackend.verifyNoOutstandingRequest();
-      expect(scope.checkDeliveryZoneAndProgramDuplicacy).toHaveBeenCalled();
+      expect(scope.checkDeliveryZoneAndProgramDuplicity).toHaveBeenCalled();
     });
 
     it('should load programs for delivery zone', function () {
@@ -181,7 +181,7 @@ describe("User", function () {
       var programs = [
         {id: 1, active: false}
       ];
-      spyOn(scope,'checkDeliveryZoneAndProgramDuplicacy');
+      spyOn(scope, 'checkDeliveryZoneAndProgramDuplicity');
       $httpBackend.expect('GET', '/deliveryZones/1/programs.json').respond({deliveryZonePrograms: programs});
       scope.loadProgramsForDeliveryZone();
       scope.$apply();
@@ -189,7 +189,7 @@ describe("User", function () {
       expect(scope.deliveryZonePrograms).toEqual([
         {id: 1, active: false, status: 'Inactive'}
       ]);
-      expect(scope.checkDeliveryZoneAndProgramDuplicacy).toHaveBeenCalled();
+      expect(scope.checkDeliveryZoneAndProgramDuplicity).toHaveBeenCalled();
     });
 
     it('should not add allocation role without program id', function () {
@@ -225,7 +225,9 @@ describe("User", function () {
     });
 
     it('should not add allocation role if duplicate', function () {
-      scope.user = {allocationRoles: [{deliveryZone: {id:1}, programId : 2}]};
+      scope.user = {allocationRoles: [
+        {deliveryZone: {id: 1}, programId: 2}
+      ]};
       validDZRole.deliveryZone.id = 1;
       validDZRole.programId = 2;
       scope.deliveryZoneRole = validDZRole;
@@ -243,9 +245,71 @@ describe("User", function () {
       expect(scope.deliveryZoneRole).toBeUndefined();
     });
 
+    it('should return list of warehouses which are not already assigned', function () {
+      scope.user = { shipmentRoles: [
+        {
+          facilityId: 1,
+          roleIds: [1, 24, 6]
+        },
+        {
+          facilityId: 2,
+          roleIds: [1, 24, 6]
+        }
 
+      ]};
 
+      scope.warehouses = [
+        {id: 1},
+        {id: 2},
+        {id: 3}
+      ];
 
+      expect(scope.availableWarehouses()).toEqual([
+        {id: 3}
+      ]);
+    });
+
+    it('should add shipment role if all fields present', function () {
+      scope.user.shipmentRoles = [
+        {
+          facilityId: 1,
+          roleIds: [1, 24, 6]
+        }
+      ];
+      scope.warehouseRole = {facilityId: 111, roleIds: [1, 2, 3]};
+      scope.addShipmentRole();
+
+      expect(scope.user.shipmentRoles.length).toEqual(2);
+      expect(scope.user.shipmentRoles[1]).toEqual({facilityId: 111, roleIds: [1, 2, 3]});
+    });
+
+    it('should not add shipment role if warehouse not present', function () {
+      scope.user.shipmentRoles = [
+        {
+          facilityId: 1,
+          roleIds: [1, 24, 6]
+        }
+      ];
+      scope.warehouseRole = {roleIds: [1, 2, 3]};
+      scope.addShipmentRole();
+
+      expect(scope.user.shipmentRoles.length).toEqual(1);
+      expect(scope.warehouseRoleMappingError).toBeTruthy();
+    });
+
+    it('should not add shipment role if roles not present', function () {
+      scope.user.shipmentRoles = [
+        {
+          facilityId: 1,
+          roleIds: [1, 24, 6]
+        }
+      ];
+      scope.warehouseRole = {facilityId: 111};
+      scope.addShipmentRole();
+
+      expect(scope.user.shipmentRoles.length).toEqual(1);
+      expect(scope.warehouseRoleMappingError).toBeTruthy();
+    });
   });
 
 });

@@ -32,9 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -75,6 +73,49 @@ public class ShipmentRoleAssignmentMapperIT {
     roleRightsMapper.insertRole(role);
 
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+
+    List<ShipmentRoleAssignment> expectedShipmentRoleAssignments = shipmentRoleAssignmentMapper.getShipmentRolesForUser(user.getId());
+
+    assertThat(expectedShipmentRoleAssignments.get(0).getUserId(), is(user.getId()));
+    assertThat(expectedShipmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
+    assertThat(expectedShipmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
+  }
+
+  @Test
+  public void shouldDeleteAllShipmentRolesForUser() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    Role role = new Role("r1", "random description");
+    roleRightsMapper.insertRole(role);
+
+    queryExecutor.executeUpdate("INSERT INTO fulfilment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+
+    shipmentRoleAssignmentMapper.deleteAllShipmentRoles(user);
+
+    List<ShipmentRoleAssignment> expectedShipmentRoleAssignments = shipmentRoleAssignmentMapper.getShipmentRolesForUser(user.getId());
+
+    assertThat(expectedShipmentRoleAssignments.size(), is(0));
+  }
+
+  @Test
+  public void shouldInsertShipmentRolesForUser() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    Role role = new Role("r1", "random description");
+    roleRightsMapper.insertRole(role);
+
+    List<Long> roles = asList(role.getId());
+    ShipmentRoleAssignment shipmentRoleAssignment = new ShipmentRoleAssignment(user.getId(), facility.getId(), roles);
+
+    shipmentRoleAssignmentMapper.insertShipmentRole(user.getId(), shipmentRoleAssignment.getFacilityId(), shipmentRoleAssignment.getRoleIds().get(0));
 
     List<ShipmentRoleAssignment> expectedShipmentRoleAssignments = shipmentRoleAssignmentMapper.getShipmentRolesForUser(user.getId());
 

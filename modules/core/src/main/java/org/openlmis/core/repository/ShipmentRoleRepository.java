@@ -14,12 +14,16 @@
 
 package org.openlmis.core.repository;
 
+import org.apache.commons.collections.Closure;
 import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.mapper.ShipmentRoleAssignmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
 @Repository
 public class ShipmentRoleRepository {
@@ -29,5 +33,20 @@ public class ShipmentRoleRepository {
 
   public List<ShipmentRoleAssignment> getShipmentRolesForUser(Long userId) {
     return shipmentRoleAssignmentMapper.getShipmentRolesForUser(userId);
+  }
+
+  public void insertShipmentRoles(final User user) {
+    shipmentRoleAssignmentMapper.deleteAllShipmentRoles(user);
+
+    for (final ShipmentRoleAssignment shipmentRoleAssignment : user.getShipmentRoles()) {
+      if (shipmentRoleAssignment == null) continue;
+      forAllDo(shipmentRoleAssignment.getRoleIds(), new Closure() {
+        @Override
+        public void execute(Object o) {
+          final Long roleId = (Long) o;
+          shipmentRoleAssignmentMapper.insertShipmentRole(user.getId(), shipmentRoleAssignment.getFacilityId(), roleId);
+        }
+      });
+    }
   }
 }

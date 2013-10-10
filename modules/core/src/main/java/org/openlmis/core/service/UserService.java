@@ -63,6 +63,7 @@ public class UserService {
     user.validate();
     userRepository.create(user);
     roleAssignmentService.saveRolesForUser(user);
+    shipmentRoleService.saveShipmentRoles(user);
   }
 
   @Transactional
@@ -70,6 +71,7 @@ public class UserService {
     user.validate();
     userRepository.update(user);
     roleAssignmentService.saveRolesForUser(user);
+    shipmentRoleService.saveShipmentRoles(user);
   }
 
   private void sendEmail(SimpleMailMessage emailMessage) {
@@ -132,7 +134,7 @@ public class UserService {
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
-    user.setShipmentRoleAssignments(shipmentRoleService.getRolesForUser(id));
+    user.setShipmentRoles(shipmentRoleService.getRolesForUser(id));
     return user;
   }
 
