@@ -8,7 +8,7 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-CREATE TABLE shipment_role_assignments (
+CREATE TABLE fulfillment_role_assignments (
   userId       INTEGER REFERENCES users (id)      NOT NULL,
   roleId       INTEGER REFERENCES roles (id)      NOT NULL,
   facilityId   INTEGER REFERENCES facilities (id) NOT NULL,
