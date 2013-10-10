@@ -17,7 +17,7 @@ function ApproveRnrListController($scope, requisitionList, $location, messageSer
     multiSelect: false,
     selectedItems: $scope.selectedItems,
     afterSelectionChange: function (rowItem, event) {
-      $scope.openRnr()
+      $scope.openRnr();
     },
     showFooter: false,
     showSelectionCheckbox: false,

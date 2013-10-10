@@ -19,7 +19,7 @@ import org.openlmis.db.categories.UnitTests;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -56,6 +56,33 @@ public class RoleTest {
 
     role.setName(null);
     expectedEx.expect(dataExceptionMatcher("error.role.without.name"));
+    role.validate();
+  }
+
+  @Test
+  public void shouldGiveErrorIfRelatedRightsAreNotSelectedForAdmin() {
+    Role role = new Role("Admin", "admin", new HashSet<>(asList(MANAGE_REPORT)));
+
+    expectedEx.expect(dataExceptionMatcher("error.role.related.right.not.selected"));
+
+    role.validate();
+  }
+
+  @Test
+  public void shouldGiveErrorIfRelatedRightsAreNotSelectedForRequisition() {
+    Role role = new Role("Admin", "admin", new HashSet<>(asList(CREATE_REQUISITION, AUTHORIZE_REQUISITION)));
+
+    expectedEx.expect(dataExceptionMatcher("error.role.related.right.not.selected"));
+
+    role.validate();
+  }
+
+  @Test
+  public void shouldGiveErrorIfRelatedRightsAreNotSelectedForShipment() {
+    Role role = new Role("Admin", "admin", new HashSet<>(asList(CONVERT_TO_ORDER)));
+
+    expectedEx.expect(dataExceptionMatcher("error.role.related.right.not.selected"));
+
     role.validate();
   }
 }

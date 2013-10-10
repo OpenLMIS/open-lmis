@@ -239,4 +239,7 @@ public interface FacilityMapper {
     })
     List<Facility> getSupplyingFacilitiesCompleteList();
 
+
+  @Select({"SELECT * from facilities where id in (SELECT supplyingfacilityid from supply_lines)"})
+  List<Facility> getWarehouses();
 }

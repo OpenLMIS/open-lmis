@@ -39,13 +39,13 @@ distributionModule.directive('notRecorded', function ($timeout) {
     link: function (scope, element, attrs, ctrl) {
       $timeout(function () {
         $.each(document.getElementsByName(element.attr('id')), function (index, ele) {
-          ele.disabled = ctrl.$modelValue;
+          ele.disabled = element.attr('disabled') || ctrl.$modelValue;
         });
       }, 0);
 
       scope.$watch(attrs.ngModel, function () {
         $.each(document.getElementsByName(element.attr('id')), function (index, associatedElement) {
-          associatedElement.disabled = ctrl.$modelValue;
+          associatedElement.disabled =  ctrl.$modelValue;
           if (!isUndefined(attrs.notRecorded)) {
             scope[attrs.notRecorded](ctrl.$modelValue);
           }
@@ -73,13 +73,9 @@ distributionModule.directive('disableForm', function ($timeout) {
   return {
     require: '?ngModel',
     link: function (scope, element) {
-
       $timeout(function () {
-        var tabbables = element.find(':tabbable');
         if (element.attr('disable-form') === "true") {
-          $.each(tabbables, function (index, tabable) {
-            $(tabable).prop('disabled', true);
-          });
+          element.find('input, textarea').attr('disabled', 'disabled');
         }
       });
 

@@ -66,11 +66,11 @@ function EpiUse(epiUse) {
           return false;
         }
         return true;
-      })
+      });
     });
 
     _this.status = statusClass || complete;
 
     return _this.status;
-  }
+  };
 }

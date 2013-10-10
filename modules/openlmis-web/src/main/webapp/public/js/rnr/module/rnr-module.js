@@ -33,7 +33,7 @@ rnrModule.positiveInteger = function (element, ctrl, scope) {
   });
   ctrl.$parsers.unshift(function (viewValue) {
     if (validationFunction(viewValue, element.attr('name'))) {
-      if (viewValue == "")  viewValue = undefined;
+      if (viewValue === "")  viewValue = undefined;
       return viewValue;
     } else {
       ctrl.$viewValue = ctrl.$modelValue;
@@ -43,8 +43,8 @@ rnrModule.positiveInteger = function (element, ctrl, scope) {
   });
   function validationFunction(value, errorHolder) {
     var INTEGER_REGEXP = /^\d*$/;
-    var valid = (value == undefined) ? true : INTEGER_REGEXP.test(value);
-    if (errorHolder != undefined) {
+    var valid = (value === undefined) ? true : INTEGER_REGEXP.test(value);
+    if (errorHolder !== undefined) {
       document.getElementById(errorHolder).style.display = (valid) ? 'none' : 'block';
     }
     return valid;

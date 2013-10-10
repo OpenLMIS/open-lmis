@@ -20,6 +20,7 @@ CREATE TABLE facility_visits (
   observations      TEXT,
   createdBy        INTEGER,
   createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy       INTEGER,
-  modifiedDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+  UNIQUE (distributionId, facilityId)
 );
+

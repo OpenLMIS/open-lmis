@@ -61,7 +61,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   };
 
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
+    return !((index > 0 ) &&
+      ($scope.pageLineItems[index].productCategory === $scope.pageLineItems[index - 1].productCategory));
   };
 
   function updateShownErrorPages() {
@@ -90,7 +91,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY : ($routeParams.supplyType == REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
+    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY :
+      ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
     $location.search('supplyType', $scope.visibleTab);
 
     if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
@@ -109,11 +111,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
     if (!$scope.pageLineItems[0].fullSupply) {
       rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-        return rnrLineItem.reduceForApproval()
+        return rnrLineItem.reduceForApproval();
       });
     } else if ($scope.pageLineItems[0].fullSupply) {
       rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-        return rnrLineItem.reduceForApproval()
+        return rnrLineItem.reduceForApproval();
       });
     }
     return rnr;
@@ -135,7 +137,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
         rnr, function (data) {
-          if (preventMessage == true) return;
+          if (preventMessage === true) return;
           $scope.message = data.success;
           $scope.error = "";
           setTimeout(fadeSaveMessage, 3000);
@@ -166,7 +168,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   }
 
   $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab == NON_FULL_SUPPLY ? _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+    return $scope.visibleTab === NON_FULL_SUPPLY ?
+      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
   };
 
   $scope.dialogCloseCallback = function (result) {
@@ -261,4 +264,3 @@ ApproveRnrController.resolve = {
     return deferred.promise;
   }
 };
-

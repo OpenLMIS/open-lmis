@@ -332,6 +332,17 @@ public class FacilityRepositoryTest {
   }
 
   @Test
+  public void shouldGetAllWarehouses() throws Exception {
+    List<Facility> expectedWarehouses = new ArrayList<>();
+    when(mapper.getWarehouses()).thenReturn(expectedWarehouses);
+
+    List<Facility> warehouses = repository.getWarehouses();
+
+    verify(mapper).getWarehouses();
+    assertThat(warehouses, is(expectedWarehouses));
+  }
+
+  @Test
   public void shouldGetAllFacilitiesByModifiedDate() throws Exception {
     List<Facility> expectedFacilities = new ArrayList<>();
     Date dateModified = new Date();

@@ -31,7 +31,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     $scope.adminRights = _.where($scope.rights, {"type": "ADMIN"});
     $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
     $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
-    $scope.shipmentRights = _.where($scope.rights, {"type": "SHIPMENT"});
+    $scope.fulfillmentRights = _.where($scope.rights, {"type": "FULFILLMENT"});
     $scope.reportRights = _.where($scope.rights, {"type": "REPORT"});
   }, {});
 
@@ -49,6 +49,9 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
       if (right.right == 'CREATE_REQUISITION' || right.right == 'AUTHORIZE_REQUISITION' ||
         right.right == 'APPROVE_REQUISITION') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
+      }
+      if (right.right == 'CONVERT_TO_ORDER') {
+        $scope.updateRights(true, $scope.getRightFromRightList("VIEW_ORDER"));
       }
     } else {
       $scope.role.rights = $.grep($scope.role.rights, function (rightObj) {
@@ -72,6 +75,10 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
 
     if (right.right == 'VIEW_REPORT') {
       return ($scope.contains('MANAGE_REPORT'));
+    }
+
+    if (right.right == 'VIEW_ORDER') {
+      return ($scope.contains('CONVERT_TO_ORDER'));
     }
   };
 
@@ -140,17 +147,16 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     var valid = true;
     $scope.error = "";
     $scope.showRightError = false;
-    if ($scope.role.name == undefined) {
+    if ($scope.role.name === undefined) {
       $scope.showError = true;
       $scope.error = "form.error";
       valid = false;
     }
-    if ($scope.role.rights.length == 0) {
+    if ($scope.role.rights.length === 0) {
       $scope.showRightError = true;
       $scope.error = "form.error";
       valid = false;
     }
     return valid;
-  }
-
+  };
 }

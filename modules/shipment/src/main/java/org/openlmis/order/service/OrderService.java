@@ -10,6 +10,7 @@ package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.ProgramService;
@@ -85,8 +86,8 @@ public class OrderService {
     }
   }
 
-  public List<Order> getOrdersForPage(int page) {
-    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize);
+  public List<Order> getOrdersForPage(int page, Long userId, Right right) {
+    List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
     Rnr rnr;
     for (Order order : orders) {
       rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());

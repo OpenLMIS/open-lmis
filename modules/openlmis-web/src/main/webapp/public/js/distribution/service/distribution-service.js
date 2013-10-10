@@ -51,7 +51,7 @@ distributionModule.service('distributionService', function ($dialog, messageServ
 
         applyFunc(_this.distribution);
         $($('input[not-recorded]').last()).trigger("blur"); //for auto save
-      }
+      };
     };
 
     OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);

@@ -202,10 +202,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userRoleList.add(APPROVE_REQUISITION);
     createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, true);
 
-    List<String> userRoleListLmu = new ArrayList<String>();
-    userRoleListLmu.add(CONVERT_TO_ORDER_REQUISITION);
-    userRoleListLmu.add(VIEW_ORDER_REQUISITION);
-    createRoleAndAssignRights(homePage, userRoleListLmu, LMU, LMU, false);
 
     RolesPage rolesPage = new RolesPage(testWebDriver);
     rolesPage.clickARole(LAB_IN_CHARGE);
@@ -214,7 +210,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.navigateRoleAssignments();
     rolesPage.clickARole(LMU);
     rolesPage.verifyProgramRoleRadioNonEditable();
-    rolesPage.verifyRoleSelected(userRoleListLmu);
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";

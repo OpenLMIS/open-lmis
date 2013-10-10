@@ -9,7 +9,6 @@
  */
 
 function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $routeParams, distributionService) {
-
   $scope.distribution = distributionService.distribution;
   $scope.selectedFacilityId = $routeParams.facility;
 
@@ -77,12 +76,10 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
 
 function showProblemDivAnimation(idSent){
   $('body,html').animate({
-     scrollTop : parseInt($('#'+idSent).offset().top)+'px'
+     scrollTop : utils.parseIntWithBaseTen($('#'+idSent).offset().top)+'px'
   },'fast');
 }
+
 function showProblemsDiv(idSent){
-  setTimeout(showProblemDivAnimation(idSent),100)
+  setTimeout(showProblemDivAnimation(idSent),100);
 }
-
-
-

@@ -63,15 +63,16 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   $scope.hasPermission = function (permission) {
     return _.find($scope.requisitionRights, function (right) {
-      return right.right == permission
+      return right.right === permission;
     });
   };
 
   prepareRnr();
 
-
   $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab == NON_FULL_SUPPLY ? _.contains($scope.errorPages.nonFullSupply, page) : $scope.visibleTab == FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
+    return $scope.visibleTab === NON_FULL_SUPPLY ?
+      _.contains($scope.errorPages.nonFullSupply, page) :
+      $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
   if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
@@ -80,7 +81,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     $location.path("/init-rnr");
   }
 
-  $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+  $scope.currentPage = ($routeParams.page) ? utils.parseIntWithBaseTen($routeParams.page) || 1 : 1;
 
   $scope.switchSupplyType = function (supplyType) {
     $scope.visibleTab = supplyType;
@@ -94,7 +95,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY : ($routeParams.supplyType == REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
+    $scope.visibleTab = $routeParams.supplyType === NON_FULL_SUPPLY ? NON_FULL_SUPPLY :
+      ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
     $location.search('supplyType', $scope.visibleTab);
 
     if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
@@ -172,7 +174,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     var setError = false;
     $.each($scope.rnr.regimenLineItems, function (index, regimenLineItem) {
       $.each($scope.visibleRegimenColumns, function (index, regimenColumn) {
-        if (regimenColumn.name != "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
+        if (regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
           setError = true;
           $scope.regimenLineItemInValid = true;
           return;
@@ -195,9 +197,9 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.dialogCloseCallback = function (result) {
-    if (result && $scope.rnr.status == 'INITIATED')
+    if (result && $scope.rnr.status === 'INITIATED')
       submitValidatedRnr();
-    if (result && $scope.rnr.status == 'SUBMITTED')
+    if (result && $scope.rnr.status === 'SUBMITTED')
       authorizeValidatedRnr();
   };
 
@@ -252,30 +254,32 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.highlightWarningBasedOnField = function (value, field) {
-    if ($scope.inputClass && (isUndefined(value) || value == false) && field) {
+    if ($scope.inputClass && (isUndefined(value) || value === false) && field) {
       return "warning-error";
     }
     return null;
   };
 
   $scope.highlightWarning = function (value) {
-    if ($scope.inputClass && (isUndefined(value) || value == false)) {
+    if ($scope.inputClass && (isUndefined(value) || value === false)) {
       return "warning-error";
     }
     return null;
   };
 
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
+    return !((index > 0 ) &&
+      ($scope.pageLineItems[index].productCategory === $scope.pageLineItems[index - 1].productCategory));
   };
 
   $scope.getCellErrorClass = function (rnrLineItem) {
-    return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ? 'cell-error-highlight' : '';
+    return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ?
+      'cell-error-highlight' : '';
   };
 
   $scope.lineItemErrorMessage = function (rnrLineItem) {
     return messageService.get(rnrLineItem.getErrorMessage());
-  }
+  };
 
   $scope.getRowErrorClass = function (rnrLineItem) {
     return $scope.getCellErrorClass(rnrLineItem) ? 'row-error-highlight' : '';
@@ -283,7 +287,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   function resetCostsIfNull() {
     var rnr = $scope.rnr;
-    if (rnr == null) return;
+    if (rnr === null) return;
     if (!rnr.fullSupplyItemsSubmittedCost)
       rnr.fullSupplyItemsSubmittedCost = 0;
     if (!rnr.nonFullSupplyItemsSubmittedCost)
@@ -299,8 +303,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     $scope.formDisabled = (function () {
       if ($scope.rnr) {
         var status = $scope.rnr.status;
-        if (status == 'INITIATED' && $scope.hasPermission('CREATE_REQUISITION')) return false;
-        if (status == 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION')) return false;
+        if (status === 'INITIATED' && $scope.hasPermission('CREATE_REQUISITION')) return false;
+        if (status === 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION')) return false;
       }
       return true;
     })();
@@ -317,11 +321,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   function removeExtraDataForPostFromRnr() {
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.pageLineItems.length) return rnr;
-    if ($scope.pageLineItems[0].fullSupply == false) {
+    if ($scope.pageLineItems[0].fullSupply === false) {
       _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
         rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
       });
-    } else if ($scope.pageLineItems[0].fullSupply == true) {
+    } else if ($scope.pageLineItems[0].fullSupply === true) {
       _.each($scope.pageLineItems, function (lineItem) {
         rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
       });
@@ -331,7 +335,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
         rnr.regimenLineItems.push(regimenLineItem);
       });
     }
-
     return rnr;
   }
 }

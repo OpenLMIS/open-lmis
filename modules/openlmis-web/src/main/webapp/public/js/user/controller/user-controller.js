@@ -42,7 +42,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     }
     var valid = true;
     $.each(user.homeFacilityRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+      if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
         valid = false;
         return false;
       }
@@ -57,7 +57,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
+        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
+      {
         valid = false;
         return false;
       }
@@ -76,7 +78,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       $scope.$parent.message = messageService.get(msgKey, $scope.user.firstName, $scope.user.lastName);
       $scope.$parent.userId = $scope.user.id;
       $location.path('');
-    }
+    };
 
     var saveSuccessHandler = function (response) {
       $scope.user = response.user;
@@ -114,12 +116,12 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.validateUserName = function () {
-    $scope.userNameInvalid = $scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0;
+    $scope.userNameInvalid = $scope.user.userName !== null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
 
   $scope.showFacilitySearchResults = function () {
     var query = $scope.query;
-    var len = (query == undefined) ? 0 : query.length;
+    var len = (query === undefined) ? 0 : query.length;
 
     if (len >= 3) {
       if (len == 3) {
@@ -188,7 +190,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
         $scope.filteredFacilities.push(facility);
       }
       $scope.resultCount = $scope.filteredFacilities.length;
-    })
+    });
   };
 
   $scope.cancelUserSave = function() {
@@ -199,7 +201,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.showError = "false";
     $scope.error = "";
     $scope.message = messageService.get(msgKey, $scope.user.firstName, $scope.user.lastName);
-  }
+  };
 
   var errorFunc = function (data) {
     $scope.showError = "true";
@@ -234,7 +236,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       body: messageService.get('enable.user.confirm', $scope.user.firstName, $scope.user.lastName)
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.restoreUserCallback, $dialog, messageService);
-  }
+  };
 
   $scope.restoreUserCallback = function (result) {
     if (!result) return;

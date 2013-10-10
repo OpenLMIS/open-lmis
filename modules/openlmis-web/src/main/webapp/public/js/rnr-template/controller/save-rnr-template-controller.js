@@ -33,7 +33,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
       $scope.errorMap = undefined;
       $location.path('select-program');
     }, function (data) {
-      if (data != null) {
+      if (data !== null) {
         $scope.errorMap = data.data;
       }
       updateErrorMessage("form.error");
@@ -59,7 +59,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.setArithmeticValidationMessageShown = function () {
     $.each($scope.rnrColumns, function (index, column) {
       if (column.sourceConfigurable) {
-        if (column.source.code == 'U' && column.visible == true) {
+        if (column.source.code == 'U' && column.visible) {
           $scope.arithmeticValidationMessageShown = true;
         }
         else {
@@ -87,7 +87,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.toggleValidateFormulaFlag = function () {
     $scope.validateFormula = !$scope.validateFormula;
     setArithmeticValidationLabel();
-  }
+  };
 }
 
 SaveRnrTemplateController.resolve = {

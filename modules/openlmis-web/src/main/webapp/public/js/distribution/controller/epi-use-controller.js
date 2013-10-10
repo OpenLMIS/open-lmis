@@ -17,7 +17,7 @@ function EPIUseController($scope, $routeParams, distributionService) {
     distributionService.applyNR(function(distribution) {
       distribution.setEpiNotRecorded($routeParams.facility);
     });
-  }
+  };
 }
 
 function EpiUseRowController($scope) {
@@ -34,5 +34,5 @@ function EpiUseRowController($scope) {
 
   var getValue = function (object) {
     return (!isUndefined(object) && !isUndefined(object.value)) ? parseInt(object.value, 10) : 0;
-  }
+  };
 }

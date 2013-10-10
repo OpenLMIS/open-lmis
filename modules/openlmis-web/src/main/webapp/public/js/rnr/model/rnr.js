@@ -44,7 +44,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
     function getNonFullSupplyPagesWithError() {
       var nonFullSupplyErrorLIneItems = thisRnr.getNonFullSupplyErrorLineItemIndexes();
-      return getErrorPages(nonFullSupplyErrorLIneItems)
+      return getErrorPages(nonFullSupplyErrorLIneItems);
     }
 
     var errorPages = {};
@@ -116,17 +116,16 @@ var Rnr = function (rnr, programRnrColumns) {
   };
 
   var calculateTotalCost = function (rnrLineItems) {
-    if (rnrLineItems == null) return;
+    if (rnrLineItems === null) return;
 
     var cost = 0;
     for (var lineItemIndex in rnrLineItems) {
       var lineItem = rnrLineItems[lineItemIndex];
-      if (!lineItem || lineItem.cost == null || !utils.isNumber(lineItem.cost)) continue;
+      if (!lineItem || lineItem.cost === null || !utils.isNumber(lineItem.cost)) continue;
       cost += parseFloat(lineItem.cost);
     }
     return cost.toFixed(2);
   };
-
 
   Rnr.prototype.calculateFullSupplyItemsSubmittedCost = function () {
     this.fullSupplyItemsSubmittedCost = calculateTotalCost(this.fullSupplyLineItems);
@@ -174,10 +173,10 @@ var Rnr = function (rnr, programRnrColumns) {
   Rnr.prototype.reduceForApproval = function () {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
     rnr.fullSupplyLineItems = _.map(rnr.fullSupplyLineItems, function (rnrLineItem) {
-      return rnrLineItem.reduceForApproval()
+      return rnrLineItem.reduceForApproval();
     });
     rnr.nonFullSupplyLineItems = _.map(rnr.nonFullSupplyLineItems, function (rnrLineItem) {
-      return rnrLineItem.reduceForApproval()
+      return rnrLineItem.reduceForApproval();
     });
     return rnr;
   };
@@ -190,7 +189,7 @@ var Rnr = function (rnr, programRnrColumns) {
       lineItems = [];
 
       $(lineItemsJson).each(function (i, lineItem) {
-        lineItems.push(RnrLineItemFactory.getInstance(lineItem, thisRnr, programRnrColumns))
+        lineItems.push(RnrLineItemFactory.getInstance(lineItem, thisRnr, programRnrColumns));
       });
       return lineItems;
     }

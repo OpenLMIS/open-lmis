@@ -343,6 +343,7 @@ public class DBWrapper {
 
     update("delete from user_password_reset_tokens ;");
     update("delete from comments;");
+    update("delete from facility_visits ;");
     update("delete from distributions ;");
     update("delete from users where userName not like('Admin%');");
     update("DELETE FROM requisition_line_item_losses_adjustments;");
@@ -1263,6 +1264,17 @@ public class DBWrapper {
     while (rs.next()) {
       update("insert into orders(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+    }
+  }
+
+  public void verifyFacilityVisits(String observations,String confirmedByName, String confirmedByTitle, String verifiedByName, String verifiedByTitle) throws SQLException {
+    ResultSet rs = query("select * from facility_visits;");
+    while (rs.next()) {
+      assertEquals(rs.getString("observations").toString(),observations);
+      assertEquals(rs.getString("confirmedbyname").toString(),confirmedByName);
+      assertEquals(rs.getString("confirmedbytitle").toString(),confirmedByTitle);
+      assertEquals(rs.getString("verifiedbyname").toString(),verifiedByName);
+      assertEquals(rs.getString("verifiedbytitle").toString(),verifiedByTitle);
     }
   }
 }

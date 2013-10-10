@@ -8,6 +8,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -62,8 +63,8 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page) {
-    ResponseEntity<OpenLmisResponse> response = response(ORDERS, getOrdersForView(orderService.getOrdersForPage(page)));
+  public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page, HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response = response(ORDERS, getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
     response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
     response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
     return response;

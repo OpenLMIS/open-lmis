@@ -10,7 +10,6 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.Facilitator;
 import org.openlmis.distribution.domain.FacilityVisit;
-import org.openlmis.distribution.domain.FacilityVisit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -99,12 +98,14 @@ public class FacilityVisitMapperIT {
 
     facilityVisit.setDistributionId(distribution.getId());
     facilityVisit.setFacilityId(facility.getId());
+    facilityVisit.setCreatedBy(1l);
 
     mapper.insert(facilityVisit);
 
-    FacilityVisit expectedFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+    FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
 
-    assertThat(expectedFacilityVisit, is(facilityVisit));
+    assertThat(actualFacilityVisit, is(facilityVisit));
+    assertThat(actualFacilityVisit.getCreatedBy(), is(1l));
   }
 
 }

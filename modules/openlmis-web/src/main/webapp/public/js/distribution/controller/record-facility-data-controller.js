@@ -38,6 +38,5 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
   $scope.chooseFacility = function () {
     if ($routeParams.facility != $scope.facilitySelected.id)
       $location.path('record-facility-data/' + $routeParams.distribution + '/' + $scope.facilitySelected.id + '/refrigerator-data');
-  }
-
+  };
 }

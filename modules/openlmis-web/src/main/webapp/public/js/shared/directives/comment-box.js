@@ -35,7 +35,7 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
       };
 
       scope.$watch("show", function () {
-        if (scope.show == true) {
+        if (scope.show) {
           angular.element(document).bind("keyup", commentEscapeKeyHandler);
         } else {
           angular.element(document).unbind("keyup", commentEscapeKeyHandler);
@@ -43,7 +43,7 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
       });
 
       scope.$watch("comment", function () {
-        if (scope.comment == undefined) return;
+        if (scope.comment === undefined) return;
         scope.comment = scope.comment.substring(0, 250);
       });
 

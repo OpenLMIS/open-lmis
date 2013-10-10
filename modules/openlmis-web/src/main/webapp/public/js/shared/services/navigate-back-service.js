@@ -13,7 +13,7 @@ services.factory('navigateBackService', function() {
 
    navigateBack.setData = function(data) {
     angular.extend(navigateBack,  data);
-   }
+   };
 
    return navigateBack;
 });

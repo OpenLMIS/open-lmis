@@ -17,7 +17,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
 
   var selectionFunc = function (rowItem, event) {
     $scope.$parent.rnrStatus = $scope.selectedItems[0].status;
-    $scope.openRequisition()
+    $scope.openRequisition();
   };
 
   $scope.rnrListGrid = { data: 'filteredRequisitions',
@@ -71,7 +71,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
       }, function () {
         $scope.programs = [];
         setProgramsLabel();
-      })
+      });
   };
 
   function setRequisitionsFoundMessage() {
@@ -111,7 +111,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
 
       setRequisitionsFoundMessage();
     }, function () {
-    })
+    });
   };
   $scope.setEndDateOffset = function () {
     if ($scope.endDate < $scope.startDate) {

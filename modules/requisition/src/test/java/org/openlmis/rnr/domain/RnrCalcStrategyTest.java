@@ -1,9 +1,7 @@
 /*
+ * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
 package org.openlmis.rnr.domain;
@@ -113,5 +111,15 @@ public class RnrCalcStrategyTest {
     LossesAndAdjustments add20 = new LossesAndAdjustments(1L, additive, 20);
 
     assertThat(calcStrategy.calculateTotalLossesAndAdjustments(asList(add10, sub5, add20), lossesAndAdjustmentsList), is(25));
+  }
+
+  @Test
+  public void shouldSetCalculatedOrderQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
+    assertThat(calcStrategy.calculateDefaultApprovedQuantity(true, 1, 6), is(1));
+  }
+
+  @Test
+  public void shouldSetRequestedQuantityAsApprovedQuantityForNonFullSupplyItems() throws Exception {
+    assertThat(calcStrategy.calculateDefaultApprovedQuantity(false, 1, 6), is(6));
   }
 }

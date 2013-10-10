@@ -57,7 +57,7 @@ function UploadController($scope, SupportedUploads, messageService) {
       $scope.errorMsg = errorMessage;
       $scope.inProgress = false;
     });
-  }
+  };
 
   function processResponse(responseText) {
     var response = JSON.parse(responseText);
@@ -79,5 +79,4 @@ function UploadController($scope, SupportedUploads, messageService) {
     $scope.successMsg = data.success;
     $scope.errorMsg = "";
   };
-
 }

@@ -22,4 +22,4 @@ ListReportController.resolve = {
     }, 100);
     return deferred.promise;
   }
-}
+};

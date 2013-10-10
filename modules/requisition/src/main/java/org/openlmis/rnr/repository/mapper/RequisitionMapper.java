@@ -11,10 +11,7 @@
 package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
@@ -168,10 +165,12 @@ public interface RequisitionMapper {
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
   })
   List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
-                                                            @Param("pageNumber") Integer pageNumber, @Param("pageSize") Integer pageSize);
+                                                            @Param("pageNumber") Integer pageNumber, @Param("pageSize") Integer pageSize,
+                                                            @Param("userId") Long userId,@Param("right") Right right);
 
   @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getCountOfApprovedRequisitionsForCriteria")
-  Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal);
+  Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
+                                                    @Param("userId") Long userId,@Param("right") Right right);
 
   public class ApprovedRequisitionSearch {
 
@@ -204,6 +203,14 @@ public interface RequisitionMapper {
     private static void appendQueryClausesBySearchType(StringBuilder sql, Map<String, Object> params) {
       String searchType = (String) params.get("searchType");
       String searchVal = ((String) params.get("searchVal")).toLowerCase();
+      Long userId = (Long) params.get("userId");
+      Right right = (Right) params.get("right");
+
+      if (userId != null && right != null) {
+        sql.append("INNER JOIN supply_lines S ON R.supervisoryNodeId = S.supervisoryNodeId " +
+          "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId " +
+          "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ");
+      }
 
       if (searchVal.isEmpty()) {
         sql.append("WHERE ");
@@ -225,8 +232,10 @@ public interface RequisitionMapper {
         sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
         sql.append("LEFT JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
         sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
+      } else if (userId != null && right != null) {
+        sql.append("WHERE FRA.userid = "+ userId + " AND RR.rightName = " + right);
       }
-      sql.append("R.status = 'APPROVED' ");
+      sql.append("R.status = 'APPROVED'");
     }
 
   }
