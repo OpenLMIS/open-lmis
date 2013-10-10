@@ -12,20 +12,29 @@
 
 package org.openlmis.distribution.domain;
 
-import lombok.Data;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.openlmis.core.domain.BaseModel;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 
-@Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class FacilityDistributionData extends BaseModel{
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-  private Long distributionId;
-  private Long facilityId;
-  private FacilityVisit facilityVisit;
+@Category(UnitTests.class)
+public class FacilityVisitTest {
 
+  @Test
+  public void shouldConstruct() throws Exception {
+    Long distributionId = 1L;
+    Long facilityId = 2L;
+    Long createdBy = 3L;
 
-  public FacilityVisit constructFacilityVisit() {
-    return this.facilityVisit.construct(distributionId, facilityId, createdBy);
+    FacilityVisit facilityVisit = new FacilityVisit();
+
+    facilityVisit.construct(distributionId, facilityId, createdBy);
+    
+    assertThat(facilityVisit.getDistributionId(),is(distributionId));
+    assertThat(facilityVisit.getFacilityId(),is(facilityId));
+    assertThat(facilityVisit.getCreatedBy(),is(createdBy));
+
   }
 }
