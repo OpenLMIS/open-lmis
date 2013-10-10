@@ -67,6 +67,9 @@ public class RequisitionPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
   private static WebElement saveSuccessMessage;
 
+  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
+  private static WebElement approveSuccessMessage;
+
   @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
   private static WebElement submitSuccessMessage;
 
@@ -295,6 +298,11 @@ public class RequisitionPage extends Page {
 
   public void verifyAuthorizeSuccessMsg() {
     assertTrue("RnR Authorize Success message not displayed", submitSuccessMessage.isDisplayed());
+  }
+
+  public void verifyApproveSuccessMsg() {
+    testWebDriver.sleep(500);
+    assertTrue("RnR Approved Success message not displayed", approveSuccessMessage.isDisplayed());
   }
 
   public int getRegimenTableRowCount() {
