@@ -580,15 +580,18 @@ public class InitiateRnR extends TestCaseHelper {
     createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", "openLmis",
       rightsList2);
 
+    List<String> rightsList3 = new ArrayList<String>();
+    rightsList3.add(CONVERT_TO_ORDER);
+    rightsList3.add(VIEW_REQUISITION);
+    createUserAndAssignRoleRights("401", "lmuincharge", "Jaan_V_Doe@openlmis.com", "F10", "lmuincharge", "openLmis",
+      rightsList3);
+
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-
-    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    homePage.clickProceed();
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
@@ -612,16 +615,26 @@ public class InitiateRnR extends TestCaseHelper {
 
     HomePage homePage2 = loginPage.loginAs("lmu", password);
     ApprovePage approvePage=homePage2.navigateToApprove();
+    approvePage.verifyEmergencyStatus();
     approvePage.verifyAndClickRequisitionPresentForApproval();
     assertEquals("0",approvePage.getApprovedQuantity());
     assertEquals("",approvePage.getAdjustedTotalConsumption());
     assertEquals("",approvePage.getAMC());
     assertEquals("",approvePage.getMaxStockQuantity());
     assertEquals("",approvePage.getCalculatedOrderQuantity());
+    approvePage.editApproveQuantity("");
+    approvePage.approveRequisition();
+    approvePage.verifyApproveErrorDiv();
+    approvePage.editApproveQuantity("0");
     approvePage.approveRequisition();
     approvePage.clickOk();
-    approvePage.verifyApproveSuccessMsg();
+    approvePage.verifyNoRequisitionPendingMessage();
 
+    homePage2.logout(baseUrlGlobal);
+
+    HomePage homePage3 = loginPage.loginAs("lmuincharge", password);
+    ConvertOrderPage convertOrderPage=homePage3.navigateConvertToOrder();
+    convertOrderPage.verifyOrderListElements(program,"F10","Village Dispensary","03/10/2013","30/01/2014","Village Dispensary");
 
   }
 
