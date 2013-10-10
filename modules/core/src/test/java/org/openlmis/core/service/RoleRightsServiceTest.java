@@ -88,30 +88,28 @@ public class RoleRightsServiceTest {
 
   @Test
   public void shouldCheckAdminRightHasIsAdminTrue() throws Exception {
-    assertEquals(UPLOADS.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_FACILITY.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_PROGRAM_PRODUCT.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_REPORT.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_ROLE.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_SCHEDULE.getType(), RightType.ADMIN);
-    assertEquals(MANAGE_USER.getType(), RightType.ADMIN);
-    assertEquals(CONVERT_TO_ORDER.getType(), RightType.ADMIN);
-    assertEquals(VIEW_ORDER.getType(), RightType.ADMIN);
-    assertEquals(CONFIGURE_RNR.getType(), RightType.ADMIN);
+    assertEquals(RightType.ADMIN, UPLOADS.getType());
+    assertEquals(RightType.ADMIN, MANAGE_FACILITY.getType());
+    assertEquals(RightType.ADMIN, MANAGE_PROGRAM_PRODUCT.getType());
+    assertEquals(RightType.ADMIN, MANAGE_REPORT.getType());
+    assertEquals(RightType.ADMIN, MANAGE_ROLE.getType());
+    assertEquals(RightType.ADMIN, MANAGE_SCHEDULE.getType());
+    assertEquals(RightType.ADMIN, MANAGE_USER.getType());
+    assertEquals(RightType.ADMIN, CONFIGURE_RNR.getType());
   }
 
   @Test
   public void shouldCheckTransactionalRightIsNotAdminRight() throws Exception {
-    assertEquals(CREATE_REQUISITION.getType(), RightType.REQUISITION);
-    assertEquals(AUTHORIZE_REQUISITION.getType(), RightType.REQUISITION);
-    assertEquals(APPROVE_REQUISITION.getType(), RightType.REQUISITION);
-    assertEquals(MANAGE_DISTRIBUTION.getType(), RightType.ALLOCATION);
-    assertEquals(VIEW_REQUISITION.getType(), RightType.REQUISITION);
+    assertEquals(RightType.REQUISITION, CREATE_REQUISITION.getType());
+    assertEquals(RightType.REQUISITION, AUTHORIZE_REQUISITION.getType());
+    assertEquals(RightType.REQUISITION, APPROVE_REQUISITION.getType());
+    assertEquals(RightType.ALLOCATION, MANAGE_DISTRIBUTION.getType());
+    assertEquals(RightType.REQUISITION, VIEW_REQUISITION.getType());
   }
 
   @Test
   public void shouldSaveRole() throws Exception {
-    role.setRights(new HashSet<>(asList(CREATE_REQUISITION)));
+    role.setRights(new HashSet<>(asList(CREATE_REQUISITION, VIEW_REQUISITION)));
     roleRightsService.saveRole(role);
     verify(roleRightsRepository).createRole(role);
   }
