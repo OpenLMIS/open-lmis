@@ -21,10 +21,10 @@ public class AdjustmentSummaryQueryBuilder {
         Map<String, String[]> sorter = ( Map<String, String[]>)params.get("SortCriteria");
         BEGIN();
 
-        SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType, SUM(totallossesandadjustments) adjustment,supplying_facility_name supplyingFacility");
+        SELECT("processing_periods_name as period, product productDescription, product_category_name category, facility_type_name facilityType,facility_name facilityName, adjustment_type adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
         FROM("vw_requisition_adjustment");
         writePredicates(filter);
-        GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name, processing_periods_name");
+        //GROUP_BY("product, adjustment_type,product_category_name,facility_type_name,facility_name, supplying_facility_name, processing_periods_name");
       ORDER_BY(QueryHelpers.getSortOrder(params, "facility_type_name,facility_name, supplying_facility_name, product, product_category_name , adjustment_type"));
 
       // write the query to a variable, this is to make it easier to debug the query.
