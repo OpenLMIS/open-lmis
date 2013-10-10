@@ -44,7 +44,7 @@ describe("Role", function () {
         {"right": "CREATE_REQUISITION", "name": "create requisition", "type": "REQUISITION"},
         {"right": "VIEW_REQUISITION", "name": "view requisition", "type": "REQUISITION"}
       ]);
-      expect(scope.shipmentRights).toEqual([
+      expect(scope.fulfillmentRights).toEqual([
         {"right": "FILL_SHIPMENT", "name": "fill shipment", "type": "FULFILLMENT"}
       ]);
     });

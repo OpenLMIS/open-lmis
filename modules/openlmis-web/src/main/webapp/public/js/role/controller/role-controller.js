@@ -31,7 +31,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     $scope.adminRights = _.where($scope.rights, {"type": "ADMIN"});
     $scope.requisitionRights = _.where($scope.rights, {"type": "REQUISITION"});
     $scope.allocationRights = _.where($scope.rights, {"type": "ALLOCATION"});
-    $scope.shipmentRights = _.where($scope.rights, {"type": "FULFILLMENT"});
+    $scope.fulfillmentRights = _.where($scope.rights, {"type": "FULFILLMENT"});
   }, {});
 
 
@@ -76,8 +76,8 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
       return ($scope.contains('MANAGE_REPORT'));
     }
 
-    if (right.right == 'CONVERT_TO_ORDER') {
-      return ($scope.contains('VIEW_ORDER'));
+    if (right.right == 'VIEW_ORDER') {
+      return ($scope.contains('CONVERT_TO_ORDER'));
     }
   };
 
