@@ -586,6 +586,8 @@ public class InitiateRnR extends TestCaseHelper {
     createUserAndAssignRoleRights("401", "lmuincharge", "Jaan_V_Doe@openlmis.com", "F10", "lmuincharge", "openLmis",
       rightsList3);
 
+    dbWrapper.insertFulfilmentRoleAssignment("lmuincharge","lmuincharge","F10");
+
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
