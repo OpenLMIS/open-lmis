@@ -292,4 +292,7 @@ services.factory('Warehouse', function ($resource) {
   return $resource('/warehouses.json', {}, {});
 });
 
+services.factory('Warehouse', function ($resource) {
+  return $resource('/warehouses.json', {}, {});
+});
 

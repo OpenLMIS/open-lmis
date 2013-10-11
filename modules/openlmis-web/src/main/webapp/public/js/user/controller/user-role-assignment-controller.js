@@ -53,8 +53,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   function getBodyMsgKey(roleList) {
-    if (roleList == 'shipmentRoles') {
-      return 'msg.roles.shipment.delete.warning';
+    if (roleList == 'fulfillmentRoles') {
+      return 'msg.roles.fulfillment.delete.warning';
     }
     else {
       return roleList == 'allocationRoles' ? 'msg.roles.delivery.zone.deletion' : "create.user.homeRoles.delete.warning";
@@ -99,7 +99,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   $scope.availableWarehouses = function () {
-    var assignedWarehouseId = _.map($scope.user.shipmentRoles, function (role) {
+    var assignedWarehouseId = _.map($scope.user.fulfillmentRoles, function (role) {
       return role.facilityId;
     });
     return _.reject($scope.warehouses, function (warehouse) {
@@ -183,8 +183,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     var valid = true;
     $($scope.user.allocationRoles).each(function (index, role) {
       if (role.deliveryZone.id === $scope.deliveryZoneRole.deliveryZone.id &&
-        role.programId === $scope.deliveryZoneRole.programId)
-      {
+        role.programId === $scope.deliveryZoneRole.programId) {
         valid = false;
         return false;
       }
@@ -210,9 +209,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
       || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) {
       return;
     }
-    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId ||
-      !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length)
-    {
+    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) {
       return;
     }
 
@@ -224,17 +221,18 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.showAllocationError = $scope.deliveryZoneRole = $scope.duplicateAllocationRoleError = undefined;
   };
 
-  $scope.addShipmentRole = function () {
-    $scope.user.shipmentRoles = $scope.user.shipmentRoles ? $scope.user.shipmentRoles : [];
+  $scope.addFulfillmentRole = function () {
+    $scope.user.fulfillmentRoles = $scope.user.fulfillmentRoles ? $scope.user.fulfillmentRoles : [];
     if (!$scope.warehouseRole || !isPresent($scope.warehouseRole.facilityId) || !isPresent($scope.warehouseRole.roleIds)) {
       $scope.warehouseRoleMappingError = true;
       return;
     }
 
-    $scope.user.shipmentRoles.push(angular.copy($scope.warehouseRole));
+    $scope.user.fulfillmentRoles.push(angular.copy($scope.warehouseRole));
     $scope.warehouseRole = null;
     $scope.warehouseRoleMappingError = false;
   }
+
 
   // WHO WROTE THIS? THIS IS AWESOME!
   $scope.getProgramName = function (programId) {
@@ -259,5 +257,5 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   var isPresent = function (obj) {
     return obj !== undefined && obj !== "" && obj !== [] && obj !== null;
-  };
+  }
 }

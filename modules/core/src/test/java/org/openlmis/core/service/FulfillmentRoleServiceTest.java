@@ -21,9 +21,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.repository.ShipmentRoleRepository;
+import org.openlmis.core.repository.FulfillmentRoleAssignmentRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.List;
@@ -36,35 +36,35 @@ import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class ShipmentRoleServiceTest {
+public class FulfillmentRoleServiceTest {
 
   @Mock
-  ShipmentRoleRepository shipmentRoleRepository;
+  FulfillmentRoleAssignmentRepository fulfillmentRoleAssignmentRepository;
 
   @InjectMocks
-  ShipmentRoleService shipmentRoleService;
+  FulfillmentRoleService fulfillmentRoleService;
 
   @Test
-  public void shouldGetShipmentRolesForUser() throws Exception {
-    List<ShipmentRoleAssignment> shipmentRoleAssignments = asList(new ShipmentRoleAssignment());
+  public void shouldGetFulfillmentRolesForUser() throws Exception {
+    List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
     Long userId = 1L;
-    Mockito.when(shipmentRoleRepository.getShipmentRolesForUser(userId)).thenReturn(shipmentRoleAssignments);
+    Mockito.when(fulfillmentRoleAssignmentRepository.getFulfillmentRolesForUser(userId)).thenReturn(fulfillmentRoleAssignments);
 
-    List<ShipmentRoleAssignment> expectedShipmentRoleAssignments = shipmentRoleService.getRolesForUser(userId);
+    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleService.getRolesForUser(userId);
 
-    verify(shipmentRoleRepository).getShipmentRolesForUser(userId);
+    verify(fulfillmentRoleAssignmentRepository).getFulfillmentRolesForUser(userId);
 
-    assertThat(expectedShipmentRoleAssignments, is(shipmentRoleAssignments));
+    assertThat(expectedFulfillmentRoleAssignments, is(fulfillmentRoleAssignments));
   }
 
   @Test
-  public void shouldSaveShipmentRolesForUser() throws Exception {
-    List<ShipmentRoleAssignment> shipmentRoleAssignments = asList(new ShipmentRoleAssignment());
+  public void shouldSaveFulfillmentRolesForUser() throws Exception {
+    List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
     User user = new User();
 
-    user.setShipmentRoles(shipmentRoleAssignments);
-    shipmentRoleService.saveShipmentRoles(user);
+    user.setFulfillmentRoles(fulfillmentRoleAssignments);
+    fulfillmentRoleService.saveFulfillmentRoles(user);
 
-    verify(shipmentRoleRepository).insertShipmentRoles(user);
+    verify(fulfillmentRoleAssignmentRepository).insertFulfillmentRoles(user);
   }
 }

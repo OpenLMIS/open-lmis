@@ -190,7 +190,18 @@ describe("User", function () {
     });
 
     it("should not create a user with empty role", function () {
-      var userWithoutRole = {shipmentRoles: [
+      var userWithoutRole = {fulfillmentRoles: [
+        {facilityId: 111, roleIds: [1]},
+        {facilityId: 222, roleIds: []}
+      ]};
+      scope.userForm = {$error: { required: false}};
+      scope.user = userWithoutRole;
+
+      expect(scope.saveUser()).toEqual(false);
+    });
+
+    it("should not create a user with empty role", function () {
+      var userWithoutRole = {fulfillmentRoles: [
         {facilityId: 111, roleIds: [1]},
         {facilityId: 222, roleIds: []}
       ]};

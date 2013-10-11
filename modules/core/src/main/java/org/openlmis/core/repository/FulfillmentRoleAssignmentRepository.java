@@ -15,9 +15,9 @@
 package org.openlmis.core.repository;
 
 import org.apache.commons.collections.Closure;
-import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.repository.mapper.ShipmentRoleAssignmentMapper;
+import org.openlmis.core.repository.mapper.FulfillmentRoleAssignmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -26,26 +26,26 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
 
 @Repository
-public class ShipmentRoleRepository {
+public class FulfillmentRoleAssignmentRepository {
 
   @Autowired
-  private ShipmentRoleAssignmentMapper shipmentRoleAssignmentMapper;
+  private FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
 
-  public List<ShipmentRoleAssignment> getShipmentRolesForUser(Long userId) {
-    return shipmentRoleAssignmentMapper.getShipmentRolesForUser(userId);
+  public List<FulfillmentRoleAssignment> getFulfillmentRolesForUser(Long userId) {
+    return fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(userId);
   }
 
-  public void insertShipmentRoles(final User user) {
-    if(user.getShipmentRoles() == null) return;
-    shipmentRoleAssignmentMapper.deleteAllShipmentRoles(user);
+  public void insertFulfillmentRoles(final User user) {
+    if (user.getFulfillmentRoles() == null) return;
+    fulfillmentRoleAssignmentMapper.deleteAllFulfillmentRoles(user);
 
-    for (final ShipmentRoleAssignment shipmentRoleAssignment : user.getShipmentRoles()) {
-      if (shipmentRoleAssignment == null) continue;
-      forAllDo(shipmentRoleAssignment.getRoleIds(), new Closure() {
+    for (final FulfillmentRoleAssignment fulfillmentRoleAssignment : user.getFulfillmentRoles()) {
+      if (fulfillmentRoleAssignment == null) continue;
+      forAllDo(fulfillmentRoleAssignment.getRoleIds(), new Closure() {
         @Override
         public void execute(Object o) {
           final Long roleId = (Long) o;
-          shipmentRoleAssignmentMapper.insertShipmentRole(user.getId(), shipmentRoleAssignment.getFacilityId(), roleId);
+          fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user.getId(), fulfillmentRoleAssignment.getFacilityId(), roleId);
         }
       });
     }

@@ -1,4 +1,4 @@
-/*
+       /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
  *
@@ -59,7 +59,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
+        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
+      {
         valid = false;
         return false;
       }
@@ -68,12 +70,12 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   }
 
   function validateShipmentRoles(user) {
-    if (!user.shipmentRoles) {
+    if (!user.fulfillmentRoles) {
       return true;
     }
 
     var valid = true;
-    $.each(user.shipmentRoles, function (index, roleAssignment) {
+    $.each(user.fulfillmentRoles, function (index, roleAssignment) {
       if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
         valid = false;
         return false;
@@ -140,7 +142,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     if (len >= 3) {
       if (len == 3) {
-        Facility.get({searchParam: query, virtualFacility: false}, function (data) {
+        Facility.get({searchParam: query, virtualFacility : false}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -208,7 +210,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     });
   };
 
-  $scope.cancelUserSave = function () {
+  $scope.cancelUserSave = function() {
     $location.path('#/search');
   };
 
@@ -244,7 +246,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.user.active = false;
   };
 
-  $scope.showConfirmUserRestoreModal = function () {
+  $scope.showConfirmUserRestoreModal = function() {
     var dialogOpts = {
       id: "restoreUserDialog",
       header: messageService.get('enable.user.header'),

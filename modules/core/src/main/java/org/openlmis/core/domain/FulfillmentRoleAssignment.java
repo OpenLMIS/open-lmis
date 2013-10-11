@@ -32,7 +32,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class ShipmentRoleAssignment extends BaseModel {
+public class FulfillmentRoleAssignment extends BaseModel {
   private Long userId;
   private Long facilityId;
   private List<Long> roleIds = new ArrayList<>();

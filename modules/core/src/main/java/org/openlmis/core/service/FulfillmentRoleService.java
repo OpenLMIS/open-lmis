@@ -14,9 +14,9 @@
 
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.repository.ShipmentRoleRepository;
+import org.openlmis.core.repository.FulfillmentRoleAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +24,17 @@ import java.util.List;
 
 
 @Service
-public class ShipmentRoleService {
+public class FulfillmentRoleService {
 
   @Autowired
-  private ShipmentRoleRepository shipmentRoleRepository;
+  private FulfillmentRoleAssignmentRepository fulfillmentRoleAssignmentRepository;
 
-  public List<ShipmentRoleAssignment> getRolesForUser(Long userId) {
-    return shipmentRoleRepository.getShipmentRolesForUser(userId);
+  public List<FulfillmentRoleAssignment> getRolesForUser(Long userId) {
+    return fulfillmentRoleAssignmentRepository.getFulfillmentRolesForUser(userId);
   }
 
-  public void saveShipmentRoles(User user) {
-    shipmentRoleRepository.insertShipmentRoles(user);
+  public void saveFulfillmentRoles(User user) {
+    fulfillmentRoleAssignmentRepository.insertFulfillmentRoles(user);
   }
 
 

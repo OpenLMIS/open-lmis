@@ -21,7 +21,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -77,7 +77,7 @@ public class UserServiceTest {
   private MessageService messageService;
 
   @Mock
-  private ShipmentRoleService shipmentRoleService;
+  private FulfillmentRoleService fulfillmentRoleService;
 
   @InjectMocks
   private UserService userService;
@@ -195,8 +195,8 @@ public class UserServiceTest {
     when(roleAssignmentService.getHomeFacilityRoles(userId)).thenReturn(homeFacilityRoles);
     when(roleAssignmentService.getSupervisorRoles(userId)).thenReturn(supervisorRoles);
     when(roleAssignmentService.getAllocationRoles(userId)).thenReturn(allocationRoles);
-    List<ShipmentRoleAssignment> shipmentRoleAssignments = asList(new ShipmentRoleAssignment());
-    when(shipmentRoleService.getRolesForUser(userId)).thenReturn(shipmentRoleAssignments);
+    List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
+    when(fulfillmentRoleService.getRolesForUser(userId)).thenReturn(fulfillmentRoleAssignments);
     RoleAssignment adminRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
 
@@ -207,7 +207,7 @@ public class UserServiceTest {
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
     assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
-    assertThat(returnedUser.getShipmentRoles(), is(shipmentRoleAssignments));
+    assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
 
   }
 
@@ -245,7 +245,7 @@ public class UserServiceTest {
 
     verify(userRepository).update(user);
     verify(roleAssignmentService).saveRolesForUser(user);
-    verify(shipmentRoleService).saveShipmentRoles(user);
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test
@@ -286,7 +286,7 @@ public class UserServiceTest {
     verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveRolesForUser(user);
-    verify(shipmentRoleService).saveShipmentRoles(user);
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test

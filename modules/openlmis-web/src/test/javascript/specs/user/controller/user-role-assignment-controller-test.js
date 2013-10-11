@@ -246,7 +246,7 @@ describe("User", function () {
     });
 
     it('should return list of warehouses which are not already assigned', function () {
-      scope.user = { shipmentRoles: [
+      scope.user = { fulfillmentRoles: [
         {
           facilityId: 1,
           roleIds: [1, 24, 6]
@@ -270,44 +270,44 @@ describe("User", function () {
     });
 
     it('should add shipment role if all fields present', function () {
-      scope.user.shipmentRoles = [
+      scope.user.fulfillmentRoles = [
         {
           facilityId: 1,
           roleIds: [1, 24, 6]
         }
       ];
       scope.warehouseRole = {facilityId: 111, roleIds: [1, 2, 3]};
-      scope.addShipmentRole();
+      scope.addFulfillmentRole();
 
-      expect(scope.user.shipmentRoles.length).toEqual(2);
-      expect(scope.user.shipmentRoles[1]).toEqual({facilityId: 111, roleIds: [1, 2, 3]});
+      expect(scope.user.fulfillmentRoles.length).toEqual(2);
+      expect(scope.user.fulfillmentRoles[1]).toEqual({facilityId: 111, roleIds: [1, 2, 3]});
     });
 
     it('should not add shipment role if warehouse not present', function () {
-      scope.user.shipmentRoles = [
+      scope.user.fulfillmentRoles = [
         {
           facilityId: 1,
           roleIds: [1, 24, 6]
         }
       ];
       scope.warehouseRole = {roleIds: [1, 2, 3]};
-      scope.addShipmentRole();
+      scope.addFulfillmentRole();
 
-      expect(scope.user.shipmentRoles.length).toEqual(1);
+      expect(scope.user.fulfillmentRoles.length).toEqual(1);
       expect(scope.warehouseRoleMappingError).toBeTruthy();
     });
 
     it('should not add shipment role if roles not present', function () {
-      scope.user.shipmentRoles = [
+      scope.user.fulfillmentRoles = [
         {
           facilityId: 1,
           roleIds: [1, 24, 6]
         }
       ];
       scope.warehouseRole = {facilityId: 111};
-      scope.addShipmentRole();
+      scope.addFulfillmentRole();
 
-      expect(scope.user.shipmentRoles.length).toEqual(1);
+      expect(scope.user.fulfillmentRoles.length).toEqual(1);
       expect(scope.warehouseRoleMappingError).toBeTruthy();
     });
   });
