@@ -229,8 +229,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     }
 
     $scope.user.fulfillmentRoles.push(angular.copy($scope.warehouseRole));
-    $scope.warehouseRole = null;
-    $scope.warehouseRoleMappingError = false;
+      $scope.warehouseRole = null;
+      $scope.warehouseRoleMappingError = false;
   }
 
 

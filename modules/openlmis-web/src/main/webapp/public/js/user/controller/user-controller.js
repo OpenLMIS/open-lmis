@@ -1,4 +1,4 @@
-       /*
+/*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
  *
@@ -59,9 +59,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
-        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
-      {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
         valid = false;
         return false;
       }
@@ -142,7 +140,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     if (len >= 3) {
       if (len == 3) {
-        Facility.get({searchParam: query, virtualFacility : false}, function (data) {
+        Facility.get({searchParam: query, virtualFacility: false}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -210,7 +208,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     });
   };
 
-  $scope.cancelUserSave = function() {
+  $scope.cancelUserSave = function () {
     $location.path('#/search');
   };
 
@@ -246,7 +244,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.user.active = false;
   };
 
-  $scope.showConfirmUserRestoreModal = function() {
+  $scope.showConfirmUserRestoreModal = function () {
     var dialogOpts = {
       id: "restoreUserDialog",
       header: messageService.get('enable.user.header'),
@@ -260,6 +258,15 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.user.active = true;
     Users.update({id: $scope.user.id}, $scope.user, restoreSuccessFunc, errorFunc);
   };
+
+  $scope.getMessage = function (key) {
+    return messageService.get(key);
+  };
+ /* $scope.expandAll = function () {
+    $('.accordion-body').attr('collapse', false);
+    $('.accordion-body').removeClass('collapse');
+    $('.accordion-body').setStyle('height', 'auto');
+  }*/
 
   var restoreSuccessFunc = function (data) {
     clearErrorAndSetMessage("msg.user.restore.success");
