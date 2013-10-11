@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
@@ -141,7 +142,8 @@ public class DistributionSyncTest extends TestCaseHelper {
         homePage.navigatePlanDistribution();
 
         distributionPage.clickSyncDistribution();
-        assertEquals(distributionPage.getSyncMessage(), "F10 - Village Dispensary, F11 - Central Hospital synced successfully");
+        assertTrue(distributionPage.getSyncMessage().contains("F10 - Village Dispensary"));
+        assertTrue(distributionPage.getSyncMessage().contains("F11 - Central Hospital"));
 
         dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
         distributionPage.clickRecordData();
