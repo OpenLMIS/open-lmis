@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.core.service;
@@ -21,7 +21,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RoleAssignment;
-import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -77,7 +77,7 @@ public class UserServiceTest {
   private MessageService messageService;
 
   @Mock
-  private ShipmentRoleService shipmentRoleService;
+  private FulfillmentRoleService fulfillmentRoleService;
 
   @InjectMocks
   private UserService userService;
@@ -195,8 +195,8 @@ public class UserServiceTest {
     when(roleAssignmentService.getHomeFacilityRoles(userId)).thenReturn(homeFacilityRoles);
     when(roleAssignmentService.getSupervisorRoles(userId)).thenReturn(supervisorRoles);
     when(roleAssignmentService.getAllocationRoles(userId)).thenReturn(allocationRoles);
-    List<ShipmentRoleAssignment> shipmentRoleAssignments = asList(new ShipmentRoleAssignment());
-    when(shipmentRoleService.getRolesForUser(userId)).thenReturn(shipmentRoleAssignments);
+    List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
+    when(fulfillmentRoleService.getRolesForUser(userId)).thenReturn(fulfillmentRoleAssignments);
     RoleAssignment adminRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
 
@@ -207,7 +207,7 @@ public class UserServiceTest {
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
     assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
-    assertThat(returnedUser.getShipmentRoleAssignments(), is(shipmentRoleAssignments));
+    assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
 
   }
 
@@ -245,6 +245,7 @@ public class UserServiceTest {
 
     verify(userRepository).update(user);
     verify(roleAssignmentService).saveRolesForUser(user);
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test
@@ -285,6 +286,7 @@ public class UserServiceTest {
     verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveRolesForUser(user);
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test

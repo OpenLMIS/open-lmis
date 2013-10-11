@@ -9,13 +9,13 @@
 --
 
 CREATE TABLE fulfillment_role_assignments (
-  userId INTEGER REFERENCES users(id) NOT NULL,
-  roleId INTEGER REFERENCES roles(id) NOT NULL,
-  facilityId INTEGER REFERENCES facilities(id) NOT NULL,
-  createdBy             INTEGER,
-  createdDate           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy            INTEGER,
-  modifiedDate          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  userId       INTEGER REFERENCES users (id)      NOT NULL,
+  roleId       INTEGER REFERENCES roles (id)      NOT NULL,
+  facilityId   INTEGER REFERENCES facilities (id) NOT NULL,
+  createdBy    INTEGER,
+  createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy   INTEGER,
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
   CONSTRAINT unique_fulfillment_role_assignments UNIQUE (userId, roleId, facilityId)
 );

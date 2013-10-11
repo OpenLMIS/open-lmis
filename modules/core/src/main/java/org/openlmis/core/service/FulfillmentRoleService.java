@@ -12,22 +12,30 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.core.repository;
+package org.openlmis.core.service;
 
-import org.openlmis.core.domain.ShipmentRoleAssignment;
-import org.openlmis.core.repository.mapper.ShipmentRoleAssignmentMapper;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.repository.FulfillmentRoleAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Repository
-public class ShipmentRoleRepository {
+
+@Service
+public class FulfillmentRoleService {
 
   @Autowired
-  private ShipmentRoleAssignmentMapper shipmentRoleAssignmentMapper;
+  private FulfillmentRoleAssignmentRepository fulfillmentRoleAssignmentRepository;
 
-  public List<ShipmentRoleAssignment> getShipmentRolesForUser(Long userId) {
-    return shipmentRoleAssignmentMapper.getShipmentRolesForUser(userId);
+  public List<FulfillmentRoleAssignment> getRolesForUser(Long userId) {
+    return fulfillmentRoleAssignmentRepository.getFulfillmentRolesForUser(userId);
   }
+
+  public void saveFulfillmentRoles(User user) {
+    fulfillmentRoleAssignmentRepository.insertFulfillmentRoles(user);
+  }
+
+
 }

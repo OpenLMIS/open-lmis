@@ -314,11 +314,22 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
-  @Then("^I should see \"([^\"]*)\" in the header$")
+  @Then("^I should verify facility name \"([^\"]*)\" in the header$")
   public void verifyFacilityNameInHeader(String facilityName) throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
+
+  @Then("^I should verify facility zone \"([^\"]*)\" in the header$")
+  public void verifyFacilityZoneInHeader(String facilityZone) throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyFacilityZoneInHeader(facilityZone);
+  }
+    @Then("^I verify legends$")
+    public void verifyFacilityZoneInHeader() throws IOException {
+        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+        facilityListPage.verifyLegend();
+    }
 
   @And("^I should see delivery zone \"([^\"]*)\" program \"([^\"]*)\" period \"([^\"]*)\" in table$")
   public void verifyTableValue(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) throws IOException {

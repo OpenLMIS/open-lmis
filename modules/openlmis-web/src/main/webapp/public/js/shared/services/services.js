@@ -287,3 +287,12 @@ services.factory('DateFormats', function ($resource) {
 services.factory('ShipmentFileTemplate', function ($resource) {
   return $resource('/shipment-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
+
+services.factory('Warehouse', function ($resource) {
+  return $resource('/warehouses.json', {}, {});
+});
+
+services.factory('Warehouse', function ($resource) {
+  return $resource('/warehouses.json', {}, {});
+});
+

@@ -153,6 +153,7 @@ public class ViewRequisition extends TestCaseHelper {
     dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
     dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
     dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC,STORE_IN_CHARGE,"F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);

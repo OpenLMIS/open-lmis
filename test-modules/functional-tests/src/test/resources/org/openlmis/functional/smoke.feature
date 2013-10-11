@@ -260,8 +260,9 @@ Feature: Smoke Tests
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
     When I choose facility "F10"
-    Then I should see "Health center" in the header
-    And  I should see "Village Dispensary" in the header
+    Then I should verify facility zone "Health center" in the header
+    And  I should verify facility name "Village Dispensary" in the header
+    And I verify legends
 
   @smoke
   @ie2
@@ -387,6 +388,7 @@ Feature: Smoke Tests
     And I have users:
       | UserId | Email                 | Firstname | Lastname | UserName | Role | FacilityCode |
       | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
+    And I have fulfillment data for user "lmu" role "lmu" and facility "F10"
     And I have regimen template configured
     And I am logged in as "storeincharge"
     And I access initiate requisition page
@@ -408,6 +410,8 @@ Feature: Smoke Tests
     And I verify order file line "2" having "F10,P10,10,16/01/2012,"
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
+
+
 
 
   @Smoke

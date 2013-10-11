@@ -110,7 +110,7 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Add new role')]")
   private static WebElement addNewRoleHeader;
 
-  @FindBy(how = How.ID, using = "shipmentRoleType")
+  @FindBy(how = How.ID, using = "fulfillmentRoleType")
   private static WebElement facilityBasedRoleType;
 
   @FindBy(how = How.XPATH, using = "//input[@id='FACILITY_FILL_SHIPMENT']")

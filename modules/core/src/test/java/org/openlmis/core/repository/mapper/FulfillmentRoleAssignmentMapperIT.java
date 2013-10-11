@@ -20,7 +20,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Role;
-import org.openlmis.core.domain.ShipmentRoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
@@ -32,9 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -45,10 +43,10 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @Transactional
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
-public class ShipmentRoleAssignmentMapperIT {
+public class FulfillmentRoleAssignmentMapperIT {
 
   @Autowired
-  ShipmentRoleAssignmentMapper shipmentRoleAssignmentMapper;
+  FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
 
   @Autowired
   QueryExecutor queryExecutor;
@@ -63,7 +61,7 @@ public class ShipmentRoleAssignmentMapperIT {
   FacilityMapper facilityMapper;
 
   @Test
-  public void shouldGetShipmentRolesForUser() throws Exception {
+  public void shouldGetFulfillmentRolesForUser() throws Exception {
 
     Facility facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
@@ -76,10 +74,54 @@ public class ShipmentRoleAssignmentMapperIT {
 
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
 
-    List<ShipmentRoleAssignment> expectedShipmentRoleAssignments = shipmentRoleAssignmentMapper.getShipmentRolesForUser(user.getId());
+    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
 
-    assertThat(expectedShipmentRoleAssignments.get(0).getUserId(), is(user.getId()));
-    assertThat(expectedShipmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
-    assertThat(expectedShipmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
+    assertThat(expectedFulfillmentRoleAssignments.get(0).getUserId(), is(user.getId()));
+    assertThat(expectedFulfillmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
+    assertThat(expectedFulfillmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
+  }
+
+
+  @Test
+  public void shouldDeleteAllFulfillmentRolesForUser() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    Role role = new Role("r1", "random description");
+    roleRightsMapper.insertRole(role);
+
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+
+    fulfillmentRoleAssignmentMapper.deleteAllFulfillmentRoles(user);
+
+    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
+
+    assertThat(expectedFulfillmentRoleAssignments.size(), is(0));
+  }
+
+  @Test
+  public void shouldInsertFulfillmentRolesForUser() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    Role role = new Role("r1", "random description");
+    roleRightsMapper.insertRole(role);
+
+    List<Long> roles = asList(role.getId());
+    FulfillmentRoleAssignment fulfillmentRoleAssignment = new FulfillmentRoleAssignment(user.getId(), facility.getId(), roles);
+
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user.getId(), fulfillmentRoleAssignment.getFacilityId(), fulfillmentRoleAssignment.getRoleIds().get(0));
+
+    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
+
+    assertThat(expectedFulfillmentRoleAssignments.get(0).getUserId(), is(user.getId()));
+    assertThat(expectedFulfillmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
+    assertThat(expectedFulfillmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
   }
 }

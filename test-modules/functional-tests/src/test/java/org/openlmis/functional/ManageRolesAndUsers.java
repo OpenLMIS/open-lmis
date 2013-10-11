@@ -125,38 +125,40 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyRightsUponOK(String user, String program, String[] credentials) throws Exception {
+    String UPLOADS="Uploads";
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.getCreateNewRoleButton().click();
     testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
+    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isEnabled(), true);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
     testWebDriver.handleScrollByPixels(0,3000);
-    testWebDriver.waitForElementToAppear(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION));
-    rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).click();
+    testWebDriver.waitForElementToAppear(rolesPage.getWebElementMap().get(UPLOADS));
+    rolesPage.getWebElementMap().get(UPLOADS).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickContinueButton();
-    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isSelected(), false);
+    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isSelected(), false);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), false);
+    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isEnabled(), false);
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), true);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testVerifyRightsUponCancel(String user, String program, String[] credentials) throws Exception {
+    String UPLOADS = "Uploads";
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.getCreateNewRoleButton().click();
     testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
-    rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).click();
+    rolesPage.getWebElementMap().get(UPLOADS).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickCancelButtonOnModal();
-    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isSelected(), true);
+    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isSelected(), true);
     assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(CONVERT_TO_ORDER_REQUISITION).isEnabled(), true);
+    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isEnabled(), true);
     assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
   }
 
@@ -166,7 +168,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     List<String> userRoleList = new ArrayList<String>();
-    userRoleList.add(CONVERT_TO_ORDER_REQUISITION);
+    userRoleList.add("Uploads");
     rolesPage.createRole(ADMIN, ADMIN,userRoleList, false);
     assertEquals(rolesPage.getSaveErrorMsgDiv().getText().trim(),"Duplicate Role found");
   }
@@ -208,8 +210,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.verifyAdminRoleRadioNonEditable();
     rolesPage.verifyRoleSelected(userRoleList);
     homePage.navigateRoleAssignments();
-    rolesPage.clickARole(LMU);
-    rolesPage.verifyProgramRoleRadioNonEditable();
+
     dbWrapper.insertSupervisoryNode(facility_code, "N1", "Node 1", "null");
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";

@@ -40,7 +40,7 @@ public class UserService {
   @Autowired
   private MessageService messageService;
   @Autowired
-  private ShipmentRoleService shipmentRoleService;
+  private FulfillmentRoleService fulfillmentRoleService;
 
   @Transactional
   public void create(User user, String resetPasswordLink) {
@@ -63,6 +63,7 @@ public class UserService {
     user.validate();
     userRepository.create(user);
     roleAssignmentService.saveRolesForUser(user);
+    fulfillmentRoleService.saveFulfillmentRoles(user);
   }
 
   @Transactional
@@ -70,6 +71,7 @@ public class UserService {
     user.validate();
     userRepository.update(user);
     roleAssignmentService.saveRolesForUser(user);
+    fulfillmentRoleService.saveFulfillmentRoles(user);
   }
 
   private void sendEmail(SimpleMailMessage emailMessage) {
@@ -132,7 +134,7 @@ public class UserService {
     user.setSupervisorRoles(roleAssignmentService.getSupervisorRoles(id));
     user.setAdminRole(roleAssignmentService.getAdminRole(id));
     user.setAllocationRoles(roleAssignmentService.getAllocationRoles(id));
-    user.setShipmentRoleAssignments(shipmentRoleService.getRolesForUser(id));
+    user.setFulfillmentRoles(fulfillmentRoleService.getRolesForUser(id));
     user.setReportRoles(roleAssignmentService.getReportRole(id));
     return user;
   }

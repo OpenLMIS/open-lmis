@@ -11,18 +11,10 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-import org.openlmis.pageobjects.ViewOrdersPage;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.NoSuchElementException;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -31,9 +23,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -58,8 +47,10 @@ public class ViewOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC,"store in-charge","F10");
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     dbWrapper.insertOrders("RELEASED", userSIC, "TB");
+
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -84,7 +75,7 @@ public class ViewOrderPagination extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
-    rightsList.add("VIEW_REQUISITION");
+//    rightsList.add("VIEW_REQUISITION");
 
     setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");

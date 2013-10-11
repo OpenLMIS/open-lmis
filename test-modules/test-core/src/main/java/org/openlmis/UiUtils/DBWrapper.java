@@ -242,6 +242,13 @@ public class DBWrapper {
 
   }
 
+  public void insertFulfilmentRoleAssignment(String userName, String roleName, String facilityCode) throws SQLException {
+    update("insert into fulfillment_role_assignments(userid, roleid, facilityid) values " +
+      "((select id from users where username='"+userName+"')," +
+      "(select id from roles where name='"+roleName+"'),(select id from facilities where code='"+facilityCode+"'));");
+
+  }
+
   public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
     String deliveryZoneName = "";
     ResultSet rs = query("select name from delivery_zones where id in(select deliveryzoneid from role_assignments where " +
@@ -334,6 +341,7 @@ public class DBWrapper {
   public void deleteData() throws SQLException, IOException {
     update("delete from role_rights where roleid not in(1);");
     update("delete from role_assignments where userid not in (1);");
+    update("delete from fulfillment_role_assignments;");
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
@@ -1262,8 +1270,12 @@ public class DBWrapper {
   public void insertOrders(String status, String username, String program) throws IOException, SQLException {
     ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='" + program + "');");
     while (rs.next()) {
-      update("insert into orders(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
+      update("update requisitions set status='RELEASED' where id ="+rs.getString("id"));
+
+
+      update("insert into orders(rnrId, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', (select id from supply_lines where supplyingfacilityid = (select facilityid from fulfillment_role_assignments where userid =(select id from users where username = '"+username+"')) limit 1) ," +
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+
     }
   }
 
@@ -1274,7 +1286,7 @@ public class DBWrapper {
       assertEquals(rs.getString("confirmedbyname").toString(),confirmedByName);
       assertEquals(rs.getString("confirmedbytitle").toString(),confirmedByTitle);
       assertEquals(rs.getString("verifiedbyname").toString(),verifiedByName);
-      assertEquals(rs.getString("verifiedbytitle").toString(),verifiedByTitle);
+      assertEquals(rs.getString("verifiedbytitle").toString(), verifiedByTitle);
     }
   }
 }

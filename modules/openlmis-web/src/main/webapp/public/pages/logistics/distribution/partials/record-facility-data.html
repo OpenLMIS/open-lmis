@@ -9,20 +9,45 @@
   -->
 
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
-  <div class="facility-heading" ng-show="facilitySelected">
-    <span ng-class="distribution.facilityDistributionData[facilitySelected.id].computeStatus()">
-      <span id="facilityIndicator" class="status-icon"></span>
+  <div class="row-fluid facility-heading">
+    <div class="span5" ng-show="facilitySelected">
+      <span ng-class="distribution.facilityDistributionData[facilitySelected.id].computeStatus()">
+        <span id="facilityIndicator" class="status-icon"></span>
       </span>
 
-    <h2>
-      <span openlmis-message="heading.health.center"></span>
-      <span>:</span>
-      <span openlmis-message="facilitySelected.name"></span>
-    </h2>
+      <h2>
+        <span openlmis-message="heading.health.center"></span>
+        <span>:</span>
+        <span openlmis-message="facilitySelected.name"></span>
+      </h2>
+    </div>
+
+    <div class="span5" ng-show="!facilitySelected">
+      <h2 openlmis-message="message.no.facility.selected"></h2>
+    </div>
+    <div id="legend" class="pull-right distribution-legend">
+      <span class="is-empty">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.distribution.legend.not.started"></span>
+      </span>
+      <span class="is-incomplete">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.distribution.legend.partial.complete"></span>
+      </span>
+      <span class="is-complete">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.distribution.legend.not.complete"></span>
+      </span>
+      <span class="is-synced">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.distribution.legend.synchronized"></span>
+      </span>
+      <span class="is-duplicate">
+        <span class="status-icon"></span>
+        <span openlmis-message="label.distribution.legend.cannot.synchronize"></span>
+      </span>
+    </div>
   </div>
-
-  <h2 openlmis-message="message.no.facility.selected" ng-show="!facilitySelected"></h2>
-
   <div class="info-box">
     <div class="row-fluid">
       <select ui-select2="{formatResult: format}" openlmis-message="label" id="selectFacility" class="span3"

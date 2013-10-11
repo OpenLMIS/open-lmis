@@ -555,7 +555,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testEmergencyRnRApproved(String program,
+  public void testEmergencyRnRApprovedAndConvertedToOrder(String program,
                                        String userSIC,
                                        String categoryCode,
                                        String password,
@@ -563,6 +563,8 @@ public class InitiateRnR extends TestCaseHelper {
                                        String regimenName,
                                        String regimenCode2,
                                        String regimenName2) throws Exception {
+    String LMU_IN_CHARGE = "lmuincharge";
+
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -582,10 +584,9 @@ public class InitiateRnR extends TestCaseHelper {
 
     List<String> rightsList3 = new ArrayList<String>();
     rightsList3.add(CONVERT_TO_ORDER);
-    rightsList3.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("401", "lmuincharge", "Jaan_V_Doe@openlmis.com", "F10", "lmuincharge", "openLmis",
+    rightsList3.add("VIEW_ORDER");
+    createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE, "openLmis",
       rightsList3);
-
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -617,11 +618,11 @@ public class InitiateRnR extends TestCaseHelper {
     ApprovePage approvePage=homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
     approvePage.verifyAndClickRequisitionPresentForApproval();
-    assertEquals("0",approvePage.getApprovedQuantity());
-    assertEquals("",approvePage.getAdjustedTotalConsumption());
-    assertEquals("",approvePage.getAMC());
-    assertEquals("",approvePage.getMaxStockQuantity());
-    assertEquals("",approvePage.getCalculatedOrderQuantity());
+    assertEquals("0", approvePage.getApprovedQuantity());
+    assertEquals("", approvePage.getAdjustedTotalConsumption());
+    assertEquals("", approvePage.getAMC());
+    assertEquals("", approvePage.getMaxStockQuantity());
+    assertEquals("", approvePage.getCalculatedOrderQuantity());
     approvePage.editApproveQuantity("");
     approvePage.approveRequisition();
     approvePage.verifyApproveErrorDiv();
@@ -632,9 +633,22 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage2.logout(baseUrlGlobal);
 
-    HomePage homePage3 = loginPage.loginAs("lmuincharge", password);
+    HomePage homePage3 = loginPage.loginAs(LMU_IN_CHARGE, password);
     ConvertOrderPage convertOrderPage=homePage3.navigateConvertToOrder();
-    convertOrderPage.verifyOrderListElements(program,"F10","Village Dispensary","03/10/2013","30/01/2014","Village Dispensary");
+    convertOrderPage.verifyNoRequisitionPendingMessage();
+
+    ViewOrdersPage viewOrdersPage= homePage3.navigateViewOrders();
+    viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();
+
+    dbWrapper.insertFulfilmentRoleAssignment(LMU_IN_CHARGE, LMU_IN_CHARGE,"F10");
+    homePage3.navigateHomePage();
+    homePage3.navigateConvertToOrder();
+    convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2014", "Village Dispensary");
+    convertOrderPage.convertToOrder();
+
+    homePage3.navigateHomePage();
+    ViewOrdersPage viewOrdersPage1=homePage3.navigateViewOrders();
+    viewOrdersPage1.isFirstRowPresent();
 
   }
 

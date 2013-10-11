@@ -3,13 +3,13 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 describe('DistributionController', function () {
-  var scope, controller, httpBackend, messageService, distributionService;
+  var scope, controller, httpBackend, messageService, distributionService, rootScope;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -21,6 +21,7 @@ describe('DistributionController', function () {
 
   beforeEach(inject(function ($rootScope, $controller, $httpBackend, _messageService_, _distributionService_) {
     messageService = _messageService_;
+    rootScope = $rootScope;
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
@@ -32,6 +33,10 @@ describe('DistributionController', function () {
 
     controller(DistributionController, {$scope: scope, deliveryZones: [], messageService: messageService});
   }));
+
+  afterEach(function () {
+    rootScope.$apply();
+  });
 
   it('should load programs', function () {
     scope.selectedZone = {id: 1};
@@ -98,7 +103,7 @@ describe('DistributionController', function () {
     var facilities = [
       {id: 2, name: "F1"}
     ];
-    httpBackend.expect('POST', '/distributions.json').respond(200, {"success": "Data has been downloaded", distribution: {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
+    httpBackend.expect('POST', '/distributions.json').respond(201, {"success": "Data has been downloaded", distribution: {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}}});
     httpBackend.expect('GET', '/deliveryZones/4/programs/4/facilities.json').respond(200, {"facilities": [
       {'id': '23'}
     ]});
@@ -110,9 +115,7 @@ describe('DistributionController', function () {
 
     httpBackend.flush();
 
-    setTimeout(function () {
-      expect(distributionService.put).toHaveBeenCalled();
-    });
+    expect(distributionService.put).toHaveBeenCalled();
   });
 
   it('should not initiate the distribution already initiated', function () {
