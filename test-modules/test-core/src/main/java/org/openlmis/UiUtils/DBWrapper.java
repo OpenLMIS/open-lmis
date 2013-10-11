@@ -1259,8 +1259,12 @@ public class DBWrapper {
   public void insertOrders(String status, String username, String program) throws IOException, SQLException {
     ResultSet rs = query("select id from requisitions where programid=(select id from programs where code='" + program + "');");
     while (rs.next()) {
-      update("insert into orders(rnrId, status, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', " +
+      update("update requisitions set status='RELEASED' where id ="+rs.getString("id"));
+
+
+      update("insert into orders(rnrId, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', (select id from supply_lines where supplyingfacilityid = (select facilityid from fulfillment_role_assignments where userid =(select id from users where username = '"+username+"')) limit 1) ," +
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+
     }
   }
 
