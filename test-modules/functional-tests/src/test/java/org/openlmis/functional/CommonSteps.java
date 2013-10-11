@@ -73,6 +73,11 @@ public class CommonSteps extends TestCaseHelper {
             dbWrapper.insertRoleAssignment(map.get("UserId").toString(),map.get("Role").toString());
         }
     }
+
+  @And("^I have fulfillment data for user \"([^\"]*)\" role \"([^\"]*)\" and facility \"([^\"]*)\"$")
+  public void insertFulfillmentRoleAssignment(String user, String role, String facility) throws Exception {
+    dbWrapper.insertFulfilmentRoleAssignment(user,role,facility);
+  }
     @And("^I have approved quantity \"([^\"]*)\"$")
     public void insertApprovedQuantity(int approvedQuantity) throws Exception {
         dbWrapper.insertApprovedQuantity(approvedQuantity);

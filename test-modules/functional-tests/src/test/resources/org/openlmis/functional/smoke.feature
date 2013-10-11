@@ -387,6 +387,7 @@ Feature: Smoke Tests
     And I have users:
       | UserId | Email                 | Firstname | Lastname | UserName | Role | FacilityCode |
       | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
+    And I have fulfillment data for user "lmu" role "lmu" and facility "F10"
     And I have regimen template configured
     And I am logged in as "storeincharge"
     And I access initiate requisition page
@@ -408,6 +409,8 @@ Feature: Smoke Tests
     And I verify order file line "2" having "F10,P10,10,16/01/2012,"
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
+
+
 
 
   @Smoke
