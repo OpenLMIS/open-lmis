@@ -11,6 +11,8 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -36,7 +39,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   public String userSIC, password;
 
 
-  @BeforeMethod(groups = {"offline"})
+  @BeforeMethod(groups = {"distribution","offline"})
   public void setUp() throws Exception {
     super.setup();
   }
@@ -80,7 +83,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse("Program selectbox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
 
-    distributionPage.verifyDistributionColor("AMBER");
     distributionPage.clickRecordData();
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility("F10");
@@ -98,7 +100,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateOfflineDistribution();
 
 
-    distributionPage.verifyDistributionColor("RED");
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
 
@@ -180,13 +181,11 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
 
-    distributionPage.verifyDistributionColor("GREEN");
-
     switchOnNetwork();
     testWebDriver.sleep(5000);
 
     distributionPage.clickSyncDistribution();
-    assertEquals(distributionPage.getSyncMessage(), "Village Dispensary-F10, have been successfully synced");
+    assertEquals(distributionPage.getSyncMessage(), "F10 - Village Dispensary synced successfully");
 
     dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
     distributionPage.clickRecordData();
@@ -206,6 +205,130 @@ public class E2EDistributionTest extends TestCaseHelper {
 
   }
 
+    @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
+    public void testMultipleFacilitySync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                          String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                          String facilityCodeFirst, String facilityCodeSecond,
+                                          String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+
+        List<String> rightsList = new ArrayList<String>();
+        rightsList.add("MANAGE_DISTRIBUTION");
+        setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+                deliveryZoneNameFirst, deliveryZoneNameSecond,
+                facilityCodeFirst, facilityCodeSecond,
+                programFirst, programSecond, schedule);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+        dbWrapper.insertProductGroup("PG1");
+        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
+        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
+        dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+        dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        DistributionPage distributionPage = homePage.navigatePlanDistribution();
+        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+        distributionPage.selectValueFromProgram(programFirst);
+        distributionPage.clickInitiateDistribution();
+
+        distributionPage.clickRecordData();
+        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+        facilityListPage.selectFacility("F10");
+        facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigate();
+        epiUse.verifyProductGroup("PG1-Name", 1);
+        epiUse.verifyIndicator("RED");
+
+        epiUse.enterValueInStockAtFirstOfMonth("10", 1);
+        epiUse.verifyIndicator("AMBER");
+        epiUse.enterValueInReceived("20", 1);
+        epiUse.enterValueInDistributed("30", 1);
+        epiUse.enterValueInLoss("40", 1);
+        epiUse.enterValueInStockAtEndOfMonth("50", 1);
+        epiUse.enterValueInExpirationDate("10/2011", 1);
+        epiUse.verifyIndicator("GREEN");
+
+
+        GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+        generalObservationPage.navigate();
+        generalObservationPage.setObservations("Some observations");
+        generalObservationPage.setConfirmedByName("samuel");
+        generalObservationPage.setConfirmedByTitle("Doe");
+        generalObservationPage.setVerifiedByName("Mai ka");
+        generalObservationPage.setVerifiedByTitle("Laal");
+
+        homePage.navigateHomePage();
+        homePage.navigateOfflineDistribution();
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F10");
+
+        facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+        homePage.navigateHomePage();
+        homePage.navigatePlanDistribution();
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F11");
+        facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
+
+        epiUse.navigate();
+        epiUse.verifyProductGroup("PG1-Name", 1);
+        epiUse.verifyIndicator("RED");
+
+        epiUse.enterValueInStockAtFirstOfMonth("10", 1);
+        epiUse.verifyIndicator("AMBER");
+        epiUse.enterValueInReceived("20", 1);
+        epiUse.enterValueInDistributed("30", 1);
+        epiUse.enterValueInLoss("40", 1);
+        epiUse.enterValueInStockAtEndOfMonth("50", 1);
+        epiUse.enterValueInExpirationDate("10/2011", 1);
+        epiUse.verifyIndicator("GREEN");
+
+        generalObservationPage.navigate();
+        generalObservationPage.setObservations("Some observations");
+        generalObservationPage.setConfirmedByName("samuel");
+        generalObservationPage.setConfirmedByTitle("Doe");
+        generalObservationPage.setVerifiedByName("Mai ka");
+        generalObservationPage.setVerifiedByTitle("Laal");
+
+        homePage.navigateHomePage();
+        homePage.navigateOfflineDistribution();
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F11");
+
+        facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
+
+        homePage.navigateHomePage();
+        homePage.navigatePlanDistribution();
+
+        distributionPage.clickSyncDistribution();
+        assertEquals(distributionPage.getSyncMessage(), "F10 - Village Dispensary, F11 - Central Hospital synced successfully");
+
+        dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F10");
+        facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+        facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+        generalObservationPage.navigate();
+        generalObservationPage.verifyAllFieldsDisabled();
+
+        epiUse.navigate();
+        epiUse.verifyAllFieldsDisabled();
+
+        homePage.navigatePlanDistribution();
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F11");
+        facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+        facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+        generalObservationPage.navigate();
+        generalObservationPage.verifyAllFieldsDisabled();
+
+        epiUse.navigate();
+        epiUse.verifyAllFieldsDisabled();
+    }
 
   @AfterMethod(groups = {"offline"})
   public void tearDownNew() throws Exception {
@@ -216,6 +339,17 @@ public class E2EDistributionTest extends TestCaseHelper {
     ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 
+    @AfterMethod(groups = "distribution")
+    public void tearDown() throws Exception {
+        testWebDriver.sleep(500);
+        if (!testWebDriver.getElementById("username").isDisplayed()) {
+            HomePage homePage = new HomePage(testWebDriver);
+            homePage.logout(baseUrlGlobal);
+            dbWrapper.deleteData();
+            dbWrapper.closeConnection();
+        }
+        ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
+    }
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
