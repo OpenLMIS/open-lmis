@@ -36,6 +36,7 @@ public class ShipmentRoleRepository {
   }
 
   public void insertShipmentRoles(final User user) {
+    if(user.getShipmentRoles() == null) return;
     shipmentRoleAssignmentMapper.deleteAllShipmentRoles(user);
 
     for (final ShipmentRoleAssignment shipmentRoleAssignment : user.getShipmentRoles()) {
