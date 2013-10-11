@@ -63,10 +63,25 @@ public class ViewOrdersPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
   private static WebElement emergencyIcon;
 
+  @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.order']")
+  private static WebElement noRequisitionReleasedAsOrderYet;
+
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  public void verifyNoRequisitionReleasedAsOrderMessage()
+  {
+    testWebDriver.waitForPageToLoad();
+    noRequisitionReleasedAsOrderYet.isDisplayed();
+  }
+
+  public void isFirstRowPresent()
+  {
+    testWebDriver.waitForPageToLoad();
+    assertTrue("First row should show up",programOnViewOrderScreen.isDisplayed());
   }
 
   public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
