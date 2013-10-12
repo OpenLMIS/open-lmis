@@ -13,11 +13,6 @@ import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
-/**
- * User: Wolde
- * Date: 7/27/13
- * Time: 4:40 PM
- */
 public class StockImbalanceQueryBuilder {
     public static String getQuery(Map params){
 

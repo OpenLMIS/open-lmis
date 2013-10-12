@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
-  ~
-  ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
-  -->
-
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="average-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -57,7 +52,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 		<groupHeader>
 			<band height="96">
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="67" width="660" height="29" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="67" width="780" height="29" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -82,7 +77,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="540" y="67" width="120" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="620" y="67" width="160" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -90,7 +85,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 					<text><![CDATA[Average Monthly Consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="270" y="67" width="270" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="270" y="67" width="350" height="29" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -249,7 +244,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="660" height="20" backcolor="#F4F4F4">
+				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="780" height="20" backcolor="#F4F4F4">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
@@ -265,16 +260,15 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="660" height="1" forecolor="#3D9297">
+				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="780" height="1" forecolor="#3D9297">
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="540" y="0" width="120" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="620" y="0" width="160" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -290,7 +284,7 @@ inner join facilities s on s.id = sl.supplyingfacilityid
 				<textFieldExpression><![CDATA[($F{category}.toUpperCase()=="NULL"?" ":$F{category})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="ab6907da-4c02-445c-9699-b776060d5a36" mode="Transparent" x="270" y="0" width="270" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement uuid="ab6907da-4c02-445c-9699-b776060d5a36" mode="Transparent" x="270" y="0" width="350" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>

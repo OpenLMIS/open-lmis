@@ -71,17 +71,15 @@ public class InteractiveReportController  extends BaseController {
        showReport("facility_mailing_list",outputOption,request,response);
    }
 
-    @RequestMapping(value = "/facilitylist", method = GET, headers = BaseController.ACCEPT_JSON)
-    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
-    public Pages getFacilityLists( //@PathVariable(value = "reportKey") String reportKey,
+    @RequestMapping(value = "/reportdata/facilitylist", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getFacilityLists(
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                     HttpServletRequest request
                                     ) {
 
-        Report report = reportManager.getReportByKey("facilities");//reportKey);
-        List<FacilityReport> facilityReportList =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
-        (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        Report report = reportManager.getReportByKey("facilities");
+        List<FacilityReport> facilityReportList =  (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
 
         return new Pages(page,max,facilityReportList);
     }
@@ -94,18 +92,15 @@ public class InteractiveReportController  extends BaseController {
                      HttpServletRequest request
     ) {
 
-        Report report = reportManager.getReportByKey("mailinglabels");//reportKey);
-        List<MailingLabelReport> mailingLabelReports =  // (List<FacilityReport>) report.getReportDataProvider().getReportDataByFilterCriteria(null);
-
-        (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-
+        Report report = reportManager.getReportByKey("mailinglabels");
+        List<MailingLabelReport> mailingLabelReports = (List<MailingLabelReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         return new Pages(page,max,mailingLabelReports);
     }
 
     @RequestMapping(value = "/reportdata/consumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_CONSUMPTION_REPORT')")
-    public Pages getConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
-                                             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+    public Pages getConsumptionData(
+                                        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                              @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                              HttpServletRequest request
 
@@ -116,13 +111,12 @@ public class InteractiveReportController  extends BaseController {
         Report report = reportManager.getReportByKey("consumption");
         List<ConsumptionReport> consumptionReportList =
                 (List<ConsumptionReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-
         return new Pages(page,max,consumptionReportList);
     }
 
     @RequestMapping(value = "/reportdata/averageConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AVERAGE_CONSUMPTION_REPORT')")
-    public Pages getAverageConsumptionData( //@PathVariable(value = "reportKey") String reportKey,
+    public Pages getAverageConsumptionData(
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                      HttpServletRequest request
@@ -140,13 +134,11 @@ public class InteractiveReportController  extends BaseController {
 
 
 
-    @RequestMapping(value = "/summary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/summary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
-    public Pages getSummaryData( //@PathVariable(value = "reportKey") String reportKey,
+    public Pages getSummaryData(
                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                  //   @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
-                                  //   @RequestParam(value = "program", required = false, defaultValue = "0") int program ,
                                     HttpServletRequest request
     ) {
 
@@ -159,7 +151,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,max,reportList);
     }
 
-    @RequestMapping(value = "/non_reporting", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/non_reporting", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_NON_REPORTING_FACILITIES')")
     public Pages getNonReportingFacilitiesData( //@PathVariable(value = "reportKey") String reportKey,
                                  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -177,33 +169,7 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,max,reportList);
     }
 
-
- /*
-    @RequestMapping(value = "/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
-    public Pages getStockedOutReportData( //@PathVariable(value = "reportKey") String reportKey,
-                                                @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                               // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
-                                                HttpServletRequest request
-    ) {
-
-
-
-        Report report = reportManager.getReportByKey("stocked_out");
-        List<MasterReport> reportList =
-                (List<MasterReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
-
-        int totalRecCount = report.getReportDataProvider().getReportDataCountByFilterCriteria(request.getParameterMap());
-
-        return new Pages(page,totalRecCount,max,reportList);
-    }
-
-   */
-
-
-
-     @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ADJUSTMENT_SUMMARY_REPORT')")
     public Pages getAdjustmentSummaryData(  @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
@@ -212,8 +178,7 @@ public class InteractiveReportController  extends BaseController {
     ) {
 
         Report report = reportManager.getReportByKey("adjustment_summary");
-        List<AdjustmentSummaryReport> adjustmentSummaryReportList =
-                (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
 
         return new Pages(page,max,adjustmentSummaryReportList);
     }
@@ -235,10 +200,10 @@ public class InteractiveReportController  extends BaseController {
 
     @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REPORT')")
-    public Pages getOrderSummaryData( //@PathVariable(value = "reportKey") String reportKey,
-                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                     HttpServletRequest request
+    public Pages getOrderSummaryData(
+                                      @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      HttpServletRequest request
 
     ) {
 
@@ -253,7 +218,7 @@ public class InteractiveReportController  extends BaseController {
 
     @RequestMapping(value = "/reportdata/supply_status", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUPPLY_STATUS_REPORT')")
-    public Pages getSupplyStatusData( //@PathVariable(value = "reportKey") String reportKey,
+    public Pages getSupplyStatusData(
                                       @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                       HttpServletRequest request
@@ -289,7 +254,7 @@ public class InteractiveReportController  extends BaseController {
     //
     @RequestMapping(value = "/reportdata/stockedOut", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCKED_OUT_REPORT')")
-    public Pages getStockedOutData( //@PathVariable(value = "reportKey") String reportKey,
+    public Pages getStockedOutData(
                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                     HttpServletRequest request

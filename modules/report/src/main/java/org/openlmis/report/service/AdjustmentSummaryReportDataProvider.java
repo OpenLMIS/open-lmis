@@ -35,7 +35,6 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
         return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-       // return reportMapper.getReportData(filterCriteria);
     }
 
     @Override
@@ -48,6 +47,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
         RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
         return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
     }
+
     @Override
     public AdjustmentSummaryReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
         AdjustmentSummaryReportFilter adjustmentSummaryReportFilter = null;
@@ -130,7 +130,6 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
         AdjustmentSummaryReportFilter  adjustmentSummaryReportFilter = (AdjustmentSummaryReportFilter) getReportFilterData(filterCriteria);
         SimpleDateFormat df = new SimpleDateFormat();
         DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
-       // dateOut = dateFormatter.format(today);
 
         return "Period : "+  dateFormatter.format(adjustmentSummaryReportFilter.getStartDate()) +" - "+ dateFormatter.format(adjustmentSummaryReportFilter.getEndDate()) +" \n" +
                 "Facility Types : "+ adjustmentSummaryReportFilter.getFacilityType() +"\n " +

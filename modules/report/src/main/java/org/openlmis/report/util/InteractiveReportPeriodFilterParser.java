@@ -11,11 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * User: Wolde
- * Date: 8/12/13
- * Time: 4:49 AM
- */
+
 public class InteractiveReportPeriodFilterParser {
     
     public static final String START_DATE = "startDate";

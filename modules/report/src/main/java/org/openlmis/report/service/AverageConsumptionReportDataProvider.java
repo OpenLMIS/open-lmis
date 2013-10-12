@@ -43,7 +43,6 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
         return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-       // return reportMapper.getReportData(filterCriteria);
     }
 
     @Override

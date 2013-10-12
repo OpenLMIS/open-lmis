@@ -22,8 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-/**
- */
 @Component
 @NoArgsConstructor
 public class ConsumptionReportDataProvider extends ReportDataProvider {

@@ -45,19 +45,11 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         MasterReport report = new MasterReport();
 
         return reportMapper.getReport(filterCriteria,rowBounds);
-        //report.details =  reportMapper.getReport(filterCriteria,rowBounds);
-        //report.summary = reportMapper.getReportSummary(filterCriteria);
-
-        //reportList.add( report );
-        // cast the list of reports to
-        //List<? extends ReportData> list;
-        //list = reportList;
-        //return list;
     }
 
     @Override
     protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.0
+        return null;
     }
 
     @Override

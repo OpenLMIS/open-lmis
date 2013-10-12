@@ -13,11 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-
- */
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = "classpath:test-applicationContext-report.xml")
 public class ReportManagerTest {
 
     private static String  REPORT_ID = "RP_ID";
