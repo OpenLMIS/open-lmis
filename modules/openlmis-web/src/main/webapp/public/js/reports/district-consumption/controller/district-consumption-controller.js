@@ -76,7 +76,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
 
         RequisitionGroups.get(function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'All Reporting Groups'});
+            $scope.requisitionGroups.unshift({'name':'All Requisition Groups'});
         });
 
 
@@ -138,6 +138,9 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
              facility : $scope.facilityId,
              facilityType : "",
              rgroup : "",
+             zone : "",
+             product : "",
+             productCategory: "",
              pdformat : 0
         };
 
@@ -185,8 +188,16 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
             if(selection != undefined || selection == ""){
                $scope.filterObject.zoneId =  selection;
                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+                $.each( $scope.zones,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.zone = idx.name;
+                    }
+                });
+
+
             }else{
                 $scope.filterObject.zoneId = 0;
+                $scope.filterObject.zone = "";
             }
             $scope.filterGrid();
         });
@@ -378,8 +389,16 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
         $scope.$watch('productCategory', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.productCategoryId =  selection;
+
+                $.each( $scope.productCategories,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.productCategory = idx.name;
+                    }
+                });
+
             }else{
                 $scope.filterObject.productCategoryId =  0;
+                $scope.filterObject.productCategory =  "";
             }
 
             $scope.filterGrid();
@@ -388,8 +407,15 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
         $scope.$watch('product', function(selection){
             if(selection != undefined || selection == ""){
                 $scope.filterObject.productId =  selection;
+                $.each( $scope.products,function( item,idx){
+                    if(idx.id == selection){
+                        $scope.filterObject.product = idx.name;
+                    }
+                });
+
             }else{
                 $scope.filterObject.productId =  0;
+                $scope.filterObject.product = "";
             }
 
             $scope.filterGrid();

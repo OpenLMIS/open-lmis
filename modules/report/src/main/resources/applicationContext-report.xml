@@ -109,7 +109,7 @@
                     <property name="reportDataProvider" ref="districtConsumptionReportDataProvider"/>
                     <property name="id" value="RP-District_Consumption_Comparison"/>
                     <property name="name" value="District Consumption Comparison"/>
-                    <property name="title" value="Summary district consumption comparison by product"/>
+                    <property name="title" value="Summary District Consumption Comparison by Product"/>
                     <property name="version" value="1.0"/>
                 </bean>
 
