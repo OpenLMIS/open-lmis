@@ -156,7 +156,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
 
         angular.forEach($scope.products,function(programProduct){
             if(programProduct.isDataChanged){
-                GetApprovedProductForFacilityTypeDetail.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.id}, function(data){
+                GetApprovedProductForFacilityTypeDetail.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.product.id}, function(data){
                     var facilityTypeApprovedProduct = data.facilityTypeApprovedProduct;
 
                     if(facilityTypeApprovedProduct == null){
@@ -166,7 +166,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
                     }
 
                     else if(facilityTypeApprovedProduct!=null && programProduct.isSelected == false){
-                        RemoveApprovedProductForFacilityType.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.id});
+                        RemoveApprovedProductForFacilityType.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.product.id},successHandler,errorHandler);
                     }
 
                     if(programProduct.isSelected == true){

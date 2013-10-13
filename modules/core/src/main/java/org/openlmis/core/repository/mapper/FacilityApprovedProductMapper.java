@@ -272,7 +272,7 @@ public interface FacilityApprovedProductMapper {
             "pp.programId = #{programId} " +
                     "AND fap.facilityTypeId = #{facilityTypeId} ",
             "AND p.id = #{productId})"})
-    FacilityTypeApprovedProduct removeFacilityApprovedProductByProgramProductAndFacilityTypeId(@Param("facilityTypeId") Long facilityTypeId,
+    int removeFacilityApprovedProductByProgramProductAndFacilityTypeId(@Param("facilityTypeId") Long facilityTypeId,
                                                                                             @Param("programId") Long programId,
                                                                                             @Param("productId") Long productId);
 

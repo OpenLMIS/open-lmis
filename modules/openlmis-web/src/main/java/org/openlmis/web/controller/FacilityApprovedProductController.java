@@ -88,10 +88,17 @@ public class FacilityApprovedProductController extends BaseController {
 
   @RequestMapping(value="/facilityApprovedProducts/remove/facilityType/{facilityTypeId}/program/{programId}/product/{productId}",method = RequestMethod.GET,headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT_ALLOWED_FOR_FACILITY')")
-  public void removeFacilityTypeApprovedProduct(@PathVariable("facilityTypeId") Long facilityTypeId,
+  public ResponseEntity<OpenLmisResponse> removeFacilityTypeApprovedProduct(@PathVariable("facilityTypeId") Long facilityTypeId,
                                                                                    @PathVariable("programId") Long programId,
                                                                                    @PathVariable("productId") Long productId){
-      facilityApprovedProductService.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+      ResponseEntity<OpenLmisResponse> successResponse;
+      try {
+          facilityApprovedProductService.removeFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId, programId, productId);
+      } catch (DataException e) {
+          return error(e, HttpStatus.BAD_REQUEST);
+      }
+      successResponse = success(String.format("Save successful"));
+      return successResponse;
   }
 
   @RequestMapping(value="/facilityApprovedProducts/insert.json",method = RequestMethod.POST,headers = ACCEPT_JSON)
