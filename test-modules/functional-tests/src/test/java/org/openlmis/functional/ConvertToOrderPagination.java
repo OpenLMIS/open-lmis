@@ -56,6 +56,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionsToBeConvertedToOrder(Integer.parseInt(requisitions), "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC,"store in-charge","F10");
   }
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
@@ -87,6 +88,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertFulfilmentRoleAssignment("storeincharge","store in-charge","F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -124,6 +126,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertFulfilmentRoleAssignment("storeincharge","store in-charge","F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
@@ -143,6 +146,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertFulfilmentRoleAssignment("storeincharge","store in-charge","F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
@@ -166,6 +170,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertFulfilmentRoleAssignment("storeincharge","store in-charge","F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -188,6 +193,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertFulfilmentRoleAssignment("storeincharge","store in-charge","F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();

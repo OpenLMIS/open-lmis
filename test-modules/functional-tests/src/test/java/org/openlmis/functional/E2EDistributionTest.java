@@ -11,6 +11,8 @@
 package org.openlmis.functional;
 
 
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -43,9 +46,9 @@ public class E2EDistributionTest extends TestCaseHelper {
 
   @Test(groups = {"offline"}, dataProvider = "Data-Provider-Function")
   public void testE2EManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                    String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                    String facilityCodeFirst, String facilityCodeSecond,
-                                    String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                        String facilityCodeFirst, String facilityCodeSecond,
+                                        String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -80,7 +83,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse("Program selectbox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
 
-    distributionPage.verifyDistributionColor("AMBER");
     distributionPage.clickRecordData();
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility("F10");
@@ -98,7 +100,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateOfflineDistribution();
 
 
-    distributionPage.verifyDistributionColor("RED");
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
 
@@ -110,7 +111,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickEdit();
+    refrigeratorPage.clickShow();
     refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -156,7 +157,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
 
-    refrigeratorPage.clickEdit();
+    refrigeratorPage.clickShow();
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
     assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), "1");
     assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), "0");
@@ -180,10 +181,29 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
 
-    distributionPage.verifyDistributionColor("GREEN");
+    switchOnNetwork();
+    testWebDriver.sleep(5000);
+
+    distributionPage.clickSyncDistribution();
+    assertEquals(distributionPage.getSyncMessage(), "F10 - Village Dispensary synced successfully");
+
+    dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
+    distributionPage.clickRecordData();
+    facilityListPage.selectFacility("F10");
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
+    //facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
+    generalObservationPage.navigate();
+    generalObservationPage.verifyAllFieldsDisabled();
+
+    epiUse.navigate();
+    epiUse.verifyAllFieldsDisabled();
+
+    refrigeratorPage.navigateToRefrigeratorTab();
+    refrigeratorPage.clickShow();
+    refrigeratorPage.verifyAllFieldsDisabled();
+
 
   }
-
 
   @AfterMethod(groups = {"offline"})
   public void tearDownNew() throws Exception {
@@ -194,7 +214,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 
-
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
@@ -204,4 +223,3 @@ public class E2EDistributionTest extends TestCaseHelper {
 
   }
 }
-

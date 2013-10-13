@@ -1,11 +1,13 @@
 <!--
-  ~ This program is part of the OpenLMIS logistics management information system platform software.
-  ~ Copyright © 2013 VillageReach
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~  
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  ~ /*
+  ~  * This program is part of the OpenLMIS logistics management information system platform software.
+  ~  * Copyright © 2013 VillageReach
+  ~  *
+  ~  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  *  
+  ~  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  ~  */
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
@@ -89,7 +91,7 @@
       <label openlmis-message="create.facility.serviceDeliveryPoint"><span class="label-required"> *</span></label>
 
             <div class="form-field radio-group">
-                <input type="radio" name="isSdp" value="true" ng-model="facility.sdp" ng-required="true"/>
+                <input type="radio" name="isSdp" ng-value="true" ng-model="facility.sdp" ng-required="true"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp; &nbsp; &nbsp;
                 <input ng-model="facility.sdp" type="radio" name="isSdp" value="false"/>
@@ -104,14 +106,12 @@
       <label openlmis-message="create.facility.activeFacility"><span class="label-required"> *</span></label>
 
             <div class="form-field radio-group">
-                <input ng-model="facility.active" type="radio" name="isActive" value="true"
-                       ng-required="true"/><strong
-                    openlmis-message="button.yes"></strong> &nbsp; &nbsp;
-                &nbsp;
-                <input ng-model="facility.active" type="radio" name="isActive" value="false"/>
+                <input ng-model="facility.active" type="radio" name="isActive" ng-value="true"
+                       ng-required="facility.active == null"/>
+              <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+                <input ng-model="facility.active" type="radio" name="isActive" ng-value="false" />
                 <strong openlmis-message="button.no"></strong>
-        <span class="field-error" ng-show="facilityForm.isActive.$error.required && showError"
-              openlmis-message="select.value">
+        <span class="field-error" ng-show="facilityForm.isActive.$error.required && showError" openlmis-message="select.value">
         </span>
             </div>
         </div>
@@ -463,10 +463,10 @@
             <label openlmis-message="create.facility.electricityAvailable"></label>
 
             <div class="form-field radio-group">
-                <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="true"/>
+                <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" ng-value="true"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp; &nbsp; &nbsp;
-                <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" value="false"/>
+                <input ng-model="facility.hasElectricity" type="radio" name="has-electricity" ng-value="false"/>
                 <strong openlmis-message="button.no"></strong>
             </div>
         </div>
@@ -475,12 +475,12 @@
             <label openlmis-message="create.facility.internetConnection"></label>
 
             <div class="form-field radio-group">
-                <input ng-model="facility.online" type="radio" name="is-online" value="true"/>
+                <input ng-model="facility.online" type="radio" name="is-online" ng-value="true"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp;
                 &nbsp;
                 &nbsp;
-                <input ng-model="facility.online" type="radio" name="is-online" value="false"/>
+                <input ng-model="facility.online" type="radio" name="is-online" ng-value="false"/>
                 <strong openlmis-message="button.no"></strong>
             </div>
         </div>
@@ -492,10 +492,10 @@
 
             <div class="form-field radio-group">
                 <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
-                       value="true"/><strong
+                       ng-value="true"/><strong
                     openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
                 <input ng-model="facility.hasElectronicScc" type="radio" name="has-electronic-scc"
-                       value="false"/><strong
+                       ng-value="false"/><strong
                     openlmis-message="button.no"></strong>
             </div>
         </div>
@@ -505,10 +505,10 @@
 
             <div class="form-field radio-group">
                 <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
-                       value="true"/><strong
+                       ng-value="true"/><strong
                     openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
                 <input ng-model="facility.hasElectronicDar" type="radio" name="has-electronic-dar"
-                       value="false"/><strong
+                       ng-value="false"/><strong
                     openlmis-message="button.no"></strong>
             </div>
         </div>
@@ -527,10 +527,10 @@
             <label openlmis-message="create.facility.suppliesOthers"></label>
 
             <div class="form-field radio-group">
-                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="true"/>
+                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" ng-value="true"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp; &nbsp; &nbsp;
-                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" value="false"/>
+                <input ng-model="facility.suppliesOthers" type="radio" name="supplies-others" ng-value="false"/>
                 <strong openlmis-message="button.no"></strong>
             </div>
         </div>
@@ -554,11 +554,11 @@
       <input type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
              ng-click="cancelUserSave()"/>
       <input type="button" class="btn btn-primary enable-button"
-             ng-show="facility.id!=null && facility.enabled == 'false'"
+             ng-show="facility.id!=null && !facility.enabled"
              ng-click="showConfirmFacilityEnable()"
              openlmis-message="button.enable"/>
       <input type="button" class="btn btn-danger delete-button"
-             ng-show="facility.id!=null && facility.enabled == 'true'"
+             ng-show="facility.id != null && facility.enabled"
              ng-click="showConfirmFacilityDisableWindow()" openlmis-message="button.disable" />
     </div>
 

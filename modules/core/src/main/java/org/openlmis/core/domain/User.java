@@ -67,6 +67,7 @@ public class User extends BaseModel implements Importable {
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
   private List<RoleAssignment> allocationRoles;
+  private List<FulfillmentRoleAssignment> fulfillmentRoles;
 
   private RoleAssignment reportRoles;
 
@@ -77,13 +78,6 @@ public class User extends BaseModel implements Importable {
   public User(Long id, String userName) {
     this.id = id;
     this.userName = userName;
-  }
-
-  public static User getLWUser(User user) {
-    User lwUSer = new User();
-    lwUSer.setId(user.getId());
-    lwUSer.setEmail(user.getEmail());
-    return lwUSer;
   }
 
   public void validate() {

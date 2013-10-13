@@ -42,6 +42,11 @@ public class DistrictConsumptionReportFilter implements ReportData {
     private int productCategoryId;
     private int rgroupId;
     private String rgroup;
+
+    private String zone;
+    private String product;
+    private String productCategory;
+
     private int programId;
 
 
@@ -49,11 +54,21 @@ public class DistrictConsumptionReportFilter implements ReportData {
     public String toString(){
 
         DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+        String periodFilterLabel =  "Period : ";
+        String zoneFilterLabel   =  "Zone : ";
+        String productCategoryFilterLabel =  "Product Category : ";
+        String productFilterLabel =  "Product : ";
+        String rggroupFilterLabel =  "Requisition Group : ";
+
 
         StringBuilder filtersValue = new StringBuilder("");
-        filtersValue.append("Period : ").append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
-               append("Reporting Groups : ").append(this.getRgroup());
+        filtersValue.append(String.format("%"+42+"s", periodFilterLabel)).append(dateFormatter.format(this.getStartDate())).append("-").append(dateFormatter.format(this.getEndDate())).append("\n").
+                append(String.format("%"+35+"s", zoneFilterLabel)).append(this.getZone()).append("\n").
+                append(String.format("%"+29+"s", productCategoryFilterLabel)).append(this.getProductCategory()).append("\n").
+                append(String.format("%"+19+"s", productFilterLabel)).append(this.getProduct()).append("\n").
+                append(String.format("%"+29+"s", rggroupFilterLabel)).append(this.getRgroup());
 
         return filtersValue.toString();
     }
+
 }

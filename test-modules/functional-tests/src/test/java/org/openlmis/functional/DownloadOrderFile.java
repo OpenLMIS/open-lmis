@@ -176,6 +176,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     setupTestRoleRightsData("lmu", "ADMIN", "CONVERT_TO_ORDER,VIEW_ORDER");
     dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com", "openLmis");
     dbWrapper.insertRoleAssignment("212", "lmu");
+    dbWrapper.insertFulfilmentRoleAssignment("lmu","lmu","F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSICUserName, password);

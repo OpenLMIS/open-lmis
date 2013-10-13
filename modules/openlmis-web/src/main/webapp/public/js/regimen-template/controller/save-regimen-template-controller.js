@@ -75,7 +75,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
 
   $scope.getRegimenValuesByCategory = function () {
     return _.values($scope.regimensByCategory);
-  }
+  };
 
   $scope.highlightRequired = function (value) {
     if ($scope.inputClass && isUndefined(value)) {
@@ -114,7 +114,7 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       $(regimenList).each(function (index, loopRegimen) {
         if (loopRegimen.editable) {
           $scope.regimensError = true;
-          $scope.error = messageService.get('error.regimens.not.done')
+          $scope.error = messageService.get('error.regimens.not.done');
           notDone = true;
           return;
         }
@@ -132,17 +132,17 @@ function SaveRegimenTemplateController($scope, program, programRegimens, regimen
       return isUndefined(column.label);
     })) {
       $scope.reportingFieldsError = true;
-      $scope.error = messageService.get('error.regimen.null.label')
+      $scope.error = messageService.get('error.regimen.null.label');
       return;
     }
 
     var count = _.countBy($scope.regimenTemplate.columns, function (column) {
-      return column.visible == true ? 'visible' : 'invisible';
+      return column.visible ? 'visible' : 'invisible';
     });
 
-    if (count.visible == undefined || count.visible == DEFAULT_VISIBLE_COUNT) {
+    if (count.visible === undefined || count.visible === DEFAULT_VISIBLE_COUNT) {
       $scope.reportingFieldsError = true;
-      $scope.error = messageService.get('error.regimens.none.selected')
+      $scope.error = messageService.get('error.regimens.none.selected');
       return;
     }
     return true;
@@ -231,5 +231,4 @@ SaveRegimenTemplateController.resolve = {
 
     return deferred.promise;
   }
-
 };

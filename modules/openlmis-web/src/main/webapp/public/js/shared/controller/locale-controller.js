@@ -9,8 +9,7 @@
  */
 
 function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, Messages, messageService, localStorageService) {
-
-  $scope.selectedLocale = $cookies.lang == undefined ? "en" : $cookies.lang;
+  $scope.selectedLocale = $cookies.lang === undefined ? "en" : $cookies.lang;
 
   Locales.get({}, function (data) {
     $scope.locales = data.locales;
@@ -28,7 +27,6 @@ function LocaleController($scope, $rootScope, $cookies, Locales, ChangeLocale, M
         }
         $rootScope.$broadcast('messagesPopulated');
       }, {});
-    })
-  }
-
-};
+    });
+  };
+}

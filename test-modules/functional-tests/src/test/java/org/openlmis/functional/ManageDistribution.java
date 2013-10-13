@@ -197,12 +197,6 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
   }
 
-  @Then("^I see overall distribution icon as \"([^\"]*)\"$")
-  public void verifyOverAllDistributionIndicator(String color) throws IOException {
-    DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.verifyDistributionColor(color);
-  }
-
   @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
   public void verifyOverAllFacilityIndicator(String whichIcon,String color) throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
@@ -225,6 +219,36 @@ public class ManageDistribution extends TestCaseHelper {
   public void navigateToGeneralObservationsTab() throws IOException {
     GeneralObservationPage observation = new GeneralObservationPage(testWebDriver);
     observation.navigate();
+  }
+
+  @Then("^I navigate to refrigerator tab$")
+  public void navigateToRefrigeratorTab() throws IOException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.navigateToRefrigeratorTab();
+  }
+
+  @Then("^I access show$")
+  public void accessShow() throws IOException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickShow();
+  }
+
+  @Then("^I see general observations fields disabled$")
+  public void verifyObservationFieldsDisabled() throws IOException {
+    GeneralObservationPage observation = new GeneralObservationPage(testWebDriver);
+    observation.verifyAllFieldsDisabled();
+  }
+
+  @Then("^I see refrigerator fields disabled$")
+  public void verifyRefrigeratorFieldsDisabled() throws IOException {
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.verifyAllFieldsDisabled();
+  }
+
+  @Then("^I see epi fields disabled$")
+  public void verifyEpiFieldsDisabled() throws IOException {
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.verifyAllFieldsDisabled();
   }
 
   @Then("^Verify \"([^\"]*)\" indicator should be \"([^\"]*)\"$")
@@ -262,6 +286,27 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickViewLoadAmount();
   }
 
+  @When("^I sync recorded data$")
+  public void clickSyncLink() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickSyncDistribution();
+  }
+
+  @Then("^I verify sync message as \"([^\"]*)\"$")
+  public void verifySyncMessage(String message) throws IOException {
+      DistributionPage distributionPage = new DistributionPage(testWebDriver);
+      assertEquals(message, distributionPage.getSyncMessage());
+  }
+
+  @When("^I view observations data in DB:$")
+    public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
+      List<Map<String, String>> data = tableData.asMaps();
+      for (Map map : data)
+          dbWrapper.verifyFacilityVisits(map.get("observations").toString(), map.get("confirmedByName").toString(),
+                  map.get("confirmedByTitle").toString(), map.get("verifiedByName").toString(),
+                  map.get("verifiedByTitle").toString());
+  }
+
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
@@ -269,11 +314,22 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
-  @Then("^I should see \"([^\"]*)\" in the header$")
+  @Then("^I should verify facility name \"([^\"]*)\" in the header$")
   public void verifyFacilityNameInHeader(String facilityName) throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityNameInHeader(facilityName);
   }
+
+  @Then("^I should verify facility zone \"([^\"]*)\" in the header$")
+  public void verifyFacilityZoneInHeader(String facilityZone) throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyFacilityZoneInHeader(facilityZone);
+  }
+    @Then("^I verify legends$")
+    public void verifyFacilityZoneInHeader() throws IOException {
+        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+        facilityListPage.verifyLegend();
+    }
 
   @And("^I should see delivery zone \"([^\"]*)\" program \"([^\"]*)\" period \"([^\"]*)\" in table$")
   public void verifyTableValue(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) throws IOException {

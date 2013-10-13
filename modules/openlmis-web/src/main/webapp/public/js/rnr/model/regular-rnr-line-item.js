@@ -9,7 +9,6 @@
  */
 
 var RegularRnrLineItem = base2.Base.extend({
-
   numberOfMonths: undefined,
   programRnrColumnList: undefined,
   rnrStatus: undefined,
@@ -20,10 +19,10 @@ var RegularRnrLineItem = base2.Base.extend({
     this.rnrStatus = rnrStatus;
     this.programRnrColumnList = programRnrColumnList;
     this.init();
-    if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
+    if (this.previousNormalizedConsumptions === undefined || this.previousNormalizedConsumptions === null)
       this.previousNormalizedConsumptions = [];
 
-    if (this.lossesAndAdjustments == undefined) this.lossesAndAdjustments = [];
+    if (this.lossesAndAdjustments === undefined) this.lossesAndAdjustments = [];
 
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
@@ -45,7 +44,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
   init: function () {
     this.initLossesAndAdjustments();
-    if (this.previousNormalizedConsumptions == undefined || this.previousNormalizedConsumptions == null)
+    if (this.previousNormalizedConsumptions === undefined || this.previousNormalizedConsumptions === null)
       this.previousNormalizedConsumptions = [];
 
     this.reEvaluateTotalLossesAndAdjustments();
@@ -67,7 +66,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   statusBeforeAuthorized: function () {
-    return this.rnrStatus == 'INITIATED' || this.rnrStatus == 'SUBMITTED';
+    return this.rnrStatus === 'INITIATED' || this.rnrStatus === 'SUBMITTED';
   },
 
   fillPacksToShip: function () {
@@ -103,7 +102,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   arithmeticallyInvalid: function () {
-    if (this.programRnrColumnList != undefined && this.programRnrColumnList[0].formulaValidationRequired) {
+    if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired) {
       var beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
       var quantityReceived = utils.parseIntWithBaseTen(this.quantityReceived);
       var quantityDispensed = utils.parseIntWithBaseTen(this.quantityDispensed);
@@ -147,7 +146,7 @@ var RegularRnrLineItem = base2.Base.extend({
       this.packsToShip = null;
       return;
     }
-    if (quantity == 0) {
+    if (quantity === 0) {
       this.packsToShip = 0;
       return;
     }
@@ -161,7 +160,7 @@ var RegularRnrLineItem = base2.Base.extend({
     if (remainderQuantity >= this.packRoundingThreshold)
       this.packsToShip += 1;
 
-    if (this.packsToShip == 0 && !this.roundToZero)
+    if (this.packsToShip === 0 && !this.roundToZero)
       this.packsToShip = 1;
   },
 
@@ -171,7 +170,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
   calculateTotal: function () {
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived)) {
-      this.total = this.beginningBalance + this.quantityReceived
+      this.total = this.beginningBalance + this.quantityReceived;
     }
     else {
       this.total = null;
@@ -179,7 +178,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateConsumption: function () {
-    if (this.getSource('quantityDispensed') != 'CALCULATED') return;
+    if (this.getSource('quantityDispensed') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
       this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
@@ -189,7 +188,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateStockInHand: function () {
-    if (this.getSource('stockInHand') != 'CALCULATED') return;
+    if (this.getSource('stockInHand') !== 'CALCULATED') return;
 
     if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {
       this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
@@ -202,7 +201,7 @@ var RegularRnrLineItem = base2.Base.extend({
     var numberOfMonthsInPeriod = 3; // will be picked up from the database in future
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
-    if (this.getSource('newPatientCount') == null) this.newPatientCount = 0;
+    if (this.getSource('newPatientCount') === null) this.newPatientCount = 0;
 
     if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.newPatientCount)) {
       this.normalizedConsumption = null;
@@ -216,6 +215,7 @@ var RegularRnrLineItem = base2.Base.extend({
         }
     });
 
+    
     if(normalizedConsumptionCalcOption == 'DISPENSED_PLUS_NEW_PATIENTS'){
        this.normalizedConsumption = this.quantityDispensed  + this.newPatientCount;
      }else{
@@ -226,12 +226,12 @@ var RegularRnrLineItem = base2.Base.extend({
 
         this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
         var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
-        var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) == 0 ?
-          this.quantityDispensed :
-          (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
+        var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) === 0 ?
+            this.quantityDispensed :
+            (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
         var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
         this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
-     }
+    }
   },
 
   calculateAMC: function () {
@@ -334,7 +334,7 @@ var RegularRnrLineItem = base2.Base.extend({
     $(visibleColumns).each(function (i, column) {
         var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
         if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
-        if (column.name == 'quantityRequested') {
+        if (column.name === 'quantityRequested') {
           valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
         } else if (column.name == 'expirationDate') {
           valid = !rnrLineItem.expirationDateInvalid();
@@ -381,7 +381,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
   compareTo: function (rnrLineItem) {
     function compareStrings(str1, str2) {
-      if (str1 < str2) return -1
+      if (str1 < str2) return -1;
       if (str1 > str2) return 1;
       return 0;
     }
@@ -390,15 +390,15 @@ var RegularRnrLineItem = base2.Base.extend({
       return -1;
     }
 
-    if (this == rnrLineItem) return 0;
+    if (this === rnrLineItem) return 0;
 
     if (this.productCategoryDisplayOrder == rnrLineItem.productCategoryDisplayOrder) {
-      if (this.productCategory == rnrLineItem.productCategory) {
+      if (this.productCategory === rnrLineItem.productCategory) {
         if (isUndefined(this.productDisplayOrder) && isUndefined(rnrLineItem.productDisplayOrder)) {
           return compareStrings(this.productCode, rnrLineItem.productCode);
         }
 
-        if (this.productDisplayOrder == rnrLineItem.productDisplayOrder) {
+        if (this.productDisplayOrder === rnrLineItem.productDisplayOrder) {
           return compareStrings(this.productCode, rnrLineItem.productCode);
         }
 
@@ -417,9 +417,7 @@ var RegularRnrLineItem = base2.Base.extend({
     return (isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
   }
 }, {
-  visibleForNonFullSupplyColumns: ['product', 'productCode', 'dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks']
-
+  visibleForNonFullSupplyColumns : ['product', 'productCode', 'dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks']
 });
-
 
 

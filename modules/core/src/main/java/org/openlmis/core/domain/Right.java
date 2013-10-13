@@ -1,5 +1,6 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *  
@@ -40,13 +41,13 @@ public enum Right {
   CREATE_REQUISITION("right.create.requisition", REQUISITION, "Permission to create, edit, submit and recall requisitions", 15, VIEW_REQUISITION),
   AUTHORIZE_REQUISITION("right.authorize.requisition", REQUISITION, "Permission to edit, authorize and recall requisitions", 13, VIEW_REQUISITION),
   APPROVE_REQUISITION("right.approve.requisition", REQUISITION, "Permission to approve requisitions", 12, VIEW_REQUISITION),
-  CONVERT_TO_ORDER("right.convert.to.order", ADMIN, "Permission to convert requisitions to order", 14),
-  VIEW_ORDER("right.view.order", ADMIN, "Permission to view orders", 17),
+  CONVERT_TO_ORDER("right.convert.to.order", FULFILLMENT, "Permission to convert requisitions to order", 14),
+  VIEW_ORDER("right.view.order", FULFILLMENT, "Permission to view orders", 17),
   MANAGE_PROGRAM_PRODUCT("right.manage.program.product", ADMIN, "Permission to manage program products", 3),
   MANAGE_DISTRIBUTION("right.manage.distribution", ALLOCATION, "Permission to manage an distribution", 9),
   CONFIGURE_EDI("right.configure.edi", ADMIN, "Permission to configure Electronic Data Interchange (EDI)", 18),
   MANAGE_REGIMEN_TEMPLATE("right.manage.regimen.template", ADMIN, "Permission to manage a regimen template", 4),
-  FACILITY_FILL_SHIPMENT("right.facility.fill.shipment", SHIPMENT, "Permission to fill shipment data for facility", 19),
+  FACILITY_FILL_SHIPMENT("right.facility.fill.shipment", FULFILLMENT, "Permission to fill shipment data for facility", 19),
 
   ACCESS_ILS_GATEWAY("Access ILS Gateway",ADMIN,"Permission to access the ILS Gateway",23),
   MANAGE_PRODUCT_ALLOWED_FOR_FACILITY("Admin - Manage Products Allowed for Facilities", ADMIN, "Permission to manage allowed products for facilities",24),

@@ -70,7 +70,7 @@ app.directive('openlmisMessage', function (messageService) {
         $.each(args, function (index, arg) {
           if (index > 0) {
             var value = scope[arg];
-            if (value == null || value == undefined) {
+            if (value === null || value === undefined) {
               value = arg;
             }
             displayMessage = displayMessage.replace("{" + (index - 1) + "}", value);
@@ -79,5 +79,5 @@ app.directive('openlmisMessage', function (messageService) {
         return displayMessage;
       }
     }
-  }
+  };
 });

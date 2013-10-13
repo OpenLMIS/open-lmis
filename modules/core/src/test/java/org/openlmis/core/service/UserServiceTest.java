@@ -10,9 +10,6 @@
 
 package org.openlmis.core.service;
 
-import com.natpryce.makeiteasy.Instantiator;
-import com.natpryce.makeiteasy.Property;
-import com.natpryce.makeiteasy.PropertyLookup;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
@@ -24,6 +21,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -36,11 +34,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mail.SimpleMailMessage;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.Property.newProperty;
+import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -51,32 +48,14 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.core.service.UserService.*;
-//import static org.openlmis.email.builder.EmailMessageBuilder.*;
+import static org.openlmis.email.builder.EmailMessageBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
-
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Encoder.class, UserService.class})
 public class UserServiceTest {
-
-  public static final Property<SimpleMailMessage, String> receiver = newProperty();
-  public static final Property<SimpleMailMessage, String> subject = newProperty();
-  public static final Property<SimpleMailMessage, String> content = newProperty();
-  public static final Instantiator<SimpleMailMessage> defaultEmailMessage = new Instantiator<SimpleMailMessage>() {
-
-    @Override
-    public SimpleMailMessage instantiate(PropertyLookup<SimpleMailMessage> lookup) {
-
-      SimpleMailMessage message = new SimpleMailMessage();
-      message.setTo(lookup.valueOf(receiver, "to@openlmis.org"));
-      message.setSubject(lookup.valueOf(subject, "Test Email"));
-      message.setText(lookup.valueOf(content, "Test Email Text"));
-
-      return message;
-    }
-  };
 
   public static final String FORGET_PASSWORD_LINK = "http://openLMIS.org";
   @Rule
@@ -96,6 +75,9 @@ public class UserServiceTest {
 
   @Mock
   private MessageService messageService;
+
+  @Mock
+  private FulfillmentRoleService fulfillmentRoleService;
 
   @InjectMocks
   private UserService userService;
@@ -204,24 +186,29 @@ public class UserServiceTest {
   @Test
   public void shouldReturnUserIfIdExists() throws Exception {
     User user = new User();
-    List<RoleAssignment> homeFacilityRoles = Arrays.asList(new RoleAssignment());
-    List<RoleAssignment> supervisorRoles = Arrays.asList(new RoleAssignment());
-    List<RoleAssignment> allocationRoles = Arrays.asList(new RoleAssignment());
+    List<RoleAssignment> homeFacilityRoles = asList(new RoleAssignment());
+    List<RoleAssignment> supervisorRoles = asList(new RoleAssignment());
+    List<RoleAssignment> allocationRoles = asList(new RoleAssignment());
 
-    when(userRepository.getById(1L)).thenReturn(user);
-    when(roleAssignmentService.getHomeFacilityRoles(1L)).thenReturn(homeFacilityRoles);
-    when(roleAssignmentService.getSupervisorRoles(1L)).thenReturn(supervisorRoles);
-    when(roleAssignmentService.getAllocationRoles(1L)).thenReturn(allocationRoles);
+    Long userId = 1L;
+    when(userRepository.getById(userId)).thenReturn(user);
+    when(roleAssignmentService.getHomeFacilityRoles(userId)).thenReturn(homeFacilityRoles);
+    when(roleAssignmentService.getSupervisorRoles(userId)).thenReturn(supervisorRoles);
+    when(roleAssignmentService.getAllocationRoles(userId)).thenReturn(allocationRoles);
+    List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
+    when(fulfillmentRoleService.getRolesForUser(userId)).thenReturn(fulfillmentRoleAssignments);
     RoleAssignment adminRole = new RoleAssignment();
-    when(roleAssignmentService.getAdminRole(1L)).thenReturn(adminRole);
+    when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
 
-    User returnedUser = userService.getById(1L);
+    User returnedUser = userService.getById(userId);
 
     assertThat(returnedUser, is(user));
     assertThat(returnedUser.getHomeFacilityRoles(), is(homeFacilityRoles));
     assertThat(returnedUser.getSupervisorRoles(), is(supervisorRoles));
     assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
+    assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
+
   }
 
   @Test
@@ -238,7 +225,7 @@ public class UserServiceTest {
   public void shouldReturnSearchResultsWhenUserExists() throws Exception {
     User user = new User();
     String userSearchParam = "abc";
-    List<User> listOfUsers = Arrays.asList(new User());
+    List<User> listOfUsers = asList(new User());
 
     when(userRepository.searchUser(userSearchParam)).thenReturn(listOfUsers);
 
@@ -251,13 +238,14 @@ public class UserServiceTest {
   public void shouldUpdateUser() throws Exception {
     User user = new User();
     final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
-    List<RoleAssignment> supervisorRoles = Arrays.asList(roleAssignment);
+    List<RoleAssignment> supervisorRoles = asList(roleAssignment);
     user.setSupervisorRoles(supervisorRoles);
 
     userService.update(user);
 
     verify(userRepository).update(user);
     verify(roleAssignmentService).saveRolesForUser(user);
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test
@@ -298,6 +286,7 @@ public class UserServiceTest {
     verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveRolesForUser(user);
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test
@@ -324,7 +313,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void shouldDisableUser(){
+  public void shouldDisableUser() {
     Long userId = 3l;
     userService.disable(userId, 1L);
     verify(userRepository).disable(userId, 1L);

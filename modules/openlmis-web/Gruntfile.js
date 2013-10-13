@@ -16,6 +16,12 @@ module.exports = function (grunt) {
       clean: ['dist', 'src/main/webapp/public/minJs/', 'quality'],
       jshint:{
         options: {
+          undef: false,
+          strict: false,
+          '-W030' : true,
+          '-W038' : true,
+          unused: false,
+          passfail: true,
           reporter: 'checkstyle',
           reporterOutput: 'quality/js/report.xml'
         },

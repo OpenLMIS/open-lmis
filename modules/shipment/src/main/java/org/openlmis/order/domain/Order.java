@@ -42,4 +42,8 @@ public class Order extends BaseModel {
     this.rnr = rnr;
     this.supplyLine = supplyLine;
   }
+
+  public String getConcatinatedOrderId(){
+    return this.rnr.getProgram().getCode() + String.format("%06d", this.getId()) + ((this.rnr.isEmergency())?"E":"R");
+  }
 }

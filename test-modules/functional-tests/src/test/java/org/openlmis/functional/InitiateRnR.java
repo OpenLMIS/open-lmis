@@ -43,6 +43,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   public static final String STORE_IN_CHARGE = "store in-charge";
   public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
+  public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
   public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
   public static final String SUBMITTED = "SUBMITTED";
   public static final String AUTHORIZED = "AUTHORIZED";
@@ -133,19 +134,19 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I enter beginning balance \"([^\"]*)\"$")
   public void enterBeginningBalance(String beginningBalance) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterBeginningBalance(beginningBalance);
   }
 
   @When("^I enter quantity received \"([^\"]*)\"$")
   public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantityReceived(quantityReceived);
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
   public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantityDispensed(quantityDispensed);
   }
 
@@ -186,14 +187,14 @@ public class InitiateRnR extends TestCaseHelper {
 
   @When("^I click submit$")
   public void clickSubmit() throws IOException {
-    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.clickSubmitButton();
     testWebDriver.sleep(250);
   }
 
   @When("^I click ok$")
   public void clickOk() throws IOException {
-    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     testWebDriver.sleep(1000);
     initiateRnRPage.clickOk();
 
@@ -470,13 +471,13 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program,
-                                                          String userSIC,
-                                                          String categoryCode,
-                                                          String password,
-                                                          String regimenCode,
-                                                          String regimenName,
-                                                          String regimenCode2,
-                                                          String regimenName2) throws Exception {
+                                                                        String userSIC,
+                                                                        String categoryCode,
+                                                                        String password,
+                                                                        String regimenCode,
+                                                                        String regimenName,
+                                                                        String regimenCode2,
+                                                                        String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -545,11 +546,109 @@ public class InitiateRnR extends TestCaseHelper {
     clickProceed(1);
     verifyErrorMessages("Requisition not initiated yet");
 
-    ViewRequisitionPage viewRequisitionPage= homePage1.navigateViewRequisition();
+    ViewRequisitionPage viewRequisitionPage = homePage1.navigateViewRequisition();
     viewRequisitionPage.enterViewSearchCriteria();
     viewRequisitionPage.clickSearch();
     viewRequisitionPage.verifyEmergencyStatus();
     viewRequisitionPage.verifyStatus("AUTHORIZED");
+
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testEmergencyRnRApprovedAndConvertedToOrder(String program,
+                                       String userSIC,
+                                       String categoryCode,
+                                       String password,
+                                       String regimenCode,
+                                       String regimenName,
+                                       String regimenCode2,
+                                       String regimenName2) throws Exception {
+    String LMU_IN_CHARGE = "lmuincharge";
+
+    List<String> rightsList = new ArrayList<String>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+
+    List<String> rightsList1 = new ArrayList<String>();
+    rightsList1.add(AUTHORIZE_REQUISITION);
+    rightsList1.add(VIEW_REQUISITION);
+    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
+      rightsList1);
+
+    List<String> rightsList2 = new ArrayList<String>();
+    rightsList2.add(APPROVE_REQUISITION);
+    rightsList2.add(VIEW_REQUISITION);
+    createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", "openLmis",
+      rightsList2);
+
+    List<String> rightsList3 = new ArrayList<String>();
+    rightsList3.add(CONVERT_TO_ORDER);
+    rightsList3.add("VIEW_ORDER");
+    createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE, "openLmis",
+      rightsList3);
+
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
+    initiateRnRPage1.enterBeginningBalance("100");
+    initiateRnRPage1.enterQuantityReceived("100");
+    initiateRnRPage1.enterQuantityDispensed("100");
+    initiateRnRPage1.clickSubmitButton();
+    initiateRnRPage1.clickOk();
+
+    homePage.logout(baseUrlGlobal);
+
+
+    HomePage homePage1 = loginPage.loginAs("mo", password);
+    homePage1.navigateAndInitiateEmergencyRnr(program);
+
+    clickProceed(2);
+    initiateRnRPage1.clickAuthorizeButton();
+    initiateRnRPage1.clickOk();
+
+    homePage1.logout(baseUrlGlobal);
+
+    HomePage homePage2 = loginPage.loginAs("lmu", password);
+    ApprovePage approvePage=homePage2.navigateToApprove();
+    approvePage.verifyEmergencyStatus();
+    approvePage.verifyAndClickRequisitionPresentForApproval();
+    assertEquals("0", approvePage.getApprovedQuantity());
+    assertEquals("", approvePage.getAdjustedTotalConsumption());
+    assertEquals("", approvePage.getAMC());
+    assertEquals("", approvePage.getMaxStockQuantity());
+    assertEquals("", approvePage.getCalculatedOrderQuantity());
+    approvePage.editApproveQuantity("");
+    approvePage.approveRequisition();
+    approvePage.verifyApproveErrorDiv();
+    approvePage.editApproveQuantity("0");
+    approvePage.approveRequisition();
+    approvePage.clickOk();
+    approvePage.verifyNoRequisitionPendingMessage();
+
+    homePage2.logout(baseUrlGlobal);
+
+    HomePage homePage3 = loginPage.loginAs(LMU_IN_CHARGE, password);
+    ConvertOrderPage convertOrderPage=homePage3.navigateConvertToOrder();
+    convertOrderPage.verifyNoRequisitionPendingMessage();
+
+    ViewOrdersPage viewOrdersPage= homePage3.navigateViewOrders();
+    viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();
+
+    dbWrapper.insertFulfilmentRoleAssignment(LMU_IN_CHARGE, LMU_IN_CHARGE,"F10");
+    homePage3.navigateHomePage();
+    homePage3.navigateConvertToOrder();
+    convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2014", "Village Dispensary");
+    convertOrderPage.convertToOrder();
+
+    homePage3.navigateHomePage();
+    ViewOrdersPage viewOrdersPage1=homePage3.navigateViewOrders();
+    viewOrdersPage1.isFirstRowPresent();
 
   }
 
@@ -827,10 +926,9 @@ public class InitiateRnR extends TestCaseHelper {
     assertTrue("Error message 'verifyStockOnHandErrorMessage' should show up", testWebDriver.getElementByXpath("//span[contains(text(),'Total Quantity Consumed is calculated to be negative, please validate entries')]").isDisplayed());
   }
 
-  private void clickProceed(int row)
-  {
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//input[@value='Proceed'])["+row+"]"));
-    testWebDriver.getElementByXpath("(//input[@value='Proceed'])["+row+"]").click();
+  private void clickProceed(int row) {
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]"));
+    testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]").click();
   }
 
 

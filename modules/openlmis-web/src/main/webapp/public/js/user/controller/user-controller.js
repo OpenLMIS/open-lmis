@@ -8,15 +8,17 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, warehouses) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
   $scope.user = user || {homeFacilityRoles: []};
   $scope.supervisoryNodes = supervisoryNodes;
+  $scope.warehouses = warehouses;
   $scope.deliveryZones = deliveryZones;
   $scope.$parent.userId = null;
   $scope.message = "";
+
   var originalUser = $.extend(true, {}, user);
 
   loadUserFacility();
@@ -42,7 +44,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     }
     var valid = true;
     $.each(user.homeFacilityRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+      if (!roleAssignment.programId || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
         valid = false;
         return false;
       }
@@ -57,7 +59,22 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
+        valid = false;
+        return false;
+      }
+    });
+    return valid;
+  }
+
+  function validateShipmentRoles(user) {
+    if (!user.fulfillmentRoles) {
+      return true;
+    }
+
+    var valid = true;
+    $.each(user.fulfillmentRoles, function (index, roleAssignment) {
+      if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
         valid = false;
         return false;
       }
@@ -66,7 +83,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   }
 
   var validateRoleAssignment = function (user) {
-    return validateHomeFacilityRoles(user) && validateSupervisorRoles(user);
+    return validateHomeFacilityRoles(user) && validateSupervisorRoles(user) && validateShipmentRoles(user);
   };
 
   $scope.saveUser = function () {
@@ -76,7 +93,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       $scope.$parent.message = messageService.get(msgKey, $scope.user.firstName, $scope.user.lastName);
       $scope.$parent.userId = $scope.user.id;
       $location.path('');
-    }
+    };
 
     var saveSuccessHandler = function (response) {
       $scope.user = response.user;
@@ -114,16 +131,16 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.validateUserName = function () {
-    $scope.userNameInvalid = $scope.user.userName != null && $scope.user.userName.trim().indexOf(' ') >= 0;
+    $scope.userNameInvalid = $scope.user.userName !== null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
 
   $scope.showFacilitySearchResults = function () {
     var query = $scope.query;
-    var len = (query == undefined) ? 0 : query.length;
+    var len = (query === undefined) ? 0 : query.length;
 
     if (len >= 3) {
       if (len == 3) {
-        Facility.get({searchParam: query, virtualFacility : false}, function (data) {
+        Facility.get({searchParam: query, virtualFacility: false}, function (data) {
           $scope.facilityList = data.facilityList;
           $scope.filteredFacilities = $scope.facilityList;
           $scope.resultCount = $scope.filteredFacilities.length;
@@ -188,10 +205,10 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
         $scope.filteredFacilities.push(facility);
       }
       $scope.resultCount = $scope.filteredFacilities.length;
-    })
+    });
   };
 
-  $scope.cancelUserSave = function() {
+  $scope.cancelUserSave = function () {
     $location.path('#/search');
   };
 
@@ -199,7 +216,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.showError = "false";
     $scope.error = "";
     $scope.message = messageService.get(msgKey, $scope.user.firstName, $scope.user.lastName);
-  }
+  };
 
   var errorFunc = function (data) {
     $scope.showError = "true";
@@ -227,14 +244,14 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.user.active = false;
   };
 
-  $scope.showConfirmUserRestoreModal = function() {
+  $scope.showConfirmUserRestoreModal = function () {
     var dialogOpts = {
       id: "restoreUserDialog",
       header: messageService.get('enable.user.header'),
       body: messageService.get('enable.user.confirm', $scope.user.firstName, $scope.user.lastName)
     };
     OpenLmisDialog.newDialog(dialogOpts, $scope.restoreUserCallback, $dialog, messageService);
-  }
+  };
 
   $scope.restoreUserCallback = function (result) {
     if (!result) return;
@@ -242,12 +259,19 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     Users.update({id: $scope.user.id}, $scope.user, restoreSuccessFunc, errorFunc);
   };
 
+  $scope.getMessage = function (key) {
+    return messageService.get(key);
+  };
+ /* $scope.expandAll = function () {
+    $('.accordion-body').attr('collapse', false);
+    $('.accordion-body').removeClass('collapse');
+    $('.accordion-body').setStyle('height', 'auto');
+  }*/
+
   var restoreSuccessFunc = function (data) {
     clearErrorAndSetMessage("msg.user.restore.success");
     $('.form-group').find(':input').removeAttr('disabled');
   };
-
-
 }
 
 UserController.resolve = {
@@ -271,7 +295,8 @@ UserController.resolve = {
     $timeout(function () {
       Roles.get({}, function (data) {
         deferred.resolve(data.roles_map);
-      }, function () {});
+      }, function () {
+      });
     }, 100);
 
     return deferred.promise;
@@ -309,6 +334,19 @@ UserController.resolve = {
     $timeout(function () {
       DeliveryZone.get({}, function (data) {
         deferred.resolve(data.deliveryZones);
+      }, function () {
+      });
+    }, 100);
+
+    return deferred.promise;
+  },
+
+  warehouses: function ($q, Warehouse, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      Warehouse.get({}, function (data) {
+        deferred.resolve(data.warehouses);
       }, function () {
       });
     }, 100);

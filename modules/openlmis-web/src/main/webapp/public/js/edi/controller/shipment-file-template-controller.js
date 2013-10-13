@@ -28,12 +28,12 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     var emptyPosition = false;
     angular.forEach($scope.shipmentFileTemplate.shipmentFileColumns, function (column) {
 
-      if (column.include && (isUndefined(column.position) || parseInt(column.position) === 0 )) {
+      if (column.include && (isUndefined(column.position) || parseInt(column.position, 10) === 0 )) {
         $scope.message = "";
         $scope.error = "shipment.file.invalid.position";
         emptyPosition = true;
       } else if (!isUndefined(column.position)) {
-        column.position = parseInt(column.position);
+        column.position = parseInt(column.position, 10);
       }
     });
 

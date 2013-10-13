@@ -121,7 +121,7 @@ function ScheduleController($scope, Schedule, $location, messageService) {
   };
 
   $scope.scheduleLoaded = function () {
-    return !($scope.schedules == undefined || $scope.schedules == null);
+    return !($scope.schedules === undefined || $scope.schedules === null);
   };
 
   $scope.startScheduleEdit = function (scheduleUnderEdit) {

@@ -24,6 +24,8 @@ public class AdjustmentSummaryReport implements ReportData {
     private String adjustmentType;
     private String period;
     private int adjustment;
+    private int signedadjustment;
+
 
 
 }

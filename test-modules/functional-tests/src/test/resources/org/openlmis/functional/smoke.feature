@@ -260,8 +260,9 @@ Feature: Smoke Tests
     And I should see No facility selected
     And I should see "active" facilities that support the program "VACCINES" and delivery zone "Delivery Zone First"
     When I choose facility "F10"
-    Then I should see "Health center" in the header
-    And  I should see "Village Dispensary" in the header
+    Then I should verify facility zone "Health center" in the header
+    And  I should verify facility name "Village Dispensary" in the header
+    And I verify legends
 
   @smoke
   @ie2
@@ -387,6 +388,7 @@ Feature: Smoke Tests
     And I have users:
       | UserId | Email                 | Firstname | Lastname | UserName | Role | FacilityCode |
       | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
+    And I have fulfillment data for user "lmu" role "lmu" and facility "F10"
     And I have regimen template configured
     And I am logged in as "storeincharge"
     And I access initiate requisition page
@@ -408,6 +410,8 @@ Feature: Smoke Tests
     And I verify order file line "2" having "F10,P10,10,16/01/2012,"
     And I verify order date format "yyyy/mm/dd" in line "2"
     And I verify order id in line "2"
+
+
 
 
   @Smoke
@@ -494,7 +498,6 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    Then I see overall distribution icon as "AMBER"
     When I record data
     And I choose facility "F10"
     Then I see "Overall" facility icon as "AMBER"
@@ -507,7 +510,8 @@ Feature: Smoke Tests
     Then I see "Overall" facility icon as "RED"
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
-    Then I see overall distribution icon as "RED"
+    When I sync recorded data
+    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be synced"
     When I record data
 
     And I choose facility "F10"
@@ -532,7 +536,22 @@ Feature: Smoke Tests
     Then I see "Overall" facility icon as "GREEN"
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
-    Then I see overall distribution icon as "GREEN"
+    When I sync recorded data
+    Then I verify sync message as "F10 - Village Dispensary synced successfully"
+    And I view observations data in DB:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               | mai ka         | lal             |
+    When I record data
+    And I choose facility "F10"
+    Then I see "Overall" facility icon as "BLUE"
+    And I see "Individual" facility icon as "BLUE"
+    When I navigate to general observations tab
+    And I see general observations fields disabled
+    When Navigate to EPI tab
+    Then I see epi fields disabled
+    When I navigate to refrigerator tab
+    And I access show
+    Then I see refrigerator fields disabled
 
   @Smoke
   @ie2

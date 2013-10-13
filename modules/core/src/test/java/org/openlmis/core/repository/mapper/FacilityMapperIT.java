@@ -94,6 +94,9 @@ public class FacilityMapperIT {
   @Autowired
   RequisitionGroupProgramScheduleMapper requisitionGroupProgramScheduleMapper;
 
+  @Autowired
+  SupplyLineMapper supplyLineMapper;
+
   @Test
   public void shouldFetchAllFacilitiesAvailable() throws Exception {
     Facility trz001 = make(a(defaultFacility,
@@ -594,6 +597,31 @@ public class FacilityMapperIT {
     assertThat(allByDateModified.size(), is(1));
     assertThat(allByDateModified.get(0).getCode(), is(facilityCode1));
     assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(2));
+  }
+
+
+  @Test
+  public void shouldGetWarehouses() throws Exception {
+
+    Facility facility = make(a(defaultFacility));
+    mapper.insert(facility);
+
+    Program program = make(a(defaultProgram));
+    programMapper.insert(program);
+
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode,with(SupervisoryNodeBuilder.facility, facility)));
+    supervisoryNodeMapper.insert(supervisoryNode);
+
+    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program), with(SupplyLineBuilder.facility, facility),
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+    supplyLineMapper.insert(supplyLine);
+
+    List<Facility> warehouses = mapper.getWarehouses();
+
+    assertThat(warehouses.get(0).getId(), is(facility.getId()));
+    assertThat(warehouses.get(0).getCode(), is(facility.getCode()));
+    assertThat(warehouses.size(), is(1));
+
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,

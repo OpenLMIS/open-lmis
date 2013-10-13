@@ -13,13 +13,10 @@ import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
-/* Date: 4/11/13
-* Time: 11:34 AM
-*/
+
 public class StockedOutReportQueryBuilder {
 
     public static String getQuery(Map params){
-
 
         StockedOutReportFilter filter  = (StockedOutReportFilter)params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");

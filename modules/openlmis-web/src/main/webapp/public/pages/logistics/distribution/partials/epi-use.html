@@ -1,11 +1,13 @@
 <!--
-  ~ This program is part of the OpenLMIS logistics management information system platform software.
-  ~ Copyright © 2013 VillageReach
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~  
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  ~ /*
+  ~  * This program is part of the OpenLMIS logistics management information system platform software.
+  ~  * Copyright © 2013 VillageReach
+  ~  *
+  ~  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  *  
+  ~  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  ~  */
   -->
 
 <ng-include
@@ -14,23 +16,23 @@
   <ng-include
       src = "'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
-  <div class = "facility-info">
-    <div class = "refrigerator-container">
+  <div class = "facility-info" ng-init="facilityData = distribution.facilityDistributionData[selectedFacilityId]">
+    <div class = "refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
       <h3>
         <span openlmis-message = "header.epi.use"></span>
-        <a href = "javascript:void(0)" ng-click = "applyNRAll()"
+        <input type="button" ng-click = "applyNRAll()"
            class = "pull-right btn"
-           openlmis-message = "button.apply.nr.all"></a>
+           openlmis-message = "button.apply.nr.all" />
       </h3>
       <div class="clearfix"></div>
       <div class = "alert alert-info" id = "noRefrigerators"
-           ng-hide = "distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
+           ng-hide = "facilityData.epiUse.productGroups.length">
         <span openlmis-message = "message.no.product.groups"></span>
       </div>
 
       <div id = "epiUseTable" tab-scroll bottom-offset = "180"
-           ng-show = "distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups.length">
-        <form auto-save = "distribution" object-store = "distributions" disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
+           ng-show = "facilityData.epiUse.productGroups.length">
+        <form auto-save = "distribution" object-store = "distributions">
           <table class = "table table-bordered">
             <thead>
               <tr>
@@ -53,7 +55,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat = "groupReading in distribution.facilityDistributionData[selectedFacilityId].epiUse.productGroups"
+              <tr ng-repeat = "groupReading in facilityData.epiUse.productGroups"
                   ng-controller = "EpiUseRowController">
                 <td class = "col-doses">
                   <span ng-bind = "groupReading.name"></span>

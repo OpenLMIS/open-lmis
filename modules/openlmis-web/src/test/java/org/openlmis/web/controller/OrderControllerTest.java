@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
 import org.openlmis.core.domain.OrderConfiguration;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
@@ -100,13 +101,13 @@ public class OrderControllerTest {
     }};
 
     mockStatic(OrderDTO.class);
-    when(orderService.getOrdersForPage(2)).thenReturn(orders);
+    when(orderService.getOrdersForPage(2, USER_ID, Right.VIEW_ORDER)).thenReturn(orders);
     List<OrderDTO> orderDTOs = new ArrayList<>();
     when(OrderDTO.getOrdersForView(orders)).thenReturn(orderDTOs);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
 
-    verify(orderService).getOrdersForPage(2);
+    verify(orderService).getOrdersForPage(2, USER_ID, Right.VIEW_ORDER);
     assertThat((List<OrderDTO>) fetchedOrders.getBody().getData().get(ORDERS), is(orderDTOs));
   }
 
@@ -114,7 +115,7 @@ public class OrderControllerTest {
   public void shouldAddPageInfoForOrders() throws Exception {
     when(orderService.getPageSize()).thenReturn(3);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
 
     assertThat((Integer) fetchedOrders.getBody().getData().get("pageSize"), is(3));
   }
@@ -123,7 +124,7 @@ public class OrderControllerTest {
   public void shouldAddTotalNumberOfPagesForOrders() throws Exception {
     when(orderService.getNumberOfPages()).thenReturn(5);
 
-    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2);
+    ResponseEntity<OpenLmisResponse> fetchedOrders = orderController.getOrdersForPage(2, request);
 
     assertThat((Integer) fetchedOrders.getBody().getData().get("numberOfPages"), is(5));
   }

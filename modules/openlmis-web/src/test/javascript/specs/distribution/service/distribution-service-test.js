@@ -18,9 +18,9 @@ describe('Distribution Service', function () {
   beforeEach(function () {
     module(function ($provide) {
       $provide.value('IndexedDB', {put: function () {
+      }, get: function () {
       }});
-    });
-
+    })
     inject(function (IndexedDB, _distributionService_, SharedDistributions) {
       indexedDB = IndexedDB;
       distributionService = _distributionService_;
@@ -29,8 +29,7 @@ describe('Distribution Service', function () {
         {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
         {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
       ];
-    });
-
+    })
   });
 
   it('should check if distribution is already cached', function () {

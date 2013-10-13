@@ -17,10 +17,8 @@ app.directive('formToolbar',function () {
   return {
     restrict:'A',
     link:function (scope, element, attrs) {
-
       setTimeout(fixToolbarWidth, 0);
       $(window).on('resize', fixToolbarWidth);
-
     }
   };
 });
@@ -35,4 +33,4 @@ var fixToolbarWidth = function() {
   var contentGutterHeight = content.outerHeight(true) - content.height();
 
   content.css('min-height', $(window).height() - (headerHeight + navHeight + contentGutterHeight));
-}
+};

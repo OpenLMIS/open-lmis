@@ -1,14 +1,19 @@
 /*
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  * This program is part of the OpenLMIS logistics management information system platform software.
+ *  * Copyright © 2013 VillageReach
  *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  *  
+ *  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  *
  */
 
 package org.openlmis.order.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -25,7 +30,10 @@ public interface OrderMapper {
   @Options(useGeneratedKeys = true)
   void insert(Order order);
 
-  @Select("SELECT * FROM orders ORDER BY createdDate DESC LIMIT #{limit} OFFSET #{offset}")
+  @Select({"SELECT * FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+    "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId ",
+    "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
+    "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
     @Result(property = "rnr.id", column = "rnrId"),
     @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
@@ -33,7 +41,7 @@ public interface OrderMapper {
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
-  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset);
+  List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") Right right);
 
   @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({

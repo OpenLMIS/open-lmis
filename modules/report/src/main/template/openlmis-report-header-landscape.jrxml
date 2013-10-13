@@ -16,7 +16,7 @@
 	</background>
 	<title>
 		<band height="200">
-			<textField>
+			<textField isStretchWithOverflow="true">
 				<reportElement uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741" x="206" y="59" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="16" isBold="true"/>

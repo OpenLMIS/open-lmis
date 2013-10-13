@@ -65,10 +65,6 @@ public class SupplyStatusQueryBuilder {
 
             predicate += " and rgm_id = "+ rgroup;
         }
-//        if (facilityTypeId != null &&  !facilityTypeId.equals("undefined") && !facilityTypeId.isEmpty() && !facilityTypeId.equals("0") &&  !facilityTypeId.equals("-1") && !facilityTypeId.equals("All")) {
-//
-//            predicate += " and ft_id = "+ facilityTypeId;
-//        }
 
 
         return predicate;

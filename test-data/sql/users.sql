@@ -15,7 +15,8 @@ INSERT INTO roles
 ('LMU In-Charge', ''),
 ('FacilityHead', ''),
 ('Medical-Officer', ''),
-('View-Report', '');
+('View-Report', ''),
+('Shipment', '');
 
 INSERT INTO role_rights
 (roleId, rightName) VALUES
@@ -62,7 +63,12 @@ INSERT INTO role_rights
 ((SELECT
     id
   FROM roles
-  WHERE name = 'View-Report'), 'VIEW_REPORT');
+  WHERE name = 'View-Report'), 'VIEW_REPORT'),
+((SELECT
+    id
+  FROM roles
+  WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT');
+
 
 INSERT INTO VENDORS (name, active) VALUES ('commTrack', TRUE);
 

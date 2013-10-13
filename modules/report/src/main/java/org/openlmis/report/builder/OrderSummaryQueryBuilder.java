@@ -15,11 +15,6 @@ import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
-/**
- * User: Wolde
- * Date: 6/02/13
- * Time: 3:20 PM
- */
 public class OrderSummaryQueryBuilder {
     public static String SelectFilteredSortedPagedRecords(Map params){
 

@@ -8,8 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-'use strict';
-angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog','ui.bootstrap.accordion']).
     config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
       when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).
@@ -30,7 +29,7 @@ angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']
           if(!$(this).hasClass('select2-container-active')) {
             $(this).data("select2").blur();
           }
-        })
+        });
       });
     };
   })

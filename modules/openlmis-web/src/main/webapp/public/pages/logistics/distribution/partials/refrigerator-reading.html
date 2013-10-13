@@ -8,7 +8,8 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<form auto-save="distribution" object-store="distributions" disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
+<form auto-save="distribution" object-store="distributions"
+      disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
   <div class="row-fluid" ng-class="refrigeratorReading.computeStatus()">
     <div class="span1 status-cell">
       <span class="status-icon"></span>
@@ -17,14 +18,14 @@
     <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
     <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
     <div class="span3">
-        <span class="pull-right">
-          <a id="editReading{{$index}}" href="" class="btn btn-small btn-primary"
-             ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber, {{$index}})"
-             ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
-             openlmis-message="button.edit"></a>
-          <a href="" class="btn btn-small btn-danger" openlmis-message="button.delete"
-             ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"></a>
-        </span>
+      <span class="pull-right">
+        <a id="editReading{{$index}}" href="" class="btn btn-small btn-primary"
+           ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber, {{$index}})"
+           ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
+           openlmis-message="button.show"></a>
+        <input type="button" class="btn btn-small btn-danger" openlmis-message="button.delete"
+               ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"/>
+      </span>
     </div>
   </div>
 
@@ -39,8 +40,8 @@
               <input type="text" name="temperature{{$index}}" ng-model="refrigeratorReading.temperature.value"
                      numeric-validator="numericValue,3,1"
                      error-holder="temperatureError{{$index}}"
-                     class="right-justified" />&deg;<span
-              openlmis-message="label.celcius.symbol"></span>
+                     class="right-justified"/>&deg;<span
+                openlmis-message="label.celcius.symbol"></span>
               <input id="temperature{{$index}}" type="checkbox" ng-model="refrigeratorReading.temperature.notRecorded"
                      not-recorded/>
               <label class="checkbox-label" for="temperature{{$index}}" openlmis-message="label.not.recorded"></label>
@@ -80,7 +81,7 @@
                      numeric-validator="positiveInteger"
                      maxlength="3"
                      error-holder="lowAlarmError{{$index}}"
-                     class="right-justified" />
+                     class="right-justified"/>
 
               <input id="lowAlarmEvent{{$index}}" type="checkbox"
                      ng-model="refrigeratorReading.lowAlarmEvents.notRecorded"
@@ -98,7 +99,7 @@
                      numeric-validator="positiveInteger"
                      maxlength="3"
                      error-holder="highAlarmError{{$index}}"
-                     class="right-justified" />
+                     class="right-justified"/>
 
               <input id="highAlarmEvent{{$index}}" type="checkbox"
                      ng-model="refrigeratorReading.highAlarmEvents.notRecorded"

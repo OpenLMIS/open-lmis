@@ -29,7 +29,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
 
   $scope.updateEndDate = function () {
     $scope.newPeriod.endDate = new Date($scope.newPeriod.endDate.getTime() + $scope.oneDay - 1000);
-  }
+  };
 
   $scope.calculateDays = function (startTime, endTime) {
     var startDate = new Date(startTime);
@@ -43,9 +43,9 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   };
 
   $scope.calculateMonths = function () {
-    if ($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) != null) {
+    if ($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) !== null) {
       $scope.newPeriod.numberOfMonths = Math.round($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) / 30);
-      if ($scope.newPeriod.numberOfMonths == 0) {
+      if ($scope.newPeriod.numberOfMonths === 0) {
         $scope.newPeriod.numberOfMonths += 1;
       }
       return $scope.newPeriod.numberOfMonths;
@@ -55,7 +55,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
 
   $scope.createPeriod = function () {
     function validatePeriod() {
-      if ($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) == null) {
+      if ($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) === null) {
         $scope.error = messageService.get("error.endDate");
         $scope.message = "";
         return false;
@@ -78,7 +78,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
         });
       }, displayTime);
       $scope.error = "";
-      if ($scope.periodList.length != 0)
+      if ($scope.periodList.length !== 0)
         resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
       else
         $scope.newPeriod = {};
@@ -140,13 +140,13 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   };
 
   var prepareNewPeriod = function () {
-    if ($scope.periodList.length != 0)
+    if ($scope.periodList.length !== 0)
       resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
     else
       $scope.newPeriod = {};
   };
 
   $scope.showDeleteButton = function (index) {
-    return (index == 0 && !inValidateStartDate($scope.periodList[index]));
-  }
+    return (index === 0 && !inValidateStartDate($scope.periodList[index]));
+  };
 }

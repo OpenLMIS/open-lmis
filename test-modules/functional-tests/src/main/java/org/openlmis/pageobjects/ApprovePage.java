@@ -73,6 +73,18 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = ID, using = "quantityApproved_0")
   private static WebElement quantityApproved;
 
+  @FindBy(how = ID, using = "normalizedConsumption_0")
+  private static WebElement adjustedTotalConsumption;
+
+  @FindBy(how = ID, using = "amc_0")
+  private static WebElement amc;
+
+  @FindBy(how = ID, using = "maxStockQuantity_0")
+  private static WebElement maxStockQuantity;
+
+  @FindBy(how = ID, using = "calculatedOrderQuantity_0")
+  private static WebElement calculatedOrderQuantity;
+
   @FindBy(how = ID, using = "nonFullSupplyTab")
   private static WebElement nonFullSupplyTab;
 
@@ -224,6 +236,31 @@ public class ApprovePage extends RequisitionPage {
       quantityApproved.sendKeys("\u0008");
     quantityApproved.sendKeys(approvedQuantity);
 
+  }
+
+  public String getApprovedQuantity() {
+    testWebDriver.waitForElementToAppear(quantityApproved);
+    return testWebDriver.getAttribute(quantityApproved, "value");
+  }
+
+  public String getAdjustedTotalConsumption() {
+    testWebDriver.waitForElementToAppear(adjustedTotalConsumption);
+    return adjustedTotalConsumption.getText();
+  }
+
+  public String getAMC() {
+    testWebDriver.waitForElementToAppear(amc);
+    return amc.getText();
+  }
+
+  public String getMaxStockQuantity() {
+    testWebDriver.waitForElementToAppear(maxStockQuantity);
+    return maxStockQuantity.getText();
+  }
+
+  public String getCalculatedOrderQuantity() {
+    testWebDriver.waitForElementToAppear(calculatedOrderQuantity);
+    return calculatedOrderQuantity.getText();
   }
 
   public void approveRequisition() {

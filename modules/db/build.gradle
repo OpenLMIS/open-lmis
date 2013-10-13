@@ -51,33 +51,48 @@ dependencies {
 
 }
 
-task setupDB(dependsOn: [{createDB}, clean]) << {
+String connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/$dbName"
+connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+
+
+task setupDB << {
+    tasks.dropDB.execute()
+    tasks.createDB.execute()
+    executeSql('create schema atomfeed', true)
+
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
 
     tasks.migrateDB.execute()
 }
 
-task createDB(dependsOn: {dropDB}) << {
+task createDB << {
     println("Creating Database..")
-    executeSqlOnDatabase('create database ' + dbName, dbUser)
-    executeSqlOnDatabase('create schema ' + atomfeedDbSchema, dbName)
-    executeSqlOnDatabase('grant all on schema ' + atomfeedDbSchema + ' to  ' + dbUser, dbName)
-
+    executeSql("create database $dbName")
 }
 
-task dropDB() << {
+task dropDB << {
     println("Dropping Database..")
-    if (!dropIfInUse(dbName, "procpid")) {
-        dropIfInUse(dbName, "pid")
+    if (!closeActiveConnections("procpid")) {
+        closeActiveConnections("pid")
     }
+    executeSql("DROP DATABASE IF EXISTS $dbName")
 }
 
-boolean dropIfInUse(String dbName, String pid) {
+task dropSchemas << {
+    executeSql('drop schema public cascade ', true)
+    executeSql('drop schema atomfeed cascade ', true)
+}
+
+task createSchemas << {
+    executeSql('create schema public', true)
+    executeSql('create schema atomfeed', true)
+}
+
+def boolean closeActiveConnections(String pid) {
     try {
-        executeSqlOnDatabase('SELECT pg_terminate_backend(' + pid + ') FROM pg_stat_activity WHERE datname=\'' + dbName + '\'', dbUser)
-        executeSqlOnDatabase('DROP DATABASE IF EXISTS ' + dbName, dbUser)
+        executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
         return true
     } catch (Exception e) {
         return false
@@ -89,10 +104,10 @@ jar.doFirst {
 }
 
 task migrateDB() << {
-    println("migrateDB:")
+    println("Migrating database..")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-    ant.flywayMigrate(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword)
+    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
 }
 
 task testSeed(type: Exec) {
@@ -105,19 +120,19 @@ task seed(type: Exec) {
     commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
-def executeSqlOnDatabase(String statement, String database) {
+def executeSql(String statement, Boolean includeDbName = false) {
+    def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort"
+
+    connectionString += (includeDbName) ? "/$dbName" : ""
+
+    connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+
     configurations.classpath.each { file ->
         gradle.class.classLoader.addURL(file.toURI().toURL())
     }
-    ext.driverName = 'org.postgresql.Driver'
-    Class.forName(driverName)
-    Sql sql = (Sql) Sql.newInstance(
-            "jdbc:postgresql://$databaseHostName:$databasePort/" + database,
-            dbUser,
-            dbPassword,
-            driverName
-    )
 
-    sql.execute(statement)
+    Class.forName(dbDriver)
+
+    Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }
 

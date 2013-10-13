@@ -75,6 +75,10 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
   private static WebElement emergencyIcon;
 
+  @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.requisitions.for.conversion']")
+  private static WebElement noRequisitionPending;
+
+
   public ConvertOrderPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -95,6 +99,13 @@ public class ConvertOrderPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(convertToOrderButton);
     convertToOrderButton.click();
   }
+
+  public void verifyNoRequisitionPendingMessage()
+  {
+    testWebDriver.waitForPageToLoad();
+    noRequisitionPending.isDisplayed();
+  }
+
 
   public void clickCheckBoxConvertToOrder() {
     testWebDriver.waitForElementToAppear(checkboxOnOrderScreen);

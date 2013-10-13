@@ -20,7 +20,7 @@ app.directive('placeholder',function () {
 
       if (!jQuery.support.placeholder) {
         var placeholder = function () {
-          if (ctrl.$modelValue != '') {
+          if (ctrl.$modelValue !== '') {
             ctrl.$modelValue = undefined;
             ctrl.$viewValue = attr.placeholder;
           }
@@ -34,22 +34,22 @@ app.directive('placeholder',function () {
         };
 
         scope.$watch(attr.ngModel, function (val) {
-          if (val == attr.placeholder)   val = '';
+          if (val === attr.placeholder)   val = '';
           value = val || '';
         });
 
         element.bind('focus', function () {
-          if (value == '' || (ctrl.$modelValue == undefined)) unPlaceholder();
+          if (value === '' || (ctrl.$modelValue === undefined)) unPlaceholder();
         });
 
         element.bind('blur', function () {
-          if (element.val() == '') {
+          if (element.val() === '') {
             placeholder();
           }
         });
 
         ctrl.$formatters.unshift(function (val) {
-          if (!val || (val == attr.placeholder)) {
+          if (!val || (val === attr.placeholder)) {
             placeholder();
             value = '';
             return attr.placeholder;
@@ -60,7 +60,6 @@ app.directive('placeholder',function () {
     }
   };
 });
-
 
 jQuery.support.placeholder = !!function () {
   return "placeholder" in document.createElement("input");

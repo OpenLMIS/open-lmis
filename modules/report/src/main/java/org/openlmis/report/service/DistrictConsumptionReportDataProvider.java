@@ -64,7 +64,13 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
             Date originalEnd =  new Date();
 
             districtConsumptionReportFilter.setZoneId( StringUtils.isBlank( filterCriteria.get("zoneId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
-            districtConsumptionReportFilter.setRgroup( StringUtils.isBlank( filterCriteria.get("rgroup")[0] ) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
+            districtConsumptionReportFilter.setRgroup( StringUtils.isBlank( filterCriteria.get("rgroup")[0] ) ? "All Requisition Groups" : filterCriteria.get("rgroup")[0]);
+
+            districtConsumptionReportFilter.setProduct( StringUtils.isBlank( filterCriteria.get("product")[0] ) ? "All Products" : filterCriteria.get("product")[0]);
+            districtConsumptionReportFilter.setZone( StringUtils.isBlank( filterCriteria.get("zone")[0] ) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
+            districtConsumptionReportFilter.setProductCategory( StringUtils.isBlank( filterCriteria.get("productCategory")[0] ) ? "All Product Categories" : filterCriteria.get("productCategory")[0]);
+
+
 
 
             districtConsumptionReportFilter.setProductCategoryId( StringUtils.isBlank(filterCriteria.get("productCategoryId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0

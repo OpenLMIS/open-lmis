@@ -17,6 +17,12 @@
       vertical-align: middle;
       border-bottom: none;
     }
+    .distribution-legend {
+      margin: 10px 40px 10px 10px;
+      .status-icon {
+        margin: 0 0 0 15px;
+      }
+    }
   }
   .info-box {
     padding-bottom: 8px;
@@ -80,11 +86,6 @@
       }
     }
   }
-  .select2-highlighted {
-    .status-icon {
-      background: #FFF !important;
-    }
-  }
 }
 
 .status-icon {
@@ -119,6 +120,12 @@
   }
 }
 
+.is-duplicate {
+  .status-icon {
+    background: #7c7c7c;
+  }
+}
+
 
 .facility-toolbar {
   min-height: 41px;
@@ -136,7 +143,7 @@
   }
   h3 {
     margin: 0 0 12px;
-    a {
+    input {
       margin-top: 10px;
       font-weight: normal;
     }
@@ -167,6 +174,10 @@
           }
         }
       }
+    }
+    div:last-child input[type="button"] {
+      float: none;
+      margin-left: 0;
     }
   }
 }

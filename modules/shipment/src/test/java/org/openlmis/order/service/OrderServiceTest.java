@@ -13,10 +13,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.OrderConfiguration;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.SupervisoryNode;
-import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
@@ -188,14 +185,14 @@ public class OrderServiceTest {
       add(order2);
     }};
 
-    when(orderRepository.getOrdersForPage(2, 3)).thenReturn(expectedOrders);
+    when(orderRepository.getOrdersForPage(2, 3,  1l, Right.VIEW_ORDER)).thenReturn(expectedOrders);
     when(requisitionService.getFullRequisitionById(rnr1.getId())).thenReturn(rnr1);
     when(requisitionService.getFullRequisitionById(rnr2.getId())).thenReturn(rnr2);
 
-    List<Order> orders = orderService.getOrdersForPage(2);
+    List<Order> orders = orderService.getOrdersForPage(2, 1l, Right.VIEW_ORDER);
 
     assertThat(orders, is(expectedOrders));
-    verify(orderRepository).getOrdersForPage(2, 3);
+    verify(orderRepository).getOrdersForPage(2, 3,  1l, Right.VIEW_ORDER);
     verify(requisitionService).getFullRequisitionById(rnr1.getId());
     verify(requisitionService).getFullRequisitionById(rnr2.getId());
   }

@@ -182,12 +182,13 @@ public class Rnr extends BaseModel {
     addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
-  public void setDefaultApprovedQuantity() {
+  public void calculateDefaultApprovedQuantity() {
+    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
-      item.setDefaultApprovedQuantity();
+      item.calculateDefaultApprovedQuantity(calcStrategy);
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.setDefaultApprovedQuantity();
+      item.calculateDefaultApprovedQuantity(calcStrategy);
     }
   }
 

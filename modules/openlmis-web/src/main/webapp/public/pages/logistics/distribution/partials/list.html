@@ -7,6 +7,7 @@
   ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
+
 <div ng-controller="DistributionListController">
 
   <h2 openlmis-message="label.initiated.distributions"></h2>
@@ -15,14 +16,12 @@
     <span openlmis-message="message.no.distribution.initiated"></span>
   </div>
 
-  <div class="alert alert-info" ng-show="message"><span ng-bind="message"></span></div>
+  <div class="alert alert-info" ng-show="message"><span openlmis-message="message"></span></div>
 
   <div ng-show="sharedDistributions.distributionList.length">
     <div id="cachedDistributions">
       <div class="list-header-container">
         <div class="row-fluid list-header">
-          <span class="span1"></span>
-
           <div class="span2">
             <div class="delivery-zone" openlmis-message="label.delivery.zone"></div>
           </div>
@@ -36,9 +35,6 @@
 
       <div class="list-container">
         <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
-          <span ng-class="distribution.computeStatus()" class="delivery-zone-status span1">
-            <span id="indicator{{ $index }}" class="status-icon"></span>
-          </span>
 
           <div class="span2">
             <div class="delivery-zone" ng-bind="distribution.deliveryZone.name"></div>

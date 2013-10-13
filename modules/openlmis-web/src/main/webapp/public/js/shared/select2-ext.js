@@ -20,4 +20,4 @@ window.Select2.class.multi.prototype.clearSearch = function() {
     // that does not properly render the caret when the field starts out blank
     this.search.val(" ").width(10);
   }
-}
+};

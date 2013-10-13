@@ -24,11 +24,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       $scope.originalFacilityName = facility.name;
       $scope.isEdit = true;
       updateProgramsToDisplay();
-      populateFlags($scope);
     } else {
       $scope.facility = {};
       updateProgramsToDisplay();
-      $scope.facility.enabled = "true";
+      $scope.facility.enabled = true;
     }
     $scope.facilityProgramProductsList = [];
   }
@@ -53,7 +52,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.$broadcast('showISAEditModal');
   };
 
-  $scope.cancelUserSave = function() {
+  $scope.cancelUserSave = function () {
     $location.path('#/search');
   };
 
@@ -73,8 +72,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       }, function () {
         deferred.reject({error: "error.facility.allocation.product.save", program: program.name});
       });
-
-    })
+    });
 
     return promises;
   }
@@ -98,14 +96,13 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
         $scope.$parent.message = data.success;
         $scope.facility = getFacilityWithDateObjects(data.facility);
         $scope.$parent.facilityId = $scope.facility.id;
-        populateFlags($scope);
         $location.path('');
       }, function (error) {
         $scope.showError = "true";
         $scope.message = "";
         $scope.error = error.error;
         $scope.errorProgram = error.program;
-      })
+      });
     };
 
     if (!$scope.isEdit) {
@@ -133,7 +130,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.showConfirmDateChangeWindow = function (program) {
     window.program = program;
-    if(getProgramById(program.program.id).push) {
+    if (getProgramById(program.program.id).push) {
       $scope.dateChangeCallback(true);
       return;
     }
@@ -165,11 +162,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.removeSupportedProgramConfirm = function (result) {
     if (result) {
-      $scope.removeSupportedProgram()
+      $scope.removeSupportedProgram();
     }
     $scope.selectedSupportedProgram = undefined;
-  }
-
+  };
 
   $scope.removeSupportedProgram = function () {
     $scope.facility.supportedPrograms = _.without($scope.facility.supportedPrograms, $scope.selectedSupportedProgram);
@@ -188,7 +184,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facility = getFacilityWithDateObjects(data.facility);
     $scope.originalFacilityCode = data.facility.code;
     $scope.originalFacilityName = data.facility.name;
-    populateFlags($scope);
   };
 
   var errorFunc = function (data) {
@@ -248,22 +243,15 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facility.supportedPrograms = $scope.facility.supportedPrograms || [];
     var supportedProgramIds = _.pluck(_.pluck($scope.facility.supportedPrograms, 'program'), "id");
     $scope.programsToDisplay = _.reject($scope.programs, function (supportedProgram) {
-      return _.contains(supportedProgramIds, supportedProgram.id)
+      return _.contains(supportedProgramIds, supportedProgram.id);
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
 
 }
 
-var populateFlags = function ($scope) {
-  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'enabled']).each(function (index, field) {
-    var value = $scope.facility[field];
-    $scope.facility[field] = (value == null) ? "" : value.toString();
-  });
-};
 
 FacilityController.resolve = {
-
   facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();
     $timeout(function () {
@@ -275,7 +263,7 @@ FacilityController.resolve = {
   },
 
   facility: function ($q, $timeout, Facility, $route) {
-    if ($route.current.params.facilityId == undefined) return undefined;
+    if ($route.current.params.facilityId === undefined) return undefined;
 
     var deferred = $q.defer();
     var facilityId = $route.current.params.facilityId;

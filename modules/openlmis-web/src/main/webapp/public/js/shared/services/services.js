@@ -78,11 +78,11 @@ services.factory('Roles', function ($resource) {
 });
 
 services.factory('CreateRequisitionProgramList', function ($resource) {
-  return $resource('/create/requisition/programs.json', {}, {})
+  return $resource('/create/requisition/programs.json', {}, {});
 });
 
 services.factory('UserSupervisedFacilitiesForProgram', function ($resource) {
-  return $resource('/create/requisition/supervised/:programId/facilities.json', {}, {})
+  return $resource('/create/requisition/supervised/:programId/facilities.json', {}, {});
 });
 
 services.factory('ReferenceData', function ($resource) {
@@ -110,7 +110,7 @@ services.factory('RequisitionForConvertToOrder', function ($resource) {
 });
 
 services.factory('LossesAndAdjustmentsReferenceData', function ($resource) {
-  return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {})
+  return $resource('/requisitions/lossAndAdjustments/reference-data.json', {}, {});
 });
 
 services.factory('Schedule', function ($resource) {
@@ -257,7 +257,7 @@ services.factory('Distributions', function ($resource) {
 });
 
 services.factory('SyncFacilityDistributionData', function ($resource) {
-  return $resource('/facilityDistributionData/:distributionId.json', {}, update);
+  return $resource('/distributions/:id/facilities/:facilityId.json', {}, update);
 });
 
 services.factory('Locales', function ($resource) {
@@ -288,5 +288,11 @@ services.factory('ShipmentFileTemplate', function ($resource) {
   return $resource('/shipment-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
+services.factory('Warehouse', function ($resource) {
+  return $resource('/warehouses.json', {}, {});
+});
 
+services.factory('Warehouse', function ($resource) {
+  return $resource('/warehouses.json', {}, {});
+});
 
