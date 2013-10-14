@@ -1,6 +1,6 @@
 Feature: Smoke Tests
 
-  @smoke
+  @smokeRequisition
   @ie2
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
@@ -24,7 +24,7 @@ Feature: Smoke Tests
     And I click ok
     Then I should see submit successfully
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: User should view requisition and regimen after authorization
@@ -53,7 +53,7 @@ Feature: Smoke Tests
     When I access regimen tab for view requisition
     Then I verify values on regimen page as patientsOnTreatment "100" patientsToInitiateTreatment "200" patientsStoppedTreatment "300" remarks "Regimens data filled"
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: User should able to configure program product ISA
@@ -65,7 +65,7 @@ Feature: Smoke Tests
     And I click cancel
     And I access home page
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: User should able to initiate distribution
@@ -83,7 +83,7 @@ Feature: Smoke Tests
     Then I should see data download successfully
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: User should able to fetch program period on manage distribution screen
@@ -103,7 +103,7 @@ Feature: Smoke Tests
     Then I should see period "Period14"
     And I click view load amount
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: User should able to override ISA
@@ -121,7 +121,7 @@ Feature: Smoke Tests
     When I search facility
     Then I should see overridden ISA "24"
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: Verifying Forgot Password functionality
@@ -132,7 +132,7 @@ Feature: Smoke Tests
     Then I should see email send successfully
     And I am logged in as Admin
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: Verify New Regimen Created
@@ -147,7 +147,7 @@ Feature: Smoke Tests
     And I save regimen
     Then I should see regimen created message
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: Verify New Regimen Reporting Field Configuration
@@ -174,7 +174,7 @@ Feature: Smoke Tests
     And I save regimen
     Then I should see regimen created message
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: Admin user should not access requisition page
@@ -182,7 +182,7 @@ Feature: Smoke Tests
     When I access initiate requisition page through URL
     Then I should see unauthorized access message
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: Requisition user should not access admin Page
@@ -191,7 +191,7 @@ Feature: Smoke Tests
     When I access create facility page through URL
     Then I should see unauthorized access message
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
@@ -218,7 +218,7 @@ Feature: Smoke Tests
     And I click load amount
     Then I should see message "No records found"
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: Distribution user should view aggregate ISA for delivery zone
@@ -239,7 +239,7 @@ Feature: Smoke Tests
     And I click load amount
     Then I should see aggregate ISA values as per multiple facilities in one delivery zone
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: User should see facility list/ selection page
@@ -264,7 +264,7 @@ Feature: Smoke Tests
     And  I should verify facility name "Village Dispensary" in the header
     And I verify legends
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: Admin can create, disable & restore user
@@ -280,7 +280,7 @@ Feature: Smoke Tests
     When I verify user email "Dummy_User@openlmis.com"
     Then I should see user "Dummy User" verified
 
-  @smoke
+  @smokeDistribution
   @ie2
 
   Scenario: User should be able to add/edit/delete refrigerator
@@ -333,7 +333,7 @@ Feature: Smoke Tests
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: User should be able to configure order file format
@@ -349,7 +349,7 @@ Feature: Smoke Tests
     When I save order file format
     Then I should see "Order file configuration saved successfully!"
 
-  @smoke
+  @smokeRequisition
   @ie2
 
   Scenario: User should be able to configure shipment file format using default format
@@ -361,7 +361,7 @@ Feature: Smoke Tests
     When I save shipment file format
     Then I should see successfull message "Shipment file configuration saved successfully!"
 
-  @smoke
+  @smokeRequisition
   Scenario: User should download order file and verify
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -414,7 +414,7 @@ Feature: Smoke Tests
 
 
 
-  @Smoke
+  @SmokeDistribution
   @ie2
 
   Scenario: User should fill general observation data
@@ -445,7 +445,7 @@ Feature: Smoke Tests
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |
 
-  @Smoke
+  @SmokeDistribution
   @ie2
 
   Scenario: User should fill EPI use data
@@ -481,7 +481,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
-  @Smoke
+  @SmokeDistribution
   @ie2
 
   Scenario: User should verify facility and sync status
@@ -553,7 +553,7 @@ Feature: Smoke Tests
     And I access show
     Then I see refrigerator fields disabled
 
-  @Smoke
+  @SmokeRequisition
   @ie2
 
   Scenario: User should be able to initiate and submit emergency RnR
@@ -588,7 +588,7 @@ Feature: Smoke Tests
 
 
 
-  @Smoke
+  @SmokeRequisition
   @ie2
   Scenario: Selected requisitions across pages should not convert to order
     Given I have "51" requisitions for convert to order
