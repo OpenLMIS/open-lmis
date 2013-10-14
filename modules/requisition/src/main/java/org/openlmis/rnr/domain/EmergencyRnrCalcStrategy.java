@@ -10,7 +10,6 @@ package org.openlmis.rnr.domain;
 
 import org.openlmis.core.domain.ProcessingPeriod;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public final class EmergencyRnrCalcStrategy extends RnrCalcStrategy {
@@ -23,7 +22,7 @@ public final class EmergencyRnrCalcStrategy extends RnrCalcStrategy {
   }
 
   @Override
-  public Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption, List<Integer> previousNormalizedConsumptions, BigDecimal sumOfPreviousNormalizedConsumptions) {
+  public Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption, List<Integer> previousNormalizedConsumptions) {
     return null;
   }
 

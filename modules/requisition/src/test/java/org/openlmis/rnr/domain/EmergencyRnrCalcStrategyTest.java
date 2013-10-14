@@ -18,7 +18,6 @@ import org.openlmis.db.categories.UnitTests;
 
 import java.util.Collections;
 
-import static java.math.BigDecimal.ZERO;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -43,7 +42,7 @@ public class EmergencyRnrCalcStrategyTest {
 
   @Test
   public void shouldReturnAmcAsNull() throws Exception {
-    Integer amc = emergencyCalcStrategy.calculateAmc(new ProcessingPeriod(), 3, Collections.<Integer>emptyList(), ZERO);
+    Integer amc = emergencyCalcStrategy.calculateAmc(new ProcessingPeriod(), 3, Collections.<Integer>emptyList());
 
     assertThat(amc, is(nullValue()));
   }

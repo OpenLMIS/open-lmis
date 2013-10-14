@@ -197,7 +197,7 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateAmc(RnrCalcStrategy calcStrategy, ProcessingPeriod period) {
-    amc = calcStrategy.calculateAmc(period, normalizedConsumption, previousNormalizedConsumptions, sumOfPreviousNormalizedConsumptions());
+    amc = calcStrategy.calculateAmc(period, normalizedConsumption, previousNormalizedConsumptions);
   }
 
   public void calculatePacksToShip(RnrCalcStrategy calcStrategy) {
@@ -285,14 +285,6 @@ public class RnrLineItem extends LineItem {
 
   public void addLossesAndAdjustments(LossesAndAdjustments lossesAndAdjustments) {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
-  }
-
-  private BigDecimal sumOfPreviousNormalizedConsumptions() {
-    Integer total = 0;
-    for (Integer consumption : previousNormalizedConsumptions) {
-      total += consumption;
-    }
-    return new BigDecimal(total);
   }
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
