@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.service;
@@ -957,7 +955,6 @@ public class RequisitionServiceTest {
     verify(programService).getById(PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
     assertThat(fullRequisition.getSupplyingDepot(), is(supplyingDepot));
-    assertThat(fullRequisition.getCalcStrategy().getClass(), is(RnrCalcStrategy.class.getClass()));
   }
 
   @Test
@@ -1381,11 +1378,11 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).getById(emergencyRequisition.getId());
 
     assertThat(result, is(emergencyRequisition));
-    assertThat(result.getCalcStrategy().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
     Rnr savedRnr = spy(rnr);
+    doNothing().when(savedRnr).calculateForApproval();
     when(requisitionPermissionService.hasPermissionToSave(USER_ID, savedRnr)).thenReturn(true);
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, right)).thenReturn(true);
     when(programService.getById(savedRnr.getProgram().getId())).thenReturn(PROGRAM);

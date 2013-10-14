@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.domain;
@@ -57,9 +55,6 @@ public class Rnr extends BaseModel {
   private Date submittedDate;
   private List<Comment> comments = new ArrayList<>();
 
-  @JsonIgnore
-  private RnrCalcStrategy calcStrategy;
-
   public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, Long modifiedBy, Long createdBy) {
     facility = new Facility();
     facility.setId(facilityId);
@@ -109,6 +104,7 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateForApproval() {
+    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip(calcStrategy);
     }
@@ -119,13 +115,19 @@ public class Rnr extends BaseModel {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
-    calculateForFullSupply(template, lossesAndAdjustmentsTypes);
-    calculateForNonFullSupply();
+  private RnrCalcStrategy getRnrCalcStrategy() {
+    return emergency ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy();
   }
 
-  private void calculateForNonFullSupply() {
+  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
+
+    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
+    calculateForFullSupply(calcStrategy, template, lossesAndAdjustmentsTypes);
+    calculateForNonFullSupply(calcStrategy);
+  }
+
+  private void calculateForNonFullSupply(RnrCalcStrategy calcStrategy) {
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
       lineItem.validateNonFullSupply();
       lineItem.calculatePacksToShip(calcStrategy);
@@ -133,7 +135,7 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private void calculateForFullSupply(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  private void calculateForFullSupply(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.validateMandatoryFields(template);
       lineItem.calculateForFullSupply(calcStrategy, period, template, this.getStatus(), lossesAndAdjustmentsTypes);
@@ -297,8 +299,8 @@ public class Rnr extends BaseModel {
           this.nonFullSupplyLineItems.add(lineItem);
         }
       } else {
-          savedLineItem.setModifiedBy(rnr.getModifiedBy());
-          savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
+        savedLineItem.setModifiedBy(rnr.getModifiedBy());
+        savedLineItem.copyCreatorEditableFieldsForNonFullSupply(lineItem, template);
       }
     }
   }
