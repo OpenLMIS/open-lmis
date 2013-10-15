@@ -19,40 +19,50 @@ describe('DistributionListController', function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
-  beforeEach(inject(function ($rootScope, $location, $controller, _IndexedDB_, _$httpBackend_, $q, _messageService_, _distributionService_, _$dialog_) {
-    rootScope = $rootScope;
-    scope = rootScope.$new();
-    $httpBackend = _$httpBackend_
-    messageService = _messageService_;
-    dialog = _$dialog_;
-    spyOn(messageService, 'get');
-    spyOn(OpenLmisDialog, 'newDialog');
-    distributionService = _distributionService_;
-    spyOn(distributionService, 'deleteDistribution');
-    spyOn(distributionService, 'save');
-    spyOn(distributionService, 'getReferenceData');
+  beforeEach(function () {
 
-    q = $q;
-    location = $location;
-    sharedDistribution = {update: function () {
-    }};
+      module(function ($provide) {
+        $provide.value('IndexedDB', {put: function () {
+        }, get: function () {
+        }, delete: function () {
+        }});
+      });
 
-    var facilityDistributionData = new FacilityDistributionData({'epiUse': {'productGroups': [
-      {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
-    ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []}, 'facilityVisit': {'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
+      inject(function ($rootScope, $location, $controller, _$httpBackend_, $q, _messageService_, _distributionService_, _$dialog_) {
+        rootScope = $rootScope;
+        scope = rootScope.$new();
+        $httpBackend = _$httpBackend_
+        messageService = _messageService_;
+        dialog = _$dialog_;
+        spyOn(messageService, 'get');
+        spyOn(OpenLmisDialog, 'newDialog');
+        distributionService = _distributionService_;
+        spyOn(distributionService, 'deleteDistribution');
+        spyOn(distributionService, 'save');
+        spyOn(distributionService, 'getReferenceData');
 
-    spyOn(facilityDistributionData, 'computeStatus');
+        q = $q;
+        location = $location;
+        sharedDistribution = {update: function () {
+        }};
 
-    spyOn(sharedDistribution, 'update');
-    distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'}, 'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
-      'facilityDistributionData': {'44': facilityDistributionData,
-        '45': new FacilityDistributionData({'epiUse': {'productGroups': [
-          {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
-        ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []}, 'facilityVisit': {'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}})}};
+        var facilityDistributionData = new FacilityDistributionData({'epiUse': {'productGroups': [
+          {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
+        ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []}, 'facilityVisit': {'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
 
-    sharedDistribution.distributionList = [distribution];
-    $controller(DistributionListController, {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService});
-  })
+        spyOn(facilityDistributionData, 'computeStatus');
+
+        spyOn(sharedDistribution, 'update');
+        distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'}, 'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
+          'facilityDistributionData': {'44': facilityDistributionData,
+            '45': new FacilityDistributionData({'epiUse': {'productGroups': [
+              {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
+            ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []}, 'facilityVisit': {'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}})}};
+
+        sharedDistribution.distributionList = [distribution];
+        $controller(DistributionListController, {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService});
+      })
+    }
   );
 
   afterEach(function () {
