@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function DistributionListController($scope, SharedDistributions, IndexedDB, SyncFacilityDistributionData, $q, messageService) {
+function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, messageService, distributionService, $dialog) {
   var COMPLETE = 'is-complete';
   var SYNCED = 'is-synced';
   var DUPLICATE = 'is-duplicate';
@@ -25,8 +25,8 @@ function DistributionListController($scope, SharedDistributions, IndexedDB, Sync
     var distributionData = _.findWhere(SharedDistributions.distributionList, {id: distributionId});
     var facilities;
 
-    IndexedDB.get('distributionReferenceData', distributionId, function (event) {
-      facilities = event.target.result.facilities;
+    distributionService.getReferenceData(distributionId, function (referenceData) {
+      facilities = referenceData.facilities;
       syncFacilities();
     });
 
@@ -52,7 +52,7 @@ function DistributionListController($scope, SharedDistributions, IndexedDB, Sync
       });
 
       $q.all(promises).then(function (resolves) {
-        IndexedDB.put('distributions', distributionData, null, null, $scope.sharedDistributions.update);
+        distributionService.save(distributionData);
 
         if (!promises.length) {
           $scope.message = 'message.no.facility.synced';
@@ -76,6 +76,23 @@ function DistributionListController($scope, SharedDistributions, IndexedDB, Sync
         $scope.message = messageService.get("message.facility.synced.successfully", facilities.join(', '));
       });
     }
+  };
+
+  $scope.deleteDistribution = function (id) {
+    var dialogOpts = {
+      id: "distributionInitiated",
+      header: messageService.get('label.delete.distribution.header'),
+      body: messageService.get('label.confirm.delete.distribution')
+    };
+
+    var callback = function () {
+      return function (result) {
+        if (!result) return;
+        distributionService.deleteDistribution(id);
+      };
+    };
+
+    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
   }
 }
 
