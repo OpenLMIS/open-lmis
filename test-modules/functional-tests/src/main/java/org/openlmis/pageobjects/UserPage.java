@@ -166,8 +166,12 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//label[@ng-bind='getDeliveryZoneName(roleAssignment.deliveryZone.id)']")
   private static WebElement addedDeliveryZoneLabel;
+//
+//  @FindBy(how = How.XPATH, using = "//div/div[4]/div/ng-include/div/div[1]/div[2]/div[2]/div/label")
+//  private static WebElement addedDeliveryZoneProgramLabel;
 
-  @FindBy(how = How.XPATH, using = "//div/div[4]/div/ng-include/div/div[1]/div[2]/div[2]/div/label")
+
+  @FindBy(how = How.XPATH, using = "//div[@class='row-fluid ng-scope']/div[2]/div/label")
   private static WebElement addedDeliveryZoneProgramLabel;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
@@ -182,7 +186,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
   private static WebElement verifiedLabel;
 
-    public UserPage(TestWebDriver driver) throws IOException {
+  public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
@@ -288,7 +292,8 @@ public class UserPage extends Page {
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
       selectFacility.click();
-
+      testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+      testWebDriver.sleep(500);
       testWebDriver.selectByVisibleText(programsMyFacility, program1);
       rolesInputFieldMyFacility.click();
       rolesInputFieldMyFacility.clear();
@@ -297,6 +302,8 @@ public class UserPage extends Page {
       rolesSelectFieldMyFacility.click();
       addButtonMyFacility.click();
       testWebDriver.sleep(1000);
+      testWebDriver.getElementByXpath("//a[contains(text(),'Supervisory Roles')]").click();
+      testWebDriver.sleep(500);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.sleep(1000);
       testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
@@ -339,6 +346,8 @@ public class UserPage extends Page {
 
   public void enterDeliveryZoneData(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
+    testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(deliveryZone);
     testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
     testWebDriver.sleep(1000);
@@ -354,6 +363,8 @@ public class UserPage extends Page {
 
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
+    testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
+    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(deliveryZone);
     testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
     testWebDriver.sleep(1000);
@@ -477,6 +488,14 @@ public class UserPage extends Page {
     }
   }
 
+  public void clickRemoveButtonWithOk(int removeButtonNumber) {
+    testWebDriver.sleep(500);
+    testWebDriver.getElementByXpath("(//input[@value='Remove'])["+removeButtonNumber+"]").click();
+    clickOk();
+    testWebDriver.sleep(100);
+
+  }
+
   public String getAddedDeliveryZoneLabel() {
     return addedDeliveryZoneLabel.getText();
   }
@@ -485,7 +504,7 @@ public class UserPage extends Page {
     return addedDeliveryZoneProgramLabel.getText();
   }
 
-    public String getVerifiedLabel() {
-        return verifiedLabel.getText();
-    }
+  public String getVerifiedLabel() {
+    return verifiedLabel.getText();
+  }
 }
