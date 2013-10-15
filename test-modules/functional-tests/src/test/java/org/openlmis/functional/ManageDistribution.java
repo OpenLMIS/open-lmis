@@ -336,6 +336,36 @@ public class ManageDistribution extends TestCaseHelper {
     verifyElementsInTable(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
+  @And("^I remove cached distrubution$")
+  public void deleteDistribution() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.deleteDistribution();
+  }
+
+  @And("^I observe confirm delete distribution dialog$")
+  public void verifyDeleteDistributionConfirmation() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.verifyDeleteConfirmMessageAndHeader();
+  }
+
+  @And("I cancel delete distribution$")
+  public void cancelDeleteDistributionConfirmation() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.CancelDeleteDistribution();
+  }
+
+  @And("I confirm delete distribution$")
+  public void confirmDeleteDistributionConfirmation() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.ConfirmDeleteDistribution();
+  }
+
+  @Then("I see no diistribution in cache$")
+  public void noDistributionInCache() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.verifyNoDistributionCachedMessage();
+  }
+
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +
       "div[1]/div[1]/div").getText(), deliveryZoneNameFirst);

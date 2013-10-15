@@ -15,7 +15,7 @@ Feature: Smoke Tests
   @smokeDistribution
   @ie2
 
-  Scenario: User should able to initiate distribution
+  Scenario: User should able to initiate & delete distribution
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
       | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
@@ -23,12 +23,20 @@ Feature: Smoke Tests
     And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
     And I am logged in as "storeincharge"
     And I access plan my distribution page
+    Then I see no diistribution in cache
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
     Then I should see data download successfully
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
+    And I remove cached distrubution
+    Then I observe confirm delete distribution dialog
+    When I cancel delete distribution
+    And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
+    And I remove cached distrubution
+    And I confirm delete distribution
+    Then I see no diistribution in cache
 
   @smokeDistribution
   @ie2

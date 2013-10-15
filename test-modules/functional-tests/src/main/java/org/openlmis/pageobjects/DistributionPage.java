@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -62,6 +63,24 @@ public class DistributionPage extends Page {
 
   @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
   private static WebElement syncMessage;
+
+  @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
+  private static WebElement deleteDistributionIcon;
+
+  @FindBy(how = ID, using = "button_Cancel")
+  private static WebElement cancelButton;
+
+  @FindBy(how = ID, using = "button_OK")
+  private static WebElement okButton;
+
+  @FindBy(how = XPATH, using = "//div[@id='distributionInitiated']/div[2][@class='modal-body']/p")
+  private static WebElement deleteConfirmDialogMessage;
+
+  @FindBy(how = XPATH, using = "//div[@id='distributionInitiated']/div[1][@class='modal-header']/h3")
+  private static WebElement deleteConfirmDialogHeader;
+
+  @FindBy(how = XPATH, using ="//div[@id='noDistributionInitiated']/span")
+  private static WebElement noDistributionCachedMessage;
 
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -121,14 +140,16 @@ public class DistributionPage extends Page {
   public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)
   {
     testWebDriver.sleep(200);
-    SeleneseTestNgHelper.assertTrue("Data download successful message should show up",saveSuccessMessageDiv.getText().equals("Data for the selected "+deliveryZone+", "+program+", "+period+" has been downloaded"));
+    assertTrue("Data download successful message should show up", saveSuccessMessageDiv.getText().equals(
+            "Data for the selected " + deliveryZone + ", " + program + ", " + period + " has been downloaded"));
 
   }
 
   public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period)
   {
     testWebDriver.sleep(200);
-    SeleneseTestNgHelper.assertTrue("Data already cached  message should show up",saveSuccessMessageDiv.getText().equals("The data for the selected "+deliveryZone+", "+program+", "+period+" is already cached"));
+    assertTrue("Data already cached  message should show up", saveSuccessMessageDiv.getText().equals(
+            "The data for the selected " + deliveryZone + ", " + program + ", " + period + " is already cached"));
 
   }
 
@@ -244,5 +265,33 @@ public class DistributionPage extends Page {
 
       assertEquals(color,distributionIndicator.getCssValue("background-color"));
   }
+    public void deleteDistribution(){
+        testWebDriver.waitForElementToAppear(deleteDistributionIcon);
+        deleteDistributionIcon.click();
+    }
+
+    public void verifyDeleteConfirmMessageAndHeader()
+    {
+        assertTrue("Incorrect Confirmation Message.", deleteConfirmDialogMessage.getText().equals(
+                "Are you sure you want to delete this distribution? Any data that has not been synced with the server will be lost."));
+        assertTrue("Incorrect Confirmation Header.", deleteConfirmDialogHeader.getText().equals(
+                "Delete distribution"));
+
+
+    }
+
+    public void ConfirmDeleteDistribution(){
+        okButton.click();
+    }
+
+    public void CancelDeleteDistribution(){
+        cancelButton.click();
+    }
+
+    public void verifyNoDistributionCachedMessage()
+    {
+        assertTrue("Incorrect Message for No Distribution cached.", noDistributionCachedMessage.getText().equals(
+                "No distributions cached"));
+    }
 
 }
