@@ -31,7 +31,7 @@ services.factory('ProductCategories', function($resource){
 }) ;
 
 services.factory('SummaryReport', function($resource){
-    return $resource('/reports/summary.json', {}, {});
+    return $resource('/reports/reportdata/summary.json', {}, {});
 }) ;
 services.factory('SupplyStatusReport', function($resource){
     return $resource('/reports/reportdata/supply_status.json', {}, {});
@@ -39,7 +39,7 @@ services.factory('SupplyStatusReport', function($resource){
 
 
 services.factory('NonReportingFacilities', function($resource){
-    return $resource('/reports/non_reporting.json', {}, {});
+    return $resource('/reports/reportdata/non_reporting.json', {}, {});
 });
 
 services.factory('RequisitionGroups', function($resource){
