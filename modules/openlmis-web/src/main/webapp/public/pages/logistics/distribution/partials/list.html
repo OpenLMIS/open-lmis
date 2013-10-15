@@ -30,6 +30,7 @@
           <div class="span2" openlmis-message="label.status"></div>
           <div class="span2"></div>
           <div class="span1"></div>
+          <div class="span1"></div>
         </div>
       </div>
 
@@ -46,6 +47,9 @@
                                 ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
           <div class="span1"><a href="javascript:void(0)" openlmis-message="label.sync"
                                 ng-click="syncDistribution(distribution.id)"></a></div>
+          <div class="span1">
+            <i class="icon-remove-sign" ng-click="deleteDistribution(distribution.id)"></i>
+          </div>
         </div>
       </div>
     </div>

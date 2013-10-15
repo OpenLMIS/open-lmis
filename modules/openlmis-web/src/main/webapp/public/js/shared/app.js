@@ -12,13 +12,17 @@
 var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorage', 'ui.directives', 'ngCookies'],
   function ($httpProvider) {
     var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
+      var requestCount = 0;
+
       function responseSuccess(response) {
-        angular.element('#loader').hide();
+        if (!(--requestCount))
+          angular.element('#loader').hide();
         return response;
       }
 
       function responseError(response) {
-        angular.element('#loader').hide();
+        if (!(--requestCount))
+          angular.element('#loader').hide();
         switch (response.status) {
           case 403:
             $window.location = "/public/pages/access-denied.html";
@@ -33,17 +37,15 @@ var app = angular.module('openlmis', ['openlmis.services', 'openlmis.localStorag
         return $q.reject(response);
       }
 
-      var spinnerFunction = function (data) {
-        angular.element('#loader').show();
-        return data;
-      };
+      function request(config) {
+        if ((++requestCount) > 0)
+          angular.element('#loader').show();
+        config.headers["X-Requested-With"] = "XMLHttpRequest";
+        return config;
+      }
 
       return {
-        'request': function (config) {
-          config.transformRequest.push(spinnerFunction);
-          config.headers["X-Requested-With"] = "XMLHttpRequest";
-          return config;
-        },
+        'request': request,
         'response': responseSuccess,
         'responseError': responseError
       };

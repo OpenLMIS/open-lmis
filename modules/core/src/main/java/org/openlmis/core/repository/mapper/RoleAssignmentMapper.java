@@ -36,6 +36,9 @@ public interface RoleAssignmentMapper {
   @Insert("INSERT INTO role_assignments" +
     "(userId, roleId, programId, supervisoryNodeId) VALUES " +
     "(#{userId}, #{roleId}, #{programId}, #{supervisoryNodeId})")
+  /**
+   * @deprecated should use insert(userId, programId, supervisoryNode, deliveryZone, roleId)
+   */
   int insertRoleAssignment(@Param(value = "userId") Long userId,
                            @Param(value = "programId") Long programId, @Param(value = "supervisoryNodeId") Long supervisoryNodeId, @Param(value = "roleId") Long roleId);
 

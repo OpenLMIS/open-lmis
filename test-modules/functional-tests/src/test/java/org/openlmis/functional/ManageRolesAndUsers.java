@@ -222,16 +222,27 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.enterDeliveryZoneData(deliveryZoneNameFirst,programFirst,"");
     userPage.clickSaveButton();
     userPage.clickViewHere();
-    assertEquals(deliveryZoneNameFirst,userPage.getAddedDeliveryZoneLabel());
-    assertEquals(programFirst,userPage.getAddedDeliveryZoneProgramLabel());
+    testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
+    testWebDriver.sleep(1000);
+    assertEquals(userPage.getAddedDeliveryZoneLabel(),deliveryZoneNameFirst);
 
+    testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+    testWebDriver.sleep(500);
     userPage.removeRole(1, false);
+    testWebDriver.getElementByXpath("//a[contains(text(),'Supervisory Roles')]").click();
+    testWebDriver.sleep(500);
     userPage.verifyRolePresent(LAB_IN_CHARGE);
     userPage.removeRole(1, false);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
-    userPage.clickAllRemoveButton();
+    userPage.clickRemoveButtonWithOk(2);
+
+    testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+    testWebDriver.sleep(500);
+    userPage.clickRemoveButtonWithOk(1);
     userPage.clickSaveButton();
     userPage.clickViewHere();
+    testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+    testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
     verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(userPage);

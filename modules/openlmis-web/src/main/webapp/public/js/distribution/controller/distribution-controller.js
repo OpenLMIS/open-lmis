@@ -123,7 +123,17 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
     });
   };
 
+  function fadeMessage () {
+    $scope.$apply(function () {
+      angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+        $scope.message = '';
+      });
+    });
+  }
 
+  $scope.$watch('message', function () {
+    setTimeout(fadeMessage, 3000);
+  });
 
   var optionMessage = function (entity, defaultMessage) {
     return utils.isEmpty(entity) ? NONE_ASSIGNED_LABEL : defaultMessage;

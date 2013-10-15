@@ -65,6 +65,10 @@ distributionModule.service('distributionService', function ($dialog, messageServ
     });
   };
 
+  this.save = function (distribution) {
+    IndexedDB.put('distributions', distribution, null, null, SharedDistributions.update);
+  };
+
   this.put = function (distribution, referenceData) {
     distribution = prepareDistribution(distribution, referenceData);
 
@@ -77,5 +81,18 @@ distributionModule.service('distributionService', function ($dialog, messageServ
     IndexedDB.put('distributionReferenceData', referenceData, function () {
     }, {});
   };
+
+  this.deleteDistribution = function (id) {
+    IndexedDB.delete('distributions', id, null, null, function () {
+      SharedDistributions.update();
+    });
+    IndexedDB.delete('distributionReferenceData', id);
+  };
+
+  this.getReferenceData = function (id, callBack) {
+    IndexedDB.get('distributionReferenceData', id, function (event) {
+      callBack(event.target.result);
+    });
+  }
 });
 

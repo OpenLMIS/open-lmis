@@ -19,12 +19,15 @@ describe('Distribution Service', function () {
     module(function ($provide) {
       $provide.value('IndexedDB', {put: function () {
       }, get: function () {
+      }, delete: function () {
       }});
-    })
+    });
     inject(function (IndexedDB, _distributionService_, SharedDistributions) {
       indexedDB = IndexedDB;
       distributionService = _distributionService_;
       spyOn(indexedDB, 'put');
+      spyOn(indexedDB, 'get');
+      spyOn(indexedDB, 'delete');
       SharedDistributions.distributionList = [
         {deliveryZone: {id: 1, name: 'zone1'}, program: {id: 1, name: 'program1'}, period: {id: 1, name: 'period1'}},
         {deliveryZone: {id: 2}, program: {id: 2}, period: {id: 2}}
@@ -55,5 +58,19 @@ describe('Distribution Service', function () {
     expect(indexedDB.put.calls[0].args).toEqual(['distributions', distribution, jasmine.any(Function), {}, jasmine.any(Function)]);
     expect(indexedDB.put.calls[1].args).toEqual(['distributionReferenceData', referenceData, jasmine.any(Function), {}]);
   });
+
+  it('should delete distribution from cache', function () {
+    distributionService.deleteDistribution(2);
+
+    expect(indexedDB.delete).toHaveBeenCalledWith('distributions', 2, null, null, jasmine.any(Function));
+    expect(indexedDB.delete).toHaveBeenCalledWith('distributionReferenceData', 2);
+  });
+
+  it('should get reference data for a distribution', function () {
+    distributionService.getReferenceData(1, function () {
+    });
+
+    expect(indexedDB.get).toHaveBeenCalledWith('distributionReferenceData', 1, jasmine.any(Function));
+  })
 
 });

@@ -91,10 +91,10 @@
       <label openlmis-message="create.facility.serviceDeliveryPoint"><span class="label-required"> *</span></label>
 
             <div class="form-field radio-group">
-                <input type="radio" name="isSdp" ng-value="true" ng-model="facility.sdp" ng-required="true"/>
+                <input type="radio" name="isSdp" ng-value="true" ng-model="facility.sdp" ng-required="facility.sdp === null || facility.sdp === undefined"/>
                 <strong openlmis-message="button.yes"></strong>
                 &nbsp; &nbsp; &nbsp;
-                <input ng-model="facility.sdp" type="radio" name="isSdp" value="false"/>
+                <input ng-model="facility.sdp" type="radio" name="isSdp" ng-value="false"/>
                 <strong openlmis-message="button.no"></strong>
         <span class="field-error" ng-show="facilityForm.isSdp.$error.required && showError"
               openlmis-message="select.value">
@@ -107,7 +107,7 @@
 
             <div class="form-field radio-group">
                 <input ng-model="facility.active" type="radio" name="isActive" ng-value="true"
-                       ng-required="facility.active == null"/>
+                       ng-required="facility.active == null || facility.active == undefined"/>
               <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
                 <input ng-model="facility.active" type="radio" name="isActive" ng-value="false" />
                 <strong openlmis-message="button.no"></strong>
