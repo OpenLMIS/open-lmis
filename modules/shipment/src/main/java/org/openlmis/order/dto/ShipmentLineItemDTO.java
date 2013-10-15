@@ -15,15 +15,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShipmentLineItemDTO {
 
   private String orderId;
+  private String concatenatedOrderId;
+  private String facilityCode;
+  private String programCode;
   private String productCode;
+  private String quantityOrdered;
   private String quantityShipped;
   private String cost;
+  private String substitutedProductCode;
+  private String substitutedProductName;
+  private String substitutedProductQuantityShipped;
+  private String packSize;
   private String packedDate;
   private String shippedDate;
+
 }

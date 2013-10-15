@@ -59,6 +59,24 @@ public class ShipmentLineItemTransformer {
     if (!isBlank(dto.getShippedDate())) {
       lineItem.setShippedDate(parseDate(shippedDateFormat, dto.getShippedDate()));
     }
+
+    if(!isBlank(dto.getPackSize())){
+      lineItem.setPackSize( Integer.parseInt(dto.getPackSize() ));
+    }
+
+    if(!isBlank(dto.getQuantityOrdered())){
+      lineItem.setQuantityOrdered( Integer.parseInt( dto.getQuantityOrdered() ) );
+    }
+
+    if(!isBlank(dto.getSubstitutedProductQuantityShipped())){
+      lineItem.setSubstitutedProductQuantityShipped( Integer.parseInt( dto.getSubstitutedProductQuantityShipped()));
+    }
+
+    lineItem.setFacilityCode( dto.getFacilityCode());
+    lineItem.setConcatenatedOrderId(dto.getConcatenatedOrderId());
+    lineItem.setProgramCode( dto.getProgramCode() );
+    lineItem.setSubstitutedProductCode(dto.getSubstitutedProductCode());
+    lineItem.setSubstitutedProductName(dto.getSubstitutedProductName());
   }
 
   private Date parseDate(String dateFormat, String date) throws ParseException {

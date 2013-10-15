@@ -27,11 +27,27 @@ public class ShipmentLineItem extends BaseModel {
 
   private Long orderId;
 
+  private String concatenatedOrderId;
+
+  private String facilityCode;
+
+  private String programCode;
+
   private String productCode;
+
+  private Integer quantityOrdered;
 
   private Integer quantityShipped;
 
   private BigDecimal cost;
+
+  private String substitutedProductCode;
+
+  private String substitutedProductName;
+
+  private Integer substitutedProductQuantityShipped;
+
+  private Integer packSize;
 
   private Date packedDate;
 
