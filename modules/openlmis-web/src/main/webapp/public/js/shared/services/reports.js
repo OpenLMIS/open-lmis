@@ -98,7 +98,7 @@ services.factory('ReportFacilityTypes', function ($resource) {
 });
 
 services.factory('FacilityList', function ($resource) {
-    return $resource('/reports/facilitylist.json', {}, {});
+    return $resource('/reports/reportdata/facilitylist.json', {}, {});
 });
 
 services.factory('ReportPeriods', function ($resource) {
