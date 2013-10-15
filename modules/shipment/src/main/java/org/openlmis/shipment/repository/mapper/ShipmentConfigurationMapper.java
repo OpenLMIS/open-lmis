@@ -23,7 +23,7 @@ public interface ShipmentConfigurationMapper {
 
   @Update({"UPDATE shipment_configuration SET",
     "headerInFile =  #{headerInFile},",
-    "modifiedDate = NOW(),",
+    "modifiedDate = DEFAULT,",
     "modifiedBy = #{modifiedBy}"})
   void update(ShipmentConfiguration shipmentConfiguration);
 

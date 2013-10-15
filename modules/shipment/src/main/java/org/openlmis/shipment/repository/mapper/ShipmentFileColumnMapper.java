@@ -25,7 +25,7 @@ public interface ShipmentFileColumnMapper {
     "include = #{include},",
     "datePattern = #{datePattern},",
     "modifiedBy = #{modifiedBy},",
-    "modifiedDate = #{modifiedDate}",
+    "modifiedDate = DEFAULT ",
     "WHERE name = #{name}"})
   public void update(ShipmentFileColumn shipmentFileColumn);
 
