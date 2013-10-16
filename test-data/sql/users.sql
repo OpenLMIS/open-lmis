@@ -20,54 +20,18 @@ INSERT INTO roles
 
 INSERT INTO role_rights
 (roleId, rightName) VALUES
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Store In-Charge'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Store In-Charge'), 'CREATE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Medical-Officer'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Medical-Officer'), 'APPROVE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'FacilityHead'), 'AUTHORIZE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'FacilityHead'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU'), 'APPROVE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU In-Charge'), 'CONVERT_TO_ORDER'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU In-Charge'), 'VIEW_ORDER'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'View-Report'), 'VIEW_REPORT'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT');
+((SELECT id FROM roles WHERE name = 'Store In-Charge'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'Store In-Charge'), 'CREATE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'Medical-Officer'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'Medical-Officer'), 'APPROVE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'FacilityHead'), 'AUTHORIZE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'FacilityHead'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'LMU'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'LMU'), 'APPROVE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'LMU In-Charge'), 'CONVERT_TO_ORDER'),
+((SELECT id FROM roles WHERE name = 'LMU In-Charge'), 'VIEW_ORDER'),
+((SELECT id FROM roles WHERE name = 'View-Report'), 'VIEW_REPORT'),
+((SELECT id FROM roles WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT');
 
 
 INSERT INTO VENDORS (name, active) VALUES ('commTrack', TRUE);
