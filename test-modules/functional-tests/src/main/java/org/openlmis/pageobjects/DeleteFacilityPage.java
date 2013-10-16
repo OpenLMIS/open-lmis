@@ -143,6 +143,7 @@ public class DeleteFacilityPage extends Page {
 
   public void clickFacilityList(String date_time) {
     testWebDriver.sleep(2000);
+
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+date_time+"')]"));
     testWebDriver.getElementByXpath("//a[contains(text(),'"+date_time+"')]").click();
     testWebDriver.waitForElementToAppear(facilityHeader);
