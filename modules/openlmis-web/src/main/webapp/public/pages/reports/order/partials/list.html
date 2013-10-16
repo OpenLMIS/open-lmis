@@ -41,7 +41,7 @@
                                         class="label-required"> *</span></label>
 
                                 <div class="form-fields">
-                                    <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
+                                    <select ui-select2 style="width:200px;" ng-change="ChangeProgram()"  class="large-input" name="program"  ng-model="program" ng-options="option.id as option.name for option in programs">
                                         <option value="">-- Select a Program --</option>
                                     </select>
                                 </div>
@@ -51,7 +51,7 @@
                                 <label class="labels">Schedule <span class="label-required">*</span></label>
 
                                 <div class="form-fields">
-                                    <select ui-select2 style="width:200px;" class="large-input" name="schedule"  ng-model="schedule">
+                                    <select ui-select2 ng-change="ChangeSchedule()" style="width:200px;" class="large-input" name="schedule"  ng-model="schedule">
                                         <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                                     </select>
                                 </div>
@@ -96,7 +96,7 @@
                                 <label class="labels">Facility Name<span  class="label-required"> *</span></label>
                                 <div class="form-field">
                                     <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility">
-                                        <option ng-repeat="option in allFacilities" value="{{option.id}}">{{option.code}}-{{option.name}}</option>
+                                        <option ng-repeat="option in facilities" value="{{option.id}}">{{option.code}}-{{option.name}}</option>
                                     </select>
                                 </div>
 
@@ -126,7 +126,39 @@
 
                 </div>
                 <div class="content-body">
-                    <div class="gridStyleReport" ng-grid="gridOptions"></div>
+
+
+                    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div ng-show="datarows.length > 0">
+
+                        <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                            <br />
+                        <span ng-repeat="summary in summaries">
+                             <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                         </span>
+                        </div>
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+
+                            <tbody>
+                            <tr ng-repeat="row in datarows">
+                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                                <td data-title="'Product Code'" style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
+                                <td data-title="'Description'" style="width:30%" sortable="description"  >{{ row.description }}</td>
+                                <td data-title="'Facility Name'" style="width:30%" sortable="facilityName"  >{{ row.facilityName }}</td>
+                                <td data-title="'Unit Size'" class="number" style="width:80px" sortable="unitSize"  >{{ row.unitSize | number }}</td>
+                                <td data-title="'Unit Quantity'" class="number" style="width:80px" sortable="unitQuantity"  >{{ row.unitQuantity | number }}</td>
+                                <td data-title="'Pack Quantity'" class="number" style="width:80px" sortable="packQuantity"  >{{ row.packQuantity | number }}</td>
+                                <td data-title="'Discrepancy or Damages'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.discrepancy | number }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
 

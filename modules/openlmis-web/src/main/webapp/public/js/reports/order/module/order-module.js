@@ -1,4 +1,4 @@
-angular.module('order', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
+angular.module('order', ['openlmis', 'ngTable', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle'])
         .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:OrderReportController, templateUrl:'partials/list.html',reloadOnSearch:false}).
