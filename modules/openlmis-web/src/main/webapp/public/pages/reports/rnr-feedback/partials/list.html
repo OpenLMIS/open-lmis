@@ -110,7 +110,42 @@
                     </div>
                 </div>
                 <div class="content-body">
-                    <div class="gridStyleReport" ng-grid="gridOptions"></div>
+
+                    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div ng-show="datarows.length > 0">
+
+                        <div class="pull-right legend" >Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                            <br />
+                        <span ng-repeat="summary in summaries">
+                             <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
+                         </span>
+                        </div>
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                            <tbody>
+                            <tr ng-repeat="row in datarows">
+                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
+                                <td data-title="'Product Code'" style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
+                                <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
+                                <td data-title="'Unit'" class="number" style="width:80px" sortable="unit"  >{{ row.unit | number }}</td>
+                                <td data-title="'B. Balance'" class="number" style="width:80px" sortable="beginningBalance"  >{{ row.beginningBalance | number }}</td>
+                                <td data-title="'Q. Received'" class="number" style="width:80px" sortable="totalQuantityReceived"  >{{ row.totalQuantityReceived | number }}</td>
+                                <td data-title="'Q. Dispensed'" class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.totalQuantityDispensed | number }}</td>
+                                <td data-title="'Adjustements'" class="number" style="width:80px" sortable="adjustments"  >{{ row.adjustments | number }}</td>
+                                <td data-title="'Physical Count'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
+                                <td data-title="'Adjusted AMC'" class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.adjustedAMC | number }}</td>
+                                <td data-title="'New EOP'" class="number" style="width:80px" sortable="newEOP"  >{{ row.newEOP | number }}</td>
+                                <td data-title="'Q. Ordered'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
+                                <td data-title="'Q. Supplied'" class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
 

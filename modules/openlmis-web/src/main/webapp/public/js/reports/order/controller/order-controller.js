@@ -1,4 +1,4 @@
-function OrderReportController($scope,ngTableParams, $filter, OrderReport, ReportProductsByProgram ,ReportFacilityTypes,AllReportPeriods,ReportPeriods,ReportPeriodsByScheduleAndYear,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,FacilitiesByProgramParams,GetFacilityByFacilityType,SettingsByKey,ReportSchedules, $routeParams,$location) {
+function OrderReportController($scope, ngTableParams, $filter, OrderReport, ReportProductsByProgram ,ReportFacilityTypes,AllReportPeriods,ReportPeriods,ReportPeriodsByScheduleAndYear,ReportFilteredPeriods, $http,OperationYears, Months, ReportPrograms,FacilitiesByProgramParams,GetFacilityByFacilityType,SettingsByKey,ReportSchedules, $routeParams,$location) {
 
 
     $scope.showMessage = true;
@@ -97,7 +97,7 @@ function OrderReportController($scope,ngTableParams, $filter, OrderReport, Repor
     }
 
     $scope.ChangeSchedule = function(){
-        if(  $scope.filterObject.year != undefined &&  $scope.filterObject.year != ''){
+        if(  $scope.filterObject.year != -1 &&  $scope.filterObject.year != 0){
             ReportPeriodsByScheduleAndYear.get({ scheduleId: $scope.schedule, year: $scope.filterObject.year}, function(data){
                 $scope.periods = data.periods;
                 $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
@@ -125,23 +125,14 @@ function OrderReportController($scope,ngTableParams, $filter, OrderReport, Repor
 
 
     $scope.$watch('year', function (selection) {
-
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
         } else if (selection != undefined || selection == "") {
             $scope.filterObject.year = selection;
-
         } else {
             $scope.filterObject.year = 0;
         }
 
-        if($scope.filterObject.year == -1 || $scope.filterObject.year == 0){
-
-            $scope.ChangeSchedule('bySchedule');
-        }else{
-
-            $scope.ChangeSchedule('byYear');
-        }
     });
 
     $scope.$watch('facilityType', function(selection){
@@ -286,16 +277,12 @@ function OrderReportController($scope,ngTableParams, $filter, OrderReport, Repor
 
 
     $scope.getPagedDataAsync = function (pageSize, page) {
-        var params  = {};
-        if(pageSize != undefined && page != undefined ){
-            var params =  {
-                "max" : 100000,
-                "page" : 1
-            };
-        }
+        var params =  {
+            "max" : 100000,
+            "page" : 1
+        };
 
         $.each($scope.filterObject, function(index, value) {
-            //if(value != undefined)
                 params[index] = value;
         });
 
@@ -305,7 +292,6 @@ function OrderReportController($scope,ngTableParams, $filter, OrderReport, Repor
         });
 
     };
-
 
 
     $scope.formatNumber = function(value){

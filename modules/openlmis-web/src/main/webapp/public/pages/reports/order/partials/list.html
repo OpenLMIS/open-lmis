@@ -3,7 +3,6 @@
   ~
   ~ The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
   -->
-
 <div class="row-fluid sortable ui-sortable">
     <div class="box span12">
         <div class="box-header">
@@ -22,10 +21,7 @@
 
                     <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
-
-
                                 <!-- Order Type-->
-
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Order Type<span
                                             class="label-required">*</span>  </label>
@@ -128,7 +124,7 @@
                 <div class="content-body">
 
 
-                    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <table class="table table-bordered ng-table-responsive" ng-show="data == undefined || data.length == 0">
                         <tr>
                             <td>No data to show under selected filters</td>
                         </tr>

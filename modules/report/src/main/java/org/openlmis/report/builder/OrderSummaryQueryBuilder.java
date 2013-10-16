@@ -36,7 +36,6 @@ public class OrderSummaryQueryBuilder {
             writePredicates(filter);
             ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, OrderSummaryReport.class,"facility_name asc"));
             return SQL();
-
         } else{  //Emergency orders
 
 

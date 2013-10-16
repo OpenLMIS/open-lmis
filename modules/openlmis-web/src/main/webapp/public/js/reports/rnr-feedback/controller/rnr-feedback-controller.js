@@ -1,4 +1,4 @@
-function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacilityTypes,OperationYears,ReportPeriods,ReportPeriodsByScheduleAndYear,AllReportPeriods,ReportFilteredPeriods, $http,ReportSchedules, ReportPrograms,AllFacilites,GetFacilityByFacilityType,SettingsByKey, $routeParams,$location) {
+function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport, Products ,ReportFacilityTypes,OperationYears,ReportPeriods,ReportPeriodsByScheduleAndYear,AllReportPeriods,ReportFilteredPeriods, $http,ReportSchedules, ReportPrograms,AllFacilites,GetFacilityByFacilityType,SettingsByKey, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -312,109 +312,60 @@ function RnRFeedbackController($scope, RnRFeedbackReport, Products ,ReportFacili
 
     };
 
-    $scope.getPagedDataAsync = function (pageSize, page) {
-        var params  = {};
-        if(pageSize != undefined && page != undefined ){
-            var params =  {
-                "max" : pageSize,
-                "page" : page
-            };
+
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function(params) {
+
+        // slice array data on pages
+        if($scope.data == undefined ){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
+            }
         }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+
+    $scope.getPagedDataAsync = function (pageSize, page) {
+
+        var params =  {
+            "max" : 10000,
+            "page" : 1
+        };
 
         $.each($scope.filterObject, function(index, value) {
-            //if(value != undefined)
             params[index] = value;
         });
 
         RnRFeedbackReport.get(params, function(data) {
-            $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+            $scope.data         = data.pages.rows ;
+            $scope.paramsChanged( $scope.tableParams );
         });
 
     };
 
-    $scope.$watch('pagingOptions.currentPage', function () {
-        $scope.currentPage = $scope.pagingOptions.currentPage;
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-    }, true);
-
-    $scope.$watch('pagingOptions.pageSize', function () {
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-    }, true);
-
-
-
-    $scope.sortInfo = { fields:["productCode","facilityName"], directions: ["ASC","ASC"]};
-
-    // put out the sort order
-    $.each($scope.sortInfo.fields, function(index, value) {
-        if(value != undefined) {
-            $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-        }
-    });
-    $scope.$watch('sortInfo', function () {
-
-        $.each($scope.sortInfo.fields, function(index, value) {
-            if(value != undefined)
-                $scope.filterObject['sort-'+$scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-        });
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
-    }, true);
     $scope.formatNumber = function(value){
         return utils.formatNumber(value,'0,000');
     };
-    $scope.gridOptions = {
-        data: 'myData',
-        columnDefs:
-    [
-        { field: 'productCode', displayName: 'Code', width: "100px;", resizable: false},
-        { field: 'product', displayName: 'Product', width: "250px;", resizable: false},
-                { field: 'unit', displayName: 'Unit', width: "100" },
-        { field: 'beginningBalance', displayName: 'Beginning Balance', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'totalQuantityReceived', displayName: 'Quantity Received', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'totalQuantityDispensed', displayName: 'Quantity Dispensed', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'adjustments', displayName: 'Adjustments', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'physicalCount', displayName: 'Physical Count', width : "180px;",cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'adjustedAMC', displayName: 'Adjusted AMC', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'newEOP', displayName: 'New EOP', width : "180px;", cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'orderQuantity', displayName: 'Order Quantity', width : "180px;", cellClass : 'pull-right',cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'},
-        { field: 'quantitySupplied', displayName: 'Quantity Supplied', width : "180px;", cellClass : 'ngCellTextRight', cellTemplate: '<div class="ngCellText" style="text-align:right;" ng-class="col.colIndex()"><span ng-cell-text>{{formatNumber(COL_FIELD)}}</span></div>'}
-
-    ],
-        enablePaging: true,
-        enableSorting :true,
-        showFooter: true,
-        selectWithCheckboxOnly :false,
-        pagingOptions: $scope.pagingOptions,
-        filterOptions: $scope.filterOptions,
-        useExternalSorting: true,
-        sortInfo: $scope.sortInfo,
-        showColumnMenu: true,
-        enableRowReordering: true,
-        showFilter: true,
-        plugins: [new ngGridFlexibleHeightPlugin()]
-
-    };
-
-    /*function parseJsonDate(jsonDate) {
-        var offset = new Date().getTimezoneOffset() * 60000;
-        var parts = /\/Date\((-?\d+)([+-]\d{2})?(\d{2})?.*//*.exec(jsonDate);
-        if (parts[2] == undefined) parts[2] = 0;
-        if (parts[3] == undefined) parts[3] = 0;
-        return new Date(+parts[1] + offset + parts[2] * 3600000 + parts[3] * 60000);
-    };
-
-    var init = function () {
-
-        $scope.periodType = $scope.defaultSettings('P');
-
-        if ($scope.periodType == 'quarterly') {
-            $scope.startQuarter = $scope.defaultSettings('Q');
-        } else {
-            $scope.startMonth = $scope.defaultSettings('M');
-        }
-        $scope.startYear = $scope.defaultSettings('Y');
-    };
-    init();
-*/
 
 }
