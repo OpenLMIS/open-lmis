@@ -368,13 +368,18 @@ public class RequisitionRepositoryTest {
     String searchType = SEARCH_ALL;
     String searchVal = "test";
     Integer pageNumber = 2;
+    String sortDirection = "asc";
+    String sortBy = "program";
     Integer pageSize = 2;
-    when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER)).thenReturn(expected);
+    when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
+      1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
 
-    List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
+    List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
+      pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(rnrList, is(expected));
-    verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
+    verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test

@@ -21,8 +21,10 @@ public class ProgramBuilder {
 
   public static final String PROGRAM_CODE = "YELL_FVR";
   public static final Long PROGRAM_ID = 1L;
+  public static final String PROGRAM_NAME = "Yellow Fever";
 
   public static final Property<Program, String> programCode = newProperty();
+  public static final Property<Program, String> programName = newProperty();
   public static final Property<Program, Boolean> programStatus = newProperty();
   public static final Property<Program, Boolean> templateStatus = newProperty();
   public static final Property<Program, Boolean> regimenTemplateConfigured = newProperty();
@@ -34,13 +36,13 @@ public class ProgramBuilder {
     public Program instantiate(PropertyLookup<Program> lookup) {
       Program program = new Program();
       program.setId(lookup.valueOf(programId, PROGRAM_ID));
+      program.setName(lookup.valueOf(programName, PROGRAM_NAME));
       program.setCode(lookup.valueOf(programCode, PROGRAM_CODE));
-      program.setName("Yellow Fever");
       program.setDescription("Yellow Fever program");
       program.setActive(lookup.valueOf(programStatus, true));
       program.setTemplateConfigured(lookup.valueOf(templateStatus, false));
       program.setPush(lookup.valueOf(push, false));
-      program.setRegimenTemplateConfigured(lookup.valueOf(regimenTemplateConfigured,Boolean.FALSE));
+      program.setRegimenTemplateConfigured(lookup.valueOf(regimenTemplateConfigured, Boolean.FALSE));
       return program;
     }
   };

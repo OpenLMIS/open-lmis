@@ -1263,18 +1263,23 @@ public class RequisitionServiceTest {
     String searchVal = "test";
     Integer pageNumber = 1;
     Integer pageSize = 3;
+    String sortBy = "sortBy";
+    String sortDirection = "asc";
 
     Rnr rnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(make(a(defaultRnr)), Right.CONVERT_TO_ORDER);
 
 
     List<Rnr> filteredRnrs = Arrays.asList(rnr);
 
-    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER)).thenReturn(filteredRnrs);
+    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(filteredRnrs);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 6, 1l, Right.CONVERT_TO_ORDER);
+    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
+      pageNumber, 6, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
-    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
+    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
     assertThat(rnrList, is(filteredRnrs));
   }
 
@@ -1283,12 +1288,18 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.page.not.found");
 
-    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "program";
+    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l,
+      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
   public void shouldReturnEmptyListInCaseNotRequisitionsExistAndPage1Requested() throws Exception {
-    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 1, 0, 1l, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "program";
+    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal",
+      1, 0, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(0));
   }
@@ -1298,12 +1309,14 @@ public class RequisitionServiceTest {
 
     int numberOfApprovedRequisitions = 5;
     String searchType = "searchType";
+    String sortDirection = "asc";
+    String sortBy = "program";
     String searchVal = "search";
     when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(count, is(2));
   }
@@ -1314,11 +1327,15 @@ public class RequisitionServiceTest {
     int numberOfApprovedRequisitions = 6;
     String searchType = "searchType";
     String searchVal = "search";
-    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal,  1l, Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
+    String sortDirection = "asc";
+    String sortBy = "program";
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
+      Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal,  1l, Right.CONVERT_TO_ORDER);
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
+      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(count, is(2));
   }
