@@ -32,7 +32,7 @@ public class ShipmentFileTemplateService {
   public void update(ShipmentFileTemplate shipmentFileTemplate) {
     shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getConfiguration());
 
-    for (EDIFileColumn shipmentFileColumn : shipmentFileTemplate.getColumns()) {
+    for (ShipmentFileColumn shipmentFileColumn : shipmentFileTemplate.getColumns()) {
       shipmentTemplateRepository.update(shipmentFileColumn);
     }
   }

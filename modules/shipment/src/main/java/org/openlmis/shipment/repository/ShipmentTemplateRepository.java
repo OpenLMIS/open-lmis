@@ -41,7 +41,7 @@ public class ShipmentTemplateRepository {
     shipmentConfigurationMapper.update(shipmentConfiguration);
   }
 
-  public void update(EDIFileColumn shipmentFileColumn) {
+  public void update(ShipmentFileColumn shipmentFileColumn) {
     shipmentFileColumnMapper.update(shipmentFileColumn);
   }
 }
