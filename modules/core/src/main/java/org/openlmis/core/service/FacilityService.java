@@ -104,6 +104,7 @@ public class FacilityService {
 
     facilityRepository.save(newFacility);
 
+    //TODO newFacility doesn't have modifiedDate populated
     notify(newFacility, oldFacility);
   }
 
