@@ -24,23 +24,39 @@ import java.io.IOException;
 
 public class LoginPage extends Page {
 
+  @FindBy(how= How.XPATH, using = "//div[@class='login-page']/ng-include/div/div[2]/h2")
+  private static WebElement pageIdentifierOnLoginPage;
+
   @FindBy(how = How.ID, using = "username")
   private static WebElement userNameField;
 
   @FindBy(how = How.ID, using = "password")
   private static WebElement passwordField;
 
+  @FindBy(how = How.XPATH, using="//input[@class='btn btn-primary']")
+  private static WebElement signInButton;
+
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
   private static WebElement forgotPasswordHeader;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Forgot password?')]")
+  @FindBy(how = How.XPATH, using = "//a[@openlmis-message='link.forgot.password']")
   private static WebElement forgotPasswordLink;
 
   private String BASE_URL;
 
   private String baseUrl;
 
-  public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
+    @FindBy(how = How.ID, using = "locale_en")
+    private static WebElement langEnglish;
+
+    @FindBy(how=How.ID, using = "locale_pt")
+    private static WebElement langPortugues;
+
+    @FindBy(how=How.ID, using = "locale_es")
+    private static WebElement langEspanol;
+
+
+    public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
     super(driver);
 
     BASE_URL = baseUrl;
@@ -64,8 +80,45 @@ public class LoginPage extends Page {
   public ForgotPasswordPage clickForgotPasswordLink() throws IOException {
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
-    testWebDriver.waitForElementToAppear(forgotPasswordHeader);
+//    testWebDriver.waitForElementToAppear(forgotPasswordHeader);
     return new ForgotPasswordPage(testWebDriver);
   }
+
+    public String getEnglishColor()
+    {
+        testWebDriver.sleep(1500);
+//        testWebDriver.waitForElementToAppear(langEnglish);
+        String color=langEnglish.getCssValue("color");
+        return color;
+    }
+
+    public String getPortuguesColor()
+
+    {
+        testWebDriver.sleep(1500);
+        testWebDriver.waitForElementToAppear(langPortugues);
+        String color=langPortugues.getCssValue("color");
+        return color;
+    }
+
+    public void setLangAsEnglish()
+    {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(langEnglish);
+        langEnglish.click();
+    }
+
+    public void setLangAsPortugues()
+    {
+        testWebDriver.sleep(1000);
+        testWebDriver.waitForElementToAppear(langPortugues);
+        langPortugues.click();
+    }
+
+    public String getPageIdentifierOnLoginPageText()
+    {
+        testWebDriver.waitForElementToAppear(pageIdentifierOnLoginPage);
+        return pageIdentifierOnLoginPage.getText();
+    }
 
 }
