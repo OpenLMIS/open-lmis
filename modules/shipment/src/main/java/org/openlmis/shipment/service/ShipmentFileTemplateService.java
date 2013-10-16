@@ -10,7 +10,8 @@
 
 package org.openlmis.shipment.service;
 
-import org.openlmis.shipment.domain.ShipmentConfiguration;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
@@ -29,15 +30,15 @@ public class ShipmentFileTemplateService {
 
   @Transactional
   public void update(ShipmentFileTemplate shipmentFileTemplate) {
-    shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getShipmentConfiguration());
+    shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getConfiguration());
 
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileTemplate.getShipmentFileColumns()) {
+    for (EDIFileColumn shipmentFileColumn : shipmentFileTemplate.getColumns()) {
       shipmentTemplateRepository.update(shipmentFileColumn);
     }
   }
 
   public ShipmentFileTemplate get() {
-    ShipmentConfiguration config = shipmentTemplateRepository.getShipmentConfiguration();
+    EDIConfiguration config = shipmentTemplateRepository.getShipmentConfiguration();
     List<ShipmentFileColumn> columns = shipmentTemplateRepository.getAllShipmentFileColumns();
 
     return new ShipmentFileTemplate(config, columns);

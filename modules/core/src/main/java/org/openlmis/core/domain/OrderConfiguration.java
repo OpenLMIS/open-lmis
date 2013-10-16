@@ -14,9 +14,8 @@ package org.openlmis.core.domain;
 import lombok.Data;
 
 @Data
-public class OrderConfiguration extends BaseModel{
+public class OrderConfiguration extends EDIConfiguration {
 
   private String filePrefix;
-  private Boolean headerInFile;
 
 }

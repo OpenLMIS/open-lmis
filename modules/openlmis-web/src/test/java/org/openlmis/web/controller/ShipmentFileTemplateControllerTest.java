@@ -16,8 +16,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
@@ -70,10 +71,10 @@ public class ShipmentFileTemplateControllerTest {
 
   @Test
   public void shouldUpdateShipmentFileTemplate() {
-    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn("name", "Label", 1, false, true, "dd/mm/yy");
-    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn("name", "Label", 2, false, true, "dd/mm/yy");
+    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn("name", "Label", false, true, 1, "dd/mm/yy");
+    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn("name", "Label", false, true, 2, "dd/mm/yy");
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(
-      new ShipmentConfiguration(true),
+      new EDIConfiguration(true),
       asList(shipmentFileColumn1, shipmentFileColumn2));
 
 
@@ -81,8 +82,8 @@ public class ShipmentFileTemplateControllerTest {
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(response.getBody().getSuccessMsg(), is("shipment.file.configuration.success"));
-    assertThat(shipmentFileTemplate.getShipmentConfiguration().getModifiedBy(), is(userId));
-    for (ShipmentFileColumn column : shipmentFileTemplate.getShipmentFileColumns()) {
+    assertThat(shipmentFileTemplate.getConfiguration().getModifiedBy(), is(userId));
+    for (EDIFileColumn column : shipmentFileTemplate.getColumns()) {
       assertThat(column.getModifiedBy(), is(userId));
     }
 

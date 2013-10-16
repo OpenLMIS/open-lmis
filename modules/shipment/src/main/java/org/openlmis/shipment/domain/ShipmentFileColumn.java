@@ -9,28 +9,16 @@
  */
 package org.openlmis.shipment.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
-
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-@JsonSerialize(include = NON_EMPTY)
-public class ShipmentFileColumn extends BaseModel {
+public class ShipmentFileColumn extends EDIFileColumn {
 
-  private String name;
-  private String dataFieldLabel;
-  private Integer position;
-  private Boolean include;
-  private Boolean mandatory;
-  private String datePattern;
-
+  public ShipmentFileColumn(String name, String dataFieldLabel, Boolean include, Boolean mandatory, Integer position, String datePattern) {
+    super(name, dataFieldLabel, include, mandatory, position, datePattern);
+  }
 
   public void validate() {
     if (position == null || position == 0) {

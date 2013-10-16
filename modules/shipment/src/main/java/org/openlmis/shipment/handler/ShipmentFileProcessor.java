@@ -12,6 +12,7 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
@@ -104,7 +105,7 @@ public class ShipmentFileProcessor {
                                       ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
     boolean status = true;
 
-    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
+    List<ShipmentFileColumn> shipmentFileColumns = (List<ShipmentFileColumn>) shipmentFileTemplate.getColumns();
 
     Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
 
@@ -179,7 +180,7 @@ public class ShipmentFileProcessor {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
       Integer position = shipmentFileColumn.getPosition();
       String name = shipmentFileColumn.getName();
       try {
@@ -197,13 +198,13 @@ public class ShipmentFileProcessor {
 
   private void ignoreFirstLineIfHeadersArePresent(ShipmentFileTemplate shipmentFileTemplate,
                                                   ICsvListReader listReader) throws IOException {
-    if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
+    if (shipmentFileTemplate.getConfiguration().isHeaderInFile()) {
       listReader.getHeader(true);
     }
   }
 
   private String getFormatForField(String fieldName, List<ShipmentFileColumn> shipmentFileColumns) {
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
       if (shipmentFileColumn.getName().equals(fieldName)) {
         return shipmentFileColumn.getDatePattern();
       }

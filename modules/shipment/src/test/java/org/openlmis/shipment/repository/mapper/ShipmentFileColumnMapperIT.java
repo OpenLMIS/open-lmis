@@ -14,6 +14,7 @@ import org.apache.commons.collections.Predicate;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
@@ -24,7 +25,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -62,12 +62,11 @@ public class ShipmentFileColumnMapperIT {
       with(columnPosition, 120),
       with(includeInShipmentFile, true),
       with(modifiedById, 22L),
-      with(modifiedOnDate, new Date(9898989898L)),
       with(dateFormat, "dd/MM")));
 
     mapper.update(shipmentFileColumn);
 
-    ShipmentFileColumn column = filterColumns(mapper.getAll(), "ColumnName");
+    EDIFileColumn column = filterColumns(mapper.getAll(), "ColumnName");
 
     assertThat(column.getDataFieldLabel(), is("label"));
     assertThat(column.getDatePattern(), is("dd/MM"));
@@ -75,7 +74,6 @@ public class ShipmentFileColumnMapperIT {
     assertThat(column.getMandatory(), is(false));
     assertThat(column.getPosition(), is(120));
     assertThat(column.getModifiedBy(), is(22L));
-    assertThat(column.getModifiedDate(), is(new Date(9898989898L)));
   }
 
   private ShipmentFileColumn filterColumns(List<ShipmentFileColumn> updatedColumns, final String columnName) {

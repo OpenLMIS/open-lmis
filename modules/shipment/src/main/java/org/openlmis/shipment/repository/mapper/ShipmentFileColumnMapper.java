@@ -12,6 +12,7 @@ package org.openlmis.shipment.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +28,7 @@ public interface ShipmentFileColumnMapper {
     "modifiedBy = #{modifiedBy},",
     "modifiedDate = DEFAULT ",
     "WHERE name = #{name}"})
-  public void update(ShipmentFileColumn shipmentFileColumn);
+  public void update(EDIFileColumn shipmentFileColumn);
 
   @Select("SELECT * FROM shipment_file_columns")
   public List<ShipmentFileColumn> getAll();

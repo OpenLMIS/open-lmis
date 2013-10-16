@@ -17,7 +17,7 @@
       <div class="clearfix form-inline row-fluid">
         <div class="span4 include-header-form">
           <input type="checkbox" id="includeHeadersCheckbox"
-                 ng-model="shipmentFileTemplate.shipmentConfiguration.headerInFile"/>
+                 ng-model="shipmentFileTemplate.configuration.headerInFile"/>
           <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
         </div>
       </div>
@@ -42,7 +42,7 @@
           </div>
 
           <div class="rnr-template-columns list-container">
-            <div class="row-fluid list-row" ng-repeat="shipmentFileColumn in shipmentFileTemplate.shipmentFileColumns">
+            <div class="row-fluid list-row" ng-repeat="shipmentFileColumn in shipmentFileTemplate.columns">
               <div class="span1">
                 <span class="first-column checkbox-column">
                   <input id="includeCheckbox{{ $index }}" type="checkbox"

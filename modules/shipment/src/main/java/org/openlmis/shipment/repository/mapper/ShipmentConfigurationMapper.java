@@ -12,19 +12,19 @@ package org.openlmis.shipment.repository.mapper;
 
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
+import org.openlmis.core.domain.EDIConfiguration;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShipmentConfigurationMapper {
 
   @Select("SELECT * FROM shipment_configuration")
-  ShipmentConfiguration get();
+  EDIConfiguration get();
 
   @Update({"UPDATE shipment_configuration SET",
     "headerInFile =  #{headerInFile},",
     "modifiedDate = DEFAULT,",
     "modifiedBy = #{modifiedBy}"})
-  void update(ShipmentConfiguration shipmentConfiguration);
+  void update(EDIConfiguration shipmentConfiguration);
 
 }

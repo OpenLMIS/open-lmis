@@ -16,11 +16,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
@@ -97,7 +98,7 @@ public class ShipmentFileProcessorTest {
   @InjectMocks
   private ShipmentFileProcessor shipmentFileProcessor;
 
-  ShipmentConfiguration shipmentConfiguration;
+  EDIConfiguration shipmentConfiguration;
 
   Date creationDate;
 
@@ -122,17 +123,16 @@ public class ShipmentFileProcessorTest {
     creationDate = new Date();
     whenNew(Date.class).withArguments(fileTime.toMillis()).thenReturn(creationDate);
 
-    shipmentConfiguration = new ShipmentConfiguration(false);
+    shipmentConfiguration = new EDIConfiguration(false);
   }
 
   @Test
   public void shouldThrowErrorIfNotEnoughFieldsInShipmentFile() throws Exception {
 
-    List<ShipmentFileColumn> shipmentFileColumnList = asList(
-      make(a(mandatoryShipmentFileColumn, with(columnPosition, 1))),
-      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))),
-      make(a(mandatoryShipmentFileColumn, with(columnPosition, 3)))
-    );
+    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<>();
+    shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 1))));
+    shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))));
+    shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 3))));
 
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
@@ -184,12 +184,12 @@ public class ShipmentFileProcessorTest {
   @Test
   public void shouldRemoveHeadersIfPresentInCsv() throws Exception {
 
-    List<ShipmentFileColumn> shipmentFileColumnList = asList(
-      make(a(mandatoryShipmentFileColumn, with(columnPosition, 2)))
-    );
+    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+      add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))));
+    }};
 
     boolean headerInFile = true;
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(new ShipmentConfiguration(headerInFile), shipmentFileColumnList);
+    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(new EDIConfiguration(headerInFile), shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
@@ -204,21 +204,22 @@ public class ShipmentFileProcessorTest {
 
   @Test
   public void shouldCreateDTOIfDateFieldsArePresent() throws Exception {
-    List<ShipmentFileColumn> shipmentFileColumnList = asList(
-      make(a(mandatoryShipmentFileColumn,
+    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+      add(make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 1),
         with(fieldName, "orderId")
-      )),
-      make(a(mandatoryShipmentFileColumn,
+      )));
+      add(make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 2),
         with(fieldName, "packedDate"),
         with(dateFormat, "MM/yy")
-      )),
-      make(a(defaultShipmentFileColumn,
+      )));
+      add(make(a(defaultShipmentFileColumn,
         with(columnPosition, 3),
         with(fieldName, "shippedDate"),
         with(dateFormat, "dd/MM/yyyy")
       )));
+    }};
 
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 

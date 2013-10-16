@@ -15,8 +15,9 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
@@ -51,7 +52,7 @@ public class ShipmentFileTemplateServiceTest {
       add(new ShipmentFileColumn());
       add(new ShipmentFileColumn());
     }};
-    ShipmentConfiguration shipmentConfiguration = new ShipmentConfiguration();
+    EDIConfiguration shipmentConfiguration = new EDIConfiguration();
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumns);
 
     service.update(shipmentFileTemplate);
@@ -61,7 +62,7 @@ public class ShipmentFileTemplateServiceTest {
 
   @Test
   public void shouldGetShipmentTemplate() throws Exception {
-    ShipmentConfiguration shipmentConfiguration = new ShipmentConfiguration();
+    EDIConfiguration shipmentConfiguration = new EDIConfiguration();
     List<ShipmentFileColumn> shipmentFileColumns = new ArrayList<>();
     when(repository.getShipmentConfiguration()).thenReturn(shipmentConfiguration);
     when(repository.getAllShipmentFileColumns()).thenReturn(shipmentFileColumns);

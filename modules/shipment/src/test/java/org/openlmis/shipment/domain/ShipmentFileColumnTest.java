@@ -24,7 +24,7 @@ public class ShipmentFileColumnTest {
 
   @Test
   public void shouldThrowErrorIfPositionIsZero() throws Exception {
-    ShipmentFileColumn column = new ShipmentFileColumn("name", "Label", 0, true, true, "dd/mm/yy");
+    ShipmentFileColumn column = new ShipmentFileColumn("name", "Label", true, true, 0, "dd/mm/yy");
 
     exException.expect(DataException.class);
     exException.expectMessage("shipment.file.invalid.position");
@@ -34,7 +34,7 @@ public class ShipmentFileColumnTest {
 
   @Test
   public void shouldThrowErrorIfPositionIsNull() throws Exception {
-    ShipmentFileColumn column = new ShipmentFileColumn("name", "Label", null, true, true, "dd/mm/yy");
+    ShipmentFileColumn column = new ShipmentFileColumn("name", "Label", true, true, null, "dd/mm/yy");
 
     exException.expect(DataException.class);
     exException.expectMessage("shipment.file.invalid.position");

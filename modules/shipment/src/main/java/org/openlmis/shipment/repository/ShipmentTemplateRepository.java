@@ -10,7 +10,8 @@
 
 package org.openlmis.shipment.repository;
 
-import org.openlmis.shipment.domain.ShipmentConfiguration;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.repository.mapper.ShipmentConfigurationMapper;
 import org.openlmis.shipment.repository.mapper.ShipmentFileColumnMapper;
@@ -32,15 +33,15 @@ public class ShipmentTemplateRepository {
     return shipmentFileColumnMapper.getAll();
   }
 
-  public ShipmentConfiguration getShipmentConfiguration() {
+  public EDIConfiguration getShipmentConfiguration() {
     return shipmentConfigurationMapper.get();
   }
 
-  public void updateShipmentConfiguration(ShipmentConfiguration shipmentConfiguration) {
+  public void updateShipmentConfiguration(EDIConfiguration shipmentConfiguration) {
     shipmentConfigurationMapper.update(shipmentConfiguration);
   }
 
-  public void update(ShipmentFileColumn shipmentFileColumn) {
+  public void update(EDIFileColumn shipmentFileColumn) {
     shipmentFileColumnMapper.update(shipmentFileColumn);
   }
 }

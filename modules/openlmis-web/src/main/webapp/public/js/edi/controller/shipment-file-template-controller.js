@@ -14,7 +14,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
   $scope.dateFormats = _.pluck(_.where(dateFormats, {"orderDate": true}), "format");
 
   function isDuplicatePosition() {
-    var positionList = _.pluck(_.where($scope.shipmentFileTemplate.shipmentFileColumns, {"include": true}), "position");
+    var positionList = _.pluck(_.where($scope.shipmentFileTemplate.columns, {"include": true}), "position");
     var uniquePositionList = _.uniq(positionList);
     if (uniquePositionList.length != positionList.length) {
       $scope.message = "";
@@ -26,7 +26,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
 
   function isInvalidPosition() {
     var emptyPosition = false;
-    angular.forEach($scope.shipmentFileTemplate.shipmentFileColumns, function (column) {
+    angular.forEach($scope.shipmentFileTemplate.columns, function (column) {
 
       if (column.include && (isUndefined(column.position) || parseInt(column.position, 10) === 0 )) {
         $scope.message = "";

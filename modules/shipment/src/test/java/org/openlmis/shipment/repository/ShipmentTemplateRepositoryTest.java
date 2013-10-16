@@ -17,8 +17,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.repository.mapper.ShipmentConfigurationMapper;
 import org.openlmis.shipment.repository.mapper.ShipmentFileColumnMapper;
@@ -55,10 +56,10 @@ public class ShipmentTemplateRepositoryTest {
 
   @Test
   public void shouldGetShipmentConfiguration() {
-    ShipmentConfiguration expectedShipmentConfiguration = new ShipmentConfiguration();
+    EDIConfiguration expectedShipmentConfiguration = new EDIConfiguration();
     when(shipmentConfigurationMapper.get()).thenReturn(expectedShipmentConfiguration);
 
-    ShipmentConfiguration shipmentConfiguration = repository.getShipmentConfiguration();
+    EDIConfiguration shipmentConfiguration = repository.getShipmentConfiguration();
 
     assertThat(shipmentConfiguration, is(expectedShipmentConfiguration));
     verify(shipmentConfigurationMapper).get();
@@ -66,7 +67,7 @@ public class ShipmentTemplateRepositoryTest {
 
   @Test
   public void shouldUpdateShipmentConfiguration() {
-    ShipmentConfiguration shipmentConfiguration = new ShipmentConfiguration();
+    EDIConfiguration shipmentConfiguration = new EDIConfiguration();
 
     repository.updateShipmentConfiguration(shipmentConfiguration);
 
