@@ -30,8 +30,8 @@ INSERT INTO role_rights
 ((SELECT id FROM roles WHERE name = 'LMU'), 'APPROVE_REQUISITION'),
 ((SELECT id FROM roles WHERE name = 'LMU In-Charge'), 'CONVERT_TO_ORDER'),
 ((SELECT id FROM roles WHERE name = 'LMU In-Charge'), 'VIEW_ORDER'),
-((SELECT id FROM roles WHERE name = 'View-Report'), 'VIEW_REPORT'),
-((SELECT id FROM roles WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT');
+((SELECT id FROM roles WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT'),
+((SELECT id FROM roles WHERE name = 'View-Report'), 'VIEW_REPORT');
 
 
 INSERT INTO VENDORS (name, active) VALUES ('commTrack', TRUE);
@@ -136,10 +136,14 @@ INSERT INTO role_assignments
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N2')),
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'Admin'), null, null),
-((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'LMU In-Charge'), null, null),
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'View-Report'), null, null),
-((SELECT ID FROM USERS WHERE username = 'lmuincharge'), (SELECT id FROM roles WHERE name = 'LMU In-Charge'), null, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
-
 ((SELECT ID FROM USERS WHERE username = 'commTrack'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
 ((SELECT ID FROM USERS WHERE username = 'commTrack'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null);
+
+INSERT INTO fulfillment_role_assignments
+(userId, roleId, facilityId) VALUES
+((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'LMU In-Charge'), (SELECT id FROM facilities WHERE code ='F10')),
+((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'Shipment'), (SELECT id FROM facilities WHERE code ='F11')),
+((SELECT ID FROM USERS WHERE username = 'lmuincharge'), (SELECT id FROM roles WHERE name = 'LMU In-Charge'), (SELECT id FROM facilities WHERE code ='F10')),
+((SELECT ID FROM USERS WHERE username = 'lmuincharge'), (SELECT id FROM roles WHERE name = 'Shipment'), (SELECT id FROM facilities WHERE code ='F11'));
 
