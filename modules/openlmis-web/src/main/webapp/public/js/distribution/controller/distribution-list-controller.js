@@ -79,6 +79,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
   };
 
   $scope.deleteDistribution = function (id) {
+    $scope.message = '';
     var dialogOpts = {
       id: "distributionInitiated",
       header: messageService.get('label.delete.distribution.header'),
