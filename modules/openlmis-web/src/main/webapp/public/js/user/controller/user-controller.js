@@ -357,6 +357,7 @@ function expandCollapse(trigger){
 		accordion.find('.accordion-section').each(function() {
       $(this).find('.accordion-body').slideDown();
       $(this).find('b').text('-');
+
     });
 	}else{
 		accordion.find('.accordion-section').each(function() {
@@ -369,14 +370,18 @@ function expandCollapseToggle(element){
   $(element).parents('.accordion-section').siblings('.accordion-section').each(function(){
     $(this).find('.accordion-body').slideUp();
     $(this).find('.accordion-heading b').text('+');
-  })
+  });
 	$(element).siblings('.accordion-body').stop().slideToggle(function(){
     if($(element).siblings('.accordion-body').is(':visible')){
       $(element).find('b').text('-');
     }else{
-    $(element).find('b').text('+');
+      $(element).find('b').text('+');
     }
 	});
+  var offsetTop = $(element).offset().top;
+  $('body, html').animate({
+    scrollTop: parseInt(offsetTop)+'px'
+  });
 }
 
 function init(){
