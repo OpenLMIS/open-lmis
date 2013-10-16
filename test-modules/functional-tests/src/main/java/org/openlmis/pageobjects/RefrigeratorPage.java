@@ -279,7 +279,7 @@ public class RefrigeratorPage extends Page {
   public void clickDoneOnModal() {
     testWebDriver.waitForElementToAppear(doneButtonOnModal);
     doneButtonOnModal.click();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
+    //testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
   }
 
   public void clickCancelOnModal() {

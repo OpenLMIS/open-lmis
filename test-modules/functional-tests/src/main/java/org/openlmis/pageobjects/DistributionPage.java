@@ -281,15 +281,18 @@ public class DistributionPage extends Page {
     }
 
     public void ConfirmDeleteDistribution(){
+        testWebDriver.waitForElementToAppear(okButton);
         okButton.click();
     }
 
     public void CancelDeleteDistribution(){
+        testWebDriver.waitForElementToAppear(cancelButton);
         cancelButton.click();
     }
 
     public void verifyNoDistributionCachedMessage()
     {
+        testWebDriver.waitForElementToAppear(noDistributionCachedMessage);
         assertTrue("Incorrect Message for No Distribution cached.", noDistributionCachedMessage.getText().equals(
                 "No distributions cached"));
     }
