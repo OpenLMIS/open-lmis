@@ -68,11 +68,11 @@ public interface RoleRightsMapper {
   @Delete("DELETE FROM role_rights WHERE roleId=#{roleId}")
   int deleteAllRightsForRole(Long roleId);
 
-  @Select({"SELECT RR.rightName",
-    "FROM users U, role_assignments RA, role_rights RR WHERE",
-    "U.id = #{userId}",
-    "AND U.id = RA.userId",
-    "AND RA.roleId = RR.roleId"})
+  @Select({"SELECT DISTINCT(RR.rightName)",
+    "FROM (SELECT userId, roleId FROM role_assignments UNION ALL SELECT userId, roleId FROM fulfillment_role_assignments) A",
+    "INNER JOIN users U ON A.userId = U.id",
+    "INNER JOIN role_rights RR ON A.roleId = RR.roleId",
+    "WHERE A.userId = #{userId}"})
   Set<Right> getAllRightsForUserById(@Param("userId") Long userId);
 
   @Select({"SELECT DISTINCT RR.rightName " +

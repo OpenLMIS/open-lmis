@@ -52,16 +52,25 @@ public class RoleRightsMapperIT {
 
   @Autowired
   UserMapper userMapper;
+
   @Autowired
   ProgramMapper programMapper;
+
   @Autowired
   ProgramSupportedMapper programSupportedMapper;
+
   @Autowired
   RoleRightsMapper roleRightsMapper;
+
+  @Autowired
+  FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
+
   @Autowired
   RoleAssignmentMapper roleAssignmentMapper;
+
   @Autowired
   private FacilityMapper facilityMapper;
+
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
 
@@ -69,7 +78,10 @@ public class RoleRightsMapperIT {
   public void shouldSetupRightsForAdminRole() {
     Set<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
     assertEquals(11, adminRights.size());
-    Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_PROGRAM_PRODUCT, MANAGE_SCHEDULE, UPLOADS, MANAGE_REPORT, VIEW_REPORT, MANAGE_REGIMEN_TEMPLATE, CONFIGURE_EDI)));
+    Assert.assertTrue(adminRights.containsAll(asList(
+      CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_PROGRAM_PRODUCT, MANAGE_SCHEDULE, UPLOADS,
+      MANAGE_REPORT, VIEW_REPORT, MANAGE_REGIMEN_TEMPLATE, CONFIGURE_EDI
+    )));
   }
 
   @Test
@@ -102,15 +114,22 @@ public class RoleRightsMapperIT {
 
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Role role = insertRole("r1", "random description");
+    Role role2 = insertRole("r2", "fulfillment role");
 
     insertRoleAssignments(program, user, role);
+    insertFulfillmentRoleAssignment(user, facility, role2);
 
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role2, VIEW_ORDER);
 
     allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
-    assertThat(allRightsForUser.size(), is(2));
+    assertThat(allRightsForUser.size(), is(3));
+    assertTrue(allRightsForUser.contains(CREATE_REQUISITION));
+    assertTrue(allRightsForUser.contains(CONFIGURE_RNR));
+    assertTrue(allRightsForUser.contains(VIEW_ORDER));
   }
+
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
@@ -261,6 +280,11 @@ public class RoleRightsMapperIT {
     roleRightsMapper.insertRole(r1);
     return r1;
   }
+
+  private void insertFulfillmentRoleAssignment(User user, Facility facility, Role role) {
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user.getId(), facility.getId(), role.getId());
+  }
+
 
   private Program insertProgram(Program program) {
     programMapper.insert(program);
