@@ -262,11 +262,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.getMessage = function (key) {
     return messageService.get(key);
   };
- /* $scope.expandAll = function () {
-    $('.accordion-body').attr('collapse', false);
-    $('.accordion-body').removeClass('collapse');
-    $('.accordion-body').setStyle('height', 'auto');
-  }*/
 
   var restoreSuccessFunc = function (data) {
     clearErrorAndSetMessage("msg.user.restore.success");
@@ -356,3 +351,35 @@ UserController.resolve = {
 
 };
 
+function expandCollapse(trigger){
+  var accordion = $('.accordion');
+	if(trigger == 'expand'){
+		accordion.find('.accordion-section').each(function() {
+      $(this).find('.accordion-body').slideDown();
+      $(this).find('b').text('-');
+    });
+	}else{
+		accordion.find('.accordion-section').each(function() {
+      $(this).find('.accordion-body').slideUp();
+      $(this).find('b').text('+');
+    });
+	}
+}
+function expandCollapseToggle(element){
+  $(element).parents('.accordion-section').siblings('.accordion-section').each(function(){
+    $(this).find('.accordion-body').slideUp();
+    $(this).find('.accordion-heading b').text('+');
+  })
+	$(element).siblings('.accordion-body').stop().slideToggle(function(){
+    if($(element).siblings('.accordion-body').is(':visible')){
+      $(element).find('b').text('-');
+    }else{
+    $(element).find('b').text('+');
+    }
+	});
+}
+
+function init(){
+  expandCollapseToggle($('.accordion-section:first .heading'));
+}
+setTimeout('init()',600);
