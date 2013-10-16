@@ -231,6 +231,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
 
   public void convertToOrder(ConvertOrderPage convertOrderPage) {
+    testWebDriver.sleep(2000);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
   }

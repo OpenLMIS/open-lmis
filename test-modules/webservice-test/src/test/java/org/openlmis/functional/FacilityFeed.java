@@ -432,7 +432,7 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsActive\":" + ACTIVE_STATUS + ""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityGoLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"SatelliteParent\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacilityCode\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
