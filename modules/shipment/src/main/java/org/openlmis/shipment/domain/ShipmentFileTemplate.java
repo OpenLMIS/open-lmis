@@ -33,7 +33,7 @@ public class ShipmentFileTemplate {
   public void validateAndSetModifiedBy(Long userId) {
     Set<Integer> positions = new HashSet();
     Integer includedColumnCount = 0;
-    List<String> mandatoryColumnNames = asList("productCode", "orderId", "quantityShipped");
+    List<String> mandatoryColumnNames = asList("productCode", "quantityShipped");
     shipmentConfiguration.setModifiedBy(userId);
     for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
       shipmentFileColumn.validate();
