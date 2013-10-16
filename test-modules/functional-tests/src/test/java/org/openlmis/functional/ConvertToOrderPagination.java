@@ -61,6 +61,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
   public void selectRequisition(String numberOfRequisitions, String page) throws IOException, SQLException {
+    testWebDriver.sleep(2000);
     testWebDriver.getElementByXpath("//a[contains(text(), '" + page + "') and @class='ng-binding']").click();
     selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
@@ -72,7 +73,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @Then("^\"([^\"]*)\" requisition converted to order$")
-  public void requisitionConvertedToOrder(String requisitions) throws IOException, SQLException {
+  public void   requisitionConvertedToOrder(String requisitions) throws IOException, SQLException {
     HomePage homePage = new HomePage(testWebDriver);
     ViewOrdersPage viewOrdersPage = homePage.navigateViewOrders();
     int numberOfLineItems = viewOrdersPage.getNumberOfLineItems();

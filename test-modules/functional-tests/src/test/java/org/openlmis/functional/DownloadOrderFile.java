@@ -103,6 +103,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I verify order file line \"([^\"]*)\" having \"([^\"]*)\"$")
   public void checkOrderFileData(int lineNumber,String data) throws Exception {
+   testWebDriver.sleep(1000);
    assertTrue("Order data incorrect in line number "+ lineNumber, csvRows[lineNumber-1].contains(data));
   }
 
