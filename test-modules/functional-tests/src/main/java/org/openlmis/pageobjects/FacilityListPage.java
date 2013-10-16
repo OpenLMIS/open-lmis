@@ -137,6 +137,7 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(facilityListSelect);
     facilityListSelect.click();
+    testWebDriver.sleep(2000);
   }
 
 
@@ -155,6 +156,7 @@ public class FacilityListPage extends RequisitionPage {
   }
 
   public void verifyFacilityIndicatorColor(String whichIcon, String color) {
+    testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
     if(color.toLowerCase().equals("RED".toLowerCase()))
       color="rgba(203, 64, 64, 1)";
