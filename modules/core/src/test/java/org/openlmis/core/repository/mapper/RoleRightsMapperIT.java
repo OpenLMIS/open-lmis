@@ -10,7 +10,6 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -31,7 +30,6 @@ import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -73,36 +71,6 @@ public class RoleRightsMapperIT {
 
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
-
-  @Test
-  public void shouldSetupRightsForAdminRole() {
-    Set<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
-    assertEquals(11, adminRights.size());
-    Assert.assertTrue(adminRights.containsAll(asList(
-      CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_PROGRAM_PRODUCT, MANAGE_SCHEDULE, UPLOADS,
-      MANAGE_REPORT, VIEW_REPORT, MANAGE_REGIMEN_TEMPLATE, CONFIGURE_EDI
-    )));
-  }
-
-  @Test
-  public void shouldGetAllRightsForAUserByUserName() throws Exception {
-    Facility facility = insertFacility();
-    User user = insertUser(facility);
-
-    Set<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
-    assertThat(allRightsForUser.size(), is(0));
-
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Role role = insertRole("r1", "random description");
-
-    insertRoleAssignments(program, user, role);
-
-    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
-
-    allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
-    assertThat(allRightsForUser.size(), is(2));
-  }
 
   @Test
   public void shouldGetAllRightsForAUserByUserId() throws Exception {

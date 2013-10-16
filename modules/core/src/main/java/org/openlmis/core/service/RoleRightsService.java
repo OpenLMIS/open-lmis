@@ -35,10 +35,6 @@ public class RoleRightsService {
     this.facilityService = facilityService;
   }
 
-  public Set<Right> getRights(String username) {
-    return roleRightsRepository.getAllRightsForUser(username);
-  }
-
   public Set<Right> getAllRights() {
     TreeSet<Right> rights = new TreeSet<>(new Right.RightComparator());
     rights.addAll(asList(Right.values()));
@@ -50,24 +46,24 @@ public class RoleRightsService {
     roleRightsRepository.createRole(role);
   }
 
-    public Map<String, List<Role>> getAllRolesMap() {
-        Map<String, List<Role>> rolesMap = new HashMap<>();
-        for (Role role : roleRightsRepository.getAllRoles()) {
-            RightType rightType = getRightTypeForRoleId(role.getId());
-            if (rightType != null) {
-                String rightName = rightType.name();
-                List<Role> roles = rolesMap.get(rightName);
-                if (roles == null) {
-                    roles = new ArrayList<>();
-                    rolesMap.put(rightName, roles);
-                }
-                roles.add(role);
-            }
+  public Map<String, List<Role>> getAllRolesMap() {
+    Map<String, List<Role>> rolesMap = new HashMap<>();
+    for (Role role : roleRightsRepository.getAllRoles()) {
+      RightType rightType = getRightTypeForRoleId(role.getId());
+      if (rightType != null) {
+        String rightName = rightType.name();
+        List<Role> roles = rolesMap.get(rightName);
+        if (roles == null) {
+          roles = new ArrayList<>();
+          rolesMap.put(rightName, roles);
         }
-        return rolesMap;
+        roles.add(role);
+      }
     }
+    return rolesMap;
+  }
 
-    public Role getRole(Long id) {
+  public Role getRole(Long id) {
     return roleRightsRepository.getRole(id);
   }
 

@@ -31,7 +31,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.session.SessionRegistry;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -90,7 +89,9 @@ public class UserControllerTest {
   @Test
   public void shouldReturnUserInfoOfLoggedInUser() {
     String username = "Foo";
+    long userId = 1234L;
     session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
     ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
     assertThat(response.getBody().getData().get("name").toString(), is("Foo"));
     assertThat((Boolean) response.getBody().getData().get("authenticated"), is(true));
@@ -108,12 +109,12 @@ public class UserControllerTest {
 
   @Test
   public void shouldGetAllPrivilegesForTheLoggedInUser() throws Exception {
-    String username = "Foo";
-    session.setAttribute(UserAuthenticationSuccessHandler.USER, username);
+    Long userId = 1234L;
+    session.setAttribute(UserAuthenticationSuccessHandler.USER_ID, userId);
     Set<Right> rights = new HashSet<>();
-    when(roleRightService.getRights(username)).thenReturn(rights);
+    when(roleRightService.getRights(userId)).thenReturn(rights);
     ResponseEntity<OpenLmisResponse> response = userController.user(httpServletRequest);
-    verify(roleRightService).getRights(username);
+    verify(roleRightService).getRights(userId);
     assertThat((Set<Right>) response.getBody().getData().get("rights"), is(rights));
   }
 
@@ -129,7 +130,6 @@ public class UserControllerTest {
   @Test
   public void shouldReturnErrorIfSendingForgotPasswordEmailFails() throws Exception {
     User user = new User();
-    HttpServletRequest request = mock(HttpServletRequest.class);
     doThrow(new DataException("some error")).when(userService).sendForgotPasswordEmail(eq(user), anyString());
 
     ResponseEntity<OpenLmisResponse> response = userController.sendPasswordTokenEmail(user);

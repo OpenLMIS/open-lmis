@@ -27,13 +27,6 @@ public interface RoleRightsMapper {
     "(#{role.id}, #{right}, #{role.modifiedBy})")
   int createRoleRight(@Param(value = "role") Role role, @Param(value = "right") Right right);
 
-  @Select({"SELECT RR.rightName",
-    "FROM users U, role_assignments RA, role_rights RR WHERE",
-    "lower(U.userName) = lower(#{userName}) ",
-    "AND U.id = RA.userId",
-    "AND RA.roleId = RR.roleId"})
-  Set<Right> getAllRightsForUserByUserName(String username);
-
   //used below
   @SuppressWarnings("unused")
   @Select("SELECT rightName FROM role_rights RR WHERE roleId = #{roleId}")

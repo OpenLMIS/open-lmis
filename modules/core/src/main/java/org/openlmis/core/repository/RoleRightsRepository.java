@@ -36,10 +36,6 @@ public class RoleRightsRepository {
     this.commaSeparator = commaSeparator;
   }
 
-  public Set<Right> getAllRightsForUser(String username) {
-    return roleRightsMapper.getAllRightsForUserByUserName(username);
-  }
-
   public void createRole(Role role) {
     try {
       roleRightsMapper.insertRole(role);
