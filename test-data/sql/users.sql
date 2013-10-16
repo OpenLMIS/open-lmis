@@ -74,144 +74,34 @@ INSERT INTO VENDORS (name, active) VALUES ('commTrack', TRUE);
 
 INSERT INTO users
 (userName, password, vendorId, facilityId, firstName, lastName, email, verified, active) VALUES
-('StoreInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                       id
-                                                                                                                     FROM
-                                                                                                                       vendors
-                                                                                                                     WHERE
-                                                                                                                       name
-                                                                                                                       =
-                                                                                                                       'openLmis'), (SELECT
-                                                                                                                                       id
-                                                                                                                                     FROM
-                                                                                                                                       facilities
-                                                                                                                                     WHERE
-                                                                                                                                       code
-                                                                                                                                       =
-                                                                                                                                       'F10'), 'Fatima', 'Doe', 'Fatima_Doe@openlmis.com', TRUE, TRUE),
-('FacilityHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                      id
-                                                                                                                    FROM
-                                                                                                                      vendors
-                                                                                                                    WHERE
-                                                                                                                      name
-                                                                                                                      =
-                                                                                                                      'openLmis'), (SELECT
-                                                                                                                                      id
-                                                                                                                                    FROM
-                                                                                                                                      facilities
-                                                                                                                                    WHERE
-                                                                                                                                      code
-                                                                                                                                      =
-                                                                                                                                      'F10'), 'Jane', 'Doe', 'Kutt_Doe@openlmis.com', TRUE, TRUE),
-('FacilityInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                          id
-                                                                                                                        FROM
-                                                                                                                          vendors
-                                                                                                                        WHERE
-                                                                                                                          name
-                                                                                                                          =
-                                                                                                                          'openLmis'), (SELECT
-                                                                                                                                          id
-                                                                                                                                        FROM
-                                                                                                                                          facilities
-                                                                                                                                        WHERE
-                                                                                                                                          code
-                                                                                                                                          =
-                                                                                                                                          'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com', FALSE, TRUE),
-('MedicalOfficer', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                        id
-                                                                                                                      FROM
-                                                                                                                        vendors
-                                                                                                                      WHERE
-                                                                                                                        name
-                                                                                                                        =
-                                                                                                                        'openLmis'), (SELECT
-                                                                                                                                        id
-                                                                                                                                      FROM
-                                                                                                                                        facilities
-                                                                                                                                      WHERE
-                                                                                                                                        code
-                                                                                                                                        =
-                                                                                                                                        'F10'), 'John', 'Doe', 'Joh_Doe@openlmis.com', TRUE, TRUE),
-('lmu', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                             id
-                                                                                                           FROM
-                                                                                                             vendors
-                                                                                                           WHERE
-                                                                                                             name
-                                                                                                             =
-                                                                                                             'openLmis'), (SELECT
-                                                                                                                             id
-                                                                                                                           FROM
-                                                                                                                             facilities
-                                                                                                                           WHERE
-                                                                                                                             code
-                                                                                                                             =
-                                                                                                                             'F10'), 'Frank', 'Doe', 'Frank_Doe@openlmis.com', TRUE, TRUE),
-('StoreHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                   id
-                                                                                                                 FROM
-                                                                                                                   vendors
-                                                                                                                 WHERE
-                                                                                                                   name
-                                                                                                                   =
-                                                                                                                   'openLmis'), (SELECT
-                                                                                                                                   id
-                                                                                                                                 FROM
-                                                                                                                                   facilities
-                                                                                                                                 WHERE
-                                                                                                                                   code
-                                                                                                                                   =
-                                                                                                                                   'F10'), 'Frank', 'Doe', 'Bhann_Doe@openlmis.com', FALSE, TRUE),
-('superuser', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                   id
-                                                                                                                 FROM
-                                                                                                                   vendors
-                                                                                                                 WHERE
-                                                                                                                   name
-                                                                                                                   =
-                                                                                                                   'openLmis'), (SELECT
-                                                                                                                                   id
-                                                                                                                                 FROM
-                                                                                                                                   facilities
-                                                                                                                                 WHERE
-                                                                                                                                   code
-                                                                                                                                   =
-                                                                                                                                   'F10'), 'Maafi-de', 'Doe', 'Maafi_de_Doe@openlmis.com', TRUE, TRUE),
-('lmuincharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                     id
-                                                                                                                   FROM
-                                                                                                                     vendors
-                                                                                                                   WHERE
-                                                                                                                     name
-                                                                                                                     =
-                                                                                                                     'openLmis'), (SELECT
-                                                                                                                                     id
-                                                                                                                                   FROM
-                                                                                                                                     facilities
-                                                                                                                                   WHERE
-                                                                                                                                     code
-                                                                                                                                     =
-                                                                                                                                     'F10'), 'Jake', 'Doe', 'Jake_Doe@openlmis.com', TRUE, TRUE);
+('StoreInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Fatima', 'Doe', 'Fatima_Doe@openlmis.com', TRUE, TRUE),
+
+('FacilityHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'),  (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Kutt_Doe@openlmis.com', TRUE, TRUE),
+
+('FacilityInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com', FALSE, TRUE),
+
+('MedicalOfficer', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'John', 'Doe', 'Joh_Doe@openlmis.com', TRUE, TRUE),
+
+('lmu', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Frank_Doe@openlmis.com', TRUE, TRUE),
+
+('StoreHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Bhann_Doe@openlmis.com', FALSE, TRUE),
+
+('superuser', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Maafi-de', 'Doe', 'Maafi_de_Doe@openlmis.com', TRUE, TRUE),
+
+('lmuincharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM vendors WHERE name = 'openLmis'), (SELECT id FROM facilities WHERE code = 'F10'), 'Jake', 'Doe', 'Jake_Doe@openlmis.com', TRUE, TRUE);
 
 INSERT INTO USERS
 (id, userName, password, facilityId, firstName, lastName, vendorId, verified, active) VALUES
-(700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie', (SELECT
-                                                                                                                        id
-                                                                                                                      FROM
-                                                                                                                        facilities
-                                                                                                                      WHERE
-                                                                                                                        code
-                                                                                                                        =
-                                                                                                                        'F10'), 'CommTrack', 'Doe', (SELECT
-                                                                                                                                                       id
-                                                                                                                                                     FROM
-                                                                                                                                                       vendors
-                                                                                                                                                     WHERE
-                                                                                                                                                       name
-                                                                                                                                                       =
-                                                                                                                                                       'commTrack'), TRUE, TRUE);
+(700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+ (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrack', 'Doe', (SELECT id FROM vendors WHERE name = 'commTrack'), TRUE, TRUE);
 
 
 INSERT INTO supervisory_nodes
