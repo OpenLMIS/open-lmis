@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static java.util.Arrays.asList;
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.openlmis.web.response.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -32,7 +33,7 @@ public class BudgetFileTemplateController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_EDI')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody EDIFileTemplate ediFileTemplate,
                                                  HttpServletRequest request) {
-   //ediFileTemplate.validateAndSetModifiedBy(loggedInUserId(request));
+    ediFileTemplate.validateAndSetModifiedBy(loggedInUserId(request), asList("facilityCode", "programCode", "periodStartDate", "allocatedBudget"));
     service.update(ediFileTemplate);
 
     return success("budget.file.configuration.success");

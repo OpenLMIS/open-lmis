@@ -73,10 +73,10 @@ public class BudgetFileTemplateControllerTest {
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(response.getBody().getSuccessMsg(), is("budget.file.configuration.success"));
-/*    assertThat(budgetFileTemplate.getConfiguration().getModifiedBy(), is(userId));
+    assertThat(budgetFileTemplate.getConfiguration().getModifiedBy(), is(userId));
     for (EDIFileColumn column : budgetFileTemplate.getColumns()) {
       assertThat(column.getModifiedBy(), is(userId));
-    }*/
+    }
 
     verify(budgetFileTemplateService).update(budgetFileTemplate);
 
