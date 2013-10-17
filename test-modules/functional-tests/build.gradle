@@ -123,8 +123,7 @@ task e2eTestChrome(type: Test) {
 e2eTestChrome.doFirst() {
     buildOpenLmis.execute()
 }
-
-task smokeTestChrome(type: Test) {
+task requisitionSmokeTestChrome(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
@@ -135,17 +134,36 @@ task smokeTestChrome(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie2', '--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition', '--tags','~@WIP', 'src/test/resources']
         }
     }
 }
 
-smokeTestChrome.doFirst() {
+requisitionSmokeTestChrome.doFirst() {
     buildOpenLmis.execute()
 }
 
+task distributionSmokeTestChrome(type: Test) {
+    dependsOn assemble, compileTestJava
 
-task smokeTestIE1(type: Test) {
+    doLast {
+        htmlformat = "html:${buildDir}/reports/tests/bddTest-report-functional"
+        jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
+        javaexec {
+            System.properties.get('browser', 'chrome')
+            systemProperties System.properties
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution', '--tags','~@WIP', 'src/test/resources']
+        }
+    }
+}
+
+distributionSmokeTestChrome.doFirst() {
+    buildOpenLmis.execute()
+}
+
+task requisitionSmokeTestIE(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
@@ -156,16 +174,16 @@ task smokeTestIE1(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie1','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeRequisition','--tags','~@WIP', 'src/test/resources']
         }
     }
 }
 
-smokeTestIE1.doFirst() {
+requisitionSmokeTestIE.doFirst() {
     buildOpenLmis.execute()
 }
 
-task smokeTestIE2(type: Test) {
+task distributionSmokeTestIE(type: Test) {
     dependsOn assemble, compileTestJava
 
     doLast {
@@ -176,12 +194,12 @@ task smokeTestIE2(type: Test) {
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@ie2','--tags','~@WIP', 'src/test/resources']
+            args = ['-f', htmlformat, '-f', jsonformat, '--glue', 'org.openlmis.functional', '--tags', '@smokeDistribution','--tags','~@WIP', 'src/test/resources']
         }
     }
 }
 
-smokeTestIE2.doFirst() {
+distributionSmokeTestIE.doFirst() {
     buildOpenLmis.execute()
 }
 

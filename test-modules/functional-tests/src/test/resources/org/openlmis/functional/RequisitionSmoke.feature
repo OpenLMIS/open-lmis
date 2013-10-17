@@ -1,7 +1,7 @@
 Feature: Smoke Tests
 
   @smokeRequisition
-  @ie2
+  
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -25,7 +25,7 @@ Feature: Smoke Tests
     Then I should see submit successfully
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: User should view requisition and regimen after authorization
     Given I have the following data for regimen:
@@ -55,7 +55,7 @@ Feature: Smoke Tests
 
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: Verifying Forgot Password functionality
     Given I am on forgot password screen
@@ -66,7 +66,7 @@ Feature: Smoke Tests
     And I am logged in as Admin
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: Verify New Regimen Created
     Given I have data available for programs configured
@@ -81,7 +81,7 @@ Feature: Smoke Tests
     Then I should see regimen created message
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: Verify New Regimen Reporting Field Configuration
     Given I have data available for programs configured
@@ -108,7 +108,7 @@ Feature: Smoke Tests
     Then I should see regimen created message
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: Admin user should not access requisition page
     Given I am logged in as Admin
@@ -116,7 +116,7 @@ Feature: Smoke Tests
     Then I should see unauthorized access message
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: Requisition user should not access admin Page
     Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
@@ -125,7 +125,7 @@ Feature: Smoke Tests
     Then I should see unauthorized access message
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: Admin can create, disable & restore user
     Given I am logged in as Admin
@@ -141,7 +141,7 @@ Feature: Smoke Tests
     Then I should see user "Dummy User" verified
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: User should be able to configure order file format
     Given I configure order file:
@@ -157,7 +157,7 @@ Feature: Smoke Tests
     Then I should see "Order file configuration saved successfully!"
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: User should be able to configure shipment file format using default format
     When I am logged in as Admin
@@ -219,7 +219,7 @@ Feature: Smoke Tests
     And I verify order id in line "2"
 
   @smokeRequisition
-  @ie2
+  
 
   Scenario: User should be able to initiate and submit emergency RnR
     Given I have the following data for regimen:
@@ -252,7 +252,7 @@ Feature: Smoke Tests
     And I should verify "currentPeriod" with status "Not yet started" in row "1"
 
   @smokeRequisition
-  @ie2
+  
   Scenario: Selected requisitions across pages should not convert to order
     Given I have "51" requisitions for convert to order
     And I am logged in as "storeincharge"

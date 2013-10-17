@@ -1,7 +1,7 @@
 Feature: Smoke Tests
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should able to configure program product ISA
     Given I have data available for program product ISA
@@ -13,7 +13,7 @@ Feature: Smoke Tests
     And I access home page
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should able to initiate & delete distribution
     Given I have the following data for distribution:
@@ -39,7 +39,7 @@ Feature: Smoke Tests
     Then I see no diistribution in cache
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
@@ -59,7 +59,7 @@ Feature: Smoke Tests
     And I click view load amount
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should able to override ISA
     Given I have the following data for override ISA:
@@ -77,7 +77,7 @@ Feature: Smoke Tests
     Then I should see overridden ISA "24"
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
     Given I have data available for distribution load amount
@@ -104,7 +104,7 @@ Feature: Smoke Tests
     Then I should see message "No records found"
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: Distribution user should view aggregate ISA for delivery zone
     Given I have data available for distribution load amount
@@ -125,7 +125,7 @@ Feature: Smoke Tests
     Then I should see aggregate ISA values as per multiple facilities in one delivery zone
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should see facility list/ selection page
     Given I have the following data for distribution:
@@ -151,7 +151,7 @@ Feature: Smoke Tests
 
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
@@ -203,7 +203,7 @@ Feature: Smoke Tests
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should fill general observation data
     Given I have the following data for distribution:
@@ -234,7 +234,7 @@ Feature: Smoke Tests
       | some observation | samuel          | fc               | mai ka         | lal             |
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should fill EPI use data
     Given I have the following data for distribution:
@@ -270,7 +270,7 @@ Feature: Smoke Tests
     Then Verify "epi use" indicator should be "GREEN"
 
   @smokeDistribution
-  @ie2
+  
 
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
