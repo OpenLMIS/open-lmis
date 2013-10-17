@@ -70,7 +70,10 @@ INSERT INTO USERS
 
 INSERT INTO supervisory_nodes
 (parentId, facilityId, name, code) VALUES
-(null, (SELECT id FROM facilities WHERE code = 'F10'), 'Node 1', 'N1'),
+(null, (SELECT id FROM facilities WHERE code = 'F10'), 'Node 1', 'N1');
+
+INSERT INTO supervisory_nodes
+(parentId, facilityId, name, code) VALUES
 ((SELECT id FROM supervisory_nodes WHERE code = 'N1'), (SELECT id FROM facilities WHERE code = 'F11'), 'Node 2', 'N2'),
 (null, (SELECT id FROM facilities WHERE code = 'F11'), 'Node 3', 'N3');
 
