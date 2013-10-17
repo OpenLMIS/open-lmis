@@ -20,6 +20,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
     {value: "facilityName", name: "option.value.facility.name"},
     {value: "supplyingDepot", name: "label.supplying.depot"}
   ];
+  $scope.noRequisitions = false;
 
   $scope.selectedSearchOption = $scope.searchOptions[0];
   $scope.sortOptions = { fields: ['submittedDate'], directions: ['asc'] };
@@ -40,6 +41,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
 
           $scope.numberOfPages = data.number_of_pages || 1;
           $scope.resultCount = $scope.filteredRequisitions.length;
+          if (!$scope.resultCount) $scope.noRequisitions = true;
         }, function () {
           $location.search('page', 1);
         });
