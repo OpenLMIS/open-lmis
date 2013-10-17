@@ -188,27 +188,22 @@
 
         <div ng-repeat="sl in supplylines" class="row-fluid list-row" ng-hide="supplylinesBackupMap[sl.id].edit">
             <div class="span1"  style="float: left; width: 60px;">
-                <input type="button" ng-hide="supplylinesBackupMap[sl.id].edit"
-                       id="lstEditBtn_{{$index}}"
-                       class="btn btn-mini pull-right"
-                       value="Edit"
-                       ng-click="startSupplylineEdit(sl)"/>
-
-           </div>
-
-            <div class="span1" style="float: left; width: 60px;">
-                <input type="button" ng-hide="supplylinesBackupMap[sl.id].deleted"
-                       id="lstDeleteBtn_{{$index}}"
-                       class="btn btn-mini pull-right"
-                       value="Delete"
-                       ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].deleted=true;"/>
-
+            </div>
+            <div class="span1"  style="float: left; width: 60px;">
             </div>
 
-            <div id="lstprogram_{{$index}}" class="span2" style="overflow: visible;"> {{sl.program.name}}</div>
+            <div id="lstprogram_{{$index}}" class="span2" style="overflow: visible;"><a href="" ng-click="startSupplylineEdit(sl)">{{sl.program.name}}</a></div>
             <div id="lstfacility_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supplyingFacility.name}}</div>
             <div id="lstsupervisorynode_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supervisoryNode.name}}</div>
             <div id="lstdescription_{{$index}}" class="span3" style="overflow: visible;"> {{sl.description}}</div>
+            <div class="span1" style="float: left; width: 60px;">
+                <!--<input type="button" ng-hide="supplylinesBackupMap[sl.id].deleted"-->
+                <!--id="lstDeleteBtn_{{$index}}"-->
+                <!--class="btn btn-mini pull-right"-->
+                <!--value="Delete"-->
+                <!--ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].deleted=true;"/>-->
+                <a href="" class="btn btn-danger" ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].deleted=true;">Delete</a>
+            </div>
         </div>
         <div form-toolbar id="action_buttons" class="action-buttons" ng-show="showDelError">
             <div class="toolbar-error" id="deleteErrorMsgDiv" ng-bind="delError" ng-show="showDelError"/>
