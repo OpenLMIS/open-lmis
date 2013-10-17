@@ -545,7 +545,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetApprovedRequisitionsInAscOrderOfSupplyingFacilityName() throws SQLException {
+  public void shouldGetApprovedRequisitionsInAscOrderOfSupplyingDepotName() throws SQLException {
     Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
     facilityMapper.insert(facility1);
     Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
@@ -568,7 +568,7 @@ public class RequisitionMapperIT {
     Integer pageNumber = 1;
     Integer pageSize = 2;
     String sortDirection = "asc";
-    String sortBy = "supplyingFacilityName";
+    String sortBy = "supplyingDepotName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
       pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);

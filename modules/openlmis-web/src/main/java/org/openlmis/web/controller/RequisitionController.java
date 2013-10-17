@@ -176,7 +176,7 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
-//  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder(@RequestParam(value = "searchType", required = false, defaultValue = SEARCH_ALL) String searchType,
                                                                 @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
                                                                 @RequestParam(value = "page", required = true, defaultValue = "1") Integer page,

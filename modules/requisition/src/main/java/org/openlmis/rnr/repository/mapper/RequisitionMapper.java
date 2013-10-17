@@ -179,8 +179,8 @@ public interface RequisitionMapper {
     public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
       sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId," +
-        " R.modifiedDate as modifiedDate, RSC.modifiedDate as submittedDate, P.name AS programName, F.name AS facilityName," +
-        " F.code AS facilityCode, SF.name AS supplyingFacilityName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
+        " R.modifiedDate as modifiedDate, RSC.createdDate as submittedDate, P.name AS programName, F.name AS facilityName," +
+        " F.code AS facilityCode, SF.name AS supplyingDepotName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
         " FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
         " INNER JOIN processing_periods PP ON PP.id = R.periodId ");
 
@@ -216,11 +216,11 @@ public interface RequisitionMapper {
       if (userId != null && right != null) {
         sql.append("INNER JOIN supply_lines S ON R.supervisoryNodeId = S.supervisoryNodeId " +
           "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId " +
-          "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ");
-        sql.append("INNER JOIN Programs P ON P.id = R.programId ");
-        sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
-        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
-        sql.append("LEFT JOIN Facilities SF ON SL.supplyingFacilityId = SF.id ");
+          "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId " +
+          "INNER JOIN Programs P ON P.id = R.programId " +
+          "INNER JOIN Facilities F ON F.id = R.facilityId " +
+          "LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) " +
+          "LEFT JOIN Facilities SF ON SL.supplyingFacilityId = SF.id ");
       }
 
       if (searchVal.isEmpty()) {
