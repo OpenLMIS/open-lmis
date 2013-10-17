@@ -11,8 +11,8 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -28,6 +28,9 @@ import static org.openqa.selenium.support.How.XPATH;
 
 
 public class FacilityListPage extends RequisitionPage {
+
+  @FindBy(how = XPATH, using = "//*[@id='select2-drop']/div/input")
+  private static WebElement inputFacilitySearch;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'No facility selected')]")
   private static WebElement noFacilitySelectedHeader;
@@ -174,9 +177,12 @@ public class FacilityListPage extends RequisitionPage {
       testWebDriver.waitForElementToAppear(facilityListTextField);
       testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
       assertEquals(color, firstFacilityIndicator.getCssValue("background-color"));
-        facilityOverAllIndicator.click();
+      escapeFacilitySearchInput();
     }
+  }
 
+  public void escapeFacilitySearchInput() {
+      inputFacilitySearch.sendKeys(Keys.ESCAPE);
   }
 
   public void verifyLegend() {
@@ -191,6 +197,5 @@ public class FacilityListPage extends RequisitionPage {
       assertEquals(legendCompletedIcon.getCssValue("background-color"),"rgba(82, 168, 30, 1)");
       assertEquals(legendSynchronizedIcon.getCssValue("background-color"),"rgba(75, 169, 253, 1)");
       assertEquals(legendCannotSynchronizedIcon.getCssValue("background-color"),"rgba(124, 124, 124, 1)");
-
   }
 }
