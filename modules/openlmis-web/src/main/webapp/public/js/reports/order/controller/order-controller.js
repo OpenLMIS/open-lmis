@@ -124,6 +124,20 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     };
 
 
+    $scope.$watch('schedule', function(selection){
+        if(selection != undefined || selection == ""){
+            $scope.filterObject.scheduleId =  selection;
+            $.each( $scope.schedules,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.schedule = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.scheduleId =  0;
+        }
+    });
+
+
     $scope.$watch('year', function (selection) {
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
