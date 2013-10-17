@@ -71,9 +71,9 @@
                     </div>
                 </div>
             </div>
-            <div ng-show="facilitiesLoaded">
+            <div>
                 <h2><span>Associated Facility<span class="label-required"> *</span></span>
-                    <a ng-click="associateFacility()" class="pull-right btn btn-primary"><span id="supervisory-node-facility-add-new">Choose a Facility</span></a>
+                    <a ng-click="associateFacility()"  ng-show="facilitiesLoaded" class="pull-right btn btn-primary"><span id="supervisory-node-facility-add-new">Choose a Facility</span></a>
                 </h2>
                 <div ng-hide="supervisoryNode.facility">Please associate a facility...</div>
                 <div ng-show="supervisoryNode.facility">
