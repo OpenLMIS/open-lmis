@@ -16,23 +16,22 @@ dependencies {
 
     flyway 'com.googlecode.flyway:flyway-ant:1.7',
             'postgresql:postgresql:9.1-901.jdbc4'
-
     classpath 'postgresql:postgresql:9.1-901.jdbc4'
 }
 
-task setupReportDB() << {
+task setupDBExtensions() << {
     ext.flyway_classpath = files(configurations.flyway)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: 'migration_schema_version'  )
-    tasks.migrateReportDB.execute()
+    tasks.migrateDBExtensions.execute()
 }
 
 jar.doFirst {
-    tasks.migrateReportDB.execute()
+    tasks.migrateDBExtensions.execute()
 }
 
-task migrateReportDB() << {
-    println("Migrating database for report implementations")
+task migrateDBExtensions() << {
+    println("Migrating database extensions")
     ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
     ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
