@@ -33,6 +33,9 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class UserPage extends Page {
 
+  @FindBy(how = How.ID, using = "user-add-new")
+  private static WebElement addNewButton;
+
   @FindBy(how = How.ID, using = "userName")
   private static WebElement userNameField;
 
@@ -45,39 +48,48 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "lastName")
   private static WebElement lastNameField;
 
+  @FindBy(how = How.ID, using = "primaryNotificationMethod")
+  private static WebElement primaryNotificationMethodField;
+
+  @FindBy(how = How.ID, using = "employeeId")
+  private static WebElement employeeIdField;
+
+  @FindBy(how = How.ID, using = "jobTitle")
+  private static WebElement jobTitleField;
+
+  @FindBy(how = How.ID, using = "officePhone")
+  private static WebElement officePhoneField;
+
+  @FindBy(how = How.ID, using = "cellPhone")
+  private static WebElement cellPhoneField;
+
+  @FindBy(how = How.XPATH, using = "//input[1][@class='btn btn-primary save-button']")
+  private static WebElement saveButton;
+
+  @FindBy(how = How.XPATH, using = "//input[2][@class='btn btn-cancel cancel-button']")
+  private static WebElement cancelButton;
+
+  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
+  private static WebElement disableButton;
+
+  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
+  private static WebElement enableButton;
+
+
+
+  @FindBy(how = How.ID, using = "searchUser")
+  private static WebElement searchUserTextField;
+
+  @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
+  private static WebElement selectFirstResetPassword;
+
+
+
   @FindBy(how = How.ID, using = "password1")
   private static WebElement newPasswordField;
 
   @FindBy(how = How.ID, using = "password2")
   private static WebElement confirmPasswordField;
-
-  @FindBy(how = How.XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton;
-
-  @FindBy(how = How.LINK_TEXT, using = "View Here")
-  private static WebElement viewHereLink;
-
-  @FindBy(how = How.LINK_TEXT, using = "Cancel")
-  private static WebElement cancelButton;
-
-
-  @FindBy(how = How.ID, using = "user-add-new")
-  private static WebElement addNewButton;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
-  private static WebElement successMessage;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement userUpdateSuccessMessage;
-
-  @FindBy(how = How.ID, using = "searchFacility")
-  private static WebElement searchFacility;
-
-  @FindBy(how = How.ID, using = "searchUser")
-  private static WebElement searchUserTextField;
-
-  @FindBy(how = How.ID, using = "user0")
-  private static WebElement firstUserLink;
 
   @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
   private static WebElement resetPasswordDone;
@@ -85,60 +97,151 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[2]")
   private static WebElement resetPasswordCancel;
 
-  @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
-  private static WebElement selectFacility;
+  @FindBy(how = How.XPATH, using = "//div[3][@class='alert alert-error ng-binding']")
+  private static WebElement messageForErrorInPassword;
+
+  @FindBy(how = How.XPATH, using = "//div[2][@class='alert alert-success ng-binding']")
+  private static WebElement SuccessMessageOnPasswordReset;
+
+  @FindBy(how = How.LINK_TEXT, using = "OK")
+  private static WebElement okButton;
+
+
+
+  @FindBy(how = How.XPATH, using = "//a[@class='close-btn']")
+  private static WebElement clearUserSearchResults;
+
+  @FindBy(how = How.ID, using = "user0")
+  private static WebElement firstUserLink;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
   private static WebElement selectFirstEditUser;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
-  private static WebElement selectFirstResetPassword;
+  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
+  private static WebElement editUserHeader;
+
+
+
+  @FindBy(how = How.ID, using = "searchFacility")
+  private static WebElement searchFacility;
+
+  @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
+  private static WebElement selectFacility;
+
+  @FindBy(how = How.XPATH, using = "//a[@class='clear-search']")
+  private static WebElement clearHomeFacilitySelected;
+
+  @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
+  private static WebElement verifiedLabel;
+
+
+
+
+  @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[1]")
+  private static WebElement expandAllOption;
+
+  @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[2]")
+  private static WebElement collapseAllOption;
+
+
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home Facility Roles')]")
+  private static WebElement homeFacilityRolesAccordion;
+
+  @FindBy(how = How.XPATH, using = "//select[@ng-model='programSelected']")
+  private static WebElement homeFacilityPrograms;
+
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
+  private static WebElement roleInputFieldHomeFacility;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
+  private static WebElement rolesSelectFieldHomeFacility;
+
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
+  private static WebElement addHomeFacilityRolesButton;
+
+
+
+
+  @FindBy(how = How.XPATH, using = "Supervisory Roles")
+  private static WebElement supervisoryRolesAccordion;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedProgramIdToSupervise']")
   private static WebElement programsToSupervise;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedSupervisoryNodeIdToSupervise']")
-  private static WebElement supervisoryNodeToSupervise;
+    private static WebElement supervisoryNodeToSupervise;
 
-  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
-  private static WebElement deliveryZone;
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
+  private static WebElement rolesInputFieldSupervisoryRole;
 
-  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
-  private static WebElement deliveryZoneProgram;
-
-
-  @FindBy(how = How.XPATH, using = "//select[@ng-model='programSelected']")
-  private static WebElement programsMyFacility;
+  @FindBy(how = How.XPATH, using = "//ul[@class='select2-choices']/li[1]/div")
+  private static WebElement rolesSelectedSupervisoryRole;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
-  private static WebElement rolesSelectFieldMyFacility;
+  private static WebElement rolesSelectFieldSupervisoryRole;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='allocationRole' and @class='fluid-grid-cell']/select[@class='ng-valid select2-offscreen ng-dirty']")
-  private static WebElement rolesSelectFieldDeliveryZone;
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
+  private static WebElement addSupervisoryRoleButton;
 
-  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
-  private static WebElement rolesSelectField;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='supervisoryRole']/div/ul/li[1]/div")
-  private static WebElement rolesListFieldMySupervisedFacility;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
-  private static WebElement rolesInputFieldMyFacility;
+  @FindBy(how = How.XPATH, using = "Warehouse Roles")
+  private static WebElement warehouseRolesAccordion;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
+  private static WebElement rolesInputFieldWarehouse;
+
+  @FindBy(how = How.XPATH, using = "//select[@ng-model='warehouseRole.facilityId']")
+  private static WebElement warehouseToSelect;
+
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addFulfillmentRole()']")
+  private static WebElement addWarehouseRoleButton;
+
+
+
+  @FindBy(how = How.XPATH, using = "Delivery zones")
+  private static WebElement deliveryZonesAccordion;
+
+  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
+  private static WebElement zoneToDelivery;
+
+  @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
+  private static WebElement programToDeliver;
+
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement rolesInputFieldMDeliveryZone;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
   private static WebElement rolesInputFieldDeliveryZone;
 
-  @FindBy(how = How.LINK_TEXT, using = "OK")
-  private static WebElement okButton;
+  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
+  private static WebElement rolesSelectFieldDeliveryZone;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
-  private static WebElement rolesInputField;
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
+  private static WebElement addDeliveryZoneRoleButton;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='s2id_adminRoles']/ul/li/input")
+
+
+  @FindBy(how = How.XPATH, using = "Admin and General Operations Roles")
+  private static WebElement adminAndGeneralOperationsRolesAccordion;
+
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField;
+
+
+
+  @FindBy(how = How.LINK_TEXT, using = "View Here")
+  private static WebElement viewHereLink;
+
+  @FindBy(how = How.XPATH, using = "//div[2][@class='alert alert-success ng-binding']")
+  private static WebElement userUpdateSuccessMessage;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement successMessage;
+
+
+
 
 
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Store In-Charge')]")
@@ -147,44 +250,25 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Medical-Officer')]")
   private static WebElement medicalOfficerOption;
 
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
-  private static WebElement addButton;
-
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
-  private static WebElement addAllocationRoleButton;
-
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
-  private static WebElement addButtonMyFacility;
-
-
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
-  private static WebElement editUserHeader;
-
-
   @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
   private static WebElement removeButton;
 
-  @FindBy(how = How.XPATH, using = "//label[@ng-bind='getDeliveryZoneName(roleAssignment.deliveryZone.id)']")
+  @FindBy(how = How.XPATH, using = "//div[6]/div[2]/ng-include/div/div[1]/div[2]/div[1]/div/label[@class='ng-binding']")
   private static WebElement addedDeliveryZoneLabel;
 //
 //  @FindBy(how = How.XPATH, using = "//div/div[4]/div/ng-include/div/div[1]/div[2]/div[2]/div/label")
 //  private static WebElement addedDeliveryZoneProgramLabel;
 
 
-  @FindBy(how = How.XPATH, using = "//div[@class='row-fluid ng-scope']/div[2]/div/label")
+  @FindBy(how = How.XPATH, using = "//div[6]/div[2]/ng-include/div/div[1]/div[2]/div[2]/div/label[@class='ng-binding']")
   private static WebElement addedDeliveryZoneProgramLabel;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
   private static WebElement noMatchFoundLink;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
-  private static WebElement disableButton;
 
-  @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
-  private static WebElement enableButton;
 
-  @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
-  private static WebElement verifiedLabel;
+
 
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -260,8 +344,9 @@ public class UserPage extends Page {
     saveButton.click();
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(viewHereLink);
+//      testWebDriver.waitForElementToAppear(successMessage);
 
-    SeleneseTestNgHelper.assertTrue("User '" + firstName + " " + lastName + "' has been successfully created, password link sent on registered Email address message is not getting displayed", successMessage.isDisplayed());
+    SeleneseTestNgHelper.assertEquals(successMessage.getText(),"User ''" + firstName + " " + lastName + "'' has been successfully created, password link has been sent on registered Email address.  View Here");
     viewHereLink.click();
 
     DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
@@ -292,15 +377,15 @@ public class UserPage extends Page {
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
       selectFacility.click();
-      testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+      homeFacilityRolesAccordion.click();
       testWebDriver.sleep(500);
-      testWebDriver.selectByVisibleText(programsMyFacility, program1);
-      rolesInputFieldMyFacility.click();
-      rolesInputFieldMyFacility.clear();
-      rolesInputFieldMyFacility.sendKeys(role);
-      testWebDriver.waitForElementToAppear(rolesSelectFieldMyFacility);
-      rolesSelectFieldMyFacility.click();
-      addButtonMyFacility.click();
+      testWebDriver.selectByVisibleText(homeFacilityPrograms, program1);
+      roleInputFieldHomeFacility.click();
+      roleInputFieldHomeFacility.clear();
+      roleInputFieldHomeFacility.sendKeys(role);
+      testWebDriver.waitForElementToAppear(rolesSelectFieldHomeFacility);
+      rolesSelectFieldHomeFacility.click();
+      addHomeFacilityRolesButton.click();
       testWebDriver.sleep(1000);
       testWebDriver.getElementByXpath("//a[contains(text(),'Supervisory Roles')]").click();
       testWebDriver.sleep(500);
@@ -311,17 +396,17 @@ public class UserPage extends Page {
 
       testWebDriver.handleScroll();
       testWebDriver.sleep(500);
-      rolesInputField.click();
-      rolesInputField.clear();
-      rolesInputField.sendKeys(role);
-      testWebDriver.waitForElementToAppear(rolesSelectField);
-      rolesSelectField.click();
+      rolesInputFieldSupervisoryRole.click();
+      rolesInputFieldSupervisoryRole.clear();
+      rolesInputFieldSupervisoryRole.sendKeys(role);
+      testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
+      rolesSelectFieldSupervisoryRole.click();
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
-      assertEquals(rolesListFieldMySupervisedFacility.getText().trim().toLowerCase(), role.toLowerCase());
+    //  assertEquals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase(), role.toLowerCase());
 
-      addButton.click();
+      addSupervisoryRoleButton.click();
       testWebDriver.sleep(1000);
     } else {
       testWebDriver.handleScroll();
@@ -329,8 +414,8 @@ public class UserPage extends Page {
       adminRolesInputField.click();
       adminRolesInputField.clear();
       adminRolesInputField.sendKeys(role);
-      testWebDriver.waitForElementToAppear(rolesSelectField);
-      rolesSelectField.click();
+      testWebDriver.waitForElementToAppear(rolesSelectFieldSupervisoryRole);
+      rolesSelectFieldSupervisoryRole.click();
     }
 
     saveButton.click();
@@ -348,16 +433,16 @@ public class UserPage extends Page {
     testWebDriver.handleScroll();
     testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
     testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(deliveryZone);
-    testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
+    testWebDriver.waitForElementToAppear(zoneToDelivery);
+    testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
     testWebDriver.sleep(1000);
-    testWebDriver.selectByVisibleText(deliveryZoneProgram, program);
+    testWebDriver.selectByVisibleText(programToDeliver, program);
     testWebDriver.sleep(1000);
     rolesInputFieldMDeliveryZone.click();
     rolesInputFieldMDeliveryZone.clear();
     rolesInputFieldMDeliveryZone.sendKeys(role);
     rolesInputFieldMDeliveryZone.sendKeys(Keys.RETURN);
-    addAllocationRoleButton.click();
+    addDeliveryZoneRoleButton.click();
     testWebDriver.sleep(1000);
   }
 
@@ -365,16 +450,16 @@ public class UserPage extends Page {
     testWebDriver.handleScroll();
     testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
     testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(deliveryZone);
-    testWebDriver.selectByVisibleText(deliveryZone, deliveryZoneCode);
+    testWebDriver.waitForElementToAppear(zoneToDelivery);
+    testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
     testWebDriver.sleep(1000);
-    testWebDriver.selectByVisibleText(deliveryZoneProgram, program);
+    testWebDriver.selectByVisibleText(programToDeliver, program);
     testWebDriver.sleep(1000);
     rolesInputFieldDeliveryZone.click();
     rolesInputFieldDeliveryZone.clear();
     rolesInputFieldDeliveryZone.sendKeys(role);
     rolesInputFieldDeliveryZone.sendKeys(Keys.RETURN);
-    addAllocationRoleButton.click();
+    addDeliveryZoneRoleButton.click();
     testWebDriver.sleep(1000);
   }
 
@@ -444,7 +529,7 @@ public class UserPage extends Page {
   }
 
   public String getAllProgramsHomeFacility() {
-    return programsMyFacility.getText();
+    return homeFacilityPrograms.getText();
   }
 
   public void clickViewHere() {
