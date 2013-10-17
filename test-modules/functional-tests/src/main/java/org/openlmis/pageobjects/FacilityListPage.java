@@ -174,7 +174,7 @@ public class FacilityListPage extends RequisitionPage {
       testWebDriver.waitForElementToAppear(facilityListTextField);
       testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
       assertEquals(color, firstFacilityIndicator.getCssValue("background-color"));
-      clickFacilityListDropDown();
+        facilityOverAllIndicator.click();
     }
 
   }
