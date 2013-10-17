@@ -4,6 +4,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     $scope.facilities = {};
     $scope.geographicZones = {};
     $scope.message={};
+    $scope.facilitiesLoaded = false;
 
     var loadMemberFacilities = function(){
         FacilityCompleteListInRequisitionGroup.get({id:$routeParams.requisitionGroupId},function(data){
@@ -31,6 +32,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
 
     GetFacilityCompleteList.get(function(data){
         $scope.allFacilities = $scope.allFacilitiesFiltered = data.facilities;
+        $scope.facilitiesLoaded = true;
     });
 
     $scope.facilityTypes = ReportFacilityTypes.get(function(data){
