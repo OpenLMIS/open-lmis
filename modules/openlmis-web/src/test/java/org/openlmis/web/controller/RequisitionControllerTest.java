@@ -329,7 +329,7 @@ public class RequisitionControllerTest {
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
-    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber, new String(), new String(), request);
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber, sortBy, sortDirection, request);
 
     verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
       1, USER_ID, Right.CONVERT_TO_ORDER,sortBy ,sortDirection);

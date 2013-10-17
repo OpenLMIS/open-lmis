@@ -16,7 +16,6 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -180,9 +179,10 @@ public interface RequisitionMapper {
     public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
       sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId," +
-        " R.modifiedDate as modifiedDate, RSC.modifiedDate as submittedDate, P.name AS ProgramName, F.name AS FacilityName," +
-        " F.code AS FacilityCode, SF.name AS SupplyingFacilityName" +
-        " FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' ");
+        " R.modifiedDate as modifiedDate, RSC.modifiedDate as submittedDate, P.name AS programName, F.name AS facilityName," +
+        " F.code AS facilityCode, SF.name AS supplyingFacilityName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
+        " FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
+        " INNER JOIN processing_periods PP ON PP.id = R.periodId ");
 
       appendQueryClausesBySearchType(sql, params);
 
@@ -190,15 +190,9 @@ public interface RequisitionMapper {
       Integer pageSize = (Integer) params.get("pageSize");
       String sortBy = (String) params.get("sortBy");
       String sortDirection = (String) params.get("sortDirection");
-      Map<String, String> sortingFieldMap = new HashMap<>();
-      sortingFieldMap.put("programName", "P.name");
-      sortingFieldMap.put("facilityName", "F.name");
-      sortingFieldMap.put("facilityCode", "F.code");
-      sortingFieldMap.put("supplyingFacilityName", "SF.name");
-      sortingFieldMap.put("submittedDate", "submittedDate");
 
 
-      return sql.append("ORDER BY " + sortingFieldMap.get(sortBy) + " " + sortDirection).append(" LIMIT ").append(pageSize)
+      return sql.append("ORDER BY " + sortBy + " " + sortDirection).append(" LIMIT ").append(pageSize)
         .append(" OFFSET ").append((pageNumber - 1) * pageSize).toString();
     }
 
