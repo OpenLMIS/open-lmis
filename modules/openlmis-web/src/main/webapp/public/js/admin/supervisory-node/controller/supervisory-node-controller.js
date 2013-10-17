@@ -14,6 +14,7 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
 
     SupervisoryNodeCompleteList.get(function (data) {
         $scope.supervisoryNodes = data.supervisoryNodes;
+        $scope.supervisoryNodes.push("");
     });
 
     GeographicZoneCompleteList.get(function(data){
@@ -48,6 +49,10 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
             $scope.showError = true;
             $scope.error = "Please fill in all required fields.";
             return false;
+        }
+
+        if($scope.supervisoryNode.parent.id == null){
+            $scope.supervisoryNode.parent = null;
         }
 
         SaveSupervisoryNode.save($scope.supervisoryNode,successHandler,errorHandler);
