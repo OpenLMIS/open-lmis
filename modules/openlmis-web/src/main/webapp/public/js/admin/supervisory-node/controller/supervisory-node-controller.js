@@ -4,6 +4,7 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     $scope.facilities = {};
     $scope.geographicZones = {};
     $scope.message={};
+    $scope.facilitiesLoaded = false;
 
     if ($routeParams.supervisoryNodeId) {
         GetSupervisoryNode.get({id: $routeParams.supervisoryNodeId}, function (data) {
@@ -21,6 +22,7 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
 
     GetFacilityCompleteList.get(function(data){
         $scope.allFacilities = $scope.allFacilitiesFiltered = data.facilities;
+        $scope.facilitiesLoaded = true;
     });
 
     $scope.facilityTypes = ReportFacilityTypes.get(function(data){
