@@ -262,8 +262,6 @@ Feature: Smoke Tests
     And I access convert to order
     Then "1" requisition converted to order
 
-  Feature: Smoke Tests
-
   @smokeDistribution
 
 
