@@ -45,7 +45,7 @@ public class FulfillmentRoleAssignmentRepository {
         @Override
         public void execute(Object o) {
           final Long roleId = (Long) o;
-          fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user.getId(), fulfillmentRoleAssignment.getFacilityId(), roleId);
+          fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, fulfillmentRoleAssignment.getFacilityId(), roleId);
         }
       });
     }

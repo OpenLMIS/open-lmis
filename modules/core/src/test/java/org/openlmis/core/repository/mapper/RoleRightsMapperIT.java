@@ -250,7 +250,7 @@ public class RoleRightsMapperIT {
   }
 
   private void insertFulfillmentRoleAssignment(User user, Facility facility, Role role) {
-    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user.getId(), facility.getId(), role.getId());
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
   }
 
 
