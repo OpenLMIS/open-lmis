@@ -36,7 +36,7 @@ public class FacilityFeedDTOTest {
 
     assertThat(facilityFeedDTO.getCode(), is(facility.getCode()));
     assertThat(facilityFeedDTO.getName(), is(facility.getName()));
-    assertThat(facilityFeedDTO.getType(), is(facility.getFacilityType().getName()));
+    assertThat(facilityFeedDTO.getFacilityType(), is(facility.getFacilityType().getName()));
     assertThat(facilityFeedDTO.getDescription(), is(facility.getDescription()));
     assertThat(facilityFeedDTO.getGLN(), is(facility.getGln()));
     assertThat(facilityFeedDTO.getMainPhone(), is(facility.getMainPhone()));
@@ -60,10 +60,10 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getActive(), is(facility.getActive()));
     assertThat(facilityFeedDTO.getGoLiveDate(), is(facility.getGoLiveDate()));
     assertThat(facilityFeedDTO.getGoDownDate(), is(facility.getGoDownDate()));
-    assertThat(facilityFeedDTO.getSatelliteFacility(), is(facility.getSatellite()));
+    assertThat(facilityFeedDTO.getSatellite(), is(facility.getSatellite()));
     assertThat(facilityFeedDTO.getVirtualFacility(), is(facility.getVirtualFacility()));
     assertThat(facilityFeedDTO.getParentFacility(), is(parentFacility.getCode()));
-    assertThat(facilityFeedDTO.getComments(), is(facility.getComment()));
+    assertThat(facilityFeedDTO.getComment(), is(facility.getComment()));
     assertThat(facilityFeedDTO.isEnabled(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
   }

@@ -84,7 +84,7 @@ public class FacilityFeed extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + facilityNamePrefix + date_time + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"" + facilityType + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"description\":\"Testing description\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"9711231305\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"fax\":\"9711231305\""));
@@ -104,7 +104,7 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"Comments\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"Comments\""));
 
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -124,12 +124,12 @@ public class FacilityFeed extends TestCaseHelper {
 
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"enabled\":false"));
-    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"type\":\"" + facilityType + "\""));
+    assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"operatedBy\":\"" + operatedBy + "\""));
 
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":true"));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"enabled\":true"));
-    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"type\":\"" + facilityType + "\""));
+    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"operatedBy\":\"" + operatedBy + "\""));
 
     deleteFacilityPage = homePage.navigateSearchFacility();
@@ -180,7 +180,7 @@ public class FacilityFeed extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + facilityNamePrefix + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"" + facilityType + "\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"description\":\"IT department\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"9711231305\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"fax\":\"9711231305\""));
@@ -201,9 +201,9 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":true"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satellite\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comments\":\"fc\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"fc\""));
 
     uploadPage.uploadFacilities("QA_facilities_Subsequent_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -245,7 +245,7 @@ public class FacilityFeed extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
@@ -302,7 +302,7 @@ public class FacilityFeed extends TestCaseHelper {
       "",
       "");
 
-    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus() == 401);
 
   }
 
@@ -327,7 +327,7 @@ public class FacilityFeed extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
@@ -376,7 +376,7 @@ public class FacilityFeed extends TestCaseHelper {
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"type\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));

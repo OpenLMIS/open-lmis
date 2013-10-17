@@ -31,8 +31,6 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private String name;
 
-  private String type;
-
   private String description;
 
   private String GLN;
@@ -46,6 +44,8 @@ public class FacilityFeedDTO extends BaseFeedDTO {
   private String address2;
 
   private String geographicZone;
+
+  private String facilityType;
 
   private Long catchmentPopulation;
 
@@ -79,22 +79,22 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Date goDownDate;
 
-  private Boolean satelliteFacility;
-
-  private Boolean virtualFacility;
+  private Boolean satellite;
 
   private String parentFacility;
 
-  private String comments;
+  private String comment;
 
   private boolean enabled;
 
   private Date modifiedDate;
 
+  private Boolean virtualFacility;
+
   public FacilityFeedDTO(Facility facility, Facility parentFacility) {
     this.code = facility.getCode();
     this.name = facility.getName();
-    this.type = facility.getFacilityType().getName();
+    this.facilityType = facility.getFacilityType().getName();
     this.description = facility.getDescription();
     this.GLN = facility.getGln();
     this.mainPhone = facility.getMainPhone();
@@ -115,13 +115,13 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.hasElectricity = facility.getHasElectricity();
     this.hasElectronicSCC = facility.getHasElectronicScc();
     this.hasElectronicDAR = facility.getHasElectronicDar();
-    this.satelliteFacility = facility.getSatellite();
+    this.satellite = facility.getSatellite();
     this.virtualFacility = facility.getVirtualFacility();
     this.active = facility.getActive();
     this.goLiveDate = facility.getGoLiveDate();
     this.goDownDate = facility.getGoDownDate();
     this.parentFacility = parentFacility != null ? parentFacility.getCode() : null;
-    this.comments = facility.getComment();
+    this.comment = facility.getComment();
     this.enabled = facility.getEnabled();
     this.modifiedDate = facility.getModifiedDate();
   }

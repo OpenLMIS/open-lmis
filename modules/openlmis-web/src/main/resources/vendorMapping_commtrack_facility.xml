@@ -12,7 +12,7 @@
 <mapping>
     <field openlmis-name="code" vendor-name="facilityCode" />
     <field openlmis-name="name" vendor-name="facilityName" />
-    <field openlmis-name="type" vendor-name="facilityType" />
+    <field openlmis-name="facilityType" vendor-name="facilityType" />
     <field openlmis-name="description" vendor-name="facilityDescription" />
     <field openlmis-name="gln" vendor-name="GLN" />
     <field openlmis-name="mainPhone" vendor-name="facilityMainPhone" />
@@ -33,13 +33,13 @@
     <field openlmis-name="hasElectricity" vendor-name="facilityHasElectricity" />
     <field openlmis-name="hasElectronicSCC" vendor-name="facilityHasElectronicSCC" />
     <field openlmis-name="hasElectronicDAR" vendor-name="facilityHasElectronicDAR" />
-    <field openlmis-name="satelliteFacility" vendor-name="facilityIsSatellite" />
+    <field openlmis-name="satellite" vendor-name="facilityIsSatellite" />
     <field openlmis-name="virtualFacility" vendor-name="facilityIsVirtual" />
     <field openlmis-name="active" vendor-name="facilityIsActive" />
     <field openlmis-name="goLiveDate" vendor-name="facilityGoLiveDate" />
     <field openlmis-name="goDownDate" vendor-name="facilityGoDownDate" />
     <field openlmis-name="parentFacility" vendor-name="parentFacilityCode" />
-    <field openlmis-name="comments" vendor-name="facilityComments" />
+    <field openlmis-name="comment" vendor-name="facilityComments" />
     <field openlmis-name="enabled" vendor-name="enabled" />
     <field openlmis-name="modifiedDate" vendor-name="lastModifiedDate" />
 </mapping>
