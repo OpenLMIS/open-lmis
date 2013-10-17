@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, warehouses) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
   $scope.user = user || {homeFacilityRoles: []};
   $scope.supervisoryNodes = supervisoryNodes;
-  $scope.warehouses = warehouses;
+  $scope.warehouses = enabledWarehouses;
   $scope.deliveryZones = deliveryZones;
   $scope.$parent.userId = null;
   $scope.message = "";
@@ -336,12 +336,12 @@ UserController.resolve = {
     return deferred.promise;
   },
 
-  warehouses: function ($q, Warehouse, $timeout) {
+  enabledWarehouses: function ($q, EnabledWarehouse, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {
-      Warehouse.get({}, function (data) {
-        deferred.resolve(data.warehouses);
+      EnabledWarehouse.get({}, function (data) {
+        deferred.resolve(data.enabledWarehouses);
       }, function () {
       });
     }, 100);
@@ -357,7 +357,10 @@ function expandCollapse(trigger){
 		accordion.find('.accordion-section').each(function() {
       $(this).find('.accordion-body').slideDown();
       $(this).find('b').text('-');
-
+    });
+    var offsetTop = accordion.offset().top;
+    $('body, html').animate({
+        scrollTop: parseInt(offsetTop)+'px'
     });
 	}else{
 		accordion.find('.accordion-section').each(function() {

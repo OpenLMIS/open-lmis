@@ -310,6 +310,17 @@ describe("User", function () {
       expect(scope.user.fulfillmentRoles.length).toEqual(1);
       expect(scope.warehouseRoleMappingError).toBeTruthy();
     });
+
+    it('it should check presence of a error for a field', function(){
+      expect(scope.hasMappingError(true, undefined)).toBeTruthy();
+      expect(scope.hasMappingError(true, null)).toBeTruthy();
+      expect(scope.hasMappingError(true, "")).toBeTruthy();
+      expect(scope.hasMappingError(true, [])).toBeTruthy();
+
+      var some_random_varible = "blah blah";
+      expect(scope.hasMappingError(true, some_random_varible)).toBeFalsy();
+    });
+
   });
 
 });

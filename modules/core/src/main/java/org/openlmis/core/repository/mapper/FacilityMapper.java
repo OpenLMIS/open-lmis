@@ -178,6 +178,8 @@ public interface FacilityMapper {
   List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
 
 
-  @Select({"SELECT * from facilities where id in (SELECT supplyingfacilityid from supply_lines)"})
-  List<Facility> getWarehouses();
+  @Select({"SELECT * from facilities where id in (SELECT supplyingfacilityid from supply_lines) and enabled = true"})
+  List<Facility> getEnabledWarehouses();
 }
+
+//

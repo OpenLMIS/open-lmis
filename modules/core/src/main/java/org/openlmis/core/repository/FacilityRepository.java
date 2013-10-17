@@ -188,7 +188,7 @@ public class FacilityRepository {
     return mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
   }
 
-  public List<Facility> getWarehouses() {
-    return mapper.getWarehouses();
+  public List<Facility> getEnabledWarehouses() {
+    return mapper.getEnabledWarehouses();
   }
 }

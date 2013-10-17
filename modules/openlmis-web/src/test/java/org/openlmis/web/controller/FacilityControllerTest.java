@@ -266,12 +266,12 @@ public class FacilityControllerTest {
     facilities.add(new Facility());
     facilities.add(new Facility());
 
-    when(facilityService.getWareshouses()).thenReturn(facilities);
+    when(facilityService.getEnabledWareshouses()).thenReturn(facilities);
 
-    ResponseEntity<OpenLmisResponse> warehouses = facilityController.getWarehouses();
+    ResponseEntity<OpenLmisResponse> warehouses = facilityController.getEnabledWarehouses();
 
-    verify(facilityService).getWareshouses();
-    assertThat((List<Facility>) warehouses.getBody().getData().get("warehouses"), is(facilities));
+    verify(facilityService).getEnabledWareshouses();
+    assertThat((List<Facility>) warehouses.getBody().getData().get("enabledWarehouses"), is(facilities));
 
   }
 

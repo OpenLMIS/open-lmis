@@ -334,11 +334,11 @@ public class FacilityRepositoryTest {
   @Test
   public void shouldGetAllWarehouses() throws Exception {
     List<Facility> expectedWarehouses = new ArrayList<>();
-    when(mapper.getWarehouses()).thenReturn(expectedWarehouses);
+    when(mapper.getEnabledWarehouses()).thenReturn(expectedWarehouses);
 
-    List<Facility> warehouses = repository.getWarehouses();
+    List<Facility> warehouses = repository.getEnabledWarehouses();
 
-    verify(mapper).getWarehouses();
+    verify(mapper).getEnabledWarehouses();
     assertThat(warehouses, is(expectedWarehouses));
   }
 

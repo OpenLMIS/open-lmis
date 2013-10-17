@@ -601,26 +601,30 @@ public class FacilityMapperIT {
 
 
   @Test
-  public void shouldGetWarehouses() throws Exception {
+  public void shouldGetEnabledWarehouses() throws Exception {
 
-    Facility facility = make(a(defaultFacility));
-    mapper.insert(facility);
+    Facility enabledFacility = make(a(defaultFacility));
+    mapper.insert(enabledFacility);
+
+    Facility disabledFacility = make(a(FacilityBuilder.defaultFacility, with(code, "FF110"), with(name, "D1100"), with(enabled, false)));
+    mapper.insert(disabledFacility);
 
     Program program = make(a(defaultProgram));
     programMapper.insert(program);
 
-    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode,with(SupervisoryNodeBuilder.facility, facility)));
+    SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode,with(SupervisoryNodeBuilder.facility, enabledFacility)));
     supervisoryNodeMapper.insert(supervisoryNode);
 
-    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program), with(SupplyLineBuilder.facility, facility),
+    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program), with(SupplyLineBuilder.facility, enabledFacility),
       with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);
 
-    List<Facility> warehouses = mapper.getWarehouses();
+    List<Facility> warehouses = mapper.getEnabledWarehouses();
 
-    assertThat(warehouses.get(0).getId(), is(facility.getId()));
-    assertThat(warehouses.get(0).getCode(), is(facility.getCode()));
     assertThat(warehouses.size(), is(1));
+    assertThat(warehouses.get(0).getId(), is(not(disabledFacility.getId())));
+    assertThat(warehouses.get(0).getId(), is(enabledFacility.getId()));
+    assertThat(warehouses.get(0).getCode(), is(enabledFacility.getCode()));
 
   }
 

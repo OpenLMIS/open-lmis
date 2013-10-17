@@ -348,11 +348,11 @@ public class FacilityServiceTest {
   public void shouldGetWarehouses() throws Exception {
 
     List<Facility> warehouses = asList(new Facility());
-    when(facilityRepository.getWarehouses()).thenReturn(warehouses);
+    when(facilityRepository.getEnabledWarehouses()).thenReturn(warehouses);
 
-    List<Facility> wareshouses = facilityService.getWareshouses();
+    List<Facility> wareshouses = facilityService.getEnabledWareshouses();
 
-    verify(facilityRepository).getWarehouses();
+    verify(facilityRepository).getEnabledWarehouses();
     assertThat(warehouses,is(warehouses));
   }
 }
