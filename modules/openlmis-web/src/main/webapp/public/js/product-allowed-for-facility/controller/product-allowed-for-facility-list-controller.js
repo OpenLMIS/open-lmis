@@ -1,4 +1,4 @@
-function ProductAllowedForFacilityListController($scope, $location, navigateBackService, ReportFacilityTypes, ProgramCompleteList,ScheduleCompleteList, GetFacilityTypeApprovedProductsCompleteList,GetFacilityTypeProgramProductAlreadyAllowedList,GetProductsCompleteListForAProgram, SaveApprovedProductForFacilityType, GetApprovedProductForFacilityTypeDetail,RemoveApprovedProductForFacilityType, $dialog, messageService) {
+function ProductAllowedForFacilityListController($scope, $location, navigateBackService, ReportFacilityTypes, ProgramCompleteList,ScheduleCompleteList,GetFacilityTypeProgramProductAlreadyAllowedList,GetProductsCompleteListForAProgram, SaveApprovedProductForFacilityType, GetApprovedProductForFacilityTypeDetail,RemoveApprovedProductForFacilityType) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showFacilityTypeList('txtFilterFacilityTypeName');

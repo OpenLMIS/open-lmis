@@ -1,4 +1,4 @@
-function RequisitionGroupProgramScheduleListController($scope, $location, navigateBackService, RequisitionGroupCompleteList, ProgramCompleteList,ScheduleCompleteList, LoadSchedulesForRequisitionGroupProgram, SaveRequisitionGroupProgramSchedule, $dialog, messageService) {
+function RequisitionGroupProgramScheduleListController($scope, $location, navigateBackService, RequisitionGroupCompleteList, ProgramCompleteList,ScheduleCompleteList, LoadSchedulesForRequisitionGroupProgram, SaveRequisitionGroupProgramSchedule) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');

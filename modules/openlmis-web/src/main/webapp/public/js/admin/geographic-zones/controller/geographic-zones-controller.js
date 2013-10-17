@@ -1,4 +1,4 @@
-function GeographicZonesController($scope, $routeParams, $location, GeographicZoneCompleteList, CreateGeographicZone, GeographicLevels, GetGeographicZone, SetGeographicZone) {
+function GeographicZonesController($scope, $routeParams, $location, GeographicZoneCompleteList, GeographicLevels, GetGeographicZone, SetGeographicZone) {
     $scope.geographicZoneNameInvalid = false;
     $scope.geographicZone = {};
     $scope.geographicZoneLevelInvalid = false;
