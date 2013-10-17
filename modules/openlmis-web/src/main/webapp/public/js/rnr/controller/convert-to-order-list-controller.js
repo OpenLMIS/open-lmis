@@ -46,8 +46,9 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
   };
 
 
-  $scope.$watch('sortOptions', function () {
-    refreshGrid();
+  $scope.$watch('sortOptions', function (newValue, oldValue) {
+    if (newValue.fields[0] != oldValue.fields[0] || newValue.directions[0] != oldValue.directions[0])
+      refreshGrid();
   }, true);
 
   $scope.$on('$routeUpdate', refreshGrid);
