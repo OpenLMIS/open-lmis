@@ -197,11 +197,6 @@
             <div id="lstsupervisorynode_{{$index}}" class="span2" style="overflow: visible;"> {{sl.supervisoryNode.name}}</div>
             <div id="lstdescription_{{$index}}" class="span3" style="overflow: visible;"> {{sl.description}}</div>
             <div class="span1" style="float: left; width: 60px;">
-                <!--<input type="button" ng-hide="supplylinesBackupMap[sl.id].deleted"-->
-                <!--id="lstDeleteBtn_{{$index}}"-->
-                <!--class="btn btn-mini pull-right"-->
-                <!--value="Delete"-->
-                <!--ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].deleted=true;"/>-->
                 <a href="" class="btn btn-danger" ng-click="showConfirmSupplylineDeleteWindow(sl); supplylinesBackupMap[sl.id].deleted=true;">Delete</a>
             </div>
         </div>
