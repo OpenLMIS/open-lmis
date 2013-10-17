@@ -30,8 +30,6 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     });
 
     $scope.saveSupervisoryNode = function () {
-        $scope.validateSupervisoryNodeFacility();
-
         var successHandler = function (response) {
             $scope.supervisoryNode = response.supervisoryNode;
             $scope.showError = false;
@@ -46,6 +44,12 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
             $scope.error = response.data.error;
         };
 
+        if($scope.supervisoryNode.facility == null || $scope.supervisoryNode.name==null || $scope.supervisoryNode.code==null){
+            $scope.showError = true;
+            $scope.error = "Please fill in all required fields.";
+            return false;
+        }
+
         SaveSupervisoryNode.save($scope.supervisoryNode,successHandler,errorHandler);
 
         return true;
@@ -59,12 +63,6 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     $scope.validateSupervisoryNodeName = function () {
         $scope.supervisoryNodeNameInvalid = $scope.supervisoryNode.name == null;
     };
-
-    $scope.validateSupervisoryNodeFacility = function(){
-        if($scope.supervisoryNode.facility == null){
-
-        }
-    }
 
     $scope.associateFacility=function(){
         $scope.allFacilitiesFiltered = $scope.allFacilities;
