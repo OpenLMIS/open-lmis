@@ -34,10 +34,10 @@ public class ShipmentFileTemplateTest {
   @Test
   public void shouldValidateShipmentFileTemplateAndThrowErrorIfPositionIsDuplicate() {
     EDIConfiguration shipmentConfiguration = new EDIConfiguration();
-    List<ShipmentFileColumn> shipmentFileColumns = new ArrayList<>();
-    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn("test_column1", "Test Column 1", true, true, 1, "dd/MM/yy");
+    List<EDIFileColumn> shipmentFileColumns = new ArrayList<>();
+    EDIFileColumn shipmentFileColumn = new EDIFileColumn("test_column1", "Test Column 1", true, true, 1, "dd/MM/yy");
     shipmentFileColumns.add(shipmentFileColumn);
-    shipmentFileColumn = new ShipmentFileColumn("test_column2", "Test Column 2", true, true, 1, "dd/MM/yy");
+    shipmentFileColumn = new EDIFileColumn("test_column2", "Test Column 2", true, true, 1, "dd/MM/yy");
     shipmentFileColumns.add(shipmentFileColumn);
     ShipmentFileTemplate fileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumns);
 
@@ -49,10 +49,10 @@ public class ShipmentFileTemplateTest {
   @Test
   public void shouldValidateShipmentFileTemplateAndThrowErrorIfMandatoryColumnIsNotIncluded() {
     EDIConfiguration shipmentConfiguration = new EDIConfiguration();
-    List<ShipmentFileColumn> shipmentFileColumns = new ArrayList<>();
-    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn("productCode", "Product Code", false, true, 1, "dd/MM/yy");
+    List<EDIFileColumn> shipmentFileColumns = new ArrayList<>();
+    EDIFileColumn shipmentFileColumn = new EDIFileColumn("productCode", "Product Code", false, true, 1, "dd/MM/yy");
     shipmentFileColumns.add(shipmentFileColumn);
-    shipmentFileColumn = new ShipmentFileColumn("test_column2", "Test Column 2", true, true, 1, "dd/MM/yy");
+    shipmentFileColumn = new EDIFileColumn("test_column2", "Test Column 2", true, true, 1, "dd/MM/yy");
     shipmentFileColumns.add(shipmentFileColumn);
     ShipmentFileTemplate fileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumns);
 
@@ -64,10 +64,10 @@ public class ShipmentFileTemplateTest {
   @Test
   public void shouldSetModifiedByIfNoError() {
     EDIConfiguration shipmentConfiguration = new EDIConfiguration();
-    List<ShipmentFileColumn> shipmentFileColumns = new ArrayList<>();
-    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn("productCode", "Product Code", true, true, 1, "dd/MM/yy");
+    List<EDIFileColumn> shipmentFileColumns = new ArrayList<>();
+    EDIFileColumn shipmentFileColumn = new EDIFileColumn("productCode", "Product Code", true, true, 1, "dd/MM/yy");
     shipmentFileColumns.add(shipmentFileColumn);
-    shipmentFileColumn = new ShipmentFileColumn("test_column2", "Test Column 2", true, true, 2, "dd/MM/yy");
+    shipmentFileColumn = new EDIFileColumn("test_column2", "Test Column 2", true, true, 2, "dd/MM/yy");
     shipmentFileColumns.add(shipmentFileColumn);
     ShipmentFileTemplate fileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumns);
 

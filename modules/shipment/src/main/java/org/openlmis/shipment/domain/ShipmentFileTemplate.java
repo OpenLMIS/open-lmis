@@ -10,10 +10,10 @@
 
 package org.openlmis.shipment.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
 
@@ -25,24 +25,21 @@ import static java.util.Arrays.asList;
 
 @Data
 @NoArgsConstructor
-public class ShipmentFileTemplate extends EDIFileTemplate<ShipmentFileColumn> {
+public class ShipmentFileTemplate extends EDIFileTemplate {
 
-  public ShipmentFileTemplate(EDIConfiguration config, List<ShipmentFileColumn> columns) {
+  public ShipmentFileTemplate(EDIConfiguration config, List<EDIFileColumn> columns) {
     this.columns = columns;
     this.configuration = config;
   }
 
-  @Override
-  public void setColumns(List<ShipmentFileColumn> columns) {
-    super.setColumns(columns);
-  }
+
 
   public void validateAndSetModifiedBy(Long userId) {
     Set<Integer> positions = new HashSet();
     Integer includedColumnCount = 0;
     List<String> mandatoryColumnNames = asList("productCode", "orderId", "quantityShipped");
     configuration.setModifiedBy(userId);
-    for (ShipmentFileColumn shipmentFileColumn : columns) {
+    for (EDIFileColumn shipmentFileColumn : columns) {
       shipmentFileColumn.validate();
       if (mandatoryColumnNames.contains(shipmentFileColumn.getName()) && !shipmentFileColumn.getInclude()) {
         throw new DataException("shipment.file.mandatory.columns.not.included");

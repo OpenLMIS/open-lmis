@@ -22,7 +22,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.handler.ShipmentFilePostProcessHandler;
@@ -129,7 +128,7 @@ public class ShipmentFileProcessorTest {
   @Test
   public void shouldThrowErrorIfNotEnoughFieldsInShipmentFile() throws Exception {
 
-    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<>();
+    List<EDIFileColumn> shipmentFileColumnList = new ArrayList<>();
     shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 1))));
     shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))));
     shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 3))));
@@ -154,7 +153,7 @@ public class ShipmentFileProcessorTest {
   @Test
   public void shouldInsertLineItemsIfAllIncludedFieldsArePresent() throws Exception {
 
-    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+    List<EDIFileColumn> shipmentFileColumnList = new ArrayList<EDIFileColumn>() {{
       add(make(a(mandatoryShipmentFileColumn, with(fieldName, "orderId"), with(columnPosition, 2))));
       add(make(a(defaultShipmentFileColumn, with(columnPosition, 4), with(includeInShipmentFile, false))));
       add(make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false))));
@@ -184,7 +183,7 @@ public class ShipmentFileProcessorTest {
   @Test
   public void shouldRemoveHeadersIfPresentInCsv() throws Exception {
 
-    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+    List<EDIFileColumn> shipmentFileColumnList = new ArrayList<EDIFileColumn>() {{
       add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))));
     }};
 
@@ -204,7 +203,7 @@ public class ShipmentFileProcessorTest {
 
   @Test
   public void shouldCreateDTOIfDateFieldsArePresent() throws Exception {
-    List<ShipmentFileColumn> shipmentFileColumnList = new ArrayList<ShipmentFileColumn>() {{
+    List<EDIFileColumn> shipmentFileColumnList = new ArrayList<EDIFileColumn>() {{
       add(make(a(mandatoryShipmentFileColumn,
         with(columnPosition, 1),
         with(fieldName, "orderId")

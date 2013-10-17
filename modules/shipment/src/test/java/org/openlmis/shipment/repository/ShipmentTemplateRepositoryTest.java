@@ -20,7 +20,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.repository.mapper.ShipmentConfigurationMapper;
 import org.openlmis.shipment.repository.mapper.ShipmentFileColumnMapper;
 
@@ -47,9 +46,9 @@ public class ShipmentTemplateRepositoryTest {
 
   @Test
   public void shouldGetAllShipmentFileColumns() {
-    List<ShipmentFileColumn> expectedShipmentColumns = new ArrayList<>();
+    List<EDIFileColumn> expectedShipmentColumns = new ArrayList<>();
     when(shipmentFileColumnMapper.getAll()).thenReturn(expectedShipmentColumns);
-    List<ShipmentFileColumn> shipmentFileColumns = repository.getAllShipmentFileColumns();
+    List<EDIFileColumn> shipmentFileColumns = repository.getAllShipmentFileColumns();
     assertThat(shipmentFileColumns, is(expectedShipmentColumns));
     verify(shipmentFileColumnMapper).getAll();
   }
@@ -77,7 +76,7 @@ public class ShipmentTemplateRepositoryTest {
 
   @Test
   public void shouldInsertShipmentFileColumn() {
-    ShipmentFileColumn shipmentFileColumn = new ShipmentFileColumn();
+    EDIFileColumn shipmentFileColumn = new EDIFileColumn();
 
     repository.update(shipmentFileColumn);
 

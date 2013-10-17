@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -47,23 +46,23 @@ public class ShipmentFileTemplateServiceTest {
 
   @Test
   public void shouldUpdateTemplate() {
-    List<ShipmentFileColumn> shipmentFileColumns = new ArrayList<ShipmentFileColumn>() {{
-      add(new ShipmentFileColumn());
-      add(new ShipmentFileColumn());
-      add(new ShipmentFileColumn());
+    List<EDIFileColumn> shipmentFileColumns = new ArrayList<EDIFileColumn>() {{
+      add(new EDIFileColumn());
+      add(new EDIFileColumn());
+      add(new EDIFileColumn());
     }};
     EDIConfiguration shipmentConfiguration = new EDIConfiguration();
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumns);
 
     service.update(shipmentFileTemplate);
     verify(repository).updateShipmentConfiguration(shipmentConfiguration);
-    verify(repository, times(3)).update(any(ShipmentFileColumn.class));
+    verify(repository, times(3)).update(any(EDIFileColumn.class));
   }
 
   @Test
   public void shouldGetShipmentTemplate() throws Exception {
     EDIConfiguration shipmentConfiguration = new EDIConfiguration();
-    List<ShipmentFileColumn> shipmentFileColumns = new ArrayList<>();
+    List<EDIFileColumn> shipmentFileColumns = new ArrayList<>();
     when(repository.getShipmentConfiguration()).thenReturn(shipmentConfiguration);
     when(repository.getAllShipmentFileColumns()).thenReturn(shipmentFileColumns);
 

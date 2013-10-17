@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EDIFileTemplate<T extends EDIFileColumn> {
+public class EDIFileTemplate {
   protected EDIConfiguration configuration;
-  protected List<T> columns;
+  protected List<EDIFileColumn> columns;
 }

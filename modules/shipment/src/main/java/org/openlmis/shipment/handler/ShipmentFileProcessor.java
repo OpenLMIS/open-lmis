@@ -17,7 +17,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
@@ -105,9 +104,9 @@ public class ShipmentFileProcessor {
                                       ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
     boolean status = true;
 
-    List<ShipmentFileColumn> shipmentFileColumns = (List<ShipmentFileColumn>) shipmentFileTemplate.getColumns();
+    List<EDIFileColumn> shipmentFileColumns = (List<EDIFileColumn>) shipmentFileTemplate.getColumns();
 
-    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
+    Collection<EDIFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
 
     String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
     String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
@@ -126,7 +125,7 @@ public class ShipmentFileProcessor {
     if (!status) {
       throw new DataException("shipment.file.error");
     }
-    if(orderSet.size() == 0) {
+    if (orderSet.size() == 0) {
       throw new DataException("mandatory.field.missing");
     }
   }
@@ -167,16 +166,16 @@ public class ShipmentFileProcessor {
   }
 
 
-  private Collection<ShipmentFileColumn> filterIncludedColumns(List<ShipmentFileColumn> shipmentFileColumns) {
+  private Collection<EDIFileColumn> filterIncludedColumns(List<EDIFileColumn> shipmentFileColumns) {
     return select(shipmentFileColumns, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        return ((ShipmentFileColumn) o).getInclude();
+        return ((EDIFileColumn) o).getInclude();
       }
     });
   }
 
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns) {
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<EDIFileColumn> shipmentFileColumns) {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
@@ -203,7 +202,7 @@ public class ShipmentFileProcessor {
     }
   }
 
-  private String getFormatForField(String fieldName, List<ShipmentFileColumn> shipmentFileColumns) {
+  private String getFormatForField(String fieldName, List<EDIFileColumn> shipmentFileColumns) {
     for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
       if (shipmentFileColumn.getName().equals(fieldName)) {
         return shipmentFileColumn.getDatePattern();

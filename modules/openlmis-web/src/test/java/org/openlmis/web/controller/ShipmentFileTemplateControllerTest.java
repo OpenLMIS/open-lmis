@@ -19,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -71,8 +70,8 @@ public class ShipmentFileTemplateControllerTest {
 
   @Test
   public void shouldUpdateShipmentFileTemplate() {
-    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn("name", "Label", false, true, 1, "dd/mm/yy");
-    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn("name", "Label", false, true, 2, "dd/mm/yy");
+    EDIFileColumn shipmentFileColumn1 = new EDIFileColumn("name", "Label", false, true, 1, "dd/mm/yy");
+    EDIFileColumn shipmentFileColumn2 = new EDIFileColumn("name", "Label", false, true, 2, "dd/mm/yy");
     ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(
       new EDIConfiguration(true),
       asList(shipmentFileColumn1, shipmentFileColumn2));

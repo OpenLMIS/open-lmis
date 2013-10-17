@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BudgetTemplateRepository {
+public class BudgetFileTemplateRepository {
 
   @Autowired
   private BudgetFileColumnMapper budgetFileColumnMapper;

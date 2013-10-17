@@ -14,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 
@@ -24,7 +25,7 @@ public class ShipmentFileColumnTest {
 
   @Test
   public void shouldThrowErrorIfPositionIsZero() throws Exception {
-    ShipmentFileColumn column = new ShipmentFileColumn("name", "Label", true, true, 0, "dd/mm/yy");
+    EDIFileColumn column = new EDIFileColumn("name", "Label", true, true, 0, "dd/mm/yy");
 
     exException.expect(DataException.class);
     exException.expectMessage("shipment.file.invalid.position");
@@ -34,7 +35,7 @@ public class ShipmentFileColumnTest {
 
   @Test
   public void shouldThrowErrorIfPositionIsNull() throws Exception {
-    ShipmentFileColumn column = new ShipmentFileColumn("name", "Label", true, true, null, "dd/mm/yy");
+    EDIFileColumn column = new EDIFileColumn("name", "Label", true, true, null, "dd/mm/yy");
 
     exException.expect(DataException.class);
     exException.expectMessage("shipment.file.invalid.position");

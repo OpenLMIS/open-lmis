@@ -5,11 +5,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
-import org.openlmis.core.repository.BudgetTemplateRepository;
+import org.openlmis.core.repository.BudgetFileTemplateRepository;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -25,15 +24,15 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(BudgetTemplateService.class)
+@PrepareForTest(BudgetFileTemplateService.class)
 @Category(UnitTests.class)
-public class BudgetTemplateServiceTest {
+public class BudgetFileTemplateServiceTest {
 
   @Mock
-  BudgetTemplateRepository budgetTemplateRepository;
+  BudgetFileTemplateRepository budgetFileTemplateRepository;
 
   @InjectMocks
-  BudgetTemplateService budgetTemplateService;
+  BudgetFileTemplateService budgetFileTemplateService;
 
   @Test
   public void shouldUpdateBudgetFileTemplate() {
@@ -42,13 +41,13 @@ public class BudgetTemplateServiceTest {
     EDIFileColumn ediFileColumn1 = new EDIFileColumn("column1", "Column 1", true, true, 1, null);
     EDIFileColumn ediFileColumn2 = new EDIFileColumn("column2", "Column 2", true, true, 2, null);
     List<EDIFileColumn> columns = asList(ediFileColumn1, ediFileColumn2);
-    EDIFileTemplate<EDIFileColumn> ediFileTemplate = new EDIFileTemplate<>(ediConf, columns);
+    EDIFileTemplate ediFileTemplate = new EDIFileTemplate(ediConf, columns);
 
-    budgetTemplateService.update(ediFileTemplate);
+    budgetFileTemplateService.update(ediFileTemplate);
 
-    verify(budgetTemplateRepository).updateBudgetConfiguration(ediConf);
-    verify(budgetTemplateRepository).update(ediFileColumn1);
-    verify(budgetTemplateRepository).update(ediFileColumn2);
+    verify(budgetFileTemplateRepository).updateBudgetConfiguration(ediConf);
+    verify(budgetFileTemplateRepository).update(ediFileColumn1);
+    verify(budgetFileTemplateRepository).update(ediFileColumn2);
   }
 
   @Test
@@ -57,11 +56,11 @@ public class BudgetTemplateServiceTest {
     List<EDIFileColumn> budgetFileColumns = new ArrayList<>();
     EDIConfiguration budgetConf = new EDIConfiguration();
     EDIFileTemplate ediFileTemplate = new EDIFileTemplate();
-    when(budgetTemplateRepository.getAllBudgetFileColumns()).thenReturn(budgetFileColumns);
-    when(budgetTemplateRepository.getBudgetConfiguration()).thenReturn(budgetConf);
+    when(budgetFileTemplateRepository.getAllBudgetFileColumns()).thenReturn(budgetFileColumns);
+    when(budgetFileTemplateRepository.getBudgetConfiguration()).thenReturn(budgetConf);
     whenNew(EDIFileTemplate.class).withArguments(budgetConf, budgetFileColumns).thenReturn(ediFileTemplate);
 
-    EDIFileTemplate returnedEdiFileTemplate = budgetTemplateService.get();
+    EDIFileTemplate returnedEdiFileTemplate = budgetFileTemplateService.get();
 
     assertThat(returnedEdiFileTemplate, is(ediFileTemplate));
   }

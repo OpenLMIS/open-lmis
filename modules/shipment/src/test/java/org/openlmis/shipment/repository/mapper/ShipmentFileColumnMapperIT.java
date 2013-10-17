@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -56,7 +55,7 @@ public class ShipmentFileColumnMapperIT {
     queryExecutor.executeUpdate("INSERT INTO shipment_file_columns" +
       "(name, dataFieldLabel, position, include, mandatory, datePattern) VALUES" +
       "(?,?,?,?,?,?)", params);
-    ShipmentFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn,
+    EDIFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn,
       with(fieldName, "ColumnName"),
       with(dataFieldLabel, "new label"),
       with(columnPosition, 120),
@@ -76,13 +75,13 @@ public class ShipmentFileColumnMapperIT {
     assertThat(column.getModifiedBy(), is(22L));
   }
 
-  private ShipmentFileColumn filterColumns(List<ShipmentFileColumn> updatedColumns, final String columnName) {
-    return (ShipmentFileColumn) select(updatedColumns, new Predicate() {
+  private EDIFileColumn filterColumns(List<EDIFileColumn> updatedColumns, final String columnName) {
+    return (EDIFileColumn) select(updatedColumns, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        return (((ShipmentFileColumn) o).getName().equals(columnName));
+        return (((EDIFileColumn) o).getName().equals(columnName));
       }
-    }).toArray(new ShipmentFileColumn[1])[0];
+    }).toArray(new EDIFileColumn[1])[0];
   }
 
 }

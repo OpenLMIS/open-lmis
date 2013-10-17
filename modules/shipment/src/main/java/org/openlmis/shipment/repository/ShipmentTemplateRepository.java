@@ -12,7 +12,6 @@ package org.openlmis.shipment.repository;
 
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
 import org.openlmis.shipment.repository.mapper.ShipmentConfigurationMapper;
 import org.openlmis.shipment.repository.mapper.ShipmentFileColumnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class ShipmentTemplateRepository {
   @Autowired
   ShipmentConfigurationMapper shipmentConfigurationMapper;
 
-  public List<ShipmentFileColumn> getAllShipmentFileColumns() {
+  public List<EDIFileColumn> getAllShipmentFileColumns() {
     return shipmentFileColumnMapper.getAll();
   }
 
@@ -41,7 +40,7 @@ public class ShipmentTemplateRepository {
     shipmentConfigurationMapper.update(shipmentConfiguration);
   }
 
-  public void update(ShipmentFileColumn shipmentFileColumn) {
+  public void update(EDIFileColumn shipmentFileColumn) {
     shipmentFileColumnMapper.update(shipmentFileColumn);
   }
 }

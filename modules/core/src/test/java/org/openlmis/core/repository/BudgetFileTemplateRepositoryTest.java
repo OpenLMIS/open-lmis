@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class BudgetTemplateRepositoryTest {
+public class BudgetFileTemplateRepositoryTest {
 
   @Mock
   BudgetFileColumnMapper budgetFileColumnMapper;
@@ -31,7 +31,7 @@ public class BudgetTemplateRepositoryTest {
   BudgetConfigurationMapper budgetConfigurationMapper;
 
   @InjectMocks
-  BudgetTemplateRepository repository;
+  BudgetFileTemplateRepository repository;
 
   @Test
   public void shouldGetAllBudgetFileColumns() {
