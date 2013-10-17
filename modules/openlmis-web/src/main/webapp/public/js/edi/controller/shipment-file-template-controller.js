@@ -18,7 +18,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
     var uniquePositionList = _.uniq(positionList);
     if (uniquePositionList.length != positionList.length) {
       $scope.message = "";
-      $scope.error = "shipment.file.duplicate.position";
+      $scope.error = "file.duplicate.position";
       return true;
     }
     return false;
@@ -30,7 +30,7 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
 
       if (column.include && (isUndefined(column.position) || parseInt(column.position, 10) === 0 )) {
         $scope.message = "";
-        $scope.error = "shipment.file.invalid.position";
+        $scope.error = "file.invalid.position";
         emptyPosition = true;
       } else if (!isUndefined(column.position)) {
         column.position = parseInt(column.position, 10);
@@ -55,9 +55,6 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
           });
         });
       }, 3000);
-    }, function (data) {
-      $scope.error = "shipment." + data.error;
-      $scope.message = '';
     });
   };
 

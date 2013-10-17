@@ -118,21 +118,21 @@ describe("Shipment File Template Controller", function () {
     shipmentFileTemplate.columns[0].position = "";
     scope.saveShipmentFileTemplate();
     expect(scope.message).toEqual("");
-    expect(scope.error).toEqual("shipment.file.invalid.position");
+    expect(scope.error).toEqual("file.invalid.position");
   });
 
   it('should not save shipment file template if position is zero', function () {
     shipmentFileTemplate.columns[0].position = 0;
     scope.saveShipmentFileTemplate();
     expect(scope.message).toEqual("");
-    expect(scope.error).toEqual("shipment.file.invalid.position");
+    expect(scope.error).toEqual("file.invalid.position");
   });
 
   it('should not save shipment file template if position is duplicate', function () {
     shipmentFileTemplate.columns[0].position = shipmentFileTemplate.columns[1].position;
     scope.saveShipmentFileTemplate();
     expect(scope.message).toEqual("");
-    expect(scope.error).toEqual("shipment.file.duplicate.position");
+    expect(scope.error).toEqual("file.duplicate.position");
   });
 
 });

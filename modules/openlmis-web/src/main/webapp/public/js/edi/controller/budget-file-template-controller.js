@@ -18,7 +18,7 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
     var uniquePositionList = _.uniq(positionList);
     if (uniquePositionList.length != positionList.length) {
       $scope.message = "";
-      $scope.error = "shipment.file.duplicate.position";
+      $scope.error = "file.duplicate.position";
       return true;
     }
     return false;
@@ -54,10 +54,7 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
             $scope.message = '';
           });
         });
-      }, 3000, function (data) {
-        $scope.error = "budget." + data.error;
-        $scope.message = '';
-      });
+      }, 3000);
     });
   };
 
