@@ -112,7 +112,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public void setOverrideISA(DataTable tableData) throws Exception {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data) {
-      dbWrapper.InsertOverridenIsa(map.get("Facility Code").toString(), map.get("Program").toString(), map.get("Product").toString(), Integer.parseInt(map.get("ISA").toString()));
+      dbWrapper.InsertOverriddenIsa(map.get("Facility Code").toString(), map.get("Program").toString(), map.get("Product").toString(), Integer.parseInt(map.get("ISA").toString()));
     }
   }
 
@@ -152,7 +152,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(dbWrapper.getFacilityPopulation(facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
 
     assertEquals(IsaProgramProduct(programFirst, product, warehouseLoadAmountPage.getFacilityPopulation(1, 1)), warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals(dbWrapper.getOverridenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
 
   }
 
@@ -184,16 +184,16 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.InsertOverridenIsa(facilityCodeFirst, programFirst, product, 1000);
-    dbWrapper.InsertOverridenIsa(facilityCodeFirst, programFirst, product2, 9999999);
-    dbWrapper.InsertOverridenIsa(facilityCodeSecond, programFirst, product, 3000);
-    dbWrapper.InsertOverridenIsa(facilityCodeSecond, programFirst, product2, 888888);
-    dbWrapper.InsertOverridenIsa(facilityCodeThird, programFirst, product, 111);
-    dbWrapper.InsertOverridenIsa(facilityCodeThird, programFirst, product2, 222);
-    dbWrapper.InsertOverridenIsa(facilityCodeFourth, programFirst, product2, 333);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product, 1000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product2, 9999999);
+    dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product, 3000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product2, 888888);
+    dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product, 111);
+    dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product2, 222);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFourth, programFirst, product2, 333);
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
-    dbWrapper.updateOverridenIsa(facilityCodeFirst, programFirst, product, null);
-    dbWrapper.updateOverridenIsa(facilityCodeSecond, programFirst, product, null);
+    dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
+    dbWrapper.updateOverriddenIsa(facilityCodeSecond, programFirst, product, null);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -214,7 +214,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     assertEquals(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)), warehouseLoadAmountPage.getFacilityPopulation(3, 2));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals(dbWrapper.getOverridenIsa(facilityCodeFourth, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeFourth, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
     assertEquals(warehouseLoadAmountPage.getProduct1Isa(2, 2), warehouseLoadAmountPage.getProduct1Isa(3, 2));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2))), warehouseLoadAmountPage.getProduct2Isa(3, 2));
 
@@ -244,10 +244,10 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.InsertOverridenIsa(facilityCodeFirst, programFirst, product, 1000);
-    dbWrapper.InsertOverridenIsa(facilityCodeFirst, programFirst, product2, 2000);
-    dbWrapper.InsertOverridenIsa(facilityCodeSecond, programFirst, product, 3000);
-    dbWrapper.InsertOverridenIsa(facilityCodeSecond, programFirst, product2, 0);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product, 1000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product2, 2000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product, 3000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product2, 0);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -264,17 +264,17 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
     assertEquals(dbWrapper.getFacilityName(facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
     assertEquals(dbWrapper.getFacilityPopulation(facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
-    assertEquals(dbWrapper.getOverridenIsa(facilityCodeSecond, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals(dbWrapper.getOverridenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 1));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
 
     assertEquals(facilityCodeFirst, warehouseLoadAmountPage.getFacilityCode(1, 2));
     assertEquals(dbWrapper.getFacilityName(facilityCodeFirst), warehouseLoadAmountPage.getFacilityName(1, 2));
     assertEquals(dbWrapper.getFacilityPopulation(facilityCodeFirst), warehouseLoadAmountPage.getFacilityPopulation(1, 2));
-    assertEquals(dbWrapper.getOverridenIsa(facilityCodeFirst, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals(dbWrapper.getOverridenIsa(facilityCodeFirst, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeFirst, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 2));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeFirst, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
 
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
-    dbWrapper.updateOverridenIsa(facilityCodeFirst, programFirst, product, null);
+    dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
     homePage.navigatePlanDistribution();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -327,7 +327,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Multiple-Facilities")
   public Object[][] parameterIntTestProvider() {
     return new Object[][]{
-      {"fieldcoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+      {"fieldCoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "F12", "F13", "VACCINES", "TB", "M", "P10", "P11"}
     };
 
@@ -336,7 +336,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Multiple-GeoZones")
   public Object[][] parameterIntTestProviderMultipleGeoZones() {
     return new Object[][]{
-      {"fieldcoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+      {"fieldCoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "P10", "P11", "District", "Total"}
     };
 

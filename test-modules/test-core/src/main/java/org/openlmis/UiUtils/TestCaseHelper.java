@@ -109,8 +109,8 @@ public class TestCaseHelper {
   }
 
   public void setupTestUserRoleRightsData(String userId, String userSIC, String vendorName, List<String> rightsList) throws IOException, SQLException {
-    dbWrapper.insertRole("store in-charge", "REQUISITION", "");
-    dbWrapper.insertRole("district pharmacist", "REQUISITION", "");
+    dbWrapper.insertRole("store in-charge", "");
+    dbWrapper.insertRole("district pharmacist", "");
     for (String rights : rightsList)
       dbWrapper.assignRight("store in-charge", rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -118,7 +118,7 @@ public class TestCaseHelper {
   }
 
   public void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, String vendorName, List<String> rightsList) throws IOException, SQLException {
-    dbWrapper.insertRole(role, "REQUISITION", "");
+    dbWrapper.insertRole(role, "");
     for (String rights : rightsList)
       dbWrapper.assignRight(role, rights);
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
@@ -155,7 +155,7 @@ public class TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, user, passwordUsers, "F10", "", vendorName);
     dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
-    dbWrapper.insertRoleAssignmentforSupervisoryNode(userId, "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(userId, "store in-charge", "N1");
   }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
@@ -185,7 +185,7 @@ public class TestCaseHelper {
   }
 
   public void setupTestRoleRightsData(String roleName, String roleType, String roleRight) throws IOException, SQLException {
-    dbWrapper.insertRole(roleName, roleType, "");
+    dbWrapper.insertRole(roleName, "");
     String right[] = roleRight.split(",");
     for (int i = 0; i < right.length; i++)
       dbWrapper.assignRight(roleName, right[i]);

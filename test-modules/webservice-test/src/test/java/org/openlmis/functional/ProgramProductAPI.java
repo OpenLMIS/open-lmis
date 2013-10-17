@@ -136,10 +136,8 @@ public class ProgramProductAPI extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
-    String productCode1 = "P10";
-    String productCode2 = "P11";
-    dbWrapper.deleteDescriptionFromProducts(productCode1);
-    dbWrapper.deleteDescriptionFromProducts(productCode2);
+    dbWrapper.deleteDescriptionFromProducts();
+    dbWrapper.deleteDescriptionFromProducts();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
 
@@ -243,7 +241,7 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders("", URL + "?programCode=" + programCode, GET, "", "");
 
-    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus() == 401);
   }
 
   @Test(groups = {"webservice"})
