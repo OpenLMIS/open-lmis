@@ -186,7 +186,7 @@ public class RequisitionController extends BaseController {
 
   {
     try {
-      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER);
       List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(
         searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);

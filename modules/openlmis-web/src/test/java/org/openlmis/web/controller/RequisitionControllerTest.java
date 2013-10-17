@@ -323,7 +323,7 @@ public class RequisitionControllerTest {
     Integer pageNumber = 1;
 
     when(requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, USER_ID,
-      Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(1);
+      Right.CONVERT_TO_ORDER)).thenReturn(1);
     when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
       1, USER_ID, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();

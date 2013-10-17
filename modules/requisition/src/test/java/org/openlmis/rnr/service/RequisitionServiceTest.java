@@ -1316,7 +1316,7 @@ public class RequisitionServiceTest {
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }
@@ -1335,7 +1335,7 @@ public class RequisitionServiceTest {
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
     Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      Right.CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }
