@@ -172,9 +172,9 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/enabledWarehouses", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> getEnabledWarehouses() {
-    List<Facility> enabledWareshouses = facilityService.getEnabledWareshouses();
+    List<Facility> enabledWarehouses = facilityService.getEnabledWarehouses();
 
-    return response("enabledWarehouses", enabledWareshouses);
+    return response("enabledWarehouses", enabledWarehouses);
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {

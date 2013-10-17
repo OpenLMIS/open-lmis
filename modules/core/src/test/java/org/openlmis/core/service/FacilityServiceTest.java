@@ -350,7 +350,7 @@ public class FacilityServiceTest {
     List<Facility> warehouses = asList(new Facility());
     when(facilityRepository.getEnabledWarehouses()).thenReturn(warehouses);
 
-    List<Facility> wareshouses = facilityService.getEnabledWareshouses();
+    List<Facility> wareshouses = facilityService.getEnabledWarehouses();
 
     verify(facilityRepository).getEnabledWarehouses();
     assertThat(warehouses,is(warehouses));
