@@ -33,7 +33,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private String description;
 
-  private String GLN;
+  private String gln;
 
   private String mainPhone;
 
@@ -96,7 +96,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.name = facility.getName();
     this.facilityType = facility.getFacilityType().getName();
     this.description = facility.getDescription();
-    this.GLN = facility.getGln();
+    this.gln = facility.getGln();
     this.mainPhone = facility.getMainPhone();
     this.fax = facility.getFax();
     this.address1 = facility.getAddress1();

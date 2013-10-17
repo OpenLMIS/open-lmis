@@ -38,7 +38,7 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getName(), is(facility.getName()));
     assertThat(facilityFeedDTO.getFacilityType(), is(facility.getFacilityType().getName()));
     assertThat(facilityFeedDTO.getDescription(), is(facility.getDescription()));
-    assertThat(facilityFeedDTO.getGLN(), is(facility.getGln()));
+    assertThat(facilityFeedDTO.getGln(), is(facility.getGln()));
     assertThat(facilityFeedDTO.getMainPhone(), is(facility.getMainPhone()));
     assertThat(facilityFeedDTO.getFax(), is(facility.getFax()));
     assertThat(facilityFeedDTO.getAddress1(), is(facility.getAddress1()));
