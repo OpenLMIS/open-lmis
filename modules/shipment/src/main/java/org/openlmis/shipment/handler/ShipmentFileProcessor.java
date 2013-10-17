@@ -13,11 +13,11 @@ package org.openlmis.shipment.handler;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
-import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
@@ -82,7 +82,7 @@ public class ShipmentFileProcessor {
     Date creationDate = new Date(attributes.creationTime().toMillis());
     Set<Long> orderIds = new HashSet<>();
 
-    ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
+    EDIFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
     boolean successfullyProcessed = true;
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
@@ -101,7 +101,7 @@ public class ShipmentFileProcessor {
 
   @Transactional
   public void processShipmentLineItem(ICsvListReader listReader,
-                                      ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
+                                      EDIFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
     boolean status = true;
 
     List<EDIFileColumn> shipmentFileColumns = (List<EDIFileColumn>) shipmentFileTemplate.getColumns();
@@ -195,7 +195,7 @@ public class ShipmentFileProcessor {
     return dto;
   }
 
-  private void ignoreFirstLineIfHeadersArePresent(ShipmentFileTemplate shipmentFileTemplate,
+  private void ignoreFirstLineIfHeadersArePresent(EDIFileTemplate shipmentFileTemplate,
                                                   ICsvListReader listReader) throws IOException {
     if (shipmentFileTemplate.getConfiguration().isHeaderInFile()) {
       listReader.getHeader(true);

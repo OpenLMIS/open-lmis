@@ -55,6 +55,9 @@ function ShipmentFileTemplateController($scope, shipmentFileTemplate, ShipmentFi
           });
         });
       }, 3000);
+    }, function (data) {
+      $scope.error = "shipment." + data.error;
+      $scope.message = '';
     });
   };
 

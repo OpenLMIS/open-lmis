@@ -54,7 +54,10 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
             $scope.message = '';
           });
         });
-      }, 3000);
+      }, 3000, function (data) {
+        $scope.error = "budget." + data.error;
+        $scope.message = '';
+      });
     });
   };
 

@@ -22,7 +22,7 @@ public class EDIFileColumn extends BaseModel {
 
   public void validate() {
     if (position == null || position == 0) {
-      throw new DataException("shipment.file.invalid.position");
+      throw new DataException("file.invalid.position");
     }
   }
 }

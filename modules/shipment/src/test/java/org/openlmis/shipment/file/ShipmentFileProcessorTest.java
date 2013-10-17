@@ -18,11 +18,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
-import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.handler.ShipmentFilePostProcessHandler;
 import org.openlmis.shipment.handler.ShipmentFileProcessor;
@@ -133,7 +133,7 @@ public class ShipmentFileProcessorTest {
     shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 2))));
     shipmentFileColumnList.add(make(a(mandatoryShipmentFileColumn, with(columnPosition, 3))));
 
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
@@ -159,7 +159,7 @@ public class ShipmentFileProcessorTest {
       add(make(a(defaultShipmentFileColumn, with(columnPosition, 6), with(includeInShipmentFile, false))));
     }};
 
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 
@@ -188,7 +188,7 @@ public class ShipmentFileProcessorTest {
     }};
 
     boolean headerInFile = true;
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(new EDIConfiguration(headerInFile), shipmentFileColumnList);
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate(new EDIConfiguration(headerInFile), shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
     when(applicationContext.getBean(ShipmentFileProcessor.class)).thenReturn(shipmentFileProcessor);
@@ -220,7 +220,7 @@ public class ShipmentFileProcessorTest {
       )));
     }};
 
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumnList);
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate(shipmentConfiguration, shipmentFileColumnList);
 
     when(shipmentFileTemplateService.get()).thenReturn(shipmentFileTemplate);
 

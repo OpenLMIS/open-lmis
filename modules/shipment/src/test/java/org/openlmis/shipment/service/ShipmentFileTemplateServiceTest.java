@@ -17,8 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -52,7 +52,7 @@ public class ShipmentFileTemplateServiceTest {
       add(new EDIFileColumn());
     }};
     EDIConfiguration shipmentConfiguration = new EDIConfiguration();
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(shipmentConfiguration, shipmentFileColumns);
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate(shipmentConfiguration, shipmentFileColumns);
 
     service.update(shipmentFileTemplate);
     verify(repository).updateShipmentConfiguration(shipmentConfiguration);
@@ -66,10 +66,10 @@ public class ShipmentFileTemplateServiceTest {
     when(repository.getShipmentConfiguration()).thenReturn(shipmentConfiguration);
     when(repository.getAllShipmentFileColumns()).thenReturn(shipmentFileColumns);
 
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate();
-    whenNew(ShipmentFileTemplate.class).withArguments(shipmentConfiguration, shipmentFileColumns).thenReturn(shipmentFileTemplate);
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate();
+    whenNew(EDIFileTemplate.class).withArguments(shipmentConfiguration, shipmentFileColumns).thenReturn(shipmentFileTemplate);
 
-    ShipmentFileTemplate shipmentFileTemplateDTO = service.get();
+    EDIFileTemplate shipmentFileTemplateDTO = service.get();
 
     assertThat(shipmentFileTemplateDTO, is(shipmentFileTemplate));
     verify(repository).getShipmentConfiguration();
