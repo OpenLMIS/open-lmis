@@ -20,8 +20,8 @@ import java.util.List;
 public interface FacilityApprovedProductMapper {
 
   @Insert("INSERT INTO facility_approved_products(" +
-    "facilityTypeId, programProductId, maxMonthsOfStock, modifiedBy, modifiedDate) values " +
-    "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{modifiedBy}, #{modifiedDate})")
+    "facilityTypeId, programProductId, maxMonthsOfStock, minMonthsOfStock, modifiedBy, modifiedDate) values " +
+    "(#{facilityType.id}, #{programProduct.id}, #{maxMonthsOfStock}, #{minMonthsOfStock}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
@@ -127,7 +127,7 @@ public interface FacilityApprovedProductMapper {
                                                                                           @Param("facilityTypeCode") String facilityTypeCode);
 
   @Update("UPDATE facility_approved_products set " +
-    "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
+    "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, minMonthsOfStock=#{minMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
     "where id=#{id}")
   void updateFacilityApprovedProduct(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
