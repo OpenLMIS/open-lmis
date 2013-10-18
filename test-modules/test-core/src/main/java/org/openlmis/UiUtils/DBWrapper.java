@@ -361,7 +361,6 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
-    update("delete from budget_configuration;");
   }
 
 
