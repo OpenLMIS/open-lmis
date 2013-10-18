@@ -152,13 +152,11 @@ public class DeleteFacilityPage extends Page {
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
 
-    String expectedMessageOnAlert = "''" + facilityNameValue + "'' / ''" + facilityCodeValue + "'' will be disabled in the system.";
+    String expectedMessageOnAlert = String.format("\"%s\" / \"%s\" will be disabled in the system.", facilityNameValue, facilityCodeValue);
     verifyHeader("Edit facility");
     clickDisableButtonOnFacilityScreen();
     verifyDisableAlert(expectedMessageOnAlert);
     clickOkButtonOnAlert();
-
-
   }
 
   private void clickDisableButtonOnFacilityScreen() {

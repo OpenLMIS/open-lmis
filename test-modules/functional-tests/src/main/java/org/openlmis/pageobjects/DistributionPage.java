@@ -145,7 +145,7 @@ public class DistributionPage extends Page {
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-    String message = String.format("Program ''%s'' is not supported by any facility in delivery zone ''%s''",
+    String message = String.format("Program \"%s\" is not supported by any facility in delivery zone \"%s\"",
       programFirst, deliveryZoneNameFirst);
 
     assertEquals(message, saveSuccessMessageDiv.getText());

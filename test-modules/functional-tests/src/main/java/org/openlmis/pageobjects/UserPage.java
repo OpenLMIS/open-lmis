@@ -76,13 +76,11 @@ public class UserPage extends Page {
   private static WebElement enableButton;
 
 
-
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField;
 
   @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
   private static WebElement selectFirstResetPassword;
-
 
 
   @FindBy(how = How.ID, using = "password1")
@@ -107,7 +105,6 @@ public class UserPage extends Page {
   private static WebElement okButton;
 
 
-
   @FindBy(how = How.XPATH, using = "//a[@class='close-btn']")
   private static WebElement clearUserSearchResults;
 
@@ -119,7 +116,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
   private static WebElement editUserHeader;
-
 
 
   @FindBy(how = How.ID, using = "searchFacility")
@@ -135,14 +131,11 @@ public class UserPage extends Page {
   private static WebElement verifiedLabel;
 
 
-
-
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[1]")
   private static WebElement expandAllOption;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[2]")
   private static WebElement collapseAllOption;
-
 
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home Facility Roles')]")
@@ -161,8 +154,6 @@ public class UserPage extends Page {
   private static WebElement addHomeFacilityRolesButton;
 
 
-
-
   @FindBy(how = How.XPATH, using = "Supervisory Roles")
   private static WebElement supervisoryRolesAccordion;
 
@@ -170,7 +161,7 @@ public class UserPage extends Page {
   private static WebElement programsToSupervise;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedSupervisoryNodeIdToSupervise']")
-    private static WebElement supervisoryNodeToSupervise;
+  private static WebElement supervisoryNodeToSupervise;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
   private static WebElement rolesInputFieldSupervisoryRole;
@@ -185,7 +176,6 @@ public class UserPage extends Page {
   private static WebElement addSupervisoryRoleButton;
 
 
-
   @FindBy(how = How.XPATH, using = "Warehouse Roles")
   private static WebElement warehouseRolesAccordion;
 
@@ -197,7 +187,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addFulfillmentRole()']")
   private static WebElement addWarehouseRoleButton;
-
 
 
   @FindBy(how = How.XPATH, using = "Delivery zones")
@@ -222,13 +211,11 @@ public class UserPage extends Page {
   private static WebElement addDeliveryZoneRoleButton;
 
 
-
   @FindBy(how = How.XPATH, using = "Admin and General Operations Roles")
   private static WebElement adminAndGeneralOperationsRolesAccordion;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField;
-
 
 
   @FindBy(how = How.LINK_TEXT, using = "View Here")
@@ -239,9 +226,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement successMessage;
-
-
-
 
 
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Store In-Charge')]")
@@ -265,9 +249,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
   private static WebElement noMatchFoundLink;
-
-
-
 
 
   public UserPage(TestWebDriver driver) throws IOException {
@@ -344,9 +325,10 @@ public class UserPage extends Page {
     saveButton.click();
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(viewHereLink);
-//      testWebDriver.waitForElementToAppear(successMessage);
 
-    SeleneseTestNgHelper.assertEquals(successMessage.getText(),"User ''" + firstName + " " + lastName + "'' has been successfully created, password link has been sent on registered Email address.  View Here");
+    String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
+      " password link has been sent on registered Email address. View Here", firstName, lastName);
+    SeleneseTestNgHelper.assertEquals(expectedMessage, successMessage.getText());
     viewHereLink.click();
 
     DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
@@ -404,7 +386,7 @@ public class UserPage extends Page {
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
-    //  assertEquals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase(), role.toLowerCase());
+      //  assertEquals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase(), role.toLowerCase());
 
       addSupervisoryRoleButton.click();
       testWebDriver.sleep(1000);
@@ -575,7 +557,7 @@ public class UserPage extends Page {
 
   public void clickRemoveButtonWithOk(int removeButtonNumber) {
     testWebDriver.sleep(500);
-    testWebDriver.getElementByXpath("(//input[@value='Remove'])["+removeButtonNumber+"]").click();
+    testWebDriver.getElementByXpath("(//input[@value='Remove'])[" + removeButtonNumber + "]").click();
     clickOk();
     testWebDriver.sleep(100);
 
