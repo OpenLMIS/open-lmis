@@ -133,7 +133,7 @@ public class RnrLineItemTest {
 
   @Test
   public void shouldCalculateMaxStockQuantity() throws Exception {
-    lineItem.calculateMaxStockQuantity(calcStrategy);
+    lineItem.calculateMaxStockQuantity(calcStrategy,template);
 
     verify(calcStrategy).calculateMaxStockQuantity(lineItem.getMaxMonthsOfStock(), lineItem.getAmc());
   }
@@ -147,7 +147,7 @@ public class RnrLineItemTest {
 
   @Test
   public void shouldCalculateNormalizedConsumption() throws Exception {
-    lineItem.calculateNormalizedConsumption(calcStrategy);
+    lineItem.calculateNormalizedConsumption(calcStrategy,template);
 
     verify(calcStrategy).calculateNormalizedConsumption(lineItem.getStockOutDays(), lineItem.getQuantityDispensed(),
       lineItem.getNewPatientCount(), lineItem.getDosesPerMonth(), lineItem.getDosesPerDispensingUnit());
@@ -355,7 +355,7 @@ public class RnrLineItemTest {
     spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     verify(spyLineItem).calculateAmc(calcStrategy, period);
-    verify(spyLineItem).calculateMaxStockQuantity(calcStrategy);
+    verify(spyLineItem).calculateMaxStockQuantity(calcStrategy, template);
     verify(spyLineItem).calculateOrderQuantity(calcStrategy);
   }
 

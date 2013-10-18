@@ -49,7 +49,6 @@ public class SupplyLineService {
         return supplyLine;
     }
 
-
   public SupplyLine getSupplyLineBy(SupervisoryNode supervisoryNode, Program program) {
         return supplyLineRepository.getSupplyLineBy(supervisoryNode, program);
   }
@@ -58,14 +57,18 @@ public class SupplyLineService {
     validateIfSupervisoryNodeIsTopmostNode(supplyLine);
 
     if (supplyLine.getId() == null) {
-      if(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(),supplyLine.getProgram())!= null){
-         throw new DataException("Supply line already exists for the chosen program and supervisory node combination.");
-      }
-      this.supplyLineRepository.insert(supplyLine);
+        validateIfSupervisoryNodeAlreadyExistsForProgram(supplyLine);
+        this.supplyLineRepository.insert(supplyLine);
       return;
     }
 
     this.supplyLineRepository.update(supplyLine);
+  }
+
+  private void validateIfSupervisoryNodeAlreadyExistsForProgram(SupplyLine supplyLine) {
+      if(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(),supplyLine.getProgram())!= null){
+         throw new DataException("Supply line already exists for the chosen program and supervisory node combination.");
+      }
   }
 
 
