@@ -37,20 +37,13 @@ module.exports = function (grunt) {
         },
         strict:{
           options:{
-            force: true,
             import:2,
             "box-model":false,
             "box-sizing": false,
             "bulletproof-font-face": false,
             "adjoining-classes":false
           },
-          src:['src/main/webapp/public/css/*.css'],
-        },
-        lax: {
-          options: {
-            import: false
-          },
-          src: ['src/main/webapp/public/css/ng-grid.css']
+          src:['src/main/webapp/public/css/*.css']
         }
       },
       uglify: {
