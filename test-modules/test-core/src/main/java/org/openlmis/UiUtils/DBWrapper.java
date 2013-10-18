@@ -1174,7 +1174,7 @@ public class DBWrapper {
                                             int position, String Format) throws IOException, SQLException {
     update("UPDATE order_file_columns SET " +
       "includeInOrderFile='" + includeInOrderFile + "', columnLabel='" + columnLabel + "', position=" + position
-      + ", format='" + Format + "' where dataFieldLabel='" + dataFieldLabel);
+      + ", format='" + Format + "' where dataFieldLabel='" + dataFieldLabel + "'");
   }
 
   public void deleteOrderFileNonOpenLMISColumns() throws SQLException {

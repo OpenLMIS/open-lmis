@@ -234,7 +234,7 @@ public class UserPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "View Here")
   private static WebElement viewHereLink;
 
-  @FindBy(how = How.XPATH, using = "//div[2][@class='alert alert-success ng-binding']")
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement userUpdateSuccessMessage;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
