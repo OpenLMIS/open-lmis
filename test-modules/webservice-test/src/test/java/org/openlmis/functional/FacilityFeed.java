@@ -23,9 +23,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
@@ -138,7 +136,7 @@ public class FacilityFeed extends TestCaseHelper {
     createFacilityPage.addProgram("VACCINES", true);
     createFacilityPage.saveFacility();
     Thread.sleep(5000);
-    assertEquals(feedJSONList.size(), 3);
+    assertEquals(3, feedJSONList.size());
 
     deleteFacilityPage = homePage.navigateSearchFacility();
     deleteFacilityPage.searchFacility(date_time);
@@ -147,7 +145,7 @@ public class FacilityFeed extends TestCaseHelper {
     createFacilityPage.saveFacility();
 
     Thread.sleep(5000);
-    assertEquals(feedJSONList.size(), 3);
+    assertEquals(3, feedJSONList.size());
 
     homePage.logout(baseUrlGlobal);
   }
@@ -163,7 +161,6 @@ public class FacilityFeed extends TestCaseHelper {
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
     String facilityCodePrefix = "facilityf10";
-    String parentFacilityCode = "F10";
     String facilityNamePrefix = "facilityf10 Village Dispensary";
     String facilityCodeUpdatedPrefix = "facilityf11";
     String facilityNameUpdatedPrefix = "facilityf11 Village Dispensary";

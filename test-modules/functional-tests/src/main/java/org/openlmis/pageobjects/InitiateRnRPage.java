@@ -26,9 +26,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.Float.parseFloat;
 import static org.openqa.selenium.support.How.*;
 
@@ -264,7 +262,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String facilityText = testWebDriver.getText(facilityLabel);
     assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    assertEquals(reportingPeriodInitRnRScreen.getText().trim(), periodDetails.trim());
+    assertEquals(periodDetails.trim(), reportingPeriodInitRnRScreen.getText().trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
     assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
@@ -304,7 +302,7 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyFieldValue(String Expected, String Actual) {
-    assertEquals(Actual, Expected);
+    assertEquals(Expected, Actual);
   }
 
   public void verifyTemplateNotConfiguredMessage() {
@@ -347,7 +345,7 @@ public class InitiateRnRPage extends RequisitionPage {
     addButton.click();
     testWebDriver.waitForElementToAppear(adjList);
     String labelAdj = testWebDriver.getText(adjList);
-    assertEquals(labelAdj.trim(), "Transfer In");
+    assertEquals("Transfer In", labelAdj.trim());
     testWebDriver.sleep(1000);
     testWebDriver.sleep(1000);
     doneButton.click();
@@ -546,10 +544,10 @@ public class InitiateRnRPage extends RequisitionPage {
     addNonFullSupplyButtonScreen.click();
 
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
-    assertEquals(testWebDriver.getSelectedOptionDefault(categoryDropDown).trim(), "");
-    assertEquals(testWebDriver.getSelectedOptionDefault(productDropDown).trim(), "");
-    assertEquals(requestedQuantityField.getAttribute("value").trim(), "");
-    assertEquals(requestedQuantityExplanationField.getAttribute("value").trim(), "");
+    assertEquals("", testWebDriver.getSelectedOptionDefault(categoryDropDown).trim());
+    assertEquals("", testWebDriver.getSelectedOptionDefault(productDropDown).trim());
+    assertEquals("", requestedQuantityField.getAttribute("value").trim());
+    assertEquals("", requestedQuantityExplanationField.getAttribute("value").trim());
 
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
 
@@ -576,17 +574,17 @@ public class InitiateRnRPage extends RequisitionPage {
     addNonFullSupplyButton.click();
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
-    assertEquals(nonFullSupplyProductCodeAndName.getText().trim(), productCode + " | " + productPrimaryName);
-    assertEquals(nonFullSupplyProductQuantityRequested.getAttribute("value").trim(), requestedQuantityValue);
-    assertEquals(nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim(), requestedQuantityExplanationValue);
+    assertEquals(productCode + " | " + productPrimaryName, nonFullSupplyProductCodeAndName.getText().trim());
+    assertEquals(requestedQuantityValue, nonFullSupplyProductQuantityRequested.getAttribute("value").trim());
+    assertEquals(requestedQuantityExplanationValue, nonFullSupplyProductReasonForRequestedQuantity.getAttribute("value").trim());
     doneButtonNonFullSupply.click();
     testWebDriver.sleep(1000);
 
-    assertEquals(productDescriptionNonFullSupply.getText().trim(), nonFullSupplyItems);
-    assertEquals(productCodeNonFullSupply.getText().trim(), productCode);
+    assertEquals(nonFullSupplyItems, productDescriptionNonFullSupply.getText().trim());
+    assertEquals(productCode, productCodeNonFullSupply.getText().trim());
     testWebDriver.waitForElementToAppear(requestedQuantity);
-    assertEquals(testWebDriver.getAttribute(requestedQuantity, "value").trim(), requestedQuantityValue);
-    assertEquals(testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim(), requestedQuantityExplanationValue);
+    assertEquals(requestedQuantityValue, testWebDriver.getAttribute(requestedQuantity, "value").trim());
+    assertEquals(requestedQuantityExplanationValue, testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim());
 
   }
 
@@ -612,7 +610,7 @@ public class InitiateRnRPage extends RequisitionPage {
         break;
       }
     }
-    assertEquals(flag, true);
+    assertTrue(flag);
   }
 
   public void verifyColumnHeadingNotPresent(String xpathTillTrTag, String heading, int noOfColumns) {
@@ -634,7 +632,7 @@ public class InitiateRnRPage extends RequisitionPage {
         break;
       }
     }
-    assertEquals(flag, false);
+    assertFalse(flag);
   }
 
 

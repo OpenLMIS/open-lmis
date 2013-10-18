@@ -24,8 +24,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.System.getProperty;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
@@ -63,7 +63,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
 
-    assertEquals(dbWrapper.getRequisitionStatus(id), "AUTHORIZED");
+    assertEquals("AUTHORIZED", dbWrapper.getRequisitionStatus(id));
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setUserId("commTrack1");
@@ -80,17 +80,17 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     response = responseEntity.getResponse();
 
-    assertEquals(responseEntity.getStatus(),200);
+    assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"R&R\":"));
-    assertEquals(dbWrapper.getRequisitionStatus(id), "RELEASED");
+    assertEquals("RELEASED", dbWrapper.getRequisitionStatus(id));
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10")+ ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\",\"externalSystem\":\"commTrack\"}"));
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -111,8 +111,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "commTrack", dbWrapper.getAuthToken("commTrack"));
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Please provide a valid username\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -136,8 +136,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         dbWrapper.getAuthToken("commTrack"));
 
     response = responseEntity.getResponse();
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid product code\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product code\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -159,8 +159,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "commTrack", dbWrapper.getAuthToken("commTrack"));
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Requisition Not Found\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Requisition Not Found\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -185,8 +185,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"R&R has errors, please correct them to proceed.\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -207,7 +207,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "commTrack1", dbWrapper.getAuthToken("commTrack"));
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-    assertEquals(responseEntity.getStatus(), 401);
+    assertEquals(401, responseEntity.getStatus());
   }
 
   public String submitReport() throws Exception {

@@ -11,7 +11,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -31,8 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -46,11 +44,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String AUTHORIZE_REQUISITION = "Authorize Requisition";
   public static final String CREATE_REQUISITION = "Create Requisition";
   public static final String APPROVE_REQUISITION = "Approve Requisition";
-  public static final String CONVERT_TO_ORDER_REQUISITION = "Convert To Order Requisition";
-  public static final String VIEW_ORDER_REQUISITION = "View Orders Requisition";
   public static final String MANAGE_DISTRIBUTION = "Manage Distribution";
   public static final String FIELD_COORDINATOR = "Field Co-Ordinator";
-  public static final String LMU = "lmu";
   public static final String ADMIN = "admin";
   public static final String geoZone = "Ngorongoro";
   public static final String facilityType = "Lvl3 Hospital";
@@ -91,7 +86,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @Then("^I should see user not verified$")
   public void notVerifiedUser() throws Exception {
     UserPage userPage = new UserPage(testWebDriver);
-    assertEquals(userPage.getVerifiedLabel(), "No");
+    assertEquals("No", userPage.getVerifiedLabel());
   }
 
   @Then("^I should see user \"([^\"]*)\" verified$")
@@ -131,18 +126,20 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.getCreateNewRoleButton().click();
     testWebDriver.waitForElementToAppear(rolesPage.getAllocationRoleType());
-    assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isEnabled(), true);
-    assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
+    assertFalse(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
+    assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
+    assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
+
     testWebDriver.handleScrollByPixels(0, 3000);
     testWebDriver.waitForElementToAppear(rolesPage.getWebElementMap().get(UPLOADS));
+
     rolesPage.getWebElementMap().get(UPLOADS).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickContinueButton();
-    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isSelected(), false);
-    assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), true);
+    assertFalse(rolesPage.getWebElementMap().get(UPLOADS).isSelected());
+    assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
+    assertFalse(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
+    assertTrue(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
@@ -156,10 +153,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.getWebElementMap().get(UPLOADS).click();
     rolesPage.getAllocationRoleType().click();
     rolesPage.clickCancelButtonOnModal();
-    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isSelected(), true);
-    assertEquals(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled(), false);
-    assertEquals(rolesPage.getWebElementMap().get(UPLOADS).isEnabled(), true);
-    assertEquals(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled(), false);
+    assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isSelected());
+    assertFalse(rolesPage.getWebElementMap().get(APPROVE_REQUISITION).isEnabled());
+    assertTrue(rolesPage.getWebElementMap().get(UPLOADS).isEnabled());
+    assertFalse(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
@@ -170,7 +167,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add("Uploads");
     rolesPage.createRole(ADMIN, ADMIN, userRoleList, false);
-    assertEquals(rolesPage.getSaveErrorMsgDiv().getText().trim(), "Duplicate Role found");
+    assertEquals("Duplicate Role found", rolesPage.getSaveErrorMsgDiv().getText().trim());
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
@@ -224,7 +221,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickViewHere();
     testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
     testWebDriver.sleep(1000);
-    assertEquals(userPage.getAddedDeliveryZoneLabel(), deliveryZoneNameFirst);
+    assertEquals(deliveryZoneNameFirst, userPage.getAddedDeliveryZoneLabel());
 
     testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
     testWebDriver.sleep(500);
@@ -270,8 +267,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickSaveButton();
     userPage.clickViewHere();
 
-    SeleneseTestNgHelper.assertEquals(deliveryZoneNameFirst, dbWrapper.getDeliveryZoneNameAssignedToUser(LAB_IN_CHARGE));
-    SeleneseTestNgHelper.assertEquals(FIELD_COORDINATOR, dbWrapper.getRoleNameAssignedToUser(LAB_IN_CHARGE));
+    assertEquals(deliveryZoneNameFirst, dbWrapper.getDeliveryZoneNameAssignedToUser(LAB_IN_CHARGE));
+    assertEquals(FIELD_COORDINATOR, dbWrapper.getRoleNameAssignedToUser(LAB_IN_CHARGE));
 
   }
 
