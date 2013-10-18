@@ -79,7 +79,7 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
         configureBudgetPage.clickSaveButton();
     }
 
-    @Then("^I should see budget successfull saved message as \"([^\"]*)\"$")
+    @Then("^I should see budget successful saved message as \"([^\"]*)\"$")
     public void verifySaveSuccessfullyMessage(String message) throws Exception {
         ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
         configureBudgetPage.verifyMessage(message);
