@@ -198,7 +198,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Then("^I see \"([^\"]*)\" facility icon as \"([^\"]*)\"$")
-  public void verifyOverAllFacilityIndicator(String whichIcon,String color) throws IOException {
+  public void verifyOverAllFacilityIndicator(String whichIcon, String color) throws IOException {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
   }
@@ -294,23 +294,23 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I verify sync message as \"([^\"]*)\"$")
   public void verifySyncMessage(String message) throws IOException {
-      DistributionPage distributionPage = new DistributionPage(testWebDriver);
-      assertEquals(message, distributionPage.getSyncMessage());
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    assertEquals(message, distributionPage.getSyncMessage());
   }
 
   @When("^I view observations data in DB:$")
-    public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
-      List<Map<String, String>> data = tableData.asMaps();
-      for (Map map : data)
-          dbWrapper.verifyFacilityVisits(map.get("observations").toString(), map.get("confirmedByName").toString(),
-                  map.get("confirmedByTitle").toString(), map.get("verifiedByName").toString(),
-                  map.get("verifiedByTitle").toString());
+  public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
+    List<Map<String, String>> data = tableData.asMaps();
+    for (Map map : data)
+      dbWrapper.verifyFacilityVisits(map.get("observations").toString(), map.get("confirmedByName").toString(),
+        map.get("confirmedByTitle").toString(), map.get("verifiedByName").toString(),
+        map.get("verifiedByTitle").toString());
   }
 
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    testWebDriver.sleep(1500);
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']"));
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
@@ -325,11 +325,12 @@ public class ManageDistribution extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.verifyFacilityZoneInHeader(facilityZone);
   }
-    @Then("^I verify legends$")
-    public void verifyFacilityZoneInHeader() throws IOException {
-        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-        facilityListPage.verifyLegend();
-    }
+
+  @Then("^I verify legends$")
+  public void verifyFacilityZoneInHeader() throws IOException {
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyLegend();
+  }
 
   @And("^I should see delivery zone \"([^\"]*)\" program \"([^\"]*)\" period \"([^\"]*)\" in table$")
   public void verifyTableValue(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) throws IOException {
@@ -673,7 +674,7 @@ public class ManageDistribution extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-      ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
+    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 
 
