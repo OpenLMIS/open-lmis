@@ -103,17 +103,18 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @And("^I have following ISA values:$")
   public void setProgramProductISA(DataTable tableData) throws Exception {
-    List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data) {
-      dbWrapper.insertProgramProductISA(map.get("Program").toString(), map.get("Product").toString(), map.get("whoratio").toString(), map.get("dosesperyear").toString(), map.get("wastageFactor").toString(), map.get("bufferpercentage").toString(), map.get("minimumvalue").toString(), map.get("maximumvalue").toString(), map.get("adjustmentvalue").toString());
+    for (Map<String, String> map : tableData.asMaps()) {
+      dbWrapper.insertProgramProductISA(map.get("Program"), map.get("Product"), map.get("whoRatio"),
+        map.get("dosesPerYear"), map.get("wastageFactor"), map.get("bufferPercentage"), map.get("minimumValue"),
+        map.get("maximumValue"), map.get("adjustmentValue"));
     }
   }
 
   @And("^I have following override ISA values:$")
   public void setOverrideISA(DataTable tableData) throws Exception {
-    List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data) {
-      dbWrapper.InsertOverriddenIsa(map.get("Facility Code").toString(), map.get("Program").toString(), map.get("Product").toString(), Integer.parseInt(map.get("ISA").toString()));
+    for (Map<String, String> map : tableData.asMaps()) {
+      dbWrapper.InsertOverriddenIsa(map.get("Facility Code"), map.get("Program"),
+        map.get("Product"), Integer.parseInt(map.get("ISA")));
     }
   }
 
@@ -124,7 +125,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @Then("^I should see aggregate ISA values as per multiple facilities in one delivery zone$")
-  public void verifyISAAndOverrideISAValuesAggregatedForMutipleFacilities() throws Exception {
+  public void verifyISAAndOverrideISAValuesAggregatedForMultipleFacilities() throws Exception {
     WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 1))), warehouseLoadAmountPage.getFacilityPopulation(3, 1));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct1Isa(2, 1))), warehouseLoadAmountPage.getProduct1Isa(3, 1));
