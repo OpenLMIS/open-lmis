@@ -42,7 +42,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String program = "HIV";
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-  public String userSICUserName = "storeincharge";
+  public String userSICUserName = "storeIncharge";
   private final String separator = getProperty("file.separator");
   public  String[] csvRows;
 

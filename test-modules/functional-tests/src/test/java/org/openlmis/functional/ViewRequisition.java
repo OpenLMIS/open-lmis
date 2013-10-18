@@ -84,7 +84,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I update requisition status to \"([^\"]*)\"$")
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
-    dbWrapper.updateRequisitionStatus(status, "storeInCharge", "HIV");
+    dbWrapper.updateRequisitionStatus(status, "storeIncharge", "HIV");
   }
 
   @When("^I type view search criteria$")
@@ -262,7 +262,7 @@ public class ViewRequisition extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {
     return new Object[][]{
-      {"HIV", "storeincharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
 
 

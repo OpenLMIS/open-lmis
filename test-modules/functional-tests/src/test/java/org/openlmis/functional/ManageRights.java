@@ -71,7 +71,7 @@ public class ManageRights extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeIncharge", "Admin123"}
     };
 
   }

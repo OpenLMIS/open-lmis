@@ -850,7 +850,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeincharge", "HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeIncharge", "HIV");
 
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2016-01-30", 1, "M");
     dbWrapper.insertValuesInRequisition(false);
@@ -948,14 +948,14 @@ public class InitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
   }
 
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeIncharge", "Admin123"}
     };
   }
 }

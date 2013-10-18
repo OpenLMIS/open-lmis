@@ -24,7 +24,6 @@ import org.testng.annotations.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
@@ -297,7 +296,7 @@ public class RnRPagination extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "medicalofficer", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeIncharge", "medicalofficer", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }

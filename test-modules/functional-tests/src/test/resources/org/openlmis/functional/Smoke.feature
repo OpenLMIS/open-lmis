@@ -318,13 +318,13 @@ Feature: Smoke Tests
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I am logged in as "storeInCharge"
+    And I am logged in as "storeIncharge"
     And I access plan my distribution page
     Then I verify fields
     And I should see deliveryZone "--None Assigned--"
-    When I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
+    When I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     Then I should see program "VACCINES,TB"

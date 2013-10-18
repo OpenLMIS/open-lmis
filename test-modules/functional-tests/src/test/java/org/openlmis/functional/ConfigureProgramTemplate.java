@@ -129,7 +129,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Program-Not-Configured")
   public Object[][] parameterProgramNotConfigured() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeIncharge", "Admin123"}
     };
 
   }
@@ -137,7 +137,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Verify-On-Rnr-Screen")
   public Object[][] parameterVerifyRnRScreen() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeIncharge", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }
