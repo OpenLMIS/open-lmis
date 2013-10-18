@@ -9,7 +9,7 @@
  */
 
 //  Description:
-//  Freezing the top column of R&R products table upon scroll
+//  Freezing the top header of R&R products table upon scroll
 
 app.directive('fixedTableHeader', function() {
   return {
@@ -17,23 +17,20 @@ app.directive('fixedTableHeader', function() {
     link: function (scope, element, attr, ctrl) {
       var fixedHeader = $("<div class='header-fixed'></div>");
       fixedHeader.hide();
-      setTimeout(function() {
+
+      var cloneAndAppendTableHeader = function() {
         var table = $("<table class='table table-bordered'></table>");
         table.append(element.find('thead').clone());
         fixedHeader.append(table);
         element.parent().append(fixedHeader);
+      }
+      setTimeout(function() {
+        cloneAndAppendTableHeader();
         fixedHeader.css('width',element.parent().css('width'));
       });
 
       scope.$watch($(window).scrollTop(), function() {
-        angular.element(window).scroll(function() {
-          fixedHeader.hide();
-          if (angular.element(this).scrollTop() >= element.offset().top && !element.is(':hidden') && fixedHeader.is(':hidden')) {
-           fixedHeader.show();
-           fixedHeader.scrollLeft(element.parent().scrollLeft());
-          }
-        });
-
+        viewFixedHeaderOnScroll(fixedHeader, element);
         element.parent().scroll(function() {
           fixedHeader.scrollLeft(angular.element(this).scrollLeft());
         });
@@ -45,3 +42,13 @@ app.directive('fixedTableHeader', function() {
     }
   };
 });
+
+var viewFixedHeaderOnScroll = function(fixedHeaderElement, element) {
+  angular.element(window).scroll(function() {
+    fixedHeaderElement.hide();
+    if (angular.element(this).scrollTop() >= element.offset().top && !element.is(':hidden') && fixedHeaderElement.is(':hidden')) {
+      fixedHeaderElement.show();
+      fixedHeaderElement.scrollLeft(element.parent().scrollLeft());
+    }
+  });
+}

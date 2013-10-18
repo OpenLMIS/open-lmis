@@ -514,7 +514,7 @@ span[class^="tpl-"] {
   padding-top: 20px;
   overflow: auto;
   th {
-    min-width: 93px;
+    min-width: 123px;
     padding: 3px 6px;
     font-size: 0.8em;
     font-weight: bold;
@@ -675,9 +675,25 @@ span[class^="tpl-"] {
   }
   th {
     border-radius: 0 !important;
-    background: rgba(0, 0, 0, 0.68);
+    background: #444;
     text-shadow: none;
     color: white;
+  }
+}
+
+#header-columns-fixed {
+  z-index: 5;
+  table {
+    width: auto;
+  }
+}
+
+.column-fixed {
+  position: fixed;
+  z-index: 3;
+  table {
+    width: auto;
+    box-shadow: #ddd 2px 0px 0px;
   }
 }
 
@@ -722,7 +738,7 @@ input[ui-date] {
 
 /* Cell size: Medium */
 /* Cell size: Large */
-th.col-product,
+/*th.col-product,*/
 th.col-remarks,
 th.col-reasonForRequestedQuantity,
 th.col-reasonForLossesAndAdjustments {
@@ -2454,5 +2470,15 @@ input[rnr-validator="positiveInteger"] {
   .Emergency:after {
     border-width: 39px 0 39px 15px;
     margin-top: -39px;
+  }
+}
+.rnr-table{
+  th.col-productCode,td.col-productCode{
+    min-width: 93px;
+    width: 93px;
+  }
+  th.col-product, td.col-product{
+    min-width: 300px;
+    width: 300px;
   }
 }

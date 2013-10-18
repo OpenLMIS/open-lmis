@@ -24,7 +24,7 @@
 
   <div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
     <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-    <table id = "fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
+    <table id = "fullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns class="table table-bordered scrollable">
       <thead >
       <tr ng-show="pageLineItems.length">
         <th class = "col-{{programRnrColumn.name}}" ng-repeat = "programRnrColumn in visibleColumns"
