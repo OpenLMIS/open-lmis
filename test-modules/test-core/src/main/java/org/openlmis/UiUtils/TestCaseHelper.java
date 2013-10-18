@@ -388,11 +388,13 @@ public class TestCaseHelper {
 
   public void waitForAppCacheComplete() {
     int count = 0;
-    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
-    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
-    while ((((JavascriptExecutor) testWebDriver.getDriver()).executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")) {
+    JavascriptExecutor driver = (JavascriptExecutor) TestWebDriver.getDriver();
+
+    driver.executeScript("if(!window.localStorage[\"appCached\"]) window.localStorage.setItem(\"appCached\",\"false\");");
+    driver.executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+    while ((driver.executeScript("return window.localStorage.getItem(\"appCached\");")).toString().equals("false")) {
       testWebDriver.sleep(2000);
-      ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
+      driver.executeScript("window.applicationCache.oncached = function (e) {window.localStorage.setItem(\"appCached\",\"true\");};");
       count++;
       if (count > 10) {
         fail("Appcache not working in 20 sec.");
