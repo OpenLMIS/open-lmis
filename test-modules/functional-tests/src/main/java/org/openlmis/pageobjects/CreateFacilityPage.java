@@ -181,8 +181,8 @@ public class CreateFacilityPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
   private static WebElement cancelIsaButton;
 
-    @FindBy(how = XPATH, using = "//a[@id='remove0']")
-    private static WebElement removeFirstProgramSupportedLink;
+  @FindBy(how = XPATH, using = "//a[@id='remove0']")
+  private static WebElement removeFirstProgramSupportedLink;
 
 
   public CreateFacilityPage(TestWebDriver driver) throws IOException {
@@ -207,10 +207,10 @@ public class CreateFacilityPage extends Page {
     return date_time;
   }
 
-    public void saveFacility(){
-        SaveButton.click();
+  public void saveFacility() {
+    SaveButton.click();
 
-    }
+  }
 
   public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix, String program,
                                       String geoZone, String facilityTypeValue, String operatedByValue,
@@ -289,30 +289,30 @@ public class CreateFacilityPage extends Page {
     addSupportedProgram.click();
   }
 
-    public void activeInactiveFirstProgram() {
-        programsSupportedFirstActiveFlag.click();
-        testWebDriver.sleep(500);
-        programsSupportedStartDate.click();
-        programsSupportedFirstStartDate.click();
-        testWebDriver.handleScrollByPixels(0,1000);
-        startDateCalender.click();
-        testWebDriver.sleep(500);
-    }
+  public void activeInactiveFirstProgram() {
+    programsSupportedFirstActiveFlag.click();
+    testWebDriver.sleep(500);
+    programsSupportedStartDate.click();
+    programsSupportedFirstStartDate.click();
+    testWebDriver.handleScrollByPixels(0, 1000);
+    startDateCalender.click();
+    testWebDriver.sleep(500);
+  }
 
-    public void removeFirstProgram() {
-        removeFirstProgramSupportedLink.click();
-        okAlert.click();
-    }
+  public void removeFirstProgram() {
+    removeFirstProgramSupportedLink.click();
+    okAlert.click();
+  }
 
   public void verifyMessageOnFacilityScreen(String facilityName, String status) {
-    String message = null;
+    String message;
     testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
     if (saveSuccessMsgDiv.isDisplayed()) {
       message = testWebDriver.getText(saveSuccessMsgDiv);
     } else {
       message = testWebDriver.getText(saveErrorMsgDiv);
     }
-    assertEquals(message, "Facility '" + facilityName + "' " + status + " successfully");
+    assertEquals(message, String.format("Facility \"%s\" %s successfully", facilityName, status));
     testWebDriver.sleep(500);
   }
 
@@ -358,7 +358,7 @@ public class CreateFacilityPage extends Page {
 
 
   public void verifyOverriddenIsa(String expectedIsa) {
-    testWebDriver.handleScrollByPixels(0,1000);
+    testWebDriver.handleScrollByPixels(0, 1000);
     testWebDriver.waitForElementToAppear(modifyIsaValueLink);
     modifyIsaValueLink.click();
     testWebDriver.waitForElementToAppear(overrideIsaTable);

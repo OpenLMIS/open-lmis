@@ -299,7 +299,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyUserOnList("Jasmine Doe");
 
     userPage.focusOnFirstUserLink();
-    //userPage.verifyResetPassword();
 
     userPage.clickEditUser();
     userPage.clickDisableButton();

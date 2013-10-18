@@ -242,7 +242,6 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     testWebDriver.keyPress(manageFacilityMenuItem);
-    //manageFacilityMenuItem.click();
     verifyTabs();
     clickCreateFacilityButton();
     verifyHeader("Add new facility");
@@ -501,10 +500,10 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
 
-    public String getErrorMessage() {
-        testWebDriver.waitForElementToAppear(errorMsg);
-        return errorMsg.getText().trim();
-    }
+  public String getErrorMessage() {
+    testWebDriver.waitForElementToAppear(errorMsg);
+    return errorMsg.getText().trim();
+  }
 
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);

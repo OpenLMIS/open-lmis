@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.*;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class RolesPage extends Page {
 
@@ -140,95 +140,95 @@ public class RolesPage extends Page {
     return webElementMap;
   }
 
-  public  WebElement getCreateNewRoleButton() {
+  public WebElement getCreateNewRoleButton() {
     return createNewRoleButton;
   }
 
-  public  WebElement getRoleNameField() {
+  public WebElement getRoleNameField() {
     return roleNameField;
   }
 
-  public  WebElement getRoleDescription() {
+  public WebElement getRoleDescription() {
     return roleDescription;
   }
 
-  public  WebElement getRightConfigureTemplate() {
+  public WebElement getRightConfigureTemplate() {
     return rightConfigureTemplate;
   }
 
-  public  WebElement getRightManageFacilities() {
+  public WebElement getRightManageFacilities() {
     return rightManageFacilities;
   }
 
-  public  WebElement getRightManageRoles() {
+  public WebElement getRightManageRoles() {
     return rightManageRoles;
   }
 
-  public  WebElement getRightManageSchedules() {
+  public WebElement getRightManageSchedules() {
     return rightManageSchedules;
   }
 
-  public  WebElement getRightUploads() {
+  public WebElement getRightUploads() {
     return rightUploads;
   }
 
-  public  WebElement getRightCreateRequisition() {
+  public WebElement getRightCreateRequisition() {
     return rightCreateRequisition;
   }
 
-  public  WebElement getRightAuthorizeRequisition() {
+  public WebElement getRightAuthorizeRequisition() {
     return rightAuthorizeRequisition;
   }
 
-  public  WebElement getRightApproveRequisition() {
+  public WebElement getRightApproveRequisition() {
     return rightApproveRequisition;
   }
 
-  public  WebElement getRightConvertToOrderRequisition() {
+  public WebElement getRightConvertToOrderRequisition() {
     return rightConvertToOrderRequisition;
   }
 
-  public  WebElement getRightViewOrders() {
+  public WebElement getRightViewOrders() {
     return rightViewOrders;
   }
 
-  public  WebElement getSaveButton() {
+  public WebElement getSaveButton() {
     return saveButton;
   }
 
-  public  WebElement getCancelButton() {
+  public WebElement getCancelButton() {
     return cancelButton;
   }
 
-  public  WebElement getSaveSuccessMsgDiv() {
+  public WebElement getSaveSuccessMsgDiv() {
     return saveSuccessMsgDiv;
   }
 
-  public  WebElement getSaveErrorMsgDiv() {
+  public WebElement getSaveErrorMsgDiv() {
     return saveErrorMsgDiv;
   }
 
-  public  WebElement getContinueButton() {
+  public WebElement getContinueButton() {
     return continueButton;
   }
 
-  public  WebElement getEditRoleHeader() {
+  public WebElement getEditRoleHeader() {
     return editRoleHeader;
   }
 
-  public  WebElement getRolesHeader() {
+  public WebElement getRolesHeader() {
     return rolesHeader;
   }
 
-  public  WebElement getRequisitionRoleType() {
+  public WebElement getRequisitionRoleType() {
     return requisitionRoleType;
   }
 
-  public  WebElement getAdminRoleType() {
+  public WebElement getAdminRoleType() {
     return adminRoleType;
   }
 
-  public  WebElement getAllocationRoleType() {
+  public WebElement getAllocationRoleType() {
     return allocationRoleType;
   }
 
@@ -254,26 +254,26 @@ public class RolesPage extends Page {
     roleDescription.sendKeys(roleDesc);
     saveButton.click();
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
+    assertEquals(saveSuccessMsgDiv.getText().trim(), "\"" + roleName + "\" created successfully");
   }
 
-    public void createFacilityBasedRoleWithSuccessMessageExpected(String roleName, String roleDesc) {
-        testWebDriver.waitForElementToAppear(createNewRoleButton);
-        createNewRoleButton.click();
+  public void createFacilityBasedRoleWithSuccessMessageExpected(String roleName, String roleDesc) {
+    testWebDriver.waitForElementToAppear(createNewRoleButton);
+    createNewRoleButton.click();
 
-        facilityBasedRoleType.click();
-        clickContinueButton();
+    facilityBasedRoleType.click();
+    clickContinueButton();
 
-        testWebDriver.sleep(1000);
+    testWebDriver.sleep(1000);
 
-        roleNameField.sendKeys(roleName);
-        roleDescription.sendKeys(roleDesc);
-        rightFillShipment.click();
-        saveButton.click();
+    roleNameField.sendKeys(roleName);
+    roleDescription.sendKeys(roleDesc);
+    rightFillShipment.click();
+    saveButton.click();
 
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-        assertEquals(saveSuccessMsgDiv.getText().trim(), "'" + roleName + "' created successfully");
-    }
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    assertEquals(saveSuccessMsgDiv.getText().trim(), "\"" + roleName + "\" created successfully");
+  }
 
   public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
@@ -334,8 +334,7 @@ public class RolesPage extends Page {
     }
   }
 
-  public void clickContinueButton()
-  {
+  public void clickContinueButton() {
     testWebDriver.waitForElementToAppear(continueButton);
     testWebDriver.click(continueButton);
     testWebDriver.sleep(250);
