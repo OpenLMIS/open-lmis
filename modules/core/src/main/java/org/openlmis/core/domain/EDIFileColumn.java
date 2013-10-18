@@ -21,7 +21,7 @@ public class EDIFileColumn extends BaseModel {
   protected String datePattern;
 
   public void validate() {
-    if (position == null || position == 0) {
+    if (include && (position == null || position == 0)) {
       throw new DataException("file.invalid.position");
     }
   }
