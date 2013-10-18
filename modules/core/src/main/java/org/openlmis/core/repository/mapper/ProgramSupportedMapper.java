@@ -43,9 +43,15 @@ public interface ProgramSupportedMapper {
   })
   List<ProgramSupported> getAllByFacilityId(Long facilityId);
 
-  @Update("UPDATE programs_supported set active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
-    "where facilityId=#{facilityId} AND programId=#{program.id}")
+  @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
+    "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
     //TODO use COALESCE for modifiedDate
   void update(ProgramSupported programSupported);
 
+  @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND active = TRUE")
+  @Results({
+    @Result(property = "program", javaType = Program.class, column = "programId",
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+  })
+  List<ProgramSupported> getActiveByFacilityId(Long facilityId);
 }

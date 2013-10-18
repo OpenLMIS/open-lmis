@@ -8,6 +8,7 @@
 
 package org.openlmis.core.service;
 
+import org.hamcrest.CoreMatchers;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -41,6 +43,8 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
+import static org.powermock.api.mockito.PowerMockito.verifyNew;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -257,6 +261,20 @@ public class ProgramSupportedServiceTest {
 
     verify(repository).updateSupportedPrograms(facility);
     verify(eventService).notify(programSupportedEvent);
+  }
+
+  @Test
+  public void shouldGetActiveProgramsSupportedByFacilityId() throws Exception {
+
+    Long facilityId = 1L;
+    List<ProgramSupported> programSupported = asList(new ProgramSupported());
+    when(repository.getActiveByFacilityId(facilityId)).thenReturn(programSupported);
+
+    List<ProgramSupported> activeProgramSupported = service.getActiveByFacilityId(facilityId);
+
+    verify(repository).getActiveByFacilityId(facilityId);
+    assertThat(activeProgramSupported, equalTo(programSupported));
+
   }
 
   private ProgramSupported createSupportedProgram(String facilityCode, String programCode, boolean active, Date startDate) {

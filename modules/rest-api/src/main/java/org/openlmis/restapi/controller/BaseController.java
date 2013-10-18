@@ -10,8 +10,30 @@
 
 package org.openlmis.restapi.controller;
 
+import org.openlmis.restapi.response.RestResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import static org.openlmis.restapi.response.RestResponse.error;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 public class BaseController {
   public static final String ACCEPT_JSON = "Accept=application/json";
   public static final String UNEXPECTED_EXCEPTION = "unexpected.exception";
   public static final String FORBIDDEN_EXCEPTION = "forbidden.exception";
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<RestResponse> handleException(Exception ex) {
+    if (ex instanceof AccessDeniedException) {
+      return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
+    }
+    if (ex instanceof MissingServletRequestParameterException) {
+      return error(ex.getMessage(), BAD_REQUEST);
+    }
+    return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
+  }
 }

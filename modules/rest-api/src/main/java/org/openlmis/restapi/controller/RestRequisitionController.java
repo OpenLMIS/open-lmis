@@ -54,15 +54,6 @@ public class RestRequisitionController extends BaseController {
     return RestResponse.response(RNR, requisition.getId(), CREATED);
   }
 
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<RestResponse> handleException(Exception ex) {
-    if (ex instanceof AccessDeniedException) {
-      return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
-    }
-    return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
-  }
-
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report, Principal principal) {
     report.setRequisitionId(id);

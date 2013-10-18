@@ -14,12 +14,16 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.db.categories.UnitTests;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
 
 @Category(UnitTests.class)
 public class FacilityFeedDTOTest {
@@ -27,8 +31,8 @@ public class FacilityFeedDTOTest {
   @Test
   //TODO write separate test for boolean fields
   public void shouldFillDTOFromGivenFacility() throws Exception {
-
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    List<ProgramSupported> programsSupported = asList(new ProgramSupported());
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(programSupportedList, programsSupported)));
     Facility parentFacility = new Facility();
     parentFacility.setCode("Parent Facility");
 
@@ -66,5 +70,6 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getComment(), is(facility.getComment()));
     assertThat(facilityFeedDTO.isEnabled(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
+    assertThat(facilityFeedDTO.getProgramsSupported(), is(programsSupported));
   }
 }

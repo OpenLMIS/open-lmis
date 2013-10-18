@@ -103,7 +103,6 @@ public class RestProgramProductControllerTest {
   @Test
   public void shouldResolveUnhandledException() throws Exception {
     String errorMessage = "Oops, something has gone wrong. Please try again later";
-    when(messageService.message(UNEXPECTED_EXCEPTION)).thenReturn(errorMessage);
 
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), INTERNAL_SERVER_ERROR);
 

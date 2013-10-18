@@ -99,7 +99,7 @@ public class RequisitionGroupMemberService {
   }
 
   public RequisitionGroupMember getExisting(RequisitionGroupMember record) {
-    Facility facility = facilityRepository.getByCode(record.getFacility());
+    Facility facility = facilityRepository.getByCode(record.getFacility().getCode());
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getByCode(record.getRequisitionGroup());
     return requisitionGroupMemberRepository.getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }

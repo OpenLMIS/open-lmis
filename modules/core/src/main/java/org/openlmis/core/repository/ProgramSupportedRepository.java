@@ -96,4 +96,8 @@ public class ProgramSupportedRepository {
   public void updateSupportedProgram(ProgramSupported programSupported) {
     programSupportedMapper.update(programSupported);
   }
+
+  public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
+    return programSupportedMapper.getActiveByFacilityId(facilityId);
+  }
 }

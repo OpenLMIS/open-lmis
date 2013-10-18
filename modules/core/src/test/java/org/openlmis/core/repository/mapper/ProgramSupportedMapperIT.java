@@ -42,6 +42,7 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 public class ProgramSupportedMapperIT {
 
   public static final String YELLOW_FEVER = "YELL_FVR";
+  public static final String GREEN_FEVER = "green_fever";
 
   @Autowired
   private ProgramMapper programMapper;
@@ -135,4 +136,36 @@ public class ProgramSupportedMapperIT {
 
     assertThat(programSupportedFromDb.getActive(), is(Boolean.FALSE));
   }
+
+  @Test
+  public void shouldGetAllActiveProgramsSupportedForFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+    Program program2 = make(a(defaultProgram, with(programCode, GREEN_FEVER)));
+    programMapper.insert(program2);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program)));
+    ProgramSupported programSupported2 = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program2),with(isActive,false)));
+
+    programSupportedMapper.insert(programSupported);
+    programSupportedMapper.insert(programSupported2);
+
+    List<ProgramSupported> programsSupported = programSupportedMapper.getActiveByFacilityId(facility.getId());
+
+    assertThat(programsSupported.size(), is(1));
+    assertThat(programsSupported.get(0).getFacilityId(), is(programSupported.getFacilityId()));
+    assertThat(programsSupported.get(0).getStartDate(), is(programSupported.getStartDate()));
+    assertThat(programsSupported.get(0).getActive(), is(programSupported.getActive()));
+    assertThat(programsSupported.get(0).getProgram().getId(), is(programSupported.getProgram().getId()));
+    assertThat(programsSupported.get(0).getProgram().getCode(), is(programSupported.getProgram().getCode()));
+    assertThat(programsSupported.get(0).getProgram().getName(), is(programSupported.getProgram().getName()));
+  }
+
 }

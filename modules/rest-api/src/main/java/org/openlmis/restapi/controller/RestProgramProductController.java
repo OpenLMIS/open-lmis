@@ -62,15 +62,4 @@ public class RestProgramProductController extends BaseController {
     }
   }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<RestResponse> handleException(Exception ex) {
-    if (ex instanceof AccessDeniedException) {
-      return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
-    }
-    if (ex instanceof MissingServletRequestParameterException) {
-      return error(ex.getMessage(), BAD_REQUEST);
-    }
-    return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
-  }
-
 }

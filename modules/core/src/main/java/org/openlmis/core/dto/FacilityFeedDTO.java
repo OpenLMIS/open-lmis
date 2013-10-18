@@ -15,8 +15,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -91,6 +93,8 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Boolean virtualFacility;
 
+  private List<ProgramSupported> programsSupported;
+
   public FacilityFeedDTO(Facility facility, Facility parentFacility) {
     this.code = facility.getCode();
     this.name = facility.getName();
@@ -124,6 +128,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.comment = facility.getComment();
     this.enabled = facility.getEnabled();
     this.modifiedDate = facility.getModifiedDate();
+    this.programsSupported = facility.getSupportedPrograms();
   }
 
 }
