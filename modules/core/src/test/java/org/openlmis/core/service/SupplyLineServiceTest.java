@@ -126,9 +126,12 @@ public class SupplyLineServiceTest {
     when(supervisoryNodeRepository.getIdForCode(supplyLine.getSupervisoryNode().getCode())).thenReturn(1L);
     supplyLine.getSupervisoryNode().setId(1L);
     when(supervisoryNodeRepository.getSupervisoryNodeParentId(1L)).thenReturn(null);
-    when(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(supplyLine);
+    // this is to get past the validation that checks for unique supply lines for a given program.
+    // the supply line will not be saved otherwise.
+    when(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(null);
     supplyLineService.save(supplyLine);
 
+    when(supplyLineRepository.getSupplyLineBy(supplyLine.getSupervisoryNode(), supplyLine.getProgram())).thenReturn(supplyLine);
     SupplyLine result = supplyLineService.getExisting(supplyLine);
 
     assertThat(result, is(supplyLine));
