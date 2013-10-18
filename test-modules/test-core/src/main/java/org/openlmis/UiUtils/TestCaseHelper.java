@@ -407,19 +407,19 @@ public class TestCaseHelper {
     verifyNextAndLastLinksDisabled();
     verifyPreviousAndFirstLinksEnabled();
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '«')]").click();
+    testWebDriver.getElementById("firstPageLink").click();
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '>')]").click();
+    testWebDriver.getElementById("nextPageLink").click();
     verifyNextAndLastLinksDisabled();
     verifyPreviousAndFirstLinksEnabled();
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '<')]").click();
+    testWebDriver.getElementById("previousPageLink").click();
     verifyNextAndLastLinksEnabled();
     verifyPreviousAndFirstLinksDisabled();
 
-    testWebDriver.getElementByXpath("//a[contains(text(), '»')]").click();
+    testWebDriver.getElementById("lastPageLink").click();
     verifyNextAndLastLinksDisabled();
     verifyPreviousAndFirstLinksEnabled();
   }
@@ -438,30 +438,36 @@ public class TestCaseHelper {
 
   public void verifyNextAndLastLinksEnabled() throws Exception {
     testWebDriver.waitForPageToLoad();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
+
+    testWebDriver.waitForElementToAppear(nextPageLink);
+
+    assertEquals(nextPageLink.getCssValue("color"), "rgba(119, 119, 119, 1)");
+    assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
   public void verifyPreviousAndFirstLinksEnabled() throws Exception {
     testWebDriver.waitForPageToLoad();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '<')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById("previousPageLink"));
+    assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
+    assertEquals(testWebDriver.getElementById("firstPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
   }
 
   public void verifyNextAndLastLinksDisabled() throws Exception {
     testWebDriver.waitForPageToLoad();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '>')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '>')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '»')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById("nextPageLink"));
+    assertEquals(testWebDriver.getElementById("nextPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
+    assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
   public void verifyPreviousAndFirstLinksDisabled() throws Exception {
     testWebDriver.waitForPageToLoad();
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '«')]"));
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '«')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
-    assertEquals(testWebDriver.getElementByXpath("//a[contains(text(), '<')]").getCssValue("color"), "rgba(204, 204, 204, 1)");
+    WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
+
+    testWebDriver.waitForElementToAppear(firstPageLink);
+
+    assertEquals(firstPageLink.getCssValue("color"), "rgba(204, 204, 204, 1)");
+    assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 }
 
