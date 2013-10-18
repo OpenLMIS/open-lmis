@@ -336,7 +336,7 @@ public class ManageDistribution extends TestCaseHelper {
     verifyElementsInTable(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
-  @And("^I remove cached distrubution$")
+  @And("^I remove cached distribution$")
   public void deleteDistribution() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.deleteDistribution();
@@ -360,7 +360,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.ConfirmDeleteDistribution();
   }
 
-  @Then("I see no diistribution in cache$")
+  @Then("I see no distribution in cache$")
   public void noDistributionInCache() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.verifyNoDistributionCachedMessage();

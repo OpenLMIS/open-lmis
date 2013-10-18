@@ -4,10 +4,10 @@ Feature: Smoke Tests
   
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
-      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
     And I have regimen template configured
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I access initiate requisition page
     When I click proceed
     And I populate RnR data
@@ -29,10 +29,10 @@ Feature: Smoke Tests
 
   Scenario: User should view requisition and regimen after authorization
     Given I have the following data for regimen:
-      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    And I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
     And I have regimen template configured
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I access initiate requisition page
     When I click proceed
     And I populate RnR data
@@ -119,8 +119,8 @@ Feature: Smoke Tests
   
 
   Scenario: Requisition user should not access admin Page
-    Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
-    And I am logged in as "storeincharge"
+    Given I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
+    And I am logged in as "storeIncharge"
     When I access create facility page through URL
     Then I should see unauthorized access message
 
@@ -130,7 +130,7 @@ Feature: Smoke Tests
   Scenario: Admin can create, disable & restore user
     Given I am logged in as Admin
     When I create a user:
-      | Email                   | Firstname | Lastname | UserName |
+      | Email                   | FirstName | LastName | UserName |
       | Dummy_User@openlmis.com | Dummy     | User     | Dummy    |
     Then I should see user not verified
     When I disable user "Dummy User"
@@ -166,7 +166,7 @@ Feature: Smoke Tests
     And I should see include checkbox for all data fields
     And I should see default value of positions
     When I save shipment file format
-    Then I should see successfull message "Shipment file configuration saved successfully!"
+    Then I should see successful message "Shipment file configuration saved successfully!"
 
   @smokeRequisition
 
@@ -178,12 +178,12 @@ Feature: Smoke Tests
     And I verify default checkbox for all data fields
     And I verify default value of positions
     When I save budget file format
-    Then I should see budget successfull saved message as "Budget file configuration saved successfully!"
+    Then I should see budget successful saved message as "Budget file configuration saved successfully!"
 
   @smokeRequisition
   Scenario: User should download order file and verify
     Given I have the following data for regimen:
-      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
     And I configure order file:
       | File Prefix | Header In File |
       | O           | TRUE           |
@@ -202,14 +202,14 @@ Feature: Smoke Tests
       | NOT APPLICABLE   | TRUE                  |              | 7        |
       | NOT APPLICABLE   | TRUE                  | Dummy        | 8        |
 
-    And I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
+    And I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION,APPROVE_REQUISITION" rights and data to initiate requisition
     And I have "lmu" role having "ADMIN" based "CONVERT_TO_ORDER,VIEW_ORDER" rights
     And I have users:
-      | UserId | Email                 | Firstname | Lastname | UserName | Role | FacilityCode |
+      | UserId | Email                 | FirstName | LastName | UserName | Role | FacilityCode |
       | 111    | Jake_Doe@openlmis.com | Jake      | Doe      | lmu      | lmu  | F10          |
     And I have fulfillment data for user "lmu" role "lmu" and facility "F10"
     And I have regimen template configured
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I access initiate requisition page
     When I click proceed
     And I populate RnR data
@@ -235,9 +235,9 @@ Feature: Smoke Tests
 
   Scenario: User should be able to initiate and submit emergency RnR
     Given I have the following data for regimen:
-      | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
-    Given I have "storeincharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
-    And I am logged in as "storeincharge"
+      | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
+    Given I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights and data to initiate requisition
+    And I am logged in as "storeIncharge"
     And I access initiate emergency requisition page
     Then I got error message "No current period defined. Please contact the Admin."
     When I have period "currentPeriod" associated with schedule "M"
@@ -267,7 +267,7 @@ Feature: Smoke Tests
   
   Scenario: Selected requisitions across pages should not convert to order
     Given I have "51" requisitions for convert to order
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     When I access convert to order page
     And I select "1" requisition on page "1"
     And I select "1" requisition on page "2"
@@ -292,25 +292,25 @@ Feature: Smoke Tests
   Scenario: User should able to initiate & delete distribution
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
-    And I am logged in as "storeincharge"
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    And I am logged in as "storeIncharge"
     And I access plan my distribution page
-    Then I see no diistribution in cache
+    Then I see no distribution in cache
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
     Then I should see data download successfully
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
-    And I remove cached distrubution
+    And I remove cached distribution
     Then I observe confirm delete distribution dialog
     When I cancel delete distribution
     And I should see delivery zone "Delivery Zone First" program "VACCINES" period "Period14" in table
-    And I remove cached distrubution
+    And I remove cached distribution
     And I confirm delete distribution
-    Then I see no diistribution in cache
+    Then I see no distribution in cache
 
   @smokeDistribution
 
@@ -318,13 +318,13 @@ Feature: Smoke Tests
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeInCharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeInCharge"
     And I access plan my distribution page
     Then I verify fields
     And I should see deliveryZone "--None Assigned--"
-    When I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    When I assign delivery zone "DZ1" to user "storeInCharge" having role "store in-charge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     Then I should see program "VACCINES,TB"
@@ -337,7 +337,7 @@ Feature: Smoke Tests
 
   Scenario: User should able to override ISA
     Given I have the following data for override ISA:
-      | user     | program  | product | productName | category | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
+      | user     | program  | product | productName | category | whoRatio | dosesPerYear | wastageFactor | bufferPercentage | minimumValue | maximumValue | adjustmentValue |
       | Admin123 | VACCINES | P1      | antibiotic1 | C1       | 1        | 2            | 3             | 4                | null         | null         | 5               |
     And I am logged in as Admin
     And I access create facility page
@@ -357,13 +357,13 @@ Feature: Smoke Tests
     Given I have data available for distribution load amount
     And I have data available for "Multiple" facilities attached to delivery zones
     And I have following ISA values:
-      | Program  | Product | whoratio | dosesperyear | wastageFactor | bufferpercentage | minimumvalue | maximumvalue | adjustmentvalue |
+      | Program  | Product | whoRatio | dosesPerYear | wastageFactor | bufferPercentage | minimumValue | maximumValue | adjustmentValue |
       | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
     And I have following override ISA values:
       | Facility Code | Program  | Product | ISA  |
       | F11           | VACCINES | P11     | 1000 |
     And I have role assigned to delivery zones
-    When I am logged in as "fieldcoordinator"
+    When I am logged in as "fieldCoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -390,7 +390,7 @@ Feature: Smoke Tests
       | F11           | VACCINES | P10     | 3000 |
       | F11           | VACCINES | P11     | 4000 |
     And I have role assigned to delivery zones
-    When I am logged in as "fieldcoordinator"
+    When I am logged in as "fieldCoordinator"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -404,10 +404,10 @@ Feature: Smoke Tests
   Scenario: User should see facility list/ selection page
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
-    And I am logged in as "storeincharge"
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    And I am logged in as "storeIncharge"
     And I access plan my distribution page
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -430,10 +430,10 @@ Feature: Smoke Tests
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
-    And I am logged in as "storeincharge"
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    And I am logged in as "storeIncharge"
     And I access plan my distribution page
     When I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -482,10 +482,10 @@ Feature: Smoke Tests
   Scenario: User should fill general observation data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
-    When I am logged in as "storeincharge"
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    When I am logged in as "storeIncharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -513,11 +513,11 @@ Feature: Smoke Tests
   Scenario: User should fill EPI use data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
-    When I am logged in as "storeincharge"
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    When I am logged in as "storeIncharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
@@ -549,12 +549,12 @@ Feature: Smoke Tests
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
-      | storeincharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
     And I update product "P10" to have product group "penta"
     And I have data available for "Multiple" facilities attached to delivery zones
-    And I assign delivery zone "DZ1" to user "storeincharge" having role "store in-charge"
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
     And I disassociate "F11" from delivery zone
-    When I am logged in as "storeincharge"
+    When I am logged in as "storeIncharge"
     And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
