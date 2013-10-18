@@ -1,22 +1,4 @@
 function AverageConsumptionReportController($scope,$filter, $window, ngTableParams, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
-
-        //to minimize and maximize the filter section
-        var section = 1;
-
-        $scope.$window = $window;
-
-        $scope.section = function (id) {
-            section = id;
-        };
-
-        $scope.show = function (id) {
-            return section == id;
-        };
-
-        // lookups and references
-
-
-
     $scope.startYears = [];
     OperationYears.get(function(data){
         $scope.startYears = $scope.endYears = data.years;
@@ -206,8 +188,6 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
                         $scope.filterObject.facilityType = idx.name;
                     }
                 });
-                //skillsSelect.options[skillsSelect.selectedIndex].text
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
             }else{
                 $scope.filterObject.facilityTypeId =  0;
                 $scope.filterObject.facilityType = "";
@@ -243,11 +223,8 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
 
                 $scope.endYear  = date.getFullYear().toString();
                 $scope.filterObject.toYear =  date.getFullYear();
-
             }
-
             $scope.filterGrid();
-
         });
 
      $scope.$watch('startQuarter', function(selection){
@@ -319,24 +296,22 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         }
     }
 
+  var adjustEndSemiAnnuals = function(){
 
-
-        var adjustEndSemiAnnuals = function(){
-
-            if($scope.startYear == $scope.endYear){
-                $scope.endSemiAnnuals = [];
-                $.each($scope.startSemiAnnuals, function(idx,obj){
-                    if(obj.value >= $scope.startHalf){
-                        $scope.endSemiAnnuals.push({'name':obj.name, 'value': obj.value});
-                    }
-                });
-                if($scope.endHalf < $scope.startHalf){
-                    $scope.endHalf =  $scope.startHalf;
+        if($scope.startYear == $scope.endYear){
+            $scope.endSemiAnnuals = [];
+            $.each($scope.startSemiAnnuals, function(idx,obj){
+                if(obj.value >= $scope.startHalf){
+                    $scope.endSemiAnnuals.push({'name':obj.name, 'value': obj.value});
                 }
-            }else{
-                $scope.endSemiAnnuals = $scope.startSemiAnnuals;
+            });
+            if($scope.endHalf < $scope.startHalf){
+                $scope.endHalf =  $scope.startHalf;
             }
+        }else{
+            $scope.endSemiAnnuals = $scope.startSemiAnnuals;
         }
+    }
 
     var adjustEndQuarters = function(){
             if($scope.startQuarter != undefined && $scope.startYear == $scope.endYear){
@@ -464,35 +439,33 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
 
 
         $scope.getPagedDataAsync = function (pageSize, page) {
-                        pageSize = 50000;
-                        page = 1;
-                        // Clear the results on the screen
-                        $scope.datarows = [];
-                        $scope.data = [];
-                        var params  = {};
-                        if(pageSize != undefined && page != undefined ){
-                                var params =  {
-                                                "max" : pageSize,
-                                                "page" : page
-                                               };
-                        }
+            pageSize = 50000;
+            page = 1;
+            // Clear the results on the screen
+            $scope.datarows = [];
+            $scope.data = [];
+            var params  = {};
+            if(pageSize != undefined && page != undefined ){
+                var params =  {
+                                "max" : pageSize,
+                                "page" : page
+                               };
+            }
 
-                        $.each($scope.filterObject, function(index, value) {
-                            if(value != undefined)
-                                params[index] = value;
-                        });
+            $.each($scope.filterObject, function(index, value) {
+                if(value != undefined)
+                    params[index] = value;
+            });
 
-
-                        $scope.data = [];
-                        AverageConsumptionReport.get(params, function(data) {
-                            if(data.pages != undefined && data.pages.rows != undefined ){
-                                $scope.MinMos = data.pages.rows[0].minMOS;
-                                $scope.MaxMos=data.pages.rows[0].maxMOS;
-                                $scope.data = data.pages.rows;
-                                $scope.paramsChanged($scope.tableParams);
-                            }
-                        });
-
+            $scope.data = [];
+            AverageConsumptionReport.get(params, function(data) {
+                if(data.pages != undefined && data.pages.rows != undefined ){
+                    $scope.MinMos = data.pages.rows[0].minMOS;
+                    $scope.MaxMos=data.pages.rows[0].maxMOS;
+                    $scope.data = data.pages.rows;
+                    $scope.paramsChanged($scope.tableParams);
+                }
+            });
         };
 
 

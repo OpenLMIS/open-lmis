@@ -90,6 +90,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         $scope.isSemiAnnualy  = function(){
             return $scope.periodType == 'semi-anual';
         };
+
         $scope.filterGrid = function (){
             $scope.getPagedDataAsync(0, 0);
         };
@@ -139,14 +140,6 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
             $scope.productCategories = data.productCategoryList;
             $scope.productCategories.unshift({'name': '-- All Categories --'});
         });
-
-
-        $scope.facilities         = [
-            {'name':'One','value':'1'},
-            {'name':'Two','value':'2'},
-            {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'}
-        ];
 
         GeographicZones.get(function(data) {
             $scope.zones = data.zones;
