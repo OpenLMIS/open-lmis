@@ -169,6 +169,18 @@ Feature: Smoke Tests
     Then I should see successfull message "Shipment file configuration saved successfully!"
 
   @smokeRequisition
+
+
+  Scenario: User should be able to configure budget file format using default format
+    When I am logged in as Admin
+    And I access configure budget page
+    And I should see default include column headers as "false"
+    And I verify default checkbox for all data fields
+    And I verify default value of positions
+    When I save budget file format
+    Then I should see budget successfull saved message as "Budget file configuration saved successfully!"
+
+  @smokeRequisition
   Scenario: User should download order file and verify
     Given I have the following data for regimen:
       | HIV | storeincharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |

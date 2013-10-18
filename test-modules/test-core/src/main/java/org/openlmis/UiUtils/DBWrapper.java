@@ -361,6 +361,7 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
+    update("delete from budget_configuration;");
   }
 
 
@@ -1130,6 +1131,11 @@ public class DBWrapper {
     update("INSERT INTO shipment_configuration(headerInFile) VALUES('" + headerInFile + "')");
   }
 
+  public void setupBudgetFileConfiguration(String headerInFile) throws IOException, SQLException {
+    update("DELETE FROM budget_configuration;");
+    update("INSERT INTO budget_configuration(headerInFile) VALUES('" + headerInFile + "')");
+  }
+
   public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
     update("DELETE FROM order_file_columns where openLMISField=TRUE;");
 
@@ -1151,6 +1157,17 @@ public class DBWrapper {
     update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('cost', 'header.cost', 4, FALSE, FALSE);");
     update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) VALUES ('packedDate', 'header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
     update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) VALUES ('shippedDate', 'header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
+
+  }
+
+  public void defaultSetupBudgetFileColumns() throws IOException, SQLException {
+    update("DELETE FROM budget_file_columns;");
+
+    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('facilityCode', 'header.facility.code', 1, TRUE, TRUE);");
+    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('programCode', 'header.program.code', 2, TRUE, TRUE);");
+    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) VALUES ('periodStartDate', 'header.period.start.date', 3, TRUE, TRUE, 'dd/MM/yy');");
+    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('allocatedBudget', 'header.allocatedBudget', 4, TRUE, TRUE);");
+    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('notes', 'header.notes', 5, FALSE, FALSE);");
 
   }
 

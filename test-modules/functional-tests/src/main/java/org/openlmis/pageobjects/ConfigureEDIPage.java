@@ -29,6 +29,9 @@ public class ConfigureEDIPage extends Page {
   @FindBy(how = ID, using = "configureShipment")
   private static WebElement configureShipmentButton;
 
+  @FindBy(how = ID, using = "configureBudget")
+  private static WebElement configureBudgetButton;
+
   public ConfigureEDIPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -48,5 +51,12 @@ public class ConfigureEDIPage extends Page {
       configureShipmentButton.click();
 
     return new ConfigureShipmentPage(testWebDriver);
+  }
+
+  public ConfigureBudgetPage navigateConfigureBudgetPage() throws IOException {
+     testWebDriver.waitForElementToAppear(configureBudgetButton);
+     configureBudgetButton.click();
+
+     return new ConfigureBudgetPage(testWebDriver);
   }
 }

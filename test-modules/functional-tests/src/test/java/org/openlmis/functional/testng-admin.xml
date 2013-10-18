@@ -40,6 +40,8 @@
             </class>
             <class name="org.openlmis.functional.ConfigureShipmentTemplate">
             </class>
+            <class name="org.openlmis.functional.ConfigureBudgetTemplate">
+            </class>
         </classes>
     </test>
 </suite>
