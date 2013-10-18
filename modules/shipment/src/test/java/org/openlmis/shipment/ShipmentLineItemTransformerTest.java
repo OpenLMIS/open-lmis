@@ -32,17 +32,26 @@ public class ShipmentLineItemTransformerTest {
 
   private ShipmentLineItemTransformer transformer = new ShipmentLineItemTransformer();
 
+  String orderIdWithSpaces = " 11 ";
+  String productCodeWithSpaces = " P111 ";
+  String quantityShippedWithSpaces = " 22 ";
+  String costWithSpaces = "21 ";
+  String packedDateWithSpaces = " 10/10/2013 ";
+  String shippedDateWithSpaces = "10/12/2013";
+  String concatenatedOrderIdWithSpaces = "ARV000001R";
+  String facilityCodeWithSpaces = " 121212 ";
+  String programCodeWithSpaces = " ARV ";
+  String quantityOrderedWithSpaces = "12 ";
+  String substitutedProductCodeWithSpaces = " ARV123 ";
+  String substitutedProductNameWithSpaces = " Abacavir Retonavir ";
+  String substitutedProductQuantityShippedWithSpaces = "123";
+  String packSizeWithSpaces = "12 ";
+
   @Test
   public void shouldTrimAndParseFieldsWithSpaces() throws Exception {
-    String orderIdWithSpaces = " 11 ";
-    String productCodeWithSpaces = " P111 ";
-    String quantityShippedWithSpaces = " 22 ";
-    String costWithSpaces = "21 ";
-    String packedDateWithSpaces = " 10/10/2013 ";
-    String shippedDateWithSpaces = "10/12/2013";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO(orderIdWithSpaces, productCodeWithSpaces,
-      quantityShippedWithSpaces, costWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
+
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDateWithSpaces, shippedDateWithSpaces);
 
     ShipmentLineItem lineItem = new ShipmentLineItemTransformer().transform(dto, "MM/dd/yyyy", "MM/dd/yyyy", new Date());
 
@@ -58,8 +67,10 @@ public class ShipmentLineItemTransformerTest {
   public void shouldThrowErrorIfPackedDateIsDifferentFromFormat() {
     String packedDate = "10/10/2013 ";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
-      "12", "34", packedDate, "10/09/2013");
+
+
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDate, shippedDateWithSpaces);
+
 
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
@@ -70,8 +81,8 @@ public class ShipmentLineItemTransformerTest {
   public void shouldThrowErrorIfShippedDateIsDifferentFromFormat() {
     String shippedDate = "10/10/13 ";
 
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO("11", "P111",
-      "12", "34", "10/09/2013", shippedDate);
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO( orderIdWithSpaces, concatenatedOrderIdWithSpaces, facilityCodeWithSpaces, programCodeWithSpaces, productCodeWithSpaces, quantityOrderedWithSpaces, quantityShippedWithSpaces,  costWithSpaces,  substitutedProductCodeWithSpaces, substitutedProductNameWithSpaces, substitutedProductQuantityShippedWithSpaces, packSizeWithSpaces, packedDateWithSpaces, shippedDate);
+
 
     expectException.expect(DataException.class);
     expectException.expectMessage("wrong.data.type");
