@@ -80,7 +80,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @Then("^I should see disable user \"([^\"]*)\" message$")
   public void verifyDisableUser(String user) throws Exception {
     UserPage userPage = new UserPage(testWebDriver);
-    userPage.verifyMessage("User \''" + user + "\'' has been disabled");
+    userPage.verifyMessage("User \"" + user + "\" has been disabled");
   }
 
   @Then("^I should see user not verified$")
@@ -110,7 +110,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   @Then("^I should see enable user \"([^\"]*)\" message$")
   public void verifyEnabledUser(String user) throws Exception {
     UserPage userPage = new UserPage(testWebDriver);
-    userPage.verifyMessage("User \''" + user + "\'' has been enabled");
+    userPage.verifyMessage("User \"" + user + "\" has been enabled");
   }
 
   @When("^I verify user email \"([^\"]*)\"$")
