@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -31,56 +29,49 @@ import static org.openqa.selenium.support.How.XPATH;
 public class DistributionPage extends Page {
 
   @FindBy(how = ID, using = "selectDeliveryZone")
-  private static WebElement selectDeliveryZoneSelectBox;
+  private static WebElement selectDeliveryZoneSelectBox = null;
 
   @FindBy(how = ID, using = "selectProgram")
-  private static WebElement selectProgramSelectBox;
+  private static WebElement selectProgramSelectBox = null;
 
   @FindBy(how = ID, using = "selectPeriod")
-
-  private static WebElement selectPeriodSelectBox;
+  private static WebElement selectPeriodSelectBox = null;
 
   @FindBy(how = XPATH, using = "//input[@value='View load amounts']")
-  private static WebElement viewLoadAmountButton;
+  private static WebElement viewLoadAmountButton = null;
 
   @FindBy(how = ID, using = "initiateDistribution")
-  private static WebElement initiateDistributionButton;
+  private static WebElement initiateDistributionButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Record Data')]")
-  private static WebElement recordDataButton;
-
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Input facility data')]")
-  private static WebElement inputFacilityDataLink;
+  private static WebElement recordDataButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement saveSuccessMessageDiv;
-
-  @FindBy(how = ID, using = "indicator0")
-  private static WebElement distributionIndicator;
+  private static WebElement saveSuccessMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[6]/a")
-  private static WebElement syncLink;
+  private static WebElement syncLink = null;
 
   @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
-  private static WebElement syncMessage;
+  private static WebElement syncMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
-  private static WebElement deleteDistributionIcon;
+  private static WebElement deleteDistributionIcon = null;
 
   @FindBy(how = ID, using = "button_Cancel")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = ID, using = "button_OK")
-  private static WebElement okButton;
+  private static WebElement okButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='distributionInitiated']/div[2][@class='modal-body']/p")
-  private static WebElement deleteConfirmDialogMessage;
+  private static WebElement deleteConfirmDialogMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='distributionInitiated']/div[1][@class='modal-header']/h3")
-  private static WebElement deleteConfirmDialogHeader;
+  private static WebElement deleteConfirmDialogHeader = null;
 
-  @FindBy(how = XPATH, using ="//div[@id='noDistributionInitiated']/span")
-  private static WebElement noDistributionCachedMessage;
+  @FindBy(how = XPATH, using = "//div[@id='noDistributionInitiated']/span")
+  private static WebElement noDistributionCachedMessage = null;
 
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -115,7 +106,7 @@ public class DistributionPage extends Page {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
-     testWebDriver.sleep(200);
+    testWebDriver.sleep(200);
   }
 
   public void clickSyncDistribution() {
@@ -126,7 +117,7 @@ public class DistributionPage extends Page {
 
   public String getSyncMessage() {
     testWebDriver.waitForElementToAppear(syncMessage);
-      return syncMessage.getText();
+    return syncMessage.getText();
   }
 
   public FacilityListPage clickRecordData() throws IOException {
@@ -137,70 +128,63 @@ public class DistributionPage extends Page {
     return new FacilityListPage(testWebDriver);
   }
 
-  public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period)
-  {
-    testWebDriver.sleep(200);
-    assertTrue("Data download successful message should show up", saveSuccessMessageDiv.getText().equals(
-            "Data for the selected " + deliveryZone + ", " + program + ", " + period + " has been downloaded"));
+  public void verifyDownloadSuccessFullMessage(String deliveryZone, String program, String period) {
+    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
 
+    String message = String.format("Data for the selected %s, %s, %s has been downloaded", deliveryZone, program, period);
+    assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
-  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period)
-  {
-    testWebDriver.sleep(200);
-    assertTrue("Data already cached  message should show up", saveSuccessMessageDiv.getText().equals(
-            "The data for the selected " + deliveryZone + ", " + program + ", " + period + " is already cached"));
+  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period) {
+    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
 
+    String message = String.format("The data for the selected %s, %s, %s is already cached", deliveryZone, program, period);
+    assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
-  public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst)
-  {
+  public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-    String message="Program ''"+programFirst+"'' is not supported by any facility in delivery zone ''"+deliveryZoneNameFirst+"''";
-    SeleneseTestNgHelper.assertEquals(message,saveSuccessMessageDiv.getText());
+    String message = String.format("Program ''%s'' is not supported by any facility in delivery zone ''%s''",
+      programFirst, deliveryZoneNameFirst);
+
+    assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
-    List<WebElement> options = testWebDriver.getOptions(selectDeliveryZoneSelectBox);
-    return options;
+    return testWebDriver.getOptions(selectDeliveryZoneSelectBox);
   }
 
   public List<WebElement> getAllSelectOptionsFromProgram() {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
-    List<WebElement> options = testWebDriver.getOptions(selectProgramSelectBox);
-    return options;
+    return testWebDriver.getOptions(selectProgramSelectBox);
   }
 
   public List<WebElement> getAllSelectOptionsFromPeriod() {
     testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
-    List<WebElement> options = testWebDriver.getOptions(selectPeriodSelectBox);
-    return options;
+    return testWebDriver.getOptions(selectPeriodSelectBox);
   }
 
   public WebElement getFirstSelectedOptionFromDeliveryZone() {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
-    WebElement option = testWebDriver.getFirstSelectedOption(selectDeliveryZoneSelectBox);
-    return option;
+    return testWebDriver.getFirstSelectedOption(selectDeliveryZoneSelectBox);
   }
 
   public WebElement getFirstSelectedOptionFromProgram() {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
-    WebElement option = testWebDriver.getFirstSelectedOption(selectProgramSelectBox);
-    return option;
+    return testWebDriver.getFirstSelectedOption(selectProgramSelectBox);
   }
 
   public WebElement getFirstSelectedOptionFromPeriod() {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(selectPeriodSelectBox);
     testWebDriver.sleep(100);
-    WebElement option = testWebDriver.getFirstSelectedOption(selectPeriodSelectBox);
-    return option;
+    return testWebDriver.getFirstSelectedOption(selectPeriodSelectBox);
   }
 
   public boolean IsDisplayedSelectDeliveryZoneSelectBox() {
@@ -211,90 +195,63 @@ public class DistributionPage extends Page {
     return selectProgramSelectBox.isDisplayed();
   }
 
-
   public boolean IsDisplayedSelectPeriodSelectBox() {
     return selectPeriodSelectBox.isDisplayed();
   }
-
 
   public boolean IsDisplayedViewLoadAmountButton() {
     return viewLoadAmountButton.isDisplayed();
   }
 
   public boolean verifyDeliveryZoneSelectBoxNotPresent() {
-        boolean deliveryZoneSelectBoxPresent = false;
-        try {
-            deliveryZoneSelectBoxPresent=selectDeliveryZoneSelectBox.isDisplayed();
-        } catch (NoSuchElementException e) {
-            deliveryZoneSelectBoxPresent = false;
-        } finally {
-            return deliveryZoneSelectBoxPresent;
-        }
+    try {
+      return selectDeliveryZoneSelectBox.isDisplayed();
+    } catch (NoSuchElementException ignored) {
+      return false;
     }
-
-    public boolean verifyProgramSelectBoxNotPresent() {
-        boolean programSelectBoxPresent = false;
-        try {
-            programSelectBoxPresent=selectProgramSelectBox.isDisplayed();
-        } catch (NoSuchElementException e) {
-            programSelectBoxPresent = false;
-        } finally {
-            return programSelectBoxPresent;
-        }
-    }
-
-    public boolean verifyPeriodSelectBoxNotPresent() {
-        boolean periodSelectBoxPresent = false;
-        try {
-            periodSelectBoxPresent=selectPeriodSelectBox.isDisplayed();
-        } catch (NoSuchElementException e) {
-            periodSelectBoxPresent = false;
-        } finally {
-            return periodSelectBoxPresent;
-        }
-    }
-
-  public void verifyDistributionColor(String color) {
-    testWebDriver.waitForElementToAppear(distributionIndicator);
-    if(color.toLowerCase().equals("RED".toLowerCase()))
-      color="rgba(203, 64, 64, 1)";
-    else if(color.toLowerCase().equals("GREEN".toLowerCase()))
-      color="rgba(82, 168, 30, 1)";
-    else if(color.toLowerCase().equals("AMBER".toLowerCase()))
-      color="rgba(240, 165, 19, 1)";
-
-      assertEquals(color,distributionIndicator.getCssValue("background-color"));
   }
-    public void deleteDistribution(){
-        testWebDriver.waitForElementToAppear(deleteDistributionIcon);
-        deleteDistributionIcon.click();
+
+  public boolean verifyProgramSelectBoxNotPresent() {
+    try {
+      return selectProgramSelectBox.isDisplayed();
+    } catch (NoSuchElementException e) {
+      return false;
     }
+  }
 
-    public void verifyDeleteConfirmMessageAndHeader()
-    {
-        assertTrue("Incorrect Confirmation Message.", deleteConfirmDialogMessage.getText().equals(
-                "Are you sure you want to delete this distribution? Any data that has not been synced with the server will be lost."));
-        assertTrue("Incorrect Confirmation Header.", deleteConfirmDialogHeader.getText().equals(
-                "Delete distribution"));
-
-
+  public boolean verifyPeriodSelectBoxNotPresent() {
+    try {
+      return selectPeriodSelectBox.isDisplayed();
+    } catch (NoSuchElementException e) {
+      return false;
     }
+  }
 
-    public void ConfirmDeleteDistribution(){
-        testWebDriver.waitForElementToAppear(okButton);
-        okButton.click();
-    }
+  public void deleteDistribution() {
+    testWebDriver.waitForElementToAppear(deleteDistributionIcon);
+    deleteDistributionIcon.click();
+  }
 
-    public void CancelDeleteDistribution(){
-        testWebDriver.waitForElementToAppear(cancelButton);
-        cancelButton.click();
-    }
+  public void verifyDeleteConfirmMessageAndHeader() {
+    assertEquals("Are you sure you want to delete this distribution? " +
+      "Any data that has not been synced with the server will be lost.", deleteConfirmDialogMessage.getText());
 
-    public void verifyNoDistributionCachedMessage()
-    {
-        testWebDriver.waitForElementToAppear(noDistributionCachedMessage);
-        assertTrue("Incorrect Message for No Distribution cached.", noDistributionCachedMessage.getText().equals(
-                "No distributions cached"));
-    }
+    assertEquals("Delete distribution", deleteConfirmDialogHeader.getText());
+  }
+
+  public void ConfirmDeleteDistribution() {
+    testWebDriver.waitForElementToAppear(okButton);
+    okButton.click();
+  }
+
+  public void CancelDeleteDistribution() {
+    testWebDriver.waitForElementToAppear(cancelButton);
+    cancelButton.click();
+  }
+
+  public void verifyNoDistributionCachedMessage() {
+    testWebDriver.waitForElementToAppear(noDistributionCachedMessage);
+    assertEquals("No distributions cached", noDistributionCachedMessage.getText());
+  }
 
 }

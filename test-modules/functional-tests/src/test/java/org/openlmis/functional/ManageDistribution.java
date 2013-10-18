@@ -21,6 +21,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.util.Collections.addAll;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -121,9 +123,7 @@ public class ManageDistribution extends TestCaseHelper {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     List<String> firstProgramValuesToBeVerified = new ArrayList<>();
 
-    String[] program = programs.split(",");
-    for (int i = 0; i < program.length; i++)
-      firstProgramValuesToBeVerified.add(program[i]);
+    addAll(firstProgramValuesToBeVerified, programs.split(","));
 
     List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(firstProgramValuesToBeVerified, valuesPresentInDropDown);
@@ -388,18 +388,23 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyAlreadyCachedDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+  public void testVerifyAlreadyCachedDistribution(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                  String deliveryZoneCodeSecond,
                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                   String facilityCodeFirst, String facilityCodeSecond,
-                                                  String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                  String programFirst, String programSecond, String schedule,
+                                                  String period, Integer totalNumberOfPeriods) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
+
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
 
@@ -419,16 +424,18 @@ public class ManageDistribution extends TestCaseHelper {
   public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                      String facilityCodeFirst, String facilityCodeSecond,
-                                     String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                     String programFirst, String programSecond, String schedule, String period,
+                                     Integer totalNumberOfPeriods) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis",
+      rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
-
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -445,7 +452,7 @@ public class ManageDistribution extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
 
-    List<String> distributionZoneValuesToBeVerified = new ArrayList<String>();
+    List<String> distributionZoneValuesToBeVerified = new ArrayList<>();
     distributionZoneValuesToBeVerified.add(deliveryZoneNameFirst);
     distributionZoneValuesToBeVerified.add(deliveryZoneNameSecond);
     List<WebElement> valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromDeliveryZone();
@@ -461,7 +468,7 @@ public class ManageDistribution extends TestCaseHelper {
 
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    List<String> firstProgramValuesToBeVerified = new ArrayList<String>();
+    List<String> firstProgramValuesToBeVerified = new ArrayList<>();
     firstProgramValuesToBeVerified.add(programFirst);
     firstProgramValuesToBeVerified.add(programSecond);
     valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
@@ -471,7 +478,7 @@ public class ManageDistribution extends TestCaseHelper {
 
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameSecond);
-    List<String> secondProgramValuesToBeVerified = new ArrayList<String>();
+    List<String> secondProgramValuesToBeVerified = new ArrayList<>();
     secondProgramValuesToBeVerified.add(programSecond);
     valuesPresentInDropDown = distributionPage.getAllSelectOptionsFromProgram();
     verifyAllSelectFieldValues(secondProgramValuesToBeVerified, valuesPresentInDropDown);
@@ -480,7 +487,7 @@ public class ManageDistribution extends TestCaseHelper {
 
 
     distributionPage.selectValueFromProgram(programSecond);
-    List<String> periodValuesToBeVerified = new ArrayList<String>();
+    List<String> periodValuesToBeVerified = new ArrayList<>();
     actualSelectFieldElement = distributionPage.getFirstSelectedOptionFromPeriod();
 
     verifySelectedOptionFromSelectField(periodDisplayedByDefault, actualSelectFieldElement);
@@ -509,18 +516,27 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                                       String facilityCodeFirst, String facilityCodeSecond,
-                                                                       String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithDeliveryZone(String userSIC, String password,
+                                                                       String deliveryZoneCodeFirst,
+                                                                       String deliveryZoneCodeSecond,
+                                                                       String deliveryZoneNameFirst,
+                                                                       String deliveryZoneNameSecond,
+                                                                       String facilityCodeFirst,
+                                                                       String facilityCodeSecond,
+                                                                       String programFirst, String programSecond,
+                                                                       String schedule, String period,
+                                                                       Integer totalNumberOfPeriods) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
+
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.deleteDeliveryZoneToFacilityMapping(deliveryZoneNameFirst);
@@ -535,18 +551,26 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                                   String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+  public void testVerifyNoFacilityToBeShownIfNotMappedWithPrograms(String userSIC, String password,
+                                                                   String deliveryZoneCodeFirst,
+                                                                   String deliveryZoneCodeSecond,
+                                                                   String deliveryZoneNameFirst,
+                                                                   String deliveryZoneNameSecond,
                                                                    String facilityCodeFirst, String facilityCodeSecond,
-                                                                   String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                                   String programFirst, String programSecond,
+                                                                   String schedule, String period,
+                                                                   Integer totalNumberOfPeriods) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
+
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.deleteProgramToFacilityMapping(programFirst);
@@ -561,18 +585,23 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+  public void testVerifyNoFacilityToBeShownIfInactive(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                      String deliveryZoneCodeSecond,
                                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                       String facilityCodeFirst, String facilityCodeSecond,
-                                                      String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                      String programFirst, String programSecond, String schedule,
+                                                      String period, Integer totalNumberOfPeriods) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
+
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.updateActiveStatusOfFacility(facilityCodeFirst, "false");
@@ -588,20 +617,25 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyGeoZonesOrderOnFacilityListPage(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+  public void testVerifyGeoZonesOrderOnFacilityListPage(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                        String deliveryZoneCodeSecond,
                                                         String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                                         String facilityCodeFirst, String facilityCodeSecond,
-                                                        String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                                        String programFirst, String programSecond, String schedule,
+                                                        String period, Integer totalNumberOfPeriods) throws Exception {
 
     String geoZoneFirst = "District1";
     String geoZoneSecond = "Ngorongoro";
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, geoZoneFirst, geoZoneSecond, geoZoneSecond);
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList,
+      programSecond, geoZoneFirst, geoZoneSecond, geoZoneSecond);
+
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
       programFirst, programSecond, schedule);
+
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -654,7 +688,7 @@ public class ManageDistribution extends TestCaseHelper {
         break;
       }
     }
-    assertTrue(valueToBeVerified + " should not exist in period drop down", flag == false);
+    assertTrue(valueToBeVerified + " should not exist in period drop down", !flag);
   }
 
 
@@ -674,7 +708,7 @@ public class ManageDistribution extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
+    ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
   }
 
 
