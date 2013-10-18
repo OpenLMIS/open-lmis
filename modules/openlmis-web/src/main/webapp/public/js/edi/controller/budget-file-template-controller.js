@@ -30,7 +30,7 @@ function BudgetFileTemplateController($scope, budgetFileTemplate, BudgetFileTemp
 
       if (column.include && (isUndefined(column.position) || parseInt(column.position, 10) === 0 )) {
         $scope.message = "";
-        $scope.error = "budget.file.invalid.position";
+        $scope.error = "file.invalid.position";
         emptyPosition = true;
       } else if (!isUndefined(column.position)) {
         column.position = parseInt(column.position, 10);
