@@ -19,5 +19,5 @@ CREATE TABLE budget_configuration (
 );
 
 INSERT INTO budget_configuration
-(headerInFile) VALUES
-(FALSE);
+(headerInFile, createdBy) VALUES
+(FALSE, (select id from users where userName = 'Admin123'));

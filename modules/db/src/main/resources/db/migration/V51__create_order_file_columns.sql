@@ -27,10 +27,10 @@ CREATE TABLE order_file_columns (
 );
 
 INSERT INTO order_file_columns
-(position, openLmisField, dataFieldLabel, nested, keyPath, columnLabel, format) VALUES
-(1, TRUE, 'header.order.number', 'order', 'id', 'Order number', ''),
-(2, TRUE, 'create.facility.code', 'order', 'rnr/facility/code', 'Facility code', ''),
-(3, TRUE, 'header.product.code', 'lineItem', 'productCode', 'Product code', ''),
-(4, TRUE, 'header.quantity.approved', 'lineItem', 'quantityApproved', 'Approved quantity', ''),
-(5, TRUE, 'label.period', 'order', 'rnr/period/startDate', 'Period', 'MM/yy'),
-(6, TRUE, 'header.order.date', 'order', 'createdDate', 'Order date', 'dd/MM/yy');
+(position, openLmisField, dataFieldLabel, nested, keyPath, columnLabel, format, createdBy) VALUES
+(1, TRUE, 'header.order.number', 'order', 'id', 'Order number', '',(select id from users where userName = 'Admin123')),
+(2, TRUE, 'create.facility.code', 'order', 'rnr/facility/code', 'Facility code', '', (select id from users where userName = 'Admin123')),
+(3, TRUE, 'header.product.code', 'lineItem', 'productCode', 'Product code', '',(select id from users where userName = 'Admin123')),
+(4, TRUE, 'header.quantity.approved', 'lineItem', 'quantityApproved', 'Approved quantity', '', (select id from users where userName = 'Admin123')),
+(5, TRUE, 'label.period', 'order', 'rnr/period/startDate', 'Period', 'MM/yy', (select id from users where userName = 'Admin123')),
+(6, TRUE, 'header.order.date', 'order', 'createdDate', 'Order date', 'dd/MM/yy', (select id from users where userName = 'Admin123'));

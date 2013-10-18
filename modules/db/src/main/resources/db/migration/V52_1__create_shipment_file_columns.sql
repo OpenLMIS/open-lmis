@@ -23,10 +23,10 @@ CREATE TABLE shipment_file_columns (
 );
 
 INSERT INTO shipment_file_columns
-(name, dataFieldLabel, position, include, mandatory, datePattern) VALUES
-('orderId', 'header.order.number', 1, TRUE, TRUE, null),
-('productCode', 'header.product.code', 2, TRUE, TRUE, null),
-('quantityShipped', 'header.quantity.shipped', 3, TRUE, TRUE, null),
-('cost', 'header.cost', 4, FALSE, FALSE, null),
-('packedDate', 'header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy'),
-('shippedDate', 'header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');
+(name, dataFieldLabel, position, include, mandatory, datePattern, createdBy) VALUES
+('orderId', 'header.order.number', 1, TRUE, TRUE, null, (select id from users where userName = 'Admin123')),
+('productCode', 'header.product.code', 2, TRUE, TRUE, null, (select id from users where userName = 'Admin123')),
+('quantityShipped', 'header.quantity.shipped', 3, TRUE, TRUE, null, (select id from users where userName = 'Admin123')),
+('cost', 'header.cost', 4, FALSE, FALSE, null, (select id from users where userName = 'Admin123')),
+('packedDate', 'header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy', (select id from users where userName = 'Admin123')),
+('shippedDate', 'header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy', (select id from users where userName = 'Admin123'));

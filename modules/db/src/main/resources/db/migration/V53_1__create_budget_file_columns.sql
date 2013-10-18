@@ -23,9 +23,9 @@ CREATE TABLE budget_file_columns (
 );
 
 INSERT INTO budget_file_columns
-(name, dataFieldLabel, position, include, mandatory, datePattern) VALUES
-('facilityCode', 'header.facility.code', 1, TRUE, TRUE, null),
-('programCode', 'header.program.code', 2, TRUE, TRUE, null),
-('periodStartDate', 'header.period.start.date', 3, TRUE, TRUE, 'dd/MM/yy'),
-('allocatedBudget', 'header.allocatedBudget', 4, TRUE, TRUE, null),
-('notes', 'header.notes', 5, FALSE, FALSE, null);
+(name, dataFieldLabel, position, include, mandatory, datePattern, createdBy) VALUES
+('facilityCode', 'header.facility.code', 1, TRUE, TRUE, null,(select id from users where userName = 'Admin123')),
+('programCode', 'header.program.code', 2, TRUE, TRUE, null, (select id from users where userName = 'Admin123')),
+('periodStartDate', 'header.period.start.date', 3, TRUE, TRUE, 'dd/MM/yy', (select id from users where userName = 'Admin123')),
+('allocatedBudget', 'header.allocatedBudget', 4, TRUE, TRUE, null, (select id from users where userName = 'Admin123')),
+('notes', 'header.notes', 5, FALSE, FALSE, null, (select id from users where userName = 'Admin123'));

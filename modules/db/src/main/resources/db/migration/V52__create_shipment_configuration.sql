@@ -19,5 +19,5 @@ CREATE TABLE shipment_configuration (
 );
 
 INSERT INTO shipment_configuration
-(headerInFile) VALUES
-(FALSE);
+(headerInFile, createdBy) VALUES
+(FALSE, (select id from users where userName = 'Admin123'));
