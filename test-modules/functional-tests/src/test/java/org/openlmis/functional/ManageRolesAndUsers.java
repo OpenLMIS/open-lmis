@@ -203,7 +203,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userRoleList.add(CREATE_REQUISITION);
     userRoleList.add(AUTHORIZE_REQUISITION);
     userRoleList.add(APPROVE_REQUISITION);
-    createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, true);
+    createRoleAndAssignRights(homePage, userRoleList, LAB_IN_CHARGE, LAB_IN_CHARGE, "Requisition");
 
 
     RolesPage rolesPage = new RolesPage(testWebDriver);
@@ -219,10 +219,11 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     setupWarehouseRolesAndRights(facilityCodeFirst, facilityCodeSecond, programFirst, schedule, "SHIPMENT");
     warehouse1Name = dbWrapper.getWarehouse1Name(facilityCodeFirst);
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION", warehouse1Name, warehouseRole);
-
+    userPage.saveUser();
+    userPage.verifyUserUpdated("Jasmine", "Doe");
     setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
     userPage.clickViewHere();
-    userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, "");
+    userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, rolename);
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.clickDeliveryZonesAccordion();
@@ -344,12 +345,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyExpandAll();
     userPage.verifyCollapseAll();
 
-    userPage.enterMyFacilityAndMySupervisedFacilityAndWarehouseRolesData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType, warehouse1, warehouseRole);
+    userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
     return userID;
   }
 
 
-  private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, boolean programDependent) throws IOException {
+  private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
     rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
   }
