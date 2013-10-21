@@ -18,7 +18,6 @@ import org.mockito.Mock;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.web.response.OpenLmisResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import static org.hamcrest.CoreMatchers.is;

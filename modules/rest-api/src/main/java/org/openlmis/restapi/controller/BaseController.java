@@ -12,14 +12,13 @@ package org.openlmis.restapi.controller;
 
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static org.openlmis.restapi.response.RestResponse.error;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 public class BaseController {
   public static final String ACCEPT_JSON = "Accept=application/json";
@@ -31,7 +30,7 @@ public class BaseController {
     if (ex instanceof AccessDeniedException) {
       return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
     }
-    if (ex instanceof MissingServletRequestParameterException) {
+    if (ex instanceof MissingServletRequestParameterException || ex instanceof HttpMessageNotReadableException) {
       return error(ex.getMessage(), BAD_REQUEST);
     }
     return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
