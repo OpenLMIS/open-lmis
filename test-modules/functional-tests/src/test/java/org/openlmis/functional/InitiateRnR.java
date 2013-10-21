@@ -33,6 +33,7 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.util.Arrays.asList;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -41,13 +42,11 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class InitiateRnR extends TestCaseHelper {
 
-  public static final String STORE_IN_CHARGE = "store in-charge";
   public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
   public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
   public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
   public static final String SUBMITTED = "SUBMITTED";
   public static final String AUTHORIZED = "AUTHORIZED";
-  public static final String IN_APPROVAL = "IN_APPROVAL";
   public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
@@ -108,10 +107,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void setupUserWithRightsAndInitiateRequisitionData(String user,
                                                             String rights) throws IOException, SQLException {
     String[] rightList = rights.split(",");
-    List<String> rightsList = new ArrayList<String>();
-    for (int i = 0; i < rightList.length; i++)
-      rightsList.add(rightList[i]);
-    setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", rightsList);
+
+    setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", asList(rightList));
   }
 
   @When("^I click proceed$")
@@ -215,7 +212,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2,
                                             String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
@@ -257,7 +254,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testApproveRegimen(String program, String userSIC, String categoryCode, String password,
                                  String regimenCode, String regimenName, String regimenCode2,
                                  String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
@@ -290,7 +287,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testApproveRegimenWithoutSave(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2,
                                             String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
@@ -302,7 +299,8 @@ public class InitiateRnR extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+
     dbWrapper.insertValuesInRequisition(false);
     dbWrapper.insertValuesInRegimenLineItems("100", "200", "300", "testing");
     dbWrapper.updateRequisitionStatus(SUBMITTED, userSIC, "HIV");
@@ -323,7 +321,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRnRWithInvisibleProgramRegimenColumn(String program, String userSIC, String categoryCode,
                                                        String password, String regimenCode, String regimenName,
                                                        String regimenCode2, String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -345,7 +343,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void testRnRWithInActiveRegimen(String program, String userSIC, String categoryCode, String password,
                                          String regimenCode, String regimenName, String regimenCode2,
                                          String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -366,7 +364,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                                   String password, String regimenCode,
                                                                   String regimenName, String regimenCode2,
                                                                   String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -383,7 +381,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                                 String password, String regimenCode,
                                                                 String regimenName, String regimenCode2,
                                                                 String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -400,7 +398,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                                   String password, String regimenCode,
                                                                   String regimenName, String regimenCode2,
                                                                   String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -417,7 +415,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                                     String regimenCode, String regimenName,
                                                                     String regimenCode2,
                                                                     String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -431,15 +429,15 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testRnRErrorMessageForAuthorizerWithRequisitionInitiatedAndSubmittedForCurrentPeriod(String program,
-                                                                                                   String userSIC,
-                                                                                                   String categoryCode,
-                                                                                                   String password,
-                                                                                                   String regimenCode,
-                                                                                                   String regimenName,
-                                                                                                   String regimenCode2,
-                                                                                                   String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+  public void shouldVerifyNoRequisitionForAuthorizationMessage(String program,
+                                                               String userSIC,
+                                                               String categoryCode,
+                                                               String password,
+                                                               String regimenCode,
+                                                               String regimenName,
+                                                               String regimenCode2,
+                                                               String regimenName2) throws Exception {
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -478,12 +476,12 @@ public class InitiateRnR extends TestCaseHelper {
                                                                         String regimenName,
                                                                         String regimenCode2,
                                                                         String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
 
-    List<String> rightsList1 = new ArrayList<String>();
+    List<String> rightsList1 = new ArrayList<>();
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
@@ -556,33 +554,33 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testEmergencyRnRApprovedAndConvertedToOrder(String program,
-                                       String userSIC,
-                                       String categoryCode,
-                                       String password,
-                                       String regimenCode,
-                                       String regimenName,
-                                       String regimenCode2,
-                                       String regimenName2) throws Exception {
+                                                          String userSIC,
+                                                          String categoryCode,
+                                                          String password,
+                                                          String regimenCode,
+                                                          String regimenName,
+                                                          String regimenCode2,
+                                                          String regimenName2) throws Exception {
     String LMU_IN_CHARGE = "lmuincharge";
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
 
-    List<String> rightsList1 = new ArrayList<String>();
+    List<String> rightsList1 = new ArrayList<>();
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
       rightsList1);
 
-    List<String> rightsList2 = new ArrayList<String>();
+    List<String> rightsList2 = new ArrayList<>();
     rightsList2.add(APPROVE_REQUISITION);
     rightsList2.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", "openLmis",
       rightsList2);
 
-    List<String> rightsList3 = new ArrayList<String>();
+    List<String> rightsList3 = new ArrayList<>();
     rightsList3.add(CONVERT_TO_ORDER);
     rightsList3.add("VIEW_ORDER");
     createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE, "openLmis",
@@ -615,7 +613,7 @@ public class InitiateRnR extends TestCaseHelper {
     homePage1.logout(baseUrlGlobal);
 
     HomePage homePage2 = loginPage.loginAs("lmu", password);
-    ApprovePage approvePage=homePage2.navigateToApprove();
+    ApprovePage approvePage = homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
     approvePage.verifyAndClickRequisitionPresentForApproval();
     assertEquals("0", approvePage.getApprovedQuantity());
@@ -634,20 +632,20 @@ public class InitiateRnR extends TestCaseHelper {
     homePage2.logout(baseUrlGlobal);
 
     HomePage homePage3 = loginPage.loginAs(LMU_IN_CHARGE, password);
-    ConvertOrderPage convertOrderPage=homePage3.navigateConvertToOrder();
+    ConvertOrderPage convertOrderPage = homePage3.navigateConvertToOrder();
     convertOrderPage.verifyNoRequisitionPendingMessage();
 
-    ViewOrdersPage viewOrdersPage= homePage3.navigateViewOrders();
+    ViewOrdersPage viewOrdersPage = homePage3.navigateViewOrders();
     viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();
 
-    dbWrapper.insertFulfilmentRoleAssignment(LMU_IN_CHARGE, LMU_IN_CHARGE,"F10");
+    dbWrapper.insertFulfilmentRoleAssignment(LMU_IN_CHARGE, LMU_IN_CHARGE, "F10");
     homePage3.navigateHomePage();
     homePage3.navigateConvertToOrder();
     convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2014", "Village Dispensary");
     convertOrderPage.convertToOrder();
 
     homePage3.navigateHomePage();
-    ViewOrdersPage viewOrdersPage1=homePage3.navigateViewOrders();
+    ViewOrdersPage viewOrdersPage1 = homePage3.navigateViewOrders();
     viewOrdersPage1.isFirstRowPresent();
 
   }
@@ -661,7 +659,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                    String regimenName,
                                                    String regimenCode2,
                                                    String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -689,7 +687,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                              String regimenName,
                                                              String regimenCode2,
                                                              String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -720,7 +718,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                 String regimenName,
                                                 String regimenCode2,
                                                 String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -753,12 +751,12 @@ public class InitiateRnR extends TestCaseHelper {
                                                                               String regimenName,
                                                                               String regimenCode2,
                                                                               String regimenName2) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
 
-    List<String> rightsList1 = new ArrayList<String>();
+    List<String> rightsList1 = new ArrayList<>();
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
@@ -805,15 +803,14 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testRnRErrorMessageForAuthorizerWhenNoPeriodDefined(String program,
-                                                                  String userSIC,
-                                                                  String categoryCode,
-                                                                  String password,
-                                                                  String regimenCode,
-                                                                  String regimenName,
-                                                                  String regimenCode2,
-                                                                  String regimenName2) throws Exception {
-    String errorMessage = "No current period defined. Please contact the Admin.";
+  public void shouldVerifyNoCurrentPeriodDefinedMessage(String program,
+                                                        String userSIC,
+                                                        String categoryCode,
+                                                        String password,
+                                                        String regimenCode,
+                                                        String regimenName,
+                                                        String regimenCode2,
+                                                        String regimenName2) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(AUTHORIZE_REQUISITION);
@@ -826,6 +823,8 @@ public class InitiateRnR extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+
+    String errorMessage = "No current period defined. Please contact the Admin.";
     verifyErrorMessages(errorMessage);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyErrorMessages(errorMessage);
@@ -833,7 +832,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRBeginningBalance(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
@@ -888,23 +887,23 @@ public class InitiateRnR extends TestCaseHelper {
         message));
   }
 
-  private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment,
-                                           String patientstoinitiatetreatment, String patientsstoppedtreatment,
+  private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
+                                           String patientsToInitiateTreatment, String patientsStoppedTreatment,
                                            String remarks) {
-    SeleneseTestBase.assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentValue());
-    SeleneseTestBase.assertEquals(patientstoinitiatetreatment,
+    SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
+    SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
       initiateRnRPage.getPatientsToInitiateTreatmentValue());
-    SeleneseTestBase.assertEquals(patientsstoppedtreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
+    SeleneseTestBase.assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
     SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
-  private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsontreatment,
-                                                    String patientstoinitiatetreatment,
-                                                    String patientsstoppedtreatment, String remarks) {
-    SeleneseTestBase.assertEquals(patientsontreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
-    SeleneseTestBase.assertEquals(patientstoinitiatetreatment,
+  private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
+                                                    String patientsToInitiateTreatment,
+                                                    String patientsStoppedTreatment, String remarks) {
+    SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
+    SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
       initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
-    SeleneseTestBase.assertEquals(patientsstoppedtreatment,
+    SeleneseTestBase.assertEquals(patientsStoppedTreatment,
       initiateRnRPage.getPatientsStoppedTreatmentInputValue());
     SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
   }
