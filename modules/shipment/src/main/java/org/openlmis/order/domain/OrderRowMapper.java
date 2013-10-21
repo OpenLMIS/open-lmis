@@ -22,7 +22,7 @@ import java.sql.SQLException;
 public class OrderRowMapper implements RowMapper {
   @Override
   public Order mapRow(ResultSet rs, int rowNum) throws SQLException {
-    return new Order(Long.parseLong(rs.getString("id")), new Rnr(Long.parseLong(rs.getString("rnrid"))),
+    return new Order(new Rnr(Long.parseLong(rs.getString("id"))),
       new SupplyLine(Long.parseLong(rs.getString("supplylineid"))));
   }
 }

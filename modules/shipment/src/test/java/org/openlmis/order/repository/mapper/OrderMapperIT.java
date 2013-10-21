@@ -168,7 +168,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrId = ?", asList(order.getRnr().getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", asList(order.getRnr().getId()));
 
     resultSet.next();
 
