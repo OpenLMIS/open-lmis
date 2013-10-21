@@ -30,8 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
-import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 
 @Category(IntegrationTests.class)
@@ -147,25 +146,27 @@ public class ProgramSupportedMapperIT {
     Program program2 = make(a(defaultProgram, with(programCode, GREEN_FEVER)));
     programMapper.insert(program2);
 
+    Program inactiveProgram = make(a(defaultProgram, with(programCode, "globallyInactiveProgram"), with(programActive, false)));
+    programMapper.insert(inactiveProgram);
+
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
     ProgramSupported programSupported2 = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program2),with(isActive,false)));
+    ProgramSupported inactiveProgramSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, inactiveProgram),with(isActive,true)));
 
     programSupportedMapper.insert(programSupported);
     programSupportedMapper.insert(programSupported2);
+    programSupportedMapper.insert(inactiveProgramSupported);
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getActiveByFacilityId(facility.getId());
+    List<ProgramSupported> programsSupported = programSupportedMapper.getActiveProgramsByFacilityId(facility.getId());
 
     assertThat(programsSupported.size(), is(1));
-    assertThat(programsSupported.get(0).getFacilityId(), is(programSupported.getFacilityId()));
-    assertThat(programsSupported.get(0).getStartDate(), is(programSupported.getStartDate()));
-    assertThat(programsSupported.get(0).getActive(), is(programSupported.getActive()));
-    assertThat(programsSupported.get(0).getProgram().getId(), is(programSupported.getProgram().getId()));
     assertThat(programsSupported.get(0).getProgram().getCode(), is(programSupported.getProgram().getCode()));
-    assertThat(programsSupported.get(0).getProgram().getName(), is(programSupported.getProgram().getName()));
   }
 
 }

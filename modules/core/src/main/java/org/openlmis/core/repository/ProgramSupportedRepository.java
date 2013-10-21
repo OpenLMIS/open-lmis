@@ -98,6 +98,6 @@ public class ProgramSupportedRepository {
   }
 
   public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
-    return programSupportedMapper.getActiveByFacilityId(facilityId);
+    return programSupportedMapper.getActiveProgramsByFacilityId(facilityId);
   }
 }

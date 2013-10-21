@@ -20,7 +20,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
@@ -216,11 +215,11 @@ public class ProgramSupportedRepositoryTest {
 
     Long facilityId = 1L;
     List<ProgramSupported> programSupported = asList(new ProgramSupported());
-    when(programSupportedMapper.getActiveByFacilityId(facilityId)).thenReturn(programSupported);
+    when(programSupportedMapper.getActiveProgramsByFacilityId(facilityId)).thenReturn(programSupported);
 
     programSupportedRepository.getActiveByFacilityId(facilityId);
 
-    verify(programSupportedMapper).getActiveByFacilityId(facilityId);
+    verify(programSupportedMapper).getActiveProgramsByFacilityId(facilityId);
 
   }
 
