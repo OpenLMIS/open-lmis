@@ -113,8 +113,7 @@ public class DistributionMapperIT {
 
     mapper.insert(distribution);
 
-    List params = Arrays.asList(distribution.getId());
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM distributions WHERE id = ?", params);
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM distributions WHERE id = ?", distribution.getId());
     resultSet.next();
 
 

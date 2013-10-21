@@ -113,9 +113,7 @@ public class OrderMapperIT {
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
-    List<Long> orderIds = new ArrayList();
-    orderIds.add(order.getId());
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", orderIds);
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getId());
     resultSet.next();
     assertThat(resultSet.getLong("id"), is(order.getId()));
   }
@@ -168,7 +166,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", asList(order.getRnr().getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getRnr().getId());
 
     resultSet.next();
 

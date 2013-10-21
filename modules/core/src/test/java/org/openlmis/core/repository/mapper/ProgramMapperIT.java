@@ -314,7 +314,7 @@ public class ProgramMapperIT {
     programMapper.setFeedSendFlag(program, true);
     boolean flag;
 
-    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", asList("HIV"))) {
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", "HIV")) {
       set.next();
       flag = set.getBoolean(1);
     }
@@ -329,7 +329,7 @@ public class ProgramMapperIT {
     programMapper.setFeedSendFlag(program, false);
     boolean flag = true;
 
-    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", asList("HIV"))) {
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", "HIV")) {
       set.next();
       flag = set.getBoolean(1);
     }

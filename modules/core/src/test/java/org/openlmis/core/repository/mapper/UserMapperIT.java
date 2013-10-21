@@ -369,7 +369,7 @@ public class UserMapperIT {
     assertThat(insertCount, is(1));
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM email_notifications WHERE receiver = ?",
-      asList("toUser@email.com"));
+      "toUser@email.com");
     resultSet.next();
     assertThat(resultSet.getString("receiver"), is("toUser@email.com"));
     assertThat(resultSet.getString("subject"), is("subject for email"));

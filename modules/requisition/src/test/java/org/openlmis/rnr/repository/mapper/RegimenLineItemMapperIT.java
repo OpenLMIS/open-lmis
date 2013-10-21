@@ -127,12 +127,12 @@ public class RegimenLineItemMapperIT {
     regimenLineItem.setRemarks("Remarks");
     regimenLineItem.setModifiedBy(1L);
 
-    ResultSet resultSetBeforeUpdate = queryExecutor.execute("SELECT * from regimen_line_items where id=?", Arrays.asList(regimenLineItem.getId()));
+    ResultSet resultSetBeforeUpdate = queryExecutor.execute("SELECT * from regimen_line_items where id=?", regimenLineItem.getId());
     resultSetBeforeUpdate.next();
 
     mapper.update(regimenLineItem);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * from regimen_line_items where id=?", Arrays.asList(regimenLineItem.getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * from regimen_line_items where id=?", regimenLineItem.getId());
     resultSet.next();
 
     assertThat(resultSet.getInt("patientsToInitiateTreatment"), is(100));
