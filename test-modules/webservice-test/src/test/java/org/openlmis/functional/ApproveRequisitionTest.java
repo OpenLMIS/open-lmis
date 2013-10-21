@@ -212,8 +212,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
   public String submitReport() throws Exception {
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dburlGlobal = getProperty("dburl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
+    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
+    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
 
     HttpClient client = new HttpClient();
     client.createContext();

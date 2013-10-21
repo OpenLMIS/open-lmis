@@ -29,7 +29,7 @@ import static java.lang.System.getProperty;
 public class TestCaseHelper {
 
   public static DBWrapper dbWrapper;
-  protected static String baseUrlGlobal, dburlGlobal;
+  protected static String baseUrlGlobal, dbUrlGlobal;
   protected static String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
@@ -41,9 +41,9 @@ public class TestCaseHelper {
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dburlGlobal = getProperty("dburl", DEFAULT_DB_URL);
+    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
 
-    dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
+    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
     dbWrapper.deleteData();
 
     if (!isSeleniumStarted) {

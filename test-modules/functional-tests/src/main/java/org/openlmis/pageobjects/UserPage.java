@@ -308,7 +308,8 @@ public class UserPage extends Page {
     resetPasswordDone.click();
   }
 
-  public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName, String baseurl, String dburl) throws IOException, SQLException {
+  public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName,
+                                          String baseurl, String dbUrl) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -333,7 +334,7 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertEquals(expectedMessage, successMessage.getText());
     viewHereLink.click();
 
-    DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
+    DBWrapper dbWrapper = new DBWrapper(baseurl, dbUrl);
     String userID = dbWrapper.getUserID(userName);
 
     return userID;

@@ -511,8 +511,10 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
 
-  public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue, String productPrimaryName, String productCode, String category, String baseurl, String dburl) throws IOException, SQLException {
-    DBWrapper dbWrapper = new DBWrapper(baseurl, dburl);
+  public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
+                                        String productPrimaryName, String productCode, String category,
+                                        String baseurl, String dbUrl) throws IOException, SQLException {
+    DBWrapper dbWrapper = new DBWrapper(baseurl, dbUrl);
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();
     testWebDriver.sleep(1000);

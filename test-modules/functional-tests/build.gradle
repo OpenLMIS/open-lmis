@@ -45,6 +45,8 @@ dependencies {
     testCompile 'postgresql:postgresql:9.0-801.jdbc4'
 }
 
+String connectionString = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
+
 test {
     exclude '**/org/openlmis/functional/*.*'
 }
@@ -64,7 +66,7 @@ task requisitionSmokeTest(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'firefox')
-            System.properties.get('dburl', "$dburl")
+            System.properties.get('dbUrl', connectionString)
             System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
@@ -87,7 +89,7 @@ task distributionSmokeTest(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'firefox')
-            System.properties.get('dburl', "$dburl")
+            System.properties.get('dbUrl', connectionString)
             System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
@@ -110,7 +112,7 @@ task e2eTestChrome(type: Test) {
         jsonformat = "json-pretty:${buildDir}/reports/tests/bddTest-report-functional/cucumber-report-functional.json"
         javaexec {
             System.properties.get('browser', 'chrome')
-            System.properties.get('dburl', "$dburl")
+            System.properties.get('dbUrl', connectionString)
             System.properties.get('baseurl', "$baseurl")
             systemProperties System.properties
             main = "cucumber.api.cli.Main"
@@ -217,7 +219,7 @@ repositories {
 task adminTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
-        systemProperties['dburl'] = "$dburl"
+        systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = "$baseurl"
 
         suites 'src/test/java/org/openlmis/functional/testng-admin.xml'
@@ -236,7 +238,7 @@ adminTest.doFirst() {
 task requisitionTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
-        systemProperties['dburl'] = "$dburl"
+        systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = "$baseurl"
 
         suites 'src/test/java/org/openlmis/functional/testng-requisition.xml'
@@ -255,7 +257,7 @@ requisitionTest.doFirst() {
 task distributionTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
-        systemProperties['dburl'] = "$dburl"
+        systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = "$baseurl"
 
         suites 'src/test/java/org/openlmis/functional/testng-distribution.xml'
@@ -274,7 +276,7 @@ distributionTest.doFirst() {
 task offlineTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'chromeM'
-        systemProperties['dburl'] = 'jdbc:postgresql://192.168.34.2/open_lmis'
+        systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = 'https://qa-openlmis.org/'
 
         suites 'src/test/java/org/openlmis/functional/testng-offline.xml'

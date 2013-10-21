@@ -72,7 +72,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-      userPage.enterAndVerifyUserDetails(map.get("UserName").toString(), map.get("Email").toString(), map.get("FirstName").toString(), map.get("LastName").toString(), baseUrlGlobal, dburlGlobal);
+      userPage.enterAndVerifyUserDetails(map.get("UserName").toString(), map.get("Email").toString(), map.get("FirstName").toString(), map.get("LastName").toString(), baseUrlGlobal, dbUrlGlobal);
   }
 
   @When("^I disable user \"([^\"]*)\"$")
@@ -280,7 +280,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = homePage.navigateToUser();
     String email = "Jasmine_Doe@openlmis.com";
-    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dburlGlobal);
+    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dbUrlGlobal);
     dbWrapper.updateUser(passwordUsers, email);
 
     userPage.enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(deliveryZoneNameFirst, programFirst, FIELD_COORDINATOR);
@@ -303,7 +303,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
 
     String email = "Jasmine_Doe@openlmis.com";
-    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dburlGlobal);
+    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dbUrlGlobal);
     dbWrapper.updateUser(passwordUsers, email);
 
     homePage.navigateToUser();
@@ -341,7 +341,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType, String warehouse1, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dbUrlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
 
     userPage.verifyExpandAll();

@@ -241,7 +241,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I add non full supply items & verify total cost$")
   public void enterNonFullSupplyAndVerifyTotalCost() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics", baseUrlGlobal, dburlGlobal);
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics",
+      baseUrlGlobal, dbUrlGlobal);
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
   }
@@ -404,7 +405,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType, String warehouse1, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dbUrlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
     userPage.enterMyFacilityAndMySupervisedFacilityAndWarehouseRolesData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType, warehouse1, warehouseRole);
     return userID;
