@@ -54,7 +54,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String operatedBy = "MoH";
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
-  public static String warehouse1Name;
+  public static String warehouseName;
   public static final String warehouseRole = "SHIPMENT";
 
   @BeforeMethod(groups = {"admin"})
@@ -217,11 +217,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = new UserPage(testWebDriver);
     setupWarehouseRolesAndRights(facilityCodeFirst, facilityCodeSecond, programFirst, schedule, "SHIPMENT");
-    warehouse1Name = dbWrapper.getWarehouse1Name(facilityCodeFirst);
-    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION", warehouse1Name, warehouseRole);
+    warehouseName = dbWrapper.getWarehouse1Name(facilityCodeFirst);
+    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
+    userPage.assignWarehouse(warehouseName,warehouseRole);
     userPage.saveUser();
     userPage.verifyUserUpdated("Jasmine", "Doe");
-    setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
+    setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
+            deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule,
+            rolename);
     userPage.clickViewHere();
     userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, rolename);
     userPage.clickSaveButton();
@@ -337,7 +340,10 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
-  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType, String warehouse1, String warehouseRole) throws IOException, SQLException {
+  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
+                                          String userFirstName, String userLastName, String userUserName,
+                                          String facility, String program, String supervisoryNode, String role,
+                                          String roleType) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
     String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dbUrlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
@@ -361,12 +367,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   }
 
   private void verifyWarehouseAvailableForWarehouseRoles(UserPage userPage) throws IOException, SQLException {
-    assertTrue(userPage.getAllWarehouseToSelect().contains(warehouse1Name));
+    assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
-    dbWrapper.disableWarehouse(warehouse1Name);
-    assertFalse(userPage.getAllWarehouseToSelect().contains(warehouse1Name));
-    dbWrapper.enableWarehouse(warehouse1Name);
-    assertTrue(userPage.getAllWarehouseToSelect().contains(warehouse1Name));
+    dbWrapper.disableWarehouse(warehouseName);
+    assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
+    dbWrapper.enableWarehouse(warehouseName);
+    assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
 
 

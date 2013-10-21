@@ -165,7 +165,7 @@ public class UserPage extends Page {
     @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
     private static WebElement programToDeliver = null;
 
-    @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
+    @FindBy(how = How.XPATH, using = "(//input[@type='text'])[18]")
     private static WebElement rolesInputFieldMDeliveryZone = null;
 
     @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
