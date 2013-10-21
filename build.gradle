@@ -30,13 +30,14 @@ buildscript {
     dependencies {
         classpath "net.saliman:gradle-cobertura-plugin:1.2.0"
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
-        classpath 'net.saliman:gradle-properties-plugin:1.1.1'
+        classpath 'net.saliman:gradle-properties-plugin:1.2.0'
 
 
     }
 }
 subprojects {
     apply plugin: 'idea'
+    apply plugin: 'properties'
     idea {
         project {
             ext.languageLevel = '1.7'
