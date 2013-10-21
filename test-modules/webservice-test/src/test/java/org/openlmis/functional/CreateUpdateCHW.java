@@ -15,7 +15,6 @@ import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -23,13 +22,13 @@ import org.testng.annotations.Test;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
 public class CreateUpdateCHW extends TestCaseHelper {
-  public WebDriver driver;
-  public static final String GET = "GET";
   public static final String POST = "POST";
   public static final String PUT = "PUT";
   public static final String FULL_JSON_TXT_FILE_NAME = "AgentValid.txt";
@@ -45,8 +44,6 @@ public class CreateUpdateCHW extends TestCaseHelper {
   public static final String FALSE_FLAG = "f";
   public static final String TRUE_FLAG = "t";
   public static final String JSON_EXTENSION = ".json";
-  public static final int AUTH_FAILED_STATUS_CODE = 401;
-  public static final int BAD_REQUEST_STATUS_CODE = 400;
 
 
   @BeforeMethod(groups = {"webservice"})
@@ -145,7 +142,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -165,7 +163,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     agentJson.setActive("false");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
@@ -184,7 +183,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntityEnabledFalse.getResponse(), responseEntityEnabledFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
+    assertTrue("Showing response as : " + responseEntityEnabledFalse.getResponse(),
+      responseEntityEnabledFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
 
   }
 
@@ -204,7 +204,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -232,7 +233,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
 
   }
 
@@ -253,7 +255,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     agentJson.setActive("false");
 
@@ -262,7 +265,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
     assertEquals(FALSE_FLAG, dbWrapper.getActivePropertyOfFacility(AGENT_CODE));
   }
@@ -293,7 +297,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
@@ -306,7 +311,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
@@ -350,7 +356,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
@@ -375,7 +382,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
@@ -406,7 +414,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -435,7 +444,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
 
 
@@ -461,7 +471,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
   }
 
 
@@ -481,7 +492,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Agent is not a virtual facility\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"error\":\"Agent is not a virtual facility\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -500,7 +512,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -526,7 +539,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -541,19 +555,13 @@ public class CreateUpdateCHW extends TestCaseHelper {
     agentJson.setActive(ACTIVE_STATUS);
     String modifiedJson = getJsonStringFor(agentJson).replace(':', ';');
 
-    ResponseEntity responseEntity = client.SendJSON(modifiedJson,
-      CREATE_URL,
-      POST,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
-
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedJson,
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertEquals(responseEntityUpdated.getStatus(), BAD_REQUEST_STATUS_CODE);
+
+    assertEquals(responseEntityUpdated.getStatus(), SC_BAD_REQUEST);
 
   }
 
@@ -567,7 +575,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -589,7 +598,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -617,7 +627,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -639,7 +650,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -670,7 +682,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       dbWrapper.getAuthToken(commTrackUser));
 
 
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -692,7 +705,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
   }
 
@@ -712,7 +726,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + getJsonStringFor(agentJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " +
+      getJsonStringFor(agentJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
 
   }
 
@@ -742,7 +757,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -764,7 +780,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -793,7 +810,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
 
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString, responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -815,7 +833,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
   }
 
@@ -845,7 +864,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
   }
 
@@ -875,7 +895,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("Active should be True/False"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("Active should be True/False"));
 
   }
 
@@ -901,7 +922,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
 
@@ -922,14 +944,9 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("BAD_REQUEST"));
 
-    ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-      PUT,
-      commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
-    assertEquals(responseEntityUpdated.getStatus(), BAD_REQUEST_STATUS_CODE);
+
+    assertEquals(responseEntity.getStatus(), SC_BAD_REQUEST);
   }
 
   @Test(groups = {"webservice"})
@@ -948,7 +965,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     agentJson.setAgentCode("CASESENSITIVE");
 
@@ -957,7 +975,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " + getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
+      getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
 
   }
 
@@ -978,7 +997,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     String agent_code_updated = "CASESENSITIVE";
     agentJson.setAgentCode(agent_code_updated);
@@ -989,7 +1009,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " + getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
+      getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
 
@@ -1009,7 +1030,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString, responseEntity.getResponse().contains("Active should be True/False"));
+    assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
+      responseEntity.getResponse().contains("Active should be True/False"));
 
   }
 
@@ -1029,7 +1051,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       commTrackUser,
       "Testing");
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("Authentication Failed"));
 
 
   }
@@ -1049,7 +1072,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       commTrackUser,
       "Testing");
-    assertEquals(responseEntity.getStatus(), AUTH_FAILED_STATUS_CODE);
+    assertEquals(responseEntity.getStatus(), SC_UNAUTHORIZED);
   }
 
   @Test(groups = {"webservice"})
@@ -1068,7 +1091,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
       POST,
       "Testing",
       dbWrapper.getAuthToken(commTrackUser));
-    assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("Authentication Failed"));
 
   }
 
@@ -1087,7 +1111,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       PUT,
       "Testing",
       dbWrapper.getAuthToken(commTrackUser));
-    assertEquals(responseEntity.getStatus(), AUTH_FAILED_STATUS_CODE);
+    assertEquals(responseEntity.getStatus(), SC_UNAUTHORIZED);
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
