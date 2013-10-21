@@ -249,13 +249,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   }
 }
 
-var populateFlags = function ($scope) {
-  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'enabled']).each(function (index, field) {
-    var value = $scope.facility[field];
-    $scope.facility[field] = ($.isEmptyObject(value)) ? "" : value.toString();
-  });
-};
-
 FacilityController.resolve = {
   facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {
     var deferred = $q.defer();

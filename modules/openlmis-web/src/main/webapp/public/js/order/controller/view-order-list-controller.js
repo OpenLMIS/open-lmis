@@ -21,8 +21,6 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
       $scope.orders = data.orders || [];
       $scope.pageSize = data.pageSize;
       $scope.numberOfPages = data.numberOfPages || 1;
-    }, function (data) {
-      console.log(data);
     });
   }
 

@@ -118,7 +118,6 @@ function InitiateRnrController($scope, $location, Requisitions,
   };
 
   var optionMessage = function (entity, defaultMessage) {
-      console.log(entity);
     return entity === null || entity.length === 0 ? messageService.get("label.none.assigned") : defaultMessage;
   };
 
