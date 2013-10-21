@@ -10,11 +10,11 @@ Feature: End to end requisition flow
     And I create "lmu" role having "Admin" based "Convert To Order Requisition,View Orders Requisition" rights
     And I create "Medical-officer" role having "Requisition" based "Approve Requisition" rights
     And I create users:
-      |Email                  |Firstname|Lastname|UserName       |Role           |RoleType    |FacilityCode|Program|Node    |
-      |Fatima_Doe@openlmis.com|Fatima   |Doe     |storeIncharge  |Store-in-charge|REQUISITION |F10         |HIV    |Node 1  |
-      |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |lmu            |ADMIN       |F10         |HIV    |Node 1  |
-      |Jane_Doe@openlmis.com  |Jane     |Doe     |medicalofficer |Medical-Officer|REQUISITION |F11         |HIV    |Node 2  |
-    And I update "storeIncharge" home facility
+      |Email                  |Firstname|Lastname|UserName       |Role           |RoleType    |FacilityCode|Program|Node    |Warehouse          |WarehouseRole  |
+      |Fatima_Doe@openlmis.com|Fatima   |Doe     |storeincharge  |Store-in-charge|REQUISITION |F10         |HIV    |Node 1  |Central Hospital   |Shipment       |
+      |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |lmu            |ADMIN       |F10         |HIV    |Node 1  |Central Hospital   |Shipment       |
+      |Jane_Doe@openlmis.com  |Jane     |Doe     |medicalofficer |Medical-Officer|REQUISITION |F11         |HIV    |Node 2  |Village Dispensary |Shipment       |
+    And I update "storeincharge" home facility
     And I setup product & requisition group data
     And I setup period, schedule & requisition group data
     And I configure "HIV" template

@@ -117,7 +117,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-      createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString());
+      createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
   }
 
   @And("^I setup product & requisition group data$")
@@ -402,11 +402,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getEmergencyLabelText(),"Emergency");
   }
 
-  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
+  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType, String warehouse1, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
     String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
-    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType);
+    userPage.enterMyFacilityAndMySupervisedFacilityAndWarehouseRolesData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType, warehouse1, warehouseRole);
     return userID;
   }
 

@@ -153,7 +153,6 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
   private static WebElement addHomeFacilityRolesButton;
 
-
   @FindBy(how = How.XPATH, using = "Supervisory Roles")
   private static WebElement supervisoryRolesAccordion;
 
@@ -166,7 +165,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
   private static WebElement rolesInputFieldSupervisoryRole;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='select2-choices']/li[1]/div")
+  @FindBy(how = How.XPATH, using = "//div[@class='select2-container select2-container-multi ng-valid ng-dirty']/ul/li[1]/div")
   private static WebElement rolesSelectedSupervisoryRole;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
@@ -175,19 +174,20 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
   private static WebElement addSupervisoryRoleButton;
 
-
   @FindBy(how = How.XPATH, using = "Warehouse Roles")
   private static WebElement warehouseRolesAccordion;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
   private static WebElement rolesInputFieldWarehouse;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
+  private static WebElement rolesSelectFieldWarehouse;
+
   @FindBy(how = How.XPATH, using = "//select[@ng-model='warehouseRole.facilityId']")
   private static WebElement warehouseToSelect;
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addFulfillmentRole()']")
   private static WebElement addWarehouseRoleButton;
-
 
   @FindBy(how = How.XPATH, using = "Delivery zones")
   private static WebElement deliveryZonesAccordion;
@@ -198,7 +198,7 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
   private static WebElement programToDeliver;
 
-  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
+  @FindBy(how = How.XPATH, using = "(//input[@type='text'])[18]")
   private static WebElement rolesInputFieldMDeliveryZone;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
@@ -209,7 +209,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
   private static WebElement addDeliveryZoneRoleButton;
-
 
   @FindBy(how = How.XPATH, using = "Admin and General Operations Roles")
   private static WebElement adminAndGeneralOperationsRolesAccordion;
@@ -326,6 +325,9 @@ public class UserPage extends Page {
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(viewHereLink);
 
+    testWebDriver.waitForElementToAppear(successMessage);
+
+
     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
       " password link has been sent on registered Email address. View Here", firstName, lastName);
     SeleneseTestNgHelper.assertEquals(expectedMessage, successMessage.getText());
@@ -354,7 +356,19 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
   }
 
-  public void enterMyFacilityAndMySupervisedFacilityData(String firstName, String lastName, String facilityCode, String program1, String node, String role, String roleType) {
+  public void verifyExpandAll(){
+      expandAllOption.click();
+      SeleneseTestNgHelper.assertTrue(programsToSupervise.isDisplayed());
+      SeleneseTestNgHelper.assertTrue(programToDeliver.isDisplayed());
+  }
+  public void verifyCollapseAll(){
+        collapseAllOption.click();
+        SeleneseTestNgHelper.assertFalse(programsToSupervise.isDisplayed());
+        SeleneseTestNgHelper.assertFalse(programToDeliver.isDisplayed());
+        SeleneseTestNgHelper.assertFalse(warehouseToSelect.isDisplayed());
+  }
+
+  public void enterMyFacilityAndMySupervisedFacilityAndWarehouseRolesData(String firstName, String lastName, String facilityCode, String program1, String node, String role, String roleType, String warehouse1, String warehouseRole) {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
@@ -369,7 +383,9 @@ public class UserPage extends Page {
       rolesSelectFieldHomeFacility.click();
       addHomeFacilityRolesButton.click();
       testWebDriver.sleep(1000);
-      testWebDriver.getElementByXpath("//a[contains(text(),'Supervisory Roles')]").click();
+
+
+      supervisoryRolesAccordion.click();
       testWebDriver.sleep(500);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.sleep(1000);
@@ -386,10 +402,38 @@ public class UserPage extends Page {
 
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
+
       //  assertEquals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase(), role.toLowerCase());
 
-      addSupervisoryRoleButton.click();
+    //  testWebDriver.sleep(3000);
+      //testWebDriver.waitForElementToAppear(rolesSelectedSupervisoryRole);
+    //  System.out.println(role.toLowerCase().equals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase()));
+     //  System.out.println(role.toLowerCase());
+     //   System.out.println(rolesSelectedSupervisoryRole.getText().trim().toLowerCase());
+
+     //   assertTrue(role.toLowerCase().equals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase()));
+
+        addSupervisoryRoleButton.click();
+
+
       testWebDriver.sleep(1000);
+      warehouseRolesAccordion.click();
+      testWebDriver.sleep(500);
+      testWebDriver.selectByVisibleText(warehouseToSelect,warehouse1);
+      testWebDriver.sleep(1000);
+      rolesInputFieldWarehouse.click();
+      rolesInputFieldWarehouse.clear();
+      rolesInputFieldWarehouse.sendKeys(warehouseRole);
+      testWebDriver.waitForElementToAppear(rolesSelectFieldWarehouse);
+      rolesSelectFieldSupervisoryRole.click();
+      assertEquals(testWebDriver.getFirstSelectedOption(warehouseToSelect).getText(), warehouse1);
+
+      addWarehouseRoleButton.click();
+      testWebDriver.sleep(1000);
+      verifyWarehouseSelectedNotAvailable(warehouse1);
+      warehouseRolesAccordion.click();
+      testWebDriver.sleep(1000);
+
     } else {
       testWebDriver.handleScroll();
       testWebDriver.sleep(500);
@@ -430,7 +474,7 @@ public class UserPage extends Page {
 
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
     testWebDriver.handleScroll();
-    testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
+    deliveryZonesAccordion.click();
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(zoneToDelivery);
     testWebDriver.selectByVisibleText(zoneToDelivery, deliveryZoneCode);
@@ -514,6 +558,12 @@ public class UserPage extends Page {
     return homeFacilityPrograms.getText();
   }
 
+  public String getAllWarehouseToSelect(){
+      return warehouseToSelect.getText();
+  }
+
+
+
   public void clickViewHere() {
     testWebDriver.waitForElementToAppear(viewHereLink);
     viewHereLink.click();
@@ -574,4 +624,28 @@ public class UserPage extends Page {
   public String getVerifiedLabel() {
     return verifiedLabel.getText();
   }
+
+  public void clickWarehouseRolesAccordion()
+  {
+      warehouseRolesAccordion.click();
+  }
+
+    public void clickHomeFacilityRolesAccordion()
+    {
+        homeFacilityRolesAccordion.click();
+    }
+
+    public void clickSupervisoryRolesAccordion()
+    {
+        supervisoryRolesAccordion.click();
+    }
+
+    public void clickDeliveryZonesAccordion()
+    {
+        deliveryZonesAccordion.click();
+    }
+
+    private void verifyWarehouseSelectedNotAvailable(String warehouse1)  {
+        assertFalse(getAllWarehouseToSelect().contains(warehouse1));
+    }
 }

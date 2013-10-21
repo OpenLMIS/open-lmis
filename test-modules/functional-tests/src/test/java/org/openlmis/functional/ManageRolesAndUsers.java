@@ -32,6 +32,11 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+
+
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -52,6 +57,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String operatedBy = "MoH";
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
+  public static String warehouse1Name;
+  public static final String warehouseRole="SHIPMENT";
 
   @BeforeMethod(groups = {"admin"})
   @Before
@@ -212,46 +219,59 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = new UserPage(testWebDriver);
-    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
+    setupWarehouseRolesAndRights(facility_code, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, "SHIPMENT");
+    warehouse1Name =dbWrapper.getWarehouse1Name(facilityCodeFirst);
+    createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION", warehouse1Name, warehouseRole);
 
-    SetupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
+    setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
     userPage.clickViewHere();
     userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, "");
     userPage.clickSaveButton();
     userPage.clickViewHere();
-    testWebDriver.getElementByXpath("//a[contains(text(),'Delivery zones')]").click();
+    userPage.clickDeliveryZonesAccordion();
     testWebDriver.sleep(1000);
     assertEquals(deliveryZoneNameFirst, userPage.getAddedDeliveryZoneLabel());
 
-    testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+    userPage.clickHomeFacilityRolesAccordion();
     testWebDriver.sleep(500);
     userPage.removeRole(1, false);
-    testWebDriver.getElementByXpath("//a[contains(text(),'Supervisory Roles')]").click();
+    userPage.clickSupervisoryRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRolePresent(LAB_IN_CHARGE);
     userPage.removeRole(1, false);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.clickRemoveButtonWithOk(2);
 
-    testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+    userPage.clickWarehouseRolesAccordion();
+    userPage.verifyRolePresent(warehouseRole);
+    userPage.removeRole(1, false);
+    userPage.verifyRoleNotPresent(warehouseRole);
+    userPage.clickRemoveButtonWithOk(2);
+
+    userPage.clickHomeFacilityRolesAccordion();
     testWebDriver.sleep(500);
     userPage.clickRemoveButtonWithOk(1);
     userPage.clickSaveButton();
     userPage.clickViewHere();
-    testWebDriver.getElementByXpath("//a[contains(text(),'Home Facility Roles')]").click();
+    userPage.clickHomeFacilityRolesAccordion();
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(LAB_IN_CHARGE);
     userPage.verifyRemoveNotPresent();
     verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(userPage);
+    userPage.clickWarehouseRolesAccordion();
+    testWebDriver.sleep(500);
+    userPage.verifyRoleNotPresent(warehouseRole);
+    userPage.verifyRemoveNotPresent();
+    //verifyWarehouseAvailableForWarehouseRoles(userPage);
 
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testCreateUserAndVerifyOnManageDistributionScreen(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                                String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                                String facilityCodeFirst, String facilityCodeSecond,
-                                                                String programFirst, String programSecond, String schedule, String rolename) throws Exception {
-    SetupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
+                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                            String facilityCodeFirst, String facilityCodeSecond,
+                                            String programFirst, String programSecond, String schedule, String rolename) throws Exception {
+    setupDeliveryZoneRolesAndRights(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule, rolename);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -319,12 +339,15 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
-  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
+  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType, String warehouse1, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
     String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
 
-    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType);
+    userPage.verifyExpandAll();
+    userPage.verifyCollapseAll();
+
+    userPage.enterMyFacilityAndMySupervisedFacilityAndWarehouseRolesData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType, warehouse1, warehouseRole);
     return userID;
   }
 
@@ -338,6 +361,17 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertFalse(userPage.getAllProgramsHomeFacility().contains("VACCINES"));
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
+
+    private void verifyWarehouseAvailableForWarehouseRoles(UserPage userPage) throws IOException, SQLException {
+        assertTrue(userPage.getAllWarehouseToSelect().contains(warehouse1Name));
+        assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
+        dbWrapper.disableWarehouse(warehouse1Name);
+        assertFalse(userPage.getAllWarehouseToSelect().contains(warehouse1Name));
+        dbWrapper.enableWarehouse(warehouse1Name);
+        assertTrue(userPage.getAllWarehouseToSelect().contains(warehouse1Name));
+    }
+
+
 
   @AfterMethod(groups = "functional2")
   @After

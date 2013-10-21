@@ -61,7 +61,7 @@ public class CommonSteps extends TestCaseHelper {
 
     @When("^I have \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")
     public void createRoleWithRights(String roleName, String roleType, String right) throws Exception {
-        setupTestRoleRightsData(roleName,roleType,right);
+        setupTestRoleRightsData(roleName, right);
     }
 
     @And("^I have users:$")

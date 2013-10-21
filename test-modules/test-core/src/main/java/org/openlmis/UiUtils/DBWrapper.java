@@ -375,11 +375,7 @@ public class DBWrapper {
   }
 
   public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
-    ResultSet rs = query("Select facilityId from supervisory_nodes;");
-
-    if (rs.next()) {
-      update("delete from supervisory_nodes;");
-    }
+    update("delete from supervisory_nodes;");
     update("INSERT INTO supervisory_nodes\n" +
       "  (parentId, facilityId, name, code) VALUES\n" +
       "  (" + supervisoryNodeParentCode + ", (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), '" + supervisoryNodeName + "', '" + supervisoryNodeCode + "');");
@@ -1054,6 +1050,13 @@ public class DBWrapper {
       "('" + code + "','" + name + "');");
   }
 
+    public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,String facilityCodeSecond,String programFirst,String programSecond, String supervisoryNode) throws SQLException {
+        update("INSERT INTO supply_lines (supplyingfacilityid, programid, supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
+                "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='"+programFirst + "'),"+ "(select id from supervisory_nodes where code='"+supervisoryNode+"'),'warehouse', 'f', '1', '1');");
+        update("INSERT INTO supply_lines (supplyingfacilityid , programid ,supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
+                "(" + "(select id from facilities where code = '" + facilityCodeSecond + "')," + "(select id from programs where name ='"+programSecond + "'),"+ "(select id from supervisory_nodes where code='"+supervisoryNode+"'),'warehouse', 'f', '1', '1');");
+    }
+
   public void insertDeliveryZoneMembers(String code, String facility) throws SQLException {
     update("INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values\n" +
       "((select id from  delivery_zones where code ='" + code + "'),(select id from  facilities where code ='" + facility + "'));");
@@ -1224,11 +1227,27 @@ public class DBWrapper {
                                    String verifiedByName, String verifiedByTitle) throws SQLException {
     ResultSet rs = query("select * from facility_visits;");
     while (rs.next()) {
-      assertEquals(rs.getString("observations"), observations);
-      assertEquals(rs.getString("confirmedByName"), confirmedByName);
-      assertEquals(rs.getString("confirmedByTitle"), confirmedByTitle);
-      assertEquals(rs.getString("verifiedByName"), verifiedByName);
-      assertEquals(rs.getString("verifiedByTitle"), verifiedByTitle);
+      assertEquals(rs.getString("observations").toString(),observations);
+      assertEquals(rs.getString("confirmedbyname").toString(),confirmedByName);
+      assertEquals(rs.getString("confirmedbytitle").toString(),confirmedByTitle);
+      assertEquals(rs.getString("verifiedbyname").toString(),verifiedByName);
+      assertEquals(rs.getString("verifiedbytitle").toString(), verifiedByTitle);
     }
   }
+
+    public String getWarehouse1Name(String facilityCode) throws SQLException {
+        String warehouseName="";
+        ResultSet rs=query("select name from facilities where code='" + facilityCode + "';");
+        if(rs.next())
+            warehouseName=rs.getString(1);
+        return warehouseName;
+    }
+
+    public void disableWarehouse(String warehouse1Name) throws SQLException {
+        update("UPDATE facilities SET enabled='false' WHERE name='"+warehouse1Name+"';");
+    }
+
+    public void enableWarehouse(String warehouse1Name) throws SQLException {
+        update("UPDATE facilities SET enabled='true' WHERE name='"+warehouse1Name+"';");
+    }
 }
