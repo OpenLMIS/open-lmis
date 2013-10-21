@@ -1050,12 +1050,11 @@ public class DBWrapper {
       "('" + code + "','" + name + "');");
   }
 
-    public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,String facilityCodeSecond,String programFirst,String programSecond, String supervisoryNode) throws SQLException {
+    public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,
+                                                    String programFirst, String supervisoryNode,boolean exportorders) throws SQLException {
         update("INSERT INTO supply_lines (supplyingfacilityid, programid, supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
-                "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='"+programFirst + "'),"+ "(select id from supervisory_nodes where code='"+supervisoryNode+"'),'warehouse', 'f', '1', '1');");
-        update("INSERT INTO supply_lines (supplyingfacilityid , programid ,supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
-                "(" + "(select id from facilities where code = '" + facilityCodeSecond + "')," + "(select id from programs where name ='"+programSecond + "'),"+ "(select id from supervisory_nodes where code='"+supervisoryNode+"'),'warehouse', 'f', '1', '1');");
-    }
+                "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='"+programFirst + "'),"+ "(select id from supervisory_nodes where code='"+supervisoryNode+"'),'warehouse', " + exportorders + ", '1', '1');");
+        }
 
   public void insertDeliveryZoneMembers(String code, String facility) throws SQLException {
     update("INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values\n" +

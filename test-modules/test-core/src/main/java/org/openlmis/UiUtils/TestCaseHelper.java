@@ -331,16 +331,17 @@ public class TestCaseHelper {
         setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
     }
 
-    public void setupWarehouseRolesAndRights(String facilityCode, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond,
+    public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond,
+                                             String programName,
                                              String schedule, String roleName) throws IOException, SQLException {
         dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
         dbWrapper.insertSchedule(schedule, "Monthly", "Month");
         setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
-        setupDataForWarehouse(facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, "N1");
+        setupDataForWarehouse(facilityCodeFirst, programName, "N1");
     }
 
-    public void setupDataForWarehouse(String facilityCodeFirst,String facilityCodeSecond,String programFirst,String programSecond, String supervisoryNode)throws IOException, SQLException{
-        dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, "N1");
+    public void setupDataForWarehouse(String facilityCode,String programName, String supervisoryNode)throws IOException, SQLException{
+        dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCode, programName,"N1",false);
     }
 
   public String[] readCSVFile(String file) throws IOException, SQLException {

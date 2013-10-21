@@ -51,7 +51,7 @@ public class E2EUpload extends TestCaseHelper {
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add("Create Requisition");
 
-    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, true);
+    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, "Requisition");
 
     UploadPage uploadPage = homePage.navigateUploads();
     verifyValidUserUpload(uploadPage);

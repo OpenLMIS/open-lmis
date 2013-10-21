@@ -67,10 +67,10 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='requisitionRights-APPROVE_REQUISITION']/input")
   private static WebElement rightApproveRequisition;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-CONVERT_TO_ORDER']/input")
+  @FindBy(how = How.ID, using = "CONVERT_TO_ORDER")
   private static WebElement rightConvertToOrderRequisition;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='rights-VIEW_ORDER']/input")
+  @FindBy(how = How.ID, using = "VIEW_ORDER")
   private static WebElement rightViewOrders;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
@@ -233,13 +233,17 @@ public class RolesPage extends Page {
   }
 
 
-  public void createRoleWithSuccessMessageExpected(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
+  public void createRoleWithSuccessMessageExpected(String roleName, String roleDesc, List<String> rights, String roleType) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
-    if (programDependant) {
-      clickProgramRole();
-      clickContinueButton();
-    }
+      if (roleType.equals("Requisition"))
+          clickProgramRole();
+      else if (roleType.equals("Admin"))
+          clickAdminRole();
+      else if (roleType.equals("Fulfillment"))
+          facilityBasedRoleType.click();
+
+    clickContinueButton();
     testWebDriver.sleep(1000);
     testWebDriver.handleScrollByPixels(0, 2000);
     for (String right : rights) {
