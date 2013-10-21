@@ -59,7 +59,7 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
 
   $scope.updateISA = function () {
     $scope.$parent.facilityProgramProductsList[$scope.currentProgram.id] = angular.copy($scope.currentProgramProducts);
-    $scope.$parent.programProductsISAModal = false;
+    $scope.programProductsISAModal = false;
   };
 
   $scope.resetISAModal = function () {
