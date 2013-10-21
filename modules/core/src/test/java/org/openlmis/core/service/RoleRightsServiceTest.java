@@ -81,7 +81,8 @@ public class RoleRightsServiceTest {
       VIEW_REQUISITION,
       VIEW_ORDER,
       CONFIGURE_EDI,
-      FACILITY_FILL_SHIPMENT);
+      FACILITY_FILL_SHIPMENT,
+      MANAGE_POD);
 
     assertThat(allRights, is(alphabeticalRights));
   }
