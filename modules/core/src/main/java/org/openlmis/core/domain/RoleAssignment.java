@@ -63,8 +63,12 @@ public class RoleAssignment extends BaseModel{
   private void parseRoleIdsIntoList(String roleIds) {
     roleIds = roleIds.replace("{", "").replace("}", "");
     String[] roleIdsArray = roleIds.split(",");
+
     for (String roleId : roleIdsArray) {
-      this.roleIds.add(Long.parseLong(roleId));
+      // ignore non unique roles for the user.
+      if(!this.roleIds.contains(Long.parseLong(roleId))) {
+        this.roleIds.add(Long.parseLong(roleId));
+      }
     }
   }
 
