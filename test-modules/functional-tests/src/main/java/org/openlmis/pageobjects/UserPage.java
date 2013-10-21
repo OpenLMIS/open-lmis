@@ -34,220 +34,168 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 public class UserPage extends Page {
 
   @FindBy(how = How.ID, using = "user-add-new")
-  private static WebElement addNewButton;
+  private static WebElement addNewButton = null;
 
   @FindBy(how = How.ID, using = "userName")
-  private static WebElement userNameField;
+  private static WebElement userNameField = null;
 
   @FindBy(how = How.ID, using = "email")
-  private static WebElement emailField;
+  private static WebElement emailField = null;
 
   @FindBy(how = How.ID, using = "firstName")
-  private static WebElement firstNameField;
+  private static WebElement firstNameField = null;
 
   @FindBy(how = How.ID, using = "lastName")
-  private static WebElement lastNameField;
-
-  @FindBy(how = How.ID, using = "primaryNotificationMethod")
-  private static WebElement primaryNotificationMethodField;
-
-  @FindBy(how = How.ID, using = "employeeId")
-  private static WebElement employeeIdField;
-
-  @FindBy(how = How.ID, using = "jobTitle")
-  private static WebElement jobTitleField;
-
-  @FindBy(how = How.ID, using = "officePhone")
-  private static WebElement officePhoneField;
-
-  @FindBy(how = How.ID, using = "cellPhone")
-  private static WebElement cellPhoneField;
+  private static WebElement lastNameField = null;
 
   @FindBy(how = How.XPATH, using = "//input[1][@class='btn btn-primary save-button']")
-  private static WebElement saveButton;
+  private static WebElement saveButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[2][@class='btn btn-cancel cancel-button']")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
-  private static WebElement disableButton;
+  private static WebElement disableButton = null;
 
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
-  private static WebElement enableButton;
+  private static WebElement enableButton = null;
 
 
   @FindBy(how = How.ID, using = "searchUser")
-  private static WebElement searchUserTextField;
+  private static WebElement searchUserTextField = null;
 
   @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
-  private static WebElement selectFirstResetPassword;
+  private static WebElement selectFirstResetPassword = null;
 
 
   @FindBy(how = How.ID, using = "password1")
-  private static WebElement newPasswordField;
+  private static WebElement newPasswordField = null;
 
   @FindBy(how = How.ID, using = "password2")
-  private static WebElement confirmPasswordField;
+  private static WebElement confirmPasswordField = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[1]")
-  private static WebElement resetPasswordDone;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='changePassword']/div/input[2]")
-  private static WebElement resetPasswordCancel;
-
-  @FindBy(how = How.XPATH, using = "//div[3][@class='alert alert-error ng-binding']")
-  private static WebElement messageForErrorInPassword;
-
-  @FindBy(how = How.XPATH, using = "//div[2][@class='alert alert-success ng-binding']")
-  private static WebElement SuccessMessageOnPasswordReset;
+  private static WebElement resetPasswordDone = null;
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
-  private static WebElement okButton;
+  private static WebElement okButton = null;
 
-
-  @FindBy(how = How.XPATH, using = "//a[@class='close-btn']")
-  private static WebElement clearUserSearchResults;
 
   @FindBy(how = How.ID, using = "user0")
-  private static WebElement firstUserLink;
+  private static WebElement firstUserLink = null;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='editUser(user.id)']")
-  private static WebElement selectFirstEditUser;
+  private static WebElement selectFirstEditUser = null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
-  private static WebElement editUserHeader;
+  private static WebElement editUserHeader = null;
 
 
   @FindBy(how = How.ID, using = "searchFacility")
-  private static WebElement searchFacility;
+  private static WebElement searchFacility = null;
 
   @FindBy(how = How.XPATH, using = "//a[@ng-click='setSelectedFacility(facility)']")
-  private static WebElement selectFacility;
-
-  @FindBy(how = How.XPATH, using = "//a[@class='clear-search']")
-  private static WebElement clearHomeFacilitySelected;
+  private static WebElement selectFacility = null;
 
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
-  private static WebElement verifiedLabel;
+  private static WebElement verifiedLabel = null;
 
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[1]")
-  private static WebElement expandAllOption;
+  private static WebElement expandAllOption = null;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[2]")
-  private static WebElement collapseAllOption;
+  private static WebElement collapseAllOption = null;
 
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home Facility Roles')]")
-  private static WebElement homeFacilityRolesAccordion;
+  private static WebElement homeFacilityRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='programSelected']")
-  private static WebElement homeFacilityPrograms;
+  private static WebElement homeFacilityPrograms = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[12]")
-  private static WebElement roleInputFieldHomeFacility;
+  private static WebElement roleInputFieldHomeFacility = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
-  private static WebElement rolesSelectFieldHomeFacility;
+  private static WebElement rolesSelectFieldHomeFacility = null;
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addHomeFacilityRole()']")
-  private static WebElement addHomeFacilityRolesButton;
+  private static WebElement addHomeFacilityRolesButton = null;
 
   @FindBy(how = How.XPATH, using = "Supervisory Roles")
-  private static WebElement supervisoryRolesAccordion;
+  private static WebElement supervisoryRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedProgramIdToSupervise']")
-  private static WebElement programsToSupervise;
+  private static WebElement programsToSupervise = null;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='selectedSupervisoryNodeIdToSupervise']")
-  private static WebElement supervisoryNodeToSupervise;
+  private static WebElement supervisoryNodeToSupervise = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[14]")
-  private static WebElement rolesInputFieldSupervisoryRole;
-
-  @FindBy(how = How.XPATH, using = "//div[@class='select2-container select2-container-multi ng-valid ng-dirty']/ul/li[1]/div")
-  private static WebElement rolesSelectedSupervisoryRole;
+  private static WebElement rolesInputFieldSupervisoryRole = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
-  private static WebElement rolesSelectFieldSupervisoryRole;
+  private static WebElement rolesSelectFieldSupervisoryRole = null;
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addSupervisoryRole()']")
-  private static WebElement addSupervisoryRoleButton;
+  private static WebElement addSupervisoryRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "Warehouse Roles")
-  private static WebElement warehouseRolesAccordion;
+  private static WebElement warehouseRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
-  private static WebElement rolesInputFieldWarehouse;
+  private static WebElement rolesInputFieldWarehouse = null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
-  private static WebElement rolesSelectFieldWarehouse;
+  private static WebElement rolesSelectFieldWarehouse = null;
 
   @FindBy(how = How.XPATH, using = "//select[@ng-model='warehouseRole.facilityId']")
-  private static WebElement warehouseToSelect;
+  private static WebElement warehouseToSelect = null;
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addFulfillmentRole()']")
-  private static WebElement addWarehouseRoleButton;
+  private static WebElement addWarehouseRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "Delivery zones")
-  private static WebElement deliveryZonesAccordion;
+  private static WebElement deliveryZonesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
-  private static WebElement zoneToDelivery;
+  private static WebElement zoneToDelivery = null;
 
   @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZoneProgram']")
-  private static WebElement programToDeliver;
+  private static WebElement programToDeliver = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[18]")
-  private static WebElement rolesInputFieldMDeliveryZone;
+  private static WebElement rolesInputFieldMDeliveryZone = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[15]")
-  private static WebElement rolesInputFieldDeliveryZone;
-
-  @FindBy(how = How.XPATH, using = "//div[@class='select2-result-label']/span")
-  private static WebElement rolesSelectFieldDeliveryZone;
+  private static WebElement rolesInputFieldDeliveryZone = null;
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='addAllocationRole()']")
-  private static WebElement addDeliveryZoneRoleButton;
-
-  @FindBy(how = How.XPATH, using = "Admin and General Operations Roles")
-  private static WebElement adminAndGeneralOperationsRolesAccordion;
+  private static WebElement addDeliveryZoneRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
-  private static WebElement adminRolesInputField;
+  private static WebElement adminRolesInputField = null;
 
 
   @FindBy(how = How.LINK_TEXT, using = "View Here")
-  private static WebElement viewHereLink;
+  private static WebElement viewHereLink = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement userUpdateSuccessMessage;
+  private static WebElement userUpdateSuccessMessage = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement successMessage;
+  private static WebElement successMessage = null;
 
-
-  @FindBy(how = How.XPATH, using = "//div[contains(text(),'Store In-Charge')]")
-  private static WebElement storeInChargeOption;
-
-  @FindBy(how = How.XPATH, using = "//div[contains(text(),'Medical-Officer')]")
-  private static WebElement medicalOfficerOption;
 
   @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
-  private static WebElement removeButton;
+  private static WebElement removeButton = null;
 
   @FindBy(how = How.XPATH, using = "//div[6]/div[2]/ng-include/div/div[1]/div[2]/div[1]/div/label[@class='ng-binding']")
-  private static WebElement addedDeliveryZoneLabel;
-//
-//  @FindBy(how = How.XPATH, using = "//div/div[4]/div/ng-include/div/div[1]/div[2]/div[2]/div/label")
-//  private static WebElement addedDeliveryZoneProgramLabel;
-
-
-  @FindBy(how = How.XPATH, using = "//div[6]/div[2]/ng-include/div/div[1]/div[2]/div[2]/div/label[@class='ng-binding']")
-  private static WebElement addedDeliveryZoneProgramLabel;
+  private static WebElement addedDeliveryZoneLabel = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
-  private static WebElement noMatchFoundLink;
+  private static WebElement noMatchFoundLink = null;
 
 
   public UserPage(TestWebDriver driver) throws IOException {
@@ -263,7 +211,7 @@ public class UserPage extends Page {
     testWebDriver.sleep(2000);
   }
 
-  public void clickUserList(String userString) {
+  public void clickUserList() {
     testWebDriver.waitForElementToAppear(firstUserLink);
     firstUserLink.click();
     testWebDriver.waitForElementToAppear(userNameField);
@@ -285,11 +233,6 @@ public class UserPage extends Page {
   public void verifyUserOnList(String userString) {
     testWebDriver.waitForElementToAppear(firstUserLink);
     SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString));
-  }
-
-  public void verifyResetPassword() {
-    testWebDriver.waitForElementToAppear(firstUserLink);
-    SeleneseTestNgHelper.assertTrue("Reset password link not available.", selectFirstResetPassword.isDisplayed());
   }
 
   public void verifyDisabledResetPassword() {
@@ -335,9 +278,8 @@ public class UserPage extends Page {
     viewHereLink.click();
 
     DBWrapper dbWrapper = new DBWrapper(baseurl, dbUrl);
-    String userID = dbWrapper.getUserID(userName);
 
-    return userID;
+    return dbWrapper.getUserID(userName);
 
   }
 
@@ -357,16 +299,17 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
   }
 
-  public void verifyExpandAll(){
-      expandAllOption.click();
-      SeleneseTestNgHelper.assertTrue(programsToSupervise.isDisplayed());
-      SeleneseTestNgHelper.assertTrue(programToDeliver.isDisplayed());
+  public void verifyExpandAll() {
+    expandAllOption.click();
+    SeleneseTestNgHelper.assertTrue(programsToSupervise.isDisplayed());
+    SeleneseTestNgHelper.assertTrue(programToDeliver.isDisplayed());
   }
-  public void verifyCollapseAll(){
-        collapseAllOption.click();
-        SeleneseTestNgHelper.assertFalse(programsToSupervise.isDisplayed());
-        SeleneseTestNgHelper.assertFalse(programToDeliver.isDisplayed());
-        SeleneseTestNgHelper.assertFalse(warehouseToSelect.isDisplayed());
+
+  public void verifyCollapseAll() {
+    collapseAllOption.click();
+    SeleneseTestNgHelper.assertFalse(programsToSupervise.isDisplayed());
+    SeleneseTestNgHelper.assertFalse(programToDeliver.isDisplayed());
+    SeleneseTestNgHelper.assertFalse(warehouseToSelect.isDisplayed());
   }
 
   public void enterMyFacilityAndMySupervisedFacilityAndWarehouseRolesData(String firstName, String lastName, String facilityCode, String program1, String node, String role, String roleType, String warehouse1, String warehouseRole) {
@@ -404,23 +347,13 @@ public class UserPage extends Page {
       assertEquals(testWebDriver.getFirstSelectedOption(supervisoryNodeToSupervise).getText(), node);
       assertEquals(testWebDriver.getFirstSelectedOption(programsToSupervise).getText(), program1);
 
-      //  assertEquals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase(), role.toLowerCase());
-
-    //  testWebDriver.sleep(3000);
-      //testWebDriver.waitForElementToAppear(rolesSelectedSupervisoryRole);
-    //  System.out.println(role.toLowerCase().equals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase()));
-     //  System.out.println(role.toLowerCase());
-     //   System.out.println(rolesSelectedSupervisoryRole.getText().trim().toLowerCase());
-
-     //   assertTrue(role.toLowerCase().equals(rolesSelectedSupervisoryRole.getText().trim().toLowerCase()));
-
-        addSupervisoryRoleButton.click();
+      addSupervisoryRoleButton.click();
 
 
       testWebDriver.sleep(1000);
       warehouseRolesAccordion.click();
       testWebDriver.sleep(500);
-      testWebDriver.selectByVisibleText(warehouseToSelect,warehouse1);
+      testWebDriver.selectByVisibleText(warehouseToSelect, warehouse1);
       testWebDriver.sleep(1000);
       rolesInputFieldWarehouse.click();
       rolesInputFieldWarehouse.clear();
@@ -559,10 +492,9 @@ public class UserPage extends Page {
     return homeFacilityPrograms.getText();
   }
 
-  public String getAllWarehouseToSelect(){
-      return warehouseToSelect.getText();
+  public String getAllWarehouseToSelect() {
+    return warehouseToSelect.getText();
   }
-
 
 
   public void clickViewHere() {
@@ -574,12 +506,6 @@ public class UserPage extends Page {
   public void clickOk() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
-    testWebDriver.sleep(100);
-  }
-
-  public void clickRemoveButton() {
-    testWebDriver.waitForElementToAppear(removeButton);
-    removeButton.click();
     testWebDriver.sleep(100);
   }
 
@@ -597,15 +523,6 @@ public class UserPage extends Page {
     assertFalse(removePresent);
   }
 
-  public void clickAllRemoveButton() {
-    List<WebElement> removeButtons = testWebDriver.getElementsByXpath("//input[@class='btn delete-role']");
-    for (WebElement removeButton : removeButtons) {
-      removeButton.click();
-      clickOk();
-      testWebDriver.sleep(100);
-    }
-  }
-
   public void clickRemoveButtonWithOk(int removeButtonNumber) {
     testWebDriver.sleep(500);
     testWebDriver.getElementByXpath("(//input[@value='Remove'])[" + removeButtonNumber + "]").click();
@@ -618,35 +535,27 @@ public class UserPage extends Page {
     return addedDeliveryZoneLabel.getText();
   }
 
-  public String getAddedDeliveryZoneProgramLabel() {
-    return addedDeliveryZoneProgramLabel.getText();
-  }
-
   public String getVerifiedLabel() {
     return verifiedLabel.getText();
   }
 
-  public void clickWarehouseRolesAccordion()
-  {
-      warehouseRolesAccordion.click();
+  public void clickWarehouseRolesAccordion() {
+    warehouseRolesAccordion.click();
   }
 
-    public void clickHomeFacilityRolesAccordion()
-    {
-        homeFacilityRolesAccordion.click();
-    }
+  public void clickHomeFacilityRolesAccordion() {
+    homeFacilityRolesAccordion.click();
+  }
 
-    public void clickSupervisoryRolesAccordion()
-    {
-        supervisoryRolesAccordion.click();
-    }
+  public void clickSupervisoryRolesAccordion() {
+    supervisoryRolesAccordion.click();
+  }
 
-    public void clickDeliveryZonesAccordion()
-    {
-        deliveryZonesAccordion.click();
-    }
+  public void clickDeliveryZonesAccordion() {
+    deliveryZonesAccordion.click();
+  }
 
-    private void verifyWarehouseSelectedNotAvailable(String warehouse1)  {
-        assertFalse(getAllWarehouseToSelect().contains(warehouse1));
-    }
+  private void verifyWarehouseSelectedNotAvailable(String warehouse1) {
+    assertFalse(getAllWarehouseToSelect().contains(warehouse1));
+  }
 }
