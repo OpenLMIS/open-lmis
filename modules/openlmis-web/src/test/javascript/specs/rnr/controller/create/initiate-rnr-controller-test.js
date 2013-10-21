@@ -38,7 +38,7 @@ describe('InitiateRnrController', function () {
   }));
 
   it("should not reset rnr data when navigated back from create rnr form", function () {
-    var testData = {selectedType: 2, selectedProgram: {"code": "HIV", "id": 1}, selectedFacilityId: 1, isNavigatedBack: true};
+    var testData = {selectedType: "2", selectedProgram: {"code": "HIV", "id": 1}, selectedFacilityId: 1, isNavigatedBack: true};
     navigateBackService.setData(testData);
     spyOn(scope, 'loadFacilitiesForProgram');
     scope.$broadcast('$viewContentLoaded');
@@ -48,7 +48,7 @@ describe('InitiateRnrController', function () {
   });
 
   it("should reset rnr data when selectedType is changed", function () {
-    var testData = {selectedType: 2, selectedProgram: {"code": "HIV", "id": 1}, selectedFacilityId: 1, isNavigatedBack: false};
+    var testData = {selectedType: "2", selectedProgram: {"code": "HIV", "id": 1}, selectedFacilityId: 1, isNavigatedBack: false};
     navigateBackService.setData(testData);
     scope.$broadcast('$viewContentLoaded');
     expect(scope.selectedProgram).toEqual(null);
@@ -56,7 +56,7 @@ describe('InitiateRnrController', function () {
   });
 
   it("should retain all the previous values when navigated back from create rnr screen", function () {
-    var testData = {selectedType: 2, selectedProgram: {"code": "HIV", "id": 1}, selectedFacilityId: 1, isNavigatedBack: true};
+    var testData = {selectedType: "2", selectedProgram: {"code": "HIV", "id": 1}, selectedFacilityId: 1, isNavigatedBack: true};
     navigateBackService.setData(testData);
     scope.programs = programs;
     spyOn(scope, 'loadFacilitiesForProgram');
@@ -73,7 +73,7 @@ describe('InitiateRnrController', function () {
   });
 
   it("should return facilities if selected type is 0 and facility list is not empty", function () {
-    var selectedType = 0;
+    var selectedType = "0";
     var UserFacilityListResponse = {"facilityList": [
       {"id": 1, "code": "F11", "name": "lokesh"}
     ]};
@@ -93,7 +93,7 @@ describe('InitiateRnrController', function () {
   });
 
   it("should not return facilities if selected type is 0 and facility list is empty", function () {
-    var selectedType = 0;
+    var selectedType = "0";
     var UserFacilityListResponse = {"facilityList": []};
 
     spyOn(messageService, 'get').andCallFake(function (arg) {
@@ -108,7 +108,7 @@ describe('InitiateRnrController', function () {
   });
 
   it("should return program list if selected type is 1", function () {
-    var selectedType = 1;
+    var selectedType = "1";
     var RequisitionResponse = {"programList": [
       {"code": "HIV", "id": 1}
     ]};
@@ -210,7 +210,7 @@ describe('InitiateRnrController', function () {
   });
 
   it('should save the selected data in the navigateBackService', function () {
-    scope.selectedType = 0;
+    scope.selectedType = "0";
     scope.selectedProgram = {"code": "hiv", "id": 2};
     scope.selectedFacilityId = 1;
     var testData = {selectedType: scope.selectedType, selectedProgram: scope.selectedProgram, selectedFacilityId: scope.selectedFacilityId, isNavigatedBack: true};
@@ -342,7 +342,9 @@ describe('InitiateRnrController', function () {
     });
 
     it('should not load periods and set already submitted error if selected type is my facility', function () {
-      scope.selectedType = 0;
+      scope.selectedType = "0";
+
+
 
       $httpBackend.expectGET('/logistics/periods.json?emergency=false&facilityId=20&programId=10').respond(400, {"error": "error.current.rnr.already.post.submit"});
 
@@ -353,7 +355,7 @@ describe('InitiateRnrController', function () {
     });
 
     it('should not load periods and set already submitted error if selected type is my supervised facility', function () {
-      scope.selectedType = 1;
+      scope.selectedType = "1";
 
       $httpBackend.expectGET('/logistics/periods.json?emergency=false&facilityId=20&programId=10').respond(400, {"error": "error.current.rnr.already.post.submit"});
 

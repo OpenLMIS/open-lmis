@@ -48,7 +48,7 @@ function InitiateRnrController($scope, $location, Requisitions,
   };
 
   $scope.$on('$viewContentLoaded', function () {
-    $scope.selectedType = navigateBackService.selectedType || 0;
+    $scope.selectedType = navigateBackService.selectedType || "0";
     $scope.selectedProgram = navigateBackService.selectedProgram;
     $scope.selectedFacilityId = navigateBackService.selectedFacilityId;
     isNavigatedBack = navigateBackService.isNavigatedBack;
@@ -73,9 +73,9 @@ function InitiateRnrController($scope, $location, Requisitions,
   });
 
   $scope.loadFacilityData = function (selectedType) {
-    isNavigatedBack = isNavigatedBack ? (selectedType == "0" ? false : true) : resetRnrData();
+    isNavigatedBack = isNavigatedBack ? selectedType !== "0" : resetRnrData();
 
-    if (selectedType == 0) { //My facility
+    if (selectedType === "0") { //My facility
       UserFacilityList.get({}, function (data) {
         $scope.facilities = data.facilityList;
         $scope.myFacility = data.facilityList[0];
@@ -92,7 +92,7 @@ function InitiateRnrController($scope, $location, Requisitions,
           $scope.selectedProgram = null;
         }
       }, {});
-    } else if (selectedType == 1) { // Supervised facility
+    } else if (selectedType === "1") { // Supervised facility
       resetRnrData();
       CreateRequisitionProgramList.get({}, function (data) {
         $scope.programs = data.programList;
@@ -118,7 +118,8 @@ function InitiateRnrController($scope, $location, Requisitions,
   };
 
   var optionMessage = function (entity, defaultMessage) {
-    return entity == null || entity.length == 0 ? messageService.get("label.none.assigned") : defaultMessage;
+      console.log(entity);
+    return entity === null || entity.length === 0 ? messageService.get("label.none.assigned") : defaultMessage;
   };
 
   var resetValuesForFirstPeriod = function (periodGridData) {
@@ -131,7 +132,7 @@ function InitiateRnrController($scope, $location, Requisitions,
 
   var createPeriodWithRnrStatus = function (periods, rnrs) {
 
-    if (periods == null || periods.length == 0) {
+    if (periods === null || periods.length === 0) {
       $scope.error = messageService.get("msg.no.period.available");
       if ($scope.isEmergency) {
         addPreviousRequisitionToPeriodList(rnrs);
@@ -141,7 +142,7 @@ function InitiateRnrController($scope, $location, Requisitions,
 
     $scope.periodGridData = [];
 
-    var periodWithRnrStatus = undefined;
+    var periodWithRnrStatus;
 
     periods.forEach(function (period) {
       periodWithRnrStatus = angular.copy(period);
@@ -150,7 +151,7 @@ function InitiateRnrController($scope, $location, Requisitions,
       }
       else {
         periodWithRnrStatus.rnrStatus = messageService.get("msg.rnr.previous.pending");
-        if (rnrs != null && rnrs.length > 0 && periodWithRnrStatus.id == rnrs[0].period.id) {
+        if (rnrs !== null && rnrs.length > 0 && periodWithRnrStatus.id === rnrs[0].period.id) {
           periodWithRnrStatus.rnrId = rnrs[0].id;
           periodWithRnrStatus.rnrStatus = rnrs[0].status;
         }
@@ -168,9 +169,9 @@ function InitiateRnrController($scope, $location, Requisitions,
 
   var addPreviousRequisitionToPeriodList = function (rnrs) {
     var periodWithRnrStatus;
-    if (rnrs == null || rnrs.length == 0) return;
+    if (rnrs === null || rnrs.length === 0) return;
     rnrs.forEach(function (rnr) {
-      if (rnr.status == 'INITIATED' || rnr.status == 'SUBMITTED') {
+      if (rnr.status === 'INITIATED' || rnr.status === 'SUBMITTED') {
         periodWithRnrStatus = angular.copy(rnr.period);
         periodWithRnrStatus.rnrStatus = rnr.status;
         periodWithRnrStatus.rnrId = rnr.id;
@@ -178,7 +179,7 @@ function InitiateRnrController($scope, $location, Requisitions,
         $scope.periodGridData.push(periodWithRnrStatus);
       }
     });
-  }
+  };
 
   $scope.periodGridOptions = { data: 'periodGridData',
     canSelectRows: false,
@@ -197,7 +198,6 @@ function InitiateRnrController($scope, $location, Requisitions,
       {field: '', displayName: '', cellTemplate: getPeriodSpecificButton('row.entity.activeForRnr')}
     ]
   };
-
 
   $scope.$watch("error", function (errorMsg) {
     setTimeout(function () {
@@ -228,8 +228,8 @@ function InitiateRnrController($scope, $location, Requisitions,
         createPeriodWithRnrStatus(data.periods, data.rnr_list);
       },
       function (data) {
-        if (data.data.error == 'error.current.rnr.already.post.submit') {
-          $scope.error = $scope.selectedType ? messageService.get("msg.no.rnr.awaiting.authorization") :
+        if (data.data.error === 'error.current.rnr.already.post.submit') {
+          $scope.error = $scope.selectedType !== "0" ? messageService.get("msg.no.rnr.awaiting.authorization") :
             messageService.get("msg.rnr.current.period.already.submitted");
           return;
         }
@@ -250,13 +250,13 @@ function InitiateRnrController($scope, $location, Requisitions,
       var rights = data.rights;
       var hasPermission = function (permission) {
         return _.find(rights, function (right) {
-          return right.right == permission
+          return right.right === permission;
         });
       };
 
       if (selectedPeriod.rnrId) {
         Requisitions.get({id: selectedPeriod.rnrId}, function (data) {
-          if (data.rnr.status != 'SUBMITTED' && !hasPermission('CREATE_REQUISITION')) {
+          if (data.rnr.status !== 'SUBMITTED' && !hasPermission('CREATE_REQUISITION')) {
             $scope.error = messageService.get("error.requisition.not.submitted");
             return;
           }
@@ -273,7 +273,7 @@ function InitiateRnrController($scope, $location, Requisitions,
           $location.url(createRnrPath);
         }, function (data) {
           $scope.error = data.data.error ? data.data.error : messageService.get("error.requisition.not.exist");
-        })
+        });
       } else {
         $scope.error = messageService.get("error.requisition.not.initiated");
       }

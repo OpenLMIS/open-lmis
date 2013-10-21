@@ -48,5 +48,5 @@ function FacilityDistributionData(facilityDistributionData) {
 
   FacilityDistributionData.prototype.isDisabled = function () {
     return [SYNCED, DUPLICATE].indexOf(this.status) != -1;
-  }
+  };
 }

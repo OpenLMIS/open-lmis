@@ -59,7 +59,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
+        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
+      {
         valid = false;
         return false;
       }
@@ -74,7 +76,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.fulfillmentRoles, function (index, roleAssignment) {
-      if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+      if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
         valid = false;
         return false;
       }
@@ -383,11 +385,12 @@ function expandCollapseToggle(element){
 	});
   var offsetTop = $(element).offset().top;
   $('body, html').animate({
-    scrollTop: parseInt(offsetTop)+'px'
+    scrollTop: utils.parseIntWithBaseTen(offsetTop)+'px'
   });
 }
 
 function init(){
   expandCollapseToggle($('.accordion-section:first .heading'));
 }
-setTimeout('init()',600);
+
+setTimeout(init(),600);

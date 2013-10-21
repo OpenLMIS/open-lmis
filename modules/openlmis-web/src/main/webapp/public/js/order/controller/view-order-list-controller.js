@@ -65,7 +65,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 }
 
 var resizeWindow = function(){
-  setTimeout('$(window).trigger("resize")',700);
-}
+  $(window).trigger("resize");
+};
 
-resizeWindow();
+setTimeout(resizeWindow(), 700);

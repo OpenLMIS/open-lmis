@@ -247,9 +247,14 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
-
 }
 
+var populateFlags = function ($scope) {
+  $(['suppliesOthers', 'sdp', 'hasElectricity', 'online', 'hasElectronicScc', 'hasElectronicDar', 'active', 'enabled']).each(function (index, field) {
+    var value = $scope.facility[field];
+    $scope.facility[field] = ($.isEmptyObject(value)) ? "" : value.toString();
+  });
+};
 
 FacilityController.resolve = {
   facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {

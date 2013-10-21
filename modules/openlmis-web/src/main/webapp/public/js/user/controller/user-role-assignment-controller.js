@@ -105,7 +105,7 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     return _.reject($scope.warehouses, function (warehouse) {
       return _.contains(assignedWarehouseId, warehouse.id);
     });
-  }
+  };
 
   $scope.showHomeFacilityRoleAssignmentOptions = function () {
     return ($scope.user !== null && $scope.user.facilityId !== null);
@@ -149,8 +149,9 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   $scope.addSupervisoryRole = function () {
-    if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise)
-      && isPresent($scope.selectedRoleIdsToSupervise)) {
+    if (isPresent($scope.selectedProgramIdToSupervise) && isPresent($scope.selectedSupervisoryNodeIdToSupervise) &&
+        isPresent($scope.selectedRoleIdsToSupervise))
+    {
       var newRoleAssignment = {programId: $scope.selectedProgramIdToSupervise,
         supervisoryNode: {id: $scope.selectedSupervisoryNodeIdToSupervise},
         roleIds: $scope.selectedRoleIdsToSupervise};
@@ -205,11 +206,9 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.user.allocationRoles = $scope.user.allocationRoles ? $scope.user.allocationRoles : [];
     $scope.showAllocationError = true;
 
-    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId
-      || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) {
-      return;
-    }
-    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId || !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length) {
+    if (!$scope.deliveryZoneRole.deliveryZone.id || !$scope.deliveryZoneRole.programId ||
+      !$scope.deliveryZoneRole.roleIds || !$scope.deliveryZoneRole.roleIds.length)
+    {
       return;
     }
 
@@ -231,10 +230,8 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     $scope.user.fulfillmentRoles.push(angular.copy($scope.warehouseRole));
       $scope.warehouseRole = null;
       $scope.warehouseRoleMappingError = false;
-  }
+  };
 
-
-  // WHO WROTE THIS? THIS IS AWESOME!
   $scope.getProgramName = function (programId) {
     return _.findWhere(_.flatten($scope.programsMap), {id: programId}).name;
   };
@@ -257,5 +254,5 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
 
   var isPresent = function (obj) {
     return obj !== undefined && obj !== null && obj !== "" && !(obj instanceof Array && obj.length == 0) ;
-  }
+  };
 }

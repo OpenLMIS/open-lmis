@@ -34,7 +34,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
       $.each(distributionData.facilityDistributionData, function (facilityId, facilityDistributionData) {
         facilityId = utils.parseIntWithBaseTen(facilityId);
         var computedStatus = facilityDistributionData.computeStatus();
-        if (computedStatus != COMPLETE)  return;
+        if (computedStatus !== COMPLETE)  return;
 
         var defer = $q.defer();
         promises.push(defer.promise);
@@ -94,6 +94,5 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     };
 
     OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
-  }
+  };
 }
-
