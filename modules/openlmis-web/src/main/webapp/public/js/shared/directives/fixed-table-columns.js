@@ -55,15 +55,16 @@ app.directive('fixedTableColumns', function () {
       $(window).on('scroll resize', setFixedTableColumnsOffset);
 
       var cloneAndAppendFixedTableColumns = function () {
+        fixedTable.html('');
         fixedTableHead.html('');
         fixedTableHead.append($(element.find('thead th')[0]).clone());
         fixedTableHead.append($(element.find('thead th')[1]).clone());
-        fixedTable.html('');
+        //fixedTable.html('');
         fixedTable.append(fixedTableHead);
 
         cloneAndAppendTableBody();
 
-        fixedColumns.html('');
+        //fixedColumns.html('');
         fixedColumns.append(fixedTable);
         element.parent().append(fixedColumns);
       };
@@ -87,6 +88,7 @@ app.directive('fixedTableColumns', function () {
 
               fixedTableRows = $("<tr></tr>").append(firstTableCell).append(secondTableCell);
             }
+
             $(fixedTableBody).append(fixedTableRows);
           });
 
