@@ -8,7 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-import com.eriwen.gradle.js.JsMinifier
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.Exec
@@ -97,39 +96,16 @@ tasks.withType(War) {
     }
 }
 
-task minifyJSFiles() {
-    doLast {
-        println "Minifying Javascript files..."
-        int i = 0;
-        javascript.source.dev.js.files.each { File file ->
-            def dest = new File(file.absolutePath.replace('/js/', '/minJs/'))
-            dest.getParentFile().mkdirs()
-            dest.createNewFile()
-            new JsMinifier().minifyJsFile(
-                    [file] as Set<File>,
-                    [] as Set<File>,
-                    dest,
-                    project.closure.compilerOptions,
-                    'QUIET', //project.closure.warningLevel,
-                    'WHITESPACE_ONLY', //project.closure.compilationLevel
-            )
-            i++
-        }
-        println "Minified " + i + " javascript files."
-    }
-}
-
 task cleanMinJs(type: Delete) {
     delete 'src/main/webapp/public/minJs/'
 }
-
-war
 
 war.doLast {
     tasks.cleanMinJs.execute()
 }
 
 build.doLast {
+    tasks.jsHint.execute()
     tasks.cleanMinJs.execute()
 }
 
