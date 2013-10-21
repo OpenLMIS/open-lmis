@@ -37,7 +37,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     });
   }
 
-
   function validateHomeFacilityRoles(user) {
     if (!user.homeFacilityRoles) {
       return true;
@@ -362,7 +361,7 @@ function expandCollapse(trigger){
     });
     var offsetTop = accordion.offset().top;
     $('body, html').animate({
-        scrollTop: parseInt(offsetTop)+'px'
+        scrollTop: utils.parseIntWithBaseTen(offsetTop)+'px'
     });
 	}else{
 		accordion.find('.accordion-section').each(function() {
@@ -371,6 +370,7 @@ function expandCollapse(trigger){
     });
 	}
 }
+
 function expandCollapseToggle(element){
   $(element).parents('.accordion-section').siblings('.accordion-section').each(function(){
     $(this).find('.accordion-body').slideUp();
@@ -393,4 +393,4 @@ function init(){
   expandCollapseToggle($('.accordion-section:first .heading'));
 }
 
-setTimeout(init(),600);
+setTimeout(init,600);

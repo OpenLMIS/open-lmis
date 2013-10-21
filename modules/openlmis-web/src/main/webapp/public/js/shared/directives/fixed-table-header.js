@@ -23,7 +23,8 @@ app.directive('fixedTableHeader', function() {
         table.append(element.find('thead').clone());
         fixedHeader.append(table);
         element.parent().append(fixedHeader);
-      }
+      };
+
       setTimeout(function() {
         cloneAndAppendTableHeader();
         fixedHeader.css('width',element.parent().css('width'));
@@ -51,4 +52,4 @@ var viewFixedHeaderOnScroll = function(fixedHeaderElement, element) {
       fixedHeaderElement.scrollLeft(element.parent().scrollLeft());
     }
   });
-}
+};

@@ -253,6 +253,6 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   };
 
   var isPresent = function (obj) {
-    return obj !== undefined && obj !== null && obj !== "" && !(obj instanceof Array && obj.length == 0) ;
+    return obj !== undefined && obj !== null && obj !== "" && !(obj instanceof Array && obj.length === 0) ;
   };
 }

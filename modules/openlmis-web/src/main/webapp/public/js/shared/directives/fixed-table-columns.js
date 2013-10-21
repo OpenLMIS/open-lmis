@@ -22,8 +22,8 @@ app.directive('fixedTableColumns', function () {
 
       var setFixedTableColumnsOffset = function () {
         fixedColumns.css({
-          top: eval(element.offset().top - $(window).scrollTop() - 1) + 'px',
-          left: eval(element.offset().left + element.parent().scrollLeft()) + 'px'
+          top: (element.offset().top - $(window).scrollTop() - 1) + 'px',
+          left: (element.offset().left + element.parent().scrollLeft()) + 'px'
         });
       };
 
@@ -40,7 +40,7 @@ app.directive('fixedTableColumns', function () {
         $('.column-fixed th').each(function (index, tableHeaderElement) {
           copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
         });
-      }
+      };
 
       scope.$watch('pageLineItems', function () {
         setTimeout(function () {
@@ -66,16 +66,17 @@ app.directive('fixedTableColumns', function () {
         fixedColumns.html('');
         fixedColumns.append(fixedTable);
         element.parent().append(fixedColumns);
-      }
+      };
 
       var cloneAndAppendTableBody = function () {
         var tableBodyList = element.find('tbody');
         tableBodyList.each(function (index, body) {
           var fixedTableBody = $('<tbody></tbody>');
           var tableRows = $(body).find('tr');
+          var fixedTableRows;
           tableRows.each(function (index, row) {
-            if (index == 0) {
-              var fixedTableRows = $(row).clone();
+            if (index === 0) {
+              fixedTableRows = $(row).clone();
               fixedTableRows.find('td').attr('colspan', '2');
             } else {
               var firstTableCell = $($(row).find('td')[0]).clone();
@@ -84,23 +85,21 @@ app.directive('fixedTableColumns', function () {
               var secondTableCell = $($(row).find('td')[1]).clone();
               copyWidthAndHeight($($(row).find('td')[1]), secondTableCell);
 
-              var fixedTableRows = $("<tr></tr>").append(firstTableCell).append(secondTableCell);
+              fixedTableRows = $("<tr></tr>").append(firstTableCell).append(secondTableCell);
             }
             $(fixedTableBody).append(fixedTableRows);
           });
 
           fixedTable.append($(fixedTableBody));
         });
-      }
-
+      };
     }
   };
 });
 
 var copyWidthAndHeight = function (fromElement, toElement) {
   toElement.css({
-    width: parseInt(fromElement.width()) + 'px',
-    height: parseInt(fromElement.height()) + 'px'
-  })
-}
-
+    width: utils.parseIntWithBaseTen(fromElement.width()) + 'px',
+    height: utils.parseIntWithBaseTen(fromElement.height()) + 'px'
+  });
+};

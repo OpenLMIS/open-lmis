@@ -62,7 +62,7 @@
                 <span ng-bind="geoZoneName"></span>
               </td>
               <td>
-                <span ng-bind="aggregateMap[geoZoneName]['totalPopulation']"></span>
+                <span ng-bind="aggregateMap[geoZoneName].totalPopulation"></span>
               </td>
               <td ng-repeat="programProduct in getProgramProductsForAggregateRow(geoZoneName)">
                 <span ng-bind="programProduct.isaAmount"></span>

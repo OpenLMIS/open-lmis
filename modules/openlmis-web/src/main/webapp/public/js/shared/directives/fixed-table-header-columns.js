@@ -31,7 +31,7 @@ app.directive('fixedTableHeaderColumns', function() {
         table.append(secondTableCell);
         fixedHeaderColumns.append(table);
         element.parent().append(fixedHeaderColumns);
-      }
+      };
 
       setTimeout(function() {
         cloneAndAppendTableHeaderColumns();
