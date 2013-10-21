@@ -263,7 +263,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     testWebDriver.sleep(500);
     userPage.verifyRoleNotPresent(warehouseRole);
     userPage.verifyRemoveNotPresent();
-    //verifyWarehouseAvailableForWarehouseRoles(userPage);
+
+    verifyWarehouseAvailableForWarehouseRoles(facilityCodeFirst);
 
   }
 
@@ -366,12 +367,21 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
-  private void verifyWarehouseAvailableForWarehouseRoles(UserPage userPage) throws IOException, SQLException {
+  private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode) throws IOException, SQLException {
+    UserPage userPage = new UserPage(testWebDriver);
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
     dbWrapper.disableWarehouse(warehouseName);
+
+    userPage.clickSaveButton();
+    userPage.clickViewHere();
+    userPage.clickWarehouseRolesAccordion();
     assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
     dbWrapper.enableWarehouse(warehouseName);
+    dbWrapper.updateActiveStatusOfFacility(FacilityCode,"true");
+    userPage.clickSaveButton();
+    userPage.clickViewHere();
+    userPage.clickWarehouseRolesAccordion();
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
   }
 
