@@ -96,17 +96,19 @@ tasks.withType(War) {
     }
 }
 
-task cleanMinJs(type: Delete) {
-    delete 'src/main/webapp/public/minJs/'
+task cleanup(type: Delete) {
+//    delete 'src/main/webapp/public/minJs/'
+    delete 'quality/js'
+    delete 'quality/'
 }
 
 war.doLast {
-    tasks.cleanMinJs.execute()
+    tasks.cleanup.execute()
 }
 
 build.doLast {
     tasks.jsHint.execute()
-    tasks.cleanMinJs.execute()
+    tasks.cleanup.execute()
 }
 
 dependencies {

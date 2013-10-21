@@ -23,7 +23,7 @@ module.exports = function (grunt) {
           unused: false,
           passfail: true,
           reporter: 'checkstyle',
-          reporterOutput: 'quality/js/report.xml'
+          reporterOutput: 'quality/js/checkstyle-results.xml'
         },
         all:['src/main/webapp/public/js/**/*.js']
       },
