@@ -201,17 +201,10 @@
         <accordion-group heading="{{getMessage('create.user.warehouse.roles')}}">
           <ng-include src="'/public/pages/admin/user/partials/user-warehouse-roles.html'"></ng-include>
         </accordion-group>
+        <accordion-group heading="Report Viewing Roles">
+          <ng-include src="'/public/pages/admin/user/partials/user-report-role-assignment.html'"></ng-include>
+        </accordion-group>
       </accordion>
-
-        <!-- /form-group -->
-        <div class="form-group">
-            <h3>Report Viewing Roles</h3>
-
-            <div class="prog-role-grid">
-                <ng-include src="'/public/pages/admin/user/partials/user-report-role-assignment.html'"></ng-include>
-            </div>
-        </div>
-        <!-- /form-group -->
 
       <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
