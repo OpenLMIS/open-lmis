@@ -24,6 +24,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
 
 @Category(UnitTests.class)
 public class FacilityFeedDTOTest {
@@ -31,7 +33,9 @@ public class FacilityFeedDTOTest {
   @Test
   //TODO write separate test for boolean fields
   public void shouldFillDTOFromGivenFacility() throws Exception {
-    List<ProgramSupported> programsSupported = asList(new ProgramSupported());
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setProgram(make(a(defaultProgram, with(programCode, "HIV"))));
+    List<ProgramSupported> programsSupported = asList(programSupported);
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(programSupportedList, programsSupported)));
     Facility parentFacility = new Facility();
     parentFacility.setCode("Parent Facility");
@@ -70,6 +74,6 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getComment(), is(facility.getComment()));
     assertThat(facilityFeedDTO.isEnabled(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
-    assertThat(facilityFeedDTO.getProgramsSupported(), is(programsSupported));
+    assertThat(facilityFeedDTO.getProgramsSupported(), is(asList("HIV")));
   }
 }

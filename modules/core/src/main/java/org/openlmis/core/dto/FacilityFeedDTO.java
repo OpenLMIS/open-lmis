@@ -13,6 +13,7 @@ package org.openlmis.core.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProgramSupported;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.ProgramSupported;
 import java.util.Date;
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -93,7 +95,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
 
   private Boolean virtualFacility;
 
-  private List<ProgramSupported> programsSupported;
+  private List<String> programsSupported;
 
   public FacilityFeedDTO(Facility facility, Facility parentFacility) {
     this.code = facility.getCode();
@@ -128,7 +130,12 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     this.comment = facility.getComment();
     this.enabled = facility.getEnabled();
     this.modifiedDate = facility.getModifiedDate();
-    this.programsSupported = facility.getSupportedPrograms();
+    this.programsSupported = (List<String>) collect(facility.getSupportedPrograms(), new Transformer() {
+      @Override
+      public Object transform(Object o) {
+        return ((ProgramSupported) o).getProgram().getCode();
+      }
+    });
   }
 
 }
