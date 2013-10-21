@@ -58,6 +58,7 @@
                   <th>Full Name</th>
                   <th>Email</th>
                   <th>Is Active</th>
+                  <th></th>
               </tr>
           </thead>
           <tbody>
@@ -66,6 +67,12 @@
                 <td>{{ user.firstName }} {{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
                 <td ><span class="icon-{{(user.active)?'check':'question-sign'}}" ></span></td>
+                <td class="user-actions">
+                    <a href="" class="btn btn-primary btn-small" openlmis-message="button.edit"
+                       ng-click="editUser(user.id)"></a>
+                    <a href="" class="btn btn-primary btn-small" ng-class="{'disabled': !user.active}" openlmis-message="button.reset.password"
+                       ng-click="user.active? changePassword(user): ''"></a>
+                </td>
             </tr>
           </tbody>
       </table>
