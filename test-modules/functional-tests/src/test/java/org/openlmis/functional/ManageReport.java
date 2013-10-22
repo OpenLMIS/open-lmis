@@ -74,7 +74,7 @@ public class ManageReport extends TestCaseHelper {
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
-    reportPage.verifyErrorMessageDivFooter();
+    reportPage.verifyErrorMessageInvalidFile();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
