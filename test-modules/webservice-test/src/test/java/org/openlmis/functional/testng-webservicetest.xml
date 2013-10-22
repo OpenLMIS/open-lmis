@@ -32,6 +32,8 @@
       </class>
       <class name="org.openlmis.functional.ProgramProductAPI">
       </class>
+        <class name="org.openlmis.functional.FacilityAPI">
+        </class>
     </classes>
   </test>
 </suite>
