@@ -42,7 +42,7 @@ app.directive('fixedTableColumns', function () {
         });
       };
 
-      scope.$watch('pageLineItems', function () {
+      scope.$watch('[pageLineItems, errorPages]', function () {
         setTimeout(function () {
           if ($('#' + $(element).attr('id')).is(':visible')) {
             cloneAndAppendFixedTableColumns();
@@ -50,7 +50,7 @@ app.directive('fixedTableColumns', function () {
           }
           $(window).trigger('scroll');
         });
-      });
+      }, true);
 
       $(window).on('scroll resize', setFixedTableColumnsOffset);
 
@@ -59,7 +59,6 @@ app.directive('fixedTableColumns', function () {
         fixedTableHead.html('');
         fixedTableHead.append($(element.find('thead th')[0]).clone());
         fixedTableHead.append($(element.find('thead th')[1]).clone());
-        //fixedTable.html('');
         fixedTable.append(fixedTableHead);
 
         cloneAndAppendTableBody();
