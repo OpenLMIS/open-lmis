@@ -255,7 +255,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
     dbWrapper.insertSupplyLines("N1", program, facilityCode1);
-    dbWrapper.updateActiveStatusOfProgram(programCode);
+    dbWrapper.updateActiveStatusOfProgram(programCode,true);
   }
 
   public void updateProductWithGroup(String product, String productGroup) throws IOException, SQLException {

@@ -361,6 +361,7 @@ public class DBWrapper {
     update("delete from atomfeed.event_records;");
     update("delete from regimens;");
     update("delete from program_regimen_columns;");
+
   }
 
 
@@ -1079,8 +1080,8 @@ public class DBWrapper {
     }
   }
 
-  public void updateActiveStatusOfProgram(String programCode) throws SQLException {
-    update("update programs SET active='true' where code='" + programCode + "';");
+  public void updateActiveStatusOfProgram(String programCode, boolean status) throws SQLException {
+    update("update programs SET active=" + status + " where code='" + programCode + "';");
   }
 
   public void insertRegimenTemplateColumnsForProgram(String programName) throws SQLException {
@@ -1242,11 +1243,11 @@ public class DBWrapper {
         return warehouseName;
     }
 
-    public void disableWarehouse(String warehouse1Name) throws SQLException {
-        update("UPDATE facilities SET enabled='false' WHERE name='"+warehouse1Name+"';");
+    public void disableFacility(String warehouseName) throws SQLException {
+        update("UPDATE facilities SET enabled='false' WHERE name='"+warehouseName+"';");
     }
 
-    public void enableWarehouse(String warehouse1Name) throws SQLException {
-        update("UPDATE facilities SET enabled='true' WHERE name='"+warehouse1Name+"';");
+    public void enableFacility(String warehouseName) throws SQLException {
+        update("UPDATE facilities SET enabled='true' WHERE name='"+warehouseName+"';");
     }
 }

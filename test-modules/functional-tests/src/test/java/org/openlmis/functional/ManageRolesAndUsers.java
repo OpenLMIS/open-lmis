@@ -371,13 +371,13 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = new UserPage(testWebDriver);
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));
-    dbWrapper.disableWarehouse(warehouseName);
+    dbWrapper.disableFacility(warehouseName);
 
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();
     assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
-    dbWrapper.enableWarehouse(warehouseName);
+    dbWrapper.enableFacility(warehouseName);
     dbWrapper.updateActiveStatusOfFacility(FacilityCode,"true");
     userPage.clickSaveButton();
     userPage.clickViewHere();
