@@ -18,19 +18,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.Vendor;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.core.service.VendorService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
 public class RestApiAuthenticationProviderTest {
@@ -39,51 +40,46 @@ public class RestApiAuthenticationProviderTest {
   public ExpectedException expectedException = none();
 
   @Mock
-  VendorService vendorService;
+  MessageService messageService;
 
   @Mock
-  MessageService messageService;
+  UserService userService;
+
+  @Mock
+  Authentication authentication;
 
   @InjectMocks
   RestApiAuthenticationProvider restApiAuthenticationProvider;
 
   @Test
-  public void shouldThrowExceptionForInvalidCredentialsDuringVendorAuthentication() throws Exception {
-    Authentication authentication = mock(Authentication.class);
-    String externalSystem = "externalSystem";
-    when(authentication.getPrincipal()).thenReturn(externalSystem);
-    when(authentication.getCredentials()).thenReturn("invalid token");
+  public void shouldThrowExceptionForInvalidCredentialsDuringUserAuthentication() throws Exception {
+    String userName = "userName";
+    String password = "invalid token";
+    when(authentication.getPrincipal()).thenReturn(userName);
+    when(authentication.getCredentials()).thenReturn(password);
 
-    Vendor vendor = new Vendor();
-    vendor.setName(externalSystem);
-    vendor.setAuthToken("invalid token");
-    when(vendorService.authenticate(vendor)).thenReturn(false);
+    when(userService.selectUserByUserNameAndPassword(userName, password)).thenReturn(null);
     when(messageService.message("error.authentication.failed")).thenReturn("message");
 
     expectedException.expect(BadCredentialsException.class);
     expectedException.expectMessage("message");
 
     restApiAuthenticationProvider.authenticate(authentication);
-
-    verify(vendorService).authenticate(vendor);
   }
 
   @Test
   public void shouldReturnAuthenticationIfVendorValidAndAuthenticated() throws Exception {
-    Authentication authentication = mock(Authentication.class);
-    String externalSystem = "externalSystem";
-    when(authentication.getPrincipal()).thenReturn(externalSystem);
-    when(authentication.getCredentials()).thenReturn("valid token");
+    String userName = "userName";
+    String password = "valid token";
+    when(authentication.getPrincipal()).thenReturn(userName);
+    when(authentication.getCredentials()).thenReturn(password);
 
-    Vendor vendor = new Vendor();
-    vendor.setName(externalSystem);
-    vendor.setAuthToken("valid token");
-    when(vendorService.authenticate(vendor)).thenReturn(true);
+    when(userService.selectUserByUserNameAndPassword(userName, password)).thenReturn(new User());
 
     Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
 
     assertThat(authenticated.getPrincipal(), is(authentication.getPrincipal()));
-    verify(vendorService).authenticate(vendor);
+    verify(userService).selectUserByUserNameAndPassword(userName, password);
   }
 
   @Test
