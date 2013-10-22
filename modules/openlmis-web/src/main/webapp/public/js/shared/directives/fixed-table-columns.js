@@ -86,7 +86,7 @@ app.directive('fixedTableColumns', function () {
 
 var copyWidthAndHeight = function (fromElement, toElement) {
   toElement.css({
-    width: utils.parseInt(fromElement.width()) + 'px',
+    width: utils.parseIntWithBaseTen(fromElement.width()) + 'px',
     height: utils.parseIntWithBaseTen(fromElement.height()) + 'px'
   });
 };
