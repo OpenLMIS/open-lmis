@@ -68,7 +68,7 @@ public class RestApiAuthenticationProviderTest {
   }
 
   @Test
-  public void shouldReturnAuthenticationIfVendorValidAndAuthenticated() throws Exception {
+  public void shouldReturnAuthenticationIfUserValidAndAuthenticated() throws Exception {
     String userName = "userName";
     String password = "valid token";
     when(authentication.getPrincipal()).thenReturn(userName);

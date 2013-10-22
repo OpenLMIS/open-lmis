@@ -83,7 +83,7 @@ public class UserRepositoryTest {
   @Test
   public void shouldThrowExceptionAndNotInsertUserIfSupervisorIdDoesNotExist() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsernameAndVendorId(user)).thenReturn(null);
+    when(userMapper.getByUsername(user)).thenReturn(null);
     exException.expect(DataException.class);
     exException.expectMessage(SUPERVISOR_USER_NOT_FOUND);
     userRepository.create(user);
@@ -92,36 +92,36 @@ public class UserRepositoryTest {
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmployeeId() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(mock(User.class));
+    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_employeeId\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMPLOYEE_ID_FOUND);
-    userMapper.getByUsernameAndVendorId(user.getSupervisor());
+    userMapper.getByUsername(user.getSupervisor());
     userRepository.create(user);
   }
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmail() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(mock(User.class));
+    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_email\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMAIL_FOUND);
-    userMapper.getByUsernameAndVendorId(user.getSupervisor());
+    userMapper.getByUsername(user.getSupervisor());
     userRepository.create(user);
   }
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateUserName() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(mock(User.class));
+    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_userName\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);
-    userMapper.getByUsernameAndVendorId(user.getSupervisor());
+    userMapper.getByUsername(user.getSupervisor());
     userRepository.create(user);
   }
 
@@ -130,9 +130,9 @@ public class UserRepositoryTest {
     String username = "Admin";
     User user = make(a(defaultUser, with(email, "John_Doe@openlmis.com")));
     user.setUserName(username);
-    when(userMapper.getByUsernameAndVendorId(user)).thenReturn(user);
+    when(userMapper.getByUsername(user)).thenReturn(user);
 
-    User returnedUser = userRepository.getByUsernameAndVendorId(user);
+    User returnedUser = userRepository.getByUsername(user);
 
     assertThat(returnedUser, is(user));
   }
@@ -221,8 +221,8 @@ public class UserRepositoryTest {
 
     User supervisorUser = new User();
 
-    when(userMapper.getByUsernameAndVendorId(user)).thenReturn(user);
-    when(userMapper.getByUsernameAndVendorId(user.getSupervisor())).thenReturn(supervisorUser);
+    when(userMapper.getByUsername(user)).thenReturn(user);
+    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(supervisorUser);
 
     userRepository.update(user);
 

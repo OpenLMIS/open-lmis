@@ -98,7 +98,7 @@ public class UserService {
       user = userRepository.getByEmail(user.getEmail());
       if (user == null || !user.getActive()) throw new DataException(USER_EMAIL_INCORRECT);
     } else {
-      user = userRepository.getByUsernameAndVendorId(user);
+      user = userRepository.getByUsername(user);
       if (user == null || !user.getActive()) throw new DataException(USER_USERNAME_INCORRECT);
     }
     return user;
@@ -153,8 +153,8 @@ public class UserService {
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
-  public User getByUsernameAndVendorId(User user) {
-    return userRepository.getByUsernameAndVendorId(user);
+  public User getByUsername(User user) {
+    return userRepository.getByUsername(user);
   }
 
   public User getByUserName(String userName) {

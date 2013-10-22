@@ -13,15 +13,9 @@ package org.openlmis.rnr.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.dto.BaseFeedDTO;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
-
-import java.io.IOException;
 
 @Data
 @AllArgsConstructor
@@ -32,10 +26,9 @@ public class RnrFeedDTO extends BaseFeedDTO {
   private Long programId;
   private Long periodId;
   private RnrStatus requisitionStatus;
-  private String externalSystem;
 
-  public static RnrFeedDTO populate(Rnr rnr, Vendor vendor) {
-    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus(), vendor.getName());
+  public static RnrFeedDTO populate(Rnr rnr) {
+    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus());
   }
 
 

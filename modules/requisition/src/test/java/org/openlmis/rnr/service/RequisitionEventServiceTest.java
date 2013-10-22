@@ -16,8 +16,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Vendor;
-import org.openlmis.core.service.VendorService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
@@ -26,7 +24,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
@@ -37,23 +36,17 @@ public class RequisitionEventServiceTest {
   @Mock
   EventService eventService;
 
-  @Mock
-  VendorService vendorService;
-
   @InjectMocks
   RequisitionEventService service;
 
   @Test
-  public void shouldFetchVendorAndTriggerNotifyOnEventService() throws Exception {
+  public void shouldTriggerNotifyOnEventService() throws Exception {
     Rnr requisition = make(a(defaultRnr));
-    Vendor vendor = new Vendor();
-    when(vendorService.getByUserId(requisition.getModifiedBy())).thenReturn(vendor);
     RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
-    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, vendor).thenReturn(event);
+    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition).thenReturn(event);
 
     service.notifyForStatusChange(requisition);
 
-    verify(vendorService).getByUserId(requisition.getModifiedBy());
     verify(eventService).notify(event);
   }
 }

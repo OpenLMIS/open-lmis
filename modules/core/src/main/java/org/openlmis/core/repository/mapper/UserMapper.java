@@ -22,27 +22,26 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND verified = TRUE and active = TRUE AND vendorId=(SELECT id FROM vendors WHERE name = 'openLmis')")
+  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND verified = TRUE and active = TRUE")
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
   @Insert({"INSERT INTO users",
     "(userName, facilityId, firstName, lastName, employeeId, jobTitle,",
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, vendorId, createdBy, modifiedBy, modifiedDate,createdDate, verified)",
+    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
-    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis')), " ,
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, " ,
       "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified})"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
-  @Select(value = "SELECT id, userName, vendorId,facilityId, firstName, lastName, employeeId, jobTitle, " +
-    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate" +
-    " FROM users where LOWER(userName) = LOWER(#{userName}) AND active = TRUE AND " +
-    "vendorId=COALESCE(#{vendorId},(SELECT id FROM vendors WHERE name = 'openLmis'))")
+  @Select(value = {"SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, ",
+    "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate",
+    " FROM users where LOWER(userName) = LOWER(#{userName}) AND active = TRUE"})
   @Results(
     @Result(property = "supervisor.id", column = "supervisorId")
   )
-  User getByUsernameAndVendorId(User user);
+  User getByUsername(User user);
 
   @Select(value = "SELECT * FROM users where LOWER(email) = LOWER(#{email})")
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))

@@ -22,7 +22,6 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
-import org.openlmis.core.service.VendorService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.Report;
@@ -58,8 +57,6 @@ public class RestRequisitionServiceTest {
   @Mock
   UserService userService;
   @Mock
-  VendorService vendorService;
-  @Mock
   private OrderService orderService;
 
   @InjectMocks
@@ -80,7 +77,7 @@ public class RestRequisitionServiceTest {
     user = new User();
     user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUsernameAndVendorId(user)).thenReturn(user);
+    when(userService.getByUsername(user)).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency()))
       .thenReturn(requisition);
     mockStatic(Base64.class);
@@ -92,7 +89,6 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
@@ -110,7 +106,6 @@ public class RestRequisitionServiceTest {
   @Test
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
-    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
 
     service.submitReport(spyReport);
 
@@ -118,12 +113,11 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldValidateUserWithVendorIdAndThrowErrorIfInvalid() throws Exception {
+  public void shouldValidateUserThrowErrorIfInvalid() throws Exception {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
-    when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
+    when(userService.getByUsername(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.username.incorrect");
@@ -132,13 +126,12 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldValidateUserWithVendorIdAndThrowErrorIfUsernameDoesNotMatchVendor() throws Exception {
+  public void shouldValidateUserAndThrowErrorIfUsernameDoesNotMatchVendor() throws Exception {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
-    when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
+    when(userService.getByUsername(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.username.incorrect");
@@ -152,7 +145,6 @@ public class RestRequisitionServiceTest {
 
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
-    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
 
     service.approve(spyReport);
 
@@ -164,13 +156,12 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldValidateUserWithVendorIdAndThrowErrorIfUsernameDoesNotMatchVendorWhileApproving() throws Exception {
+  public void shouldValidateUserAndThrowErrorIfUsernameDoesNotMatchVendorWhileApproving() throws Exception {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(vendorService.getByName(report.getVendor().getName())).thenReturn(report.getVendor());
-    when(userService.getByUsernameAndVendorId(user)).thenReturn(null);
+    when(userService.getByUsername(user)).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.username.incorrect");

@@ -18,7 +18,6 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.utils.mapper.TestVendorMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -64,8 +63,6 @@ public class UserMapperIT {
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
   @Autowired
-  TestVendorMapper vendorMapper;
-  @Autowired
   QueryExecutor queryExecutor;
 
   private Facility facility;
@@ -105,7 +102,7 @@ public class UserMapperIT {
 
     userMapper.insert(someUser);
 
-    User fetchedUser = userMapper.getByUsernameAndVendorId(someUser);
+    User fetchedUser = userMapper.getByUsername(someUser);
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -120,7 +117,7 @@ public class UserMapperIT {
     someUser.setModifiedDate(calendar.getTime());
 
     userMapper.insert(someUser);
-    User fetchedUser = userMapper.getByUsernameAndVendorId(someUser);
+    User fetchedUser = userMapper.getByUsername(someUser);
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -144,7 +141,6 @@ public class UserMapperIT {
     someUser.setPassword(null);
     someUser.getSupervisor().setModifiedDate(null);
     someUser.setModifiedDate(null);
-    someUser.setVendorId(null);
     assertThat(users, hasItem(someUser));
   }
 
@@ -167,31 +163,14 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNotNull() throws Exception {
-    String nullString = null;
-    Vendor vendor = new Vendor();
-    vendor.setName("newVendor");
-    vendorMapper.insert(vendor);
-
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString),
-      with(vendorId, vendor.getId()), with(active, true)));
-    user.setModifiedDate(Calendar.getInstance().getTime());
-    userMapper.insert(user);
-
-    User result = userMapper.getByUsernameAndVendorId(user);
-    user.setPassword(null);
-    assertThat(result, is(user));
-  }
-
-  @Test
-  public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNull() throws Exception {
+  public void shouldGetUserWithUserName() throws Exception {
     String nullString = null;
 
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(active, true)));
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
 
-    User result = userMapper.getByUsernameAndVendorId(user);
+    User result = userMapper.getByUsername(user);
     user.setPassword(null);
     assertThat(result, is(user));
   }
@@ -313,7 +292,7 @@ public class UserMapperIT {
 
     userMapper.disable(user.getId(), 1L);
 
-    assertThat(userMapper.getByUsernameAndVendorId(user), is(nullValue()));
+    assertThat(userMapper.getByUsername(user), is(nullValue()));
   }
 
   @Test
@@ -356,21 +335,6 @@ public class UserMapperIT {
     User returnedUser = userMapper.selectUserByUserNameAndPassword(user.getUserName(), newPassword);
     assertThat(returnedUser, is(notNullValue()));
   }
-
-  @Test
-  public void shouldSelectOnlyUsersWithExternalSystemNullWhileAuthentication() throws Exception {
-    Vendor commTrac = new Vendor("commTrac", true);
-    vendorMapper.insert(commTrac);
-
-    User externalUser = make(a(defaultUser, with(facilityId, facility.getId()), with(vendorId, commTrac.getId())));
-
-    userMapper.insert(externalUser);
-    userMapper.updateUserPasswordAndVerify(externalUser.getId(), "random");
-
-    User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
-    assertThat(user, is(nullValue()));
-  }
-
 
   @Test
   public void shouldInsertEmailNotification() throws Exception {

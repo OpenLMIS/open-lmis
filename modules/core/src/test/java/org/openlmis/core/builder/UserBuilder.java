@@ -33,7 +33,6 @@ public class UserBuilder {
   public static final Property<User, String> email = newProperty();
   public static final Property<User, Long> supervisorId = newProperty();
   public static final Property<User, String> supervisorUserName = newProperty();
-  public static final Property<User, Long> vendorId = newProperty();
   public static final Property<User, Boolean> verified = newProperty();
   public static final Property<User, Boolean> active = newProperty();
 
@@ -49,7 +48,6 @@ public class UserBuilder {
   public static final String defaultEmail = "mizengo_pinda@openlmis.com";
   public static final Long defaultSupervisorId = 1L;
   public static final String defaultSupervisorUserName = "supervisorUserName";
-  public static final Long defaultVendorId = 1L;
   public static final Boolean defaultVerified = false;
   public static final Boolean defaultActive = true;
 
@@ -69,7 +67,6 @@ public class UserBuilder {
       user.setOfficePhone(lookup.valueOf(officePhone, defaultOfficePhone));
       user.setCellPhone(lookup.valueOf(cellPhone, defaultCellPhone));
       user.setEmail(lookup.valueOf(email, defaultEmail));
-      user.setVendorId(lookup.valueOf(vendorId, defaultVendorId));
       user.setVerified(lookup.valueOf(verified, defaultVerified));
       user.setActive(lookup.valueOf(active, defaultActive));
       User supervisor = new User();

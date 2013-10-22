@@ -77,8 +77,6 @@ public class UserRepository {
       throw new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
     if (message.contains("duplicate key value violates unique constraint \"uc_users_userName\"".toLowerCase()))
       throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
-    if (message.contains(" duplicate key value violates unique constraint \"uc_users_username_vendor\"".toLowerCase())) //TODO:Change the message key after vendor is added on upload
-      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
   }
 
   private void validateAndSetSupervisor(User user) {
@@ -87,7 +85,7 @@ public class UserRepository {
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
       && !user.getSupervisor().getUserName().isEmpty()) {
 
-      supervisor = userMapper.getByUsernameAndVendorId(user.getSupervisor());
+      supervisor = userMapper.getByUsername(user.getSupervisor());
       if (supervisor == null)
         throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
     }
@@ -99,8 +97,8 @@ public class UserRepository {
     return userMapper.getByEmail(email);
   }
 
-  public User getByUsernameAndVendorId(User user) {
-    return userMapper.getByUsernameAndVendorId(user);
+  public User getByUsername(User user) {
+    return userMapper.getByUsername(user);
   }
 
   public List<User> searchUser(String userSearchParam) {

@@ -71,11 +71,14 @@ public class User extends BaseModel implements Importable {
 
   private RoleAssignment adminRole;
 
-  private Long vendorId;
 
   public User(Long id, String userName) {
     this.id = id;
     this.userName = userName;
+  }
+
+  public User(String userName) {
+    this(null, userName);
   }
 
   public void validate() {

@@ -14,7 +14,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
@@ -23,7 +22,6 @@ import org.openlmis.rnr.domain.Rnr;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.restapi.builder.ReportBuilder.vendor;
 
 @Category(UnitTests.class)
 public class ReportTest {
@@ -75,19 +73,8 @@ public class ReportTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfReportDoesNotContainVendorId() {
-    Vendor nullVendor = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(vendor, nullVendor)));
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
-
-    report.validate();
-  }
-
-  @Test
   public void shouldGetRequisitionFromReport() throws Exception {
-    Report report = make(a(ReportBuilder.defaultReport, with(vendor, new Vendor())));
+    Report report = make(a(ReportBuilder.defaultReport));
     Rnr requisition = report.getRequisition();
     assertThat(requisition.getId(), is(report.getRequisitionId()));
     assertThat(requisition.getFullSupplyLineItems(), is(report.getProducts()));

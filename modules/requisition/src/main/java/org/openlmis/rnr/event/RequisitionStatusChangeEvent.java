@@ -12,7 +12,6 @@ package org.openlmis.rnr.event;
 
 import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrFeedDTO;
 
@@ -22,8 +21,8 @@ import java.util.UUID;
 
 public class RequisitionStatusChangeEvent extends Event {
 
-  public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
+  public RequisitionStatusChangeEvent(Rnr requisition) throws URISyntaxException {
+    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition).getSerializedContents(), "requisition");
   }
 
 }

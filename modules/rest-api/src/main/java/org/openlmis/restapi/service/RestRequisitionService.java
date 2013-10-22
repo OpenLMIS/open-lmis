@@ -12,10 +12,8 @@ package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
-import org.openlmis.core.service.VendorService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
@@ -37,14 +35,10 @@ public class RestRequisitionService {
   private RequisitionService requisitionService;
 
   @Autowired
-  private VendorService vendorService;
-
-  @Autowired
   private OrderService orderService;
 
   @Transactional
   public Rnr submitReport(Report report) {
-    fillVendor(report);
     report.validate();
 
     User user = getValidatedUser(report);
@@ -62,6 +56,17 @@ public class RestRequisitionService {
     return requisition;
   }
 
+  @Transactional
+  public Rnr approve(Report report) {
+    User user = getValidatedUser(report);
+    Rnr requisition = report.getRequisition();
+    requisition.setModifiedBy(user.getId());
+    requisitionService.save(requisition);
+    requisitionService.approve(requisition);
+    orderService.convertToOrder(asList(requisition), user.getId());
+    return requisition;
+  }
+
   private Rnr getReportedRequisition(Report report, Rnr requisition) {
     Rnr reportedRequisition = new Rnr(requisition.getId());
     reportedRequisition.setModifiedBy(requisition.getModifiedBy());
@@ -70,32 +75,14 @@ public class RestRequisitionService {
     return reportedRequisition;
   }
 
-  private void fillVendor(Report report) {
-    Vendor vendor = vendorService.getByName(report.getVendor().getName());
-    report.setVendor(vendor);
-  }
-
   private User getValidatedUser(Report report) {
     User reportUser = new User();
     reportUser.setUserName(report.getUserId());
-    reportUser.setVendorId(report.getVendor().getId());
-    User user = userService.getByUsernameAndVendorId(reportUser);
+    User user = userService.getByUsername(reportUser);
     if (user == null) {
       throw new DataException("user.username.incorrect");
     }
     return user;
-  }
-
-  @Transactional
-  public Rnr approve(Report report) {
-    fillVendor(report);
-    User user = getValidatedUser(report);
-    Rnr requisition = report.getRequisition();
-    requisition.setModifiedBy(user.getId());
-    requisitionService.save(requisition);
-    requisitionService.approve(requisition);
-    orderService.convertToOrder(asList(requisition), user.getId());
-    return requisition;
   }
 
 }

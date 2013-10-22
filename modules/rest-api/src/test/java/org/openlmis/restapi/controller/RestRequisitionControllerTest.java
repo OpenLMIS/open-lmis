@@ -71,7 +71,7 @@ public class RestRequisitionControllerTest {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), HttpStatus.OK);
     when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(1L));
   }
@@ -88,23 +88,9 @@ public class RestRequisitionControllerTest {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
-  }
-
-  @Test
-  public void shouldSetVendorNameInReport() throws Exception {
-    String errorMessage = "some error";
-    Report report = new Report();
-
-    Rnr requisition = new Rnr();
-    requisition.setId(1L);
-    doThrow(new DataException(errorMessage)).when(service).submitReport(report);
-
-    controller.submitRequisition(report, principal);
-
-    assertThat(report.getVendor().getName(), is("vendor name"));
   }
 
   @Test
@@ -117,10 +103,9 @@ public class RestRequisitionControllerTest {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), HttpStatus.OK);
     when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
+    ResponseEntity<RestResponse> response = controller.approve(id, report);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
-    assertThat(report.getVendor().getName(), is("vendor name"));
     assertThat(report.getRequisitionId(), is(1L));
     verify(service).approve(report);
   }
@@ -136,7 +121,7 @@ public class RestRequisitionControllerTest {
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
+    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }

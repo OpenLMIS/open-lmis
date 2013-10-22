@@ -175,7 +175,7 @@ public class UserServiceTest {
   public void shouldGiveErrorIfUserNameExistsButUserIsDisabled() throws Exception {
     User disabledUser = make(a(defaultUser, with(email, ""), with(active, false)));
 
-    when(userRepository.getByUsernameAndVendorId(disabledUser)).thenReturn(disabledUser);
+    when(userRepository.getByUsername(disabledUser)).thenReturn(disabledUser);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
