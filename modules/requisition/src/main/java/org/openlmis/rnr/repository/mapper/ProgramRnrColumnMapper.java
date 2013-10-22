@@ -22,11 +22,11 @@ public interface ProgramRnrColumnMapper {
 
   @Insert({"INSERT INTO program_rnr_columns",
       "(programId, masterColumnId, visible, label,",
-      "position, source, formulaValidationRequired, calculationOption" +
+      "position, source, formulaValidationRequired, calculationOption, " +
       "createdBy, modifiedBy)",
       "VALUES",
       "(#{programId}, #{rnrColumn.id},  #{rnrColumn.visible}, #{rnrColumn.label},",
-      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}, #{rnrColumn.calculationOption}" +
+      "#{rnrColumn.position}, #{rnrColumn.source.code}, #{rnrColumn.formulaValidationRequired}, #{rnrColumn.calculationOption}, " +
       "#{rnrColumn.createdBy}, #{rnrColumn.modifiedBy})"})
   int insert(@Param("programId") Long programId, @Param("rnrColumn") RnrColumn rnrColumn);
 
