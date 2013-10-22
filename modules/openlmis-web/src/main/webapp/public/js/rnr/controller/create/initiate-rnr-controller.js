@@ -118,7 +118,7 @@ function InitiateRnrController($scope, $location, Requisitions,
   };
 
   var optionMessage = function (entity, defaultMessage) {
-    return entity === null || entity.length === 0 ? messageService.get("label.none.assigned") : defaultMessage;
+    return entity === undefined || _.isEmpty(entity) ? messageService.get("label.none.assigned") : defaultMessage;
   };
 
   var resetValuesForFirstPeriod = function (periodGridData) {
