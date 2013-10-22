@@ -20,8 +20,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -175,7 +175,7 @@ public class UserServiceTest {
   public void shouldGiveErrorIfUserNameExistsButUserIsDisabled() throws Exception {
     User disabledUser = make(a(defaultUser, with(email, ""), with(active, false)));
 
-    when(userRepository.getByUsername(disabledUser)).thenReturn(disabledUser);
+    when(userRepository.getByUserName(disabledUser.getUserName())).thenReturn(disabledUser);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);

@@ -77,7 +77,7 @@ public class RestRequisitionServiceTest {
     user = new User();
     user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUsername(user)).thenReturn(user);
+    when(userService.getByUserName(user.getUserName())).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency()))
       .thenReturn(requisition);
     mockStatic(Base64.class);
@@ -117,7 +117,7 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(userService.getByUsername(user)).thenReturn(null);
+    when(userService.getByUserName(user.getUserName())).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.username.incorrect");
@@ -131,7 +131,7 @@ public class RestRequisitionServiceTest {
     products.add(new RnrLineItem());
     report.setProducts(products);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUsername(user)).thenReturn(null);
+    when(userService.getByUserName(user.getUserName())).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.username.incorrect");
@@ -161,7 +161,7 @@ public class RestRequisitionServiceTest {
     products.add(new RnrLineItem());
     report.setProducts(products);
     whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUsername(user)).thenReturn(null);
+    when(userService.getByUserName(user.getUserName())).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("user.username.incorrect");

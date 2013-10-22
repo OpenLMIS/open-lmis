@@ -71,7 +71,7 @@ public class RestAgentServiceTest {
     Facility facility = mock(Facility.class);
     when(facilityService.getFacilityWithReferenceDataForCode(agent.getParentFacilityCode())).thenReturn(baseFacility);
     whenNew(Facility.class).withNoArguments().thenReturn(facility);
-    when(userService.getByUsername(user)).thenReturn(user);
+    when(userService.getByUserName(user.getUserName())).thenReturn(user);
     Date currentTimeStamp = mock(Date.class);
     whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
 
@@ -107,7 +107,7 @@ public class RestAgentServiceTest {
     chwFacility.setEnabled(true);
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
-    when(userService.getByUsername(user)).thenReturn(user);
+    when(userService.getByUserName(user.getUserName())).thenReturn(user);
 
     restAgentService.update(agent, principal.getName());
 

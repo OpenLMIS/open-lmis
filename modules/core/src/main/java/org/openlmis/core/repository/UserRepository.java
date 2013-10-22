@@ -85,7 +85,7 @@ public class UserRepository {
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
       && !user.getSupervisor().getUserName().isEmpty()) {
 
-      supervisor = userMapper.getByUsername(user.getSupervisor());
+      supervisor = userMapper.getByUserName(user.getSupervisor().getUserName());
       if (supervisor == null)
         throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
     }
@@ -95,10 +95,6 @@ public class UserRepository {
 
   public User getByEmail(String email) {
     return userMapper.getByEmail(email);
-  }
-
-  public User getByUsername(User user) {
-    return userMapper.getByUsername(user);
   }
 
   public List<User> searchUser(String userSearchParam) {

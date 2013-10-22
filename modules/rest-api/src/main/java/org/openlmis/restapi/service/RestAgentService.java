@@ -10,7 +10,6 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.UserService;
@@ -37,7 +36,7 @@ public class RestAgentService {
       throw new DataException("error.agent.already.registered");
     }
     Facility facility = getFacilityForCHW(agent);
-    facility.setCreatedBy(userService.getByUsername(new User(userName)).getId());
+    facility.setCreatedBy(userService.getByUserName(userName).getId());
     facility.setModifiedBy(facility.getCreatedBy());
     facilityService.save(facility);
   }
@@ -56,7 +55,7 @@ public class RestAgentService {
     chwFacility.setActive(Boolean.parseBoolean(agent.getActive()));
     fillBaseFacility(agent, chwFacility);
     chwFacility.setModifiedDate(new Date());
-    chwFacility.setModifiedBy(userService.getByUsername(new User(userName)).getId());
+    chwFacility.setModifiedBy(userService.getByUserName(userName).getId());
     facilityService.update(chwFacility);
   }
 

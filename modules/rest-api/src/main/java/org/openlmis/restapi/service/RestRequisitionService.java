@@ -76,9 +76,7 @@ public class RestRequisitionService {
   }
 
   private User getValidatedUser(Report report) {
-    User reportUser = new User();
-    reportUser.setUserName(report.getUserId());
-    User user = userService.getByUsername(reportUser);
+    User user = userService.getByUserName(report.getUserId());
     if (user == null) {
       throw new DataException("user.username.incorrect");
     }

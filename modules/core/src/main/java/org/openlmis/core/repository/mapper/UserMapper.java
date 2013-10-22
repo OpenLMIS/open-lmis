@@ -30,8 +30,8 @@ public interface UserMapper {
     "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
-    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, " ,
-      "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified})"})
+    "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, ",
+    "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified})"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
@@ -41,15 +41,15 @@ public interface UserMapper {
   @Results(
     @Result(property = "supervisor.id", column = "supervisorId")
   )
-  User getByUsername(User user);
+  User getByUserName(String userName);
 
   @Select(value = "SELECT * FROM users where LOWER(email) = LOWER(#{email})")
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   User getByEmail(String email);
 
-  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, " ,
+  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, ",
     "officePhone, cellPhone, email, supervisorId ,verified, active " +
-    "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
+      "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
     "WHERE RA.programId = #{program.id} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RR.rightName = #{right}"})
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   List<User> getUsersWithRightInNodeForProgram(@Param("program") Program program, @Param("supervisoryNode") SupervisoryNode supervisoryNode,
@@ -58,10 +58,6 @@ public interface UserMapper {
   @Select(value = "SELECT id, firstName, lastName, email, username, active FROM users WHERE LOWER(firstName) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(lastName) LIKE '%'|| " +
     "LOWER(#{userSearchParam}) ||'%' OR LOWER(email) LIKE '%'|| LOWER(#{userSearchParam}) ||'%' OR LOWER(username) LIKE '%'|| LOWER(#{userSearchParam}) ||'%'")
   List<User> getUserWithSearchedName(String userSearchParam);
-
-
-
-
 
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
@@ -91,13 +87,10 @@ public interface UserMapper {
                               @Param(value = "content") String content);
 
   @Update("UPDATE users SET password = #{password} WHERE id = #{userId}")
-  void updateUserPassword(@Param(value = "userId")Long userId, @Param(value = "password")String password);
+  void updateUserPassword(@Param(value = "userId") Long userId, @Param(value = "password") String password);
 
 
   @Update("UPDATE users SET active = FALSE, modifiedBy = #{modifiedBy}, modifiedDate = NOW() WHERE id = #{userId}")
   void disable(@Param(value = "userId") Long userId, @Param(value = "modifiedBy") Long modifiedBy);
 
-  @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, " +
-    "primaryNotificationMethod, cellPhone, email, verified, active FROM users WHERE userName=#{userName}")
-  User getByUserName(String userName);
 }

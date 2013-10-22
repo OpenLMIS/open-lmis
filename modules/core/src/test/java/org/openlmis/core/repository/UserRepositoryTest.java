@@ -39,7 +39,6 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.email;
-import static org.openlmis.core.builder.UserBuilder.userName;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
@@ -83,7 +82,7 @@ public class UserRepositoryTest {
   @Test
   public void shouldThrowExceptionAndNotInsertUserIfSupervisorIdDoesNotExist() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsername(user)).thenReturn(null);
+    when(userMapper.getByUserName(user.getUserName())).thenReturn(null);
     exException.expect(DataException.class);
     exException.expectMessage(SUPERVISOR_USER_NOT_FOUND);
     userRepository.create(user);
@@ -92,36 +91,36 @@ public class UserRepositoryTest {
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmployeeId() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(mock(User.class));
+    when(userMapper.getByUserName(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_employeeId\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMPLOYEE_ID_FOUND);
-    userMapper.getByUsername(user.getSupervisor());
+    userMapper.getByUserName(user.getSupervisor().getUserName());
     userRepository.create(user);
   }
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateEmail() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(mock(User.class));
+    when(userMapper.getByUserName(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_email\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_EMAIL_FOUND);
-    userMapper.getByUsername(user.getSupervisor());
+    userMapper.getByUserName(user.getSupervisor().getUserName());
     userRepository.create(user);
   }
 
   @Test
   public void shouldThrowExceptionAndNotInsertUserOnDuplicateUserName() throws Exception {
     User user = make(a(defaultUser));
-    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(mock(User.class));
+    when(userMapper.getByUserName(user.getSupervisor().getUserName())).thenReturn(mock(User.class));
     doThrow(new DuplicateKeyException("duplicate key value violates unique constraint \"uc_users_userName\"")).when(userMapper).insert(user);
 
     exException.expect(DataException.class);
     exException.expectMessage(DUPLICATE_USER_NAME_FOUND);
-    userMapper.getByUsername(user.getSupervisor());
+    userMapper.getByUserName(user.getSupervisor().getUserName());
     userRepository.create(user);
   }
 
@@ -130,9 +129,9 @@ public class UserRepositoryTest {
     String username = "Admin";
     User user = make(a(defaultUser, with(email, "John_Doe@openlmis.com")));
     user.setUserName(username);
-    when(userMapper.getByUsername(user)).thenReturn(user);
+    when(userMapper.getByUserName(user.getUserName())).thenReturn(user);
 
-    User returnedUser = userRepository.getByUsername(user);
+    User returnedUser = userRepository.getByUserName(user.getUserName());
 
     assertThat(returnedUser, is(user));
   }
@@ -221,8 +220,8 @@ public class UserRepositoryTest {
 
     User supervisorUser = new User();
 
-    when(userMapper.getByUsername(user)).thenReturn(user);
-    when(userMapper.getByUsername(user.getSupervisor())).thenReturn(supervisorUser);
+    when(userMapper.getByUserName(user.getUserName())).thenReturn(user);
+    when(userMapper.getByUserName(user.getSupervisor().getUserName())).thenReturn(supervisorUser);
 
     userRepository.update(user);
 
@@ -230,7 +229,7 @@ public class UserRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateUserPasword(){
+  public void shouldUpdateUserPasword() {
     Long userId = 1l;
     String password = "newPassword";
 
@@ -240,7 +239,7 @@ public class UserRepositoryTest {
   }
 
   @Test
-  public void shouldSetActiveForUser(){
+  public void shouldSetActiveForUser() {
     Long userId = 3l;
     Long modifiedBy = 1L;
 

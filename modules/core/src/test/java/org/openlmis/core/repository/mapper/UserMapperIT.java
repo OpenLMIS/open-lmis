@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static java.util.Calendar.YEAR;
 import static org.apache.commons.lang.time.DateUtils.truncate;
 import static org.hamcrest.CoreMatchers.*;
@@ -102,7 +101,7 @@ public class UserMapperIT {
 
     userMapper.insert(someUser);
 
-    User fetchedUser = userMapper.getByUsername(someUser);
+    User fetchedUser = userMapper.getByUserName(someUser.getUserName());
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -117,7 +116,7 @@ public class UserMapperIT {
     someUser.setModifiedDate(calendar.getTime());
 
     userMapper.insert(someUser);
-    User fetchedUser = userMapper.getByUsername(someUser);
+    User fetchedUser = userMapper.getByUserName(someUser.getUserName());
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -170,7 +169,7 @@ public class UserMapperIT {
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
 
-    User result = userMapper.getByUsername(user);
+    User result = userMapper.getByUserName(user.getUserName());
     user.setPassword(null);
     assertThat(result, is(user));
   }
@@ -292,7 +291,7 @@ public class UserMapperIT {
 
     userMapper.disable(user.getId(), 1L);
 
-    assertThat(userMapper.getByUsername(user), is(nullValue()));
+    assertThat(userMapper.getByUserName(user.getUserName()), is(nullValue()));
   }
 
   @Test
