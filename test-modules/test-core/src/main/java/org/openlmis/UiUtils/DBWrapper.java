@@ -59,12 +59,12 @@ public class DBWrapper {
   }
 
 
-  public void insertUser(String userId, String userName, String password, String facilityCode, String email, String vendorName) throws SQLException, IOException {
+  public void insertUser(String userId, String userName, String password, String facilityCode, String email) throws SQLException, IOException {
     update("delete from users where userName like('" + userName + "');");
 
     update("INSERT INTO users\n" +
-      "  (id, userName, password,vendorId, facilityId, firstName, lastName, email, active, verified) VALUES\n" +
-      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM vendors WHERE name = '" + vendorName + "'), (SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');");
+      "  (id, userName, password, facilityId, firstName, lastName, email, active, verified) VALUES\n" +
+      "  ('" + userId + "', '" + userName + "', '" + password + "',(SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 'Fatima', 'Doe', '" + email + "','true','true');");
 
 
   }
@@ -933,21 +933,6 @@ public class DBWrapper {
     update("INSERT INTO role_rights\n" +
       "  (roleId, rightName) VALUES\n" +
       "  ((select id from roles where name='" + roleName + "'), '" + roleRight + "');");
-  }
-
-  public String getAuthToken(String vendorName) throws IOException, SQLException {
-    ResultSet rs = query("select authToken from vendors where name='" + vendorName + "'");
-
-    if (rs.next()) {
-      return rs.getString("authToken");
-    }
-    return "";
-
-  }
-
-  public void insertVendor(String vendorName) throws SQLException {
-    update("delete from vendors where name='" + vendorName + "';");
-    update("INSERT INTO VENDORS (name, active) VALUES ('" + vendorName + "', true);");
   }
 
   public void updatePacksToShip(String packsToShip) throws SQLException {

@@ -189,7 +189,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
                                             String programFirst, String programSecond, String schedule, String rolename) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
+    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();

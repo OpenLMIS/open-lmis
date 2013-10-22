@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.authentication;
 
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,16 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    User user = new User();
+    user.setUserName(authentication.getPrincipal().toString());
+    user.setPassword(authentication.getCredentials().toString());
 
-    if (userService.selectUserByUserNameAndPassword(authentication.getPrincipal().toString(), authentication.getCredentials().toString()) == null)
+    if (userService.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword()) == null)
       throw new BadCredentialsException(messageService.message("error.authentication.failed"));
 
     Collection<? extends GrantedAuthority> authorities = null;
 
-    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(),
+    return new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword(),
       authorities);
   }
 

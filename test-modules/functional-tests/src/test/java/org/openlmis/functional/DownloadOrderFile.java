@@ -172,10 +172,10 @@ public class DownloadOrderFile extends TestCaseHelper {
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     rightsList.add("APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
 
     setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
-    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com", "openLmis");
+    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
     dbWrapper.insertRoleAssignment("212", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu","lmu","F10");
 

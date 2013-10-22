@@ -64,7 +64,7 @@ public class FacilityFeed extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com", "openLmis");
+    dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -237,7 +237,7 @@ public class FacilityFeed extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -262,7 +262,7 @@ public class FacilityFeed extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
@@ -319,7 +319,7 @@ public class FacilityFeed extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -338,7 +338,7 @@ public class FacilityFeed extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
@@ -368,7 +368,7 @@ public class FacilityFeed extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -387,7 +387,7 @@ public class FacilityFeed extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
@@ -417,7 +417,7 @@ public class FacilityFeed extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityCode\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -436,7 +436,7 @@ public class FacilityFeed extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsActive\":false"));

@@ -76,7 +76,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
         "PUT",
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     response = responseEntity.getResponse();
 
@@ -86,11 +86,11 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\",\"externalSystem\":\"commTrack\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\",\"externalSystem\":\"commTrack\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\"}"));
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -108,7 +108,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-      "commTrack", dbWrapper.getAuthToken("commTrack"));
+      "commTrack", "Admin123");
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
@@ -133,7 +133,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
         "PUT",
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
@@ -156,7 +156,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-      "commTrack", dbWrapper.getAuthToken("commTrack"));
+      "commTrack", "Admin123");
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
@@ -181,7 +181,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
         "PUT",
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
@@ -204,7 +204,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-      "commTrack1", dbWrapper.getAuthToken("commTrack"));
+      "commTrack100", "Admin123");
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
     assertEquals(401, responseEntity.getStatus());
@@ -227,7 +227,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       "POST",
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 

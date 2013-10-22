@@ -61,9 +61,9 @@ INSERT INTO users
  (SELECT id FROM facilities WHERE code = 'F10'), 'Jake', 'Doe', 'Jake_Doe@openlmis.com', TRUE, TRUE);
 
 INSERT INTO USERS
-(id, userName, password, facilityId, firstName, lastName, verified, active) VALUES
+(id, userName, password, facilityId, firstName, lastName, email, verified, active) VALUES
 (700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrack', 'Doe', TRUE, TRUE);
+ (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrack', 'Doe', 'commTrack@openlmis.com', TRUE, TRUE);
 
 
 INSERT INTO supervisory_nodes

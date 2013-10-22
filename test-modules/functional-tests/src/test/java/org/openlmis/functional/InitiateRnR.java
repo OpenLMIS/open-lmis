@@ -108,7 +108,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                             String rights) throws IOException, SQLException {
     String[] rightList = rights.split(",");
 
-    setupTestDataToInitiateRnR(true, program, user, "200", "openLmis", asList(rightList));
+    setupTestDataToInitiateRnR(true, program, user, "200", asList(rightList));
   }
 
   @When("^I click proceed$")
@@ -216,7 +216,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -259,7 +259,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList.add(VIEW_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(APPROVE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -292,7 +292,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList.add(VIEW_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(APPROVE_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -324,7 +324,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -346,7 +346,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, false);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
@@ -367,7 +367,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period2");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -384,7 +384,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period2");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -401,7 +401,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -418,7 +418,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -441,7 +441,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
@@ -479,12 +479,12 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     List<String> rightsList1 = new ArrayList<>();
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
+    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
       rightsList1);
 
     dbWrapper.deletePeriod("Period1");
@@ -566,24 +566,24 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     List<String> rightsList1 = new ArrayList<>();
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
+    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
       rightsList1);
 
     List<String> rightsList2 = new ArrayList<>();
     rightsList2.add(APPROVE_REQUISITION);
     rightsList2.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", "openLmis",
+    createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu",
       rightsList2);
 
     List<String> rightsList3 = new ArrayList<>();
     rightsList3.add(CONVERT_TO_ORDER);
     rightsList3.add("VIEW_ORDER");
-    createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE, "openLmis",
+    createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE,
       rightsList3);
 
     dbWrapper.deletePeriod("Period1");
@@ -662,7 +662,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
@@ -690,7 +690,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
@@ -721,7 +721,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
@@ -754,12 +754,12 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     List<String> rightsList1 = new ArrayList<>();
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", "openLmis",
+    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
       rightsList1);
 
 
@@ -815,7 +815,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
 
     dbWrapper.deletePeriod("Period1");
@@ -835,7 +835,7 @@ public class InitiateRnR extends TestCaseHelper {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.DeleteProcessingPeriods();
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "M");
 

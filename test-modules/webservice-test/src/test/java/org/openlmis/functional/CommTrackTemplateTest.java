@@ -64,7 +64,7 @@ public class CommTrackTemplateTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         "POST",
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
      client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 

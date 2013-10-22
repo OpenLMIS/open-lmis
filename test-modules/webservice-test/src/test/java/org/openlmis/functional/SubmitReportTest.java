@@ -70,7 +70,7 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
@@ -111,7 +111,7 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(400, responseEntity.getStatus());
@@ -139,13 +139,13 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(jsonStringFor,
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(400, responseEntity.getStatus());
@@ -163,7 +163,7 @@ public class SubmitReportTest extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
@@ -187,7 +187,7 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -213,7 +213,7 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -240,7 +240,7 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -265,7 +265,7 @@ public class SubmitReportTest extends TestCaseHelper {
       client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions.json", POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -292,7 +292,7 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack1000",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     assertEquals(401, responseEntity.getStatus());
   }
@@ -314,7 +314,7 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       "POST",
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     return responseEntity.getResponse();

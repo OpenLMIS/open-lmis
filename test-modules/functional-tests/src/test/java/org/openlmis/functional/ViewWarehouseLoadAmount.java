@@ -76,7 +76,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true,
-      programFirst, userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone);
+      programFirst, userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone);
 
   }
 
@@ -173,7 +173,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst,
-      userSIC, "200", "openLmis", rightsList, programSecond, district1, district1, parentGeoZone1);
+      userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone1);
 
     setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
@@ -238,7 +238,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
     setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,

@@ -212,7 +212,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
     rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+    setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");

@@ -91,9 +91,9 @@ public class CreateUpdateCHW extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
-    String vendorCode = "ABC";
+    String agentCode = "ABC";
 
-    agentJson.setAgentCode(vendorCode);
+    agentJson.setAgentCode(agentCode);
     agentJson.setAgentName(DEFAULT_AGENT_NAME);
     agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     agentJson.setPhoneNumber(PHONE_NUMBER);
@@ -102,25 +102,25 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(vendorCode);
-    deleteFacilityPage.clickFacilityList(vendorCode);
-    deleteFacilityPage.disableFacility(vendorCode, DEFAULT_AGENT_NAME);
+    deleteFacilityPage.searchFacility(agentCode);
+    deleteFacilityPage.clickFacilityList(agentCode);
+    deleteFacilityPage.disableFacility(agentCode, DEFAULT_AGENT_NAME);
 
-    deleteFacilityPage.verifyDisabledFacility(vendorCode, DEFAULT_AGENT_NAME);
+    deleteFacilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
     HomePage homePageRestore = deleteFacilityPage.enableFacility();
 
     DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
-    deleteFacilityPageRestore.searchFacility(vendorCode);
-    deleteFacilityPageRestore.clickFacilityList(vendorCode);
+    deleteFacilityPageRestore.searchFacility(agentCode);
+    deleteFacilityPageRestore.clickFacilityList(agentCode);
     deleteFacilityPage.saveFacility();
     deleteFacilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
-    assertEquals(TRUE_FLAG, dbWrapper.getVirtualPropertyOfFacility(vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getVirtualPropertyOfFacility(agentCode));
     homePage.logout(baseUrlGlobal);
 
   }
@@ -141,7 +141,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
@@ -161,7 +161,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
@@ -171,7 +171,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
@@ -181,7 +181,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityEnabledFalse.getResponse(),
       responseEntityEnabledFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
@@ -203,7 +203,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
   }
@@ -223,7 +223,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     agentJson.setPhoneNumber("0099887766759785759859757757887");
 
@@ -231,7 +231,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
@@ -254,7 +254,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
@@ -264,7 +264,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
@@ -273,11 +273,11 @@ public class CreateUpdateCHW extends TestCaseHelper {
 
   @Test(groups = {"webservice"})
   public void testVerifyFieldsAfterChangeInParentFacilityCode() throws Exception {
-    String typeid = "typeid";
-    String geographiczoneid = "geographiczoneid";
-    String operatedbyid = "operatedbyid";
-    String parentfacilityid = "parentfacilityid";
-    String vendorCode = "ABCDE";
+    String typeId = "typeid";
+    String geographicZoneId = "geographiczoneid";
+    String operatedById = "operatedbyid";
+    String parentFacilityId = "parentfacilityid";
+    String agentCode = "ABCDE";
     String firstParentFacility = DEFAULT_PARENT_FACILITY_CODE;
     String updateParentFacility = "F11";
     String id = "id";
@@ -286,7 +286,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
-    agentJson.setAgentCode(vendorCode);
+    agentJson.setAgentCode(agentCode);
     agentJson.setAgentName(DEFAULT_AGENT_NAME);
     agentJson.setParentFacilityCode(firstParentFacility);
     agentJson.setPhoneNumber(PHONE_NUMBER);
@@ -296,48 +296,48 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
     agentJson.setParentFacilityCode(updateParentFacility);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-      UPDATE_URL + vendorCode + JSON_EXTENSION,
+      UPDATE_URL + agentCode + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, updateParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, updateParentFacility), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
   }
 
   @Test(groups = {"webservice"})
   public void testVerifyFieldsAfterCHWCreation() throws Exception {
-    String typeid = "typeid";
-    String geographiczoneid = "geographiczoneid";
-    String operatedbyid = "operatedbyid";
-    String parentfacilityid = "parentfacilityid";
-    String vendorCode = "commtrk";
-    String vendorName = DEFAULT_AGENT_NAME;
-    String vendorNameUpdated = "AgentJyot";
+    String typeId = "typeid";
+    String geographicZoneId = "geographiczoneid";
+    String operatedById = "operatedbyid";
+    String parentFacilityId = "parentfacilityid";
+    String agentCode = "commtrk";
+    String agentName = DEFAULT_AGENT_NAME;
+    String agentNameUpdated = "AgentJyot";
     String firstParentFacility = DEFAULT_PARENT_FACILITY_CODE;
     String firstParentFacilityUpdated = "F11";
     String code = "code";
     String name = "name";
     String id = "id";
-    String mainphone = "mainphone";
+    String mainPhone = "mainphone";
     String phoneNumber = PHONE_NUMBER;
     String phoneNumberUpdated = "12345678";
     String active = "active";
-    String virtualfacility = "virtualfacility";
+    String virtualFacility = "virtualfacility";
     String sdp = "sdp";
     String enabled = "enabled";
 
@@ -345,8 +345,8 @@ public class CreateUpdateCHW extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     Agent agentJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Agent.class);
-    agentJson.setAgentCode(vendorCode);
-    agentJson.setAgentName(vendorName);
+    agentJson.setAgentCode(agentCode);
+    agentJson.setAgentName(agentName);
     agentJson.setParentFacilityCode(firstParentFacility);
     agentJson.setPhoneNumber(phoneNumber);
     agentJson.setActive(ACTIVE_STATUS);
@@ -355,46 +355,46 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
-    assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
-    assertEquals(vendorName, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
-    assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
+    assertEquals(agentCode, dbWrapper.getFacilityFieldBYCode(code, agentCode));
+    assertEquals(agentName, dbWrapper.getFacilityFieldBYCode(name, agentCode));
+    assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainPhone, agentCode));
 
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(active, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, vendorCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(active, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualFacility, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, agentCode));
 
-    agentJson.setAgentName(vendorNameUpdated);
+    agentJson.setAgentName(agentNameUpdated);
     agentJson.setParentFacilityCode(firstParentFacilityUpdated);
     agentJson.setPhoneNumber(phoneNumberUpdated);
     agentJson.setActive("false");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-      UPDATE_URL + vendorCode + JSON_EXTENSION,
+      UPDATE_URL + agentCode + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographiczoneid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographiczoneid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentfacilityid, vendorCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedbyid, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(operatedbyid, vendorCode));
-    assertEquals(vendorCode, dbWrapper.getFacilityFieldBYCode(code, vendorCode));
-    assertEquals(vendorNameUpdated, dbWrapper.getFacilityFieldBYCode(name, vendorCode));
-    assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainphone, vendorCode));
-    assertEquals(FALSE_FLAG, dbWrapper.getFacilityFieldBYCode(active, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualfacility, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, vendorCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, vendorCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
+    assertEquals(agentCode, dbWrapper.getFacilityFieldBYCode(code, agentCode));
+    assertEquals(agentNameUpdated, dbWrapper.getFacilityFieldBYCode(name, agentCode));
+    assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainPhone, agentCode));
+    assertEquals(FALSE_FLAG, dbWrapper.getFacilityFieldBYCode(active, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualFacility, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, agentCode));
   }
 
   @Test(groups = {"webservice"})
@@ -413,7 +413,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
@@ -435,7 +435,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     dbWrapper.updateVirtualPropertyOfFacility(facilityCode, ACTIVE_STATUS);
 
@@ -443,7 +443,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
@@ -464,13 +464,13 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
   }
@@ -491,7 +491,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + Agent_code + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"error\":\"Agent is not a virtual facility\"}"));
   }
@@ -511,7 +511,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
@@ -531,14 +531,14 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     agentJson.setParentFacilityCode("A10");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
@@ -559,7 +559,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertEquals(responseEntityUpdated.getStatus(), SC_BAD_REQUEST);
 
@@ -574,7 +574,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -597,7 +597,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -618,14 +618,14 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
       responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
@@ -649,7 +649,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -671,7 +671,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
 
@@ -679,7 +679,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
@@ -704,7 +704,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
@@ -725,7 +725,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " +
       getJsonStringFor(agentJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
 
@@ -746,7 +746,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(",\"active\":\"true\"", " ");
@@ -756,7 +756,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -779,7 +779,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
@@ -800,7 +800,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(DEFAULT_AGENT_NAME, "");
 
@@ -808,7 +808,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
       responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
@@ -832,7 +832,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
@@ -853,7 +853,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(ACTIVE_STATUS, "");
@@ -863,7 +863,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
 
@@ -884,7 +884,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(ACTIVE_STATUS, " ");
@@ -894,7 +894,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("Active should be True/False"));
 
@@ -915,13 +915,13 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
@@ -943,7 +943,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
 
 
     assertEquals(responseEntity.getStatus(), SC_BAD_REQUEST);
@@ -964,7 +964,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
@@ -974,7 +974,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
       getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
 
@@ -996,7 +996,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
@@ -1008,7 +1008,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + agent_code_updated + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
       getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
@@ -1029,7 +1029,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       commTrackUser,
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
       responseEntity.getResponse().contains("Active should be True/False"));
 
@@ -1090,7 +1090,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       CREATE_URL,
       POST,
       "Testing",
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("Authentication Failed"));
 
@@ -1110,7 +1110,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
       PUT,
       "Testing",
-      dbWrapper.getAuthToken(commTrackUser));
+      "Admin123");
     assertEquals(responseEntity.getStatus(), SC_UNAUTHORIZED);
   }
 

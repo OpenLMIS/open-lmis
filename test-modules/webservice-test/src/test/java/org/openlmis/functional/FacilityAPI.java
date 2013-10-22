@@ -13,8 +13,6 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -45,7 +43,7 @@ public class FacilityAPI extends TestCaseHelper {
         HttpClient client = new HttpClient();
         client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"F10\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"Village Dispensary\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
@@ -81,14 +79,14 @@ public class FacilityAPI extends TestCaseHelper {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":true"));
 
         dbWrapper.disableFacility("Village Dispensary");
-        responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+        responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":false"));
 
         dbWrapper.deleteProgramToFacilityMapping("ESS_MEDS");
-        responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+        responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
         assertTrue("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"programsSupported\":[\"HIV\",\"VACCINES\"]"));
 
-        responseEntity = client.SendJSON("", URL + "?facilityCode=%20F10", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+        responseEntity = client.SendJSON("", URL + "?facilityCode=%20F10", GET, commTrackUser, "Admin123");
         assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
         assertEquals(responseEntity.getStatus(), 400) ;
     }
@@ -98,7 +96,7 @@ public class FacilityAPI extends TestCaseHelper {
         HttpClient client = new HttpClient();
         client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, commTrackUser, "Admin123");
         assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
         assertEquals(responseEntity.getStatus(), 400) ;
 
@@ -109,7 +107,7 @@ public class FacilityAPI extends TestCaseHelper {
         HttpClient client = new HttpClient();
         client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=", GET, commTrackUser, "Admin123");
         assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
         assertEquals(responseEntity.getStatus(), 400) ;
 
@@ -120,7 +118,7 @@ public class FacilityAPI extends TestCaseHelper {
         HttpClient client = new HttpClient();
         client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, "ABCD", dbWrapper.getAuthToken(commTrackUser));
+        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, "ABCD", "Admin123");
         assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed")) ;
         assertEquals(responseEntity.getStatus(), 401) ;
 

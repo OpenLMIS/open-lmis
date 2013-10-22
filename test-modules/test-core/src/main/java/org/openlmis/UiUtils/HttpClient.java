@@ -52,7 +52,6 @@ public class HttpClient {
   private BasicHttpContext httpContext;
 
   public ResponseEntity SendJSON(String json, String url, String commMethod, String username, String password) {
-//    if (StringUtils.isEmpty(username) && StringUtils.isEmpty(password)) return null;
 
     HttpHost targetHost = new HttpHost(HOST, PORT, PROTOCOL);
     AuthScope localhost = new AuthScope(HOST, PORT);

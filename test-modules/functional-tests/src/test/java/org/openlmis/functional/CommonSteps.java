@@ -56,7 +56,7 @@ public class CommonSteps extends TestCaseHelper {
         List<String> rightsList = new ArrayList<String>();
         for(int i=0;i<rightList.length;i++)
             rightsList.add(rightList[i]);
-        setupTestUserRoleRightsData("200", user, "openLmis", rightsList);
+        setupTestUserRoleRightsData("200", user, rightsList);
     }
 
     @When("^I have \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")
@@ -69,7 +69,7 @@ public class CommonSteps extends TestCaseHelper {
         String password="TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
         List<Map<String, String>> data = userTable.asMaps();
         for (Map map : data){
-            dbWrapper.insertUser(map.get("UserId").toString(), map.get("UserName").toString(),password, map.get("FacilityCode").toString(), map.get("Email").toString(),"openLmis");
+            dbWrapper.insertUser(map.get("UserId").toString(), map.get("UserName").toString(),password, map.get("FacilityCode").toString(), map.get("Email").toString());
             dbWrapper.insertRoleAssignment(map.get("UserId").toString(),map.get("Role").toString());
         }
     }
