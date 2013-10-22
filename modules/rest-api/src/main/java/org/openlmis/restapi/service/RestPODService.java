@@ -26,7 +26,7 @@ public class RestPODService {
 
   private void validateDuplicatePOD(POD pod) {
    if(podService.getPODByOrderId(pod.getOrderId()) != null) {
-     throw new DataException("error.restapi.order.invalid");
+     throw new DataException("error.restapi.delivery.already.confirmed");
    }
   }
 }

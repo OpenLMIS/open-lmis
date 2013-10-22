@@ -26,6 +26,8 @@ public class POD extends BaseModel {
         if (StringUtils.isEmpty(lineItem.getProductCode()) || lineItem.getQuantityReceived() == null) {
           throw new DataException("error.restapi.mandatory.missing");
         }
+        lineItem.setCreatedBy(createdBy);
+        lineItem.setModifiedBy(modifiedBy);
       }
     }
   }
