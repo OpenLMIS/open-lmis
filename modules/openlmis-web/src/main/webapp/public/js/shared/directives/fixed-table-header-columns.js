@@ -33,6 +33,12 @@ app.directive('fixedTableHeaderColumns', function() {
         element.parent().append(fixedHeaderColumns);
       };
 
+      $(window).on('resize', function() {
+        $('#header-columns-fixed th').each(function (index, tableHeaderElement) {
+          copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
+        });
+      });
+
       setTimeout(function() {
         cloneAndAppendTableHeaderColumns();
       });

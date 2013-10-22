@@ -25,18 +25,6 @@ app.directive('fixedTableColumns', function () {
           top: (element.offset().top - $(window).scrollTop() - 1) + 'px',
           left: (element.offset().left + element.parent().scrollLeft()) + 'px'
         });
-      };
-
-
-      setTimeout(function () {
-        if ($('#' + $(element).attr('id')).is(':visible')) {
-          cloneAndAppendFixedTableColumns();
-          setFixedTableColumnsOffset();
-          setColumnWidthAndHeight();
-        }
-      });
-
-      var setColumnWidthAndHeight = function () {
         $('.column-fixed th').each(function (index, tableHeaderElement) {
           copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
         });
@@ -44,11 +32,10 @@ app.directive('fixedTableColumns', function () {
 
       scope.$watch('[pageLineItems, errorPages]', function () {
         setTimeout(function () {
-          if ($('#' + $(element).attr('id')).is(':visible')) {
-            cloneAndAppendFixedTableColumns();
-            setColumnWidthAndHeight();
-          }
-          $(window).trigger('scroll');
+          if (!$('#' + $(element).attr('id')).is(':visible')) return;
+
+          cloneAndAppendFixedTableColumns();
+          setFixedTableColumnsOffset();
         });
       }, true);
 
@@ -63,7 +50,6 @@ app.directive('fixedTableColumns', function () {
 
         cloneAndAppendTableBody();
 
-        //fixedColumns.html('');
         fixedColumns.append(fixedTable);
         element.parent().append(fixedColumns);
       };
@@ -100,7 +86,7 @@ app.directive('fixedTableColumns', function () {
 
 var copyWidthAndHeight = function (fromElement, toElement) {
   toElement.css({
-    width: utils.parseIntWithBaseTen(fromElement.width()) + 'px',
+    width: utils.parseInt(fromElement.width()) + 'px',
     height: utils.parseIntWithBaseTen(fromElement.height()) + 'px'
   });
 };
