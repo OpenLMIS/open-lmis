@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
@@ -74,12 +75,12 @@ public class RestApiAuthenticationProviderTest {
     when(authentication.getPrincipal()).thenReturn(userName);
     when(authentication.getCredentials()).thenReturn(password);
 
-    when(userService.selectUserByUserNameAndPassword(userName, password)).thenReturn(new User());
+    when(userService.selectUserByUserNameAndPassword(userName, Encoder.hash(password))).thenReturn(new User());
 
     Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
 
     assertThat(authenticated.getPrincipal(), is(authentication.getPrincipal()));
-    verify(userService).selectUserByUserNameAndPassword(userName, password);
+    verify(userService).selectUserByUserNameAndPassword(userName, Encoder.hash(password));
   }
 
   @Test
