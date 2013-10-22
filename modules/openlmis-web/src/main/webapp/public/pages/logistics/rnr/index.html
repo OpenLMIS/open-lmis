@@ -96,5 +96,13 @@
 <div class="content rnr-content">
   <div ng-view></div>
 </div>
+<script type="text/javascript">
+  function attachEvent(){
+  $('input[type="button"]').on('click',function(){
+  $(window).trigger('scroll');
+  });
+  }
+  setTimeout(attachEvent, 1000);
+</script>
 </body>
 </html>
