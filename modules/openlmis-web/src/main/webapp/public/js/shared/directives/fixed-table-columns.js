@@ -23,7 +23,7 @@ app.directive('fixedTableColumns', function () {
       var setFixedTableColumnsOffset = function () {
         var baseElementOffset = element.offset();
         fixedColumns.css({
-          top: (baseElementOffset.top - $(window).scrollTop()) + 'px',
+          top: (baseElementOffset.top) + 'px',
           left: (baseElementOffset.left + element.parent().scrollLeft()) + 'px'
         });
         $('.column-fixed th').each(function (index, tableHeaderElement) {
@@ -31,16 +31,22 @@ app.directive('fixedTableColumns', function () {
         });
       };
 
-      scope.$watch('[pageLineItems, errorPages]', function () {
+      scope.$watch('pageLineItems', function () {
         setTimeout(function () {
-          if (!$('#' + $(element).attr('id')).is(':visible')) return;
+          if (!element.is(':visible')) return;
 
           cloneAndAppendFixedTableColumns();
           setFixedTableColumnsOffset();
         });
-      }, true);
+      });
 
-      $(window).on('scroll resize', setFixedTableColumnsOffset);
+      scope.$watch('errorPages', function () {
+        setFixedTableColumnsOffset();
+      });
+
+      $('.rnr-body').on('scroll', setFixedTableColumnsOffset);
+
+      $(window).on('resize', setFixedTableColumnsOffset);
 
       var cloneAndAppendFixedTableColumns = function () {
         fixedTable.html('');

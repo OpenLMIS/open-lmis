@@ -11,14 +11,14 @@
 //  Description:
 //  Freezing the top two columns of header of R&R products table upon scroll
 
-app.directive('fixedTableHeaderColumns', function() {
+app.directive('fixedTableHeaderColumns', function () {
   return {
     restrict: 'A',
     link: function (scope, element, attr, ctrl) {
       var fixedHeaderColumns = $("<div id='header-columns-fixed' class='header-fixed'></div>");
       fixedHeaderColumns.hide();
 
-      var cloneAndAppendTableHeaderColumns = function() {
+      var cloneAndAppendTableHeaderColumns = function () {
         var table = $("<table class='table table-bordered'><thead></thead></table>");
 
         var firstTableCell = $(element.find('thead th')[0]).clone();
@@ -33,17 +33,14 @@ app.directive('fixedTableHeaderColumns', function() {
         element.parent().append(fixedHeaderColumns);
       };
 
-      $(window).on('resize', function() {
+      $(window).on('resize', function () {
         $('#header-columns-fixed th').each(function (index, tableHeaderElement) {
           copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
         });
       });
 
-      setTimeout(function() {
+      setTimeout(function () {
         cloneAndAppendTableHeaderColumns();
-      });
-
-      scope.$watch($(window).scrollTop(), function() {
         viewFixedHeaderOnScroll(fixedHeaderColumns, element);
       });
 

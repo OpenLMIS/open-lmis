@@ -9,7 +9,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<html lang="en" ng-app="rnr">
+<html lang="en" ng-app="rnr" style="overflow: hidden">
 <head>
   <meta charset="utf-8">
   <title openlmis-message="app.title"></title>
@@ -43,6 +43,7 @@
   <script src="/public/js/shared/directives/form-toolbar.js"></script>
   <script src="/public/js/shared/directives/openlmis-message.js"></script>
   <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
+  <script src="/public/js/shared/directives/rnr-body.js"></script>
   <script src="/public/js/shared/directives/placeholder.js"></script>
   <script src="/public/js/shared/directives/ui-nav.js"></script>
   <script src="/public/js/shared/directives/fixed-table-header.js"></script>
@@ -89,8 +90,7 @@
   <![endif]-->
 
 </head>
-<!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
-<body onunload="">
+<body class="rnr-body">
 <ng-include src="'/public/pages/header.html'"></ng-include>
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
 

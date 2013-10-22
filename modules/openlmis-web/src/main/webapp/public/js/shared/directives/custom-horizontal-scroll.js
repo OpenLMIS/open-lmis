@@ -70,7 +70,7 @@ app.directive('customHorizontalScroll',function () {
 
           element.scroll(elementScrollHandler);
 
-          $(window).scroll(pageScrollHandler);
+          $('.rnr-body').scroll(pageScrollHandler);
 
           if(getContainerBottomOffset() > 0) {
             scrollBar.hide();
@@ -97,7 +97,7 @@ app.directive('customHorizontalScroll',function () {
       }
 
       function getContainerBottomOffset() {
-        var distance = $(window).height() - (element.offset().top + element.outerHeight() - $(window).scrollTop()) - 90;
+        var distance = $(window).height() - (element.offset().top + element.outerHeight()) - 90;
         return distance;
       }
 
@@ -107,7 +107,7 @@ app.directive('customHorizontalScroll',function () {
         myScroll.scrollHandle.unbind();
         $(document).unbind('mouseup');
         element.unbind("scroll", elementScrollHandler);
-        $(window).unbind("scroll", pageScrollHandler);
+        $('.rnr-body').unbind("scroll", pageScrollHandler);
 
         setupScroll();
       }

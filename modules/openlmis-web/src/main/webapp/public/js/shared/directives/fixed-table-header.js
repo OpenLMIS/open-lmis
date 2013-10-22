@@ -28,9 +28,6 @@ app.directive('fixedTableHeader', function() {
       setTimeout(function() {
         cloneAndAppendTableHeader();
         fixedHeader.css('width',element.parent().css('width'));
-      });
-
-      scope.$watch($(window).scrollTop(), function() {
         viewFixedHeaderOnScroll(fixedHeader, element);
         element.parent().scroll(function() {
           fixedHeader.scrollLeft(angular.element(this).scrollLeft());
@@ -45,9 +42,9 @@ app.directive('fixedTableHeader', function() {
 });
 
 var viewFixedHeaderOnScroll = function(fixedHeaderElement, element) {
-  angular.element(window).scroll(function() {
+  angular.element('.rnr-body').scroll(function() {
     fixedHeaderElement.hide();
-    if (angular.element(this).scrollTop() >= element.offset().top && !element.is(':hidden') && fixedHeaderElement.is(':hidden')) {
+    if (element.offset().top < 0 && !element.is(':hidden') && fixedHeaderElement.is(':hidden')) {
       fixedHeaderElement.show();
       fixedHeaderElement.scrollLeft(element.parent().scrollLeft());
     }
