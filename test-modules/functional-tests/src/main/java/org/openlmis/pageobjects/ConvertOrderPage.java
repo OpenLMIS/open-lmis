@@ -22,13 +22,14 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
 import static org.openqa.selenium.support.How.XPATH;
 
 
 public class ConvertOrderPage extends RequisitionPage {
 
   @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
-  private static WebElement NoRequisitionsPendingMessage;
+  private static WebElement noRequisitionsPendingMessage;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement programOnOrderScreen;
@@ -60,9 +61,6 @@ public class ConvertOrderPage extends RequisitionPage {
   @FindBy(how = How.XPATH, using = "//div[@id='noRequisitionSelectedMsgDiv']")
   private static WebElement noRequisitonSelectedDiv;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
-  private static WebElement noRequisitionPendingMessage;
-
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
   private static WebElement searchTextBox;
 
@@ -87,12 +85,12 @@ public class ConvertOrderPage extends RequisitionPage {
 
   public void verifyOrderListElements(String program, String facilityCode, String facilityName, String periodStartDate, String periodEndDate, String supplyFacilityName) throws IOException {
     testWebDriver.waitForElementToAppear(programOnOrderScreen);
-    SeleneseTestNgHelper.assertEquals(programOnOrderScreen.getText().trim(), program);
-    SeleneseTestNgHelper.assertEquals(facilityCodeOnOrderScreen.getText().trim(), facilityCode);
-    SeleneseTestNgHelper.assertEquals(facilityNameOnOrderScreen.getText().trim(), facilityName);
-    SeleneseTestNgHelper.assertEquals(periodStartDateOnOrderScreen.getText().trim(), periodStartDate);
-    SeleneseTestNgHelper.assertEquals(periodEndDateOnOrderScreen.getText().trim(), periodEndDate);
-    SeleneseTestNgHelper.assertEquals(supplyDepotOnOrderScreen.getText().trim(), supplyFacilityName);
+    assertEquals(programOnOrderScreen.getText().trim(), program);
+    assertEquals(facilityCodeOnOrderScreen.getText().trim(), facilityCode);
+    assertEquals(facilityNameOnOrderScreen.getText().trim(), facilityName);
+    assertEquals(periodStartDateOnOrderScreen.getText().trim(), periodStartDate);
+    assertEquals(periodEndDateOnOrderScreen.getText().trim(), periodEndDate);
+    assertEquals(supplyDepotOnOrderScreen.getText().trim(), supplyFacilityName);
   }
 
   public void clickConvertToOrderButton() {
@@ -151,4 +149,7 @@ public class ConvertOrderPage extends RequisitionPage {
     searchButton.click();
     testWebDriver.sleep(1000);
   }
+    public String getNoRequisitionPendingMessage() {
+        return noRequisitionPending.getText();
+    }
 }

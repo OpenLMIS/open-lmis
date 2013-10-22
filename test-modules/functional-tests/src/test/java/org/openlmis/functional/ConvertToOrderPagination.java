@@ -11,6 +11,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
@@ -278,6 +279,22 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertTrue("Link number" + i + " should not appear", flag);
   }
 
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+    public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws Exception {
+        setUpData(program, userSIC);
+        dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
+        dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
+        dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+        dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+        dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+        dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+        dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+        dbWrapper.updateSupplyLines("F10","F11");
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
+        assertEquals("No requisitions to be converted to orders", convertOrderPage.getNoRequisitionPendingMessage());
+    }
 
   @AfterMethod(groups = "requisition")
   @After

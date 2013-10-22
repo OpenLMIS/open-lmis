@@ -363,7 +363,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @When("^I access convert to order page$")
-  public void nevigateConvertToOrderPage() throws Exception {
+  public void navigateConvertToOrderPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateConvertToOrder();
   }
