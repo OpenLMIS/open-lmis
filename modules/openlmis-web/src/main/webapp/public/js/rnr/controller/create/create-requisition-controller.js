@@ -22,7 +22,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
-  $scope.fullScreen = false;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.currency = messageService.get('label.currency.symbol');
   resetFlags();
@@ -30,18 +29,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   var NON_FULL_SUPPLY = 'non-full-supply';
   var FULL_SUPPLY = 'full-supply';
   var REGIMEN = 'regimen';
-
-  $scope.$watch('fullScreen', function () {
-    angular.element(window).scrollTop(0);
-    if (!$.browser.msie) {
-      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp({'duration': 'slow', 'progress' :fixToolbarWidth }) :
-        angular.element('.toggleFullScreen').slideDown({ 'duration': 'slow', 'progress' :fixToolbarWidth });
-    }
-    else {
-      $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
-    }
-    $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
-  });
 
   if ($scope.rnr.emergency) {
     $scope.requisitionType = messageService.get("requisition.type.emergency");

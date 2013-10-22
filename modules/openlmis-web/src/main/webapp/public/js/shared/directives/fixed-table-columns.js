@@ -21,9 +21,10 @@ app.directive('fixedTableColumns', function () {
       var fixedTableHead = $("<thead><tr></tr></thead>");
 
       var setFixedTableColumnsOffset = function () {
+        var baseElementOffset = element.offset();
         fixedColumns.css({
-          top: (element.offset().top - $(window).scrollTop() - 1) + 'px',
-          left: (element.offset().left + element.parent().scrollLeft()) + 'px'
+          top: (baseElementOffset.top - $(window).scrollTop()) + 'px',
+          left: (baseElementOffset.left + element.parent().scrollLeft()) + 'px'
         });
         $('.column-fixed th').each(function (index, tableHeaderElement) {
           copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
