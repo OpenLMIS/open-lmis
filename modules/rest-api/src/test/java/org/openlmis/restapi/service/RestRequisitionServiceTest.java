@@ -89,6 +89,7 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
+    when(userService.getByUserName("1")).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
@@ -106,6 +107,8 @@ public class RestRequisitionServiceTest {
   @Test
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
+
+    when(userService.getByUserName("1")).thenReturn(user);
 
     service.submitReport(spyReport);
 
@@ -145,6 +148,7 @@ public class RestRequisitionServiceTest {
 
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    when(userService.getByUserName("1")).thenReturn(user);
 
     service.approve(spyReport);
 
