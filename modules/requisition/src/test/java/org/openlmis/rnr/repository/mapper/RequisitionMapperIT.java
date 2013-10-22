@@ -713,7 +713,7 @@ public class RequisitionMapperIT {
 
 
   private void insertRoleForApprovedRequisitions(Long facilityId, Long userId) throws SQLException {
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facilityId, role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facilityId, role.getId());
   }
 
   private Role insertRole() {

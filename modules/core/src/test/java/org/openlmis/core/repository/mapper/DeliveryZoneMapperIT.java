@@ -154,29 +154,29 @@ public class DeliveryZoneMapperIT {
 
   private void insertDeliveryZoneProgramSchedule(long id, long scheduleId) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO delivery_zone_program_schedules(deliveryZoneId, programId, scheduleId ) " +
-      "VALUES(?,(SELECT id FROM programs WHERE code='VACCINES'), ?)", asList(id, scheduleId));
+      "VALUES(?,(SELECT id FROM programs WHERE code='VACCINES'), ?)", id, scheduleId);
   }
 
   private long insertSchedule() throws SQLException {
     return queryExecutor.executeUpdate("INSERT INTO processing_schedules(code, name, description) values(?, ?, ?)",
-      asList("M", "scheduleName", "desc"));
+    "M", "scheduleName", "desc");
   }
 
   private void createRoleAssignment(long user, String deliveryZoneCode, String planDistributionRole) throws SQLException {
-    queryExecutor.executeUpdate("INSERT INTO roles (name) VALUES (?)", asList(planDistributionRole));
+    queryExecutor.executeUpdate("INSERT INTO roles (name) VALUES (?)", planDistributionRole);
     queryExecutor.executeUpdate("INSERT INTO role_rights (roleId, rightName) VALUES ((select id from roles where name=?), ?)",
-      asList(planDistributionRole, MANAGE_DISTRIBUTION.toString()));
+      planDistributionRole, MANAGE_DISTRIBUTION.toString());
     queryExecutor.executeUpdate("INSERT INTO role_assignments (userId, roleId, deliveryZoneId) " +
       "VALUES (?, (SELECT id FROM roles WHERE name = ?), " +
-      "(SELECT id FROM delivery_zones WHERE code=?))", asList(user, planDistributionRole, deliveryZoneCode));
+      "(SELECT id FROM delivery_zones WHERE code=?))",user, planDistributionRole, deliveryZoneCode);
   }
 
   private long insertUser(String user) throws SQLException {
     return queryExecutor.executeUpdate("INSERT INTO users(username, password, firstname, lastname, email) " +
-      "VALUES(?,'password','firstname','lastname', 'email')", asList(user));
+      "VALUES(?,'password','firstname','lastname', 'email')", user);
   }
 
   private long insertDeliveryZone(String deliveryZoneCode, String deliveryZoneName) throws SQLException {
-    return queryExecutor.executeUpdate("INSERT INTO delivery_zones (code, name) values (?,?)", asList(deliveryZoneCode, deliveryZoneName));
+    return queryExecutor.executeUpdate("INSERT INTO delivery_zones (code, name) values (?,?)", deliveryZoneCode, deliveryZoneName);
   }
 }

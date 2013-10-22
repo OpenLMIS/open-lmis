@@ -247,7 +247,7 @@ public class OrderMapperIT {
       roleRightsMapper.createRoleRight(role, right);
     }
 
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facility.getId(), role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facility.getId(), role.getId());
     return userId;
   }
 

@@ -39,6 +39,7 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.email;
+import static org.openlmis.core.builder.UserBuilder.userName;
 import static org.openlmis.core.domain.Right.APPROVE_REQUISITION;
 import static org.openlmis.core.repository.UserRepository.*;
 
@@ -188,6 +189,17 @@ public class UserRepositoryTest {
     when(userMapper.getById(1L)).thenReturn(user);
 
     User userReturned = userRepository.getById(1L);
+
+    assertThat(userReturned, is(user));
+  }
+
+  @Test
+  public void getUserByUserName() throws Exception {
+    String userName = "userName";
+    User user = new User();
+    when(userMapper.getByUserName(userName)).thenReturn(user);
+
+    User userReturned = userRepository.getByUserName(userName);
 
     assertThat(userReturned, is(user));
   }

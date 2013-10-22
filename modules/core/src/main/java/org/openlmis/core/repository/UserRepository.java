@@ -142,4 +142,8 @@ public class UserRepository {
   public void disable(Long userId, Long modifiedBy) {
     userMapper.disable(userId, modifiedBy);
   }
+
+  public User getByUserName(String userName) {
+    return userMapper.getByUserName(userName);
+  }
 }

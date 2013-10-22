@@ -157,6 +157,9 @@ public class UserService {
     return userRepository.getByUsernameAndVendorId(user);
   }
 
+  public User getByUserName(String userName) {
+    return userRepository.getByUserName(userName);
+  }
   public User selectUserByUserNameAndPassword(String userName, String password) {
     return userRepository.selectUserByUserNameAndPassword(userName, password);
   }

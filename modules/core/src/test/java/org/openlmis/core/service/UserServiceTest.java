@@ -212,6 +212,19 @@ public class UserServiceTest {
   }
 
   @Test
+  public void shouldReturnUserByUserName() throws Exception {
+    User user = new User();
+    String userName = "userName";
+    when(userRepository.getByUserName(userName)).thenReturn(user);
+
+    User returnedUser = userService.getByUserName(userName);
+
+    assertThat(returnedUser, is(user));
+
+  }
+
+
+  @Test
   public void shouldSendPasswordEmailWhenUserCreated() throws Exception {
     User user = new User();
 

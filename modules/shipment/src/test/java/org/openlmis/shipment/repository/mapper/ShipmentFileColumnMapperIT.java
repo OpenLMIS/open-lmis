@@ -50,11 +50,10 @@ public class ShipmentFileColumnMapperIT {
   @Test
   public void shouldUpdateOnlyRequiredFields() throws SQLException {
 
-    List params = asList("ColumnName", "label", 100, false, false, "dd/MM/yyyy");
 
     queryExecutor.executeUpdate("INSERT INTO shipment_file_columns" +
       "(name, dataFieldLabel, position, include, mandatory, datePattern) VALUES" +
-      "(?,?,?,?,?,?)", params);
+      "(?,?,?,?,?,?)", "ColumnName", "label", 100, false, false, "dd/MM/yyyy");
     EDIFileColumn shipmentFileColumn = make(a(mandatoryShipmentFileColumn,
       with(fieldName, "ColumnName"),
       with(dataFieldLabel, "new label"),

@@ -10,13 +10,12 @@
 
 CREATE TABLE pod_line_items (
   id               SERIAL PRIMARY KEY,
-  orderId          INTEGER     NOT NULL REFERENCES orders (id),
+  podId            INTEGER     NOT NULL REFERENCES pod (id),
   productCode      VARCHAR(50) NOT NULL REFERENCES products (code),
   quantityReceived INTEGER     NOT NULL,
-  receivedDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy        INTEGER,
   createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy       INTEGER,
   modifiedDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (orderId, productCode)
+  UNIQUE (podId, productCode)
 );

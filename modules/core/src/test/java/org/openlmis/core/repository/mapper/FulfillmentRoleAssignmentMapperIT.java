@@ -72,7 +72,7 @@ public class FulfillmentRoleAssignmentMapperIT {
     Role role = new Role("r1", "random description");
     roleRightsMapper.insertRole(role);
 
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", user.getId(), facility.getId(), role.getId());
 
     List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
 
@@ -98,7 +98,7 @@ public class FulfillmentRoleAssignmentMapperIT {
 
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId, facilityId,roleId, " +
             "createdBy, modifiedBy) values (?,?,?, ?, ?)",
-            asList(user.getId(), facility.getId(), role.getId(), user.getModifiedBy(), user.getModifiedBy()));
+            user.getId(), facility.getId(), role.getId(), user.getModifiedBy(), user.getModifiedBy());
 
     fulfillmentRoleAssignmentMapper.deleteAllFulfillmentRoles(user);
 

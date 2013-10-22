@@ -10,7 +10,7 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 public class PODLineItem extends BaseModel {
 
-  private Long orderId;
+  private Long podId;
   private String productCode;
   private Integer quantityReceived;
 

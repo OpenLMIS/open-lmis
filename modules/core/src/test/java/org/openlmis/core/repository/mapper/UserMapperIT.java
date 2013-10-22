@@ -296,6 +296,17 @@ public class UserMapperIT {
   }
 
   @Test
+  public void shouldGetUserByUserName() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+
+    userMapper.insert(user);
+
+    User returnedUser = userMapper.getByUserName(user.getUserName());
+
+    assertThat(user.getUserName(), is(returnedUser.getUserName()));
+  }
+
+  @Test
   public void shouldNotGetDisabledUserData() {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
