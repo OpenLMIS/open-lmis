@@ -78,10 +78,12 @@ var RegularRnrLineItem = base2.Base.extend({
             isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
     }
     else {
-        orderQuantity = this.quantityApproved * utils.parseIntWithBaseTen(this.packSize) ;
+        orderQuantity = this.quantityApproved ;
     }
 
-    this.calculatePacksToShip(orderQuantity);
+      orderQuantity  = orderQuantity * utils.parseIntWithBaseTen(this.packSize)
+
+      this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   },
 
