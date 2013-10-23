@@ -8,7 +8,7 @@ app.directive('rnrBody', function () {
 
       $(window).on('resize', function () {
         element.css('max-height', $(window).height() + 'px');
-      })
+      });
     }
-  }
+  };
 });

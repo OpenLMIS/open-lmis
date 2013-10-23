@@ -24,7 +24,7 @@ app.directive('fullScreen', function () {
           fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
         }
         fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
-      })
+      });
     }
-  }
+  };
 });
