@@ -33,6 +33,7 @@ public class FacilityFeedDTO extends BaseFeedDTO {
     public GeographicZone getGeographicZone();
     public FacilityType getFacilityType();
     public FacilityOperator getOperatedBy();
+    public List<ProgramSupported> getSupportedPrograms();
   }
 
   @Delegate(excludes = ExcludedDelegates.class)
