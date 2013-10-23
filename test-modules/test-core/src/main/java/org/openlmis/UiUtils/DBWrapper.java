@@ -1203,7 +1203,7 @@ public class DBWrapper {
       update("update requisitions set status='RELEASED' where id =" + rs.getString("id"));
 
 
-      update("insert into orders(rnrId, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id")
+      update("insert into orders(Id, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id")
         + ", '" + status + "', (select id from supply_lines where supplyingFacilityId = " +
         "(select facilityId from fulfillment_role_assignments where userId = " +
         "(select id from users where username = '" + username + "')) limit 1) ," +
