@@ -222,7 +222,7 @@ public class DBWrapper {
     }
     if (withSupplyLine) {
       if (flag) {
-        insertSupplyLines("N1", program, "F10");
+        insertSupplyLines("N1", program, "F10", true);
       }
     }
 
@@ -316,7 +316,8 @@ public class DBWrapper {
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
-
+    update("delete from pod_line_items;");
+    update("delete from pod;");
     update("delete from orders;");
     update("DELETE FROM requisition_status_changes;");
 
@@ -738,9 +739,9 @@ public class DBWrapper {
     update("update facilities set " + field + "='" + value + "' where code='" + code + "';");
   }
 
-  public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
+  public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode, boolean exportOrders) throws IOException, SQLException {
     update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
-      "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
+      "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "')," + exportOrders + ");\n");
   }
 
   public void updateSupplyLines(String previousFacilityCode, String newFacilityCode) throws IOException, SQLException {
@@ -969,6 +970,17 @@ public class DBWrapper {
       requisitionStatus = rs.getString("status");
     }
     return requisitionStatus;
+
+  }
+
+  public String getOrderStatus(Long orderId) throws IOException, SQLException {
+    String orderStatus = null;
+    ResultSet rs = query("SELECT status from orders where id=" + orderId);
+
+      if (rs.next()) {
+          orderStatus = rs.getString("status");
+      }
+      return orderStatus;
 
   }
 
@@ -1210,6 +1222,13 @@ public class DBWrapper {
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
 
     }
+  }
+
+  public void setupUserForFulfillmentRole(String username, String roleName, String facilityCode) throws IOException, SQLException {
+           update("insert into fulfillment_role_assignments(userId, roleId,facilityId) values((select id from users where userName = '" + username +
+                    "'),(select id from roles where name = '" + roleName + "')," +
+                    "(select id from facilities where code = '" + facilityCode + "'));");
+
   }
 
   public void verifyFacilityVisits(String observations, String confirmedByName, String confirmedByTitle,

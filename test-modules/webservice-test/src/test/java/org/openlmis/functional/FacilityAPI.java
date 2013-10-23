@@ -10,6 +10,7 @@
 
 package org.openlmis.functional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -81,6 +82,8 @@ public class FacilityAPI extends TestCaseHelper {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"VACCINES\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":true"));
 
+        assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"),35);
+
         dbWrapper.disableFacility("Village Dispensary");
         responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":false"));
@@ -94,6 +97,7 @@ public class FacilityAPI extends TestCaseHelper {
         responseEntity = client.SendJSON("", URL + "?facilityCode=%20F10", GET, commTrackUser, "Admin123");
         assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
         assertEquals(responseEntity.getStatus(), 400) ;
+
     }
 
     @Test(groups = {"webservice"})
