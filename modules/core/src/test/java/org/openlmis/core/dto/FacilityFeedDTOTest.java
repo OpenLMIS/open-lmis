@@ -63,8 +63,8 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getSdp(), is(facility.getSdp()));
     assertThat(facilityFeedDTO.getHasElectricity(), is(facility.getHasElectricity()));
     assertThat(facilityFeedDTO.getOnline(), is(facility.getOnline()));
-    assertThat(facilityFeedDTO.getHasElectronicSCC(), is(facility.getHasElectronicScc()));
-    assertThat(facilityFeedDTO.getHasElectronicDAR(), is(facility.getHasElectronicDar()));
+    assertThat(facilityFeedDTO.getHasElectronicSCC(), is(facility.getHasElectronicSCC()));
+    assertThat(facilityFeedDTO.getHasElectronicDAR(), is(facility.getHasElectronicDAR()));
     assertThat(facilityFeedDTO.getActive(), is(facility.getActive()));
     assertThat(facilityFeedDTO.getGoLiveDate(), is(facility.getGoLiveDate()));
     assertThat(facilityFeedDTO.getGoDownDate(), is(facility.getGoDownDate()));
@@ -72,7 +72,7 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getVirtualFacility(), is(facility.getVirtualFacility()));
     assertThat(facilityFeedDTO.getParentFacility(), is(parentFacility.getCode()));
     assertThat(facilityFeedDTO.getComment(), is(facility.getComment()));
-    assertThat(facilityFeedDTO.isEnabled(), is(true));
+    assertThat(facilityFeedDTO.getEnabled(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
     assertThat(facilityFeedDTO.getProgramsSupported(), is(asList("HIV")));
   }

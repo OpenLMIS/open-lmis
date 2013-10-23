@@ -25,7 +25,7 @@ public interface FacilityMapper {
   @Insert("Insert into facilities(code, name, description, gln, mainPhone, fax, address1, address2, " +
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
-    "satellite, parentFacilityId, hasElectricity, hasElectronicScc, hasElectronicDar, active," +
+    "satellite, parentFacilityId, hasElectricity, hasElectronicSCC, hasElectronicDAR, active," +
     "goLiveDate, goDownDate, comment, virtualFacility, enabled, createdDate,createdBy, modifiedBy, modifiedDate) " +
     "values(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
@@ -33,7 +33,7 @@ public interface FacilityMapper {
     "#{catchmentPopulation}, #{latitude}, #{longitude}, #{altitude}," +
     "#{operatedBy.id}," +
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
-    "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicScc}, #{hasElectronicDar}, #{active}," +
+    "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
     "COALESCE(#{modifiedDate}, NOW()))")
   @Options(useGeneratedKeys = true)
@@ -84,8 +84,8 @@ public interface FacilityMapper {
     "operatedById = #{operatedBy.id}," +
     "coldStorageGrossCapacity = #{coldStorageGrossCapacity}, coldStorageNetCapacity = #{coldStorageNetCapacity}," +
     "suppliesOthers = #{suppliesOthers}, sdp = #{sdp}, online = #{online}, satellite = #{satellite}, parentFacilityId = #{parentFacilityId}," +
-    "hasElectricity = #{hasElectricity}, hasElectronicScc = #{hasElectronicScc}, " +
-    "hasElectronicDar = #{hasElectronicDar}, active = #{active}, virtualFacility = #{virtualFacility}, " +
+    "hasElectricity = #{hasElectricity}, hasElectronicSCC = #{hasElectronicSCC}, " +
+    "hasElectronicDAR = #{hasElectronicDAR}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}," +
     "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);

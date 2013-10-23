@@ -10,126 +10,48 @@
 
 package org.openlmis.core.dto;
 
-import lombok.Data;
+import lombok.Delegate;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.*;
 
-import java.util.Date;
 import java.util.List;
 
+import static lombok.AccessLevel.NONE;
 import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
-@Data
+@Getter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 public class FacilityFeedDTO extends BaseFeedDTO {
+  private interface ExcludedDelegates {
+    public GeographicZone getGeographicZone();
+    public FacilityType getFacilityType();
+    public FacilityOperator getOperatedBy();
+  }
 
-
-  private String code;
-
-  private String name;
-
-  private String description;
-
-  private String gln;
-
-  private String mainPhone;
-
-  private String fax;
-
-  private String address1;
-
-  private String address2;
+  @Delegate(excludes = ExcludedDelegates.class)
+  @Getter(NONE)
+  private Facility facility;
 
   private String geographicZone;
-
   private String facilityType;
-
-  private Long catchmentPopulation;
-
-  private Double latitude;
-
-  private Double longitude;
-
-  private Double altitude;
-
-  private String operatedBy;
-
-  private Double coldStorageGrossCapacity;
-
-  private Double coldStorageNetCapacity;
-
-  private Boolean suppliesOthers;
-
-  private Boolean sdp;
-
-  private Boolean hasElectricity;
-
-  private Boolean online;
-
-  private Boolean hasElectronicSCC;
-
-  private Boolean hasElectronicDAR;
-
-  private Boolean active;
-
-  private Date goLiveDate;
-
-  private Date goDownDate;
-
-  private Boolean satellite;
-
   private String parentFacility;
-
-  private String comment;
-
-  private boolean enabled;
-
-  private Date modifiedDate;
-
-  private Boolean virtualFacility;
-
+  private String operatedBy;
   private List<String> programsSupported;
 
+  @SuppressWarnings("unchecked")
   public FacilityFeedDTO(Facility facility, Facility parentFacility) {
-    this.code = facility.getCode();
-    this.name = facility.getName();
+    this.facility = facility;
     this.facilityType = facility.getFacilityType().getName();
-    this.description = facility.getDescription();
-    this.gln = facility.getGln();
-    this.mainPhone = facility.getMainPhone();
-    this.fax = facility.getFax();
-    this.address1 = facility.getAddress1();
-    this.address2 = facility.getAddress2();
     this.geographicZone = facility.getGeographicZone().getName();
-    this.catchmentPopulation = facility.getCatchmentPopulation();
-    this.latitude = facility.getLatitude();
-    this.longitude = facility.getLongitude();
-    this.altitude = facility.getAltitude();
     this.operatedBy = (facility.getOperatedBy() != null) ? facility.getOperatedBy().getText() : null;
-    this.coldStorageGrossCapacity = facility.getColdStorageGrossCapacity();
-    this.coldStorageNetCapacity = facility.getColdStorageNetCapacity();
-    this.sdp = facility.getSdp();
-    this.online = facility.getOnline();
-    this.suppliesOthers = facility.getSuppliesOthers();
-    this.hasElectricity = facility.getHasElectricity();
-    this.hasElectronicSCC = facility.getHasElectronicScc();
-    this.hasElectronicDAR = facility.getHasElectronicDar();
-    this.satellite = facility.getSatellite();
-    this.virtualFacility = facility.getVirtualFacility();
-    this.active = facility.getActive();
-    this.goLiveDate = facility.getGoLiveDate();
-    this.goDownDate = facility.getGoDownDate();
     this.parentFacility = parentFacility != null ? parentFacility.getCode() : null;
-    this.comment = facility.getComment();
-    this.enabled = facility.getEnabled();
-    this.modifiedDate = facility.getModifiedDate();
     this.programsSupported = (List<String>) collect(facility.getSupportedPrograms(), new Transformer() {
       @Override
       public Object transform(Object o) {
@@ -137,5 +59,4 @@ public class FacilityFeedDTO extends BaseFeedDTO {
       }
     });
   }
-
 }
