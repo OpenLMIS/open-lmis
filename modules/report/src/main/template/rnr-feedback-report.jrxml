@@ -6,59 +6,28 @@
 	<style name="err_open" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_open_balance} == 1]]></conditionExpression>
-			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
-				<box>
-					<pen lineWidth="0.25" lineColor="#000000"/>
-					<topPen lineWidth="0.25" lineColor="#000000"/>
-					<leftPen lineWidth="0.25" lineColor="#000000"/>
-					<bottomPen lineWidth="0.25" lineColor="#000000"/>
-					<rightPen lineWidth="0.25" lineColor="#000000"/>
-				</box>
-			</style>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-BoldOblique" pdfEncoding="Cp1252"/>
 		</conditionalStyle>
 	</style>
 	<style name="err_received" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_received} == 1]]></conditionExpression>
-			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
-				<box>
-					<pen lineWidth="0.25" lineColor="#000000"/>
-					<topPen lineWidth="0.25" lineColor="#000000"/>
-					<leftPen lineWidth="0.25" lineColor="#000000"/>
-					<bottomPen lineWidth="0.25" lineColor="#000000"/>
-					<rightPen lineWidth="0.25" lineColor="#000000"/>
-				</box>
-			</style>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-BoldOblique" pdfEncoding="Cp1252"/>
 		</conditionalStyle>
 	</style>
 	<style name="err_required" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_required} == 1]]></conditionExpression>
-			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
-				<box>
-					<pen lineWidth="0.25" lineColor="#000000"/>
-					<topPen lineWidth="0.25" lineColor="#000000"/>
-					<leftPen lineWidth="0.25" lineColor="#000000"/>
-					<bottomPen lineWidth="0.25" lineColor="#000000"/>
-					<rightPen lineWidth="0.25" lineColor="#000000"/>
-				</box>
-			</style>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-BoldOblique" pdfEncoding="Cp1252"/>
 		</conditionalStyle>
 	</style>
-	<style name="err_soh" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+	<style name="err_soh" pattern="" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{err_qty_stockinhand} == 1]]></conditionExpression>
-			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252">
-				<box>
-					<pen lineWidth="0.25" lineColor="#000000"/>
-					<topPen lineWidth="0.25" lineColor="#000000"/>
-					<leftPen lineWidth="0.25" lineColor="#000000"/>
-					<bottomPen lineWidth="0.25" lineColor="#000000"/>
-					<rightPen lineWidth="0.25" lineColor="#000000"/>
-				</box>
-			</style>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-BoldOblique" pdfEncoding="Cp1252"/>
 		</conditionalStyle>
 	</style>
+	<style name="style1" fill="Solid"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
 	</parameter>
@@ -133,7 +102,7 @@ from vw_rnr_feedback]]>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="72" y="40" width="183" height="43" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="42" y="40" width="213" height="43" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -141,7 +110,7 @@ from vw_rnr_feedback]]>
 					<text><![CDATA[Product]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="40" width="72" height="43" forecolor="#000000" backcolor="#333333"/>
+					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="40" width="42" height="43" forecolor="#000000" backcolor="#333333"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -157,7 +126,7 @@ from vw_rnr_feedback]]>
 					<text><![CDATA[Unit]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="84fb0aa5-78bc-4086-a683-f926270f266e" mode="Transparent" x="72" y="0" width="304" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="84fb0aa5-78bc-4086-a683-f926270f266e" mode="Transparent" x="62" y="0" width="314" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -167,14 +136,14 @@ from vw_rnr_feedback]]>
 					<textFieldExpression><![CDATA[($F{facility}== null?" - ":$F{facility})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="0502ca62-a410-47a4-b9ff-5defeff263d4" mode="Transparent" x="0" y="0" width="72" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="0502ca62-a410-47a4-b9ff-5defeff263d4" mode="Transparent" x="0" y="0" width="62" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Facility]]></text>
+					<text><![CDATA[Facility:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="e011adc6-c2b4-44ef-a753-434ffcc53d9f" mode="Transparent" x="618" y="20" width="152" height="20" forecolor="#000000" backcolor="#333333">
@@ -217,7 +186,7 @@ from vw_rnr_feedback]]>
 					<textFieldExpression><![CDATA[($F{maximumStock}== null?" - ":$F{maximumStock})]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="c7816492-a546-4827-bf64-c7e688d38e09" mode="Transparent" x="72" y="20" width="304" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement uuid="c7816492-a546-4827-bf64-c7e688d38e09" mode="Transparent" x="62" y="20" width="314" height="20" forecolor="#000000" backcolor="#FFFFFF">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -227,14 +196,14 @@ from vw_rnr_feedback]]>
 					<textFieldExpression><![CDATA[($F{facilityCode}== null?" - ":$F{facilityCode})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="62948eaf-688a-4494-8f8d-52c2e13f551d" mode="Transparent" x="0" y="20" width="72" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="62948eaf-688a-4494-8f8d-52c2e13f551d" mode="Transparent" x="0" y="20" width="62" height="20" forecolor="#000000" backcolor="#333333">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
-					<text><![CDATA[Facility Code]]></text>
+					<text><![CDATA[Facility Code:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement uuid="68bb975b-9d88-4a0b-bb86-58fc0044c43b" mode="Transparent" x="376" y="40" width="62" height="43" forecolor="#000000" backcolor="#333333">
@@ -383,7 +352,7 @@ from vw_rnr_feedback]]>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="72" height="20"/>
+				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="42" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
@@ -398,7 +367,7 @@ from vw_rnr_feedback]]>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="c9bc60cb-abde-4dcf-a88e-06c431a49abc" x="72" y="0" width="32" height="20"/>
+				<reportElement uuid="c9bc60cb-abde-4dcf-a88e-06c431a49abc" x="42" y="0" width="62" height="20"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>

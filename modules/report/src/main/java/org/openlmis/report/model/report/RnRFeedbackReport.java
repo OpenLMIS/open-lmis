@@ -44,4 +44,10 @@ public class RnRFeedbackReport implements ReportData {
     private Integer err_qty_required;
     private Integer err_qty_received;
     private Integer err_qty_stockinhand;
+    @Column( name = "productcode")
+    private String productCodeMain;
+    @Column( name = " quantity_shipped_total")
+    private Integer totalQuantityShipped;
+    private Integer productIndex;
+
 }

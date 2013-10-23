@@ -125,22 +125,35 @@
                              <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
                          </span>
                         </div>
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams" style="padding-top: 20px;">
                             <tbody>
+                            <th>#</th>
+                            <th>Product<br>Code</th>
+                            <th>Product<br>Name</th>
+                            <th>Unit</th>
+                            <th>Beginning<br>Balance</th>
+                            <th>Quantity<br>Received</th>
+                            <th>Quanity<br>Dispensed</th>
+                            <th>Adjustments</th>
+                            <th>Physical<br>Count</th>
+                            <th>Adjusted<br>AMC</th>
+                            <th>New<br>EOP</th>
+                            <th>Quantity<br>Ordered</th>
+                            <th>Quantity<br>Supplied</th>
                             <tr ng-repeat="row in datarows">
-                                <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'Product Code'" style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
-                                <td data-title="'Product'" style="width:30%" sortable="product"  >{{ row.product }}</td>
-                                <td data-title="'Unit'" class="number" style="width:80px" sortable="unit"  >{{ row.unit | number }}</td>
-                                <td data-title="'B. Balance'" class="number" style="width:80px" sortable="beginningBalance"  >{{ row.beginningBalance | number }}</td>
-                                <td data-title="'Q. Received'" class="number" style="width:80px" sortable="totalQuantityReceived"  >{{ row.totalQuantityReceived | number }}</td>
-                                <td data-title="'Q. Dispensed'" class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.totalQuantityDispensed | number }}</td>
-                                <td data-title="'Adjustements'" class="number" style="width:80px" sortable="adjustments"  >{{ row.adjustments | number }}</td>
-                                <td data-title="'Physical Count'" class="number" style="width:80px" sortable="physicalCount"  >{{ row.physicalCount | number }}</td>
-                                <td data-title="'Adjusted AMC'" class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.adjustedAMC | number }}</td>
-                                <td data-title="'New EOP'" class="number" style="width:80px" sortable="newEOP"  >{{ row.newEOP | number }}</td>
-                                <td data-title="'Q. Ordered'" class="number" style="width:80px" sortable="orderQuantity"  >{{ row.orderQuantity | number }}</td>
-                                <td data-title="'Q. Supplied'" class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
+                                <td class="number" style="width:20px" >{{row.no}}</td>
+                                <td style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
+                                <td style="width:30%" sortable="product"  >{{ row.product }}</td>
+                                <td class="number" style="width:80px" sortable="unit"  >{{ row.unit }}</td>
+                                <td class="number" style="..." sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
+                                <td class="number" stype="..." sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
+                                <td class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.productIndex == 0 && (row.totalQuantityDispensed | number) || ''}}</td>
+                                <td class="number" style="width:80px" sortable="adjustments"  >{{ row.productIndex == 0 && (row.adjustments | number) || ''}}</td>
+                                <td class="number" style="width:80px" sortable="physicalCount"  >{{ row.productIndex == 0 && (row.physicalCount | number) || '' }}</td>
+                                <td class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.productIndex == 0 && (row.adjustedAMC | number) || ''}}</td>
+                                <td class="number" style="width:80px" sortable="newEOP"  >{{ row.productIndex == 0 && (row.newEOP | number) || ''}}</td>
+                                <td class="number" style="width:80px" sortable="orderQuantity"  >{{ row.productIndex == 0 && (row.orderQuantity | number) || ''}}</td>
+                                <td class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
                             </tr>
                             </tbody>
                         </table>

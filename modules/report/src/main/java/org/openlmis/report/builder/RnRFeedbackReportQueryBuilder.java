@@ -25,25 +25,43 @@ public class RnRFeedbackReportQueryBuilder {
 
         //Regular Orders
         if(orderType == null || orderType.isEmpty() || orderType.equals("Regular")){
-
+            // main product
             BEGIN();
-            SELECT("productCode, facility_code AS facilityCode, facility_name AS facility, product, dispensingunit AS unit, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity maximumStock, quantityrequested AS orderQuantity, quantityShipped AS quantitySupplied, 0 emergencyOrder, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
+            SELECT("facility_code AS facilityCode, facility_name AS facility, productcode as productCode, product, productcode as productCodeMain, dispensingunit AS unit, beginningbalance as beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc AS adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity AS maximumStock, quantityrequested AS orderQuantity, quantityshipped AS quantitySupplied, quantity_shipped_total AS totalQuantityShipped, 0 AS emergencyOrder, 0 AS productIndex, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
             FROM("vw_rnr_feedback");
+            WHERE("(substitutedproductcode is null or (productcode is not null and substitutedproductcode is not null))");
             writePredicates(filter);
-            ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc"));
-
-            return SQL();
+            String query = SQL();
+            RESET();
+            //substitute product
+            BEGIN();
+            SELECT("facility_code AS facilityCode, facility_name AS facility, substitutedproductcode as productCode, '*'||substitutedproductname as product, productcode as productCodeMain, null AS unit, null as beginningBalance, null as totalQuantityReceived, null AS totalQuantityDispensed, null as adjustments, null AS physicalCount, null AS adjustedAMC, null AS newEOP, null AS maximumStock, null AS orderQuantity, substitutedproductquantityshipped quantitySupplied, null AS totalQuantityShipped, 0 AS emergencyOrder, 1 AS productIndex, 0 as err_open_balance, 0 as err_qty_required, 0 as err_qty_received, 0 as err_qty_stockinhand");
+            FROM("vw_rnr_feedback");
+            WHERE("substitutedproductcode is not null");
+            writePredicates(filter);
+            query += " UNION " + SQL() + " order by productcodemain, productindex";
+            return query;
 
         } else{  //Emergency orders
 
-
+            // main product
             BEGIN();
-            SELECT("productCode, facility_code AS facilityCode, facility_name AS facility, product, dispensingunit AS unit, beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity maximumStock, quantityrequested AS orderQuantity, quantityShipped AS quantitySupplied, 0 emergencyOrder, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
+            SELECT("facility_code AS facilityCode, facility_name AS facility, productcode as productCode, product, productcode as productCodeMain, dispensingunit AS unit, beginningbalance as beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc AS adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity AS maximumStock, quantityrequested AS orderQuantity, quantityshipped AS quantitySupplied, quantity_shipped_total AS totalQuantityShipped, 1 AS emergencyOrder, 0 AS productIndex, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
             FROM("vw_rnr_feedback");
+            WHERE("(substitutedproductcode is null or (productcode is not null and substitutedproductcode is not null))");
             writePredicates(filter);
-            ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, RnRFeedbackReport.class,"productcode asc,facility_name asc"));
+            String query = SQL();
+            RESET();
+            //substitute product
+            BEGIN();
+            SELECT("facility_code AS facilityCode, facility_name AS facility, productcode as productCode, product, productcode as productCodeMain, dispensingunit AS unit, beginningbalance as beginningBalance, quantityreceived AS totalQuantityReceived, quantitydispensed AS totalQuantityDispensed, totallossesandadjustments AS adjustments, stockinhand AS physicalCount, amc AS adjustedAMC, amc * nominaleop AS newEOP, maxstockquantity AS maximumStock, quantityrequested AS orderQuantity, quantityshipped AS quantitySupplied, quantity_shipped_total AS totalQuantityShipped, 1 AS emergencyOrder, 0 AS productIndex, err_open_balance, err_qty_required, err_qty_received, err_qty_stockinhand");
+            FROM("vw_rnr_feedback");
+            WHERE("substitutedproductcode is not null");
+            writePredicates(filter);
+            query += " UNION " + SQL() + " order by productcodemain, productindex";
+            return query;
 
-            return SQL();
+
         }
     }
 
