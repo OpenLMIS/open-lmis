@@ -201,6 +201,16 @@ var RegularRnrLineItem = base2.Base.extend({
     }
   },
 
+  getCalcOption:function(columnName){
+      var colOption = null;
+      angular.forEach(this.programRnrColumnList, function(item){
+          if(item.name == columnName) {
+              colOption = item.calculationOption;
+          }
+      });
+      return colOption;
+  },
+
   calculateNormalizedConsumption: function () {
     var numberOfMonthsInPeriod = 3; // will be picked up from the database in future
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
@@ -212,14 +222,8 @@ var RegularRnrLineItem = base2.Base.extend({
       return;
     }
     // find the calculation option
-    var normalizedConsumptionCalcOption = null;
-    angular.forEach(this.programRnrColumnList, function(item){
-        if(item.name == 'maxStockQuantity') {
-            normalizedConsumptionCalcOption = item.calculationOption;
-        }
-    });
+    var normalizedConsumptionCalcOption = this.getCalcOption("normalizedConsumption");
 
-    
     if(normalizedConsumptionCalcOption == 'DISPENSED_PLUS_NEW_PATIENTS'){
        this.normalizedConsumption = this.quantityDispensed  + this.newPatientCount;
      }else{
@@ -263,12 +267,7 @@ var RegularRnrLineItem = base2.Base.extend({
           return;
       }
       // find the calculation option
-      var maxStockColumnCalculationOption = null;
-      angular.forEach(this.programRnrColumnList, function(item){
-          if(item.name == 'maxStockQuantity') {
-              maxStockColumnCalculationOption = item.calculationOption;
-          }
-      });
+      var maxStockColumnCalculationOption = this.getCalcOption('maxStockQuantity');
 
       // if not default, apply the formula
       if( maxStockColumnCalculationOption == 'CONSUMPTION_X_2'){
