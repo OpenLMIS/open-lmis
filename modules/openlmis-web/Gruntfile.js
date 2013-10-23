@@ -19,7 +19,6 @@ module.exports = function (grunt) {
           undef: false,
           strict: false,
           '-W030' : true,
-          '-W038' : true,
           unused: false,
           passfail: true,
           reporter: 'checkstyle',

@@ -20,6 +20,10 @@ app.directive('modal', function() {
       scope.$watch(shownExpr, function(isShown, oldShown) {
         var tabbables;
         var backdrop;
+        var focusTabbableFirstChild = function (e) {
+          tabbables.first().focus();
+        };
+
         setTimeout(function() {
           if (isShown) {
             tabbables = elm.find(":tabbable");
@@ -40,10 +44,6 @@ app.directive('modal', function() {
                 e.preventDefault();
               }
             });
-
-            var focusTabbableFirstChild = function(e) {
-              tabbables.first().focus();
-            };
 
             backdrop.bind("click", focusTabbableFirstChild);
 
