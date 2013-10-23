@@ -2,6 +2,7 @@ package org.openlmis.restapi.service;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.pod.service.PODService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,23 @@ public class RestPODService {
   @Autowired
   private PODService podService;
 
+  @Autowired
+  private OrderService orderService;
 
   public void updatePOD(POD pod, String userName) {
     pod.setCreatedBy(userService.getByUserName(userName).getId());
     pod.setModifiedBy(userService.getByUserName(userName).getId());
     pod.validate();
-    validateDuplicatePOD(pod);
+    validateOrderForPOD(pod);
     podService.updatePOD(pod);
   }
 
-  private void validateDuplicatePOD(POD pod) {
-   if(podService.getPODByOrderId(pod.getOrderId()) != null) {
-     throw new DataException("error.restapi.delivery.already.confirmed");
-   }
+  private void validateOrderForPOD(POD pod) {
+    if(orderService.getOrder(pod.getOrderId()) == null) {
+      throw new DataException("error.restapi.invalid.order");
+    }
+    if (podService.getPODByOrderId(pod.getOrderId()) != null) {
+      throw new DataException("error.restapi.delivery.already.confirmed");
+    }
   }
 }
