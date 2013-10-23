@@ -190,7 +190,7 @@ public class FacilityListPage extends RequisitionPage {
       assertEquals(legendPartiallyCompletedText.getText(),"Partially completed");
       assertEquals(legendCompletedText.getText(),"Completed");
       assertEquals(legendSynchronizedText.getText(),"Synchronized");
-      assertEquals(legendCannotSynchronizedText.getText(),"Cannot synchronized");
+      assertEquals(legendCannotSynchronizedText.getText(),"Cannot synchronize");
 
       assertEquals(legendNotStartedIcon.getCssValue("background-color"),"rgba(203, 64, 64, 1)");
       assertEquals(legendPartiallyCompletedIcon.getCssValue("background-color"),"rgba(240, 165, 19, 1)");
