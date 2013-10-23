@@ -50,6 +50,9 @@ public class ForgotPasswordPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Please check your email and click on reset password link.')]")
   private static WebElement pleaseCheckMailDiv;
 
+  @FindBy(how= How.XPATH, using = "//body/div/div/div[2][@class='forgot-password-form']//input[1][@class='btn btn-primary']")
+  public static WebElement pageIdentifierOnForgotPasswordPage;
+
   public WebElement getEmailTextField() {
     return emailTextField;
   }
@@ -123,6 +126,10 @@ public class ForgotPasswordPage extends Page {
 
   }
 
-
+   public String getPageIdentifierOnForgotPasswordPageAttribute() {
+     testWebDriver.sleep(1000);
+     testWebDriver.waitForElementToAppear(pageIdentifierOnForgotPasswordPage);
+     return testWebDriver.getAttribute(pageIdentifierOnForgotPasswordPage,"value");
+   }
 
 }

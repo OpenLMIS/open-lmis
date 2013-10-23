@@ -38,7 +38,7 @@ public class OrderCsvHelper {
   public void writeCsvFile(Order order, OrderFileTemplateDTO orderFileTemplateDTO, Writer writer) throws IOException {
     List<OrderFileColumn> orderFileColumns = orderFileTemplateDTO.getOrderFileColumns();
     removeExcludedColumns(orderFileColumns);
-    if (orderFileTemplateDTO.getOrderConfiguration().getHeaderInFile()) {
+    if (orderFileTemplateDTO.getOrderConfiguration().isHeaderInFile()) {
       writeHeader(orderFileColumns, writer);
     }
     writeLineItems(order, order.getRnr().getFullSupplyLineItems(), orderFileColumns, writer);

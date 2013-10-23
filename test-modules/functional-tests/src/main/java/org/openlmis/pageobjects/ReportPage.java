@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
@@ -142,6 +143,10 @@ public class ReportPage extends RequisitionPage {
     assertTrue("Report with same name already exists message should show up", saveErrorMessage.isDisplayed());
   }
 
+  public void verifyErrorMessageInvalidFile() {
+    testWebDriver.sleep(2500);
+    assertEquals("File uploaded is invalid", saveErrorMessage.getText()) ;
+  }
 
   public void verifyErrorMessageDivReportName() {
     testWebDriver.sleep(500);

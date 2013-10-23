@@ -247,9 +247,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     });
     $scope.programSupportedMessage = ($scope.programsToDisplay.length) ? 'label.select.program.supported' : 'label.no.programs.left';
   }
-
 }
-
 
 FacilityController.resolve = {
   facilityReferenceData: function ($q, $timeout, FacilityReferenceData) {

@@ -168,7 +168,7 @@ public class RequisitionPage extends Page {
   }
 
   public void clickOk() {
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(3000);
     okButton.click();
     testWebDriver.sleep(500);
   }
@@ -286,7 +286,7 @@ public class RequisitionPage extends Page {
   }
 
   public void clickAuthorizeButton() {
-    testWebDriver.waitForElementToAppear(AuthorizeButton);
+    testWebDriver.sleep(2000);
     AuthorizeButton.click();
   }
 

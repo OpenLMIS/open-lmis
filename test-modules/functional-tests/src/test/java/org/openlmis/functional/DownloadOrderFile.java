@@ -42,7 +42,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public String program = "HIV";
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-  public String userSICUserName = "storeincharge";
+  public String userSICUserName = "storeIncharge";
   private final String separator = getProperty("file.separator");
   public  String[] csvRows;
 
@@ -85,7 +85,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void downloadOrderFile() throws Exception {
     ViewOrdersPage viewOrderPage = new ViewOrdersPage(testWebDriver);
     viewOrderPage.downloadCSV();
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(5000);
   }
 
     @And("^I get order data in file prefix \"([^\"]*)\"$")
@@ -95,7 +95,7 @@ public class DownloadOrderFile extends TestCaseHelper {
         String orderId = dbWrapper.getOrderId();
 
         csvRows = readCSVFile(filePrefix + orderId + ".csv");
-        testWebDriver.sleep(1000);
+        testWebDriver.sleep(5000);
         deleteFile(filePrefix + orderId + ".csv");
 
         return csvRows;
@@ -103,6 +103,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I verify order file line \"([^\"]*)\" having \"([^\"]*)\"$")
   public void checkOrderFileData(int lineNumber,String data) throws Exception {
+   testWebDriver.sleep(1000);
    assertTrue("Order data incorrect in line number "+ lineNumber, csvRows[lineNumber-1].contains(data));
   }
 
@@ -171,10 +172,10 @@ public class DownloadOrderFile extends TestCaseHelper {
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     rightsList.add("APPROVE_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
 
-    setupTestRoleRightsData("lmu", "ADMIN", "CONVERT_TO_ORDER,VIEW_ORDER");
-    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com", "openLmis");
+    setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
+    dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
     dbWrapper.insertRoleAssignment("212", "lmu");
     dbWrapper.insertFulfilmentRoleAssignment("lmu","lmu","F10");
 

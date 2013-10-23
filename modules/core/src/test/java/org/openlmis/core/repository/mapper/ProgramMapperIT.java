@@ -151,7 +151,7 @@ public class ProgramMapperIT {
     SupervisoryNode supervisoryNode = insertSupervisoryNode(node);
 
     Program activeProgramWithCreateRight = insertProgram(make(a(defaultProgram, with(programCode, "P1"))));
-    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programStatus, false))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "P2"), with(programActive, false))));
     Program activeProgramWithConfigureRight = insertProgram(make(a(defaultProgram, with(programCode, "P3"))));
     Program activeProgramForHomeFacility = insertProgram(make(a(defaultProgram, with(programCode, "P4"))));
     Program activePushProgramWithCreateRight = insertProgram(make(a(defaultProgram, with(programCode, "P5"), with(push, true))));
@@ -183,7 +183,7 @@ public class ProgramMapperIT {
   public void shouldFetchActiveProgramsSupportedByAFacilityForAUserWithRight() {
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Program anotherActiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p2"))));
-    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programActive, false))));
     Program activePushProgram = insertProgram(make(a(defaultProgram, with(programCode, "p4"), with(push, true))));
 
     Facility facility = insertFacility(make(a(defaultFacility)));
@@ -222,7 +222,7 @@ public class ProgramMapperIT {
   @Test
   public void shouldGetActiveProgramsForUserWithGivenRights() throws Exception {
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programActive, false))));
 
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
@@ -265,7 +265,7 @@ public class ProgramMapperIT {
   @Test
   public void shouldGetProgramsForAUserByFacilityAndRights() throws Exception {
     Program activeProgram = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programStatus, false))));
+    Program inactiveProgram = insertProgram(make(a(defaultProgram, with(programCode, "p3"), with(programActive, false))));
 
     Facility facility = insertFacility(make(a(defaultFacility)));
     User user = insertUser(facility);
@@ -314,7 +314,7 @@ public class ProgramMapperIT {
     programMapper.setFeedSendFlag(program, true);
     boolean flag;
 
-    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", asList("HIV"))) {
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", "HIV")) {
       set.next();
       flag = set.getBoolean(1);
     }
@@ -329,7 +329,7 @@ public class ProgramMapperIT {
     programMapper.setFeedSendFlag(program, false);
     boolean flag = true;
 
-    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", asList("HIV"))) {
+    try (ResultSet set = queryExecutor.execute("SELECT sendFeed from programs WHERE code = ?", "HIV")) {
       set.next();
       flag = set.getBoolean(1);
     }

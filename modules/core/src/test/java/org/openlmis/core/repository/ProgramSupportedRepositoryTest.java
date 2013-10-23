@@ -210,6 +210,18 @@ public class ProgramSupportedRepositoryTest {
     verify(programSupportedMapper).update(programSupported);
   }
 
+  @Test
+  public void shouldGetAciveByFacilityId() throws Exception {
+
+    Long facilityId = 1L;
+    List<ProgramSupported> programSupported = asList(new ProgramSupported());
+    when(programSupportedMapper.getActiveProgramsByFacilityId(facilityId)).thenReturn(programSupported);
+
+    programSupportedRepository.getActiveByFacilityId(facilityId);
+
+    verify(programSupportedMapper).getActiveProgramsByFacilityId(facilityId);
+
+  }
 
   private static Matcher<ProgramSupported> programSupportedMatcher(final Long facilityId, final Boolean active,
                                                                    final Date startDate, final Long modifiedBy,

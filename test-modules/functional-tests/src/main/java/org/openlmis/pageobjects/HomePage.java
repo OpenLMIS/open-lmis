@@ -271,7 +271,6 @@ public class HomePage extends Page {
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     testWebDriver.keyPress(manageFacilityMenuItem);
-    //manageFacilityMenuItem.click();
     verifyTabs();
     clickCreateFacilityButton();
     verifyHeader("Add new facility");
@@ -526,7 +525,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
-    testWebDriver.sleep(3500);
+    testWebDriver.sleep(7000);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
     return new ConvertOrderPage(testWebDriver);
   }
@@ -585,6 +584,10 @@ public class HomePage extends Page {
     SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
   }
 
+  public String getErrorMessage() {
+    testWebDriver.waitForElementToAppear(errorMsg);
+    return errorMsg.getText().trim();
+  }
   public void goBack(){
       TestWebDriver.getDriver().navigate().back();
   }

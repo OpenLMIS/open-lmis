@@ -10,9 +10,9 @@
 
 package org.openlmis.restapi.authentication;
 
-import org.openlmis.core.domain.Vendor;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.core.service.VendorService;
+import org.openlmis.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -27,23 +27,22 @@ import java.util.Collection;
 public class RestApiAuthenticationProvider implements AuthenticationProvider {
 
   @Autowired
-  private VendorService vendorService;
+  private UserService userService;
 
   MessageService messageService = MessageService.getRequestInstance();
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-    Vendor vendor = new Vendor();
+    User user = new User();
+    user.setUserName(authentication.getPrincipal().toString());
+    user.setPassword(authentication.getCredentials().toString());
 
-    vendor.setName((String) authentication.getPrincipal());
-    vendor.setAuthToken((String) authentication.getCredentials());
-
-    if (!vendorService.authenticate(vendor))
+    if (userService.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword()) == null)
       throw new BadCredentialsException(messageService.message("error.authentication.failed"));
 
     Collection<? extends GrantedAuthority> authorities = null;
 
-    return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(), authentication.getCredentials(),
+    return new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword(),
       authorities);
   }
 

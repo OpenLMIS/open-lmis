@@ -86,7 +86,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
         configureShipmentPage.clickSaveButton();
     }
 
-    @Then("^I should see successfull message \"([^\"]*)\"$")
+    @Then("^I should see successful message \"([^\"]*)\"$")
     public void verifySaveSuccessfullyMessage(String message) throws Exception {
         ConfigureShipmentPage configureShipmentPage = new ConfigureShipmentPage(testWebDriver);
         configureShipmentPage.verifyMessage(message);

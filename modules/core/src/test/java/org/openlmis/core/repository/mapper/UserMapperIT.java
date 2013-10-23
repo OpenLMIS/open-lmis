@@ -18,7 +18,6 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.core.utils.mapper.TestVendorMapper;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static java.util.Arrays.asList;
 import static java.util.Calendar.YEAR;
 import static org.apache.commons.lang.time.DateUtils.truncate;
 import static org.hamcrest.CoreMatchers.*;
@@ -63,8 +61,6 @@ public class UserMapperIT {
   private FacilityMapper facilityMapper;
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
-  @Autowired
-  TestVendorMapper vendorMapper;
   @Autowired
   QueryExecutor queryExecutor;
 
@@ -105,7 +101,7 @@ public class UserMapperIT {
 
     userMapper.insert(someUser);
 
-    User fetchedUser = userMapper.getByUsernameAndVendorId(someUser);
+    User fetchedUser = userMapper.getByUserName(someUser.getUserName());
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -120,7 +116,7 @@ public class UserMapperIT {
     someUser.setModifiedDate(calendar.getTime());
 
     userMapper.insert(someUser);
-    User fetchedUser = userMapper.getByUsernameAndVendorId(someUser);
+    User fetchedUser = userMapper.getByUserName(someUser.getUserName());
 
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
@@ -144,7 +140,6 @@ public class UserMapperIT {
     someUser.setPassword(null);
     someUser.getSupervisor().setModifiedDate(null);
     someUser.setModifiedDate(null);
-    someUser.setVendorId(null);
     assertThat(users, hasItem(someUser));
   }
 
@@ -167,31 +162,14 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNotNull() throws Exception {
-    String nullString = null;
-    Vendor vendor = new Vendor();
-    vendor.setName("newVendor");
-    vendorMapper.insert(vendor);
-
-    User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString),
-      with(vendorId, vendor.getId()), with(active, true)));
-    user.setModifiedDate(Calendar.getInstance().getTime());
-    userMapper.insert(user);
-
-    User result = userMapper.getByUsernameAndVendorId(user);
-    user.setPassword(null);
-    assertThat(result, is(user));
-  }
-
-  @Test
-  public void shouldGetUserWithUserNameAndVendorIdWhenVendorIdIsNull() throws Exception {
+  public void shouldGetUserWithUserName() throws Exception {
     String nullString = null;
 
     User user = make(a(defaultUser, with(facilityId, facility.getId()), with(supervisorUserName, nullString), with(active, true)));
     user.setModifiedDate(Calendar.getInstance().getTime());
     userMapper.insert(user);
 
-    User result = userMapper.getByUsernameAndVendorId(user);
+    User result = userMapper.getByUserName(user.getUserName());
     user.setPassword(null);
     assertThat(result, is(user));
   }
@@ -296,13 +274,24 @@ public class UserMapperIT {
   }
 
   @Test
+  public void shouldGetUserByUserName() throws Exception {
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+
+    userMapper.insert(user);
+
+    User returnedUser = userMapper.getByUserName(user.getUserName());
+
+    assertThat(user.getUserName(), is(returnedUser.getUserName()));
+  }
+
+  @Test
   public void shouldNotGetDisabledUserData() {
     User user = make(a(defaultUser, with(facilityId, facility.getId())));
     userMapper.insert(user);
 
     userMapper.disable(user.getId(), 1L);
 
-    assertThat(userMapper.getByUsernameAndVendorId(user), is(nullValue()));
+    assertThat(userMapper.getByUserName(user.getUserName()), is(nullValue()));
   }
 
   @Test
@@ -347,21 +336,6 @@ public class UserMapperIT {
   }
 
   @Test
-  public void shouldSelectOnlyUsersWithExternalSystemNullWhileAuthentication() throws Exception {
-    Vendor commTrac = new Vendor("commTrac", true);
-    vendorMapper.insert(commTrac);
-
-    User externalUser = make(a(defaultUser, with(facilityId, facility.getId()), with(vendorId, commTrac.getId())));
-
-    userMapper.insert(externalUser);
-    userMapper.updateUserPasswordAndVerify(externalUser.getId(), "random");
-
-    User user = userMapper.selectUserByUserNameAndPassword(defaultUserName, "random");
-    assertThat(user, is(nullValue()));
-  }
-
-
-  @Test
   public void shouldInsertEmailNotification() throws Exception {
 
     int insertCount = userMapper.insertEmailNotification("toUser@email.com", "subject for email", "content of email");
@@ -369,7 +343,7 @@ public class UserMapperIT {
     assertThat(insertCount, is(1));
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM email_notifications WHERE receiver = ?",
-      asList("toUser@email.com"));
+      "toUser@email.com");
     resultSet.next();
     assertThat(resultSet.getString("receiver"), is("toUser@email.com"));
     assertThat(resultSet.getString("subject"), is("subject for email"));

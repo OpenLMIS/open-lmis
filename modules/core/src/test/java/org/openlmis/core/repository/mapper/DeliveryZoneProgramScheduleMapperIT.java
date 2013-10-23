@@ -16,10 +16,10 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.DeliveryZoneBuilder;
 import org.openlmis.core.builder.DeliveryZoneProgramScheduleBuilder;
+import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.DeliveryZoneProgramSchedule;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.domain.ProcessingSchedule;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.query.QueryExecutor;
@@ -34,10 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
-import static java.util.Arrays.asList;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.code;
 
@@ -143,15 +140,15 @@ public class DeliveryZoneProgramScheduleMapperIT {
 
   private void insertDeliveryZoneProgramSchedule(long id, Long scheduleId) throws SQLException {
     queryExecutor.executeUpdate("INSERT INTO delivery_zone_program_schedules(deliveryZoneId, programId, scheduleId ) " +
-      "VALUES(?,(SELECT id FROM programs WHERE code='VACCINES'), ?)", asList(id, scheduleId));
+      "VALUES(?,(SELECT id FROM programs WHERE code='VACCINES'), ?)", id, scheduleId);
   }
 
   private long insertSchedule() throws SQLException {
     return queryExecutor.executeUpdate("INSERT INTO processing_schedules(code, name, description) values(?, ?, ?)",
-      asList("M", "scheduleName", "desc"));
+      "M", "scheduleName", "desc");
   }
 
   private long insertDeliveryZone(String deliveryZoneCode, String deliveryZoneName) throws SQLException {
-    return queryExecutor.executeUpdate("INSERT INTO delivery_zones (code, name) values (?,?)", asList(deliveryZoneCode, deliveryZoneName));
+    return queryExecutor.executeUpdate("INSERT INTO delivery_zones (code, name) values (?,?)", deliveryZoneCode, deliveryZoneName);
   }
 }

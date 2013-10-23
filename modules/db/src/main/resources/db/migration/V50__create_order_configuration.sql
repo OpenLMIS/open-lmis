@@ -20,5 +20,5 @@ CREATE TABLE order_configuration (
 );
 
 INSERT INTO order_configuration
-(filePrefix, headerInFile) VALUES
-('O', FALSE);
+(filePrefix, headerInFile, createdBy) VALUES
+('O', FALSE, (select id from users where userName = 'Admin123'));

@@ -50,11 +50,11 @@ describe("User", function () {
         {id: 4}
       ];
 
-      warehouses = [
+      enabledWarehouses = [
         {id: 1},
         {id: 2},
         {id: 3}
-      ]
+      ];
 
       programs = [
         {"id": 1, active: false, push: false},
@@ -65,7 +65,7 @@ describe("User", function () {
       user = {"id": 123, "userName": "User420"};
 
       ctrl = controller(UserController, {$scope: scope, roles_map: roles_map, programs: programs,
-        supervisoryNodes: [], user: user, deliveryZones: deliveryZones, warehouses: warehouses}, location);
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones, enabledWarehouses: enabledWarehouses}, location);
       scope.userForm = {$error: { pattern: "" }};
     }));
 
@@ -86,7 +86,7 @@ describe("User", function () {
       });
 
       ctrl = controller(UserController, {$scope: scope, roles_map: roles_map, programs: programs,
-        supervisoryNodes: [], user: user, deliveryZones: deliveryZones, warehouses: warehouses}, location);
+        supervisoryNodes: [], user: user, deliveryZones: deliveryZones, enabledWarehouses: enabledWarehouses}, location);
 
       expect(scope.programsMap).toEqual({pull: [
         {"id": 1, active: false, status: 'Inactive', push: false},
@@ -440,17 +440,17 @@ describe("User", function () {
       expect(deferredObject.resolve).toHaveBeenCalledWith(deliveryZones);
     });
 
-    it('should get warehouses', function () {
-      var warehouses = [
+    it('should get enabledWarehouses', function () {
+      var enabledWarehouses = [
         {id: 1},
         {id: 2}
       ];
-      httpBackend.expect('GET', "/warehouses.json").respond({"warehouses": warehouses});
-      ctrl(UserController.resolve.warehouses, {$q: $q});
+      httpBackend.expect('GET', "/enabledWarehouses.json").respond({"enabledWarehouses": enabledWarehouses});
+      ctrl(UserController.resolve.enabledWarehouses, {$q: $q});
       expect($q.defer).toHaveBeenCalled();
       $timeout.flush();
       httpBackend.flush();
-      expect(deferredObject.resolve).toHaveBeenCalledWith(warehouses);
+      expect(deferredObject.resolve).toHaveBeenCalledWith(enabledWarehouses);
     })
 
 

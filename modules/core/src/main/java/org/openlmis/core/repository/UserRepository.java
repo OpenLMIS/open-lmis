@@ -77,8 +77,6 @@ public class UserRepository {
       throw new DataException(new OpenLmisMessage(DUPLICATE_EMAIL_FOUND));
     if (message.contains("duplicate key value violates unique constraint \"uc_users_userName\"".toLowerCase()))
       throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
-    if (message.contains(" duplicate key value violates unique constraint \"uc_users_username_vendor\"".toLowerCase())) //TODO:Change the message key after vendor is added on upload
-      throw new DataException(new OpenLmisMessage(DUPLICATE_USER_NAME_FOUND));
   }
 
   private void validateAndSetSupervisor(User user) {
@@ -87,7 +85,7 @@ public class UserRepository {
     if (user.getSupervisor() != null && user.getSupervisor().getUserName() != null
       && !user.getSupervisor().getUserName().isEmpty()) {
 
-      supervisor = userMapper.getByUsernameAndVendorId(user.getSupervisor());
+      supervisor = userMapper.getByUserName(user.getSupervisor().getUserName());
       if (supervisor == null)
         throw new DataException(new OpenLmisMessage(SUPERVISOR_USER_NOT_FOUND));
     }
@@ -97,10 +95,6 @@ public class UserRepository {
 
   public User getByEmail(String email) {
     return userMapper.getByEmail(email);
-  }
-
-  public User getByUsernameAndVendorId(User user) {
-    return userMapper.getByUsernameAndVendorId(user);
   }
 
   public List<User> searchUser(String userSearchParam) {
@@ -141,5 +135,9 @@ public class UserRepository {
 
   public void disable(Long userId, Long modifiedBy) {
     userMapper.disable(userId, modifiedBy);
+  }
+
+  public User getByUserName(String userName) {
+    return userMapper.getByUserName(userName);
   }
 }

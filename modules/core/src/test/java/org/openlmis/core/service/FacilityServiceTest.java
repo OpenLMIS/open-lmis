@@ -347,12 +347,44 @@ public class FacilityServiceTest {
   @Test
   public void shouldGetWarehouses() throws Exception {
 
-    List<Facility> warehouses = asList(new Facility());
-    when(facilityRepository.getWarehouses()).thenReturn(warehouses);
+    List<Facility> expectedWarehouses = asList(new Facility());
+    when(facilityRepository.getEnabledWarehouses()).thenReturn(expectedWarehouses);
 
-    List<Facility> wareshouses = facilityService.getWareshouses();
+    List<Facility> wareshouses = facilityService.getEnabledWarehouses();
 
-    verify(facilityRepository).getWarehouses();
-    assertThat(warehouses,is(warehouses));
+    verify(facilityRepository).getEnabledWarehouses();
+    assertThat(wareshouses,is(expectedWarehouses));
+  }
+
+  @Test
+  public void shouldGetFacilityByCode() throws Exception {
+
+    String facilityCode = "F11";
+    List<ProgramSupported> programSupported = asList(new ProgramSupported());
+    Facility expectedFacility = new Facility();
+    Long facilityId = 1L;
+    expectedFacility.setId(facilityId);
+    when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
+    when(facilityRepository.getById(facilityId)).thenReturn(expectedFacility);
+    when(programSupportedService.getActiveByFacilityId(facilityId)).thenReturn(programSupported);
+
+    Facility facility = facilityService.getFacilityByCode(facilityCode);
+
+    assertThat(facility, is(expectedFacility));
+    verify(facilityRepository).getIdForCode(facilityCode);
+    verify(facilityRepository).getById(facilityId);
+    verify(programSupportedService).getActiveByFacilityId(facilityId);
+    assertThat(facility.getSupportedPrograms(),is(programSupported));
+  }
+
+  @Test
+  public void shouldThrowErrorIfFacilityCodeInvalid() throws Exception {
+    String invalidCode = "BlahBlahBlah";
+    when(facilityRepository.getIdForCode(invalidCode)).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.code.invalid");
+
+    facilityService.getFacilityByCode(invalidCode);
   }
 }

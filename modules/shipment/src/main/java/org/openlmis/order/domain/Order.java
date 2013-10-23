@@ -29,6 +29,7 @@ public class Order extends BaseModel {
   private String ftpComment;
 
   public Order(Rnr rnr) {
+    this(rnr.getId());
     this.rnr = rnr;
     this.createdBy = rnr.getModifiedBy();
   }
@@ -37,9 +38,8 @@ public class Order extends BaseModel {
     this.id = id;
   }
 
-  public Order(Long orderId, Rnr rnr, SupplyLine supplyLine) {
-    this.id = orderId;
-    this.rnr = rnr;
+  public Order(Rnr rnr, SupplyLine supplyLine) {
+    this(rnr);
     this.supplyLine = supplyLine;
   }
 

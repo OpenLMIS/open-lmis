@@ -8,7 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService, $routeParams, $location) {
+function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService,
+                                      $routeParams, $location) {
   $scope.message = "";
   $scope.maxNumberOfPages = 10;
   $scope.selectedItems = [];
@@ -19,26 +20,38 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
     {value: "facilityName", name: "option.value.facility.name"},
     {value: "supplyingDepot", name: "label.supplying.depot"}
   ];
+  $scope.noRequisitions = false;
 
   $scope.selectedSearchOption = $scope.searchOptions[0];
+  $scope.sortOptions = { fields: ['submittedDate'], directions: ['asc'] };
 
   var refreshGrid = function () {
 
     $scope.noRequisitionSelectedMessage = "";
     $scope.selectedItems.length = 0;
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
-    $scope.selectedSearchOption = _.findWhere($scope.searchOptions, {value: $routeParams.searchType}) || $scope.searchOptions[0];
+    $scope.selectedSearchOption = _.findWhere($scope.searchOptions,
+        {value: $routeParams.searchType}) || $scope.searchOptions[0];
     $scope.query = $routeParams.searchVal;
 
-    RequisitionForConvertToOrder.get({page: $scope.currentPage, searchType: $scope.selectedSearchOption.value, searchVal: $scope.query}, function (data) {
-      $scope.filteredRequisitions = data.rnr_list;
+    RequisitionForConvertToOrder.get({page: $scope.currentPage, searchType: $scope.selectedSearchOption.value,
+          searchVal: $scope.query, sortBy: $scope.sortOptions.fields[0], sortDirection: $scope.sortOptions.directions[0]},
+        function (data) {
+          $scope.filteredRequisitions = data.rnr_list;
 
-      $scope.numberOfPages = data.number_of_pages || 1;
-      $scope.resultCount = $scope.filteredRequisitions.length;
-    }, function () {
-      $location.search('page', 1);
-    });
+          $scope.numberOfPages = data.number_of_pages || 1;
+          $scope.resultCount = $scope.filteredRequisitions.length;
+          if (!$scope.resultCount) $scope.noRequisitions = true;
+        }, function () {
+          $location.search('page', 1);
+        });
   };
+
+
+  $scope.$watch('sortOptions', function (newValue, oldValue) {
+    if (newValue.fields[0] != oldValue.fields[0] || newValue.directions[0] != oldValue.directions[0])
+      refreshGrid();
+  }, true);
 
   $scope.$on('$routeUpdate', refreshGrid);
 
@@ -67,7 +80,8 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
     selectedItems: $scope.selectedItems,
     multiSelect: true,
     showSelectionCheckbox: true,
-    sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
+    sortInfo: $scope.sortOptions,
+    useExternalSorting: true,
     columnDefs: [
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},

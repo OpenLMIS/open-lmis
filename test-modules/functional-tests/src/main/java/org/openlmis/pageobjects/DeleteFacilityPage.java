@@ -142,6 +142,8 @@ public class DeleteFacilityPage extends Page {
   }
 
   public void clickFacilityList(String date_time) {
+    testWebDriver.sleep(2000);
+
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+date_time+"')]"));
     testWebDriver.getElementByXpath("//a[contains(text(),'"+date_time+"')]").click();
     testWebDriver.waitForElementToAppear(facilityHeader);
@@ -150,13 +152,11 @@ public class DeleteFacilityPage extends Page {
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
 
-    String expectedMessageOnAlert = "''" + facilityNameValue + "'' / ''" + facilityCodeValue + "'' will be disabled in the system.";
+    String expectedMessageOnAlert = String.format("\"%s\" / \"%s\" will be disabled in the system.", facilityNameValue, facilityCodeValue);
     verifyHeader("Edit facility");
     clickDisableButtonOnFacilityScreen();
     verifyDisableAlert(expectedMessageOnAlert);
     clickOkButtonOnAlert();
-
-
   }
 
   private void clickDisableButtonOnFacilityScreen() {
@@ -275,7 +275,7 @@ public class DeleteFacilityPage extends Page {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementsToAppear(messageDiv, saveErrorMsgDiv);
     String updateMessage = getMessage();
-    SeleneseTestNgHelper.assertEquals(updateMessage, "Facility '" + facilityName + "' " + status + " successfully");
+    SeleneseTestNgHelper.assertEquals(updateMessage, "Facility \"" + facilityName + "\" " + status + " successfully");
     testWebDriver.sleep(500);
   }
 

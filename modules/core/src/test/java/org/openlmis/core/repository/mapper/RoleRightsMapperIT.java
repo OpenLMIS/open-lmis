@@ -10,11 +10,11 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,6 @@ import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -52,45 +51,29 @@ public class RoleRightsMapperIT {
 
   @Autowired
   UserMapper userMapper;
+
   @Autowired
   ProgramMapper programMapper;
+
   @Autowired
   ProgramSupportedMapper programSupportedMapper;
+
   @Autowired
   RoleRightsMapper roleRightsMapper;
+
+  @Autowired
+  private FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
+
   @Autowired
   RoleAssignmentMapper roleAssignmentMapper;
+
   @Autowired
   private FacilityMapper facilityMapper;
+
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
 
-  @Test
-  public void shouldSetupRightsForAdminRole() {
-    Set<Right> adminRights = roleRightsMapper.getAllRightsForUserByUserName("Admin123");
-    assertEquals(11, adminRights.size());
-    Assert.assertTrue(adminRights.containsAll(asList(CONFIGURE_RNR, MANAGE_FACILITY, MANAGE_ROLE, MANAGE_PROGRAM_PRODUCT, MANAGE_SCHEDULE, UPLOADS, MANAGE_REPORT, VIEW_REPORT, MANAGE_REGIMEN_TEMPLATE, CONFIGURE_EDI)));
-  }
 
-  @Test
-  public void shouldGetAllRightsForAUserByUserName() throws Exception {
-    Facility facility = insertFacility();
-    User user = insertUser(facility);
-
-    Set<Right> allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
-    assertThat(allRightsForUser.size(), is(0));
-
-    Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
-    Role role = insertRole("r1", "random description");
-
-    insertRoleAssignments(program, user, role);
-
-    roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
-    roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
-
-    allRightsForUser = roleRightsMapper.getAllRightsForUserByUserName(user.getUserName());
-    assertThat(allRightsForUser.size(), is(2));
-  }
 
   @Test
   public void shouldGetAllRightsForAUserByUserId() throws Exception {
@@ -102,15 +85,22 @@ public class RoleRightsMapperIT {
 
     Program program = insertProgram(make(a(defaultProgram, with(programCode, "p1"))));
     Role role = insertRole("r1", "random description");
+    Role role2 = insertRole("r2", "fulfillment role");
 
     insertRoleAssignments(program, user, role);
+    insertFulfillmentRoleAssignment(user, facility, role2);
 
     roleRightsMapper.createRoleRight(role, CREATE_REQUISITION);
     roleRightsMapper.createRoleRight(role, CONFIGURE_RNR);
+    roleRightsMapper.createRoleRight(role2, VIEW_ORDER);
 
     allRightsForUser = roleRightsMapper.getAllRightsForUserById(user.getId());
-    assertThat(allRightsForUser.size(), is(2));
+    assertThat(allRightsForUser.size(), is(3));
+    assertTrue(allRightsForUser.contains(CREATE_REQUISITION));
+    assertTrue(allRightsForUser.contains(CONFIGURE_RNR));
+    assertTrue(allRightsForUser.contains(VIEW_ORDER));
   }
+
 
   @Test
   public void shouldGetRoleAndRights() throws Exception {
@@ -256,11 +246,33 @@ public class RoleRightsMapperIT {
 
   }
 
+  @Test
+  public void shouldGetRightsForUserAndWarehouse() {
+    Role role = new Role("WareHouserole", "Warehouse Role");
+    roleRightsMapper.insertRole(role);
+    roleRightsMapper.createRoleRight(role, MANAGE_POD);
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
+
+    Set<Right> rights = roleRightsMapper.getRightsForUserAndWarehouse(user.getId(), facility.getId());
+
+    assertThat(rights.size(), is(1));
+    assertThat(rights.contains(MANAGE_POD), is(true));
+  }
+
   private Role insertRole(String name, String description) {
     Role r1 = new Role(name, description);
     roleRightsMapper.insertRole(r1);
     return r1;
   }
+
+  private void insertFulfillmentRoleAssignment(User user, Facility facility, Role role) {
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
+  }
+
 
   private Program insertProgram(Program program) {
     programMapper.insert(program);

@@ -19,11 +19,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.TemplateConfigPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.Test;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +41,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(false, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(false, program, userSIC, "200", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -60,7 +56,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -129,7 +125,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Program-Not-Configured")
   public Object[][] parameterProgramNotConfigured() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeIncharge", "Admin123"}
     };
 
   }
@@ -137,7 +133,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Verify-On-Rnr-Screen")
   public Object[][] parameterVerifyRnRScreen() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123", new String[]{"Admin123", "Admin123"}}
+      {"HIV", "storeIncharge", "Admin123", new String[]{"Admin123", "Admin123"}}
     };
 
   }

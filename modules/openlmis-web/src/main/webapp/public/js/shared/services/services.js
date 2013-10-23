@@ -288,11 +288,11 @@ services.factory('ShipmentFileTemplate', function ($resource) {
   return $resource('/shipment-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
-services.factory('Warehouse', function ($resource) {
-  return $resource('/warehouses.json', {}, {});
+
+services.factory('BudgetFileTemplate', function ($resource) {
+  return $resource('/budget-file-template.json', {}, {post: {method: 'POST', isArray: true}});
 });
 
-services.factory('Warehouse', function ($resource) {
-  return $resource('/warehouses.json', {}, {});
+services.factory('EnabledWarehouse', function ($resource) {
+  return $resource('/enabledWarehouses.json', {}, {});
 });
-

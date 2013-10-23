@@ -51,7 +51,8 @@ public class Role extends BaseModel {
     if (rights.contains(Right.MANAGE_REPORT) && !rights.contains(Right.VIEW_REPORT)) {
       throw new DataException("error.role.related.right.not.selected");
     }
-    if (rights.contains(Right.CONVERT_TO_ORDER) && !rights.contains(Right.VIEW_ORDER)) {
+    if ((rights.contains(Right.CONVERT_TO_ORDER) || rights.contains(Right.MANAGE_POD) || rights.contains(Right.FACILITY_FILL_SHIPMENT))
+      && !rights.contains(Right.VIEW_ORDER)) {
       throw new DataException("error.role.related.right.not.selected");
     }
   }

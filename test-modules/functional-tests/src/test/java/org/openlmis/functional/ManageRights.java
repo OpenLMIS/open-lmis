@@ -42,7 +42,7 @@ public class ManageRights extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -71,7 +71,7 @@ public class ManageRights extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeincharge", "Admin123"}
+      {"HIV", "storeIncharge", "Admin123"}
     };
 
   }

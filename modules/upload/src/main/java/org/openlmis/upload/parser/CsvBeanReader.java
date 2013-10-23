@@ -10,7 +10,6 @@
 
 package org.openlmis.upload.parser;
 
-import lombok.Data;
 import lombok.Getter;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.model.ModelClass;
@@ -44,7 +43,7 @@ public class CsvBeanReader {
 
   private void configureDozerBeanReader(InputStream inputStream) throws IOException {
     CsvPreference csvPreference = new CsvPreference.Builder(CsvPreference.STANDARD_PREFERENCE)
-        .surroundingSpacesNeedQuotes(true).build();
+      .surroundingSpacesNeedQuotes(true).build();
 
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
     dozerBeanReader = new CsvDozerBeanReader(bufferedReader, csvPreference);

@@ -18,6 +18,7 @@ import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityFeedDTO;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +50,7 @@ public class FacilityService {
   @Autowired
   private EventService eventService;
 
-
   private static final Logger logger = Logger.getLogger(FacilityService.class);
-
 
   @Transactional
   public void update(Facility facility) {
@@ -104,6 +103,7 @@ public class FacilityService {
 
     facilityRepository.save(newFacility);
 
+    //TODO newFacility doesn't have modifiedDate populated
     notify(newFacility, oldFacility);
   }
 
@@ -138,7 +138,7 @@ public class FacilityService {
   }
 
   public Facility getByCode(Facility facility) {
-    return facilityRepository.getByCode(facility);
+    return facilityRepository.getByCode(facility.getCode());
   }
 
   public List<Facility> getAllForDeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
@@ -165,8 +165,18 @@ public class FacilityService {
     return facilityRepository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(query, virtualFacility);
   }
 
-  public List<Facility> getWareshouses() {
-    return facilityRepository.getWarehouses();
+  public List<Facility> getEnabledWarehouses() {
+    return facilityRepository.getEnabledWarehouses();
+  }
+
+  public Facility getFacilityByCode(String facilityCode) {
+    Long facilityId;
+    if ((facilityId = facilityRepository.getIdForCode(facilityCode)) == null) {
+      throw new DataException("error.facility.code.invalid");
+    }
+    Facility facility = facilityRepository.getById(facilityId);
+    facility.setSupportedPrograms(programSupportedService.getActiveByFacilityId(facility.getId()));
+    return facility;
   }
 
   public List<Facility> getAllFacilitiesDetail(){

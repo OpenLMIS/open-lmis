@@ -14,12 +14,18 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.db.categories.UnitTests;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
 
 @Category(UnitTests.class)
 public class FacilityFeedDTOTest {
@@ -27,8 +33,10 @@ public class FacilityFeedDTOTest {
   @Test
   //TODO write separate test for boolean fields
   public void shouldFillDTOFromGivenFacility() throws Exception {
-
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setProgram(make(a(defaultProgram, with(programCode, "HIV"))));
+    List<ProgramSupported> programsSupported = asList(programSupported);
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(programSupportedList, programsSupported)));
     Facility parentFacility = new Facility();
     parentFacility.setCode("Parent Facility");
 
@@ -36,9 +44,9 @@ public class FacilityFeedDTOTest {
 
     assertThat(facilityFeedDTO.getCode(), is(facility.getCode()));
     assertThat(facilityFeedDTO.getName(), is(facility.getName()));
-    assertThat(facilityFeedDTO.getType(), is(facility.getFacilityType().getName()));
+    assertThat(facilityFeedDTO.getFacilityType(), is(facility.getFacilityType().getName()));
     assertThat(facilityFeedDTO.getDescription(), is(facility.getDescription()));
-    assertThat(facilityFeedDTO.getGLN(), is(facility.getGln()));
+    assertThat(facilityFeedDTO.getGln(), is(facility.getGln()));
     assertThat(facilityFeedDTO.getMainPhone(), is(facility.getMainPhone()));
     assertThat(facilityFeedDTO.getFax(), is(facility.getFax()));
     assertThat(facilityFeedDTO.getAddress1(), is(facility.getAddress1()));
@@ -55,16 +63,17 @@ public class FacilityFeedDTOTest {
     assertThat(facilityFeedDTO.getSdp(), is(facility.getSdp()));
     assertThat(facilityFeedDTO.getHasElectricity(), is(facility.getHasElectricity()));
     assertThat(facilityFeedDTO.getOnline(), is(facility.getOnline()));
-    assertThat(facilityFeedDTO.getHasElectronicSCC(), is(facility.getHasElectronicScc()));
-    assertThat(facilityFeedDTO.getHasElectronicDAR(), is(facility.getHasElectronicDar()));
+    assertThat(facilityFeedDTO.getHasElectronicSCC(), is(facility.getHasElectronicSCC()));
+    assertThat(facilityFeedDTO.getHasElectronicDAR(), is(facility.getHasElectronicDAR()));
     assertThat(facilityFeedDTO.getActive(), is(facility.getActive()));
     assertThat(facilityFeedDTO.getGoLiveDate(), is(facility.getGoLiveDate()));
     assertThat(facilityFeedDTO.getGoDownDate(), is(facility.getGoDownDate()));
-    assertThat(facilityFeedDTO.getSatelliteFacility(), is(facility.getSatellite()));
+    assertThat(facilityFeedDTO.getSatellite(), is(facility.getSatellite()));
     assertThat(facilityFeedDTO.getVirtualFacility(), is(facility.getVirtualFacility()));
     assertThat(facilityFeedDTO.getParentFacility(), is(parentFacility.getCode()));
-    assertThat(facilityFeedDTO.getComments(), is(facility.getComment()));
-    assertThat(facilityFeedDTO.isEnabled(), is(true));
+    assertThat(facilityFeedDTO.getComment(), is(facility.getComment()));
+    assertThat(facilityFeedDTO.getEnabled(), is(true));
     assertThat(facilityFeedDTO.getModifiedDate(), is(facility.getModifiedDate()));
+    assertThat(facilityFeedDTO.getProgramsSupported(), is(asList("HIV")));
   }
 }

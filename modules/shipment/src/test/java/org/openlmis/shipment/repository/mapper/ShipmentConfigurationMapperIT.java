@@ -13,8 +13,8 @@ package org.openlmis.shipment.repository.mapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.domain.EDIConfiguration;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,13 +40,13 @@ public class ShipmentConfigurationMapperIT {
 
   @Test
   public void shouldGetShipmentConfiguration() {
-    ShipmentConfiguration shipmentConfiguration = mapper.get();
+    EDIConfiguration shipmentConfiguration = mapper.get();
     assertThat(shipmentConfiguration.isHeaderInFile(), is(false));
   }
 
   @Test
   public void shouldUpdateShipmentConfiguration() {
-    ShipmentConfiguration configuration = mapper.get();
+    EDIConfiguration configuration = mapper.get();
 
     Date originalModifiedDate = configuration.getModifiedDate();
 

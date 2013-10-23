@@ -10,9 +10,9 @@
 
 package org.openlmis.shipment.service;
 
-import org.openlmis.shipment.domain.ShipmentConfiguration;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
-import org.openlmis.shipment.domain.ShipmentFileTemplate;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.shipment.repository.ShipmentTemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,18 +28,18 @@ public class ShipmentFileTemplateService {
   ShipmentTemplateRepository shipmentTemplateRepository;
 
   @Transactional
-  public void update(ShipmentFileTemplate shipmentFileTemplate) {
-    shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getShipmentConfiguration());
+  public void update(EDIFileTemplate shipmentFileTemplate) {
+    shipmentTemplateRepository.updateShipmentConfiguration(shipmentFileTemplate.getConfiguration());
 
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileTemplate.getShipmentFileColumns()) {
+    for (EDIFileColumn shipmentFileColumn : shipmentFileTemplate.getColumns()) {
       shipmentTemplateRepository.update(shipmentFileColumn);
     }
   }
 
-  public ShipmentFileTemplate get() {
-    ShipmentConfiguration config = shipmentTemplateRepository.getShipmentConfiguration();
-    List<ShipmentFileColumn> columns = shipmentTemplateRepository.getAllShipmentFileColumns();
+  public EDIFileTemplate get() {
+    EDIConfiguration config = shipmentTemplateRepository.getShipmentConfiguration();
+    List<EDIFileColumn> columns = shipmentTemplateRepository.getAllShipmentFileColumns();
 
-    return new ShipmentFileTemplate(config, columns);
+    return new EDIFileTemplate(config, columns);
   }
 }

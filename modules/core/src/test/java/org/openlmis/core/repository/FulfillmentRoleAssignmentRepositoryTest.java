@@ -75,7 +75,7 @@ public class FulfillmentRoleAssignmentRepositoryTest {
 
     fulfillmentRoleAssignmentRepository.insertFulfillmentRoles(user);
 
-    verify(fulfillmentRoleAssignmentMapper).insertFulfillmentRole(user.getId(), fulfillmentRoleAssignment.getFacilityId(),
-      fulfillmentRoleAssignment.getRoleIds().get(0));
+    verify(fulfillmentRoleAssignmentMapper).insertFulfillmentRole(user, fulfillmentRoleAssignment.getFacilityId(),
+            fulfillmentRoleAssignment.getRoleIds().get(0));
   }
 }

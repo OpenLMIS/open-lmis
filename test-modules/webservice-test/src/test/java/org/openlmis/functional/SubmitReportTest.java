@@ -24,8 +24,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.System.getProperty;
 import static org.openlmis.UiUtils.HttpClient.GET;
 import static org.openlmis.UiUtils.HttpClient.POST;
@@ -46,7 +46,7 @@ public class SubmitReportTest extends TestCaseHelper {
     driver = new FirefoxDriver();
     driver.get("http://localhost:9091");
     super.setup();
-    super.setupDataExternalVendor(false);
+    super.setupTestData(false);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -70,12 +70,12 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
-    assertEquals(responseEntity.getStatus(), 400);
+    assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"User does not have rights to save this R&R\"}");
   }
 
@@ -94,8 +94,8 @@ public class SubmitReportTest extends TestCaseHelper {
       POST,
       "",
       "");
-    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
-    }
+    assertEquals(401, responseEntity.getStatus());
+  }
 
   @Test(groups = {"webservice"})
   public void testSubmitReportInvalidProgram() throws Exception {
@@ -111,12 +111,11 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
-    String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"User does not have rights to save this R&R\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"User does not have rights to save this R&R\"}", responseEntity.getResponse());
   }
 
   @Test(groups = {"webservice"})
@@ -140,17 +139,17 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(jsonStringFor,
       "http://localhost:9091/rest-api/requisitions.json",
       POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(responseEntity.getResponse(), "{\"error\":\"Please finish all R&R of previous period(s)\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Please finish all R&R of previous period(s)\"}", responseEntity.getResponse());
   }
 
   @Test(groups = {"webservice"})
@@ -164,12 +163,12 @@ public class SubmitReportTest extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-      assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid product code\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product code\"}", response);
   }
 
   @Test(groups = {"webservice"})
@@ -188,13 +187,13 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Invalid product code\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product code\"}", response);
   }
 
   @Test(groups = {"webservice"})
@@ -214,13 +213,13 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"R&R has errors, please correct them to proceed.\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
   }
 
   @Test(groups = {"webservice"})
@@ -241,12 +240,12 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 201);
+    assertEquals(201, responseEntity.getStatus());
     assertTrue(response.contains("{\"R&R\":"));
   }
 
@@ -266,17 +265,17 @@ public class SubmitReportTest extends TestCaseHelper {
       client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions.json", POST,
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(responseEntity.getStatus(), 400);
-    assertEquals(response, "{\"error\":\"Please provide a valid username\"}");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Please provide a valid username\"}", response);
   }
 
   @Test(groups = {"webservice"})
-  public void shouldReturn401StatusWhenSubmittingReportWithInvalidVendor() throws Exception {
+  public void shouldReturn401StatusWhenSubmittingReportWithInvalidAPIUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -293,15 +292,15 @@ public class SubmitReportTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack1000",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
-    assertEquals(responseEntity.getStatus(), 401);
+    assertEquals(401, responseEntity.getStatus());
   }
 
   public String submitReport() throws Exception {
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dburlGlobal = getProperty("dburl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dburlGlobal);
+    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
+    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -315,7 +314,7 @@ public class SubmitReportTest extends TestCaseHelper {
       "http://localhost:9091/rest-api/requisitions.json",
       "POST",
       "commTrack",
-      dbWrapper.getAuthToken("commTrack"));
+      "Admin123");
 
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     return responseEntity.getResponse();

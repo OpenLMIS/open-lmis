@@ -131,7 +131,7 @@ public interface RequisitionMapper {
   })
   Rnr getLWById(Long rnrId);
 
-  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id} AND emergency = false")
+  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id} AND emergency = FALSE")
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "facility.id", column = "facilityId"),
@@ -166,26 +166,33 @@ public interface RequisitionMapper {
   })
   List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
                                                             @Param("pageNumber") Integer pageNumber, @Param("pageSize") Integer pageSize,
-                                                            @Param("userId") Long userId,@Param("right") Right right);
+                                                            @Param("userId") Long userId, @Param("right") Right right,
+                                                            @Param("sortBy") String sortBy, @Param("sortDirection") String sortDirection);
 
   @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getCountOfApprovedRequisitionsForCriteria")
   Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
-                                                    @Param("userId") Long userId,@Param("right") Right right);
+                                                    @Param("userId") Long userId, @Param("right") Right right);
 
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")
     public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
-      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId, R.modifiedDate as modifiedDate,RSC.modifiedDate as submittedDate " +
-        "FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' ");
+      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId," +
+        " R.modifiedDate as modifiedDate, RSC.createdDate as submittedDate, P.name AS programName, F.name AS facilityName," +
+        " F.code AS facilityCode, SF.name AS supplyingDepotName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
+        " FROM Requisitions R INNER JOIN requisition_status_changes RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
+        " INNER JOIN processing_periods PP ON PP.id = R.periodId ");
 
       appendQueryClausesBySearchType(sql, params);
 
       Integer pageNumber = (Integer) params.get("pageNumber");
       Integer pageSize = (Integer) params.get("pageSize");
+      String sortBy = (String) params.get("sortBy");
+      String sortDirection = (String) params.get("sortDirection");
 
-      return sql.append("ORDER BY R.modifiedDate ").append("LIMIT ").append(pageSize)
+
+      return sql.append("ORDER BY " + sortBy + " " + sortDirection).append(" LIMIT ").append(pageSize)
         .append(" OFFSET ").append((pageNumber - 1) * pageSize).toString();
     }
 
@@ -209,32 +216,28 @@ public interface RequisitionMapper {
       if (userId != null && right != null) {
         sql.append("INNER JOIN supply_lines S ON R.supervisoryNodeId = S.supervisoryNodeId " +
           "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId " +
-          "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ");
+          "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId " +
+          "INNER JOIN Programs P ON P.id = R.programId " +
+          "INNER JOIN Facilities F ON F.id = R.facilityId " +
+          "LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) " +
+          "LEFT JOIN Facilities SF ON SL.supplyingFacilityId = SF.id ");
       }
 
       if (searchVal.isEmpty()) {
         sql.append("WHERE ");
       } else if (searchType.isEmpty() || searchType.equalsIgnoreCase(RequisitionService.SEARCH_ALL)) {
-        sql.append("INNER JOIN Programs P ON P.id = R.programId ");
-        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
-        sql.append("LEFT JOIN Facilities F ON (F.id = R.facilityId OR F.id = SL.supplyingFacilityId)");
-        sql.append("WHERE (LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" + searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%') AND ");
+        sql.append("WHERE (LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" +
+          searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' OR LOWER(SF.name) LIKE '%" + searchVal + "%') AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
-        sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
         sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_NAME)) {
-        sql.append("INNER JOIN Facilities F ON F.id = R.facilityId ");
         sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_PROGRAM_NAME)) {
-        sql.append("INNER JOIN Programs P ON P.id = R.programId ");
         sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' AND ");
       } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
-        sql.append("LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) ");
-        sql.append("LEFT JOIN Facilities F ON SL.supplyingFacilityId = F.id ");
-        sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
-      } else if (userId != null && right != null) {
-        sql.append("WHERE FRA.userid = "+ userId + " AND RR.rightName = " + right);
+        sql.append("WHERE LOWER(SF.name) LIKE '%" + searchVal + "%' AND ");
       }
+      sql.append("FRA.userid = " + userId + " AND RR.rightName = '" + right + "' AND ");
       sql.append("R.status = 'APPROVED'");
     }
 

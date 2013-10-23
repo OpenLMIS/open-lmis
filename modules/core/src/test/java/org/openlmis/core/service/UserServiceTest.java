@@ -20,8 +20,8 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
+import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
@@ -175,7 +175,7 @@ public class UserServiceTest {
   public void shouldGiveErrorIfUserNameExistsButUserIsDisabled() throws Exception {
     User disabledUser = make(a(defaultUser, with(email, ""), with(active, false)));
 
-    when(userRepository.getByUsernameAndVendorId(disabledUser)).thenReturn(disabledUser);
+    when(userRepository.getByUserName(disabledUser.getUserName())).thenReturn(disabledUser);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage(USER_USERNAME_INCORRECT);
@@ -210,6 +210,19 @@ public class UserServiceTest {
     assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
 
   }
+
+  @Test
+  public void shouldReturnUserByUserName() throws Exception {
+    User user = new User();
+    String userName = "userName";
+    when(userRepository.getByUserName(userName)).thenReturn(user);
+
+    User returnedUser = userService.getByUserName(userName);
+
+    assertThat(returnedUser, is(user));
+
+  }
+
 
   @Test
   public void shouldSendPasswordEmailWhenUserCreated() throws Exception {

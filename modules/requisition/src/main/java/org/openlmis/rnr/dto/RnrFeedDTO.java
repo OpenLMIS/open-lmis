@@ -12,31 +12,29 @@ package org.openlmis.rnr.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Delegate;
 import lombok.EqualsAndHashCode;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.dto.BaseFeedDTO;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
-
-import java.io.IOException;
 
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class RnrFeedDTO extends BaseFeedDTO {
   private Long requisitionId;
-  private Long facilityId;
-  private Long programId;
-  private Long periodId;
   private RnrStatus requisitionStatus;
-  private String externalSystem;
+  private boolean emergency;
+  private Long startDate;
+  private Long endDate;
 
-  public static RnrFeedDTO populate(Rnr rnr, Vendor vendor) {
-    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus(), vendor.getName());
+  public RnrFeedDTO(Rnr rnr) {
+    this.requisitionId = rnr.getId();
+    this.requisitionStatus = rnr.getStatus();
+    this.emergency = rnr.isEmergency();
+    // TODO - Send UTC timestamps - open issue
+    if (rnr.getPeriod() == null) return;
+    this.startDate = rnr.getPeriod().getStartDate().getTime();
+    this.endDate = rnr.getPeriod().getEndDate().getTime();
   }
-
-
 }

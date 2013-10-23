@@ -72,14 +72,17 @@ public class FulfillmentRoleAssignmentMapperIT {
     Role role = new Role("r1", "random description");
     roleRightsMapper.insertRole(role);
 
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", user.getId(), facility.getId(), role.getId());
 
     List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
 
-    assertThat(expectedFulfillmentRoleAssignments.get(0).getUserId(), is(user.getId()));
-    assertThat(expectedFulfillmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
-    assertThat(expectedFulfillmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
-  }
+    FulfillmentRoleAssignment fulfillmentRoleAssignment = expectedFulfillmentRoleAssignments.get(0);
+    assertThat(fulfillmentRoleAssignment.getUserId(), is(user.getId()));
+    assertThat(fulfillmentRoleAssignment.getRoleIds().get(0), is(role.getId()));
+    assertThat(fulfillmentRoleAssignment.getFacilityId(), is(facility.getId()));
+    assertThat(fulfillmentRoleAssignment.getCreatedBy(), is(user.getCreatedBy()));
+    assertThat(fulfillmentRoleAssignment.getModifiedBy(), is(user.getModifiedBy()));
+    }
 
 
   @Test
@@ -93,7 +96,9 @@ public class FulfillmentRoleAssignmentMapperIT {
     Role role = new Role("r1", "random description");
     roleRightsMapper.insertRole(role);
 
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(user.getId(), facility.getId(), role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId, facilityId,roleId, " +
+            "createdBy, modifiedBy) values (?,?,?, ?, ?)",
+            user.getId(), facility.getId(), role.getId(), user.getModifiedBy(), user.getModifiedBy());
 
     fulfillmentRoleAssignmentMapper.deleteAllFulfillmentRoles(user);
 
@@ -116,12 +121,12 @@ public class FulfillmentRoleAssignmentMapperIT {
     List<Long> roles = asList(role.getId());
     FulfillmentRoleAssignment fulfillmentRoleAssignment = new FulfillmentRoleAssignment(user.getId(), facility.getId(), roles);
 
-    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user.getId(), fulfillmentRoleAssignment.getFacilityId(), fulfillmentRoleAssignment.getRoleIds().get(0));
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, fulfillmentRoleAssignment.getFacilityId(), fulfillmentRoleAssignment.getRoleIds().get(0));
 
-    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
+    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());;
 
     assertThat(expectedFulfillmentRoleAssignments.get(0).getUserId(), is(user.getId()));
     assertThat(expectedFulfillmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
     assertThat(expectedFulfillmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
-  }
+    }
 }

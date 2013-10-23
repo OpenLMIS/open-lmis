@@ -27,13 +27,6 @@ public interface RoleRightsMapper {
     "(#{role.id}, #{right}, #{role.modifiedBy})")
   int createRoleRight(@Param(value = "role") Role role, @Param(value = "right") Right right);
 
-  @Select({"SELECT RR.rightName",
-    "FROM users U, role_assignments RA, role_rights RR WHERE",
-    "lower(U.userName) = lower(#{userName}) ",
-    "AND U.id = RA.userId",
-    "AND RA.roleId = RR.roleId"})
-  Set<Right> getAllRightsForUserByUserName(String username);
-
   //used below
   @SuppressWarnings("unused")
   @Select("SELECT rightName FROM role_rights RR WHERE roleId = #{roleId}")
@@ -69,10 +62,10 @@ public interface RoleRightsMapper {
   int deleteAllRightsForRole(Long roleId);
 
   @Select({"SELECT DISTINCT(RR.rightName)",
-      "FROM (SELECT userId, roleId FROM role_assignments UNION ALL SELECT userId, roleId FROM fulfillment_role_assignments) A",
-      "INNER JOIN users U ON A.userId = U.id",
-      "INNER JOIN role_rights RR ON A.roleId = RR.roleId",
-      "WHERE A.userId = #{userId}"})
+    "FROM (SELECT userId, roleId FROM role_assignments UNION ALL SELECT userId, roleId FROM fulfillment_role_assignments) A",
+    "INNER JOIN users U ON A.userId = U.id",
+    "INNER JOIN role_rights RR ON A.roleId = RR.roleId",
+    "WHERE A.userId = #{userId}"})
   Set<Right> getAllRightsForUserById(@Param("userId") Long userId);
 
   @Select({"SELECT DISTINCT RR.rightName " +
@@ -87,4 +80,8 @@ public interface RoleRightsMapper {
 
   @Select({"SELECT R.rightType from rights R INNER JOIN role_rights RR ON RR.rightName = R.name AND RR.roleId = #{roleId} LIMIT 1"})
   RightType getRightTypeForRoleId(Long roleId);
+
+  @Select({"SELECT DISTINCT RR.rightName FROM role_rights RR INNER JOIN fulfillment_role_assignments FRA ON RR.roleId = FRA.roleId " ,
+    "WHERE FRA.userId = #{userId} AND FRA.facilityId = #{warehouseId}"})
+  Set<Right> getRightsForUserAndWarehouse(@Param("userId")Long userId, @Param("warehouseId")Long warehouseId);
 }

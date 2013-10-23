@@ -63,7 +63,7 @@ function IsaModalController($scope, FacilityProgramProducts, ProgramProducts, $r
   };
 
   $scope.resetISAModal = function () {
-    $scope.programProductsISAModal = false;
+    $scope.$parent.programProductsISAModal = false;
   };
 
   $scope.resetAllToCalculatedIsa = function () {

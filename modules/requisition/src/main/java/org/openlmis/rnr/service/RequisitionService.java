@@ -127,6 +127,9 @@ public class RequisitionService {
 
     requisition = requisitionRepository.getById(requisition.getId());
     fillSupportingInfo(requisition);
+
+    logStatusChangeAndNotify(requisition);
+
     return requisition;
   }
 
@@ -164,7 +167,6 @@ public class RequisitionService {
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
       requisitionRepository.getLossesAndAdjustmentsTypes());
-
     return update(savedRnr);
   }
 
@@ -216,6 +218,7 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
+      fillSupportingInfo(loadedRequisition);
       loadedRequisition.convertToOrder(userId);
       update(loadedRequisition);
     }
@@ -393,7 +396,6 @@ public class RequisitionService {
 
   private void insert(Rnr requisition) {
     requisitionRepository.insert(requisition);
-    logStatusChangeAndNotify(requisition);
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
@@ -426,7 +428,9 @@ public class RequisitionService {
     return processingScheduleService.getCurrentPeriod(criteria.getFacilityId(), criteria.getProgramId(), programStartDate);
   }
 
-  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber, Integer totalNumberOfPages, Long userId, Right right) {
+  public List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(String searchType, String searchVal, Integer pageNumber,
+                                                                   Integer totalNumberOfPages, Long userId, Right right,
+                                                                   String sortBy, String sortDirection) {
     if (pageNumber.equals(1) && totalNumberOfPages.equals(0))
       return new ArrayList<>();
 
@@ -435,7 +439,8 @@ public class RequisitionService {
 
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
-    List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, userId, right);
+    List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
+      pageNumber, pageSize, userId, right, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));

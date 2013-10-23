@@ -30,6 +30,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -40,12 +41,16 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
-import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
+import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.FacilityBuilder.name;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
+import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
+import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramBuilder.programName;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.core.builder.UserBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.active;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -102,22 +107,32 @@ public class RequisitionMapperIT {
 
   private SupervisoryNode supervisoryNode;
   private SupplyLine supplyLine;
-
+  private Role role;
+  private Date modifiedDate;
 
   @Before
   public void setUp() {
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
-    processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingSchedule = make(a(defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
 
     insertProgram();
 
-    processingPeriod1 = insertPeriod("Period 1");
-    processingPeriod2 = insertPeriod("Period 2");
-    processingPeriod3 = insertPeriod("Period 3");
-    supervisoryNode = insertSupervisoryNode();
+    Date periodStartDate = new Date();
+    Date periodEndDate = new Date();
+    processingPeriod1 = insertPeriod("Period 1", processingSchedule, periodStartDate, periodEndDate);
+    processingPeriod2 = insertPeriod("Period 2", processingSchedule, periodStartDate, periodEndDate);
+    processingPeriod3 = insertPeriod("Period 3", processingSchedule, periodStartDate, periodEndDate);
+    supervisoryNode = insertSupervisoryNode("N1");
+    insertSupplyLine(facility, supervisoryNode);
+    role = insertRole();
+    modifiedDate = new Date();
+
+  }
+
+  private void insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
     supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
       with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
     supplyLineMapper.insert(supplyLine);
@@ -125,13 +140,13 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldSetRequisitionId() {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     assertThat(requisition.getId(), is(notNullValue()));
   }
 
   @Test
   public void shouldGetRequisitionById() {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
@@ -165,7 +180,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldUpdateRequisition() {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     requisition.setModifiedBy(USER_ID);
     Date submittedDate = new Date();
     requisition.setSubmittedDate(submittedDate);
@@ -193,8 +208,8 @@ public class RequisitionMapperIT {
     FacilityTypeApprovedProduct fullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(fullSupplyProgramProduct);
     FacilityTypeApprovedProduct nonFullSupplyFacilityTypeApprovedProduct = insertFacilityApprovedProduct(nonFullSupplyProgramProduct);
 
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
-    insertRequisition(processingPeriod2, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    insertRequisition(processingPeriod2, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
 
     insertRnrLineItem(requisition, fullSupplyFacilityTypeApprovedProduct);
     insertRnrLineItem(requisition, nonFullSupplyFacilityTypeApprovedProduct);
@@ -211,8 +226,8 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetOnlyRegularRequisitions() throws Exception {
-    Rnr regularRnr = insertRequisition(processingPeriod1, program, INITIATED, false);
-    insertRequisition(processingPeriod1, program, INITIATED, true);
+    Rnr regularRnr = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    insertRequisition(processingPeriod1, program, INITIATED, true, facility, supervisoryNode, modifiedDate);
 
     Rnr regularRequisition = mapper.getRegularRequisitionWithLineItems(facility, program, processingPeriod1);
 
@@ -221,7 +236,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Product product = insertProduct(true, "P1");
     ProgramProduct programProduct = insertProgramProduct(product, program);
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = insertFacilityApprovedProduct(programProduct);
@@ -240,7 +255,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldNotGetInitiatedRequisitionsForFacilitiesAndPrograms() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
 
@@ -251,7 +266,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetRequisitionsInSubmittedStateForRoleAssignment() throws Exception {
-    Rnr requisition = insertRequisition(processingPeriod1, program, AUTHORIZED, true);
+    Rnr requisition = insertRequisition(processingPeriod1, program, AUTHORIZED, true, facility, supervisoryNode, modifiedDate);
     requisition.setSupervisoryNodeId(supervisoryNode.getId());
     mapper.update(requisition);
     RoleAssignment roleAssignment = new RoleAssignment(USER_ID, 1L, program.getId(), supervisoryNode);
@@ -280,15 +295,15 @@ public class RequisitionMapperIT {
 
     processingPeriodMapper.insert(processingPeriod4);
 
-    Rnr rnr1 = insertRequisition(processingPeriod1, program, AUTHORIZED, false);
+    Rnr rnr1 = insertRequisition(processingPeriod1, program, AUTHORIZED, false, facility, supervisoryNode, modifiedDate);
     rnr1.setSubmittedDate(date1.toDate());
     mapper.update(rnr1);
 
-    Rnr rnr2 = insertRequisition(processingPeriod4, program, APPROVED, false);
+    Rnr rnr2 = insertRequisition(processingPeriod4, program, APPROVED, false, facility, supervisoryNode, modifiedDate);
     rnr2.setSubmittedDate(date2.toDate());
     mapper.update(rnr2);
 
-    insertRequisition(processingPeriod3, program, INITIATED, false);
+    insertRequisition(processingPeriod3, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
 
     Rnr lastRequisitionToEnterThePostSubmitFlow = mapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
 
@@ -297,8 +312,8 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldNotGetEmergencyRequisitionsForPostSubmitFlow() throws Exception {
-    insertRequisition(processingPeriod1, program, INITIATED, false);
-    insertRequisition(processingPeriod1, program, AUTHORIZED, true);
+    insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    insertRequisition(processingPeriod1, program, AUTHORIZED, true, facility, supervisoryNode, modifiedDate);
 
     Rnr lastRequisition = mapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
 
@@ -307,18 +322,22 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() throws SQLException {
-    Long userId = insertUserAndRoleForApprovedRequisitions();
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
 
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, true);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
-    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
     approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_FACILITY_CODE;
     Integer pageNumber = 1;
     Integer pageSize = 2;
 
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "submittedDate";
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -336,19 +355,23 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityName() throws SQLException {
-    Long userId = insertUserAndRoleForApprovedRequisitions();
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
 
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
-    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
 
     approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_FACILITY_NAME;
     Integer pageNumber = 1;
     Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "submittedDate";
 
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -357,38 +380,24 @@ public class RequisitionMapperIT {
     assertThat(requisitions.get(1), is(requisition2));
   }
 
-  private Long insertUserAndRoleForApprovedRequisitions() throws SQLException {
-    Long userId = 1l;
-
-    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
-    userMapper.insert(someUser);
-
-    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.CONVERT_TO_ORDER, Right.VIEW_ORDER)));
-    Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
-    role.setId(roleId);
-    for (Right right : role.getRights()) {
-      roleRightsMapper.createRoleRight(role, right);
-    }
-
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facility.getId(), role.getId()));
-    return userId;
-  }
-
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingBySupplyDepotName() throws SQLException {
-    Long userId = insertUserAndRoleForApprovedRequisitions();
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
 
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
-    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
 
     approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME;
     Integer pageNumber = 1;
     Integer pageSize = 2;
-
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "submittedDate";
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -400,19 +409,21 @@ public class RequisitionMapperIT {
   @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByProgramName() throws SQLException {
 
-    Long userId = insertUserAndRoleForApprovedRequisitions();
-
-    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false);
-    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false);
-    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
 
     approve(requisition1, requisition2, requisition3);
 
     String searchType = RequisitionService.SEARCH_PROGRAM_NAME;
     Integer pageNumber = 1;
     Integer pageSize = 2;
-
-    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber, pageSize, userId, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "submittedDate";
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -421,28 +432,21 @@ public class RequisitionMapperIT {
     assertThat(requisitions.get(1), is(requisition2));
   }
 
-  private void populateProgramValuesForComparison(Rnr requisition, int index, List<Rnr> requisitions) {
-    requisition.setSubmittedDate(requisitions.get(index).getSubmittedDate());
-    requisition.setProgram(requisitions.get(index).getProgram());
-    requisition.setSupplyingDepot(requisitions.get(index).getSupplyingDepot());
-    requisition.setSupervisoryNodeId(requisitions.get(index).getSupervisoryNodeId());
-  }
-
   @Test
   public void shouldGetRequisitionsForViewByFacilityProgramAndPeriodIds() throws Exception {
 
     String commaSeparatedPeriodIds = "{" + processingPeriod1.getId() + "," + processingPeriod2.getId() + "," + processingPeriod3.getId() + "}";
-    insertRequisition(processingPeriod1, program, AUTHORIZED, false);
-    insertRequisition(processingPeriod2, program, APPROVED, false);
-    insertRequisition(processingPeriod3, program, SUBMITTED, false);
+    insertRequisition(processingPeriod1, program, AUTHORIZED, false, facility, supervisoryNode, modifiedDate);
+    insertRequisition(processingPeriod2, program, APPROVED, false, facility, supervisoryNode, modifiedDate);
+    insertRequisition(processingPeriod3, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
     List<Rnr> result = mapper.getPostSubmitRequisitions(facility, program, commaSeparatedPeriodIds);
     assertThat(result.size(), is(2));
   }
 
   @Test
   public void shouldOnlyLoadEmergencyRequisitionDataForGivenQuery() throws Exception {
-    Rnr initiatedRequisition = insertRequisition(processingPeriod1, program, INITIATED, true);
-    Rnr submittedRequisition = insertRequisition(processingPeriod1, program, SUBMITTED, true);
+    Rnr initiatedRequisition = insertRequisition(processingPeriod1, program, INITIATED, true, facility, supervisoryNode, modifiedDate);
+    Rnr submittedRequisition = insertRequisition(processingPeriod1, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
 
     List<Rnr> actualRequisitions =
       mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
@@ -450,6 +454,292 @@ public class RequisitionMapperIT {
     verifyRequisition(initiatedRequisition, actualRequisitions.get(0), INITIATED);
     verifyRequisition(submittedRequisition, actualRequisitions.get(1), SUBMITTED);
 
+  }
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfProgramName() throws SQLException {
+
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+    Program program1 = make(a(ProgramBuilder.defaultProgram, with(programCode, "YF"), with(programName, "Yellow fever")));
+    programMapper.insert(program1);
+    Program program2 = make(a(ProgramBuilder.defaultProgram, with(programCode, "GF"), with(programName, "Green fever")));
+    programMapper.insert(program2);
+
+    Rnr requisition1 = insertRequisition(processingPeriod1, program1, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod3, program2, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "programName";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getProgram().getId(), is(requisition2.getProgram().getId()));
+    assertThat(requisitions.get(1).getProgram().getId(), is(requisition1.getProgram().getId()));
+  }
+
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfFacilityName() throws SQLException {
+
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
+    facilityMapper.insert(facility1);
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
+    facilityMapper.insert(facility2);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility1, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility2, supervisoryNode, modifiedDate);
+
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "facilityName";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getFacility().getId(), is(requisition2.getFacility().getId()));
+    assertThat(requisitions.get(1).getFacility().getId(), is(requisition1.getFacility().getId()));
+  }
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfFacilityCode() throws SQLException {
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
+    facilityMapper.insert(facility1);
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
+    facilityMapper.insert(facility2);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility1, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility2, supervisoryNode, modifiedDate);
+
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "facilityCode";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getFacility().getId(), is(requisition2.getFacility().getId()));
+    assertThat(requisitions.get(1).getFacility().getId(), is(requisition1.getFacility().getId()));
+  }
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfSupplyingDepotName() throws SQLException {
+    Facility facility1 = make(a(FacilityBuilder.defaultFacility, with(name, "village pharmacy"), with(FacilityBuilder.code, "VP")));
+    facilityMapper.insert(facility1);
+    Facility facility2 = make(a(FacilityBuilder.defaultFacility, with(name, "central hospital"), with(FacilityBuilder.code, "CH")));
+    facilityMapper.insert(facility2);
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility1.getId(), userId);
+    insertRoleForApprovedRequisitions(facility2.getId(), userId);
+
+    SupervisoryNode supervisoryNode1 = insertSupervisoryNode("N2");
+    SupervisoryNode supervisoryNode2 = insertSupervisoryNode("N3");
+
+    insertSupplyLine(facility1, supervisoryNode1);
+    insertSupplyLine(facility2, supervisoryNode2);
+
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility1, supervisoryNode1, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod3, program, SUBMITTED, false, facility2, supervisoryNode2, modifiedDate);
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "supplyingDepotName";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getFacility().getId(), is(requisition2.getFacility().getId()));
+    assertThat(requisitions.get(1).getFacility().getId(), is(requisition1.getFacility().getId()));
+  }
+
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfModifiedDate() throws SQLException {
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+    Date date1 = new Date();
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, false, facility, supervisoryNode, date1);
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(calendar.DAY_OF_MONTH, 1);
+    Date date2 = calendar.getTime();
+
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false, facility, supervisoryNode, date2);
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "modifiedDate";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getId(), is(requisition1.getId()));
+    assertThat(requisitions.get(1).getId(), is(requisition2.getId()));
+  }
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfEmergency() throws SQLException {
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+    Rnr requisition1 = insertRequisition(processingPeriod1, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod2, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition3 = insertRequisition(processingPeriod3, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
+
+    approve(requisition1, requisition2, requisition3);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "emergency";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getId(), is(requisition2.getId()));
+    assertThat(requisitions.get(1).getId(), is(requisition1.getId()));
+  }
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfPeriodStartDate() throws SQLException {
+
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+
+    ProcessingSchedule processingSchedule1 = make(a(defaultProcessingSchedule, with(ProcessingScheduleBuilder.code, "PS1")));
+    processingScheduleMapper.insert(processingSchedule1);
+    ProcessingSchedule processingSchedule2 = make(a(defaultProcessingSchedule, with(ProcessingScheduleBuilder.code, "PS2")));
+    processingScheduleMapper.insert(processingSchedule2);
+
+    Date periodStartDate1 = new Date();
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(calendar.DAY_OF_MONTH, 1);
+    Date periodStartDate2 = calendar.getTime();
+
+
+    ProcessingPeriod processingPeriod4 = insertPeriod("period4", processingSchedule1, periodStartDate1, new Date());
+    ProcessingPeriod processingPeriod5 = insertPeriod("period5", processingSchedule2, periodStartDate2, new Date());
+
+    Rnr requisition1 = insertRequisition(processingPeriod4, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod5, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "periodStartDate";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getId(), is(requisition1.getId()));
+    assertThat(requisitions.get(1).getId(), is(requisition2.getId()));
+  }
+
+
+  @Test
+  public void shouldGetApprovedRequisitionsInAscOrderOfPeriodEndDate() throws SQLException {
+
+    Long userId = insertUser();
+    insertRoleForApprovedRequisitions(facility.getId(), userId);
+
+    ProcessingSchedule processingSchedule1 = make(a(defaultProcessingSchedule, with(ProcessingScheduleBuilder.code, "PS1")));
+    processingScheduleMapper.insert(processingSchedule1);
+    ProcessingSchedule processingSchedule2 = make(a(defaultProcessingSchedule, with(ProcessingScheduleBuilder.code, "PS2")));
+    processingScheduleMapper.insert(processingSchedule2);
+
+    Date periodEndDate1 = new Date();
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(calendar.DAY_OF_MONTH, 1);
+    Date periodEndDate2 = calendar.getTime();
+
+
+    ProcessingPeriod processingPeriod4 = insertPeriod("period4", processingSchedule1, new Date(), periodEndDate1);
+    ProcessingPeriod processingPeriod5 = insertPeriod("period5", processingSchedule2, new Date(), periodEndDate2);
+
+    Rnr requisition1 = insertRequisition(processingPeriod4, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
+    Rnr requisition2 = insertRequisition(processingPeriod5, program, SUBMITTED, false, facility, supervisoryNode, modifiedDate);
+
+    approve(requisition1, requisition2);
+
+    Integer pageNumber = 1;
+    Integer pageSize = 2;
+    String sortDirection = "asc";
+    String sortBy = "periodEndDate";
+
+    List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
+      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+
+    assertThat(requisitions.size(), is(2));
+
+    assertThat(requisitions.get(0).getId(), is(requisition1.getId()));
+    assertThat(requisitions.get(1).getId(), is(requisition2.getId()));
+  }
+
+
+  private void insertRoleForApprovedRequisitions(Long facilityId, Long userId) throws SQLException {
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facilityId, role.getId());
+  }
+
+  private Role insertRole() {
+    Role role = new Role("r1", "random description", new HashSet<>(asList(Right.CONVERT_TO_ORDER, Right.VIEW_ORDER)));
+    Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
+    role.setId(roleId);
+    for (Right right : role.getRights()) {
+      roleRightsMapper.createRoleRight(role, right);
+    }
+    return role;
+  }
+
+  private Long insertUser() {
+    Long userId = 1l;
+
+    User someUser = make(a(defaultUser, with(UserBuilder.facilityId, facility.getId()), with(active, true)));
+    userMapper.insert(someUser);
+    return userId;
+  }
+
+
+  private void populateProgramValuesForComparison(Rnr requisition, int index, List<Rnr> requisitions) {
+    requisition.setSubmittedDate(requisitions.get(index).getSubmittedDate());
+    requisition.setProgram(requisitions.get(index).getProgram());
+    requisition.setSupplyingDepot(requisitions.get(index).getSupplyingDepot());
+    requisition.setSupervisoryNodeId(requisitions.get(index).getSupervisoryNodeId());
   }
 
   private void verifyRequisition(Rnr expectedRequisition, Rnr actualRequisition, RnrStatus expectedStatus) {
@@ -460,11 +750,11 @@ public class RequisitionMapperIT {
     assertThat(actualRequisition.getNonFullSupplyLineItems().size(), is(0));
   }
 
-  private Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency) {
+  private Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency, Facility facility, SupervisoryNode supervisoryNode, Date modifiedDate) {
     Rnr rnr = new Rnr(facility.getId(), program.getId(), period.getId(), emergency, MODIFIED_BY, 1L);
     rnr.setStatus(status);
     rnr.setEmergency(emergency);
-    rnr.setModifiedDate(new Date());
+    rnr.setModifiedDate(modifiedDate);
     rnr.setSubmittedDate(new Date(111111L));
     rnr.setProgram(program);
     rnr.setSupplyingDepot(facility);
@@ -507,9 +797,9 @@ public class RequisitionMapperIT {
     return product;
   }
 
-  private ProcessingPeriod insertPeriod(String name) {
+  private ProcessingPeriod insertPeriod(String name, ProcessingSchedule processingSchedule, Date periodStartDate, Date periodEndDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
+      with(scheduleId, processingSchedule.getId()), with(startDate, periodStartDate),with(endDate,periodEndDate),
       with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
@@ -517,8 +807,8 @@ public class RequisitionMapperIT {
     return processingPeriod;
   }
 
-  private SupervisoryNode insertSupervisoryNode() {
-    supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
+  private SupervisoryNode insertSupervisoryNode(String code) {
+    supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode, with(SupervisoryNodeBuilder.code, code)));
     supervisoryNode.setFacility(facility);
 
     supervisoryNodeMapper.insert(supervisoryNode);
@@ -527,7 +817,7 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetLWRequisitionById() {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));

@@ -26,8 +26,7 @@ import java.util.List;
 @Repository
 public interface OrderMapper {
 
-  @Insert("INSERT INTO orders(rnrId, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
-  @Options(useGeneratedKeys = true)
+  @Insert("INSERT INTO orders(id, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
   void insert(Order order);
 
   @Select({"SELECT * FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
@@ -35,7 +34,8 @@ public interface OrderMapper {
     "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
     "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
-    @Result(property = "rnr.id", column = "rnrId"),
+    @Result(property = "id", column = "id"),
+    @Result(property = "rnr.id", column = "id"),
     @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
       one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
@@ -45,7 +45,8 @@ public interface OrderMapper {
 
   @Select("SELECT * FROM orders WHERE id = #{id}")
   @Results({
-    @Result(property = "rnr.id", column = "rnrId"),
+    @Result(property = "id", column = "id"),
+    @Result(property = "rnr.id", column = "id"),
     @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
       one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })

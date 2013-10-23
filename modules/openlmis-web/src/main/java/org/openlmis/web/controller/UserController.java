@@ -37,6 +37,7 @@ import java.util.List;
 
 import static java.lang.Boolean.TRUE;
 import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER;
+import static org.openlmis.authentication.web.UserAuthenticationSuccessHandler.USER_ID;
 import static org.openlmis.web.response.OpenLmisResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -61,7 +62,6 @@ public class UserController extends BaseController {
   @Value("${mail.base.url}")
   private String baseUrl;
 
-  public static final String USER_ID = "userId";
   public static final String TOKEN_VALID = "TOKEN_VALID";
 
   private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
@@ -81,9 +81,10 @@ public class UserController extends BaseController {
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> user(HttpServletRequest httpServletRequest) {
-    String userName = (String) httpServletRequest.getSession().getAttribute(USER);
-    Long userId = (Long) httpServletRequest.getSession().getAttribute("USER_ID");
-    if (userName != null) {
+    Long userId = (Long) httpServletRequest.getSession().getAttribute(USER_ID);
+    if (userId != null) {
+      String userName = (String) httpServletRequest.getSession().getAttribute(USER);
+
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
       openLmisResponse.addData("authenticated", TRUE);
       openLmisResponse.addData("rights", roleRightService.getRights(userId));

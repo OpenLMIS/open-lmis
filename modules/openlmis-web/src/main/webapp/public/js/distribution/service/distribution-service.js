@@ -93,6 +93,6 @@ distributionModule.service('distributionService', function ($dialog, messageServ
     IndexedDB.get('distributionReferenceData', id, function (event) {
       callBack(event.target.result);
     });
-  }
+  };
 });
 

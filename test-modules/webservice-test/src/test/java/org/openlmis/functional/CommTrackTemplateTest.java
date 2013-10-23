@@ -37,7 +37,7 @@ public class CommTrackTemplateTest extends TestCaseHelper {
     driver = new FirefoxDriver();
     driver.get("http://localhost:9091");
     super.setup();
-    super.setupDataExternalVendor(true);
+    super.setupTestData(true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -64,7 +64,7 @@ public class CommTrackTemplateTest extends TestCaseHelper {
         "http://localhost:9091/rest-api/requisitions.json",
         "POST",
         "commTrack",
-        dbWrapper.getAuthToken("commTrack"));
+        "Admin123");
 
      client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 

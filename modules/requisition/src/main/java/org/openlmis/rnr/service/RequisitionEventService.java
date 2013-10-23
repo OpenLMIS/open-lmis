@@ -11,9 +11,7 @@
 package org.openlmis.rnr.service;
 
 import org.ict4h.atomfeed.server.service.EventService;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.VendorService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.event.RequisitionStatusChangeEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +26,11 @@ public class RequisitionEventService {
   EventService eventService;
 
   @Autowired
-  VendorService vendorService;
-
-  @Autowired
   NotificationServices notificationServices;
-
+  
   public void notifyForStatusChange(Rnr requisition) {
-    Vendor vendor = vendorService.getByUserId(requisition.getModifiedBy());
     try {
-      eventService.notify(new RequisitionStatusChangeEvent(requisition, vendor, notificationServices));
+      eventService.notify(new RequisitionStatusChangeEvent(requisition, notificationServices));
     } catch (URISyntaxException e) {
       throw new DataException("error.malformed.uri");
     }

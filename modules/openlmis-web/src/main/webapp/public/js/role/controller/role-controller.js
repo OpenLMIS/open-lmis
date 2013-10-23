@@ -50,7 +50,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
         right.right == 'APPROVE_REQUISITION') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_REQUISITION"));
       }
-      if (right.right == 'CONVERT_TO_ORDER') {
+      if (right.right == 'CONVERT_TO_ORDER' || right.right == 'MANAGE_POD' || right.right == 'FACILITY_FILL_SHIPMENT') {
         $scope.updateRights(true, $scope.getRightFromRightList("VIEW_ORDER"));
       }
     } else {
@@ -78,7 +78,7 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
     }
 
     if (right.right == 'VIEW_ORDER') {
-      return ($scope.contains('CONVERT_TO_ORDER'));
+      return ($scope.contains('CONVERT_TO_ORDER') || $scope.contains('MANAGE_POD') || $scope.contains('FACILITY_FILL_SHIPMENT'));
     }
   };
 

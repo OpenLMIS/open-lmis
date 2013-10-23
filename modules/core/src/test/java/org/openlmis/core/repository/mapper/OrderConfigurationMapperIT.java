@@ -36,7 +36,7 @@ public class OrderConfigurationMapperIT {
   public void shouldGetConfiguration() throws Exception {
     OrderConfiguration orderConfiguration = mapper.get();
     assertThat(orderConfiguration.getFilePrefix(), is("O"));
-    assertThat(orderConfiguration.getHeaderInFile(), is(false));
+    assertThat(orderConfiguration.isHeaderInFile(), is(false));
   }
 
   @Test
@@ -46,7 +46,7 @@ public class OrderConfigurationMapperIT {
     orderConfiguration.setFilePrefix("ORD");
     mapper.update(orderConfiguration);
     OrderConfiguration returnedOrderConfiguration = mapper.get();
-    assertThat(returnedOrderConfiguration.getHeaderInFile(), is(true));
+    assertThat(returnedOrderConfiguration.isHeaderInFile(), is(true));
     assertThat(returnedOrderConfiguration.getFilePrefix(), is("ORD"));
   }
 }

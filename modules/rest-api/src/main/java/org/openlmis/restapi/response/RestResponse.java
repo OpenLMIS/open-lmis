@@ -13,6 +13,7 @@ package org.openlmis.restapi.response;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonAnyGetter;
 import org.codehaus.jackson.annotate.JsonAnySetter;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
@@ -96,6 +97,16 @@ public class RestResponse {
     for (String key : errors.keySet()) {
       addData(key, messageService.message(errors.get(key)));
     }
+  }
+
+  @JsonIgnore
+  public String getError() {
+    return (String) data.get(ERROR);
+  }
+
+  @JsonIgnore
+  public String getSuccess() {
+    return (String) data.get(SUCCESS);
   }
 
 }

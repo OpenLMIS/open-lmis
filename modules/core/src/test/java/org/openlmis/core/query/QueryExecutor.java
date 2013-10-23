@@ -36,21 +36,19 @@ public class QueryExecutor {
     return preparedStatement.executeQuery();
   }
 
-  //TODO release connection
-  public ResultSet execute(String query, List params) throws SQLException {
+  public ResultSet execute(String query, Object ... params)throws SQLException{
     Connection connection = DataSourceUtils.getConnection(dataSource);
     PreparedStatement preparedStatement = connection.prepareStatement(query);
-    for (int index = 0; index < params.size(); index++) {
-      preparedStatement.setObject(index + 1, params.get(index));
+    for (int index = 0; index < params.length; index++) {
+      preparedStatement.setObject(index + 1, params[index]);
     }
     return preparedStatement.executeQuery();
   }
-
-  public long executeUpdate(String query, List params) throws SQLException {
+  public long executeUpdate(String query, Object... params) throws SQLException {
     Connection connection = DataSourceUtils.getConnection(dataSource);
     try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-      for (int index = 0; index < params.size(); index++) {
-        preparedStatement.setObject(index + 1, params.get(index));
+      for (int index = 0; index < params.length; index++) {
+        preparedStatement.setObject(index + 1, params[index]);
       }
       preparedStatement.executeUpdate();
 

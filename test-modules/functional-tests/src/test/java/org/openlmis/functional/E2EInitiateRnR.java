@@ -55,7 +55,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public String program = "HIV";
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-  public String userSICUserName = "storeincharge";
+  public String userSICUserName = "storeIncharge";
 
 
   @Before
@@ -97,12 +97,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     List<String> userRoleListStoreInCharge = new ArrayList<String>();
     for (int i = 0; i < roleRights.length; i++)
       userRoleListStoreInCharge.add(roleRights[i]);
-    if (roleType.equals("Requisition"))
-      createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, true);
-    else if (roleType.equals("Admin"))
-      createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, false);
-
-
+      createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, roleType);
   }
 
   @And("^I setup supervisory node data$")
@@ -112,12 +107,29 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
   }
 
+    @And("^I setup warehouse data$")
+    public void warehouseDataSetup() throws Exception {
+        dbWrapper.insertWarehouseIntoSupplyLinesTable("F11", "HIV", "N1",true);
+    }
+
   @And("^I create users:$")
   public void createUser(DataTable userTable) throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-      createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString());
+      createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
+  }
+
+  @And("^I update user$")
+  public void updateUser() throws Exception {
+    UserPage userPage = new UserPage(testWebDriver);
+    userPage.saveUser();
+  }
+
+  @And("^I assign warehouse \"([^\"]*)\" and role \"([^\"]*)\" to user$")
+  public void assignWarehouse(String warehouse,String warehouseRole) throws Exception {
+    UserPage userPage = new UserPage(testWebDriver);
+    userPage.assignWarehouse(warehouse, warehouseRole);
   }
 
   @And("^I setup product & requisition group data$")
@@ -157,7 +169,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
 
-    dbWrapper.insertSupplyLines("N1", program, facilityCodePrefix + date_time);
+    //dbWrapper.insertSupplyLines("N1", program, facilityCodePrefix + date_time);
   }
 
   @And("^I initiate and submit requisition$")
@@ -241,7 +253,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I add non full supply items & verify total cost$")
   public void enterNonFullSupplyAndVerifyTotalCost() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics", baseUrlGlobal, dburlGlobal);
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics",
+      baseUrlGlobal, dbUrlGlobal);
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
   }
@@ -350,7 +363,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @When("^I access convert to order page$")
-  public void nevigateConvertToOrderPage() throws Exception {
+  public void navigateConvertToOrderPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateConvertToOrder();
   }
@@ -402,12 +415,18 @@ public class E2EInitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getEmergencyLabelText(),"Emergency");
   }
 
-  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail, String userFirstName, String userLastName, String userUserName, String facility, String program, String supervisoryNode, String role, String roleType) throws IOException, SQLException {
+  private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
+                                        String userFirstName, String userLastName, String userUserName,
+                                        String facility, String program, String supervisoryNode, String role,
+                                        String roleType, String warehouse, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dburlGlobal);
+    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dbUrlGlobal);
     dbWrapper.updateUser(passwordUsers, userEmail);
-    userPage.enterMyFacilityAndMySupervisedFacilityData(userFirstName, userLastName, facility, program, supervisoryNode, role, roleType);
-    return userID;
+    userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program,
+            supervisoryNode, role, roleType);
+    userPage.assignWarehouse(warehouse,warehouseRole);
+    userPage.saveUser();
+    userPage.verifyUserUpdated(userFirstName,userLastName);
   }
 
   private void verifyConvertToOrder(ConvertOrderPage convertOrderPageOrdersPending) {
@@ -418,9 +437,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
     convertOrderPageOrdersPending.clickOk();
   }
 
-  private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, boolean programDependent) throws IOException {
+  private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String roleType) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, roleType);
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws Exception {

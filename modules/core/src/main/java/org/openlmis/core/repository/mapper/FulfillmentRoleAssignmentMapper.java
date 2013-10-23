@@ -30,9 +30,9 @@ public interface FulfillmentRoleAssignmentMapper {
   @Select({"SELECT userId, facilityId, array_agg(roleId) as roleAsString FROM fulfillment_role_assignments WHERE userId = #{userId} GROUP BY userId,facilityId"})
   List<FulfillmentRoleAssignment> getFulfillmentRolesForUser(Long userId);
 
-  @Insert({"INSERT INTO fulfillment_role_assignments(userId, facilityId, roleId) VALUES(#{userId}, #{facilityId}, #{roleId})"})
-  void insertFulfillmentRole(@Param("userId") Long userId,
-                             @Param("facilityId") Long facilityId,
+  @Insert({"INSERT INTO fulfillment_role_assignments(userId, facilityId, roleId, createdBy, modifiedBy) " +
+          "VALUES(#{user.id}, #{facilityId}, #{roleId}, #{user.modifiedBy}, #{user.modifiedBy})"})
+  void insertFulfillmentRole(@Param("user") User user, @Param("facilityId") Long facilityId,
                              @Param("roleId") Long roleId);
 
   @Delete({"DELETE FROM fulfillment_role_assignments WHERE userId = #{id}"})

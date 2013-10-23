@@ -13,32 +13,32 @@ package org.openlmis.shipment.builder;
 import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
+import org.openlmis.core.domain.EDIFileColumn;
 
 import java.util.Date;
 
 public class ShipmentFileColumnBuilder {
 
-  public static Property<? super ShipmentFileColumn, String> fieldName = new Property<>();
+  public static Property<? super EDIFileColumn, String> fieldName = new Property<>();
 
-  public static Property<? super ShipmentFileColumn, String> dataFieldLabel = new Property<>();
+  public static Property<? super EDIFileColumn, String> dataFieldLabel = new Property<>();
 
-  public static Property<? super ShipmentFileColumn, Integer> columnPosition = new Property<>();
+  public static Property<? super EDIFileColumn, Integer> columnPosition = new Property<>();
 
-  public static Property<? super ShipmentFileColumn, Boolean> includeInShipmentFile = new Property<>();
+  public static Property<? super EDIFileColumn, Boolean> includeInShipmentFile = new Property<>();
 
-  public static Property<? super ShipmentFileColumn, Boolean> mandatory = new Property<>();
+  public static Property<? super EDIFileColumn, Boolean> mandatory = new Property<>();
 
-  public static Property<? super ShipmentFileColumn, String> dateFormat = new Property<>();
-  public static Property<? super ShipmentFileColumn, Long> modifiedById = new Property<>();
-  public static Property<? super ShipmentFileColumn, Date> modifiedOnDate = new Property<>();
+  public static Property<? super EDIFileColumn, String> dateFormat = new Property<>();
+  public static Property<? super EDIFileColumn, Long> modifiedById = new Property<>();
+  public static Property<? super EDIFileColumn, Date> modifiedOnDate = new Property<>();
 
 
-  public static final Instantiator<ShipmentFileColumn> mandatoryShipmentFileColumn = new Instantiator<ShipmentFileColumn>() {
+  public static final Instantiator<EDIFileColumn> mandatoryShipmentFileColumn = new Instantiator<EDIFileColumn>() {
 
     @Override
-    public ShipmentFileColumn instantiate(PropertyLookup<ShipmentFileColumn> lookup) {
-      ShipmentFileColumn column = new ShipmentFileColumn();
+    public EDIFileColumn instantiate(PropertyLookup<EDIFileColumn> lookup) {
+      EDIFileColumn column = new EDIFileColumn();
       column.setName(lookup.valueOf(fieldName, "name"));
       column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "label"));
       column.setPosition(lookup.valueOf(columnPosition, 1));
@@ -52,11 +52,11 @@ public class ShipmentFileColumnBuilder {
     }
   };
 
-  public static final Instantiator<ShipmentFileColumn> defaultShipmentFileColumn = new Instantiator<ShipmentFileColumn>() {
+  public static final Instantiator<EDIFileColumn> defaultShipmentFileColumn = new Instantiator<EDIFileColumn>() {
 
     @Override
-    public ShipmentFileColumn instantiate(PropertyLookup<ShipmentFileColumn> lookup) {
-      ShipmentFileColumn column = new ShipmentFileColumn();
+    public EDIFileColumn instantiate(PropertyLookup<EDIFileColumn> lookup) {
+      EDIFileColumn column = new EDIFileColumn();
       column.setName(lookup.valueOf(fieldName, "name"));
       column.setDataFieldLabel(lookup.valueOf(dataFieldLabel, "label"));
       column.setPosition(lookup.valueOf(columnPosition, 1));

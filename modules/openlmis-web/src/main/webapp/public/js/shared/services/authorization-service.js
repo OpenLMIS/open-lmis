@@ -14,7 +14,7 @@ services.factory('AuthorizationService', function (localStorageService, $window)
 
   var preAuthorize = function () {
 
-    if(rights == undefined) return;
+    if (rights === undefined || rights === null) return;
 
     var permissions = Array.prototype.slice.call(arguments);
     var permitted = false;
@@ -30,6 +30,6 @@ services.factory('AuthorizationService', function (localStorageService, $window)
   };
 
   return{
-    preAuthorize:preAuthorize
-  }
+    preAuthorize: preAuthorize
+  };
 });

@@ -51,7 +51,7 @@ public class E2EUpload extends TestCaseHelper {
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add("Create Requisition");
 
-    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, true);
+    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, "Requisition");
 
     UploadPage uploadPage = homePage.navigateUploads();
     verifyValidUserUpload(uploadPage);
@@ -606,7 +606,7 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. 'Number of records created:0', 'Number of records updated: 1'");
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records created:0\", \"Number of records updated: 1\".");
 
   }
 

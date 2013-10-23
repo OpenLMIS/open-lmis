@@ -189,9 +189,8 @@ public class FacilityRepository {
     return facilityType;
   }
 
-  //TODO send only code
-  public Facility getByCode(Facility facility) {
-    return mapper.getByCode(facility.getCode());
+  public Facility getByCode(String code) {
+    return mapper.getByCode(code);
   }
 
   public List<Facility> getAllInDeliveryZoneFor(Long deliveryZoneId, Long programId) {
@@ -210,7 +209,8 @@ public class FacilityRepository {
       return mapper.getSupplyingFacilitiesCompleteList();
   }
 
-  public List<Facility> getWarehouses() {
-    return mapper.getWarehouses();
+  public List<Facility> getEnabledWarehouses() {
+    return mapper.getEnabledWarehouses();
   }
+
 }

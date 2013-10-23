@@ -23,15 +23,15 @@ import java.util.UUID;
 
 
 public class RequisitionStatusChangeEvent extends Event {
+  static final String FEED_TITLE = "Requisition Status";
+  static final String FEED_CATEGORY = "requisitionStatus";
 
   NotificationServices notificationService;
+  
+  public RequisitionStatusChangeEvent(Rnr requisition, NotificationServices nServices) throws URISyntaxException {
+    super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",
+            new RnrFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
 
-  public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
-  }
-
-  public RequisitionStatusChangeEvent(Rnr requisition, Vendor vendor, NotificationServices nServices) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition, vendor).getSerializedContents(), "requisition");
     if(requisition != null)  {
       notificationService = nServices;
       notificationService.notifyStatusChange(requisition, vendor);

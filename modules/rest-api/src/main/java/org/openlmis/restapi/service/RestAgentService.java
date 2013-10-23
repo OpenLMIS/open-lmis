@@ -12,7 +12,7 @@ package org.openlmis.restapi.service;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.VendorService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.restapi.domain.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class RestAgentService {
   FacilityService facilityService;
 
   @Autowired
-  VendorService vendorService;
+  UserService userService;
 
   @Transactional
   public void create(Agent agent, String userName) {
@@ -36,7 +36,7 @@ public class RestAgentService {
       throw new DataException("error.agent.already.registered");
     }
     Facility facility = getFacilityForCHW(agent);
-    facility.setCreatedBy(vendorService.getByName(userName).getId());
+    facility.setCreatedBy(userService.getByUserName(userName).getId());
     facility.setModifiedBy(facility.getCreatedBy());
     facilityService.save(facility);
   }
@@ -55,7 +55,7 @@ public class RestAgentService {
     chwFacility.setActive(Boolean.parseBoolean(agent.getActive()));
     fillBaseFacility(agent, chwFacility);
     chwFacility.setModifiedDate(new Date());
-    chwFacility.setModifiedBy(vendorService.getByName(userName).getId());
+    chwFacility.setModifiedBy(userService.getByUserName(userName).getId());
     facilityService.update(chwFacility);
   }
 

@@ -6,20 +6,21 @@ Feature: End to end requisition flow
     When I create "HIV" program supported facility
     Then I should see message for successfully created facility
     When I setup supervisory node data
+    And I setup warehouse data
     And I create "Store-in-charge" role having "Requisition" based "Create Requisition,Authorize Requisition,Approve Requisition" rights
-    And I create "lmu" role having "Admin" based "Convert To Order Requisition,View Orders Requisition" rights
+    And I create "lmu" role having "Fulfillment" based "Convert To Order Requisition,View Orders Requisition" rights
     And I create "Medical-officer" role having "Requisition" based "Approve Requisition" rights
     And I create users:
-      |Email                  |Firstname|Lastname|UserName       |Role           |RoleType    |FacilityCode|Program|Node    |
-      |Fatima_Doe@openlmis.com|Fatima   |Doe     |storeincharge  |Store-in-charge|REQUISITION |F10         |HIV    |Node 1  |
-      |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |lmu            |ADMIN       |F10         |HIV    |Node 1  |
-      |Jane_Doe@openlmis.com  |Jane     |Doe     |medicalofficer |Medical-Officer|REQUISITION |F11         |HIV    |Node 2  |
-    And I update "storeincharge" home facility
+      |Email                  |Firstname|Lastname|UserName       |Role           |RoleType    |FacilityCode|Program|Node    |Warehouse          |WarehouseRole  |
+      |Fatima_Doe@openlmis.com|Fatima   |Doe     |storeIncharge  |Store-in-charge|REQUISITION |F10         |HIV    |Node 1  |Central Hospital   |lmu            |
+      |Jane_Doe@openlmis.com  |Jane     |Doe     |medicalofficer |Medical-Officer|REQUISITION |F11         |HIV    |Node 2  |Central Hospital   |lmu            |
+      |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |Store-in-charge|FULFILLMENT |F10         |HIV    |Node 1  |Central Hospital   |lmu            |
+    And I update "storeIncharge" home facility
     And I setup product & requisition group data
     And I setup period, schedule & requisition group data
     And I configure "HIV" template
     And I logout
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I initiate and submit requisition
     Then I verify Regular RnR Type
     When I add comments
@@ -43,7 +44,7 @@ Feature: End to end requisition flow
     When I approve requisition
     Then I should see no requisition pending message
     When I logout
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I access requisition on approval page
     Then I should see RnR Header
     And I should see approved quantity from lower hierarchy
@@ -62,7 +63,7 @@ Feature: End to end requisition flow
     And I access view orders page
     Then I should see ordered list without download link
     When I logout
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I initiate and submit emergency requisition
     Then I verify Emergency RnR Type
     And I update & verify ordered quantities for emergency RnR
@@ -74,7 +75,7 @@ Feature: End to end requisition flow
     When I update approve quantity and verify total cost as "290"
     When I approve requisition
     When I logout
-    And I am logged in as "storeincharge"
+    And I am logged in as "storeIncharge"
     And I access requisition on approval page
     When I update approve quantity and verify total cost as "100"
     When I approve requisition

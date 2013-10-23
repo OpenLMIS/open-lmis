@@ -52,7 +52,7 @@ public class ManageReport extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
-    //reportPage.verifyNoReportsMessage();
+
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 
@@ -71,10 +71,12 @@ public class ManageReport extends TestCaseHelper {
     reportPage.clickSaveButton();
     reportPage.verifyErrorMessageDivReportName();
 
+    testWebDriver.sleep(1000);
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
-    reportPage.verifyErrorMessageDivFooter();
+    testWebDriver.sleep(1000);
+    reportPage.verifyErrorMessageInvalidFile();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")
@@ -84,7 +86,7 @@ public class ManageReport extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ReportPage reportPage = homePage.navigateReportScreen();
-//    reportPage.verifyNoReportsMessage();
+
     reportPage.clickAddNewButton();
     reportPage.verifyItemsOnReportUploadScreen();
 

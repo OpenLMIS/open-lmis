@@ -13,7 +13,6 @@ package org.openlmis.restapi.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -31,12 +30,11 @@ public class Report {
   private Long programId;
   private Long periodId;
   private String userId;
-  private Vendor vendor;
   private Boolean emergency;
   private List<RnrLineItem> products;
 
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userId == null || vendor == null) {
+    if (facilityId == null || programId == null || periodId == null || userId == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
   }

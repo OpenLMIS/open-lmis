@@ -66,7 +66,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I access home page")
   public void accessHomePage() throws IOException, SQLException {
-    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.clickHome();
   }
 
@@ -84,7 +84,7 @@ public class ViewRequisition extends TestCaseHelper {
 
   @When("^I update requisition status to \"([^\"]*)\"$")
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
-    dbWrapper.updateRequisitionStatus(status, "storeincharge", "HIV");
+    dbWrapper.updateRequisitionStatus(status, "storeIncharge", "HIV");
   }
 
   @When("^I type view search criteria$")
@@ -146,14 +146,14 @@ public class ViewRequisition extends TestCaseHelper {
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
 
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", "openLmis", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode, regimenName, true);
     dbWrapper.insertRegimenTemplateConfiguredForProgram(program, categoryCode, regimenCode2, regimenName2, false);
     dbWrapper.insertRegimenTemplateColumnsForProgram(program);
     dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
     dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
     dbWrapper.assignRight(STORE_IN_CHARGE, VIEW_ORDER);
-    dbWrapper.insertFulfilmentRoleAssignment(userSIC,STORE_IN_CHARGE,"F10");
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC, STORE_IN_CHARGE, "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -188,7 +188,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageAuthorized.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
     dbWrapper.updateRequisitionStatus(IN_APPROVAL, userSIC, "HIV");
-      ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
+    ViewRequisitionPage viewRequisitionPageInApproval = homePageInApproval.navigateViewRequisition();
     viewRequisitionPageInApproval.enterViewSearchCriteria();
     viewRequisitionPageInApproval.clickSearch();
     viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
@@ -234,7 +234,7 @@ public class ViewRequisition extends TestCaseHelper {
     viewRequisitionPageOrdered.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, patientsOnTreatment, patientsToInitiateTreatment, patientsStoppedTreatment, remarks);
 
-    ViewOrdersPage viewOrdersPage=homePageApproved.navigateViewOrders();
+    ViewOrdersPage viewOrdersPage = homePageApproved.navigateViewOrders();
     viewOrdersPage.verifyEmergencyStatus();
   }
 
@@ -249,7 +249,7 @@ public class ViewRequisition extends TestCaseHelper {
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
-    if(!testWebDriver.getElementById("username").isDisplayed()) {
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
       dbWrapper.deleteData();
@@ -262,7 +262,7 @@ public class ViewRequisition extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {
     return new Object[][]{
-      {"HIV", "storeincharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
 
 

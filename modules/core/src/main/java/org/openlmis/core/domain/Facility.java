@@ -27,11 +27,11 @@ import static org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
-@Data
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
-@EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Facility extends BaseModel implements Importable {
   @ImportField(mandatory = true, name = "Facility Code")
@@ -98,10 +98,10 @@ public class Facility extends BaseModel implements Importable {
   private Boolean online;
 
   @ImportField(type = "boolean", name = "Facility Has Electronic SCC")
-  private Boolean hasElectronicScc;
+  private Boolean hasElectronicSCC;
 
   @ImportField(type = "boolean", name = "Facility Has Electronic DAR")
-  private Boolean hasElectronicDar;
+  private Boolean hasElectronicDAR;
 
   @ImportField(type = "boolean", mandatory = true, name = "Is Active")
   private Boolean active;

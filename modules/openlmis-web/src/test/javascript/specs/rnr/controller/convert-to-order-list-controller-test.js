@@ -10,14 +10,15 @@
 
 describe('ConvertToOrderListController', function () {
 
-  var scope, ctrl, httpBackend, controller, routeParams, location;
+  var scope, httpBackend, controller, routeParams, location;
   var requisitions, $dialog, messageService;
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $routeParams, $location, _$dialog_, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $routeParams, $location, _$dialog_,
+                              _messageService_) {
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
@@ -34,19 +35,19 @@ describe('ConvertToOrderListController', function () {
       {"facilityName": "second facility", "programName": "second program", "facilityCode": "second code", supplyingDepot: "supplying depot second"},
       {"facilityName": "third facility", "programName": "third program", "facilityCode": "third code", supplyingDepot: "supplying depot third"}
     ];
+    httpBackend.expect('GET',
+        '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({"rnr_list": [requisitions[0], requisitions[1]]});
 
-    ctrl = controller;
-
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=1&searchType=all').respond({"rnr_list": [requisitions[0], requisitions[1]]});
-
-    ctrl(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
+    controller(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
   }));
 
   it('should set page line items based on pageSize', function () {
     routeParams.page = 2;
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=2&searchType=all').respond(200, {"rnr_list": [requisitions[2]]});
+    httpBackend.expect('GET',
+            '/requisitions-for-convert-to-order.json?page=2&searchType=all&sortBy=submittedDate&sortDirection=asc').
+        respond(200, {"rnr_list": [requisitions[2]]});
 
-    ctrl(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
+    controller(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
 
     httpBackend.flush();
 
@@ -58,7 +59,10 @@ describe('ConvertToOrderListController', function () {
     routeParams.page = 2;
     routeParams.searchType = 'facilityCode';
     routeParams.searchVal = 'first';
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=2&searchType=facilityCode&searchVal=first').respond(200, {"rnr_list": [requisitions[2]], "number_of_pages": 3});
+    httpBackend.expect('GET',
+            '/requisitions-for-convert-to-order.json?page=2&searchType=facilityCode&searchVal=first&sortBy=submittedDate&sortDirection=asc')
+        .respond(200,
+        {"rnr_list": [requisitions[2]], "number_of_pages": 3});
 
     scope.$broadcast('$routeUpdate');
 
@@ -75,7 +79,8 @@ describe('ConvertToOrderListController', function () {
     routeParams.page = 2;
     routeParams.searchType = 'facilityCode';
     routeParams.searchVal = 'first';
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=2&searchType=facilityCode&searchVal=first').respond(404);
+    httpBackend.expect('GET',
+        '/requisitions-for-convert-to-order.json?page=2&searchType=facilityCode&searchVal=first&sortBy=submittedDate&sortDirection=asc').respond(404);
 
     scope.$broadcast('$routeUpdate');
 
@@ -85,7 +90,9 @@ describe('ConvertToOrderListController', function () {
   });
 
   it('should set page to 1 and search type to all by default on route update', function () {
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=1&searchType=all').respond(200, {rnr_list: [requisitions[0]]});
+    httpBackend.expect('GET',
+            '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond(200,
+        {rnr_list: [requisitions[0]]});
 
     scope.$broadcast('$routeUpdate');
 
@@ -110,7 +117,7 @@ describe('ConvertToOrderListController', function () {
     scope.searchField = "facilityCode";
     scope.selectedItems = [requisitions[0]];
 
-    ctrl(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
+    controller(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
     scope.$broadcast('$routeUpdate');
 
     expect(scope.selectedItems.length).toEqual(0);
@@ -118,7 +125,7 @@ describe('ConvertToOrderListController', function () {
 
   it('should give message if no requisition selected', function () {
     scope.selectedItems = [];
-    ctrl(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
+    controller(ConvertToOrderListController, {$scope: scope, $location: location, $routeParams: routeParams});
 
     scope.convertToOrder();
 
@@ -130,7 +137,8 @@ describe('ConvertToOrderListController', function () {
 
     scope.convertToOrder();
 
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), $dialog, messageService);
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), $dialog,
+        messageService);
   });
 
   function getDialogCallback() {
@@ -142,7 +150,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should convert selected requisitions to order upon click of ok of dialog', function () {
     httpBackend.expect('POST', '/orders.json', [requisitions[0], requisitions[1]]).respond(200);
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=1&searchType=all').respond({rnr_list: [requisitions[0]]});
+    httpBackend.expect('GET',
+        '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
     getDialogCallback()(true);
 
@@ -151,7 +160,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should show success message requisitions converted to order', function () {
     httpBackend.expect('POST', '/orders.json').respond(200);
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=1&searchType=all').respond({rnr_list: [requisitions[0]]});
+    httpBackend.expect('GET',
+        '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
     getDialogCallback()(true);
 
@@ -163,7 +173,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should give error message if convert to order fails with conflicting data', function () {
     httpBackend.expect('POST', '/orders.json').respond(409, {error: 'error!!'});
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=1&searchType=all').respond({rnr_list: [requisitions[0]]});
+    httpBackend.expect('GET',
+        '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
     getDialogCallback()(true);
 
@@ -175,7 +186,8 @@ describe('ConvertToOrderListController', function () {
 
   it('should give error message if convert to order fails for some reason', function () {
     httpBackend.expect('POST', '/orders.json').respond(400);
-    httpBackend.expect('GET', '/requisitions-for-convert-to-order.json?page=1&searchType=all').respond({rnr_list: [requisitions[0]]});
+    httpBackend.expect('GET',
+        '/requisitions-for-convert-to-order.json?page=1&searchType=all&sortBy=submittedDate&sortDirection=asc').respond({rnr_list: [requisitions[0]]});
 
     getDialogCallback()(true);
 
@@ -192,5 +204,10 @@ describe('ConvertToOrderListController', function () {
 
     httpBackend.verifyNoOutstandingExpectation();
   });
+
+  it('should set sortOptions', function () {
+    expect(scope.sortOptions).toEqual({ fields: ['submittedDate'], directions: ['asc'] });
+  });
+
 });
 

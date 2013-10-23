@@ -62,10 +62,8 @@ import static org.openlmis.rnr.domain.RegimenLineItem.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -187,11 +185,15 @@ public class RequisitionServiceTest {
     Rnr rnr = spyRequisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, false);
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
+    verify(processingScheduleService).getPeriodById(PERIOD.getId());
     verify(requisitionRepository).insert(any(Rnr.class));
     verify(requisitionRepository).logStatusChange(any(Rnr.class));
     verify(regimenColumnService).getRegimenTemplateByProgramId(PROGRAM.getId());
 
     assertThat(rnr, is(spyRequisition));
+    assertThat(rnr.getPeriod().getId(), is(PERIOD.getId()));
+    assertThat(rnr.getPeriod().getStartDate(), is(PERIOD.getStartDate()));
+    assertThat(rnr.getPeriod().getEndDate(), is(PERIOD.getEndDate()));
   }
 
   @Test
@@ -1063,6 +1065,11 @@ public class RequisitionServiceTest {
     whenNew(Rnr.class).withAnyArguments().thenReturn(requisition);
     Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
+    when(requisitionRepository.getById(requisition.getId())).thenReturn(requisition);
+    when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
+    when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
+
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, false);
 
     verify(requisitionEventService).notifyForStatusChange(requisition);
@@ -1142,29 +1149,37 @@ public class RequisitionServiceTest {
   @Test
   public void shouldReleaseRequisitionAsOrder() throws Exception {
     when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
-    final Rnr rnr = spy(authorizedRnr);
-    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(rnr);
-    List<Rnr> rnrList = new ArrayList<Rnr>() {{
-      add(rnr);
+    final Rnr requisition = spy(authorizedRnr);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(requisition);
+    List<Rnr> requisitionList = new ArrayList<Rnr>() {{
+      add(requisition);
     }};
 
-    requisitionService.releaseRequisitionsAsOrder(rnrList, USER_ID);
+    when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
+    when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
 
-    verify(rnr).convertToOrder(USER_ID);
+    requisitionService.releaseRequisitionsAsOrder(requisitionList, USER_ID);
+
+    verify(requisition).convertToOrder(USER_ID);
   }
 
   @Test
   public void shouldNotifyStatusChangeToReleased() throws Exception {
     when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
-    final Rnr rnr = spy(authorizedRnr);
-    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(rnr);
-    List<Rnr> rnrList = new ArrayList<Rnr>() {{
-      add(rnr);
+    final Rnr requisition = spy(authorizedRnr);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(requisition);
+    List<Rnr> requisitionList = new ArrayList<Rnr>() {{
+      add(requisition);
     }};
 
-    requisitionService.releaseRequisitionsAsOrder(rnrList, USER_ID);
+    when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
+    when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
 
-    verify(requisitionEventService).notifyForStatusChange(rnr);
+    requisitionService.releaseRequisitionsAsOrder(requisitionList, USER_ID);
+
+    verify(requisitionEventService).notifyForStatusChange(requisition);
   }
 
 
@@ -1263,18 +1278,23 @@ public class RequisitionServiceTest {
     String searchVal = "test";
     Integer pageNumber = 1;
     Integer pageSize = 3;
+    String sortBy = "sortBy";
+    String sortDirection = "asc";
 
     Rnr rnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(make(a(defaultRnr)), Right.CONVERT_TO_ORDER);
 
 
     List<Rnr> filteredRnrs = Arrays.asList(rnr);
 
-    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER)).thenReturn(filteredRnrs);
+    when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(filteredRnrs);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, 6, 1l, Right.CONVERT_TO_ORDER);
+    List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
+      pageNumber, 6, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
-    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER);
+    verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
     assertThat(rnrList, is(filteredRnrs));
   }
 
@@ -1283,12 +1303,18 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.page.not.found");
 
-    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "program";
+    requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l,
+      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
   public void shouldReturnEmptyListInCaseNotRequisitionsExistAndPage1Requested() throws Exception {
-    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 1, 0, 1l, Right.CONVERT_TO_ORDER);
+    String sortDirection = "asc";
+    String sortBy = "program";
+    List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal",
+      1, 0, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(0));
   }
@@ -1298,6 +1324,8 @@ public class RequisitionServiceTest {
 
     int numberOfApprovedRequisitions = 5;
     String searchType = "searchType";
+    String sortDirection = "asc";
+    String sortBy = "program";
     String searchVal = "search";
     when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
@@ -1314,11 +1342,15 @@ public class RequisitionServiceTest {
     int numberOfApprovedRequisitions = 6;
     String searchType = "searchType";
     String searchVal = "search";
-    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal,  1l, Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
+    String sortDirection = "asc";
+    String sortBy = "program";
+    when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
+      Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
-    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal,  1l, Right.CONVERT_TO_ORDER);
+    Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
+      Right.CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }

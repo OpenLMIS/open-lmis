@@ -11,10 +11,9 @@
 package org.openlmis.functional;
 
 
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -52,7 +50,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", "openLmis", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
@@ -211,13 +209,13 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(5000);
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
-    ((JavascriptExecutor) testWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
+    ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
   }
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"storeincharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+      {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
 

@@ -42,6 +42,8 @@ dependencies {
     }
 }
 
+String connectionString = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
+
 test {
     exclude '**/org/openlmis/functional/*.*'
 }
@@ -53,7 +55,7 @@ task buildOpenLmis(type: GradleBuild) {
 
 task webservicetest(type: Test) {
     useTestNG() {
-        systemProperties['dburl'] = "$dburl"
+        systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = "$baseurl"
 
         suites 'src/test/java/org/openlmis/functional/testng-webservicetest.xml'

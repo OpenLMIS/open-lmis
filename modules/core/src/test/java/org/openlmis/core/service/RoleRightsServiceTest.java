@@ -1,5 +1,6 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *  
@@ -80,6 +81,7 @@ public class RoleRightsServiceTest {
             VIEW_ORDER,
             CONFIGURE_EDI,
             FACILITY_FILL_SHIPMENT,
+            MANAGE_POD,
             ACCESS_ILS_GATEWAY,
             MANAGE_PRODUCT_ALLOWED_FOR_FACILITY,
             MANAGE_SETTING,
@@ -230,5 +232,20 @@ public class RoleRightsServiceTest {
     assertThat(allRolesMap.get(RightType.ADMIN.name()).size(), is(1));
     assertThat(allRolesMap.get(RightType.REQUISITION.name()).size(), is(1));
     assertThat(allRolesMap.get(RightType.ALLOCATION.name()).size(), is(2));
+  }
+
+
+  @Test
+  public void shouldGetRightsForUserAndWarehouse() {
+    Set<Right> expectedRights = new HashSet<>();
+    Long userId = 1l;
+    Long warehouseId = 2l;
+    when(roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId)).thenReturn(expectedRights);
+
+    Set<Right> rights = roleRightsService.getRightsForUserAndWarehouse(userId, warehouseId);
+
+    assertThat(rights, is(expectedRights));
+    verify(roleRightsRepository).getRightsForUserAndWarehouse(userId, warehouseId);
+
   }
 }

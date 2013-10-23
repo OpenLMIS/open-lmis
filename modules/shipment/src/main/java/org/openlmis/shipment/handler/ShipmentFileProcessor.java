@@ -12,12 +12,12 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.order.dto.ShipmentLineItemDTO;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.ShipmentLineItemTransformer;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
-import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
@@ -82,7 +82,7 @@ public class ShipmentFileProcessor {
     Date creationDate = new Date(attributes.creationTime().toMillis());
     Set<Long> orderIds = new HashSet<>();
 
-    ShipmentFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
+    EDIFileTemplate shipmentFileTemplate = shipmentFileTemplateService.get();
 
     boolean successfullyProcessed = true;
     try (ICsvListReader listReader = new CsvListReader(new FileReader(shipmentFile), STANDARD_PREFERENCE)) {
@@ -101,12 +101,12 @@ public class ShipmentFileProcessor {
 
   @Transactional
   public void processShipmentLineItem(ICsvListReader listReader,
-                                      ShipmentFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
+                                      EDIFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
     boolean status = true;
 
-    List<ShipmentFileColumn> shipmentFileColumns = shipmentFileTemplate.getShipmentFileColumns();
+    List<EDIFileColumn> shipmentFileColumns = (List<EDIFileColumn>) shipmentFileTemplate.getColumns();
 
-    Collection<ShipmentFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
+    Collection<EDIFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
 
     String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
     String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
@@ -128,7 +128,7 @@ public class ShipmentFileProcessor {
     if (!status) {
       throw new DataException("shipment.file.error");
     }
-    if(orderSet.size() == 0) {
+    if (orderSet.size() == 0) {
       throw new DataException("mandatory.field.missing");
     }
   }
@@ -180,20 +180,20 @@ public class ShipmentFileProcessor {
   }
 
 
-  private Collection<ShipmentFileColumn> filterIncludedColumns(List<ShipmentFileColumn> shipmentFileColumns) {
+  private Collection<EDIFileColumn> filterIncludedColumns(List<EDIFileColumn> shipmentFileColumns) {
     return select(shipmentFileColumns, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        return ((ShipmentFileColumn) o).getInclude();
+        return ((EDIFileColumn) o).getInclude();
       }
     });
   }
 
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<ShipmentFileColumn> shipmentFileColumns) {
+  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<EDIFileColumn> shipmentFileColumns) {
 
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
       Integer position = shipmentFileColumn.getPosition();
       String name = shipmentFileColumn.getName();
       try {
@@ -209,15 +209,15 @@ public class ShipmentFileProcessor {
     return dto;
   }
 
-  private void ignoreFirstLineIfHeadersArePresent(ShipmentFileTemplate shipmentFileTemplate,
+  private void ignoreFirstLineIfHeadersArePresent(EDIFileTemplate shipmentFileTemplate,
                                                   ICsvListReader listReader) throws IOException {
-    if (shipmentFileTemplate.getShipmentConfiguration().isHeaderInFile()) {
+    if (shipmentFileTemplate.getConfiguration().isHeaderInFile()) {
       listReader.getHeader(true);
     }
   }
 
-  private String getFormatForField(String fieldName, List<ShipmentFileColumn> shipmentFileColumns) {
-    for (ShipmentFileColumn shipmentFileColumn : shipmentFileColumns) {
+  private String getFormatForField(String fieldName, List<EDIFileColumn> shipmentFileColumns) {
+    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
       if (shipmentFileColumn.getName().equals(fieldName)) {
         return shipmentFileColumn.getDatePattern();
       }

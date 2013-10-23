@@ -8,7 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-import com.eriwen.gradle.js.JsMinifier
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.Exec
@@ -23,9 +22,9 @@ task jsHint(type: GruntTask) {
     gruntArgs = "jshint"
 }
 
-task csslint(type: GruntTask) {
+task lesslint(type: GruntTask) {
     workingDir '.'
-    gruntArgs = "csslint"
+    gruntArgs = "lesslint --force"
 }
 
 task uglify(type: GruntTask) {
@@ -75,8 +74,6 @@ javascript.source {
     }
 }
 
-def separator = File.separator
-
 war {
     from("src/main/webapp/public/minJs/") {
         into "public/js/"
@@ -99,40 +96,17 @@ tasks.withType(War) {
     }
 }
 
-task minifyJSFiles() {
-    doLast {
-        println "Minifying Javascript files..."
-        int i = 0;
-        javascript.source.dev.js.files.each { File file ->
-
-            def dest = new File(file.absolutePath.replace(separator+'js'+separator,separator+'minJs'+separator))
-            dest.getParentFile().mkdirs()
-            dest.createNewFile()
-            new JsMinifier().minifyJsFile(
-                    [file] as Set<File>,
-                    [] as Set<File>,
-                    dest,
-                    project.closure.compilerOptions,
-                    'QUIET', //project.closure.warningLevel,
-                    'WHITESPACE_ONLY', //project.closure.compilationLevel
-            )
-            i++
-        }
-        println "Minified " + i + " javascript files."
-    }
-}
-
 task cleanMinJs(type: Delete) {
     delete 'src/main/webapp/public/minJs/'
 }
-
-war
 
 war.doLast {
     tasks.cleanMinJs.execute()
 }
 
 build.doLast {
+    tasks.jsHint.execute()
+    tasks.lesslint.execute()
     tasks.cleanMinJs.execute()
 }
 
@@ -178,7 +152,7 @@ dependencies {
             project(path: ':modules:shipment', configuration: 'testFixtures'),
             project(path: ':modules:distribution', configuration: 'testFixtures'),
             project(path: ':modules:reporting', configuration: 'testFixtures'),
-            project(path :':modules:report',configuration: 'testFixtures')
+            project(':modules:report')
 }
 
 task jettyDaemon(dependsOn: war) {
@@ -231,11 +205,6 @@ task compileLess << {
 task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
-
-//task JasmineRun(type: Test) {
-//    include '**/org/openlmis/jasmine/*.*'
-//    useTestNG()
-//}
 
 compileJava.dependsOn compileLess
 

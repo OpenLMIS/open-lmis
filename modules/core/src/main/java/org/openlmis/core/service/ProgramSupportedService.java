@@ -133,4 +133,8 @@ public class ProgramSupportedService {
       logger.error("Failed to generate program supported event feed", e);
     }
   }
+
+  public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
+    return repository.getActiveByFacilityId(facilityId);
+  }
 }

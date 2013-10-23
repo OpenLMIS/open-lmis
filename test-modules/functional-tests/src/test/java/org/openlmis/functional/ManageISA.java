@@ -65,13 +65,13 @@ public class ManageISA extends TestCaseHelper {
       product = map.get("product").toString();
       productName = map.get("productName").toString();
       category = map.get("category").toString();
-      whoratio = map.get("whoratio").toString();
-      dosesperyear = map.get("dosesperyear").toString();
+      whoratio = map.get("whoRatio").toString();
+      dosesperyear = map.get("dosesPerYear").toString();
       wastageFactor = map.get("wastageFactor").toString();
-      bufferpercentage = map.get("bufferpercentage").toString();
-      minimumvalue = map.get("minimumvalue").toString();
-      maximumvalue = map.get("maximumvalue").toString();
-      adjustmentvalue = map.get("adjustmentvalue").toString();
+      bufferpercentage = map.get("bufferPercentage").toString();
+      minimumvalue = map.get("minimumValue").toString();
+      maximumvalue = map.get("maximumValue").toString();
+      adjustmentvalue = map.get("adjustmentValue").toString();
 
       setupProgramProductTestDataWithCategories(product, productName, category, program);
       setupProgramProductISA(program, product, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);

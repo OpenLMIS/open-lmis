@@ -16,10 +16,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.EDIConfiguration;
+import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.shipment.domain.ShipmentConfiguration;
-import org.openlmis.shipment.domain.ShipmentFileColumn;
-import org.openlmis.shipment.domain.ShipmentFileTemplate;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.ResponseEntity;
@@ -58,22 +58,22 @@ public class ShipmentFileTemplateControllerTest {
   @Test
   public void shouldGetShipmentFileTemplate() {
 
-    ShipmentFileTemplate expectedShipmentFileTemplate = new ShipmentFileTemplate();
+    EDIFileTemplate expectedShipmentFileTemplate = new EDIFileTemplate();
 
     when(shipmentFileTemplateService.get()).thenReturn(expectedShipmentFileTemplate);
 
     ResponseEntity<OpenLmisResponse> response = controller.get();
 
-    assertThat((ShipmentFileTemplate) response.getBody().getData().get("shipment_template"), is(expectedShipmentFileTemplate));
+    assertThat((EDIFileTemplate) response.getBody().getData().get("shipment_template"), is(expectedShipmentFileTemplate));
     verify(shipmentFileTemplateService).get();
   }
 
   @Test
   public void shouldUpdateShipmentFileTemplate() {
-    ShipmentFileColumn shipmentFileColumn1 = new ShipmentFileColumn("name", "Label", 1, false, true, "dd/mm/yy");
-    ShipmentFileColumn shipmentFileColumn2 = new ShipmentFileColumn("name", "Label", 2, false, true, "dd/mm/yy");
-    ShipmentFileTemplate shipmentFileTemplate = new ShipmentFileTemplate(
-      new ShipmentConfiguration(true),
+    EDIFileColumn shipmentFileColumn1 = new EDIFileColumn("name", "Label", false, true, 1, "dd/mm/yy");
+    EDIFileColumn shipmentFileColumn2 = new EDIFileColumn("name", "Label", false, true, 2, "dd/mm/yy");
+    EDIFileTemplate shipmentFileTemplate = new EDIFileTemplate(
+      new EDIConfiguration(true),
       asList(shipmentFileColumn1, shipmentFileColumn2));
 
 
@@ -81,8 +81,8 @@ public class ShipmentFileTemplateControllerTest {
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(response.getBody().getSuccessMsg(), is("shipment.file.configuration.success"));
-    assertThat(shipmentFileTemplate.getShipmentConfiguration().getModifiedBy(), is(userId));
-    for (ShipmentFileColumn column : shipmentFileTemplate.getShipmentFileColumns()) {
+    assertThat(shipmentFileTemplate.getConfiguration().getModifiedBy(), is(userId));
+    for (EDIFileColumn column : shipmentFileTemplate.getColumns()) {
       assertThat(column.getModifiedBy(), is(userId));
     }
 

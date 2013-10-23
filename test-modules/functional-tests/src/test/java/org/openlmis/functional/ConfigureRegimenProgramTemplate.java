@@ -21,7 +21,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.InitiateRnRPage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.RegimenTemplateConfigPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -428,7 +431,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
-    setupTestUserRoleRightsData("200", userSIC, "openLmis", rightsList);
+    setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
@@ -436,7 +439,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
   @AfterMethod(groups = "admin")
@@ -471,7 +474,7 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV","Admin123", "storeincharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV","Admin123", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
 
 

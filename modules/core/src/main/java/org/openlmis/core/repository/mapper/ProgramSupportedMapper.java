@@ -43,9 +43,15 @@ public interface ProgramSupportedMapper {
   })
   List<ProgramSupported> getAllByFacilityId(Long facilityId);
 
-  @Update("UPDATE programs_supported set active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
-    "where facilityId=#{facilityId} AND programId=#{program.id}")
+  @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
+    "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
     //TODO use COALESCE for modifiedDate
   void update(ProgramSupported programSupported);
 
+  @Select({"SELECT P.code FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
+    "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
+  @Results({
+    @Result(property = "program.code", column = "code")
+  })
+  List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
 }

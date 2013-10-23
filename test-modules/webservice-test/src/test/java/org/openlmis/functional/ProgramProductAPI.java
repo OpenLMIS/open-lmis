@@ -34,7 +34,7 @@ public class ProgramProductAPI extends TestCaseHelper {
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
     super.setup();
-    super.setupDataExternalVendor(true);
+    super.setupTestData(true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -51,7 +51,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     String facilityType = "lvl3_hospital";
 
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, "Admin123");
 
     assertTrue("Actual Response entity : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
@@ -70,7 +70,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     String programCode = "hiv";
     String facilityType = "LVL3_HOSPITAL";
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, "Admin123");
 
     assertTrue("Actual Response entity : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
@@ -88,7 +88,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     String programCode = "HIV";
     String facilityType = "testing";
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode + "&facilityTypeCode=" + facilityType + "", GET, commTrackUser, "Admin123");
 
 
     List<String> productDetails = dbWrapper.getProductDetailsForProgramAndFacilityType(programCode, facilityType);
@@ -103,7 +103,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     client.createContext();
     String programCode = "HIV";
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
     assertTrue("Actual Response entity : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
         "\"productName\":\"antibiotic\",\"description\":\"TDF/FTC/EFV\",\"unit\":10,\"category\":\"Antibiotics\"}"));
@@ -120,7 +120,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     String programCode = "HIV";
     dbWrapper.deleteCategoryFromProducts();
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 
     assertTrue("Actual Response entity : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"programCode\":\"" + programCode.toUpperCase() + "\",\"programName\":\"HIV\",\"productCode\":\"P10\"," +
@@ -136,12 +136,10 @@ public class ProgramProductAPI extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
     String programCode = "HIV";
-    String productCode1 = "P10";
-    String productCode2 = "P11";
-    dbWrapper.deleteDescriptionFromProducts(productCode1);
-    dbWrapper.deleteDescriptionFromProducts(productCode2);
+    dbWrapper.deleteDescriptionFromProducts();
+    dbWrapper.deleteDescriptionFromProducts();
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 
     assertTrue("Actual Response entity : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"programCode\":\"HIV\",\"programName\":\"HIV\",\"productCode\":\"P11\"," +
@@ -158,7 +156,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     client.createContext();
     String programCode = "testing123";
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
     List<String> productDetails = dbWrapper.getProductDetailsForProgram(programCode);
     assertTrue("0 records should show up", productDetails.size() == 0);
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid program code\"}"));
@@ -173,7 +171,7 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     dbWrapper.updateActiveStatusOfProduct(productCode, "false");
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"" + productCode));
   }
@@ -187,7 +185,7 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     dbWrapper.updateActiveStatusOfProgramProduct(productCode, programCode, "false");
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"" + productCode));
   }
@@ -198,7 +196,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     client.createContext();
     String programCode = "HIVtestingtestingtestingHIVtestingtestingtestingHIVtestingtestingtestingHIVtestingtestingtesting";
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, commTrackUser, "Admin123");
 
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Invalid program code\"}"));
   }
@@ -208,7 +206,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=", GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=", GET, commTrackUser, "Admin123");
 
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Invalid program code"));
   }
@@ -218,7 +216,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    ResponseEntity responseEntity = client.SendJSON("", URL, GET, commTrackUser, dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL, GET, commTrackUser, "Admin123");
 
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("{\"error\":\"Required String parameter 'programCode' is not present\"}"));
   }
@@ -243,7 +241,7 @@ public class ProgramProductAPI extends TestCaseHelper {
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders("", URL + "?programCode=" + programCode, GET, "", "");
 
-    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus()==401);
+    assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus() == 401);
   }
 
   @Test(groups = {"webservice"})
@@ -252,7 +250,7 @@ public class ProgramProductAPI extends TestCaseHelper {
     client.createContext();
     String programCode = "HIV";
 
-    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, "testing", dbWrapper.getAuthToken(commTrackUser));
+    ResponseEntity responseEntity = client.SendJSON("", URL + "?programCode=" + programCode, GET, "testing", "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
   }
 

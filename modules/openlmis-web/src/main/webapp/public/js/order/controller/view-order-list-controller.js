@@ -21,8 +21,6 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
       $scope.orders = data.orders || [];
       $scope.pageSize = data.pageSize;
       $scope.numberOfPages = data.numberOfPages || 1;
-    }, function (data) {
-      console.log(data);
     });
   }
 
@@ -65,7 +63,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 }
 
 var resizeWindow = function(){
-  setTimeout('$(window).trigger("resize")',700);
-}
+  $(window).trigger("resize");
+};
 
-resizeWindow();
+setTimeout(resizeWindow(), 700);

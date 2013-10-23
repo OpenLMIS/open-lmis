@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.VendorService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Agent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -47,17 +47,19 @@ public class RestAgentServiceTest {
   RestAgentService restAgentService;
 
   @Mock
-  private VendorService vendorService;
+  private UserService userService;
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   Principal principal;
+  private User user;
 
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
     when(principal.getName()).thenReturn("vendor name");
+    user = new User(2l, principal.getName());
   }
 
   @Test
@@ -69,7 +71,7 @@ public class RestAgentServiceTest {
     Facility facility = mock(Facility.class);
     when(facilityService.getFacilityWithReferenceDataForCode(agent.getParentFacilityCode())).thenReturn(baseFacility);
     whenNew(Facility.class).withNoArguments().thenReturn(facility);
-    when(vendorService.getByName(principal.getName())).thenReturn(new Vendor());
+    when(userService.getByUserName(user.getUserName())).thenReturn(user);
     Date currentTimeStamp = mock(Date.class);
     whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
 
@@ -105,7 +107,7 @@ public class RestAgentServiceTest {
     chwFacility.setEnabled(true);
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
-    when(vendorService.getByName(principal.getName())).thenReturn(new Vendor());
+    when(userService.getByUserName(user.getUserName())).thenReturn(user);
 
     restAgentService.update(agent, principal.getName());
 

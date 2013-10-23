@@ -13,14 +13,13 @@ package org.openlmis.order.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.EDIFileColumn;
 
 @Data
 @NoArgsConstructor
-public class OrderFileColumn extends BaseModel{
+public class OrderFileColumn extends EDIFileColumn{
 
-  private String dataFieldLabel;
   private Boolean openLmisField;
-  private int position;
   private String columnLabel;
   private String format;
   private String keyPath;

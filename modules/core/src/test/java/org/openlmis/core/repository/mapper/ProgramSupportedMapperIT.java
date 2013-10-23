@@ -30,8 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
-import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
-import static org.openlmis.core.builder.ProgramBuilder.programCode;
+import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 
 @Category(IntegrationTests.class)
@@ -42,6 +41,7 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 public class ProgramSupportedMapperIT {
 
   public static final String YELLOW_FEVER = "YELL_FVR";
+  public static final String GREEN_FEVER = "green_fever";
 
   @Autowired
   private ProgramMapper programMapper;
@@ -135,4 +135,38 @@ public class ProgramSupportedMapperIT {
 
     assertThat(programSupportedFromDb.getActive(), is(Boolean.FALSE));
   }
+
+  @Test
+  public void shouldGetAllActiveProgramsSupportedForFacility() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+    Program program2 = make(a(defaultProgram, with(programCode, GREEN_FEVER)));
+    programMapper.insert(program2);
+
+    Program inactiveProgram = make(a(defaultProgram, with(programCode, "globallyInactiveProgram"), with(programActive, false)));
+    programMapper.insert(inactiveProgram);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program)));
+    ProgramSupported programSupported2 = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, program2),with(isActive,false)));
+    ProgramSupported inactiveProgramSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()),
+      with(supportedProgram, inactiveProgram),with(isActive,true)));
+
+    programSupportedMapper.insert(programSupported);
+    programSupportedMapper.insert(programSupported2);
+    programSupportedMapper.insert(inactiveProgramSupported);
+
+    List<ProgramSupported> programsSupported = programSupportedMapper.getActiveProgramsByFacilityId(facility.getId());
+
+    assertThat(programsSupported.size(), is(1));
+    assertThat(programsSupported.get(0).getProgram().getCode(), is(programSupported.getProgram().getCode()));
+  }
+
 }

@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, warehouses) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
   $scope.user = user || {homeFacilityRoles: []};
   $scope.supervisoryNodes = supervisoryNodes;
-  $scope.warehouses = warehouses;
+  $scope.warehouses = enabledWarehouses;
   $scope.deliveryZones = deliveryZones;
   $scope.$parent.userId = null;
   $scope.message = "";
@@ -37,7 +37,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     });
   }
 
-
   function validateHomeFacilityRoles(user) {
     if (!user.homeFacilityRoles) {
       return true;
@@ -59,7 +58,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
+        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
+      {
         valid = false;
         return false;
       }
@@ -74,7 +75,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.fulfillmentRoles, function (index, roleAssignment) {
-      if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length == 0) {
+      if (!roleAssignment.facilityId || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
         valid = false;
         return false;
       }
@@ -262,11 +263,6 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.getMessage = function (key) {
     return messageService.get(key);
   };
- /* $scope.expandAll = function () {
-    $('.accordion-body').attr('collapse', false);
-    $('.accordion-body').removeClass('collapse');
-    $('.accordion-body').setStyle('height', 'auto');
-  }*/
 
   var restoreSuccessFunc = function (data) {
     clearErrorAndSetMessage("msg.user.restore.success");
@@ -341,12 +337,12 @@ UserController.resolve = {
     return deferred.promise;
   },
 
-  warehouses: function ($q, Warehouse, $timeout) {
+  enabledWarehouses: function ($q, EnabledWarehouse, $timeout) {
     var deferred = $q.defer();
 
     $timeout(function () {
-      Warehouse.get({}, function (data) {
-        deferred.resolve(data.warehouses);
+      EnabledWarehouse.get({}, function (data) {
+        deferred.resolve(data.enabledWarehouses);
       }, function () {
       });
     }, 100);
@@ -356,3 +352,45 @@ UserController.resolve = {
 
 };
 
+function expandCollapse(trigger){
+  var accordion = $('.accordion');
+	if(trigger == 'expand'){
+		accordion.find('.accordion-section').each(function() {
+      $(this).find('.accordion-body').slideDown();
+      $(this).find('b').text('-');
+    });
+    var offsetTop = accordion.offset().top;
+    $('body, html').animate({
+        scrollTop: utils.parseIntWithBaseTen(offsetTop)+'px'
+    });
+	}else{
+		accordion.find('.accordion-section').each(function() {
+      $(this).find('.accordion-body').slideUp();
+      $(this).find('b').text('+');
+    });
+	}
+}
+
+function expandCollapseToggle(element){
+  $(element).parents('.accordion-section').siblings('.accordion-section').each(function(){
+    $(this).find('.accordion-body').slideUp();
+    $(this).find('.accordion-heading b').text('+');
+  });
+	$(element).siblings('.accordion-body').stop().slideToggle(function(){
+    if($(element).siblings('.accordion-body').is(':visible')){
+      $(element).find('b').text('-');
+    }else{
+      $(element).find('b').text('+');
+    }
+	});
+  var offsetTop = $(element).offset().top;
+  $('body, html').animate({
+    scrollTop: utils.parseIntWithBaseTen(offsetTop)+'px'
+  });
+}
+
+function init(){
+  expandCollapseToggle($('.accordion-section:first .heading'));
+}
+
+setTimeout(init,600);

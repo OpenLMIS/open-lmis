@@ -20,8 +20,8 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 import static java.math.BigDecimal.ROUND_HALF_UP;
@@ -153,7 +153,7 @@ public class ApprovePage extends RequisitionPage {
     String facilityText = testWebDriver.getText(facilityLabel);
     assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
 
-    assertEquals(reportingPeriodInitRnRScreen.getText().trim(), periodDetails.trim());
+    assertEquals(periodDetails.trim(), reportingPeriodInitRnRScreen.getText().trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
     assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
@@ -186,13 +186,13 @@ public class ApprovePage extends RequisitionPage {
   public void verifyApprovedQuantityApprovedFromLowerHierarchy(String approvedQuantity) {
     testWebDriver.waitForElementToAppear(quantityApproved);
     String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
-    assertEquals(actualApproveQuantity, approvedQuantity);
+    assertEquals(approvedQuantity, actualApproveQuantity);
   }
 
   public void editApproveQuantityAndVerifyTotalCost(String approvedQuantity) {
     editApproveQuantity(approvedQuantity);
     remarks.click();
-    assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
+    assertEquals(parseInt(approvedQuantity) / 10, packsToShip.getText().trim());
 
     int packsToShip = parseInt(ApprovePage.packsToShip.getText().trim());
     float pricePerPack = parseFloat(ApprovePage.pricePerPack.getText().substring(1));
@@ -216,7 +216,7 @@ public class ApprovePage extends RequisitionPage {
     pricePerPack = parseFloat(ApprovePage.pricePerPack.getText().substring(1));
 
     lineItemCost = parseFloat(ApprovePage.lineItemCost.getText().substring(1));
-    assertEquals(packsToShip, parseInt(approvedQuantity) / 10);
+    assertEquals(parseInt(approvedQuantity) / 10, packsToShip);
 
     BigDecimal costNonFullSupply = new BigDecimal((packsToShip * pricePerPack)).setScale(2, ROUND_HALF_UP);
     assertEquals(costNonFullSupply, new BigDecimal(lineItemCost).setScale(2, ROUND_HALF_UP));
@@ -283,7 +283,7 @@ public class ApprovePage extends RequisitionPage {
   public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {
     editApproveQuantity(approvedQuantity);
     remarks.click();
-    assertEquals(packsToShip.getText().trim(), parseInt(approvedQuantity) / 10);
+    assertEquals(parseInt(approvedQuantity) / 10, packsToShip.getText().trim());
 
     BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) * parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
     assertEquals(String.valueOf(cost), lineItemCost.getText().substring(1));
@@ -292,7 +292,7 @@ public class ApprovePage extends RequisitionPage {
 
 
     BigDecimal totalOverAllCost = new BigDecimal(parseFloat(totalCostFullSupplyLineItem)).setScale(2, ROUND_HALF_UP);
-    assertEquals(totalRnrCost.getText().substring(1).trim(), String.valueOf(totalOverAllCost));
+    assertEquals(String.valueOf(totalOverAllCost), totalRnrCost.getText().substring(1).trim());
 
 
   }

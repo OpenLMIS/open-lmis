@@ -51,7 +51,7 @@ dependencies {
 
 }
 
-String connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/$dbName"
+String connectionString = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
 connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
 
 

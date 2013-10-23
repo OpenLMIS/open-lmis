@@ -1,11 +1,12 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
 package org.openlmis.order.repository.mapper;
 
 import org.junit.Before;
@@ -113,9 +114,7 @@ public class OrderMapperIT {
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     mapper.insert(order);
-    List<Long> orderIds = new ArrayList();
-    orderIds.add(order.getId());
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", orderIds);
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getId());
     resultSet.next();
     assertThat(resultSet.getLong("id"), is(order.getId()));
   }
@@ -168,7 +167,7 @@ public class OrderMapperIT {
 
     mapper.updateShipmentAndStatus(order.getId(), PACKED, shipmentFileInfo.getId());
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE rnrId = ?", asList(order.getRnr().getId()));
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM orders WHERE id = ?", order.getRnr().getId());
 
     resultSet.next();
 
@@ -249,7 +248,7 @@ public class OrderMapperIT {
       roleRightsMapper.createRoleRight(role, right);
     }
 
-    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", asList(userId, facility.getId(), role.getId()));
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId,facilityId,roleId) values (?,?,?)", userId, facility.getId(), role.getId());
     return userId;
   }
 
