@@ -145,16 +145,16 @@
                                 <td style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
                                 <td style="width:30%" sortable="product"  >{{ row.product }}</td>
                                 <td class="number" style="width:80px" sortable="unit"  >{{ row.unit }}</td>
-                                <td class="number" style="..." sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
-                                <td class="number" stype="..." sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
+                                <td class="number" style="{{ row.productIndex == 0 && row.err_open_balance == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
+                                <td class="number" style="{{ row.productIndex == 0 && row.err_qty_received == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
                                 <td class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.productIndex == 0 && (row.totalQuantityDispensed | number) || ''}}</td>
                                 <td class="number" style="width:80px" sortable="adjustments"  >{{ row.productIndex == 0 && (row.adjustments | number) || ''}}</td>
-                                <td class="number" style="width:80px" sortable="physicalCount"  >{{ row.productIndex == 0 && (row.physicalCount | number) || '' }}</td>
+                                <td class="number" style="{{ row.productIndex == 0 && row.err_qty_stockinhand == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="physicalCount"  >{{ row.productIndex == 0 && (row.physicalCount | number) || '' }}</td>
                                 <td class="number" style="width:80px" sortable="adjustedAMC"  >{{ row.productIndex == 0 && (row.adjustedAMC | number) || ''}}</td>
                                 <td class="number" style="width:80px" sortable="newEOP"  >{{ row.productIndex == 0 && (row.newEOP | number) || ''}}</td>
-                                <td class="number" style="width:80px" sortable="orderQuantity"  >{{ row.productIndex == 0 && (row.orderQuantity | number) || ''}}</td>
+                                <td class="number" style="{{ row.productIndex == 0 && row.err_qty_required == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="orderQuantity"  >{{ row.productIndex == 0 && (row.orderQuantity | number) || ''}}</td>
                                 <td class="number" style="width:80px" sortable="quantitySupplied"  >{{ row.quantitySupplied | number }}</td>
-                            </tr>
+                               </tr>
                             </tbody>
                         </table>
                     </div>
