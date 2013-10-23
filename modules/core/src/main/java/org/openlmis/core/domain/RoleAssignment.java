@@ -28,7 +28,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class RoleAssignment extends BaseModel{
+public class RoleAssignment extends BaseModel {
   private Long userId;
   private List<Long> roleIds = new ArrayList<>();
 
@@ -64,7 +64,9 @@ public class RoleAssignment extends BaseModel{
     roleIds = roleIds.replace("{", "").replace("}", "");
     String[] roleIdsArray = roleIds.split(",");
     for (String roleId : roleIdsArray) {
-      this.roleIds.add(Long.parseLong(roleId));
+      Long id = Long.parseLong(roleId);
+      if (!this.roleIds.contains(id))
+        this.roleIds.add(id);
     }
   }
 
