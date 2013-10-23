@@ -38,7 +38,7 @@ describe('CreateFullSupplyController', function () {
     };
     ctrl = controller(CreateFullSupplyController, {$scope:scope, $location:location, $routeParams:routeParams, localStorageService:localStorageService});
 
-    scope.allTypes = [
+    scope.lossesAndAdjustmentTypes = [
       {"name":"some name"},
       {"name":"some other name"}
     ];

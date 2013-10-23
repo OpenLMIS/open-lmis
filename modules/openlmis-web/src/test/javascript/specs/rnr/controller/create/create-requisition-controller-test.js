@@ -113,7 +113,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should get lossesAndAdjustments types', function () {
-    expect(lossesAndAdjustmentTypes).toEqual(scope.allTypes);
+    expect(lossesAndAdjustmentTypes).toEqual(scope.lossesAndAdjustmentTypes);
   });
 
   it('should get facility approved products', function () {
