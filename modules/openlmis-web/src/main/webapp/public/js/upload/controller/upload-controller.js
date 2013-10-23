@@ -52,7 +52,7 @@ function UploadController($scope, SupportedUploads, messageService) {
   }
 
   var failureHandler = function (response) {
-    var errorMessage
+    var errorMessage;
     if (response.responseText.length)
       errorMessage = JSON.parse(response.responseText).error;
     errorMessage = messageService.get('error.upload.network.server.down');
