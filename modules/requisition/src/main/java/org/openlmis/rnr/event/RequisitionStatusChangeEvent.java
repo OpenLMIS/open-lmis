@@ -20,9 +20,12 @@ import java.util.UUID;
 
 
 public class RequisitionStatusChangeEvent extends Event {
+  static final String FEED_TITLE = "Requisition Status";
+  static final String FEED_CATEGORY = "requisitionStatus";
 
   public RequisitionStatusChangeEvent(Rnr requisition) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), "Requisition", DateTime.now(), "", RnrFeedDTO.populate(requisition).getSerializedContents(), "requisition");
+    super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",
+            new RnrFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
   }
 
 }

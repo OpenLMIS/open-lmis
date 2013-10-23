@@ -12,6 +12,7 @@ package org.openlmis.rnr.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Delegate;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.dto.BaseFeedDTO;
 import org.openlmis.rnr.domain.Rnr;
@@ -22,14 +23,18 @@ import org.openlmis.rnr.domain.RnrStatus;
 @EqualsAndHashCode(callSuper = false)
 public class RnrFeedDTO extends BaseFeedDTO {
   private Long requisitionId;
-  private Long facilityId;
-  private Long programId;
-  private Long periodId;
   private RnrStatus requisitionStatus;
+  private boolean emergency;
+  private Long startDate;
+  private Long endDate;
 
-  public static RnrFeedDTO populate(Rnr rnr) {
-    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus());
+  public RnrFeedDTO(Rnr rnr) {
+    this.requisitionId = rnr.getId();
+    this.requisitionStatus = rnr.getStatus();
+    this.emergency = rnr.isEmergency();
+    // TODO - Send UTC timestamps - open issue
+    if (rnr.getPeriod() == null) return;
+    this.startDate = rnr.getPeriod().getStartDate().getTime();
+    this.endDate = rnr.getPeriod().getEndDate().getTime();
   }
-
-
 }
