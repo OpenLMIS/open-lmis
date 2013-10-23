@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.SupervisoryNodeBuilder;
+import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class RoleRightsMapperIT {
   RoleRightsMapper roleRightsMapper;
 
   @Autowired
-  FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
+  private FulfillmentRoleAssignmentMapper fulfillmentRoleAssignmentMapper;
 
   @Autowired
   RoleAssignmentMapper roleAssignmentMapper;
@@ -71,6 +72,8 @@ public class RoleRightsMapperIT {
 
   @Autowired
   private SupervisoryNodeMapper supervisoryNodeMapper;
+
+
 
   @Test
   public void shouldGetAllRightsForAUserByUserId() throws Exception {
@@ -241,6 +244,23 @@ public class RoleRightsMapperIT {
 
     assertThat(rightTypeForRoleId, is(CREATE_REQUISITION.getType()));
 
+  }
+
+  @Test
+  public void shouldGetRightsForUserAndWarehouse() {
+    Role role = new Role("WareHouserole", "Warehouse Role");
+    roleRightsMapper.insertRole(role);
+    roleRightsMapper.createRoleRight(role, MANAGE_POD);
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+    fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, facility.getId(), role.getId());
+
+    Set<Right> rights = roleRightsMapper.getRightsForUserAndWarehouse(user.getId(), facility.getId());
+
+    assertThat(rights.size(), is(1));
+    assertThat(rights.contains(MANAGE_POD), is(true));
   }
 
   private Role insertRole(String name, String description) {

@@ -7,39 +7,35 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-
 package org.openlmis.pod.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 
-import java.util.List;
+public class PODLineItemTest {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class POD extends BaseModel {
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
-  private Long orderId;
-  private List<PODLineItem> podLineItems;
+  @Test
+  public void shouldThrowExceptionIfProductCodeIsEmpty(){
+    PODLineItem podLineItem = new PODLineItem(1l, null, 100);
 
-  public POD(Long id) {
-    this.id = id;
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
+
+    podLineItem.validate();
   }
 
-  public void validate() {
-    if (orderId == null || podLineItems == null) {
-      throw new DataException("error.restapi.mandatory.missing");
-    }
-    if (podLineItems == null || podLineItems.size() == 0) throw new DataException("error.restapi.mandatory.missing");
-    for (PODLineItem lineItem : podLineItems) {
-      lineItem.validate();
-      lineItem.setCreatedBy(createdBy);
-      lineItem.setModifiedBy(modifiedBy);
-    }
+  @Test
+  public void shouldThrowExceptionIfQuantityReceivedIsEmpty(){
+    PODLineItem podLineItem = new PODLineItem(1l, "P100", null);
 
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
+
+    podLineItem.validate();
   }
 }

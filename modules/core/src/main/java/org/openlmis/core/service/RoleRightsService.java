@@ -82,6 +82,10 @@ public class RoleRightsService {
     return result;
   }
 
+  public Set<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
+    return roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId);
+  }
+
   private List<Right> getSupervisoryRights(Long userId, Facility facility, Program program) {
     SupervisoryNode supervisoryNode = supervisoryNodeService.getFor(facility, program);
     if (supervisoryNode != null) {

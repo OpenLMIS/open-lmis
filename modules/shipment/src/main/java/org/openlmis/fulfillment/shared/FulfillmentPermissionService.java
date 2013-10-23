@@ -8,27 +8,25 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.pod.domain;
+package org.openlmis.fulfillment.shared;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.exception.DataException;
+import org.openlmis.core.domain.Right;
+import org.openlmis.core.service.RoleRightsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PODLineItem extends BaseModel {
+import java.util.Set;
 
-  private Long podId;
-  private String productCode;
-  private Integer quantityReceived;
+@Service
+public class FulfillmentPermissionService {
 
-  public void validate() {
-    if (StringUtils.isEmpty(productCode) || quantityReceived == null) {
-      throw new DataException("error.restapi.mandatory.missing");
-    }
+
+  @Autowired
+  private RoleRightsService roleRightsService;
+
+
+  public Boolean hasPermission(Long userId, Long facilityId, Right right) {
+    Set<Right> userRights = roleRightsService.getRightsForUserAndWarehouse(userId, facilityId);
+    return userRights.contains(right);
   }
 }
