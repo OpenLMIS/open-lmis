@@ -37,7 +37,7 @@ public class CommTrackTemplateTest extends TestCaseHelper {
     driver = new FirefoxDriver();
     driver.get("http://localhost:9091");
     super.setup();
-    super.setupDataExternalVendor(true);
+    super.setupTestData(true);
   }
 
   @AfterMethod(groups = {"webservice"})

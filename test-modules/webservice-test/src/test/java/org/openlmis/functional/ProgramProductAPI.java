@@ -34,7 +34,7 @@ public class ProgramProductAPI extends TestCaseHelper {
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
     super.setup();
-    super.setupDataExternalVendor(true);
+    super.setupTestData(true);
   }
 
   @AfterMethod(groups = {"webservice"})

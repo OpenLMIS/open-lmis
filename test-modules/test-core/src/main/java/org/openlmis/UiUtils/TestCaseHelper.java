@@ -191,7 +191,7 @@ public class TestCaseHelper {
       dbWrapper.assignRight(roleName, right[i]);
   }
 
-  public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
+  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -203,7 +203,7 @@ public class TestCaseHelper {
 
   }
 
-  public void setupDataApproverExternalVendor() throws IOException, SQLException {
+  public void setupDataRequisitionApprover() throws IOException, SQLException {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("APPROVE_REQUISITION");
     rightsList.add("CONVERT_TO_ORDER");

@@ -29,7 +29,7 @@ public class FacilityAPI extends TestCaseHelper {
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
     super.setup();
-    super.setupDataExternalVendor(true);
+    super.setupTestData(true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -75,7 +75,10 @@ public class FacilityAPI extends TestCaseHelper {
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"fc\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\":"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programsSupported\":[\"HIV\",\"ESS_MEDS\",\"VACCINES\"]"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"programsSupported\":["));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"HIV\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"ESS_MEDS\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"VACCINES\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":true"));
 
         dbWrapper.disableFacility("Village Dispensary");
@@ -84,7 +87,9 @@ public class FacilityAPI extends TestCaseHelper {
 
         dbWrapper.deleteProgramToFacilityMapping("ESS_MEDS");
         responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
-        assertTrue("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"programsSupported\":[\"HIV\",\"VACCINES\"]"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"programsSupported\":["));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"HIV\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"VACCINES\""));
 
         responseEntity = client.SendJSON("", URL + "?facilityCode=%20F10", GET, commTrackUser, "Admin123");
         assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");

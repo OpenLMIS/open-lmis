@@ -43,8 +43,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     driver = new FirefoxDriver();
     driver.get("http://localhost:9091");
     super.setup();
-    super.setupDataExternalVendor(false);
-    super.setupDataApproverExternalVendor();
+    super.setupTestData(false);
+    super.setupDataRequisitionApprover();
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -115,7 +115,28 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     assertEquals("{\"error\":\"Please provide a valid username\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+    @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+    public void testApproveRequisitionUnauthorizedAccess() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        String response = submitReport();
+        Long id = getRequisitionIdFromResponse(response);
+
+        Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+        reportFromJson.setRequisitionId(id);
+        reportFromJson.setUserId("commTrack100");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setQuantityApproved(65);
+
+        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+                "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
+                "commTrack100", "Admin123");
+        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+
+        assertEquals(401, responseEntity.getStatus());
+    }
+
+    @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionInvalidProduct() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -187,27 +208,6 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
-  }
-
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
-  public void testApproveRequisitionInValidVendor() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
-
-    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setRequisitionId(id);
-    reportFromJson.setUserId("commTrack100");
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-    reportFromJson.getProducts().get(0).setQuantityApproved(65);
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-      "commTrack100", "Admin123");
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
-    assertEquals(401, responseEntity.getStatus());
   }
 
   public String submitReport() throws Exception {
