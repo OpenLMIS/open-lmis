@@ -73,9 +73,13 @@ var RegularRnrLineItem = base2.Base.extend({
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity;
 
-    if (this.statusBeforeAuthorized()) orderQuantity =
-      isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
-    else orderQuantity = this.quantityApproved;
+    if (this.statusBeforeAuthorized()) {
+        orderQuantity =
+            isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    }
+    else {
+        orderQuantity = this.quantityApproved * utils.parseIntWithBaseTen(this.packSize) ;
+    }
 
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
