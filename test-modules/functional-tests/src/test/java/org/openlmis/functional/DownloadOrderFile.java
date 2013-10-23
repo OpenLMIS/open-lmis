@@ -85,7 +85,7 @@ public class DownloadOrderFile extends TestCaseHelper {
   public void downloadOrderFile() throws Exception {
     ViewOrdersPage viewOrderPage = new ViewOrdersPage(testWebDriver);
     viewOrderPage.downloadCSV();
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(5000);
   }
 
     @And("^I get order data in file prefix \"([^\"]*)\"$")
@@ -95,7 +95,7 @@ public class DownloadOrderFile extends TestCaseHelper {
         String orderId = dbWrapper.getOrderId();
 
         csvRows = readCSVFile(filePrefix + orderId + ".csv");
-        testWebDriver.sleep(1000);
+        testWebDriver.sleep(5000);
         deleteFile(filePrefix + orderId + ".csv");
 
         return csvRows;
