@@ -23,7 +23,7 @@ function UploadController($scope, SupportedUploads, messageService) {
     $('#uploadForm').ajaxForm(options);
   });
 
-  $scope.getMessage = function(key) {
+  $scope.getMessage = function (key) {
     return messageService.get(key);
   };
 
@@ -52,7 +52,10 @@ function UploadController($scope, SupportedUploads, messageService) {
   }
 
   var failureHandler = function (response) {
-    var errorMessage = JSON.parse(response.responseText).error;
+    var errorMessage
+    if (response.responseText.length)
+      errorMessage = JSON.parse(response.responseText).error;
+    errorMessage = messageService.get('error.upload.network.server.down');
     $scope.$apply(function () {
       $scope.errorMsg = errorMessage;
       $scope.inProgress = false;
