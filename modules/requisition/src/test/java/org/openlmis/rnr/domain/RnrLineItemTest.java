@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
@@ -44,6 +45,7 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -56,7 +58,12 @@ public class RnrLineItemTest {
   private List<RnrColumn> templateColumns;
   private ProcessingPeriod period;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
+
+  @Mock
   ProgramRnrTemplate template;
+
+  @Mock
+  RnrColumn column;
 
   private RnrCalcStrategy calcStrategy;
 
@@ -350,7 +357,7 @@ public class RnrLineItemTest {
   @Test
   public void shouldCalculateAMCAndMaxStockQuantityAndOrderedQuantityOnlyWhenAuthorized() throws Exception {
     RnrLineItem spyLineItem = spy(lineItem);
-    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
+    doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy, template);
 
     spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
 

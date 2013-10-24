@@ -46,9 +46,8 @@ public class RequisitionEventServiceTest {
   public void shouldTriggerNotifyOnEventService() throws Exception {
     Rnr requisition = make(a(defaultRnr));
     RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
-    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition).thenReturn(event);
 
-    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, vendor, notificationServices).thenReturn(event);
+    whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, notificationServices).thenReturn(event);
 
     service.notifyForStatusChange(requisition);
 

@@ -228,9 +228,13 @@ public class RnrLineItem extends LineItem {
 
   public void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
     RnrColumn column = template.getRnrColumnsMap().get("maxStockQuantity");
-    if(column.getCalculationOption() == "CONSUMPTION_X_2"){
+    String columnOption = "DEFAULT";
+    if(column != null){
+      columnOption = column.getCalculationOption();
+    }
+    if(columnOption == "CONSUMPTION_X_2"){
       maxStockQuantity = this.normalizedConsumption * 2;
-    }else if(column.getCalculationOption() == "DISPENSED_X_2"){
+    }else if(columnOption == "DISPENSED_X_2"){
       maxStockQuantity = this.quantityDispensed * 2;
     } else{
       // apply the default calculation if there was no other calculation that works here
@@ -244,9 +248,13 @@ public class RnrLineItem extends LineItem {
 
   public void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
     RnrColumn column = template.getRnrColumnsMap().get("normalizedConsumption");
-    if(column.getCalculationOption() == "DISPENSED_PLUS_NEW_PATIENTS"){
+    String columnOption = "DEFAULT";
+    if(column != null){
+      columnOption = column.getCalculationOption();
+    }
+    if(columnOption == "DISPENSED_PLUS_NEW_PATIENTS"){
       // ONLY GOD AND I KNOW THAT THIS DOES NOT MAKE SENSE.
-      // I WONDER WHY THE CONTRY PEOPLE ARE PUSHING FOR THIS.
+      // I WONDER WHY THE COUNTRY PEOPLE ARE PUSHING FOR THIS.
       normalizedConsumption = quantityDispensed + newPatientCount;
     } else{
       normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit);
