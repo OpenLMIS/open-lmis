@@ -253,7 +253,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
     dbWrapper.insertSupplyLines("N1", program, facilityCode1, true);
-    dbWrapper.updateActiveStatusOfProgram(programCode, true);
+    dbWrapper.updateActiveStatusOfProgram(programCode,true);
   }
 
   public void updateProductWithGroup(String product, String productGroup) throws IOException, SQLException {
@@ -320,27 +320,27 @@ public class TestCaseHelper {
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
-  public void setupDeliveryZoneRolesAndRightsAfterWarehouse(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
-                                                            String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
-                                                            String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
-    //dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
-    //dbWrapper.insertSchedule(schedule, "Monthly", "Month");
-    setupTestRoleRightsData(roleNmae, "MANAGE_DISTRIBUTION");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-  }
+    public void setupDeliveryZoneRolesAndRightsAfterWarehouse(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
+                                                String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
+        //dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
+        //dbWrapper.insertSchedule(schedule, "Monthly", "Month");
+        setupTestRoleRightsData(roleNmae, "MANAGE_DISTRIBUTION");
+        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+    }
 
-  public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond,
-                                           String programName,
-                                           String schedule, String roleName) throws IOException, SQLException {
-    dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
-    dbWrapper.insertSchedule(schedule, "Monthly", "Month");
-    setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
-    setupDataForWarehouse(facilityCodeFirst, programName, "N1");
-  }
+    public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond,
+                                             String programName,
+                                             String schedule, String roleName) throws IOException, SQLException {
+        dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
+        dbWrapper.insertSchedule(schedule, "Monthly", "Month");
+        setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
+        setupDataForWarehouse(facilityCodeFirst, programName, "N1");
+    }
 
-  public void setupDataForWarehouse(String facilityCode, String programName, String supervisoryNode) throws IOException, SQLException {
-    dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCode, programName, "N1", false);
-  }
+    public void setupDataForWarehouse(String facilityCode,String programName, String supervisoryNode)throws IOException, SQLException{
+        dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCode, programName,"N1",false);
+    }
 
   public String[] readCSVFile(String file) throws IOException, SQLException {
     BufferedReader br = null;
