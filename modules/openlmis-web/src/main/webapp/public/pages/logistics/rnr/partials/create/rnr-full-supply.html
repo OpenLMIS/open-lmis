@@ -54,7 +54,7 @@
                                ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                                ng-class = "highlightRequired(rnrLineItem[column.name])" /></span >
                       <span ng-switch-default >
-                        <span class = "cell-text" ng-bind = "rnrLineItem[column.name]" ></span ></span >
+                        <span class = "cell-text text-right-align display-block" ng-bind = "rnrLineItem[column.name]"></span ></span >
                     </ng-switch >
                     <span class = "rnr-form-error" id = "beginningBalance{{rnrLineItem['id']}}"
                           style = "display:none;" openlmis-message="error.number.only">
@@ -208,7 +208,7 @@
                 <ng-switch on = "column.name" >
                   <span ng-switch-when = "stockInHand"
                         ng-class = "getCellErrorClass(rnrLineItem)" >
-                    <span id = "{{getId(column.name, $parent)}}" ng-bind = "rnrLineItem[column.name]" class = "cell-text" > </span >
+                    <span id = "{{getId(column.name, $parent)}}" ng-bind = "rnrLineItem[column.name]" class = "cell-text text-right-align display-block" > </span >
                     <span class = "row-specific-error" ng-show = "rnrLineItem.getErrorMessage()" >
                       <span ng-bind = "lineItemErrorMessage(rnrLineItem)" ></span >
                       <span class = "beak-down" ></span >

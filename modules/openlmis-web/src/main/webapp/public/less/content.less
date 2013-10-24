@@ -687,7 +687,7 @@ span[class^="tpl-"] {
 }
 
 #header-columns-fixed {
-  z-index: 5;
+  z-index: 11;
   table {
     width: auto;
   }
@@ -695,10 +695,10 @@ span[class^="tpl-"] {
 
 .column-fixed {
   position: fixed;
-  z-index: 3;
+  z-index: 10;
   table {
     width: auto;
-    box-shadow: #ddd 2px 0px 0px;
+    box-shadow: #ddd 1px 0px 0px;
   }
 }
 
@@ -796,21 +796,17 @@ td.col-price,
 td.col-cost,
 td.col-lossesAndAdjustments {
   span {
-    text-align: right;
     display: block;
   }
 }
 
-td.col-beginningBalance{
-  span{
-    text-align: left;
-  }
-}
+
 
 #viewRnr {
   td.col-beginningBalance,
   td.col-quantityReceived,
   td.col-quantityDispensed,
+  td.col-stockInHand,
   td.col-newPatientCount,
   td.col-stockOutDays,
   td.col-quantityRequested,
@@ -827,10 +823,12 @@ td.col-beginningBalance{
 
 #approveRnr {
   td.col-beginningBalance,
+  td.col-stockInHand,
   td.col-quantityReceived,
   td.col-quantityDispensed,
   td.col-newPatientCount,
   td.col-stockOutDays,
+  td.col-stockInHand,
   td.col-quantityRequested,
   td.col-patientsOnTreatment,
   td.col-patientsToInitiateTreatment,
@@ -913,6 +911,9 @@ table td.cell-input .cell-text {
   display: inline-block;
   font-size: 0.8em;
   line-height: 18px;
+}
+table td.cell-input .display-block,.display-block {
+  display: block;
 }
 
 .cell-input input[type="text"] {
@@ -1005,7 +1006,7 @@ table td.cell-input .cell-text {
         background-color: #f9f9f9;
       }
       &:hover .user-actions a {
-        display: inline-block !important;
+        display: inline-block;
       }
     }
     .user-actions {
@@ -1423,7 +1424,8 @@ table td.delete-button {
 }
 
 .row-specific-error {
-  width: 140px;
+  width: 100%;
+  max-width: 160px;
   padding: 6px;
   margin-left: -82px;
   display: none;
@@ -2493,4 +2495,8 @@ input[rnr-validator="positiveInteger"] {
     min-width: 300px;
     width: 300px;
   }
+}
+
+.text-right-align{
+  text-align: right;
 }
