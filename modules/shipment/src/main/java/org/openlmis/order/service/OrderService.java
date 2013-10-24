@@ -155,7 +155,7 @@ public class OrderService {
 
   public void updateOrderStatus(Order order) {
     orderRepository.updateOrderStatus(order);
-    order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+    order.setRnr(requisitionService.getFullRequisitionById(order.getId()));
     orderEventService.notifyForStatusChange(order);
   }
 
