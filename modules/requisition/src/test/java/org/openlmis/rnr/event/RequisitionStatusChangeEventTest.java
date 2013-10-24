@@ -16,7 +16,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrFeedDTO;
+import org.openlmis.rnr.dto.RnrStatusFeedDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -39,15 +39,15 @@ public class RequisitionStatusChangeEventTest {
   @Test
   public void shouldCreateEventFromRequisition() throws Exception {
     mockStatic(DateTime.class);
-    mockStatic(RnrFeedDTO.class);
+    mockStatic(RnrStatusFeedDTO.class);
 
     Rnr rnr = make(a(defaultRnr));
 
     DateTime date = DateTime.now();
     when(DateTime.now()).thenReturn(date);
 
-    RnrFeedDTO feedDTO = mock(RnrFeedDTO.class);
-    whenNew(RnrFeedDTO.class).withArguments(rnr).thenReturn(feedDTO);
+    RnrStatusFeedDTO feedDTO = mock(RnrStatusFeedDTO.class);
+    whenNew(RnrStatusFeedDTO.class).withArguments(rnr).thenReturn(feedDTO);
     when(feedDTO.getSerializedContents()).thenReturn("serializedContents");
 
     RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr);

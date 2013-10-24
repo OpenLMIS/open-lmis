@@ -16,9 +16,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -26,12 +24,12 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.period;
 
 @Category(UnitTests.class)
-public class RnrFeedDTOTest {
+public class RnrStatusFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
 
-    RnrFeedDTO feed = new RnrFeedDTO(rnr);
+    RnrStatusFeedDTO feed = new RnrStatusFeedDTO(rnr);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));
@@ -47,7 +45,7 @@ public class RnrFeedDTOTest {
     Rnr rnr = make(a(defaultRnr, with(period, processingPeriod)));
     rnr.setPeriod(null);
 
-    RnrFeedDTO feed = new RnrFeedDTO(rnr);
+    RnrStatusFeedDTO feed = new RnrStatusFeedDTO(rnr);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));

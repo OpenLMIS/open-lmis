@@ -13,13 +13,16 @@ package org.openlmis.rnr.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -29,9 +32,11 @@ public class RnrDTO {
 
   private Long id;
   private String programName;
+  private String programCode;
   private Long programId;
   private String facilityName;
   private String facilityCode;
+  private String agentCode;
   private boolean emergency;
   private Date submittedDate;
   private Date modifiedDate;
@@ -40,6 +45,7 @@ public class RnrDTO {
   private String periodName;
   private Long facilityId;
   private String supplyingDepotName;
+  private List<RnrLineItemDTO> products;
   private String status;
   private Long modifiedBy;
 
@@ -90,4 +96,30 @@ public class RnrDTO {
     rnrDTO.emergency = requisition.isEmergency();
     return rnrDTO;
   }
+
+  public static RnrDTO prepareForREST(final Rnr rnr) {
+    RnrDTO rnrDTO = new RnrDTO();
+    rnrDTO.id = rnr.getId();
+    rnrDTO.agentCode = rnr.getFacility().getCode();
+    rnrDTO.programCode = rnr.getProgram().getCode();
+    rnrDTO.periodEndDate = rnr.getPeriod().getEndDate();
+    rnrDTO.periodStartDate = rnr.getPeriod().getStartDate();
+    rnrDTO.status = rnr.getStatus().name();
+    rnrDTO.emergency = rnr.isEmergency();
+
+    ArrayList<RnrLineItem> lineItems = new ArrayList<RnrLineItem>() {{
+      addAll(rnr.getNonFullSupplyLineItems());
+      addAll(rnr.getFullSupplyLineItems());
+    }};
+
+    rnrDTO.products = (List<RnrLineItemDTO>) collect(lineItems, new Transformer() {
+      @Override
+      public Object transform(Object o) {
+        return new RnrLineItemDTO((RnrLineItem) o);
+      }
+    });
+    return rnrDTO;
+  }
+
+
 }

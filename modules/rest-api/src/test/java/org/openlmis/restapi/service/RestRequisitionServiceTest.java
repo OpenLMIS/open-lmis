@@ -39,10 +39,12 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -173,4 +175,15 @@ public class RestRequisitionServiceTest {
     service.approve(report);
   }
 
+  @Test
+  public void shouldGetRequisitionById() throws Exception {
+    Long rnrId = 3L;
+    Rnr expectedRnr = new Rnr(rnrId);
+    when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(expectedRnr);
+
+    Rnr rnr = service.getRequisition(rnrId);
+
+    assertThat(rnr, is(expectedRnr));
+    verify(requisitionService).getFullRequisitionById(rnrId);
+  }
 }
