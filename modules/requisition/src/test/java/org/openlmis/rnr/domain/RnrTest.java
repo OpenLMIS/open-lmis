@@ -30,7 +30,9 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.eq;
@@ -540,4 +542,12 @@ public class RnrTest {
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
   }
 
+  @Test
+  public void shouldReturnTrueIfRequisitionIsInApprovalAndFalseOtherwise() {
+    Rnr inApprovalRequisition = make(a(defaultRnr, with(status, IN_APPROVAL)));
+    assertTrue(inApprovalRequisition.isInApproval());
+
+    Rnr approvedRequisition = make(a(defaultRnr, with(status, APPROVED)));
+    assertFalse(approvedRequisition.isInApproval());
+  }
 }

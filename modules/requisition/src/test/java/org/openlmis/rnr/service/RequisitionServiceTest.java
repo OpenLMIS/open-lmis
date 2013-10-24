@@ -722,17 +722,51 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldApproveAnRnrAndKeepStatusInApprovalIfFurtherApprovalNeeded() throws Exception {
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+  public void shouldKeepStatusInApprovalIfFurtherApprovalNeededAndNotNotifyStatusChange() {
+    Rnr inApprovalRequisition =
+            getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(inApprovalRnr, APPROVE_REQUISITION);
 
-    savedRnr.setSupervisoryNodeId(1L);
+    inApprovalRequisition.setSupervisoryNodeId(1L);
     SupervisoryNode parentNode = new SupervisoryNode() {{
       setId(2L);
     }};
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
-    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).thenReturn(new User());
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).
+            thenReturn(new User());
 
-    savedRnr.setSupervisoryNodeId(1l);
+    inApprovalRequisition.setSupervisoryNodeId(1l);
+    SupervisoryNode supervisoryNode = new SupervisoryNode();
+    supervisoryNode.setId(1l);
+    SupplyLine supplyLine = mock(SupplyLine.class);
+
+    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
+    Facility supplyingDepot = new Facility();
+    when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
+
+    requisitionService.approve(inApprovalRnr);
+
+    verify(requisitionRepository).approve(inApprovalRequisition);
+    verify(requisitionRepository).logStatusChange(inApprovalRequisition);
+    verify(requisitionEventService, never()).notifyForStatusChange(inApprovalRequisition);
+    assertThat(inApprovalRequisition.getStatus(), is(IN_APPROVAL));
+    assertThat(inApprovalRequisition.getSupervisoryNodeId(), is(2L));
+    assertThat(inApprovalRequisition.getModifiedBy(), is(USER_ID));
+  }
+
+  @Test
+  public void shouldApproveAnAuthorizedRequisitionAndNotifyStatusChange() throws Exception {
+    Rnr approvedRequisition =
+            getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+
+    approvedRequisition.setSupervisoryNodeId(1L);
+    SupervisoryNode parentNode = new SupervisoryNode() {{
+      setId(2L);
+    }};
+    when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
+    when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).
+            thenReturn(new User());
+
+    approvedRequisition.setSupervisoryNodeId(1l);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
     supervisoryNode.setId(1l);
     SupplyLine supplyLine = mock(SupplyLine.class);
@@ -743,13 +777,12 @@ public class RequisitionServiceTest {
 
     requisitionService.approve(authorizedRnr);
 
-    verify(requisitionRepository).approve(savedRnr);
-    verify(requisitionRepository).logStatusChange(savedRnr);
-    verify(requisitionEventService).notifyForStatusChange(savedRnr);
-    assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
-    assertThat(savedRnr.getSupervisoryNodeId(), is(2L));
-    assertThat(savedRnr.getModifiedBy(), is(USER_ID));
-
+    verify(requisitionRepository).approve(approvedRequisition);
+    verify(requisitionRepository).logStatusChange(approvedRequisition);
+    verify(requisitionEventService).notifyForStatusChange(approvedRequisition);
+    assertThat(approvedRequisition.getStatus(), is(IN_APPROVAL));
+    assertThat(approvedRequisition.getSupervisoryNodeId(), is(2L));
+    assertThat(approvedRequisition.getModifiedBy(), is(USER_ID));
   }
 
   @Test
