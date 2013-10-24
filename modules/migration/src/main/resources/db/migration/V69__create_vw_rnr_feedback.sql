@@ -60,7 +60,7 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
             ELSE 0
         END AS err_qty_stockinhand
    FROM vw_requisition_detail
-   LEFT JOIN Orders ON Orders.rnrId =  vw_requisition_detail.req_id
+   LEFT JOIN Orders ON Orders.id =  vw_requisition_detail.req_id
    LEFT JOIN shipment_line_items ON Orders.id = shipment_line_items.orderId;
 
 ALTER TABLE vw_rnr_feedback
