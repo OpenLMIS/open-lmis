@@ -18,6 +18,7 @@ import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -29,6 +30,7 @@ import java.util.Date;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static com.natpryce.makeiteasy.Property.newProperty;
 import static java.lang.Boolean.FALSE;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 
 public class RequisitionBuilder {
 
@@ -40,6 +42,7 @@ public class RequisitionBuilder {
   public static final Property<Rnr, Program> program = newProperty();
   public static final Property<Rnr, Long> id = newProperty();
   public static final Property<Rnr, Boolean> emergency = newProperty();
+  public static final Property<Rnr, ProcessingPeriod> period = newProperty();
 
   public static final Date SUBMITTED_DATE = new DateTime().withDate(2013, 3, 19).toDate();
   public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3L)));
@@ -59,8 +62,10 @@ public class RequisitionBuilder {
     defaultFacility.setId(3L);
     rnr.setFacility(lookup.valueOf(facility, defaultFacility));
     rnr.setProgram(lookup.valueOf(program, PROGRAM));
-    rnr.setPeriod(make(a(ProcessingPeriodBuilder.defaultProcessingPeriod)));
-    rnr.getPeriod().setId(lookup.valueOf(periodId, 3L));
+    Long processingPeriodId = lookup.valueOf(periodId, 3L);
+    ProcessingPeriod period =
+            make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, processingPeriodId)));
+    rnr.setPeriod(lookup.valueOf(RequisitionBuilder.period, period));
     rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
     rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));
     rnr.setEmergency(lookup.valueOf(emergency, FALSE));

@@ -95,4 +95,8 @@ public class RoleRightsRepository {
   public RightType getRightTypeForRoleId(Long roleId) {
     return roleRightsMapper.getRightTypeForRoleId(roleId);
   }
+
+  public Set<Right> getRightsForUserAndWarehouse(Long userId, Long warehouseId) {
+    return roleRightsMapper.getRightsForUserAndWarehouse(userId, warehouseId);
+  }
 }

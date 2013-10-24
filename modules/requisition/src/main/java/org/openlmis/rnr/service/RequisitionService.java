@@ -127,6 +127,9 @@ public class RequisitionService {
 
     requisition = requisitionRepository.getById(requisition.getId());
     fillSupportingInfo(requisition);
+
+    logStatusChangeAndNotify(requisition);
+
     return requisition;
   }
 
@@ -164,7 +167,6 @@ public class RequisitionService {
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
       requisitionRepository.getLossesAndAdjustmentsTypes());
-
     return update(savedRnr);
   }
 
@@ -216,6 +218,7 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     for (Rnr requisition : requisitions) {
       Rnr loadedRequisition = requisitionRepository.getById(requisition.getId());
+      fillSupportingInfo(loadedRequisition);
       loadedRequisition.convertToOrder(userId);
       update(loadedRequisition);
     }
@@ -393,7 +396,6 @@ public class RequisitionService {
 
   private void insert(Rnr requisition) {
     requisitionRepository.insert(requisition);
-    logStatusChangeAndNotify(requisition);
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

@@ -80,4 +80,8 @@ public interface RoleRightsMapper {
 
   @Select({"SELECT R.rightType from rights R INNER JOIN role_rights RR ON RR.rightName = R.name AND RR.roleId = #{roleId} LIMIT 1"})
   RightType getRightTypeForRoleId(Long roleId);
+
+  @Select({"SELECT DISTINCT RR.rightName FROM role_rights RR INNER JOIN fulfillment_role_assignments FRA ON RR.roleId = FRA.roleId " ,
+    "WHERE FRA.userId = #{userId} AND FRA.facilityId = #{warehouseId}"})
+  Set<Right> getRightsForUserAndWarehouse(@Param("userId")Long userId, @Param("warehouseId")Long warehouseId);
 }

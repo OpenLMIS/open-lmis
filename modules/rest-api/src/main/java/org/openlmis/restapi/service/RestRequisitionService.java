@@ -45,7 +45,7 @@ public class RestRequisitionService {
 
     Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency());
 
-    Rnr reportedRequisition = getReportedRequisition(report, requisition);
+    Rnr reportedRequisition = createReportedRequisition(report, requisition);
 
     requisitionService.save(reportedRequisition);
 
@@ -67,7 +67,7 @@ public class RestRequisitionService {
     return requisition;
   }
 
-  private Rnr getReportedRequisition(Report report, Rnr requisition) {
+  private Rnr createReportedRequisition(Report report, Rnr requisition) {
     Rnr reportedRequisition = new Rnr(requisition.getId());
     reportedRequisition.setModifiedBy(requisition.getModifiedBy());
     reportedRequisition.setFullSupplyLineItems(report.getProducts());
@@ -83,4 +83,7 @@ public class RestRequisitionService {
     return user;
   }
 
+  public Rnr getRequisition(Long id) {
+    return requisitionService.getFullRequisitionById(id);
+  }
 }

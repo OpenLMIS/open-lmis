@@ -10,6 +10,8 @@
 
 package org.openlmis.functional;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
@@ -27,6 +29,8 @@ import java.sql.SQLException;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.System.getProperty;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
@@ -43,8 +47,8 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     driver = new FirefoxDriver();
     driver.get("http://localhost:9091");
     super.setup();
-    super.setupDataExternalVendor(false);
-    super.setupDataApproverExternalVendor();
+    super.setupTestData(false);
+    super.setupDataRequisitionApprover();
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -84,13 +88,13 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     assertTrue(response.contains("{\"R&R\":"));
     assertEquals("RELEASED", dbWrapper.getRequisitionStatus(id));
 
-    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition/recent", "GET", "", "");
+    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisitionStatus/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"INITIATED\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"SUBMITTED\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"AUTHORIZED\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"APPROVED\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"facilityId\":" + dbWrapper.getFacilityID("F10") + ",\"programId\":" + dbWrapper.getProgramID("HIV") + ",\"periodId\":" + dbWrapper.getPeriodID("Period2") + ",\"requisitionStatus\":\"RELEASED\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -115,7 +119,28 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     assertEquals("{\"error\":\"Please provide a valid username\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+    @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+    public void testApproveRequisitionUnauthorizedAccess() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        String response = submitReport();
+        Long id = getRequisitionIdFromResponse(response);
+
+        Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+        reportFromJson.setRequisitionId(id);
+        reportFromJson.setUserId("commTrack100");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setQuantityApproved(65);
+
+        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+                "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
+                "commTrack100", "Admin123");
+        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+
+        assertEquals(401, responseEntity.getStatus());
+    }
+
+    @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionInvalidProduct() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -187,27 +212,6 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
-  }
-
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
-  public void testApproveRequisitionInValidVendor() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
-
-    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setRequisitionId(id);
-    reportFromJson.setUserId("commTrack100");
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-    reportFromJson.getProducts().get(0).setQuantityApproved(65);
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-      "commTrack100", "Admin123");
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
-    assertEquals(401, responseEntity.getStatus());
   }
 
   public String submitReport() throws Exception {

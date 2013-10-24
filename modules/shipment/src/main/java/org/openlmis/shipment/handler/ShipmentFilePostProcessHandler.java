@@ -12,6 +12,7 @@ package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
+import org.openlmis.order.service.OrderEventService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.openlmis.shipment.service.ShipmentService;

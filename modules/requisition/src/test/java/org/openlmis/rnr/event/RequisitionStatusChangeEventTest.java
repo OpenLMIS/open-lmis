@@ -16,7 +16,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RnrFeedDTO;
+import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -27,32 +27,35 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_CATEGORY;
+import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_TITLE;
 import static org.powermock.api.mockito.PowerMockito.*;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DateTime.class, RnrFeedDTO.class})
+@PrepareForTest({DateTime.class, RequisitionStatusChangeEvent.class})
 public class RequisitionStatusChangeEventTest {
 
   @Test
   public void shouldCreateEventFromRequisition() throws Exception {
     mockStatic(DateTime.class);
-    mockStatic(RnrFeedDTO.class);
 
     Rnr rnr = make(a(defaultRnr));
 
     DateTime date = DateTime.now();
     when(DateTime.now()).thenReturn(date);
 
-    RnrFeedDTO feedDTO = mock(RnrFeedDTO.class);
-    when(RnrFeedDTO.populate(rnr)).thenReturn(feedDTO);
+    RequisitionStatusFeedDTO feedDTO = mock(RequisitionStatusFeedDTO.class);
+    whenNew(RequisitionStatusFeedDTO.class).withArguments(rnr).thenReturn(feedDTO);
     when(feedDTO.getSerializedContents()).thenReturn("serializedContents");
 
     RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr);
 
-    assertThat(event.getTitle(), is("Requisition"));
+    assertThat(event.getTitle(), is(FEED_TITLE));
     assertThat(event.getTimeStamp(), is(date));
     assertThat(event.getUuid(), is(notNullValue()));
     assertThat(event.getContents(), is("serializedContents"));
+    assertThat(event.getCategory(), is(FEED_CATEGORY));
     verify(feedDTO).getSerializedContents();
   }
 }

@@ -9,58 +9,54 @@
  */
 
 module.exports = function (grunt) {
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-    grunt.initConfig({
-      pkg: grunt.file.readJSON('package.json'),
-      clean: ['dist', 'src/main/webapp/public/minJs/', 'quality'],
-      jshint:{
-        options: {
-          undef: false,
-          strict: false,
-          '-W030' : true,
-          unused: false,
-          passfail: true,
-          reporter: 'checkstyle',
-          reporterOutput: 'quality/js/checkstyle-results.xml'
-        },
-        all:['src/main/webapp/public/js/**/*.js']
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    clean: ['dist', 'src/main/webapp/public/minJs/', 'quality'],
+    jshint: {
+      options: {
+        undef: false,
+        strict: false,
+        '-W030': true,
+        unused: false,
+        passfail: true,
+        reporter: 'checkstyle',
+        reporterOutput: 'quality/js/checkstyle-results.xml'
       },
-      csslint:{
-        options: {
-          absoluteFilePathsForFormatters: true,
-          quiet: true,
-          formatters: [
-            {id: 'compact', dest: 'quality/css/report.txt'}
-          ]
-        },
-        strict:{
-          options:{
-            import:2,
-            "box-model":false,
-            "box-sizing": false,
-            "bulletproof-font-face": false,
-            "adjoining-classes":false
-          },
-          src:['src/main/webapp/public/css/*.css']
-        }
-      },
-      uglify: {
-        options: {
-          mangle: false,
-          beautify: true,
-          report: 'min',
-          preserveComments: false
-        },
-        files: {
-          cwd: 'src/main/webapp/public/js/',
-          src: ['**/*.js'],
-          dest: 'src/main/webapp/public/minJs/',
-          expand: true,
-          flatten: false
+      all: ['src/main/webapp/public/js/**/*.js']
+    },
+    lesslint: {
+      src: ['src/main/webapp/public/less/*.less'],
+      options: {
+        quiet: true,
+        formatters: [
+          {id: 'checkstyle-xml', dest: 'quality/less/checkstyle-results.xml'}
+        ],
+        csslint: {
+          ids: false,
+          "bulletproof-font-face": false,
+          "box-model": false,
+          "box-sizing": false
         }
       }
-    });
+    },
+    uglify: {
+      options: {
+        mangle: false,
+        beautify: true,
+        report: 'min',
+        preserveComments: false
+      },
+      files: {
+        cwd: 'src/main/webapp/public/js/',
+        src: ['**/*.js'],
+        dest: 'src/main/webapp/public/minJs/',
+        expand: true,
+        flatten: false
+      }
+    }
+  });
 
-    grunt.registerTask('default', ['clean', 'jshint', 'csslint']);
+  grunt.registerTask('default', ['clean', 'jshint', 'lesslint']);
 };

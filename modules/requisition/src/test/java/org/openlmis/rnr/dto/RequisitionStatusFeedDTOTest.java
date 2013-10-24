@@ -10,40 +10,48 @@
 
 package org.openlmis.rnr.dto;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.period;
+
 @Category(UnitTests.class)
-public class RnrFeedDTOTest {
+public class RequisitionStatusFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
 
-    RnrFeedDTO feed = RnrFeedDTO.populate(rnr);
+    RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
-    assertThat(feed.getFacilityId(), is(rnr.getFacility().getId()));
-    assertThat(feed.getProgramId(), is(rnr.getProgram().getId()));
-    assertThat(feed.getPeriodId(), is(rnr.getPeriod().getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));
+    assertThat(feed.isEmergency(), is(rnr.isEmergency()));
+    assertThat(feed.getStartDate(), is(rnr.getPeriod().getStartDate().getTime()));
+    assertThat(feed.getEndDate(), is(rnr.getPeriod().getEndDate().getTime()));
+    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325356200000,\"endDate\":1328034600000}"));
   }
 
   @Test
-  public void shouldGetSerializedContentsFromRequisition() throws Exception {
-    ObjectMapper mapper = new ObjectMapper();
-    Rnr requisition = make(a(defaultRnr));
-    RnrFeedDTO feedDTO = RnrFeedDTO.populate(requisition);
+  public void shouldNotSetStartDateAndEndDateIfPeriodIsNull() throws Exception {
+    ProcessingPeriod processingPeriod = null;
+    Rnr rnr = make(a(defaultRnr, with(period, processingPeriod)));
+    rnr.setPeriod(null);
 
-    String serializedContents = feedDTO.getSerializedContents();
+    RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
-    assertThat(serializedContents, is(mapper.writeValueAsString(feedDTO)));
+    assertThat(feed.getRequisitionId(), is(rnr.getId()));
+    assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));
+    assertThat(feed.isEmergency(), is(rnr.isEmergency()));
+    assertThat(feed.getStartDate(), is(nullValue()));
+    assertThat(feed.getEndDate(), is(nullValue()));
   }
+
 }

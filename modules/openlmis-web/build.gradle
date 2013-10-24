@@ -22,9 +22,9 @@ task jsHint(type: GruntTask) {
     gruntArgs = "jshint"
 }
 
-task csslint(type: GruntTask) {
+task lesslint(type: GruntTask) {
     workingDir '.'
-    gruntArgs = "csslint"
+    gruntArgs = "lesslint --force"
 }
 
 task uglify(type: GruntTask) {
@@ -106,6 +106,7 @@ war.doLast {
 
 build.doLast {
     tasks.jsHint.execute()
+    tasks.lesslint.execute()
     tasks.cleanMinJs.execute()
 }
 
@@ -203,13 +204,12 @@ task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
 
-//task JasmineRun(type: Test) {
-//    include '**/org/openlmis/jasmine/*.*'
-//    useTestNG()
-//}
-
 compileJava.dependsOn compileLess
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
+}
+
+cobertura {
+    coverageFormats << 'xml'
 }

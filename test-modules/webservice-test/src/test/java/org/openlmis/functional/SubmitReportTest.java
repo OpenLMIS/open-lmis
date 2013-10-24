@@ -46,7 +46,7 @@ public class SubmitReportTest extends TestCaseHelper {
     driver = new FirefoxDriver();
     driver.get("http://localhost:9091");
     super.setup();
-    super.setupDataExternalVendor(false);
+    super.setupTestData(false);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -275,7 +275,7 @@ public class SubmitReportTest extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void shouldReturn401StatusWhenSubmittingReportWithInvalidVendor() throws Exception {
+  public void shouldReturn401StatusWhenSubmittingReportWithInvalidAPIUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 

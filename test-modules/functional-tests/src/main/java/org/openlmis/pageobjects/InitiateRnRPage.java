@@ -367,6 +367,7 @@ public class InitiateRnRPage extends RequisitionPage {
     enterQuantityReceived(B.toString());
     enterQuantityDispensed(C.toString());
     enterLossesAndAdjustments(D.toString());
+    testWebDriver.waitForElementToAppear(beginningBalance);
     beginningBalance.click();
     testWebDriver.waitForElementToAppear(stockInHand);
     testWebDriver.sleep(2000);

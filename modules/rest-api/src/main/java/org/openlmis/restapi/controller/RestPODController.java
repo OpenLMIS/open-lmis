@@ -8,6 +8,7 @@ import org.openlmis.restapi.service.RestPODService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,8 +25,9 @@ public class RestPODController extends BaseController {
   private RestPODService restPODService;
 
   @RequestMapping(value = "/rest-api/pod/{orderId}", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> createCHW(@RequestBody POD pod, Principal principal) {
+  public ResponseEntity<RestResponse> createCHW(@RequestBody POD pod, @PathVariable Long orderId, Principal principal) {
     try {
+      pod.setOrderId(orderId);
       restPODService.updatePOD(pod, principal.getName());
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);

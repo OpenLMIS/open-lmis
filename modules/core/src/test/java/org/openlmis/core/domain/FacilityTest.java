@@ -34,7 +34,7 @@ public class FacilityTest {
     Facility facilityWithPrograms = make(a(FacilityBuilder.defaultFacility));
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
     }};
     facilityWithPrograms.setSupportedPrograms(programsForFacility);
 
@@ -48,7 +48,7 @@ public class FacilityTest {
     Facility facilityWithPrograms = make(a(FacilityBuilder.defaultFacility));
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
     }};
     facilityWithPrograms.setSupportedPrograms(programsForFacility);
 

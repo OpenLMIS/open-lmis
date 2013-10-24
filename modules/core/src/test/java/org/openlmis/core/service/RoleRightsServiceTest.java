@@ -211,4 +211,19 @@ public class RoleRightsServiceTest {
     assertThat(allRolesMap.get(RightType.REQUISITION.name()).size(), is(1));
     assertThat(allRolesMap.get(RightType.ALLOCATION.name()).size(), is(2));
   }
+
+
+  @Test
+  public void shouldGetRightsForUserAndWarehouse() {
+    Set<Right> expectedRights = new HashSet<>();
+    Long userId = 1l;
+    Long warehouseId = 2l;
+    when(roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId)).thenReturn(expectedRights);
+
+    Set<Right> rights = roleRightsService.getRightsForUserAndWarehouse(userId, warehouseId);
+
+    assertThat(rights, is(expectedRights));
+    verify(roleRightsRepository).getRightsForUserAndWarehouse(userId, warehouseId);
+
+  }
 }

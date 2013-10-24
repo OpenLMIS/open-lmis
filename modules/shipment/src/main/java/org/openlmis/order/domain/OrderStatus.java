@@ -16,5 +16,6 @@ public enum OrderStatus {
   RELEASED,
   TRANSFER_FAILED,
   PACKED,
-  SHIPMENT_ERROR
+  SHIPMENT_ERROR,
+  RECEIVED
 }

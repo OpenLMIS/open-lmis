@@ -222,7 +222,7 @@ public class DBWrapper {
     }
     if (withSupplyLine) {
       if (flag) {
-        insertSupplyLines("N1", program, "F10");
+        insertSupplyLines("N1", program, "F10", true);
       }
     }
 
@@ -260,7 +260,7 @@ public class DBWrapper {
 
   public void insertFacilities(String facility1, String facility2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
       "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
       "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',5,2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'FALSE');\n");
 
@@ -280,7 +280,7 @@ public class DBWrapper {
 
   public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicScc, hasElectronicDar, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
       "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone1 + "'),2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
       "('" + facility2 + "','Central Hospital','IT department','G7646',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone2 + "'),2,333,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'FALSE');\n");
 
@@ -316,7 +316,8 @@ public class DBWrapper {
     update("delete from roles where name not in ('Admin');");
     update("delete from facility_approved_products;");
     update("delete from program_product_price_history;");
-
+    update("delete from pod_line_items;");
+    update("delete from pod;");
     update("delete from orders;");
     update("DELETE FROM requisition_status_changes;");
 
@@ -738,9 +739,9 @@ public class DBWrapper {
     update("update facilities set " + field + "='" + value + "' where code='" + code + "';");
   }
 
-  public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode) throws IOException, SQLException {
+  public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode, boolean exportOrders) throws IOException, SQLException {
     update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
-      "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "'),'t');\n");
+      "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "')," + exportOrders + ");\n");
   }
 
   public void updateSupplyLines(String previousFacilityCode, String newFacilityCode) throws IOException, SQLException {
@@ -969,6 +970,28 @@ public class DBWrapper {
       requisitionStatus = rs.getString("status");
     }
     return requisitionStatus;
+
+  }
+
+  public String getOrderForRequisition(Long requisitionId) throws IOException, SQLException {
+    String requisitionStatus = null;
+    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
+
+    if (rs.next()) {
+      requisitionStatus = rs.getString("status");
+    }
+    return requisitionStatus;
+
+  }
+
+  public String getOrderStatus(Long orderId) throws IOException, SQLException {
+    String orderStatus = null;
+    ResultSet rs = query("SELECT status from orders where id=" + orderId);
+
+      if (rs.next()) {
+          orderStatus = rs.getString("status");
+      }
+      return orderStatus;
 
   }
 
@@ -1203,13 +1226,20 @@ public class DBWrapper {
       update("update requisitions set status='RELEASED' where id =" + rs.getString("id"));
 
 
-      update("insert into orders(rnrId, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id")
+      update("insert into orders(Id, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id")
         + ", '" + status + "', (select id from supply_lines where supplyingFacilityId = " +
         "(select facilityId from fulfillment_role_assignments where userId = " +
         "(select id from users where username = '" + username + "')) limit 1) ," +
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
 
     }
+  }
+
+  public void setupUserForFulfillmentRole(String username, String roleName, String facilityCode) throws IOException, SQLException {
+           update("insert into fulfillment_role_assignments(userId, roleId,facilityId) values((select id from users where userName = '" + username +
+                    "'),(select id from roles where name = '" + roleName + "')," +
+                    "(select id from facilities where code = '" + facilityCode + "'));");
+
   }
 
   public void verifyFacilityVisits(String observations, String confirmedByName, String confirmedByTitle,
@@ -1238,5 +1268,17 @@ public class DBWrapper {
 
     public void enableFacility(String warehouseName) throws SQLException {
         update("UPDATE facilities SET enabled='true' WHERE name='"+warehouseName+"';");
+    }
+
+    public void verifyPODAndPODLineItems(String OrderId,String productCode, String quantityReceived) throws Exception {
+        ResultSet rs = query("select id,receivedDate from pod where OrderId='"+ OrderId +"';");
+        while (rs.next()) {
+            //assertEquals(rs.getString("receivedDate").toString(),receivedDate);
+            rs = query("select productcode,quantityreceived from POD_line_items where podId='"+ rs.getString("id").toString() +"';");
+            while (rs.next()) {
+                assertEquals(rs.getString("productcode").toString(),productCode);
+                assertEquals(rs.getString("quantityreceived").toString(),quantityReceived);
+                }
+        }
     }
 }

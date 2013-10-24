@@ -30,6 +30,7 @@ import org.springframework.dao.DuplicateKeyException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -169,5 +170,18 @@ public class RoleRightsRepositoryTest {
     List<Right> result = roleRightsRepository.getRightsForUserOnHomeFacilityAndProgram(userId, program);
     verify(roleRightsMapper).getRightsForUserOnHomeFacilityAndProgram(userId, program);
     assertThat(result, is(expected));
+  }
+
+  @Test
+  public void shouldGetRightsForUserAndWarehouse(){
+    Set<Right> expectedRights = new HashSet<>();
+    Long userId = 1l;
+    Long warehouseId = 2l;
+    when(roleRightsMapper.getRightsForUserAndWarehouse(userId, warehouseId)).thenReturn(expectedRights);
+
+    Set<Right> rights = roleRightsRepository.getRightsForUserAndWarehouse(userId, warehouseId);
+
+    assertThat(rights, is(expectedRights));
+    verify(roleRightsMapper).getRightsForUserAndWarehouse(userId, warehouseId);
   }
 }

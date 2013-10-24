@@ -105,7 +105,7 @@ public class TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2012-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.insertSupplyLines("N1", program, "F10", true);
   }
 
   public void setupTestUserRoleRightsData(String userId, String userSIC, List<String> rightsList) throws IOException, SQLException {
@@ -136,7 +136,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-    dbWrapper.insertSupplyLines("N1", program, "F10");
+    dbWrapper.insertSupplyLines("N1", program, "F10", false);
     if (configureGenericTemplate) {
       dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "Q1stM");
       dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
@@ -191,7 +191,7 @@ public class TestCaseHelper {
       dbWrapper.assignRight(roleName, right[i]);
   }
 
-  public void setupDataExternalVendor(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
+  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -203,7 +203,7 @@ public class TestCaseHelper {
 
   }
 
-  public void setupDataApproverExternalVendor() throws IOException, SQLException {
+  public void setupDataRequisitionApprover() throws IOException, SQLException {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("APPROVE_REQUISITION");
     rightsList.add("CONVERT_TO_ORDER");
@@ -253,7 +253,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
-    dbWrapper.insertSupplyLines("N1", program, facilityCode1);
+    dbWrapper.insertSupplyLines("N1", program, facilityCode1, true);
     dbWrapper.updateActiveStatusOfProgram(programCode,true);
   }
 

@@ -22,6 +22,7 @@ app.directive('fullScreen', function () {
         }
         else {
           fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
+          $('.rnr-body').trigger('scroll');
         }
         fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
       });

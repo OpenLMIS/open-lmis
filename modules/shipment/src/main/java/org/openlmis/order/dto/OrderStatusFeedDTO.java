@@ -8,28 +8,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.dto;
+package org.openlmis.order.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.openlmis.core.dto.BaseFeedDTO;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class RnrFeedDTO extends BaseFeedDTO {
-  private Long requisitionId;
-  private Long facilityId;
-  private Long programId;
-  private Long periodId;
-  private RnrStatus requisitionStatus;
+public class OrderStatusFeedDTO extends RequisitionStatusFeedDTO {
+  private Long orderId;
+  private OrderStatus orderStatus;
 
-  public static RnrFeedDTO populate(Rnr rnr) {
-    return new RnrFeedDTO(rnr.getId(), rnr.getFacility().getId(), rnr.getProgram().getId(), rnr.getPeriod().getId(), rnr.getStatus());
+  public OrderStatusFeedDTO(Order order) {
+    super(order.getRnr());
+    this.orderId = order.getId();
+    this.orderStatus = order.getStatus();
   }
-
-
 }

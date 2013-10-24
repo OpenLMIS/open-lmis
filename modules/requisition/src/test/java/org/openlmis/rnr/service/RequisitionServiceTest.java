@@ -62,10 +62,8 @@ import static org.openlmis.rnr.domain.RegimenLineItem.*;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -187,11 +185,15 @@ public class RequisitionServiceTest {
     Rnr rnr = spyRequisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, false);
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
+    verify(processingScheduleService).getPeriodById(PERIOD.getId());
     verify(requisitionRepository).insert(any(Rnr.class));
     verify(requisitionRepository).logStatusChange(any(Rnr.class));
     verify(regimenColumnService).getRegimenTemplateByProgramId(PROGRAM.getId());
 
     assertThat(rnr, is(spyRequisition));
+    assertThat(rnr.getPeriod().getId(), is(PERIOD.getId()));
+    assertThat(rnr.getPeriod().getStartDate(), is(PERIOD.getStartDate()));
+    assertThat(rnr.getPeriod().getEndDate(), is(PERIOD.getEndDate()));
   }
 
   @Test
@@ -1063,6 +1065,11 @@ public class RequisitionServiceTest {
     whenNew(Rnr.class).withAnyArguments().thenReturn(requisition);
     Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
+    when(requisitionRepository.getById(requisition.getId())).thenReturn(requisition);
+    when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
+    when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
+
     requisitionService.initiate(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId(), 1L, false);
 
     verify(requisitionEventService).notifyForStatusChange(requisition);
@@ -1142,29 +1149,37 @@ public class RequisitionServiceTest {
   @Test
   public void shouldReleaseRequisitionAsOrder() throws Exception {
     when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
-    final Rnr rnr = spy(authorizedRnr);
-    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(rnr);
-    List<Rnr> rnrList = new ArrayList<Rnr>() {{
-      add(rnr);
+    final Rnr requisition = spy(authorizedRnr);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(requisition);
+    List<Rnr> requisitionList = new ArrayList<Rnr>() {{
+      add(requisition);
     }};
 
-    requisitionService.releaseRequisitionsAsOrder(rnrList, USER_ID);
+    when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
+    when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
 
-    verify(rnr).convertToOrder(USER_ID);
+    requisitionService.releaseRequisitionsAsOrder(requisitionList, USER_ID);
+
+    verify(requisition).convertToOrder(USER_ID);
   }
 
   @Test
   public void shouldNotifyStatusChangeToReleased() throws Exception {
     when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
-    final Rnr rnr = spy(authorizedRnr);
-    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(rnr);
-    List<Rnr> rnrList = new ArrayList<Rnr>() {{
-      add(rnr);
+    final Rnr requisition = spy(authorizedRnr);
+    when(requisitionRepository.getById(authorizedRnr.getId())).thenReturn(requisition);
+    List<Rnr> requisitionList = new ArrayList<Rnr>() {{
+      add(requisition);
     }};
 
-    requisitionService.releaseRequisitionsAsOrder(rnrList, USER_ID);
+    when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
+    when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
+    when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
 
-    verify(requisitionEventService).notifyForStatusChange(rnr);
+    requisitionService.releaseRequisitionsAsOrder(requisitionList, USER_ID);
+
+    verify(requisitionEventService).notifyForStatusChange(requisition);
   }
 
 

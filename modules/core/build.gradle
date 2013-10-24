@@ -49,3 +49,7 @@ dependencies {
     }
 }
 
+cobertura {
+    coverageFormats << 'xml'
+}
+

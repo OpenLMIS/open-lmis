@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.order.service;
@@ -49,6 +51,9 @@ public class OrderService {
   @Autowired
   private SupplyLineService supplyLineService;
 
+  @Autowired
+  private OrderEventService orderEventService;
+
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
   private int pageSize;
@@ -56,10 +61,6 @@ public class OrderService {
   @Autowired
   public void setPageSize(@Value("${order.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
-  }
-
-  public void save(Order order) {
-    orderRepository.save(order);
   }
 
   @Transactional
@@ -80,6 +81,8 @@ public class OrderService {
       }
       order.setStatus(status);
       orderRepository.save(order);
+      order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+      orderEventService.notifyForStatusChange(order);
     }
   }
 
@@ -96,6 +99,9 @@ public class OrderService {
 
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
+    if(order == null) {
+      return order;
+    }
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
     removeUnorderedProducts(requisition);
     order.setRnr(requisition);
@@ -123,6 +129,9 @@ public class OrderService {
     for (Long orderId : orderIds) {
       OrderStatus status = (shipmentFileInfo.isProcessingError()) ? RELEASED : PACKED;
       orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
+      Order order = orderRepository.getById(orderId);
+      order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+      orderEventService.notifyForStatusChange(order);
     }
   }
 
@@ -146,6 +155,8 @@ public class OrderService {
 
   public void updateOrderStatus(Order order) {
     orderRepository.updateOrderStatus(order);
+    order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+    orderEventService.notifyForStatusChange(order);
   }
 
   public boolean isShippable(Long orderId) {

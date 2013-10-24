@@ -429,7 +429,7 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyNoRequisitionForAuthorizationMessage(String program,
+  public void shouldVerifyRequisitionAlreadySubmittedMessage(String program,
                                                                String userSIC,
                                                                String categoryCode,
                                                                String password,
@@ -460,7 +460,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
 
-    verifyErrorMessages("No requisitions awaiting authorization");
+    verifyErrorMessages("R&R for current period already submitted");
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     homePage.clickProceed();

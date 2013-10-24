@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.order.service;
@@ -13,6 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.SupplyLineService;
@@ -23,6 +26,7 @@ import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -30,10 +34,7 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -41,6 +42,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.builder.FacilityBuilder.code;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
@@ -62,17 +65,13 @@ public class OrderServiceTest {
   private RequisitionService requisitionService;
 
   @Mock
+  private OrderEventService orderEventService;
+
+  @Mock
   private SupplyLineService supplyLineService;
 
   @InjectMocks
   private OrderService orderService;
-
-  @Test
-  public void shouldSaveOrder() throws Exception {
-    Order order = new Order();
-    orderService.save(order);
-    verify(orderRepository).save(order);
-  }
 
   @Test
   public void shouldConvertRequisitionsToOrderWithStatusInRoute() throws Exception {
@@ -93,16 +92,19 @@ public class OrderServiceTest {
 
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
 
     orderService.convertToOrder(rnrList, userId);
 
     Order order = new Order(rnr);
+
     order.setStatus(OrderStatus.IN_ROUTE);
     order.setSupplyLine(supplyLine);
     verify(orderRepository).save(order);
     verify(supplyLineService).getSupplyLineBy(supervisoryNode, program);
     verify(requisitionService).getLWById(rnr.getId());
     verify(requisitionService).releaseRequisitionsAsOrder(rnrList, userId);
+    verify(orderEventService).notifyForStatusChange(order);
     assertThat(order.getSupplyLine(), is(supplyLine));
   }
 
@@ -125,6 +127,7 @@ public class OrderServiceTest {
 
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
 
     orderService.convertToOrder(rnrList, userId);
 
@@ -152,6 +155,7 @@ public class OrderServiceTest {
     SupervisoryNode supervisoryNode = new SupervisoryNode(1L);
     whenNew(SupervisoryNode.class).withArguments(1l).thenReturn(supervisoryNode);
     when(supplyLineService.getSupplyLineBy(supervisoryNode, program)).thenReturn(null);
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(rnr);
 
     List<Rnr> rnrList = new ArrayList<>();
     rnrList.add(rnr);
@@ -199,9 +203,12 @@ public class OrderServiceTest {
 
   @Test
   public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
-    Set<Long> orderIds = new HashSet<>();
-    orderIds.add(123L);
-    orderIds.add(456L);
+    Order order1 = new Order(make(a(defaultRnr, with(id, 123L))));
+    Order order2 = new Order(make(a(defaultRnr, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
+
+    Set<Long> orderIds = new LinkedHashSet<>();
+    orderIds.add(order1.getId());
+    orderIds.add(order2.getId());
     long shipmentId = 678L;
 
     boolean processingError = true;
@@ -209,17 +216,30 @@ public class OrderServiceTest {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
+    when(orderRepository.getById(123L)).thenReturn(order1);
+    when(orderRepository.getById(456L)).thenReturn(order2);
+    when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
+    when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
+
     orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, RELEASED, shipmentId);
-    verify(orderRepository).updateStatusAndShipmentIdForOrder(456L, RELEASED, shipmentId);
+    verify(orderRepository).getById(123L);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order1.getId(), RELEASED, shipmentId);
+    verify(orderEventService).notifyForStatusChange(order1);
+
+    verify(orderRepository).getById(456L);
+    verify(orderRepository).updateStatusAndShipmentIdForOrder(order2.getId(), RELEASED, shipmentId);
+    verify(orderEventService).notifyForStatusChange(order2);
   }
 
   @Test
   public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
-    Set<Long> orderIds = new HashSet<>();
-    orderIds.add(123L);
-    orderIds.add(456L);
+    Order order1 = new Order(make(a(defaultRnr, with(id, 123L))));
+    Order order2 = new Order(make(a(defaultRnr, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
+
+    Set<Long> orderIds = new LinkedHashSet<>();
+    orderIds.add(order1.getId());
+    orderIds.add(order2.getId());
     long shipmentId = 678L;
 
     boolean processingError = false;
@@ -227,6 +247,10 @@ public class OrderServiceTest {
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo("shipmentFile.csv", processingError);
     shipmentFileInfo.setId(shipmentId);
 
+    when(orderRepository.getById(order1.getId())).thenReturn(order1);
+    when(orderRepository.getById(order2.getId())).thenReturn(order2);
+    when(requisitionService.getFullRequisitionById(order1.getRnr().getId())).thenReturn(order1.getRnr());
+    when(requisitionService.getFullRequisitionById(order2.getRnr().getId())).thenReturn(order2.getRnr());
     orderService.updateStatusAndShipmentIdForOrders(orderIds, shipmentFileInfo);
 
     verify(orderRepository).updateStatusAndShipmentIdForOrder(123L, PACKED, shipmentId);
@@ -298,9 +322,12 @@ public class OrderServiceTest {
 
   @Test
   public void shouldUpdateOrderStatusAndFtpComment() throws Exception {
-    Order order = new Order();
+    Order order = new Order(make(a(defaultRnr, with(id, 123L))));
+    when(requisitionService.getFullRequisitionById(order.getRnr().getId())).thenReturn(order.getRnr());
+
     orderService.updateOrderStatus(order);
     verify(orderRepository).updateOrderStatus(order);
+    verify(orderEventService).notifyForStatusChange(order);
   }
 
   @Test

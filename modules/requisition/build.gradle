@@ -41,5 +41,8 @@ dependencies {
     artifacts {
         testFixtures testJar
     }
+}
 
+cobertura {
+    coverageFormats << 'xml'
 }
