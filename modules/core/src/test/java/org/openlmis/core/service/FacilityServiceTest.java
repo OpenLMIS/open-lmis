@@ -189,7 +189,7 @@ public class FacilityServiceTest {
     final Date nullDate = null;
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1L, "HIV")), with(isActive, true), with(startDate, nullDate))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(1L)), with(isActive, true), with(startDate, nullDate))));
     }};
 
     facility.setSupportedPrograms(programs);
@@ -201,11 +201,11 @@ public class FacilityServiceTest {
   }
 
   @Test
-  public void shouldUpdateFacilityAndNotifyForFeedIfCoreAttriButeChanges() throws Exception {
+  public void shouldUpdateFacilityAndNotifyForFeedIfCoreAttributeChanges() throws Exception {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
     }};
     when(programSupportedService.getAllByFacilityId(facility.getId())).thenReturn(programsForFacility);
     facility.setSupportedPrograms(programsForFacility);
@@ -225,7 +225,7 @@ public class FacilityServiceTest {
     Facility facility = make(a(FacilityBuilder.defaultFacility));
     List<ProgramSupported> programsForFacility = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported)));
-      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L, "ARV")))));
+      add(make(a(defaultProgramSupported, with(supportedProgram, new Program(2L)))));
     }};
     facility.setSupportedPrograms(programsForFacility);
     Facility savedFacility = make(a(FacilityBuilder.defaultFacility));

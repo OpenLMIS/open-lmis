@@ -12,6 +12,7 @@ package org.openlmis.rnr.dto;
 
 
 import lombok.Data;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,10 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 
 import static java.lang.reflect.Modifier.isStatic;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
+@JsonSerialize(include = NON_EMPTY)
 public class RnrLineItemDTO {
 
   String productCode;

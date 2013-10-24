@@ -131,7 +131,7 @@ public class ProgramSupportedRepositoryTest {
   @Test
   public void shouldDeleteIfNotSendInUpdate() throws Exception {
     Long facilityId = 100L;
-    Program program = new Program(1232L, "random");
+    Program program = new Program(1232L);
 
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedProgram, program)));
     Facility facility = make(a(defaultFacility));
@@ -150,7 +150,7 @@ public class ProgramSupportedRepositoryTest {
   @Test
   public void shouldUpdateIfExist() throws Exception {
     Long facilityId = 100L;
-    Program program = new Program(1232L, "random");
+    Program program = new Program(1232L);
 
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedProgram, program)));
     Date date = new Date();
@@ -180,7 +180,7 @@ public class ProgramSupportedRepositoryTest {
     final Facility facility = make(a(defaultFacility));
     facility.setId(1L);
 
-    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1L, "HIV")),
+    final ProgramSupported hivProgram = make(a(defaultProgramSupported, with(supportedProgram, new Program(1L)),
       with(supportedFacilityId, facility.getId())));
     List<ProgramSupported> programs = new ArrayList<ProgramSupported>() {{
       add(make(a(defaultProgramSupported, with(supportedFacilityId, facility.getId()))));

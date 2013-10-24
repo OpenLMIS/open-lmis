@@ -23,6 +23,7 @@ import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnrDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestResponse.class)
+@PrepareForTest({RestResponse.class, RnrDTO.class})
 public class RestRequisitionControllerTest {
 
   @Mock
@@ -146,11 +147,14 @@ public class RestRequisitionControllerTest {
 
   @Test
   public void shouldGetRequisitionById() throws Exception {
+    mockStatic(RnrDTO.class);
     Long rnrId = 3L;
     Rnr rnr = new Rnr(rnrId);
+    RnrDTO rnrDTO = new RnrDTO();
+    when(RnrDTO.prepareForREST(rnr)).thenReturn(rnrDTO);
     when(service.getRequisition(rnrId)).thenReturn(rnr);
     ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("rnr", rnr), OK);
-    when(RestResponse.response("rnr", rnr)).thenReturn(expectedResponse);
+    when(RestResponse.response("rnr", rnrDTO)).thenReturn(expectedResponse);
 
     ResponseEntity<RestResponse> response = controller.getRequisition(rnrId);
 

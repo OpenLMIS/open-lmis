@@ -37,8 +37,9 @@ public class Program extends BaseModel {
     this.id = id;
   }
 
-  public Program(Long id, String name) {
+  private Program(Long id, String name, String code) {
     this.id = id;
+    this.code = code;
     this.name = name;
   }
 
@@ -52,6 +53,6 @@ public class Program extends BaseModel {
   }
 
   public Program basicInformation() {
-    return new Program(id, name);
+    return new Program(id, name, code);
   }
 }
