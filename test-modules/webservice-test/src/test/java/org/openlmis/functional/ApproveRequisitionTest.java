@@ -10,8 +10,6 @@
 
 package org.openlmis.functional;
 
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
@@ -28,9 +26,6 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.System.getProperty;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
@@ -119,28 +114,28 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     assertEquals("{\"error\":\"Please provide a valid username\"}", response);
   }
 
-    @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
-    public void testApproveRequisitionUnauthorizedAccess() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  public void testApproveRequisitionUnauthorizedAccess() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-        reportFromJson.setRequisitionId(id);
-        reportFromJson.setUserId("commTrack100");
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+    reportFromJson.setRequisitionId(id);
+    reportFromJson.setUserId("commTrack100");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
-        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-                "commTrack100", "Admin123");
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
+      "commTrack100", "Admin123");
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-        assertEquals(401, responseEntity.getStatus());
-    }
+    assertEquals(401, responseEntity.getStatus());
+  }
 
-    @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionInvalidProduct() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -215,9 +210,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
   }
 
   public String submitReport() throws Exception {
-    baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
+    dbWrapper = new DBWrapper();
 
     HttpClient client = new HttpClient();
     client.createContext();

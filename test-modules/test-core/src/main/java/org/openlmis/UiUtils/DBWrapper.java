@@ -16,26 +16,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static java.lang.System.getProperty;
 
 public class DBWrapper {
 
-  String baseUrl, dbUrl, dbUser, dbPassword;
   Connection connection;
+  public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
 
-  public DBWrapper(String baseUrl, String dbUrl) throws IOException, SQLException {
-    this.baseUrl = baseUrl;
-    this.dbUrl = dbUrl;
-    dbUser = "postgres";
-    dbPassword = "p@ssw0rd";
-    connection = getConnection();
+  public DBWrapper() throws IOException, SQLException {
+    String dbUser = "postgres";
+    String dbPassword = "p@ssw0rd";
+    String dbUrl = getProperty("dbUrl", DEFAULT_DB_URL);
     loadDriver();
+    connection = getConnection(dbUrl, dbUser, dbPassword);
   }
+
 
   public void closeConnection() throws SQLException {
     if (connection != null) connection.close();
   }
 
-  private Connection getConnection() throws SQLException {
+  private Connection getConnection(String dbUrl, String dbUser, String dbPassword) throws SQLException {
     return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
   }
 
@@ -746,7 +747,7 @@ public class DBWrapper {
 
   public void updateSupplyLines(String previousFacilityCode, String newFacilityCode) throws IOException, SQLException {
     update("update supply_lines SET supplyingFacilityId=(select id from facilities where code = '" + newFacilityCode + "') " +
-            "where supplyingFacilityId=(select id from facilities where code = '" + previousFacilityCode + "');");
+      "where supplyingFacilityId=(select id from facilities where code = '" + previousFacilityCode + "');");
   }
 
   public void insertValuesInRequisition(boolean emergencyRequisitionRequired) throws IOException, SQLException {
@@ -988,10 +989,10 @@ public class DBWrapper {
     String orderStatus = null;
     ResultSet rs = query("SELECT status from orders where id=" + orderId);
 
-      if (rs.next()) {
-          orderStatus = rs.getString("status");
-      }
-      return orderStatus;
+    if (rs.next()) {
+      orderStatus = rs.getString("status");
+    }
+    return orderStatus;
 
   }
 
@@ -1063,11 +1064,11 @@ public class DBWrapper {
       "('" + code + "','" + name + "');");
   }
 
-    public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,
-                                                    String programFirst, String supervisoryNode,boolean exportorders) throws SQLException {
-        update("INSERT INTO supply_lines (supplyingfacilityid, programid, supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
-                "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='"+programFirst + "'),"+ "(select id from supervisory_nodes where code='"+supervisoryNode+"'),'warehouse', " + exportorders + ", '1', '1');");
-        }
+  public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,
+                                                  String programFirst, String supervisoryNode, boolean exportorders) throws SQLException {
+    update("INSERT INTO supply_lines (supplyingfacilityid, programid, supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
+      "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='" + programFirst + "')," + "(select id from supervisory_nodes where code='" + supervisoryNode + "'),'warehouse', " + exportorders + ", '1', '1');");
+  }
 
   public void insertDeliveryZoneMembers(String code, String facility) throws SQLException {
     update("INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values\n" +
@@ -1236,9 +1237,9 @@ public class DBWrapper {
   }
 
   public void setupUserForFulfillmentRole(String username, String roleName, String facilityCode) throws IOException, SQLException {
-           update("insert into fulfillment_role_assignments(userId, roleId,facilityId) values((select id from users where userName = '" + username +
-                    "'),(select id from roles where name = '" + roleName + "')," +
-                    "(select id from facilities where code = '" + facilityCode + "'));");
+    update("insert into fulfillment_role_assignments(userId, roleId,facilityId) values((select id from users where userName = '" + username +
+      "'),(select id from roles where name = '" + roleName + "')," +
+      "(select id from facilities where code = '" + facilityCode + "'));");
 
   }
 
@@ -1246,39 +1247,39 @@ public class DBWrapper {
                                    String verifiedByName, String verifiedByTitle) throws SQLException {
     ResultSet rs = query("select * from facility_visits;");
     while (rs.next()) {
-      assertEquals(rs.getString("observations").toString(),observations);
-      assertEquals(rs.getString("confirmedbyname").toString(),confirmedByName);
-      assertEquals(rs.getString("confirmedbytitle").toString(),confirmedByTitle);
-      assertEquals(rs.getString("verifiedbyname").toString(),verifiedByName);
+      assertEquals(rs.getString("observations").toString(), observations);
+      assertEquals(rs.getString("confirmedbyname").toString(), confirmedByName);
+      assertEquals(rs.getString("confirmedbytitle").toString(), confirmedByTitle);
+      assertEquals(rs.getString("verifiedbyname").toString(), verifiedByName);
       assertEquals(rs.getString("verifiedbytitle").toString(), verifiedByTitle);
     }
   }
 
-    public String getWarehouse1Name(String facilityCode) throws SQLException {
-        String warehouseName="";
-        ResultSet rs=query("select name from facilities where code='" + facilityCode + "';");
-        if(rs.next())
-            warehouseName=rs.getString(1);
-        return warehouseName;
-    }
+  public String getWarehouse1Name(String facilityCode) throws SQLException {
+    String warehouseName = "";
+    ResultSet rs = query("select name from facilities where code='" + facilityCode + "';");
+    if (rs.next())
+      warehouseName = rs.getString(1);
+    return warehouseName;
+  }
 
-    public void disableFacility(String warehouseName) throws SQLException {
-        update("UPDATE facilities SET enabled='false' WHERE name='"+warehouseName+"';");
-    }
+  public void disableFacility(String warehouseName) throws SQLException {
+    update("UPDATE facilities SET enabled='false' WHERE name='" + warehouseName + "';");
+  }
 
-    public void enableFacility(String warehouseName) throws SQLException {
-        update("UPDATE facilities SET enabled='true' WHERE name='"+warehouseName+"';");
-    }
+  public void enableFacility(String warehouseName) throws SQLException {
+    update("UPDATE facilities SET enabled='true' WHERE name='" + warehouseName + "';");
+  }
 
-    public void verifyPODAndPODLineItems(String OrderId,String productCode, String quantityReceived) throws Exception {
-        ResultSet rs = query("select id,receivedDate from pod where OrderId='"+ OrderId +"';");
-        while (rs.next()) {
-            //assertEquals(rs.getString("receivedDate").toString(),receivedDate);
-            rs = query("select productcode,quantityreceived from POD_line_items where podId='"+ rs.getString("id").toString() +"';");
-            while (rs.next()) {
-                assertEquals(rs.getString("productcode").toString(),productCode);
-                assertEquals(rs.getString("quantityreceived").toString(),quantityReceived);
-                }
-        }
+  public void verifyPODAndPODLineItems(String OrderId, String productCode, String quantityReceived) throws Exception {
+    ResultSet rs = query("select id,receivedDate from pod where OrderId='" + OrderId + "';");
+    while (rs.next()) {
+      //assertEquals(rs.getString("receivedDate").toString(),receivedDate);
+      rs = query("select productcode,quantityreceived from POD_line_items where podId='" + rs.getString("id").toString() + "';");
+      while (rs.next()) {
+        assertEquals(rs.getString("productcode").toString(), productCode);
+        assertEquals(rs.getString("quantityreceived").toString(), quantityReceived);
+      }
     }
+  }
 }

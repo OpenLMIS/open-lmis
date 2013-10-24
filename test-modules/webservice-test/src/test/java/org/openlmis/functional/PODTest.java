@@ -27,8 +27,6 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.System.getProperty;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
@@ -70,8 +68,8 @@ public class PODTest extends TestCaseHelper {
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10") ;
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65) ;
+    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
@@ -308,9 +306,7 @@ public class PODTest extends TestCaseHelper {
     }
 
   public String approveRequisition() throws Exception {
-    baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
+    dbWrapper = new DBWrapper();
 
     HttpClient client = new HttpClient();
     client.createContext();
@@ -336,10 +332,10 @@ public class PODTest extends TestCaseHelper {
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
     responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-                      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-                      "PUT",
-                      "commTrack",
-                      "Admin123");
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
     return responseEntity.getResponse();
   }
 

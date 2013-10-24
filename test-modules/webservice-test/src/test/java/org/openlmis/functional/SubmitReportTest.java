@@ -26,7 +26,6 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.System.getProperty;
 import static org.openlmis.UiUtils.HttpClient.GET;
 import static org.openlmis.UiUtils.HttpClient.POST;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
@@ -298,9 +297,7 @@ public class SubmitReportTest extends TestCaseHelper {
   }
 
   public String submitReport() throws Exception {
-    baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
+    dbWrapper = new DBWrapper();
 
     HttpClient client = new HttpClient();
     client.createContext();

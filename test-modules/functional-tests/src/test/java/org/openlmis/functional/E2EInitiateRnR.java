@@ -97,7 +97,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     List<String> userRoleListStoreInCharge = new ArrayList<String>();
     for (int i = 0; i < roleRights.length; i++)
       userRoleListStoreInCharge.add(roleRights[i]);
-      createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, roleType);
+    createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, roleType);
   }
 
   @And("^I setup supervisory node data$")
@@ -107,10 +107,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node 2", "N1");
   }
 
-    @And("^I setup warehouse data$")
-    public void warehouseDataSetup() throws Exception {
-        dbWrapper.insertWarehouseIntoSupplyLinesTable("F11", "HIV", "N1",true);
-    }
+  @And("^I setup warehouse data$")
+  public void warehouseDataSetup() throws Exception {
+    dbWrapper.insertWarehouseIntoSupplyLinesTable("F11", "HIV", "N1", true);
+  }
 
   @And("^I create users:$")
   public void createUser(DataTable userTable) throws Exception {
@@ -127,7 +127,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @And("^I assign warehouse \"([^\"]*)\" and role \"([^\"]*)\" to user$")
-  public void assignWarehouse(String warehouse,String warehouseRole) throws Exception {
+  public void assignWarehouse(String warehouse, String warehouseRole) throws Exception {
     UserPage userPage = new UserPage(testWebDriver);
     userPage.assignWarehouse(warehouse, warehouseRole);
   }
@@ -189,26 +189,26 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @And("^I initiate and submit emergency requisition$")
-    public void initiateEmergencyRnR() throws Exception {
-      HomePage homePage = new HomePage(testWebDriver);
+  public void initiateEmergencyRnR() throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
 
-      homePage.navigateAndInitiateEmergencyRnr(program);
-      InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-      homePage.clickProceed();
-      initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails,
-              geoZone, parentGeoZone, operatedBy, facilityType);
-      initiateRnRPage.submitRnR();
-      initiateRnRPage.verifySubmitRnrErrorMsg();
-      initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
-      initiateRnRPage.verifyTotalField();
+    homePage.navigateAndInitiateEmergencyRnr(program);
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    homePage.clickProceed();
+    initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails,
+      geoZone, parentGeoZone, operatedBy, facilityType);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.verifySubmitRnrErrorMsg();
+    initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
+    initiateRnRPage.verifyTotalField();
 
-      initiateRnRPage.submitRnR();
-      initiateRnRPage.clickOk();
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
   }
 
   @And("^I access proceed$")
   public void accessProceed() throws Exception {
-    HomePage homePage=new HomePage(testWebDriver);
+    HomePage homePage = new HomePage(testWebDriver);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
   }
@@ -230,14 +230,14 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142,false);
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142, false);
     initiateRnRPage.verifyPacksToShip("15");
   }
 
   @And("^I update & verify ordered quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142,true);
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142, true);
     initiateRnRPage.verifyPacksToShip("");
   }
 
@@ -253,8 +253,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I add non full supply items & verify total cost$")
   public void enterNonFullSupplyAndVerifyTotalCost() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics",
-      baseUrlGlobal, dbUrlGlobal);
+    initiateRnRPage.addNonFullSupplyLineItems("99", "Due to unforeseen event", "antibiotic", "P11", "Antibiotics");
     initiateRnRPage.calculateAndVerifyTotalCostNonFullSupply();
     initiateRnRPage.verifyCostOnFooter();
   }
@@ -390,7 +389,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see ordered list with download link$")
   public void verifyOrderListWithdDownloadLink() throws Exception {
-      verifyOrderedList(true);
+    verifyOrderedList(true);
   }
 
   @When("^I do not have anything to pack to ship$")
@@ -400,19 +399,19 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see ordered list without download link$")
   public void verifyOrderListWithoutdDownloadLink() throws Exception {
-      verifyOrderedList(false);
+    verifyOrderedList(false);
   }
 
   @Then("^I verify Regular RnR Type$")
   public void verifyRegularRnRText() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    assertEquals(initiateRnRPage.getRegularLabelText(),"Regular");
+    assertEquals(initiateRnRPage.getRegularLabelText(), "Regular");
   }
 
-    @Then("^I verify Emergency RnR Type$")
+  @Then("^I verify Emergency RnR Type$")
   public void verifyEmergencyRnRText() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    assertEquals(initiateRnRPage.getEmergencyLabelText(),"Emergency");
+    assertEquals(initiateRnRPage.getEmergencyLabelText(), "Emergency");
   }
 
   private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
@@ -420,13 +419,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
                                         String facility, String program, String supervisoryNode, String role,
                                         String roleType, String warehouse, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dbUrlGlobal);
+    userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName);
     dbWrapper.updateUser(passwordUsers, userEmail);
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program,
-            supervisoryNode, role, roleType);
-    userPage.assignWarehouse(warehouse,warehouseRole);
+      supervisoryNode, role, roleType);
+    userPage.assignWarehouse(warehouse, warehouseRole);
     userPage.saveUser();
-    userPage.verifyUserUpdated(userFirstName,userLastName);
+    userPage.verifyUserUpdated(userFirstName, userLastName);
   }
 
   private void verifyConvertToOrder(ConvertOrderPage convertOrderPageOrdersPending) {

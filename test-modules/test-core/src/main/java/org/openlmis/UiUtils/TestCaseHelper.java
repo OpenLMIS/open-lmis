@@ -29,21 +29,20 @@ import static java.lang.System.getProperty;
 public class TestCaseHelper {
 
   public static DBWrapper dbWrapper;
-  protected static String baseUrlGlobal, dbUrlGlobal;
+  protected static String baseUrlGlobal;
   protected static String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
   public static final String DEFAULT_BROWSER = "firefox";
   public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
-  public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
+
 
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
 
-    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
+    dbWrapper = new DBWrapper();
     dbWrapper.deleteData();
 
     if (!isSeleniumStarted) {
@@ -254,7 +253,7 @@ public class TestCaseHelper {
     dbWrapper.insertSchedule("M", "Monthly", "Month");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", facilityCode1, facilityCode2);
     dbWrapper.insertSupplyLines("N1", program, facilityCode1, true);
-    dbWrapper.updateActiveStatusOfProgram(programCode,true);
+    dbWrapper.updateActiveStatusOfProgram(programCode, true);
   }
 
   public void updateProductWithGroup(String product, String productGroup) throws IOException, SQLException {
@@ -321,27 +320,27 @@ public class TestCaseHelper {
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
   }
 
-    public void setupDeliveryZoneRolesAndRightsAfterWarehouse(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
-                                                String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
-                                                String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
-        //dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
-        //dbWrapper.insertSchedule(schedule, "Monthly", "Month");
-        setupTestRoleRightsData(roleNmae, "MANAGE_DISTRIBUTION");
-        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
-    }
+  public void setupDeliveryZoneRolesAndRightsAfterWarehouse(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                            String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond,
+                                                            String programFirst, String programSecond, String schedule, String roleNmae) throws IOException, SQLException {
+    //dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
+    //dbWrapper.insertSchedule(schedule, "Monthly", "Month");
+    setupTestRoleRightsData(roleNmae, "MANAGE_DISTRIBUTION");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
+  }
 
-    public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond,
-                                             String programName,
-                                             String schedule, String roleName) throws IOException, SQLException {
-        dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
-        dbWrapper.insertSchedule(schedule, "Monthly", "Month");
-        setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
-        setupDataForWarehouse(facilityCodeFirst, programName, "N1");
-    }
+  public void setupWarehouseRolesAndRights(String facilityCodeFirst, String facilityCodeSecond,
+                                           String programName,
+                                           String schedule, String roleName) throws IOException, SQLException {
+    dbWrapper.insertFacilities(facilityCodeFirst, facilityCodeSecond);
+    dbWrapper.insertSchedule(schedule, "Monthly", "Month");
+    setupTestRoleRightsData(roleName, "FACILITY_FILL_SHIPMENT");
+    setupDataForWarehouse(facilityCodeFirst, programName, "N1");
+  }
 
-    public void setupDataForWarehouse(String facilityCode,String programName, String supervisoryNode)throws IOException, SQLException{
-        dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCode, programName,"N1",false);
-    }
+  public void setupDataForWarehouse(String facilityCode, String programName, String supervisoryNode) throws IOException, SQLException {
+    dbWrapper.insertWarehouseIntoSupplyLinesTable(facilityCode, programName, "N1", false);
+  }
 
   public String[] readCSVFile(String file) throws IOException, SQLException {
     BufferedReader br = null;
