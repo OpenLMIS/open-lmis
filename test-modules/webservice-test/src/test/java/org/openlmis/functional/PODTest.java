@@ -24,9 +24,9 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
