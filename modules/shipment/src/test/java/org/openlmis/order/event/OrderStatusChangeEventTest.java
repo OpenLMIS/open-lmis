@@ -8,15 +8,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.event;
+package org.openlmis.order.event;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.dto.OrderStatusFeedDTO;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -26,36 +27,37 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_CATEGORY;
-import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_TITLE;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DateTime.class, RequisitionStatusChangeEvent.class})
-public class RequisitionStatusChangeEventTest {
+@PrepareForTest({DateTime.class, OrderStatusChangeEvent.class})
+public class OrderStatusChangeEventTest {
 
   @Test
-  public void shouldCreateEventFromRequisition() throws Exception {
+  public void shouldCreateEventFromOrder() throws Exception {
     mockStatic(DateTime.class);
 
     Rnr rnr = make(a(defaultRnr));
+    Order order = new Order(rnr);
+    order.setStatus(READY_TO_PACK);
 
     DateTime date = DateTime.now();
     when(DateTime.now()).thenReturn(date);
 
-    RequisitionStatusFeedDTO feedDTO = mock(RequisitionStatusFeedDTO.class);
-    whenNew(RequisitionStatusFeedDTO.class).withArguments(rnr).thenReturn(feedDTO);
+    OrderStatusFeedDTO feedDTO = mock(OrderStatusFeedDTO.class);
+    whenNew(OrderStatusFeedDTO.class).withArguments(order).thenReturn(feedDTO);
     when(feedDTO.getSerializedContents()).thenReturn("serializedContents");
 
-    RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr);
+    OrderStatusChangeEvent event = new OrderStatusChangeEvent(order);
 
-    assertThat(event.getTitle(), is(FEED_TITLE));
+    assertThat(event.getTitle(), is(OrderStatusChangeEvent.FEED_TITLE));
     assertThat(event.getTimeStamp(), is(date));
     assertThat(event.getUuid(), is(notNullValue()));
     assertThat(event.getContents(), is("serializedContents"));
-    assertThat(event.getCategory(), is(FEED_CATEGORY));
+    assertThat(event.getCategory(), is(OrderStatusChangeEvent.FEED_CATEGORY));
     verify(feedDTO).getSerializedContents();
   }
 }

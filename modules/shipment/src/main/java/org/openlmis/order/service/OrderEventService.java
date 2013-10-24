@@ -8,23 +8,28 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.event;
+package org.openlmis.order.service;
 
-import org.ict4h.atomfeed.server.service.Event;
-import org.joda.time.DateTime;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
+import org.ict4h.atomfeed.server.service.EventService;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.event.OrderStatusChangeEvent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
-import java.util.UUID;
 
-public class RequisitionStatusChangeEvent extends Event {
-  static final String FEED_TITLE = "Requisition Status";
-  static final String FEED_CATEGORY = "requisitionStatus";
+@Service
+public class OrderEventService {
 
-  public RequisitionStatusChangeEvent(Rnr requisition) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",
-            new RequisitionStatusFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
+  @Autowired
+  EventService eventService;
+
+  public void notifyForStatusChange(Order order) {
+    try {
+      eventService.notify(new OrderStatusChangeEvent(order));
+    } catch (URISyntaxException e) {
+      throw new DataException("error.malformed.uri");
+    }
   }
-
 }

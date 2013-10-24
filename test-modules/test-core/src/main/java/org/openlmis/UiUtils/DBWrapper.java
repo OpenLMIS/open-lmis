@@ -973,6 +973,17 @@ public class DBWrapper {
 
   }
 
+  public String getOrderForRequisition(Long requisitionId) throws IOException, SQLException {
+    String requisitionStatus = null;
+    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
+
+    if (rs.next()) {
+      requisitionStatus = rs.getString("status");
+    }
+    return requisitionStatus;
+
+  }
+
   public String getOrderStatus(Long orderId) throws IOException, SQLException {
     String orderStatus = null;
     ResultSet rs = query("SELECT status from orders where id=" + orderId);

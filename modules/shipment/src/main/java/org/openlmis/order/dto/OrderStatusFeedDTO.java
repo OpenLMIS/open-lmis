@@ -8,32 +8,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.dto;
+package org.openlmis.order.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.openlmis.core.dto.BaseFeedDTO;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 
 @Data
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class RnrStatusFeedDTO extends BaseFeedDTO {
-  private Long requisitionId;
-  private RnrStatus requisitionStatus;
-  private boolean emergency;
-  private Long startDate;
-  private Long endDate;
+public class OrderStatusFeedDTO extends RequisitionStatusFeedDTO {
+  private Long orderId;
+  private OrderStatus orderStatus;
 
-  public RnrStatusFeedDTO(Rnr rnr) {
-    this.requisitionId = rnr.getId();
-    this.requisitionStatus = rnr.getStatus();
-    this.emergency = rnr.isEmergency();
-    // TODO - Send UTC timestamps - open issue
-    if (rnr.getPeriod() == null) return;
-    this.startDate = rnr.getPeriod().getStartDate().getTime();
-    this.endDate = rnr.getPeriod().getEndDate().getTime();
+  public OrderStatusFeedDTO(Order order) {
+    super(order.getRnr());
+    this.orderId = order.getId();
+    this.orderStatus = order.getStatus();
   }
 }

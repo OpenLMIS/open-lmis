@@ -90,11 +90,11 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisitionStatus/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"SUBMITTED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"AUTHORIZED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})

@@ -8,54 +8,51 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.event;
+package org.openlmis.order.service;
 
-import org.joda.time.DateTime;
+import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.order.event.OrderStatusChangeEvent;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_CATEGORY;
-import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_TITLE;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DateTime.class, RequisitionStatusChangeEvent.class})
-public class RequisitionStatusChangeEventTest {
+@PrepareForTest(OrderEventService.class)
+public class OrderEventServiceTest {
+
+  @Mock
+  EventService eventService;
+
+  @InjectMocks
+  OrderEventService service;
 
   @Test
-  public void shouldCreateEventFromRequisition() throws Exception {
-    mockStatic(DateTime.class);
+  public void shouldTriggerNotifyOnEventService() throws Exception {
+    Rnr requisition = make(a(defaultRnr));
+    Order order = new Order(requisition);
+    order.setStatus(READY_TO_PACK);
 
-    Rnr rnr = make(a(defaultRnr));
+    OrderStatusChangeEvent event = mock(OrderStatusChangeEvent.class);
+    whenNew(OrderStatusChangeEvent.class).withArguments(order).thenReturn(event);
 
-    DateTime date = DateTime.now();
-    when(DateTime.now()).thenReturn(date);
+    service.notifyForStatusChange(order);
 
-    RequisitionStatusFeedDTO feedDTO = mock(RequisitionStatusFeedDTO.class);
-    whenNew(RequisitionStatusFeedDTO.class).withArguments(rnr).thenReturn(feedDTO);
-    when(feedDTO.getSerializedContents()).thenReturn("serializedContents");
-
-    RequisitionStatusChangeEvent event = new RequisitionStatusChangeEvent(rnr);
-
-    assertThat(event.getTitle(), is(FEED_TITLE));
-    assertThat(event.getTimeStamp(), is(date));
-    assertThat(event.getUuid(), is(notNullValue()));
-    assertThat(event.getContents(), is("serializedContents"));
-    assertThat(event.getCategory(), is(FEED_CATEGORY));
-    verify(feedDTO).getSerializedContents();
+    verify(eventService).notify(event);
   }
 }

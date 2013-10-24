@@ -24,12 +24,12 @@ import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.period;
 
 @Category(UnitTests.class)
-public class RnrStatusFeedDTOTest {
+public class RequisitionStatusFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
 
-    RnrStatusFeedDTO feed = new RnrStatusFeedDTO(rnr);
+    RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));
@@ -45,7 +45,7 @@ public class RnrStatusFeedDTOTest {
     Rnr rnr = make(a(defaultRnr, with(period, processingPeriod)));
     rnr.setPeriod(null);
 
-    RnrStatusFeedDTO feed = new RnrStatusFeedDTO(rnr);
+    RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));

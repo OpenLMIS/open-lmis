@@ -8,23 +8,32 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.event;
+package org.openlmis.rnr.dto;
 
-import org.ict4h.atomfeed.server.service.Event;
-import org.joda.time.DateTime;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Delegate;
+import lombok.EqualsAndHashCode;
+import org.openlmis.core.dto.BaseFeedDTO;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
+import org.openlmis.rnr.domain.RnrStatus;
 
-import java.net.URISyntaxException;
-import java.util.UUID;
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class RequisitionStatusFeedDTO extends BaseFeedDTO {
+  protected Long requisitionId;
+  protected RnrStatus requisitionStatus;
+  protected boolean emergency;
+  protected Long startDate;
+  protected Long endDate;
 
-public class RequisitionStatusChangeEvent extends Event {
-  static final String FEED_TITLE = "Requisition Status";
-  static final String FEED_CATEGORY = "requisitionStatus";
-
-  public RequisitionStatusChangeEvent(Rnr requisition) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",
-            new RequisitionStatusFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
+  public RequisitionStatusFeedDTO(Rnr rnr) {
+    this.requisitionId = rnr.getId();
+    this.requisitionStatus = rnr.getStatus();
+    this.emergency = rnr.isEmergency();
+    // TODO - Send UTC timestamps - open issue
+    if (rnr.getPeriod() == null) return;
+    this.startDate = rnr.getPeriod().getStartDate().getTime();
+    this.endDate = rnr.getPeriod().getEndDate().getTime();
   }
-
 }
