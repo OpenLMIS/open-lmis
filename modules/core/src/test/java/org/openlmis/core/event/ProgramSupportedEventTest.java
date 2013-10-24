@@ -48,7 +48,7 @@ public class ProgramSupportedEventTest {
 
     assertThat(programSupportedEvent.getTitle(), is("ProgramSupported"));
     assertNotNull(programSupportedEvent.getUuid());
-    assertThat(programSupportedEvent.getCategory(), is("programSupported"));
+    assertThat(programSupportedEvent.getCategory(), is("program-supported"));
     assertThat(programSupportedEvent.getTimeStamp(),is(dateTime));
     assertThat(programSupportedEvent.getContents(),is("serializedContents"));
     verify(programSupportedEventDTO).getSerializedContents();
