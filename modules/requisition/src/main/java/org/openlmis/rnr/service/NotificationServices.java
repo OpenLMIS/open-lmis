@@ -8,7 +8,6 @@ package org.openlmis.rnr.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.email.service.EmailService;
@@ -40,7 +39,7 @@ public class NotificationServices {
 
 
 
-  public void notifyStatusChange(Rnr requisition, Vendor vendor)   {
+  public void notifyStatusChange(Rnr requisition)   {
 
 
         // read from the configuration the email template

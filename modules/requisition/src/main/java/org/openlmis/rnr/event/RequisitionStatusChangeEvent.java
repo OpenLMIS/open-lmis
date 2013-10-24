@@ -12,7 +12,6 @@ package org.openlmis.rnr.event;
 
 import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
-import org.openlmis.core.domain.Vendor;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrFeedDTO;
 import org.openlmis.rnr.service.NotificationServices;
@@ -34,7 +33,7 @@ public class RequisitionStatusChangeEvent extends Event {
 
     if(requisition != null)  {
       notificationService = nServices;
-      notificationService.notifyStatusChange(requisition, vendor);
+      notificationService.notifyStatusChange(requisition);
     }
   }
 

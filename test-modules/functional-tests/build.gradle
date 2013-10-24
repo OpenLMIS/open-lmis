@@ -298,7 +298,7 @@ distributionTest.doFirst() {
 task reportTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'firefox'
-        systemProperties['dburl'] = "$dburl"
+        systemProperties['dbUrl'] = connectionString
         systemProperties['baseurl'] = "$baseurl"
 
         suites 'src/test/java/org/openlmis/functional/testng-report.xml'
