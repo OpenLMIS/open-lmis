@@ -68,7 +68,7 @@ subprojects {
     }
 
     test {
-        jvmArgs '-XX:-UseSplitVerifier'
+        jvmArgs '-XX:-UseSplitVerifier', '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005'
         System.properties.get('environmentName', 'local')
         systemProperties System.properties
         useJUnit {
