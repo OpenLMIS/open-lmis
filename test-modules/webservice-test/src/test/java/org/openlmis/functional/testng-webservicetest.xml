@@ -36,6 +36,8 @@
         </class>
       <class name="org.openlmis.functional.PODTest">
       </class>
+      <class name="org.openlmis.functional.GetRequsitionDetailsAPI">
+      </class>
     </classes>
   </test>
 </suite>
