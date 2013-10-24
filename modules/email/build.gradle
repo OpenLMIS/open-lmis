@@ -40,3 +40,7 @@ dependencies {
         testFixtures testJar
     }
 }
+
+cobertura {
+    coverageFormats << 'xml'
+}
