@@ -15,7 +15,6 @@ import org.gradle.api.tasks.Exec
 apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'js'
-apply plugin: 'cobertura'
 
 task jsHint(type: GruntTask) {
     workingDir '.'
@@ -208,8 +207,4 @@ compileJava.dependsOn compileLess
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
-}
-
-cobertura {
-    coverageFormats << 'xml'
 }

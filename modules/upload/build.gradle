@@ -8,11 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-apply plugin: 'cobertura'
-
-apply plugin: 'idea'
-apply plugin: 'java'
-
 repositories {
     mavenCentral()
 }
@@ -32,8 +27,4 @@ dependencies {
     }
 
     testCompile 'org.springframework:spring-test:3.1.2.RELEASE'
-}
-
-cobertura {
-    coverageFormats << 'xml'
 }

@@ -8,8 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-apply plugin: 'cobertura'
-
 dependencies {
 
     compile "postgresql:postgresql:9.1-901.jdbc4",
@@ -48,8 +46,3 @@ dependencies {
         testFixtures testJar
     }
 }
-
-cobertura {
-    coverageFormats << 'xml'
-}
-

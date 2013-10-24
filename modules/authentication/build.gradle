@@ -8,8 +8,6 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-apply plugin: 'cobertura'
-
 dependencies {
     compile 'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
@@ -23,8 +21,4 @@ dependencies {
             'javax.servlet:servlet-api:2.5'
 
     testCompile 'org.springframework:spring-test:3.1.1.RELEASE'
-}
-
-cobertura {
-    coverageFormats << 'xml'
 }
