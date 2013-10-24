@@ -24,17 +24,13 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.System.getProperty;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
 import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class GetRequsitionDetailsAPI extends TestCaseHelper {
+public class GetRequisitionDetailsAPI extends TestCaseHelper {
 
-  public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
   public WebDriver driver;
@@ -74,9 +70,7 @@ public class GetRequsitionDetailsAPI extends TestCaseHelper {
       }
 
   public String submitReport() throws Exception {
-    baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
+    dbWrapper = new DBWrapper();
 
     HttpClient client = new HttpClient();
     client.createContext();
