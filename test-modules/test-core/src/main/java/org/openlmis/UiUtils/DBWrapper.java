@@ -1258,4 +1258,16 @@ public class DBWrapper {
     public void enableFacility(String warehouseName) throws SQLException {
         update("UPDATE facilities SET enabled='true' WHERE name='"+warehouseName+"';");
     }
+
+    public void verifyPODAndPODLineItems(String OrderId,String productCode, String quantityReceived) throws Exception {
+        ResultSet rs = query("select id,receivedDate from pod where OrderId='"+ OrderId +"';");
+        while (rs.next()) {
+            //assertEquals(rs.getString("receivedDate").toString(),receivedDate);
+            rs = query("select productcode,quantityreceived from POD_line_items where podId='"+ rs.getString("id").toString() +"';");
+            while (rs.next()) {
+                assertEquals(rs.getString("productcode").toString(),productCode);
+                assertEquals(rs.getString("quantityreceived").toString(),quantityReceived);
+                }
+        }
+    }
 }

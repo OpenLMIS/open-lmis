@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -57,7 +58,7 @@ public class PODTest extends TestCaseHelper {
   }
 
   @Test(groups = {"webservice"})
-  public void testPODValidRnR() throws Exception {
+  public void testValidAndDuplicatePOD() throws Exception {
       dbWrapper.assignRight("store in-charge", "MANAGE_POD");
       dbWrapper.setupUserForFulfillmentRole("commTrack","store in-charge","F10");
 
@@ -84,7 +85,227 @@ public class PODTest extends TestCaseHelper {
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
+
+    dbWrapper.verifyPODAndPODLineItems(id.toString(),"P10","65");
+
+      responseEntity =
+              client.SendJSON(getJsonStringFor(PODFromJson),
+                      "http://localhost:9091/rest-api/pod/" + id + ".json",
+                      "POST",
+                      "commTrack",
+                      "Admin123");
+      response = responseEntity.getResponse();
+
+      assertEquals(400, responseEntity.getStatus());
+      assertEquals(response, "{\"error\":\"Delivery already confirmed\"}");
   }
+
+    @Test(groups = {"webservice"})
+    public void verifyPODHavingProductNotAvailableinRnR() throws Exception {
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+        dbWrapper.setupUserForFulfillmentRole("commTrack","store in-charge","F10");
+
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P11") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(650) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(200, responseEntity.getStatus());
+        assertEquals(response, "{\"success\":\"POD updated successfully\"}");
+        assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
+
+        dbWrapper.verifyPODAndPODLineItems(id.toString(),"P11","650");
+    }
+
+    @Test(groups = {"webservice"})
+    public void verifyUserPermissionOnWarehouse() throws Exception {
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(65) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals(response, "{\"error\":\"User does not have permission\"}");
+        assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    }
+
+    @Test(groups = {"webservice"})
+    public void verifyRoleManagePOD() throws Exception {
+        dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(65) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals(response, "{\"error\":\"User does not have permission\"}");
+        assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    }
+
+    @Test(groups = {"webservice"})
+    public void verifyInvalidOrderId() throws Exception {
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(65) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/19999999.json",
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals(response, "{\"error\":\"Invalid Order ID\"}");
+        assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    }
+
+    @Test(groups = {"webservice"})
+    public void verifyInvalidProductCode() throws Exception {
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+        dbWrapper.setupUserForFulfillmentRole("commTrack","store in-charge","F10");
+
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P1000000") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(65) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals(response, "{\"error\":\"[P1000000] Invalid product code\"}");
+        assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    }
+
+    @Test(groups = {"webservice"})
+    public void verifyAuthentication() throws Exception {
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+        dbWrapper.setupUserForFulfillmentRole("commTrack","store in-charge","F10");
+
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(65) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "POST",
+                        "commTrack100",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(401, responseEntity.getStatus());
+        assertTrue(response.contains("Error 401 Authentication Failed"));
+        assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    }
+
+    @Test(groups = {"webservice"})
+    public void verifyInvalidQuantity() throws Exception {
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+        dbWrapper.setupUserForFulfillmentRole("commTrack","store in-charge","F10");
+
+        HttpClient client = new HttpClient();
+
+        client.createContext();
+
+        String response = approveRequisition();
+        Long id = getRequisitionIdFromResponse(response);
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10") ;
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(-65) ;
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        response = responseEntity.getResponse();
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals(response, "{\"error\":\"Invalid received quantity\"}");
+        assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    }
 
   public String approveRequisition() throws Exception {
     baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
