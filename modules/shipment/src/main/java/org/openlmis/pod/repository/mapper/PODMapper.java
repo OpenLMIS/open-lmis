@@ -31,7 +31,7 @@ public interface PODMapper {
   @Select("SELECT * FROM pod_line_items where podId = #{podId}")
   List<PODLineItem> getPODLineItemsByPODId(Long podId);
 
-  @Insert("INSERT INTO pod (orderId, receivedDate) values (#{orderId}, DEFAULT)")
+  @Insert("INSERT INTO pod (orderId, receivedDate, createdBy, modifiedBy) values (#{orderId}, DEFAULT, #{createdBy}, #{modifiedBy} )")
   @Options(useGeneratedKeys = true)
   void insertPOD(POD pod);
 
