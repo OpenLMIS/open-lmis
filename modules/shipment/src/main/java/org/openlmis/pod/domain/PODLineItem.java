@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +30,9 @@ public class PODLineItem extends BaseModel {
   public void validate() {
     if (StringUtils.isEmpty(productCode) || quantityReceived == null) {
       throw new DataException("error.restapi.mandatory.missing");
+    }
+    if(quantityReceived < 0) {
+      throw new DataException(new OpenLmisMessage("error.invalid.received.quantity"));
     }
   }
 }

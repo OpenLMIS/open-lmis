@@ -38,4 +38,14 @@ public class PODLineItemTest {
 
     podLineItem.validate();
   }
+
+  @Test
+  public void shouldThrowExceptionIfQuantityReceivedIsNegative(){
+    PODLineItem podLineItem = new PODLineItem(1l, "P100", -100);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.received.quantity");
+
+    podLineItem.validate();
+  }
 }
