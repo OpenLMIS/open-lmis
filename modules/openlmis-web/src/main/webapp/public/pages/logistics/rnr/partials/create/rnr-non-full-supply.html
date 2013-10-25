@@ -31,14 +31,14 @@
 
 <div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
   <table id="nonFullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns class="table table-bordered scrollable"
-         ng-show="pageLineItems.length > 0">
+         ng-show="page.nonFullSupply.length > 0">
     <thead>
     <tr>
       <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
           ng-bind="programRnrColumn.label"></th>
     </tr>
     </thead>
-    <tbody ng-repeat="rnrLineItem in pageLineItems">
+    <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
     <tr>
       <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
           ng-bind="rnrLineItem.productCategory"></td>

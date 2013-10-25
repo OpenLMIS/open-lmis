@@ -534,28 +534,28 @@ describe('CreateRequisitionController', function () {
 
   it('should return true if error on full supply page', function () {
     scope.errorPages = {fullSupply: [1]};
-    scope.visibleTab = 'full-supply';
+    scope.visibleTab = 'fullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on full supply page', function () {
     scope.errorPages = {fullSupply: []};
-    scope.visibleTab = 'full-supply';
+    scope.visibleTab = 'fullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
 
   it('should return true if error on non full supply page', function () {
     scope.errorPages = {nonFullSupply: [1]};
-    scope.visibleTab = 'non-full-supply';
+    scope.visibleTab = 'nonFullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on non full supply page', function () {
     scope.errorPages = {nonFullSupply: []};
-    scope.visibleTab = 'non-full-supply';
+    scope.visibleTab = 'nonFullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });

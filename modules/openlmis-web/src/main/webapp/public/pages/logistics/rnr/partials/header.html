@@ -16,8 +16,8 @@
   </h2>
   <div class="info-box padding2px">
     <div class="pull-left">
-      <div ng-class="requisitionType">
-        <span ng-bind="requisitionType"></span>
+      <div ng-class="{'emergency': rnr.emergency, 'regular': !rnr.emergency}">
+        <span openlmis-message="requisitionType"></span>
       </div>
 
     </div>

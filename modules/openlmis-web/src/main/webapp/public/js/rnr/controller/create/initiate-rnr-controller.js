@@ -260,7 +260,7 @@ function InitiateRnrController($scope, $location, Requisitions,
             return;
           }
           $scope.$parent.rnr = data.rnr;
-          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=fullSupply&page=1";
           $location.url(createRnrPath);
         });
       } else if (hasPermission('CREATE_REQUISITION')) {
@@ -268,7 +268,7 @@ function InitiateRnrController($scope, $location, Requisitions,
         Requisitions.save({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id,
           periodId: selectedPeriod.id, emergency: $scope.selectedRnrType.emergency}, {}, function (data) {
           $scope.$parent.rnr = data.rnr;
-          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=full-supply&page=1";
+          createRnrPath = '/create-rnr/' + $scope.$parent.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id + "?supplyType=fullSupply&page=1";
           $location.url(createRnrPath);
         }, function (data) {
           $scope.error = data.data.error ? data.data.error : messageService.get("error.requisition.not.exist");

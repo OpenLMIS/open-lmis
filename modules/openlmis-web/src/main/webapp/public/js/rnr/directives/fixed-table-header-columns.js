@@ -14,7 +14,8 @@
 app.directive('fixedTableHeaderColumns', function () {
   return {
     restrict: 'A',
-    link: function (scope, element, attr, ctrl) {
+    link: function (scope, element) {
+
       var fixedHeaderColumns = $("<div id='header-columns-fixed' class='header-fixed'></div>");
       fixedHeaderColumns.hide();
 
@@ -34,7 +35,9 @@ app.directive('fixedTableHeaderColumns', function () {
       };
 
       $(window).on('resize', function () {
-        $('#header-columns-fixed th').each(function (index, tableHeaderElement) {
+        if (!element.is(':visible'))
+          return;
+        $('#header-columns-fixed th:visible').each(function (index, tableHeaderElement) {
           copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
         });
       });
