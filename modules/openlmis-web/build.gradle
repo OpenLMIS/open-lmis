@@ -16,6 +16,8 @@ apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'js'
 
+apply plugin: 'cobertura'
+
 class GruntTask extends Exec {
     private String gruntExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "grunt.cmd" : "grunt"
     private String switches = "--no-color"
