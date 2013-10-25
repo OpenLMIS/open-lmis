@@ -155,8 +155,8 @@ public class RestRequisitionControllerTest {
     Order order = mock(Order.class);
     when(ReplenishmentDTO.prepareForREST(rnr, order)).thenReturn(replenishmentDTO);
     when(service.getReplenishmentDetails(rnrId)).thenReturn(replenishmentDTO);
-    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("replenishment", replenishmentDTO), OK);
-    when(RestResponse.response("replenishment", replenishmentDTO)).thenReturn(expectedResponse);
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("requisition", replenishmentDTO), OK);
+    when(RestResponse.response("requisition", replenishmentDTO)).thenReturn(expectedResponse);
 
     ResponseEntity<RestResponse> response = controller.getReplenishment(rnrId);
 
@@ -171,7 +171,7 @@ public class RestRequisitionControllerTest {
     DataException exception = new DataException("some error");
     doThrow(exception).when(service).getReplenishmentDetails(rnrId);
 
-    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("replenishment", replenishmentDTO), BAD_REQUEST);
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("requisition", replenishmentDTO), BAD_REQUEST);
     when(RestResponse.error(exception.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
 
     ResponseEntity<RestResponse> response = controller.getReplenishment(rnrId);

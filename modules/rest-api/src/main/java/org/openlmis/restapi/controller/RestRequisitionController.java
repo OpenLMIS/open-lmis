@@ -63,7 +63,7 @@ public class RestRequisitionController extends BaseController {
   @RequestMapping(value = "/rest-api/requisitions/{id}", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> getReplenishment(@PathVariable Long id) {
     try {
-      return response("replenishment", restRequisitionService.getReplenishmentDetails(id));
+      return response("requisition", restRequisitionService.getReplenishmentDetails(id));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
