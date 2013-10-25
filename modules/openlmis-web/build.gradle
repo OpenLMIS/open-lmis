@@ -52,6 +52,11 @@ task uglify(type: GruntTask) {
     gruntArgs = "uglify"
 }
 
+task installGruntDeps(type: Exec) {
+    println "Installing Grunt Dependencies"
+    commandLine "npm install"
+}
+
 buildscript {
     repositories {
         mavenCentral();
@@ -196,8 +201,12 @@ task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
 
-compileJava.dependsOn less
+compileJava.dependsOn installGruntDeps, less
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
+}
+
+cobertura {
+    coverageFormats << 'xml'
 }
