@@ -47,11 +47,6 @@ task less(type: GruntTask) {
     gruntArgs = "less"
 }
 
-task less2css() {
-    tasks.lesslint.execute()
-    tasks.less.execute()
-}
-
 task uglify(type: GruntTask) {
     workingDir '.'
     gruntArgs = "uglify"
@@ -115,7 +110,6 @@ war.doLast {
 
 build.doLast {
     tasks.jsHint.execute()
-    tasks.less2css.execute()
     tasks.cleanMinJs.execute()
 }
 
@@ -163,10 +157,10 @@ dependencies {
 }
 
 task jettyDaemon(dependsOn: war) {
-  doFirst {
-    jettyRun.daemon = true
-    jettyRun.execute()
-  }
+    doFirst {
+        jettyRun.daemon = true
+        jettyRun.execute()
+    }
 }
 
 jettyRun {
@@ -202,7 +196,7 @@ task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
 
-compileJava.dependsOn less2css
+compileJava.dependsOn less
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
