@@ -100,7 +100,8 @@ public class ViewOrdersPage extends RequisitionPage {
 
   public void downloadCSV() throws IOException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
-    downloadCSVLink.click();
+    downloadFileWhileSaveDialogOPen(downloadCSVLink);
+    //downloadCSVLink.click();
   }
 
   public void verifyEmergencyStatus() throws IOException {
