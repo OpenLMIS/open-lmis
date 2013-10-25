@@ -73,7 +73,7 @@ public class PODTest extends TestCaseHelper {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/pod/" + id + ".json",
+        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
         "POST",
         "commTrack",
         "Admin123");
@@ -88,7 +88,7 @@ public class PODTest extends TestCaseHelper {
 
       responseEntity =
               client.SendJSON(getJsonStringFor(PODFromJson),
-                      "http://localhost:9091/rest-api/pod/" + id + ".json",
+                      "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                       "POST",
                       "commTrack",
                       "Admin123");
@@ -116,7 +116,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                         "POST",
                         "commTrack",
                         "Admin123");
@@ -147,7 +147,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                         "POST",
                         "commTrack",
                         "Admin123");
@@ -176,7 +176,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                         "POST",
                         "commTrack",
                         "Admin123");
@@ -203,7 +203,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/19999999.json",
+                        "http://localhost:9091/rest-api/order/19999999/pod.json",
                         "POST",
                         "commTrack",
                         "Admin123");
@@ -233,7 +233,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                         "POST",
                         "commTrack",
                         "Admin123");
@@ -263,7 +263,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                         "POST",
                         "commTrack100",
                         "Admin123");
@@ -293,7 +293,7 @@ public class PODTest extends TestCaseHelper {
 
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(PODFromJson),
-                        "http://localhost:9091/rest-api/pod/" + id + ".json",
+                        "http://localhost:9091/rest-api/order/" + id +"/pod.json",
                         "POST",
                         "commTrack",
                         "Admin123");
