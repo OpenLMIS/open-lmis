@@ -1110,21 +1110,23 @@ h3 {
   padding: 7px 0;
 }
 
-.gradient-header th {
-  min-width: 93px;
-  background: #EEE;
-  background: #f9f9f9; /* Old browsers */
-  background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e0e0e0)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* IE10+ */
-  background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e0e0e0', GradientType=0); /* IE6-9 */
-  font-size: 0.9em;
-  font-weight: bold;
-  text-shadow: 0 1px 0 #FFF;
-  color: #444;
+.gradient-header{
+  th {
+    min-width: 93px;
+    background: #EEE;
+    background: #f9f9f9; /* Old browsers */
+    background: -moz-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f9f9f9), color-stop(100%, #e0e0e0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #f9f9f9 0%, #e0e0e0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e0e0e0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f9f9f9', endColorstr='#e0e0e0', GradientType=0); /* IE6-9 */
+    font-size: 0.9em;
+    font-weight: bold;
+    text-shadow: 0 1px 0 #FFF;
+    color: #444;
+  }
 }
 
 .total-cost {
@@ -1642,8 +1644,7 @@ table td.delete-button {
 }
 
 .ngViewport {
-  outline: 0 none; //height: auto !important;
-  //max-height: 200px;
+  outline: 0 none;
 }
 
 .grid-btn {
@@ -1756,15 +1757,8 @@ td .close {
   font-size: 1em;
 }
 
-.delete-role { //  display: inline-block;
-  //  margin-top: 2px;
-  //  font-size: 2em;
-  //  font-weight: bold;
-  //  color: #BBB;
+.delete-role {
   margin: 10px 0 0 -5px;
-  &:hover { //    text-decoration: none;
-    //    color: #666;
-  }
 }
 
 .select2-results {
@@ -1855,8 +1849,10 @@ input[placeholder].placeholder {
   .ngRow.even:hover, .ngRow.even:hover + .ngRow.even {
     background-color: #bdd0cb;
   }
-  .ngCellText span {
-    cursor: pointer !important;
+  .ngCellText{
+    span {
+      cursor: pointer !important;
+    }
   }
 }
 
@@ -1876,16 +1872,20 @@ input[placeholder].placeholder {
       line-height: 20px;
       color: #777;
     }
-    &.errorpage  a {
-      border-color: rgb(221, 42, 42);
-      background-color: red;
-      color: #ffffff;
+    &.errorpage{
+      a {
+        border-color: rgb(221, 42, 42);
+        background-color: red;
+        color: #ffffff;
+      }
     }
 
-    &.active a {
-      border-color: #419EA2;
-      background-color: #60ACAF;
-      color: #E1EDED;
+    &.active{
+      a {
+        border-color: #419EA2;
+        background-color: #60ACAF;
+        color: #E1EDED;
+      }
     }
 
     &.disabled {
@@ -1907,8 +1907,10 @@ input[placeholder].placeholder {
   label {
     text-align: right;
   }
-  .ISAFormulaModalSubContent h5 {
-    margin-bottom: 0px;
+  .ISAFormulaModalSubContent{
+    h5 {
+      margin-bottom: 0px;
+    }
   }
   .modal-body {
     max-height: 500px;
@@ -2227,10 +2229,12 @@ input[placeholder].placeholder {
   }
 }
 
-.geo-zone-facility-list h3 {
-  margin: 3px 0;
-  font-weight: normal;
-  color: #48888f;
+.geo-zone-facility-list{
+  h3 {
+    margin: 3px 0;
+    font-weight: normal;
+    color: #48888f;
+  }
 }
 
 .facilities-isa-amount-table {
@@ -2392,8 +2396,10 @@ input[rnr-validator="positiveInteger"] {
   text-align: right;
 }
 
-.cell-input input[type="text"].small-width-ie {
-  width: 86%;
+.cell-input{
+  input[type="text"].small-width-ie {
+    width: 86%;
+  }
 }
 
 .padding2px {
