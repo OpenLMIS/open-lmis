@@ -37,9 +37,19 @@ task jsHint(type: GruntTask) {
     gruntArgs = "jshint"
 }
 
-task less2css(type: GruntTask) {
+task lesslint(type: GruntTask) {
     workingDir '.'
-    gruntArgs = "lesslint --force less"
+    gruntArgs = "lesslint --force"
+}
+
+task less(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "less"
+}
+
+task less2css() {
+    tasks.lesslint.execute()
+    tasks.less.execute()
 }
 
 task uglify(type: GruntTask) {
