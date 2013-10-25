@@ -18,6 +18,14 @@ apply plugin: 'js'
 
 apply plugin: 'cobertura'
 
+task npm(type: Exec) {
+   group = "Build"
+   description = "Installs all Node.js dependencies defined in package.json"
+   commandLine = ["npm", "install"]
+   inputs.file "package.json"
+   outputs.dir "node_modules"
+}
+
 class GruntTask extends Exec {
     private String gruntExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "grunt.cmd" : "grunt"
     private String switches = "--no-color"
@@ -37,21 +45,25 @@ class GruntTask extends Exec {
 task jsHint(type: GruntTask) {
     workingDir '.'
     gruntArgs = "jshint"
+    dependsOn npm
 }
 
 task lesslint(type: GruntTask) {
     workingDir '.'
     gruntArgs = "lesslint --force"
+    dependsOn npm
 }
 
 task less(type: GruntTask) {
     workingDir '.'
     gruntArgs = "less"
+    dependsOn npm
 }
 
 task uglify(type: GruntTask) {
     workingDir '.'
     gruntArgs = "uglify"
+    dependsOn npm
 }
 
 buildscript {
