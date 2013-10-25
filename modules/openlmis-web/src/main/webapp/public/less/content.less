@@ -760,6 +760,7 @@ td.col-quantityRequested,
 td.col-quantityApproved {
   input[type="text"] {
     width: 89%;
+    margin-right: 10%;
   }
 }
 
@@ -797,6 +798,12 @@ td.col-cost,
 td.col-lossesAndAdjustments {
   span {
     display: block;
+    text-align: right;
+  }
+  span.row-specific-error{
+    span{
+      text-align: left;
+    }
   }
 }
 
@@ -1420,7 +1427,7 @@ table td.delete-button {
 }
 
 .row-specific-error {
-  width: 100%;
+  width: 108%;
   max-width: 160px;
   padding: 6px;
   margin-left: -82px;
