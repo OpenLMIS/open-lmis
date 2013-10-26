@@ -21,7 +21,12 @@ apply plugin: 'cobertura'
 task npm(type: Exec) {
    group = "Build"
    description = "Installs all Node.js dependencies defined in package.json"
-   commandLine = ["npm", "install"]
+//   commandLine = ["npm", "install"]
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine 'cmd', '/c', 'npm', 'install'
+    } else {
+        commandLine 'npm', 'install'
+    }
    inputs.file "package.json"
    outputs.dir "node_modules"
 }
