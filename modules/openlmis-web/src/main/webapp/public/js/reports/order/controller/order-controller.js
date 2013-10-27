@@ -90,8 +90,8 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.ChangeProgram = function(){
         ReportProductsByProgram.get({programId: $scope.program}, function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({ name: '-- Indicator / Tracer Product --', id:'0'});
-            $scope.products.unshift({ name: '-- All Products --', id:'-1'});
+            $scope.products.unshift({ name: '-- Indicator / Tracer Product --', id:'-1'});
+            $scope.products.unshift({ name: '-- All Products --', id:'0'});
 
         });
     };
@@ -199,6 +199,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
         $scope.filterGrid();
     });
 
+    /*
     $scope.$watch('product', function(selection){
         if(selection == "All"){
             $scope.filterObject.productId =  0;
@@ -211,6 +212,25 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
             });
         }else{
             $scope.filterObject.productId =  -1;
+        }
+        $scope.filterGrid();
+    });
+   */
+    $scope.$watch('product', function(selection){
+        if(selection == "All"){
+            $scope.filterObject.productId =  0;
+
+        }else if(selection == "-1"){
+            $scope.filterObject.productId =  -1;
+        }else if(selection !== undefined || selection === ""){
+            $scope.filterObject.productId =  selection;
+            $.each($scope.products, function(item, idx){
+                if(idx.id == selection){
+                    $scope.filterObject.product = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.productId =  0;
         }
         $scope.filterGrid();
     });
