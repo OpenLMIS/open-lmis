@@ -18,7 +18,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         Months.get(function(data){
             var months = data.months;
 
-            if(months != null){
+            if(months !== null){
                 $scope.startMonths = [];
                 $scope.endMonths = [];
                 $.each(months,function(idx,obj){
@@ -34,9 +34,9 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         };
 
         $scope.endQuarters  = function(){
-            if($scope.startYear == $scope.endYear && $scope.startQuarter != '' ){
+            if($scope.startYear === $scope.endYear && $scope.startQuarter !== '' ){
                 var arr = [];
-                for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
+                for(var i=$scope.startQuarter - 1; i < $scope.quarters.length; i++){
                     arr.push($scope.quarters[i]);
                 }
                 return arr;
@@ -117,8 +117,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
              rgroup : "",
              pdformat : 0,
              adjustmentTypeId : $scope.adjustmentType,
-             adjustmentType : "",
-             pdformat : 0
+             adjustmentType : ""
         };
 
         ReportFacilityTypes.get(function(data) {
@@ -151,10 +150,8 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
             $scope.programs.unshift({'name':'-- Select Programs --'});
         });
 
-        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
-
         $scope.$watch('zone.value', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ""){
                $scope.filterObject.zoneId =  selection;
 
             }else{
@@ -164,7 +161,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         });
 
         $scope.$watch('status.value', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ""){
                 $scope.filterObject.statusId =  selection;
             }else{
                 $scope.filterObject.statusId ='';
@@ -172,7 +169,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
             $scope.filterGrid();
         });
         $scope.$watch('facilityType.value', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ""){
                 $scope.filterObject.facilityTypeId =  selection;
                 $.each( $scope.facilityTypes,function( item,idx){
                     if(idx.id == selection){
@@ -189,7 +186,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
         $scope.$watch('startYear', function(selection){
             var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromYear =  selection;
             adjustEndYears();
             adjustEndMonths();
@@ -204,7 +201,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
         $scope.$watch('endYear', function(selection){
             var date = new Date();
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ''){
                 $scope.filterObject.toYear =  selection;
                 adjustEndMonths();
                 adjustEndQuarters();
@@ -218,11 +215,10 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
     $scope.$watch('startQuarter', function(selection){
         var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromQuarter =  selection;
             adjustEndQuarters();
         }else{
-            var date = new Date();
             $scope.filterObject.fromQuarter =  1;
         }
         $scope.filterGrid();
@@ -230,10 +226,9 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
     $scope.$watch('endQuarter', function(selection){
         var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toQuarter =  selection;
         }else{
-            var date = new Date();
             $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
         }
         $scope.filterGrid();
@@ -241,7 +236,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
     $scope.$watch('startHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromSemiAnnual =  selection;
             adjustEndSemiAnnuals();
         }else{
@@ -251,7 +246,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
     });
     $scope.$watch('endHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toSemiAnnual =  selection;
         }else{
             var date = new Date();
@@ -263,7 +258,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
     $scope.$watch('startMonth', function(selection){
         $scope.filterObject.fromMonth = $scope.startMonth;
-        if($scope.startMonth != undefined || $scope.startMonth == ""){
+        if($scope.startMonth !== undefined || $scope.startMonth === ""){
             adjustEndMonths();
         }else{
             var date = new Date();
@@ -279,7 +274,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
     });
 
     var adjustEndMonths = function(){
-        if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
+        if($scope.startMonth !== undefined && $scope.startMonths !== undefined && $scope.startYear === $scope.endYear ){
             $scope.endMonths = [];
             $.each($scope.startMonths,function(idx,obj){
                 if(obj.value >= $scope.startMonth){
@@ -287,7 +282,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
                 }
             });
         }
-    }
+    };
 
     var adjustEndQuarters = function(){
         if($scope.startYear == $scope.endYear){
@@ -303,7 +298,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         }else{
             $scope.endQuarters = $scope.startQuarters;
         }
-    }
+    };
 
     var adjustEndSemiAnnuals = function(){
 
@@ -320,7 +315,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         }else{
             $scope.endSemiAnnuals = $scope.startSemiAnnuals;
         }
-    }
+    };
 
     var adjustEndYears = function(){
         $scope.endYears = [];
@@ -332,11 +327,11 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         if($scope.endYear <= $scope.startYear){
             $scope.endYear  = new Date().getFullYear();
         }
-    }
+    };
 
 
     $scope.$watch('periodType', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ""){
                 $scope.filterObject.periodType =  selection;
 
             }else{
@@ -346,7 +341,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         });
 
         $scope.$watch('productCategory', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ""){
                 $scope.filterObject.productCategoryId =  selection;
             }else{
                 $scope.filterObject.productCategoryId =  0;
@@ -357,7 +352,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         $scope.$watch('product', function(selection){
             if(selection == "All"){
                 $scope.filterObject.productId =  -1;
-            }else if(selection != undefined || selection == ""){
+            }else if(selection !== undefined || selection === ""){
                 $scope.filterObject.productId =  selection;
             }else{
                 $scope.filterObject.productId =  0;
@@ -367,7 +362,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
 
 
         $scope.$watch('rgroup', function(selection){
-            if(selection != undefined || selection == ""){
+            if(selection !== undefined || selection === ""){
                 $scope.filterObject.rgroupId =  selection;
                 $.each( $scope.requisitionGroups,function( item,idx){
                     if(idx.id == selection){
@@ -384,7 +379,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
         $scope.$watch('program', function(selection){
             if(selection == "All"){
                 $scope.filterObject.programId =  -1;
-            }else if(selection != undefined || selection == ""){
+            }else if(selection !== undefined || selection === ""){
                 $scope.filterObject.programId =  selection;
             }else{
                 $scope.filterObject.programId =  0;
@@ -397,7 +392,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
             $scope.filterObject.adjustmentTypeId =  -1;
             $scope.filterObject.adjustmentType = "All";
 
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
                 $scope.filterObject.adjustmentTypeId =  selection;
                 $.each( $scope.adjustmentTypes,function( item,idx){
                     if(idx.name == selection){
@@ -431,7 +426,7 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -454,37 +449,32 @@ function AdjustmentSummaryReportController($scope, $filter , ngTableParams , Adj
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
     $scope.getPagedDataAsync = function (pageSize, page) {
-        pageSize = 6000;
-        page = 1;
-            var params  = {};
-            if($scope.program == null || $scope.program == undefined || $scope.program == ''){
-                // do not send a request to the server before the basic selection was done.
-                return;
-            }
-            if(pageSize != undefined && page != undefined ){
-                    var params =  {
-                                    "max" : pageSize,
-                                    "page" : page
-                                   };
-            }
-
-            $.each($scope.filterObject, function(index, value) {
-                 if(value != undefined)
-                    params[index] = value;
-            });
-
-            // clear existing data
-            $scope.data = [];
-
-            // try to load the new data based on the selected parameters
-            AdjustmentSummaryReport.get(params, function(data) {
-                if(data.pages != undefined){
-                    $scope.data = data.pages.rows;
-                    $scope.paramsChanged($scope.tableParams);
-                }
-            });
-
+        var params =  {
+            "max" : 10000,
+            "page" : 1
         };
+        if($scope.program === null || $scope.program === undefined || $scope.program === ''){
+            // do not send a request to the server before the basic selection was done.
+            return;
+        }
+
+        $.each($scope.filterObject, function(index, value) {
+             if(value !== undefined)
+                params[index] = value;
+        });
+
+        // clear existing data
+        $scope.data = [];
+
+        // try to load the new data based on the selected parameters
+        AdjustmentSummaryReport.get(params, function(data) {
+            if(data.pages !== undefined){
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
+
+    };
 
 
 }

@@ -36,7 +36,7 @@ function SupervisoryNodeListController($scope, $location, navigateBackService, S
     var filterSupervisoryNodesByName = function (query) {
         query = query || "";
 
-        if (query.length == 0) {
+        if (query.length === 0) {
             $scope.filteredSupervisoryNodes = $scope.supervisoryNodesList;
         }
         else {
@@ -60,7 +60,6 @@ function SupervisoryNodeListController($scope, $location, navigateBackService, S
     $scope.$watch('reloadTheList',function(){
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showSupervisoryNodesList('txtFilterSupervisoryNodes');
-    })
-
+    });
 
 }

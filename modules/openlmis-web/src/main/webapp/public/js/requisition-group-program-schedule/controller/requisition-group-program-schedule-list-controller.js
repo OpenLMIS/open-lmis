@@ -46,7 +46,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     var filterRequisitionGroupsByName = function (query) {
         query = query || "";
 
-        if (query.length == 0) {
+        if (query.length === 0) {
             $scope.filteredRequisitionGroups = $scope.requisitionGroupsList;
         }
         else {
@@ -68,7 +68,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     };
 
     $scope.getReqColor = function(reqGroup){
-        if($scope.selectedRequisitionGroup== null){
+        if($scope.selectedRequisitionGroup === null){
             return 'none';
         }
 
@@ -87,7 +87,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     };
 
     $scope.getProgramColor = function(program){
-        if($scope.selectedProgram== null){
+        if($scope.selectedProgram === null){
             return 'none';
         }
 
@@ -102,7 +102,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
 
 
     $scope.getScheduleColor = function(schedule){
-        if($scope.selectedSchedule== null){
+        if($scope.selectedSchedule === null){
             return 'none';
         }
 
@@ -124,43 +124,43 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     });
 
     $scope.loadRequisitionGroupProgramSchedule = function (){
-        if($scope.selectedRequisitionGroup == null || $scope.selectedProgram == null){
+        if($scope.selectedRequisitionGroup === null || $scope.selectedProgram === null){
             return;
         }
 
         LoadSchedulesForRequisitionGroupProgram.get({rgId: $scope.selectedRequisitionGroup.id, pgId: $scope.selectedProgram.id},function(data){
             $scope.selectedRequisitionGroupProgramSchedule = data.requisitionGroupProgramSchedule;
 
-            if($scope.selectedRequisitionGroupProgramSchedule==null){
+            if($scope.selectedRequisitionGroupProgramSchedule === null){
                 $scope.message = "No schedule configured for " + $scope.selectedRequisitionGroup.name + " in program: " + $scope.selectedProgram.name;
                 $scope.showMessage = true;
-                $scope.setOriginallySelectedSchedule(null);
+                $scope.setOriginallySelectedSchedule( null );
             }
             else{
                 $scope.message="";
-                $scope.showMessage=false;
+                $scope.showMessage = false;
 
-                $scope.setOriginallySelectedSchedule($scope.selectedRequisitionGroupProgramSchedule.processingSchedule)
+                $scope.setOriginallySelectedSchedule( $scope.selectedRequisitionGroupProgramSchedule.processingSchedule );
             }
         },{});
     };
 
-    $scope.setOriginallySelectedSchedule = function (schedule){
-        if(schedule == null){
+    $scope.setOriginallySelectedSchedule = function ( schedule ){
+        if(schedule === null){
             $scope.selectedSchedule = null;
         }
         else {
-            angular.forEach($scope.schedules, function (scheduleEntry) {
+            angular.forEach($scope.schedules, function ( scheduleEntry ) {
                 if (scheduleEntry.id == schedule.id) {
                     $scope.selectedSchedule = scheduleEntry;
                 }
             });
         }
-    }
+    };
 
     $scope.setSelectedSchedule = function(schedule){
         $scope.selectedSchedule = schedule;
-    }
+    };
 
     $scope.saveRequisitionGroupProgramSchedule = function(){
         var successHandler = function (response) {
@@ -176,7 +176,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
             $scope.error = response.data.error;
         };
 
-        if($scope.selectedRequisitionGroupProgramSchedule == null){
+        if($scope.selectedRequisitionGroupProgramSchedule === null){
             $scope.selectedRequisitionGroupProgramSchedule = {};
             $scope.selectedRequisitionGroupProgramSchedule.directDelivery = true;
         }
@@ -186,6 +186,6 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
         $scope.selectedRequisitionGroupProgramSchedule.processingSchedule = $scope.selectedSchedule;
 
         SaveRequisitionGroupProgramSchedule.save($scope.selectedRequisitionGroupProgramSchedule,successHandler,errorHandler);
-    }
+    };
 
 }

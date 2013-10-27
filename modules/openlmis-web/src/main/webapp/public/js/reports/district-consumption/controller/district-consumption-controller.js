@@ -1,269 +1,247 @@
-function DistrictConsumptionReportController($scope, $filter , ngTableParams
-                                            ,DistrictConsumptionReport, ReportProductsByProgram , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears,Months
-                                            , $http, $routeParams,$location) {
+function DistrictConsumptionReportController($scope, $filter, ngTableParams, DistrictConsumptionReport, ReportProductsByProgram , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, OperationYears, Months, $http, $routeParams, $location) {
+    // default to the monthly period type
+    $scope.periodType = 'monthly';
 
-        //to minimize and maximize the filter section
-        var section = 1;
+    $scope.periodTypes = [
+        {'name':'Monthly', 'value':'monthly'},
+        {'name':'Quarterly', 'value':'quarterly'},
+        {'name':'Semi Anual', 'value':'semi-anual'},
+        {'name':'Annual', 'value':'annual'}
+   ];
+    $scope.startYears = [];
+    OperationYears.get(function(data){
+        $scope.startYears = $scope.endYears = data.years;
+        adjustEndYears();
+    });
 
-        $scope.section = function (id) {
-            section = id;
-        };
+    Months.get(function(data){
+        var months = data.months;
 
-        $scope.show = function (id) {
-            return section == id;
-        };
-
-        // lookups and references
-
-
-        // default to the monthly period type
-        $scope.periodType = 'monthly';
-
-        $scope.periodTypes = [
-            {'name':'Monthly', 'value':'monthly'},
-            {'name':'Quarterly', 'value':'quarterly'},
-            {'name':'Semi Anual', 'value':'semi-anual'},
-            {'name':'Annual', 'value':'annual'}
-       ];
-        $scope.startYears = [];
-        OperationYears.get(function(data){
-            $scope.startYears = $scope.endYears = data.years;
-            adjustEndYears();
-        });
-
-        Months.get(function(data){
-            var months = data.months;
-
-            if(months != null){
-                $scope.startMonths = [];
-                $scope.endMonths = [];
-                $.each(months,function(idx,obj){
-                    $scope.startMonths.push({'name':obj.toString(), 'value': idx+1});
-                    $scope.endMonths.push({'name':obj.toString(), 'value': idx+1});
-                });
-            }
-
-        });
-
-        $scope.startQuarters = function(){
-            return $scope.quarters;
-        };
-
-        $scope.endQuarters  = function(){
-            if($scope.startYear == $scope.endYear && $scope.startQuarter != '' ){
-                var arr = [];
-                for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
-                    arr.push($scope.quarters[i]);
-                }
-                return arr;
-            }
-            return $scope.quarters;
-        };
-
-        $scope.quarters         = [
-            {'name':'One','value':'1'},
-            {'name':'Two','value':'2'},
-            {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'}
-        ];
-
-        $scope.semiAnnuals= [
-            {'name':'First Half','value':'1'},
-            {'name':'Second Half','value':'2'}
-        ];
-
-        $scope.product;
-
-        RequisitionGroups.get(function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'All Requisition Groups'});
-        });
-
-
-        // copy over the start month and end months
-        // this is just for initial loading.
-        $(function (){
-            $scope.startQuarters  = $scope.quarters;
-            $scope.endQuarters  = $scope.quarters;
-            $scope.endYears     = $scope.startYears;
-            $scope.startSemiAnnuals = $scope.semiAnnuals;
-            $scope.endSemiAnnuals = $scope.semiAnnuals;
-            $scope.toQuarter = 1;
-            $scope.fromQuarter = 1;
-            $scope.startHalf = 1;
-            $scope.endHalf = 1;
-        });
-
-
-        $scope.isMonthly = function(){
-            return $scope.periodType == 'monthly';
-        };
-
-        $scope.isQuarterly = function(){
-            return $scope.periodType == 'quarterly';
-        };
-
-        $scope.isSemiAnnualy  = function(){
-            return $scope.periodType == 'semi-anual';
-        };
-        $scope.filterGrid = function (){
-            $scope.getPagedDataAsync(0, 0);
-        };
-
-        //filter form data section
-        $scope.filterOptions = {
-            filterText: "",
-            useExternalFilter: false
-        };
-
-
-
-        //filter form data section
-        $scope.filterObject =  {
-             facilityTypeId : $scope.facilityType,
-             zoneId : $scope.zone,
-             periodType: $scope.periodType,
-             fromYear: $scope.fromYear,
-             fromMonth: $scope.fromMonth,
-             fromQuarter: $scope.fromQuarter,
-             fromSemiAnnual:$scope.startHalf,
-             toYear: $scope.toYear,
-             toMonth: $scope.toMonth,
-             toQuarter: $scope.toQuarter,
-             toSemiAnnual:$scope.endHalf,
-             productId: $scope.product,
-             productCategoryId : $scope.productCategory,
-             rgroupId : $scope.rgroup,
-             programId : $scope.program,
-             facility : $scope.facilityId,
-             facilityType : "",
-             rgroup : "",
-             zone : "",
-             product : "",
-             productCategory: "",
-             pdformat : 0
-        };
-
-        ReportFacilityTypes.get(function(data) {
-            $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
-        });
-
-
-        ProductCategories.get(function(data){
-            $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.unshift({'name': '-- All Product Categories --'});
-        });
-
-
-        $scope.facilities         = [
-            {'name':'One','value':'1'},
-            {'name':'Two','value':'2'},
-            {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'}
-        ];
-
-        GeographicZones.get(function(data) {
-            $scope.zones = data.zones;
-            $scope.zones.unshift({'name': '-- All Geographic Zones --'});
-        });
-
-        ReportPrograms.get(function(data){
-            $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'-- Select Programs --'});
-
-            $scope.products = [];
-            $scope.products.push({name:'-- Select Product --'});
-        });
-
-        $scope.ProgramChanged = function(){
-            ReportProductsByProgram.get({programId: $scope.program}, function(data){
-                $scope.products = data.productList;
-                $scope.products.unshift({id: '',name: '-- Select Product --'});
+        if(months !== null){
+            $scope.startMonths = [];
+            $scope.endMonths = [];
+            $.each(months,function(idx,obj){
+                $scope.startMonths.push({'name':obj.toString(), 'value': idx+1});
+                $scope.endMonths.push({'name':obj.toString(), 'value': idx+1});
             });
         }
 
+    });
 
-        $scope.$watch('zone.value', function(selection){
-            if(selection != undefined || selection == ""){
-               $scope.filterObject.zoneId =  selection;
-               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-                $.each( $scope.zones,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.zone = idx.name;
-                    }
-                });
+    $scope.startQuarters = function(){
+        return $scope.quarters;
+    };
 
-
-            }else{
-                $scope.filterObject.zoneId = 0;
-                $scope.filterObject.zone = "";
+    $scope.endQuarters  = function(){
+        if($scope.startYear == $scope.endYear && $scope.startQuarter !== '' ){
+            var arr = [];
+            for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
+                arr.push($scope.quarters[i]);
             }
-            $scope.filterGrid();
-        });
+            return arr;
+        }
+        return $scope.quarters;
+    };
 
-        $scope.$watch('status.value', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.statusId =  selection;
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }else{
-                $scope.filterObject.statusId ='';
-            }
-            $scope.filterGrid();
-        });
-        $scope.$watch('facilityType.value', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.facilityTypeId =  selection;
-                $.each( $scope.facilityTypes,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.facilityType = idx.name;
-                    }
-                });
-                //skillsSelect.options[skillsSelect.selectedIndex].text
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }else{
-                $scope.filterObject.facilityTypeId =  0;
-                $scope.filterObject.facilityType = "";
-            }
-            $scope.filterGrid();
-        });
+    $scope.quarters         = [
+        {'name':'One','value':'1'},
+        {'name':'Two','value':'2'},
+        {'name':'Three','value':'3'},
+        {'name':'Four','value':'4'}
+    ];
 
-        $scope.$watch('startYear', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.fromYear =  selection;
-                adjustEndYears();
-                adjustEndMonths();
-                adjustEndQuarters();
-                adjustEndSemiAnnuals();
-            }else{
-                $scope.startYear  = date.getFullYear().toString();
-                $scope.filterObject.fromYear =  date.getFullYear();
-            }
-            $scope.filterGrid();
-        });
+    $scope.semiAnnuals= [
+        {'name':'First Half','value':'1'},
+        {'name':'Second Half','value':'2'}
+    ];
 
-        $scope.$watch('endYear', function(selection){
-            var date = new Date();
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.toYear =  selection;
-                adjustEndMonths();
-                adjustEndQuarters();
-                adjustEndSemiAnnuals();
-            }else{
-                $scope.endYear  = date.getFullYear().toString();
-                $scope.filterObject.toYear =  date.getFullYear();
-            }
-            $scope.filterGrid();
+    $scope.product;
+
+    RequisitionGroups.get(function(data){
+        $scope.requisitionGroups = data.requisitionGroupList;
+        $scope.requisitionGroups.unshift({'name':'All Requisition Groups'});
+    });
+
+
+    // copy over the start month and end months
+    // this is just for initial loading.
+    $(function (){
+        $scope.startQuarters  = $scope.quarters;
+        $scope.endQuarters  = $scope.quarters;
+        $scope.endYears     = $scope.startYears;
+        $scope.startSemiAnnuals = $scope.semiAnnuals;
+        $scope.endSemiAnnuals = $scope.semiAnnuals;
+        $scope.toQuarter = 1;
+        $scope.fromQuarter = 1;
+        $scope.startHalf = 1;
+        $scope.endHalf = 1;
+    });
+
+
+    $scope.isMonthly = function(){
+        return $scope.periodType == 'monthly';
+    };
+
+    $scope.isQuarterly = function(){
+        return $scope.periodType == 'quarterly';
+    };
+
+    $scope.isSemiAnnualy  = function(){
+        return $scope.periodType == 'semi-anual';
+    };
+    $scope.filterGrid = function (){
+        $scope.getPagedDataAsync(0, 0);
+    };
+
+    //filter form data section
+    $scope.filterOptions = {
+        filterText: "",
+        useExternalFilter: false
+    };
+
+    //filter form data section
+    $scope.filterObject =  {
+         facilityTypeId : $scope.facilityType,
+         zoneId : $scope.zone,
+         periodType: $scope.periodType,
+         fromYear: $scope.fromYear,
+         fromMonth: $scope.fromMonth,
+         fromQuarter: $scope.fromQuarter,
+         fromSemiAnnual:$scope.startHalf,
+         toYear: $scope.toYear,
+         toMonth: $scope.toMonth,
+         toQuarter: $scope.toQuarter,
+         toSemiAnnual:$scope.endHalf,
+         productId: $scope.product,
+         productCategoryId : $scope.productCategory,
+         rgroupId : $scope.rgroup,
+         programId : $scope.program,
+         facility : $scope.facilityId,
+         facilityType : "",
+         rgroup : "",
+         zone : "",
+         product : "",
+         productCategory: "",
+         pdformat : 0
+    };
+
+    ReportFacilityTypes.get(function(data) {
+        $scope.facilityTypes = data.facilityTypes;
+        $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
+    });
+
+
+    ProductCategories.get(function(data){
+        $scope.productCategories = data.productCategoryList;
+        $scope.productCategories.unshift({'name': '-- All Product Categories --'});
+    });
+
+
+    $scope.facilities         = [
+        {'name':'One','value':'1'},
+        {'name':'Two','value':'2'},
+        {'name':'Three','value':'3'},
+        {'name':'Four','value':'4'}
+    ];
+
+    GeographicZones.get(function(data) {
+        $scope.zones = data.zones;
+        $scope.zones.unshift({'name': '-- All Geographic Zones --'});
+    });
+
+    ReportPrograms.get(function(data){
+        $scope.programs = data.programs;
+        $scope.programs.unshift({'name':'-- Select Programs --'});
+
+        $scope.products = [];
+        $scope.products.push({name:'-- Select Product --'});
+    });
+
+    $scope.ProgramChanged = function(){
+        ReportProductsByProgram.get({programId: $scope.program}, function(data){
+            $scope.products = data.productList;
+            $scope.products.unshift({id: '',name: '-- Select Product --'});
         });
+    };
+
+
+    $scope.$watch('zone.value', function(selection){
+        if(selection !== undefined || selection === ""){
+           $scope.filterObject.zoneId =  selection;
+           //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+            $.each( $scope.zones,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.zone = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.zoneId = 0;
+            $scope.filterObject.zone = "";
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('status.value', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.statusId =  selection;
+            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }else{
+            $scope.filterObject.statusId ='';
+        }
+        $scope.filterGrid();
+    });
+    $scope.$watch('facilityType.value', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.facilityTypeId =  selection;
+            $.each( $scope.facilityTypes,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityType = idx.name;
+                }
+            });
+            //skillsSelect.options[skillsSelect.selectedIndex].text
+            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }else{
+            $scope.filterObject.facilityTypeId =  0;
+            $scope.filterObject.facilityType = "";
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('startYear', function(selection){
+        var date = new Date();
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.fromYear =  selection;
+            adjustEndYears();
+            adjustEndMonths();
+            adjustEndQuarters();
+            adjustEndSemiAnnuals();
+        }else{
+            $scope.startYear  = date.getFullYear().toString();
+            $scope.filterObject.fromYear =  date.getFullYear();
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('endYear', function(selection){
+        var date = new Date();
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.toYear =  selection;
+            adjustEndMonths();
+            adjustEndQuarters();
+            adjustEndSemiAnnuals();
+        }else{
+            $scope.endYear  = date.getFullYear().toString();
+            $scope.filterObject.toYear =  date.getFullYear();
+        }
+        $scope.filterGrid();
+    });
 
     $scope.$watch('startQuarter', function(selection){
         var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromQuarter =  selection;
             adjustEndQuarters();
         }else{
-            var date = new Date();
             $scope.filterObject.fromQuarter =  1;
         }
         $scope.filterGrid();
@@ -271,10 +249,9 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
 
     $scope.$watch('endQuarter', function(selection){
         var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toQuarter =  selection;
         }else{
-            var date = new Date();
             $scope.filterObject.toQuarter =  $scope.filterObject.fromQuarter;
         }
         $scope.filterGrid();
@@ -282,7 +259,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
 
     $scope.$watch('startHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromSemiAnnual =  selection;
             adjustEndSemiAnnuals();
         }else{
@@ -292,7 +269,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
     });
     $scope.$watch('endHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toSemiAnnual =  selection;
         }else{
             var date = new Date();
@@ -302,7 +279,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
     });
 
     $scope.$watch('startMonth', function(selection){
-        if($scope.startMonth != undefined || $scope.startMonth == ""){
+        if($scope.startMonth !== undefined || $scope.startMonth === ""){
             adjustEndMonths();
         }else{
             var date = new Date();
@@ -318,7 +295,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
     });
 
     var adjustEndMonths = function(){
-        if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
+        if($scope.startMonth !== undefined && $scope.startMonths !== undefined && $scope.startYear === $scope.endYear ){
             $scope.endMonths = [];
             $.each($scope.startMonths,function(idx,obj){
                 if(obj.value >= $scope.startMonth){
@@ -326,7 +303,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
                 }
             });
         }
-    }
+    };
 
     var adjustEndQuarters = function(){
         if($scope.startYear == $scope.endYear){
@@ -342,7 +319,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
         }else{
             $scope.endQuarters = $scope.startQuarters;
         }
-    }
+    };
 
     var adjustEndSemiAnnuals = function(){
 
@@ -359,7 +336,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
         }else{
             $scope.endSemiAnnuals = $scope.startSemiAnnuals;
         }
-    }
+    };
 
     var adjustEndYears = function(){
         $scope.endYears = [];
@@ -371,90 +348,90 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
         if($scope.endYear < $scope.startYear){
             $scope.endYear  = new Date().getFullYear();
         }
-    }
+    };
 
 
     $scope.$watch('periodType', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.periodType =  selection;
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.periodType =  selection;
 
-            }else{
-                $scope.filterObject.periodType =  "monthly";
-            }
+        }else{
+            $scope.filterObject.periodType =  "monthly";
+        }
+
+    $scope.filterGrid();
+
+    });
+
+    $scope.$watch('productCategory', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.productCategoryId =  selection;
+
+            $.each( $scope.productCategories,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.productCategory = idx.name;
+                }
+            });
+
+        }else{
+            $scope.filterObject.productCategoryId =  0;
+            $scope.filterObject.productCategory =  "";
+        }
 
         $scope.filterGrid();
+    });
 
-        });
+    $scope.$watch('product', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.productId =  selection;
+            $.each( $scope.products,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.product = idx.name;
+                }
+            });
 
-        $scope.$watch('productCategory', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.productCategoryId =  selection;
-
-                $.each( $scope.productCategories,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.productCategory = idx.name;
-                    }
-                });
-
-            }else{
-                $scope.filterObject.productCategoryId =  0;
-                $scope.filterObject.productCategory =  "";
-            }
-
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('product', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.productId =  selection;
-                $.each( $scope.products,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.product = idx.name;
-                    }
-                });
-
-            }else{
-                $scope.filterObject.productId =  0;
-                $scope.filterObject.product = "";
-            }
-
-            $scope.filterGrid();
-        });
-
-
-        $scope.$watch('rgroup', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.rgroupId =  selection;
-                $.each( $scope.requisitionGroups,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.rgroup = idx.name;
-                    }
-                });
-            }else{
-                $scope.filterObject.rgroupId =  0;
-                $scope.filterObject.rgroup = "";
-            }
-
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('program', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.programId =  selection;
-            }else{
-                $scope.filterObject.programId =  0;
-            }
-
-            $scope.filterGrid();
-        });
-
-       $scope.exportReport   = function (type){
-
-            $scope.filterObject.pdformat =1;
-            var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/district_consumption/' + type +'?' + params;
-            window.open(url);
+        }else{
+            $scope.filterObject.productId =  0;
+            $scope.filterObject.product = "";
         }
+
+        $scope.filterGrid();
+    });
+
+
+    $scope.$watch('rgroup', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.rgroupId =  selection;
+            $.each( $scope.requisitionGroups,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.rgroup = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.rgroupId =  0;
+            $scope.filterObject.rgroup = "";
+        }
+
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('program', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.programId =  selection;
+        }else{
+            $scope.filterObject.programId =  0;
+        }
+
+        $scope.filterGrid();
+    });
+
+   $scope.exportReport   = function (type){
+
+        $scope.filterObject.pdformat =1;
+        var params = jQuery.param($scope.filterObject);
+        var url = '/reports/download/district_consumption/' + type +'?' + params;
+        window.open(url);
+    };
 
     // the grid options
     $scope.tableParams = new ngTableParams({
@@ -466,7 +443,7 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -489,30 +466,30 @@ function DistrictConsumptionReportController($scope, $filter , ngTableParams
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
 
-        $scope.getPagedDataAsync = function (pageSize, page) {
-                        pageSize = 10000;
-                        page = 1;
-                        $scope.data = $scope.datarows = [];
-                        var params  = {};
-                        if(pageSize != undefined && page != undefined ){
-                                var params =  {
-                                                "max" : pageSize,
-                                                "page" : page
-                                               };
-                        }
-
-                        $.each($scope.filterObject, function(index, value) {
-                             if(value != undefined)
-                                params[index] = value;
-                        });
-
-                        DistrictConsumptionReport.get(params, function(data) {
-                            if(data.pages != undefined){
-                                $scope.data = data.pages.rows;
-                                $scope.paramsChanged($scope.tableParams);
-                            }
-                        });
-
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        var params =  {
+            "max" : 10000,
+            "page" : 1
         };
+
+        $scope.data = $scope.datarows = [];
+
+        if(pageSize !== undefined && page !== undefined ){
+
+        }
+
+        $.each($scope.filterObject, function(index, value) {
+             if(value !== undefined)
+                params[index] = value;
+        });
+
+        DistrictConsumptionReport.get(params, function(data) {
+            if(data.pages !== undefined){
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
+
+    };
 
 }

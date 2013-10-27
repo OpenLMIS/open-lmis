@@ -27,7 +27,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
         ProgramCompleteList.get(function(data){
             $scope.programs = data.programs;
         });
-    }
+    };
 
 
     ScheduleCompleteList.get(function(data){
@@ -50,7 +50,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     var filterFacilityTypesByName = function (query) {
         query = query || "";
 
-        if (query.length == 0) {
+        if (query.length === 0) {
             $scope.filteredFacilityTypes = $scope.facilityTypeList;
         }
         else {
@@ -72,7 +72,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     };
 
     $scope.getFacilityTypeColor = function(facilityType){
-        if($scope.selectedFacilityType== null){
+        if($scope.selectedFacilityType === null){
             return 'none';
         }
 
@@ -91,7 +91,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     };
 
     $scope.getProgramColor = function(program){
-        if($scope.selectedProgram== null){
+        if($scope.selectedProgram === null){
             return 'none';
         }
 
@@ -115,7 +115,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     });
 
     $scope.loadFacilityTypeProgramProducts = function (){
-        if($scope.selectedFacilityType == null || $scope.selectedProgram == null){
+        if($scope.selectedFacilityType === null || $scope.selectedProgram === null){
             return;
         }
 
@@ -159,17 +159,17 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
                 GetApprovedProductForFacilityTypeDetail.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.product.id}, function(data){
                     var facilityTypeApprovedProduct = data.facilityTypeApprovedProduct;
 
-                    if(facilityTypeApprovedProduct == null){
+                    if(facilityTypeApprovedProduct === null){
                         facilityTypeApprovedProduct={};
                         facilityTypeApprovedProduct.programProduct = programProduct;
                         facilityTypeApprovedProduct.facilityType = $scope.selectedFacilityType;
                     }
 
-                    else if(facilityTypeApprovedProduct!=null && programProduct.isSelected == false){
+                    else if(facilityTypeApprovedProduct !== null && programProduct.isSelected === false){
                         RemoveApprovedProductForFacilityType.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.product.id},successHandler,errorHandler);
                     }
 
-                    if(programProduct.isSelected == true){
+                    if(programProduct.isSelected === true){
 
                         facilityTypeApprovedProduct.maxMonthsOfStock = programProduct.maxMonthsOfStock;
                         facilityTypeApprovedProduct.minMonthsOfStock = programProduct.minMonthsOfStock;
@@ -181,13 +181,13 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
 
 
             }
-        })
-    }
+        });
+    };
 
     $scope.setDataChanged = function(programProduct){
         programProduct.isDataChanged = true;
         $scope.isDataChanged = true;
-    }
+    };
 
     
 }

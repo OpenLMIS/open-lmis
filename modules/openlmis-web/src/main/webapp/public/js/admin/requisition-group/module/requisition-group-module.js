@@ -19,7 +19,7 @@
             if (!$(this).hasClass('select2-container-active')) {
               $(this).data("select2").blur();
             }
-          })
+          });
         });
       };
     })
@@ -47,6 +47,6 @@
               setShouldReloadTheList: function(value){
                   reloadTheList = value;
               }
-          }
+          };
       });
 

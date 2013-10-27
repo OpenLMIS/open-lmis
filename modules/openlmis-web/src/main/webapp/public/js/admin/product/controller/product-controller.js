@@ -45,7 +45,7 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
         query = $scope.program;
         $scope.filteredProducts = [];
         query = query || "";
-        if (query == 'NaN' || query == '') {
+        if (query == 'NaN' || query === '') {
             $scope.filteredProducts = $scope.filterProductsByName($scope.productsList);
             return;
         }
@@ -64,34 +64,34 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
     };
 
     $scope.filterProductsByName = function(arrayOfProducts){
-        if($scope.productName == '' || $scope.productName == undefined){
+        if($scope.productName === '' || $scope.productName === undefined){
             return arrayOfProducts;
         }
 
         var result = [];
         angular.forEach(arrayOfProducts, function(product){
-            if(product.primaryName.indexOf($scope.productName) == 0){
+            if(product.primaryName.indexOf($scope.productName) === 0){
                 result.push(product);
             }
         });
         return result;
 
-    }
+    };
 
 //  scope is undefined,
     $scope.productLoaded = function () {
-        return !($scope.products == undefined || $scope.products == null);
+        return !($scope.products === undefined || $scope.products === null);
     };
 
     // Programs list
     ReportPrograms.get(function (data) {
         var tmp = data.programs;
         $scope.programs = data.programs;
-    })
+    });
 
     $scope.YesNo = function (tf) {
         var retval = '';
-        if (tf == true) {
+        if (tf === true) {
             retval = 'Yes';
         } else
         {
@@ -100,5 +100,4 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
         return retval;
     };
 
-
-};
+}

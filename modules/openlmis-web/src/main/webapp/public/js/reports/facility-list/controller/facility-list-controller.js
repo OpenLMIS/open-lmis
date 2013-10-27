@@ -1,63 +1,63 @@
 function ListFacilitiesController($scope,$filter,ngTableParams, FacilityList, ReportFacilityTypes, GeographicZones, RequisitionGroups, $http, $routeParams, $location) {
 
 
-        $scope.filterGrid = function (){
-            $scope.getPagedDataAsync(0, 0);//
-        };
+    $scope.filterGrid = function (){
+        $scope.getPagedDataAsync(0, 0);//
+    };
 
-        //filter form data section
-        $scope.filterObject =  {
-             facilityType : $scope.facilityType,
-             zone : $scope.zone,
-             rgroupId : $scope.rgroupId,
-             rgroup : "",
-             status : $scope.status
-        };
-        RequisitionGroups.get(function (data) {
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-        });
+    //filter form data section
+    $scope.filterObject =  {
+         facilityType : $scope.facilityType,
+         zone : $scope.zone,
+         rgroupId : $scope.rgroupId,
+         rgroup : "",
+         status : $scope.status
+    };
+    RequisitionGroups.get(function (data) {
+        $scope.requisitionGroups = data.requisitionGroupList;
+        $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
+    });
 
-         ReportFacilityTypes.get(function(data) {
-            $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': '-- All Facility Types --', id:'0'});
-        });
+     ReportFacilityTypes.get(function(data) {
+        $scope.facilityTypes = data.facilityTypes;
+        $scope.facilityTypes.unshift({'name': '-- All Facility Types --', id:'0'});
+    });
 
-        GeographicZones.get(function(data) {
-            $scope.zones = data.zones;
-            $scope.zones.unshift({'name': '-- All Zones --', id:'0'});
-        });
-
-
-        $scope.statuses = [
-            {'name': 'All Statuses'},
-            {'name': 'Active', 'value': "TRUE"},
-            {'name': 'Inactive', 'value': "FALSE"}
-        ];
+    GeographicZones.get(function(data) {
+        $scope.zones = data.zones;
+        $scope.zones.unshift({'name': '-- All Zones --', id:'0'});
+    });
 
 
-        $scope.exportReport   = function (type){
-            var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
-            window.open(url);
+    $scope.statuses = [
+        {'name': 'All Statuses'},
+        {'name': 'Active', 'value': "TRUE"},
+        {'name': 'Inactive', 'value': "FALSE"}
+    ];
+
+
+    $scope.exportReport   = function (type){
+        var url = '/reports/download/facilities/' + type +'?zoneId=' +  $scope.filterObject.zoneId + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId + '&status=' +  $scope.filterObject.statusId;
+        window.open(url);
+    };
+
+
+
+    $scope.$watch('rgroupId', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.rgroupId = -1;
+        } else if (selection !== undefined || selection === "") {
+            $scope.filterObject.rgroupId = selection;
+            $.each($scope.requisitionGroups, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.rgroup = idx.name;
+                }
+            });
+        } else {
+            $scope.filterObject.rgroupId = 0;
         }
-
-
-
-        $scope.$watch('rgroupId', function (selection) {
-            if (selection == "All") {
-                $scope.filterObject.rgroupId = -1;
-            } else if (selection != undefined || selection == "") {
-                $scope.filterObject.rgroupId = selection;
-                $.each($scope.requisitionGroups, function (item, idx) {
-                    if (idx.id == selection) {
-                        $scope.filterObject.rgroup = idx.name;
-                    }
-                });
-            } else {
-                $scope.filterObject.rgroupId = 0;
-            }
-            $scope.filterGrid();
-        });
+        $scope.filterGrid();
+    });
 
 
     // the grid options
@@ -70,7 +70,7 @@ function ListFacilitiesController($scope,$filter,ngTableParams, FacilityList, Re
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -93,21 +93,14 @@ function ListFacilitiesController($scope,$filter,ngTableParams, FacilityList, Re
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
     $scope.getPagedDataAsync = function (pageSize, page) {
-        pageSize = 10000;
-        page = 1;
-        var params  = {};
-        if(pageSize != undefined && page != undefined ){
-            var params =  {
-                            "max" : pageSize,
-                            "page" : page
-                           };
-        }
-
-
-        params['zoneId'] = $scope.zone;
-        params['facilityTypeId'] = $scope.facilityType;
-        params['statusId'] = $scope.status;
-        params['rgroupId'] =$scope.filterObject.rgroupId;
+        var params =  {
+            "max" : 10000,
+            "page" : 1
+        };
+        params.zoneId = $scope.zone;
+        params.facilityTypeId = $scope.facilityType;
+        params.statusId = $scope.status;
+        params.rgroupId =$scope.filterObject.rgroupId;
 
         $scope.data = $scope.datarows = [];
 
@@ -115,8 +108,6 @@ function ListFacilitiesController($scope,$filter,ngTableParams, FacilityList, Re
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged( $scope.tableParams );
             });
-        };
-
-
+    };
 
 }

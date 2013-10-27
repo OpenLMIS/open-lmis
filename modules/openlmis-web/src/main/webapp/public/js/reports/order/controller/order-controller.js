@@ -2,7 +2,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
 
 
     $scope.showMessage = true;
-    $scope.message = "Indicates a required field."
+    $scope.message = "Indicates a required field.";
 
     $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
 
@@ -23,8 +23,8 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     });
 
     $scope.filterGrid = function (){
-           $scope.getPagedDataAsync(0, 0);
-        };
+       $scope.getPagedDataAsync(0, 0);
+    };
 
     //filter form data section
     $scope.filterOptions = {
@@ -90,14 +90,14 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.ChangeProgram = function(){
         ReportProductsByProgram.get({programId: $scope.program}, function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({id: '',name: '-- Indicator / Tracer Product --', id:'0'});
-            $scope.products.unshift({id: '',name: '-- All Products --', id:'-1'});
+            $scope.products.unshift({ name: '-- Indicator / Tracer Product --', id:'0'});
+            $scope.products.unshift({ name: '-- All Products --', id:'-1'});
 
         });
-    }
+    };
 
     $scope.ChangeSchedule = function(){
-        if(  $scope.filterObject.year != -1 &&  $scope.filterObject.year != 0){
+        if(  $scope.filterObject.year !== -1 &&  $scope.filterObject.year !== 0){
             ReportPeriodsByScheduleAndYear.get({ scheduleId: $scope.schedule, year: $scope.filterObject.year}, function(data){
                 $scope.periods = data.periods;
                 $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
@@ -125,7 +125,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
 
 
     $scope.$watch('schedule', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.scheduleId =  selection;
             $.each( $scope.schedules,function( item,idx){
                 if(idx.id == selection){
@@ -141,7 +141,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.$watch('year', function (selection) {
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.year = selection;
         } else {
             $scope.filterObject.year = 0;
@@ -152,7 +152,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.$watch('facilityType', function(selection){
         if(selection == "All"){
             $scope.filterObject.facilityTypeId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.facilityTypeId =  selection;
             $.each( $scope.facilityTypes,function( item,idx){
                 if(idx.id == selection){
@@ -175,7 +175,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     };
 
     $scope.$watch('facility', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.facilityId =  selection;
             $.each( $scope.allFacilities,function( item,idx){
                 if(idx.id == selection){
@@ -190,7 +190,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
 
 
     $scope.$watch('orderType', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.orderType =  selection;
 
         }else{
@@ -202,7 +202,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.$watch('product', function(selection){
         if(selection == "All"){
             $scope.filterObject.productId =  0;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.productId =  selection;
             $.each($scope.products, function( item,idx){
                 if(idx.id == selection){
@@ -218,7 +218,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.$watch('program', function(selection){
         if(selection == "All"){
             $scope.filterObject.programId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.programId =  selection;
             $.each($scope.programs, function(item,indx){
                if(indx.id == selection){
@@ -234,7 +234,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.$watch('period', function(selection){
         if(selection == "All"){
             $scope.filterObject.periodId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.periodId =  selection;
             $.each( $scope.periods,function( item,idx){
                 if(idx.id == selection){
@@ -267,7 +267,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -310,7 +310,6 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
 
     $scope.formatNumber = function(value){
         return utils.formatNumber(value,'0,000');
-    }
-
+    };
 
 }

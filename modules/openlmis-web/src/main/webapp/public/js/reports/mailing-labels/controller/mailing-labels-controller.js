@@ -21,7 +21,7 @@ function ListMailinglabelsController($scope,$filter, ngTableParams, MailingLabel
             url = '/reports/download/mailinglabels/list/' + "pdf" +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId ;
         }
         window.open(url);
-    }
+    };
 
 
 
@@ -35,7 +35,7 @@ function ListMailinglabelsController($scope,$filter, ngTableParams, MailingLabel
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -58,20 +58,16 @@ function ListMailinglabelsController($scope,$filter, ngTableParams, MailingLabel
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
     $scope.getPagedDataAsync = function (pageSize, page) {
-        pageSize = 10000;
-        page = 1;
-        var params  = {};
-        if(pageSize != undefined && page != undefined ){
-                var params =  {
-                                "max" : pageSize,
-                                "page" : page
-                               };
-        }
+        var params =  {
+            "max" : 10000,
+            "page" : 1
+        };
+
         //filter form data section
         $scope.filterObject = {
             facilityTypeId : $scope.facilityTypeId,
             rgroupId :  $scope.rgroupId
-        }
+        };
 
         // copy the filters over
         $.each($scope.filterObject, function(index, value) {

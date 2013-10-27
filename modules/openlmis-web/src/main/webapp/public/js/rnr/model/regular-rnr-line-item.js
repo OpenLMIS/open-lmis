@@ -74,16 +74,14 @@ var RegularRnrLineItem = base2.Base.extend({
     var orderQuantity;
 
     if (this.statusBeforeAuthorized()) {
-        orderQuantity =
-            isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
-    }
-    else {
+        orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    } else {
         orderQuantity = this.quantityApproved ;
     }
+    // this section has been modifified to accept the approved quanitty in packs.
+    orderQuantity  = orderQuantity * utils.parseIntWithBaseTen(this.packSize);
 
-      orderQuantity  = orderQuantity * utils.parseIntWithBaseTen(this.packSize)
-
-      this.calculatePacksToShip(orderQuantity);
+    this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
   },
 

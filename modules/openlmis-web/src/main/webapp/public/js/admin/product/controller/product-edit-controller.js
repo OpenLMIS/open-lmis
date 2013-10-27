@@ -17,8 +17,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
     ReportPrograms.get(function (data) {
         var tmp = data.programs;
         $scope.programs = data.programs;
-        //alert(JSON.stringify( $scope.programs, null, 4));
-    })
+    });
 
 
     $scope.disableAllFields = function() {
@@ -28,7 +27,6 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
     // delete confirm window
     $scope.showConfirmProductDeleteWindow = function (productUnderDelete) {
 
-        //alert(JSON.stringify( $scope.product, null, 4));
         var dialogOpts = {
             id: "deleteProductDialog",
             header: messageService.get('Delete product'),
@@ -111,7 +109,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
     //  scope is undefined,
     $scope.productLoaded = function () {
-        return !($scope.products == undefined || $scope.products == null);
+        return !($scope.products === undefined || $scope.products === null);
     };
 
 
@@ -140,7 +138,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
     $scope.YesNo = function (tf) {
         var retval = '';
-        if (tf == true) {
+        if (tf === true) {
             retval = 'Yes';
         } else
         {
@@ -187,7 +185,7 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
         // now get a fresh copy of the product object from the server
         ProductDetail.get({id:productId}, function(data){
             $scope.editProduct = data.product;
-            if($scope.editProduct.active == false){
+            if($scope.editProduct.active === false){
                 $scope.disableAllFields();
             }
         });
@@ -200,4 +198,4 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
     // start the editing
     $scope.startProductEdit($route.current.params.id);
 
-};
+}

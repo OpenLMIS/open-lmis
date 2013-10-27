@@ -17,7 +17,7 @@
             if (!$(this).hasClass('select2-container-active')) {
               $(this).data("select2").blur();
             }
-          })
+          });
         });
       };
     })

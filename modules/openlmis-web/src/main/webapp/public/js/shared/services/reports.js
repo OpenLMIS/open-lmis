@@ -1,10 +1,3 @@
-/**
- * User: Elias
- * Date: 5/4/13
- * Time: 2:33 PM
- */
-
-//var services = angular.module('openlmis.services', ['ngResource']);
 
 services.factory('MailingLabels', function ($resource) {
     return $resource('/reports/reportdata/mailingLabels.json', {}, {});
@@ -340,7 +333,7 @@ services.factory('GetApprovedProductForFacilityTypeDetail', function($resource){
 });
 
 services.factory('SaveApprovedProductForFacilityType',function($resource){
-    return $resource('/facilityApprovedProducts/insert.json',{},{})
+    return $resource('/facilityApprovedProducts/insert.json',{},{});
 });
 
 services.factory('RemoveApprovedProductForFacilityType', function($resource){

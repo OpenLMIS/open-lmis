@@ -18,7 +18,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
 
     GeographicLevels.get(function (data) {
         $scope.geographicLevels = data.geographicLevels;
-    })
+    });
 
     GeographicZoneCompleteList.get(function (data) {
         $scope.geographicZones = data.geographicZones;
@@ -46,7 +46,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
             $scope.error = response.data.error;
         };
 
-        if($scope.geographicZone.parent.id == null){
+        if($scope.geographicZone.parent.id === null){
             $scope.geographicZone.parent = null;
         }
 
@@ -56,7 +56,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
     };
 
     $scope.validateGeographicZoneName = function () {
-        $scope.geographicZoneNameInvalid = $scope.geographicZone.name != null;
+        $scope.geographicZoneNameInvalid = $scope.geographicZone.name !== null;
     };
 
     $scope.validateGeographicZoneLevelParent = function(){
@@ -70,7 +70,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
 
     $scope.validateGeographicZoneLevel = function(){
         $scope.geographicZoneLevelInvalid = $scope.geographicZone.level.id == $scope.selectedParent.level.id;
-    }
+    };
 
 
 }

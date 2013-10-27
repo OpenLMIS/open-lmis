@@ -24,7 +24,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         $scope.fromQuarter = $scope.toQuarter = 1;
 
         $scope.endQuarters  = function(){
-            if($scope.startYear == $scope.endYear && $scope.startQuarter != '' ){
+            if($scope.startYear == $scope.endYear && $scope.startQuarter !== '' ){
                 var arr = [];
                 for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
                     arr.push($scope.quarters[i]);
@@ -36,7 +36,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     Months.get(function(data){
        var months = data.months;
 
-       if(months != null){
+       if(months !== null){
            $scope.startMonths = [];
            $scope.endMonths = [];
            $.each(months,function(idx,obj){
@@ -89,115 +89,109 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
       };
 
 
-        $scope.filterGrid = function (){
+    $scope.filterGrid = function (){
+        if ($scope.filterForm.$invalid) {
+            $scope.errorShown = true;
+            //return;
+        }
+        $scope.getPagedDataAsync(0, 0);
 
+    };
 
-            if ($scope.filterForm.$invalid) {
-                $scope.errorShown = true;
-                //return;
-            }
-            $scope.getPagedDataAsync(0, 0);
-
-        };
-
-        //filter form data section
-        $scope.filterOptions = {
-            filterText: "",
-            useExternalFilter: false
-        };
-
-
-
-        //filter form data section
-        $scope.filterObject =  {
-             facilityTypeId : $scope.facilityType,
-             zoneId : $scope.zone,
-             periodType: $scope.periodType,
-             fromYear: $scope.fromYear,
-             fromMonth: $scope.fromMonth,
-             fromQuarter: $scope.fromQuarter,
-             fromSemiAnnual:$scope.startHalf,
-             toYear: $scope.toYear,
-             toMonth: $scope.toMonth,
-             toQuarter: $scope.toQuarter,
-             toSemiAnnual:$scope.endHalf,
-             productId: $scope.product,
-             productCategoryId : $scope.productCategory,
-             rgroupId : $scope.rgroup,
-             programId : $scope.program,
-             facility : $scope.facilityId,
-             facilityType : "",
-             rgroup : "",
-             pdformat : 0
-        };
-
-        ReportFacilityTypes.get(function(data) {
-            $scope.facilityTypes = data.facilityTypes;
-            $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
-        });
-
-        Products.get(function(data){
-            $scope.products = data.productList;
-            $scope.products.unshift({'name': '-- All Products --'});
-        });
-
-        ProductCategories.get(function(data){
-            $scope.productCategories = data.productCategoryList;
-            $scope.productCategories.unshift({'name': '-- All Product Categories --'});
-        });
+    //filter form data section
+    $scope.filterOptions = {
+        filterText: "",
+        useExternalFilter: false
+    };
 
 
 
+    //filter form data section
+    $scope.filterObject =  {
+         facilityTypeId : $scope.facilityType,
+         zoneId : $scope.zone,
+         periodType: $scope.periodType,
+         fromYear: $scope.fromYear,
+         fromMonth: $scope.fromMonth,
+         fromQuarter: $scope.fromQuarter,
+         fromSemiAnnual:$scope.startHalf,
+         toYear: $scope.toYear,
+         toMonth: $scope.toMonth,
+         toQuarter: $scope.toQuarter,
+         toSemiAnnual:$scope.endHalf,
+         productId: $scope.product,
+         productCategoryId : $scope.productCategory,
+         rgroupId : $scope.rgroup,
+         programId : $scope.program,
+         facility : $scope.facilityId,
+         facilityType : "",
+         rgroup : "",
+         pdformat : 0
+    };
 
-        GeographicZones.get(function(data) {
-            $scope.zones = data.zones;
-            $scope.zones.unshift({'name': '-- All Geographic Zones --'});
-        });
+    ReportFacilityTypes.get(function(data) {
+        $scope.facilityTypes = data.facilityTypes;
+        $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
+    });
 
-        ReportPrograms.get(function(data){
-            $scope.programs = data.programs;
-            $scope.programs.unshift({'name':'-- Select Programs --'});
-        });
+    Products.get(function(data){
+        $scope.products = data.productList;
+        $scope.products.unshift({'name': '-- All Products --'});
+    });
 
-        $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
+    ProductCategories.get(function(data){
+        $scope.productCategories = data.productCategoryList;
+        $scope.productCategories.unshift({'name': '-- All Product Categories --'});
+    });
 
-        $scope.$watch('zone.value', function(selection){
-            if(selection != undefined || selection == ""){
-               $scope.filterObject.zoneId =  selection;
-               //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }else{
-                $scope.filterObject.zoneId = 0;
-            }
-            $scope.filterGrid();
-        });
+    GeographicZones.get(function(data) {
+        $scope.zones = data.zones;
+        $scope.zones.unshift({'name': '-- All Geographic Zones --'});
+    });
 
-        $scope.$watch('status.value', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.statusId =  selection;
-                //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-            }else{
-                $scope.filterObject.statusId ='';
-            }
-            $scope.filterGrid();
-        });
-        $scope.$watch('facilityType.value', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.facilityTypeId =  selection;
-                $.each( $scope.facilityTypes,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.facilityType = idx.name;
-                    }
-                });
-            }else{
-                $scope.filterObject.facilityTypeId =  0;
-                $scope.filterObject.facilityType = "";
-            }
-            $scope.filterGrid();
-        });
+    ReportPrograms.get(function(data){
+        $scope.programs = data.programs;
+        $scope.programs.unshift({'name':'-- Select Programs --'});
+    });
 
-        $scope.$watch('startYear', function(selection){
+    $scope.$watch('zone.value', function(selection){
+        if(selection !== undefined || selection === ""){
+           $scope.filterObject.zoneId =  selection;
+           //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }else{
+            $scope.filterObject.zoneId = 0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('status.value', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.statusId =  selection;
+            //$scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }else{
+            $scope.filterObject.statusId ='';
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('facilityType.value', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.facilityTypeId =  selection;
+            $.each( $scope.facilityTypes,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.facilityType = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.facilityTypeId =  0;
+            $scope.filterObject.facilityType = "";
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('startYear', function(selection){
         var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromYear =  selection;
            adjustEndYears();
            adjustEndMonths();
@@ -206,40 +200,38 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         }else{
             $scope.startYear  = date.getFullYear().toString();
             $scope.filterObject.fromYear =  date.getFullYear();
-
         }
-            $scope.filterGrid();
-        });
+        $scope.filterGrid();
+    });
 
-        $scope.$watch('endYear', function(selection){
+    $scope.$watch('endYear', function(selection){
+        var date = new Date();
+        if(selection !== undefined || selection === "" ){
+            $scope.filterObject.toYear =  selection;
+            adjustEndMonths();
+            adjustEndQuarters();
+            adjustEndSemiAnnuals();
+        }else{
 
-            var date = new Date();
-            if(selection != undefined || selection == "" ){
-                $scope.filterObject.toYear =  selection;
-                adjustEndMonths();
-                adjustEndQuarters();
-                adjustEndSemiAnnuals();
-            }else{
+            $scope.endYear  = date.getFullYear().toString();
+            $scope.filterObject.toYear =  date.getFullYear();
+        }
+        $scope.filterGrid();
+    });
 
-                $scope.endYear  = date.getFullYear().toString();
-                $scope.filterObject.toYear =  date.getFullYear();
-            }
-            $scope.filterGrid();
-        });
-
-     $scope.$watch('startQuarter', function(selection){
-        if(selection != undefined || selection == ""){
-         $scope.filterObject.fromQuarter =  selection;
-         adjustEndQuarters();
+    $scope.$watch('startQuarter', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.fromQuarter =  selection;
+            adjustEndQuarters();
          }else{
-         var date = new Date();
-         $scope.filterObject.fromQuarter =  1;
+            var date = new Date();
+            $scope.filterObject.fromQuarter =  1;
          }
          $scope.filterGrid();
      });
 
     $scope.$watch('endQuarter', function(selection){
-       if(selection != undefined || selection == ""){
+       if(selection !== undefined || selection === ""){
             $scope.filterObject.toQuarter =  selection;
         }else{
             var date = new Date();
@@ -250,7 +242,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
 
     $scope.$watch('startHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromSemiAnnual =  selection;
             adjustEndSemiAnnuals();
         }else{
@@ -260,7 +252,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     });
     $scope.$watch('endHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toSemiAnnual =  selection;
         }else{
             var date = new Date();
@@ -270,7 +262,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     });
 
     $scope.$watch('startMonth', function(selection){
-        if($scope.startMonth != undefined || $scope.startMonth == ""){
+        if($scope.startMonth !== undefined || $scope.startMonth === ""){
             adjustEndMonths();
         }else{
             var date = new Date();
@@ -286,7 +278,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     });
 
     var adjustEndMonths = function(){
-        if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
+        if($scope.startMonth !== undefined && $scope.startMonths !== undefined && $scope.startYear == $scope.endYear ){
             $scope.endMonths = [];
             $.each($scope.startMonths,function(idx,obj){
                 if(obj.value >= $scope.startMonth){
@@ -294,7 +286,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
                 }
             });
         }
-    }
+    };
 
   var adjustEndSemiAnnuals = function(){
 
@@ -311,163 +303,151 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         }else{
             $scope.endSemiAnnuals = $scope.startSemiAnnuals;
         }
-    }
+    };
 
     var adjustEndQuarters = function(){
-            if($scope.startQuarter != undefined && $scope.startYear == $scope.endYear){
-                $scope.endQuarters = [];
-                $.each($scope.startQuarters, function(idx,obj){
-                    if(obj.value >= $scope.startQuarter){
-                        $scope.endQuarters.push({'name':obj.name, 'value': obj.value});
-                    }
-                });
-                if($scope.endQuarter < $scope.startQuarter){
-                    $scope.endQuarter =  $scope.startQuarter;
-                }
-            }else{
-                $scope.endQuarters = $scope.startQuarters;
-            }
-        }
-
-        var adjustEndYears = function(){
-            $scope.endYears = [];
-            $.each( $scope.startYears,function( idx,obj){
-                if(obj >= $scope.startYear){
-                    $scope.endYears.push(obj);
+        if($scope.startQuarter !== undefined && $scope.startYear == $scope.endYear){
+            $scope.endQuarters = [];
+            $.each($scope.startQuarters, function(idx,obj){
+                if(obj.value >= $scope.startQuarter){
+                    $scope.endQuarters.push({'name':obj.name, 'value': obj.value});
                 }
             });
-            if($scope.endYear < $scope.startYear){
-                $scope.endYear  = new Date().getFullYear();
+            if($scope.endQuarter < $scope.startQuarter){
+                $scope.endQuarter =  $scope.startQuarter;
             }
+        }else{
+            $scope.endQuarters = $scope.startQuarters;
         }
+    };
 
-        $scope.$watch('periodType', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.periodType =  selection;
-
-            }else{
-                $scope.filterObject.periodType =  "monthly";
+    var adjustEndYears = function(){
+        $scope.endYears = [];
+        $.each( $scope.startYears,function( idx,obj){
+            if(obj >= $scope.startYear){
+                $scope.endYears.push(obj);
             }
-            $scope.filterGrid();
-
         });
-
-        $scope.$watch('productCategory', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.productCategoryId =  selection;
-            }else{
-                $scope.filterObject.productCategoryId =  0;
-            }
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('product', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.productId =  selection;
-            }else{
-                $scope.filterObject.productId =  0;
-            }
-            $scope.filterGrid();
-        });
-
-
-        $scope.$watch('rgroup', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.rgroupId =  selection;
-                $.each( $scope.requisitionGroups,function( item,idx){
-                    if(idx.id == selection){
-                        $scope.filterObject.rgroup = idx.name;
-                    }
-                });
-            }else{
-                $scope.filterObject.rgroupId =  0;
-                $scope.filterObject.rgroup = "";
-            }
-            $scope.filterGrid();
-        });
-
-        $scope.$watch('program', function(selection){
-            if(selection != undefined || selection == ""){
-                $scope.filterObject.programId =  selection;
-            }else{
-                $scope.filterObject.programId =  0;
-            }
-            $scope.filterGrid();
-        });
-
-
-        $scope.exportReport   = function (type){
-
-            $scope.filterObject.pdformat =1;
-            var params = jQuery.param($scope.filterObject);
-            var url = '/reports/download/average_consumption/' + type +'?' + params;
-            $scope.$window.open(url);
+        if($scope.endYear < $scope.startYear){
+            $scope.endYear  = new Date().getFullYear();
         }
+    };
 
-        // the grid options
-        $scope.tableParams = new ngTableParams({
-            page: 1,            // show first page
-            total: 0,           // length of data
-            count: 25           // count per page
-        });
+    $scope.$watch('periodType', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.periodType =  selection;
 
-        $scope.paramsChanged = function(params) {
+        }else{
+            $scope.filterObject.periodType =  "monthly";
+        }
+        $scope.filterGrid();
 
-            // slice array data on pages
-            if($scope.data == undefined ){
-                $scope.datarows = [];
-                params.total = 0;
-            }else{
-                var data = $scope.data;
-                var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-                orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+    });
 
-                params.total = orderedData.length;
-                $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
-                var i = 0;
-                var baseIndex = params.count * (params.page - 1) + 1;
-                while(i < $scope.datarows.length){
-                    $scope.datarows[i].no = baseIndex + i;
-                    i++;
+    $scope.$watch('productCategory', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.productCategoryId =  selection;
+        }else{
+            $scope.filterObject.productCategoryId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+    $scope.$watch('product', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.productId =  selection;
+        }else{
+            $scope.filterObject.productId =  0;
+        }
+        $scope.filterGrid();
+    });
+
+
+    $scope.$watch('rgroup', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.rgroupId =  selection;
+            $.each( $scope.requisitionGroups,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.rgroup = idx.name;
                 }
-            }
-        };
+            });
+        }else{
+            $scope.filterObject.rgroupId =  0;
+            $scope.filterObject.rgroup = "";
+        }
+        $scope.filterGrid();
+    });
 
-        // watch for changes of parameters
-        $scope.$watch('tableParams', $scope.paramsChanged , true);
+    $scope.$watch('program', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.programId =  selection;
+        }else{
+            $scope.filterObject.programId =  0;
+        }
+        $scope.filterGrid();
+    });
 
 
+    $scope.exportReport   = function ( type ){
+        $scope.filterObject.pdformat = 1;
+        var params = jQuery.param($scope.filterObject);
+        var url = '/reports/download/average_consumption/' + type +'?' + params;
+        $scope.$window.open(url);
+    };
 
-        $scope.getPagedDataAsync = function (pageSize, page) {
-            pageSize = 50000;
-            page = 1;
-            // Clear the results on the screen
+    // the grid options
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function(params) {
+        // slice array data on pages
+        if($scope.data === undefined ){
             $scope.datarows = [];
-            $scope.data = [];
-            var params  = {};
-            if(pageSize != undefined && page != undefined ){
-                var params =  {
-                                "max" : pageSize,
-                                "page" : page
-                               };
+            params.total = 0;
+        }else{
+            var data = $scope.data;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+            var i = 0;
+            var baseIndex = params.count * (params.page - 1) + 1;
+            while(i < $scope.datarows.length){
+                $scope.datarows[i].no = baseIndex + i;
+                i++;
             }
+        }
+    };
 
-            $.each($scope.filterObject, function(index, value) {
-                if(value != undefined)
-                    params[index] = value;
-            });
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
 
-            $scope.data = [];
-            AverageConsumptionReport.get(params, function(data) {
-                if(data.pages != undefined && data.pages.rows != undefined ){
-                    $scope.MinMos = data.pages.rows[0].minMOS;
-                    $scope.MaxMos=data.pages.rows[0].maxMOS;
-                    $scope.data = data.pages.rows;
-                    $scope.paramsChanged($scope.tableParams);
-                }
-            });
+    $scope.getPagedDataAsync = function (pageSize, page) {
+        // Clear the results on the screen
+        $scope.datarows = [];
+        $scope.data = [];
+        var params =  {
+            "max" : 10000,
+            "page" : 1
         };
 
+        $.each($scope.filterObject, function(index, value) {
+            if(value !== undefined)
+                params[index] = value;
+        });
 
+        AverageConsumptionReport.get(params, function(data) {
+            if(data.pages !== undefined && data.pages.rows !== undefined ){
+                $scope.MinMos = data.pages.rows[0].minMOS;
+                $scope.MaxMos=data.pages.rows[0].maxMOS;
+                $scope.data = data.pages.rows;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
+    };
 
 }

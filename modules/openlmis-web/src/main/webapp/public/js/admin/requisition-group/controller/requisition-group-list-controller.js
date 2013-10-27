@@ -4,6 +4,7 @@ function RequisitionGroupListController($scope, sharedSpace, $location, navigate
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
     });
+
     $scope.previousQuery = '';
 
     $scope.showRequisitionGroupsList = function (id) {
@@ -37,7 +38,7 @@ function RequisitionGroupListController($scope, sharedSpace, $location, navigate
     var filterRequisitionGroupsByName = function (query) {
         query = query || "";
 
-        if (query.length == 0) {
+        if (query.length === 0) {
             $scope.filteredRequisitionGroups = $scope.requisitionGroupsList;
         }
         else {
@@ -61,5 +62,5 @@ function RequisitionGroupListController($scope, sharedSpace, $location, navigate
     $scope.$watch('sharedSpace.getShouldReloadTheList()',function(){
         $scope.$apply($scope.query = navigateBackService.query);
         $scope.showRequisitionGroupsList('txtFilterRequisitionGroups');
-    })
+    });
 }

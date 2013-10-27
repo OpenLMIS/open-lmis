@@ -72,7 +72,7 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
       } else {
           $scope.updateSupplyline(supplyline, form);
       }
-    }
+    };
 
     //  switch to new mode
     $scope.startAddNewSupplyline = function() {
@@ -126,7 +126,7 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
 //    //  scope is undefined,
     $scope.supplylineLoaded = function () {
         //alert(JSON.stringify($scope.supplylines, null, 4));
-        return !($scope.supplylines == undefined || $scope.supplylines == null);
+        return !($scope.supplylines === undefined || $scope.supplylines === null);
     };
 
     $scope.clearErrorsOnPage = function(){
@@ -136,15 +136,16 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
         $scope.message = "";
         $scope.creationError = "";
         $scope.error = "";
-    }
+    };
 
-    //
+
     $scope.startSupplylineEdit = function (supplylineUnderEdit) {
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].editFormActive = "supplyline-form-active";
         $scope.supplylinesBackupMap[supplylineUnderEdit.id].edit = true;
         $scope.clearErrorsOnPage();
         $scope.setFlags('edit','start');
     };
+
     // update
     $scope.updateSupplyline = function (supplyline, form) {
 
@@ -268,7 +269,7 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
             $scope.newSupplyline = {};
             $scope.editSupplyline = {};
             $scope.setFlags('delete','delete');
-            if(data.success != null ){
+            if(data.success !== null ){
                 $scope.showDelError = false;
                 $scope.delError = "";
             }
@@ -312,6 +313,6 @@ function SupplylineController($scope,$location,$dialog,messageService,ReportProg
          $scope.AddEditMode = false;
          $scope.title = 'Supply Lines';
      }
+ };
 
- }
 }

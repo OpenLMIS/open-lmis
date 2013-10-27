@@ -39,7 +39,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     $scope.fromQuarter = $scope.toQuarter = 1;
 
     $scope.endQuarters  = function(){
-        if($scope.startYear == $scope.endYear && $scope.startQuarter != '' ){
+        if($scope.startYear == $scope.endYear && $scope.startQuarter !== '' ){
             var arr = [];
             for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
                 arr.push($scope.quarters[i]);
@@ -51,7 +51,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     Months.get(function(data){
         var months = data.months;
 
-        if(months != null){
+        if(months !== null){
             $scope.startMonths = [];
             $scope.endMonths = [];
             $.each(months,function(idx,obj){
@@ -180,8 +180,8 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         // load products
         ReportProductsByProgram.get({programId: $scope.filterObject.programId}, function(data){
             $scope.products = data.productList;
-            $scope.products.unshift({id: '',name: '-- Indicator / Tracer Product --', id:'0'});
-            $scope.products.unshift({id: '',name: '-- All Products --', id:'-1'});
+            $scope.products.unshift({name: '-- Indicator / Tracer Product --', id:'0'});
+            $scope.products.unshift({name: '-- All Products --', id:'-1'});
 
         });
         // load facilities
@@ -196,10 +196,10 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         );
 
         $scope.filterGrid();
-    }
+    };
 
     $scope.$watch('zone.value', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.zoneId =  selection;
             $.each( $scope.zones,function( item,idx){
                 if(idx.id == selection){
@@ -215,7 +215,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
 
     $scope.$watch('facilityType.value', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.facilityTypeId =  selection;
             $.each( $scope.facilityTypes,function( item,idx){
                 if(idx.id == selection){
@@ -230,7 +230,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     $scope.$watch('facility.value', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.facilityId =  selection;
             $.each( $scope.allFacilities,function( item,idx){
                 if(idx.id == selection){
@@ -246,7 +246,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
     $scope.$watch('startYear', function(selection){
         var date = new Date();
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromYear =  selection;
             adjustEndYears();
             adjustEndMonths();
@@ -263,7 +263,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     $scope.$watch('endYear', function(selection){
 
         var date = new Date();
-        if(selection != undefined || selection == "" ){
+        if(selection !== undefined || selection === "" ){
             $scope.filterObject.toYear =  selection;
             adjustEndMonths();
             adjustEndQuarters();
@@ -280,7 +280,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     $scope.$watch('startQuarter', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromQuarter =  selection;
             adjustEndQuarters();
         }else{
@@ -291,7 +291,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     $scope.$watch('endQuarter', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toQuarter =  selection;
         }else{
             var date = new Date();
@@ -302,7 +302,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
     $scope.$watch('startHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.fromSemiAnnual =  selection;
             adjustEndSemiAnnuals();
         }else{
@@ -312,7 +312,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
     $scope.$watch('endHalf', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.toSemiAnnual =  selection;
         }else{
             var date = new Date();
@@ -322,7 +322,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     $scope.$watch('startMonth', function(selection){
-        if($scope.startMonth != undefined || $scope.startMonth == ""){
+        if($scope.startMonth !== undefined || $scope.startMonth === ""){
             adjustEndMonths();
         }else{
             var date = new Date();
@@ -338,7 +338,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     var adjustEndMonths = function(){
-        if($scope.startMonth != undefined && $scope.startMonths != undefined && $scope.startYear == $scope.endYear ){
+        if($scope.startMonth !== undefined && $scope.startMonths !== undefined && $scope.startYear == $scope.endYear ){
             $scope.endMonths = [];
             $.each($scope.startMonths,function(idx,obj){
                 if(obj.value >= $scope.startMonth){
@@ -346,7 +346,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
                 }
             });
         }
-    }
+    };
 
     var adjustEndSemiAnnuals = function(){
 
@@ -363,10 +363,10 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         }else{
             $scope.endSemiAnnuals = $scope.startSemiAnnuals;
         }
-    }
+    };
 
     var adjustEndQuarters = function(){
-        if($scope.startQuarter != undefined && $scope.startYear == $scope.endYear){
+        if($scope.startQuarter !== undefined && $scope.startYear === $scope.endYear){
             $scope.endQuarters = [];
             $.each($scope.startQuarters, function(idx,obj){
                 if(obj.value >= $scope.startQuarter){
@@ -379,7 +379,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         }else{
             $scope.endQuarters = $scope.startQuarters;
         }
-    }
+    };
 
     var adjustEndYears = function(){
         $scope.endYears = [];
@@ -391,10 +391,10 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         if($scope.endYear < $scope.startYear){
             $scope.endYear  = new Date().getFullYear();
         }
-    }
+    };
 
     $scope.$watch('periodType', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.periodType =  selection;
 
         }else{
@@ -405,7 +405,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     });
 
     $scope.$watch('productCategory', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.productCategoryId =  selection;
             $.each( $scope.productCategories,function( item,idx){
                 if(idx.id == selection){
@@ -422,7 +422,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
 
     $scope.$watch('product', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.productId =  selection;
             $.each( $scope.products,function( item,idx){
                 if(idx.id == selection){
@@ -440,7 +440,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
     $scope.$watch('rgroup', function(selection){
 
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.rgroupId =  selection;
             $.each( $scope.requisitionGroups,function( item,idx){
                 if(idx.id == selection){
@@ -460,7 +460,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/stocked_out/' + type + '?' + params;
         $scope.$window.open(url);
-    }
+    };
 
     // the grid options
     $scope.tableParams = new ngTableParams({
@@ -472,7 +472,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -496,23 +496,17 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
     $scope.getPagedDataAsync = function (pageSize, page) {
 
-        if($scope.filterObject.program == undefined){
+        if($scope.filterObject.program === undefined){
             return;
         }
 
-
-        pageSize = 10000;
-        page = 1;
-        var params  = {};
-        if(pageSize != undefined && page != undefined ){
-            var params =  {
-                "max" : pageSize,
-                "page" : page
-            };
-        }
+        var params =  {
+            "max" : 10000,
+            "page" : 1
+        };
 
         $.each($scope.filterObject, function(index, value) {
-            if(value != undefined)
+            if(value !== undefined)
                 params[index] = value;
         });
 
@@ -520,7 +514,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         $scope.data = $scope.datarows = [];
 
         StockedOutReport.get(params, function (data) {
-            if(data.pages != undefined && data.pages.rows != undefined ){
+            if(data.pages !== undefined && data.pages.rows !== undefined ){
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);
             }
@@ -528,9 +522,5 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         });
 
     };
-
-
-
-
 
 }

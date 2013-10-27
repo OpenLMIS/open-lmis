@@ -9,5 +9,5 @@ function ListSettingController($scope, $routeParams, $location, $dialog, Setting
             $location.path('');
             $scope.$parent.message = "The configuration changes were successfully updated.";
         });
-    }
+    };
 }

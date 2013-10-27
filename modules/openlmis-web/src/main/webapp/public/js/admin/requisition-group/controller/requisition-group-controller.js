@@ -9,7 +9,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     var loadMemberFacilities = function(){
         FacilityCompleteListInRequisitionGroup.get({id:$routeParams.requisitionGroupId},function(data){
             $scope.facilities = data.facilities;
-        })
+        });
     };
 
 
@@ -59,7 +59,8 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
         return true;
     };
 
-    $scope.saveRequisitionGroupMember=function(){
+    $scope.saveRequisitionGroupMember = function(){
+
         var successHandler = function (response) {
             $scope.requisitionGroupMember = response.requisitionGroupMember;
             $scope.showError = false;
@@ -83,7 +84,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     };
 
     $scope.validateRequisitionGroupName = function () {
-        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name == null;
+        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null;
     };
 
     $scope.addNewMemberFacility=function(){
@@ -100,18 +101,18 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     };
 
     $scope.filterFacilityList=function(){
-        $scope.allFacilitiesFiltered=[];
-        if($scope.facilityType == null && $scope.geographicZone == null){
+        $scope.allFacilitiesFiltered = [];
+        if($scope.facilityType === null && $scope.geographicZone === null){
             $scope.allFacilitiesFiltered = $scope.allFacilities;
         }
         else{
             angular.forEach($scope.allFacilities,function(facility){
-                if($scope.facilityType!=null){
+                if($scope.facilityType !== null){
                     if(facility.facilityType.id == $scope.facilityType.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }
-                else if($scope.geographicZone != null){
+                else if($scope.geographicZone !== null){
                     if(facility.geographicZone.id == $scope.geographicZone.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }

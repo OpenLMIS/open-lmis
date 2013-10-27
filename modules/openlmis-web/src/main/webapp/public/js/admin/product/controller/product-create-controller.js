@@ -29,10 +29,7 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
         $scope.product.active = true;
         $scope.product.tracer = false;
         $scope.apply();
-    })
-
-
-
+    });
 
     // create product
     $scope.createProduct = function () {
@@ -106,7 +103,7 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
 
     $scope.YesNo = function (tf) {
         var retval = '';
-        if (tf == true) {
+        if (tf === true) {
             retval = 'Yes';
         } else
         {
@@ -115,4 +112,4 @@ function ProductCreateController($scope, $location, $dialog, messageService, Cre
         return retval;
     };
 
-};
+}

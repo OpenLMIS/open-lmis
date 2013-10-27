@@ -1,5 +1,3 @@
-
-'use strict';
 angular.module('setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/list', {controller:ListSettingController, templateUrl:'partials/list.html'}).
@@ -12,9 +10,12 @@ angular.module('setting', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialo
 
 app.directive('setting', function ($compile, $http, $templateCache) {
 
-    var noteTemplate = '<div class="entry-note"><div class="entry-text"><div class="entry-title">{{name}}</div><div class="entry-copy">{{content.data}}</div></div></div>';
-
-
+    var noteTemplate = '<div class="entry-note">' +
+                            '<div class="entry-text">' +
+                                '<div class="entry-title">{{name}}</div>' +
+                                '<div class="entry-copy">{{content.data}}</div>' +
+                            '</div>' +
+                        '</div>';
 
     var getTemplate = function(contentType) {
         var templateLoader,
@@ -32,8 +33,7 @@ app.directive('setting', function ($compile, $http, $templateCache) {
         templateLoader = $http.get(templateUrl, {cache: $templateCache});
 
         return templateLoader;
-
-    }
+    };
 
     var linker = function(scope, element, attrs) {
         var loader = getTemplate(scope.content.valueType);
@@ -42,7 +42,7 @@ app.directive('setting', function ($compile, $http, $templateCache) {
                         }).then(function (response) {
                             element.replaceWith($compile(element.html())(scope));
                         });
-    }
+    };
 
     return {
         restrict: "E",

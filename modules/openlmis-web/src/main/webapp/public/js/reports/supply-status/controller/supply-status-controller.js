@@ -1,9 +1,8 @@
-function SupplyStatusController($scope, $filter, ngTableParams
-                                , SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , ReportProductsByProgram ,ReportFacilityTypes, FacilitiesByProgramParams,GetFacilityByFacilityType, GeographicZones, RequisitionGroups,SettingsByKey, $http, $routeParams,$location) {
+function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , ReportProductsByProgram ,ReportFacilityTypes, FacilitiesByProgramParams,GetFacilityByFacilityType, GeographicZones, RequisitionGroups,SettingsByKey, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
-    $scope.message = "Indicates a required field."
+    $scope.message = "Indicates a required field." ;
 
 
     $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
@@ -11,17 +10,6 @@ function SupplyStatusController($scope, $filter, ngTableParams
     SettingsByKey.get({key: $scope.IndicatorProductsKey},function (data){
         $scope.IndicatorProductsDescription = data.settings.value;
     });
-
-
-    $scope.section = function (id) {
-        section = id;
-    };
-
-    $scope.show = function (id) {
-        return section == id;
-    };
-    // lookups and references
-
 
     $scope.filterGrid = function (){
         $scope.getPagedDataAsync(0, 0);
@@ -74,7 +62,7 @@ function SupplyStatusController($scope, $filter, ngTableParams
     });
 
     $scope.ProgramChanged = function(){
-        if($scope.filterObject.schedule != ''){
+        if($scope.filterObject.schedule !== ''){
             $scope.ChangeSchedule();
         }
 
@@ -114,12 +102,11 @@ function SupplyStatusController($scope, $filter, ngTableParams
 
 
     $scope.exportReport   = function (type){
-        $scope.filterObject.pdformat =1;
+        $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/supply_status/' + type +'?' + params;
         window.open(url);
-
-    }
+    };
 
     // the grid options
     $scope.tableParams = new ngTableParams({
@@ -131,7 +118,7 @@ function SupplyStatusController($scope, $filter, ngTableParams
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -157,15 +144,10 @@ function SupplyStatusController($scope, $filter, ngTableParams
     $scope.getPagedDataAsync = function (pageSize, page) {
         $scope.datarows = $scope.data = [];
 
-        pageSize = 10000;
-        page = 1;
-        var params  = {};
-        if(pageSize != undefined && page != undefined ){
-            var params =  {
-                "max" : pageSize,
-                "page" : page
-            };
-        }
+        var params =  {
+            "max" : 10000,
+            "page" : 1
+        };
 
         $.each($scope.filterObject, function(index, value) {
             params[index] = value;

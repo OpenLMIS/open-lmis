@@ -9,14 +9,14 @@ function ILSGatewayDashboardController($scope, $routeParams, $location, $dialog,
 
     $scope.setHeight = function(){
 
-    }
+    } ;
 
     $scope.getHeight = function(contentId){
         var content = document.getElementById(contentId).contentWindow;
-        if(content != null){
+        if(content !== null){
             var height = content.document.height;
             return "height :" + height;
         }
-    }
+    };
 
 }

@@ -45,13 +45,13 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
             $scope.error = response.data.error;
         };
 
-        if($scope.supervisoryNode.facility == null || $scope.supervisoryNode.name==null || $scope.supervisoryNode.code==null){
+        if($scope.supervisoryNode.facility === null || $scope.supervisoryNode.name === null || $scope.supervisoryNode.code === null){
             $scope.showError = true;
             $scope.error = "Please fill in all required fields.";
             return false;
         }
 
-        if($scope.supervisoryNode.parent.id == null){
+        if($scope.supervisoryNode.parent.id === null){
             $scope.supervisoryNode.parent = null;
         }
 
@@ -66,7 +66,7 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     };
 
     $scope.validateSupervisoryNodeName = function () {
-        $scope.supervisoryNodeNameInvalid = $scope.supervisoryNode.name == null;
+        $scope.supervisoryNodeNameInvalid = $scope.supervisoryNode.name === null;
     };
 
     $scope.associateFacility=function(){
@@ -85,18 +85,18 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
 
     $scope.filterFacilityList=function(){
         $scope.allFacilitiesFiltered=[];
-        if($scope.facilityType == null && $scope.geographicZone == null){
+        if($scope.facilityType === null && $scope.geographicZone === null){
             $scope.allFacilitiesFiltered = $scope.allFacilities;
         }
         else{
             angular.forEach($scope.allFacilities,function(facility){
-                if($scope.facilityType!=null){
+                if($scope.facilityType !== null){
                     if(facility.facilityType.id == $scope.facilityType.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }
-                else if($scope.geographicZone != null){
-                    if(facility.geographicZone.id == $scope.geographicZone.id){
+                else if($scope.geographicZone !== null){
+                    if(facility.geographicZone.id === $scope.geographicZone.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }

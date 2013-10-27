@@ -3,7 +3,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
-    $scope.message = "Indicates a required field."
+    $scope.message = "Indicates a required field." ;
 
     $scope.defaultFlag = true;
    // $scope.reporting = "quarterly";
@@ -101,7 +101,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     $scope.$watch('stockImbalance.facilityTypeId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.facilityTypeId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.facilityTypeId = selection;
             $.each($scope.facilityTypes, function (item, idx) {
                 if (idx.id == selection) {
@@ -116,7 +116,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     });
 
     $scope.$watch('stockImbalance.facilityName', function (selection) {
-        if (selection != undefined || selection == "") {
+        if (selection !== undefined || selection === "") {
             $scope.filterObject.facilityName = selection;
 
         } else {
@@ -128,13 +128,13 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     $scope.$watch('stockImbalance.productCategoryId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.productCategoryId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.productCategoryId = selection;
             $.each($scope.productCategories, function(item, idx){
                 if(idx.id == selection){
                     $scope.filterObject.productCategory = idx.name;
                 }
-            })
+            });
         } else {
             $scope.filterObject.productCategoryId = 0;
         }
@@ -149,12 +149,12 @@ function StockImbalanceController($scope, $filter, ngTableParams,
             var ind_prod = $scope.IndicatorProductsDescription;
             $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'), 'id':'-1'});
         });
-    }
+    };
 
     $scope.$watch('stockImbalance.productId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.productId = 0;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.productId = selection;
             $.each($scope.products, function(item, idx){
                 if(idx.id == selection){
@@ -171,7 +171,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     $scope.$watch('stockImbalance.rgroupId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.rgroupId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.rgroupId = selection;
             $.each($scope.requisitionGroups, function (item, idx) {
                 if (idx.id == selection) {
@@ -187,7 +187,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     $scope.$watch('stockImbalance.programId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.programId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.programId = selection;
             $.each($scope.programs, function (item, idx) {
                 if (idx.id == selection) {
@@ -204,7 +204,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     $scope.$watch('stockImbalance.periodId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.periodId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.periodId = selection;
             $.each($scope.periods, function (item, idx) {
                 if (idx.id == selection) {
@@ -215,14 +215,13 @@ function StockImbalanceController($scope, $filter, ngTableParams,
         } else {
             $scope.filterObject.periodId = 0;
         }
-
         $scope.filterGrid();
     });
 
     $scope.$watch('stockImbalance.scheduleId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.scheduleId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.scheduleId = selection;
             $.each($scope.schedules , function (item, idx) {
                 if (idx.id == selection) {
@@ -241,14 +240,14 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.year = selection;
 
         } else {
             $scope.filterObject.year = 0;
         }
 
-        if($scope.filterObject.year == -1 || $scope.filterObject.year == 0){
+        if($scope.filterObject.year === -1 || $scope.filterObject.year === 0){
 
             $scope.ChangeSchedule('bySchedule');
         }else{
@@ -259,8 +258,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
 
     $scope.exportReport = function (type) {
-        //$scope.message ="";
-        //if ($scope.message = "") {
+
         $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/stock_imbalance/' + type + '?' + params;
@@ -269,10 +267,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
         localStorageService.add(localStorageKeys.REPORTS.STOCK_IMBALANCE, JSON.stringify($scope.filterObject));
         window.open(url);
         //}
-    }
-
-
-
+    };
 
     //filter form data section
     $scope.filterObject = {
@@ -311,7 +306,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
@@ -335,16 +330,10 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
     $scope.getPagedDataAsync = function (pageSize, page) {
 
-        pageSize = 10000;
-        page = 1;
-        var params = {};
-        //alert('xxx');
-        if (pageSize != undefined && page != undefined) {
-            var params = {
-                "max": pageSize,
-                "page": page
-            };
-        }
+        var params = {
+            "max": 10000,
+            "page": 1
+        };
 
         $.each($scope.filterObject, function (index, value) {
             //if(value != undefined)
@@ -358,11 +347,8 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
     };
 
-
-
     $scope.formatNumber = function (value, format) {
         return utils.formatNumber(value, format);
-    }
-
+    };
 
 }

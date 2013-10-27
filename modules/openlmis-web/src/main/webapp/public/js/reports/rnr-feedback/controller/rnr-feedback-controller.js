@@ -7,7 +7,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     };
 
     $scope.showMessage = true;
-    $scope.message = "Indicates a required field."
+    $scope.message = "Indicates a required field." ;
 
     $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
 
@@ -35,7 +35,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     ];
 
     //Order type defaults to Regular
-    $scope.orderType = 'Regular'
+    $scope.orderType = 'Regular' ;
 
 
     $scope.filterGrid = function (){
@@ -118,7 +118,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     $scope.$watch('facilityType', function(selection){
         if(selection == "All"){
             $scope.filterObject.facilityTypeId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.facilityTypeId =  selection;
             $.each( $scope.facilityTypes,function( item,idx){
                 if(idx.id == selection){
@@ -140,7 +140,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     };
 
     $scope.$watch('facility', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.facilityId =  selection;
             $.each( $scope.allFacilities,function( item,idx){
                 if(idx.id == selection){
@@ -155,7 +155,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
 
     $scope.$watch('orderType', function(selection){
-        if(selection != undefined || selection == ""){
+        if(selection !== undefined || selection === ""){
             $scope.filterObject.orderType =  selection;
 
         }else{
@@ -185,7 +185,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     $scope.$watch('schedule', function (selection) {
         if (selection == "All") {
             $scope.filterObject.scheduleId = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.scheduleId = selection;
             $.each($scope.schedules , function (item, idx) {
                 if (idx.id == selection) {
@@ -206,7 +206,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
         }else if(selection == "-1"){
                 $scope.filterObject.productId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.productId =  selection;
             $.each($scope.products, function(item, idx){
                if(idx.id == selection){
@@ -223,7 +223,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     $scope.$watch('program', function(selection){
         if(selection == "All"){
             $scope.filterObject.programId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.programId =  selection;
             $.each($scope.programs, function(item, idx){
                if(idx.id == selection){
@@ -239,7 +239,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     $scope.$watch('period', function(selection){
         if(selection == "All"){
             $scope.filterObject.periodId =  -1;
-        }else if(selection != undefined || selection == ""){
+        }else if(selection !== undefined || selection === ""){
             $scope.filterObject.periodId =  selection;
             $.each( $scope.periods,function( item,idx){
                 if(idx.id == selection){
@@ -257,14 +257,14 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;
-        } else if (selection != undefined || selection == "") {
+        } else if (selection !== undefined || selection === "") {
             $scope.filterObject.year = selection;
 
         } else {
             $scope.filterObject.year = 0;
         }
 
-        if($scope.filterObject.year == -1 || $scope.filterObject.year == 0){
+        if($scope.filterObject.year === -1 || $scope.filterObject.year === 0){
 
             $scope.ChangeSchedule('bySchedule');
         }else{
@@ -272,8 +272,6 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
             $scope.ChangeSchedule('byYear');
         }
     });
-
-    $scope.currentPage = ($routeParams.page) ? parseInt($routeParams.page) || 1 : 1;
 
     $scope.exportReport   = function (type){
         $scope.filterObject.pdformat =1;
@@ -290,7 +288,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
     $scope.$watch("currentPage", function () {  //good watch no problem
 
-        if($scope.currentPage != undefined && $scope.currentPage != 1){
+        if($scope.currentPage !== undefined && $scope.currentPage !== 1){
             //when clicked using the links they have done updated the paging info no problem here
             //or using the url page param
             //$scope.pagingOptions.currentPage = $scope.currentPage;
@@ -323,7 +321,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     $scope.paramsChanged = function(params) {
 
         // slice array data on pages
-        if($scope.data == undefined ){
+        if($scope.data === undefined ){
             $scope.datarows = [];
             params.total = 0;
         }else{
