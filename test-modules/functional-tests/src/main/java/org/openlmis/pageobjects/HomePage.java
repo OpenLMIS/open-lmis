@@ -592,11 +592,6 @@ public class HomePage extends Page {
       TestWebDriver.getDriver().navigate().back();
   }
 
-  public String getErrorMessage() {
-      testWebDriver.waitForElementToAppear(errorMsg);
-      return errorMsg.getText().trim();
-  }
-
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);
     SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
