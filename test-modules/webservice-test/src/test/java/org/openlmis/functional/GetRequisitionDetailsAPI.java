@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -62,193 +61,192 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
     Long id = getRequisitionIdFromResponse(response);
 
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"emergency\":false"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"products\":[{"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"beginningBalance\":3"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityReceived\":0"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityDispensed\":1"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"totalLossesAndAdjustments\":-2"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockInHand\":0"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"newPatientCount\":2"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockOutDays\":2"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityRequested\":3"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
-      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"emergency\":false"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"products\":[{"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"beginningBalance\":3"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityReceived\":0"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityDispensed\":1"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"totalLossesAndAdjustments\":-2"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockInHand\":0"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"newPatientCount\":2"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockOutDays\":2"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityRequested\":3"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
   }
 
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithInvalidRequisitionID() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithInvalidRequisitionID() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + id*10, "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"error\":\"Requisition Not Found\""));
+    ResponseEntity responseEntity = client.SendJSON("", URL + id * 10, "GET", "commTrack", "Admin123");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"error\":\"Requisition Not Found\""));
 
-        responseEntity = client.SendJSON("", URL + "@", "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"error\":\"Oops, something has gone wrong. Please try again later\""));
-    }
+    responseEntity = client.SendJSON("", URL + "@", "GET", "commTrack", "Admin123");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"error\":\"Oops, something has gone wrong. Please try again later\""));
+  }
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithInvalidPassword() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithInvalidPassword() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
-    }
+    ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+  }
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithInvalidUser() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithInvalidUser() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "comm", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
-    }
+    ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "comm", "Admin123");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+  }
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithBlankRequisitionID() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithBlankRequisitionID() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL , "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Request method 'GET' not supported"));
-    }
+    ResponseEntity responseEntity = client.SendJSON("", URL, "GET", "commTrack", "Admin123");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Request method 'GET' not supported"));
+  }
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithMalformedRequest() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithMalformedRequest() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/rest-api/requisition/"+id , "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
-    }
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/rest-api/requisition/" + id, "GET", "commTrack", "Admin123");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
+  }
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithUnrecognizedField() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithUnrecognizedField() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL+id+"/prgramCode" , "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
-    }
+    ResponseEntity responseEntity = client.SendJSON("", URL + id + "/prgramCode", "GET", "commTrack", "Admin123");
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
+  }
 
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithSpaceBeforeRequisitionID() throws Exception {
-        HttpClient client = new HttpClient();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithSpaceBeforeRequisitionID() throws Exception {
+    HttpClient client = new HttpClient();
 
-        client.createContext();
+    client.createContext();
 
-        String response = submitReport();
-        Long id = getRequisitionIdFromResponse(response);
+    String response = submitReport();
+    Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL+"%20"+id , "GET", "commTrack", "Admin123");
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
-    }
-    @Test(groups = {"webservice"})
-    public void testGetRequisitionDetailsWithNullRemarks() throws Exception {
-        HttpClient client = new HttpClient();
+    ResponseEntity responseEntity = client.SendJSON("", URL + "%20" + id, "GET", "commTrack", "Admin123");
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
+  }
 
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testGetRequisitionDetailsWithNullRemarks() throws Exception {
+    HttpClient client = new HttpClient();
 
-        String response = submitReportWithNullRemark();
-        Long id = getRequisitionIdFromResponse(response);
+    client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL+id , "GET", "commTrack", "Admin123");
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("remarks:"));
-    }
+    String response = submitReportWithNullRemark();
+    Long id = getRequisitionIdFromResponse(response);
+
+    ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\"AUTHORIZED\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("remarks:"));
+  }
 
 
-    public String submitReport() throws Exception {
-    dbWrapper = new DBWrapper();
-
+  private String submitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -273,28 +271,27 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
     return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
   }
 
-    public String submitReportWithNullRemark() throws Exception {
-        dbWrapper = new DBWrapper();
+  private String submitReportWithNullRemark() throws Exception {
 
-        HttpClient client = new HttpClient();
-        client.createContext();
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-        reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-        reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-        reportFromJson.getProducts().get(0).setRemarks(null);
+    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
+    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.getProducts().get(0).setRemarks(null);
 
-        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions.json",
-                "POST",
-                "commTrack",
-                "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions.json",
+      "POST",
+      "commTrack",
+      "Admin123");
 
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-        return responseEntity.getResponse();
-    }
+    return responseEntity.getResponse();
+  }
 
 }
 

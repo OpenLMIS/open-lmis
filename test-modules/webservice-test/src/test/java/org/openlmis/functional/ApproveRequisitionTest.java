@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -85,11 +84,11 @@ public class ApproveRequisitionTest extends TestCaseHelper {
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":"+ id +",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":"+ id +",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359484200000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -209,9 +208,7 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
   }
 
-  public String submitReport() throws Exception {
-    dbWrapper = new DBWrapper();
-
+  private String submitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 

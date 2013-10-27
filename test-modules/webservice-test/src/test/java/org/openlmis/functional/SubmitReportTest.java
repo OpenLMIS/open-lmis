@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -296,9 +295,7 @@ public class SubmitReportTest extends TestCaseHelper {
     assertEquals(401, responseEntity.getStatus());
   }
 
-  public String submitReport() throws Exception {
-    dbWrapper = new DBWrapper();
-
+  private String submitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
