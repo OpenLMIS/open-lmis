@@ -39,7 +39,7 @@ System Requirement
   ### For Mac users
   * Install Node,js [directly](http://nodejs.org/) or using homebrew as described [link](http://)
   * Those who install Node.js using Homebrew should export the following (or include in ```$HOME/.bash_profile``` or ```$HOME/.profile``` or ```$HOME/.bashrc``` or ```$HOME/.zshrc```, depending on your shell.
-      - **export NODE_PATH="/usr/local/lib/node"**
+      - **export NODE_PATH="/usr/local/bin/node"**
       - **export PATH="/usr/local/share/npm/bin:$PATH"**  
   
 - Grunt.js (used for linting JS, LESS files, minifying JS files etc.)
