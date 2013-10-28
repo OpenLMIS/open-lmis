@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
 import org.testng.annotations.AfterMethod;
@@ -24,11 +23,10 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class CreateUpdateCHW extends TestCaseHelper {
+
+public class CreateUpdateCHW extends JsonUtility {
   public static final String POST = "POST";
   public static final String PUT = "PUT";
   public static final String FULL_JSON_TXT_FILE_NAME = "AgentValid.txt";

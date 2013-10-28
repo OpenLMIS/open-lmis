@@ -12,9 +12,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pod.domain.POD;
-import org.openlmis.restapi.domain.Report;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
@@ -26,11 +24,9 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class PODTest extends TestCaseHelper {
+public class PODTest extends JsonUtility {
 
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
@@ -63,7 +59,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -106,7 +102,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -137,7 +133,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -166,7 +162,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -193,7 +189,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -223,7 +219,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -253,7 +249,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -283,7 +279,7 @@ public class PODTest extends TestCaseHelper {
 
     client.createContext();
 
-    String response = approveRequisition();
+    String response = createApproveRequisition();
     Long id = getRequisitionIdFromResponse(response);
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
@@ -302,43 +298,6 @@ public class PODTest extends TestCaseHelper {
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"Invalid received quantity\"}");
     assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
-  }
-
-  private String approveRequisition() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      "POST",
-      "commTrack",
-      "Admin123");
-
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    Long id = getRequisitionIdFromResponse(responseEntity.getResponse());
-
-    reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack1");
-    reportFromJson.setRequisitionId(id);
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-    reportFromJson.getProducts().get(0).setQuantityApproved(65);
-
-    responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-      "PUT",
-      "commTrack",
-      "Admin123");
-    return responseEntity.getResponse();
-  }
-
-
-  private Long getRequisitionIdFromResponse(String response) {
-    return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
   }
 
 }

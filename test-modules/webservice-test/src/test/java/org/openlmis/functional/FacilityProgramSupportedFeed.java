@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
@@ -29,7 +28,7 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
-public class FacilityProgramSupportedFeed extends TestCaseHelper {
+public class FacilityProgramSupportedFeed extends JsonUtility {
   public WebDriver driver;
 
   @BeforeMethod(groups = {"webservice"})

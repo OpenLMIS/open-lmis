@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.restapi.domain.Report;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -24,11 +23,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class CommTrackTemplateTest extends TestCaseHelper {
+public class CommTrackTemplateTest extends JsonUtility {
   public static final String FULL_COMMTRACK_JSON_TXT_FILE_NAME = "CommTrackReportJson.txt";
   public WebDriver driver;
 

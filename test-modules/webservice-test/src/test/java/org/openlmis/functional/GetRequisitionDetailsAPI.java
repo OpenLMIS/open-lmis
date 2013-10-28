@@ -13,7 +13,6 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.restapi.domain.Report;
 import org.openqa.selenium.WebDriver;
@@ -28,11 +27,8 @@ import java.sql.SQLException;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
-
-public class GetRequisitionDetailsAPI extends TestCaseHelper {
+public class GetRequisitionDetailsAPI extends JsonUtility {
 
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
@@ -302,34 +298,7 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         checkOrderStatus("RELEASED", 65,"RECEIVED",responseEntity);
     }
 
-    public String submitReport() throws Exception {
-    dbWrapper = new DBWrapper();
-
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      "POST",
-      "commTrack",
-      "Admin123");
-
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
-    return responseEntity.getResponse();
-  }
-
-
-  private Long getRequisitionIdFromResponse(String response) {
-    return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
-  }
-
-    public void checkRequisitionStatus(String requisitionStatus, ResponseEntity responseEntity){
+    private void checkRequisitionStatus(String requisitionStatus, ResponseEntity responseEntity){
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"emergency\":false"));
@@ -355,25 +324,7 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         assertEquals(200, responseEntity.getStatus());
     }
 
-    public void approveRequisition(Long id, int quantityApproved) throws Exception {
-
-        HttpClient client = new HttpClient();
-        client.createContext();
-
-        Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-        reportFromJson.setUserId("commTrack1");
-        reportFromJson.setRequisitionId(id);
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
-
-        client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-                "PUT",
-                "commTrack",
-                "Admin123");
-    }
-
-    public void checkOrderStatus(String requisitionStatus, int quantityApproved, String orderStatus, ResponseEntity responseEntity)
+    private void checkOrderStatus(String requisitionStatus, int quantityApproved, String orderStatus, ResponseEntity responseEntity)
     {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));

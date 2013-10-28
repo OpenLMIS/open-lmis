@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.UploadPage;
@@ -26,7 +25,7 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 
-public class ProgramCatalogChangesFeed extends TestCaseHelper {
+public class ProgramCatalogChangesFeed extends JsonUtility {
 
   public static final String URL = "http://localhost:9091/feeds/program-catalog-changes/recent";
   public static final String GET = "GET";

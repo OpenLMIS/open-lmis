@@ -12,10 +12,8 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -24,14 +22,10 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class FacilityFeed extends TestCaseHelper {
-  public WebDriver driver;
+public class FacilityFeed extends JsonUtility {
   public static final String FULL_JSON_TXT_FILE_NAME = "AgentValid.txt";
-  public static final String userEmail = "Fatim_Doe@openlmis.com";
   public static final String CREATE_URL = "http://localhost:9091/rest-api/agent.json";
   public static final String UPDATE_URL = "http://localhost:9091/rest-api/agent/";
   public static final String commTrackUser = "commTrack";
@@ -41,7 +35,6 @@ public class FacilityFeed extends TestCaseHelper {
   public static final String ACTIVE_STATUS = "true";
   public static final String DEFAULT_AGENT_CODE = "A2";
   public static final String JSON_EXTENSION = ".json";
-  public static final String GET = "GET";
   public static final String POST = "POST";
   public static final String PUT = "PUT";
 
@@ -150,8 +143,8 @@ public class FacilityFeed extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
   }
 
-  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyFacilityFeedForFacilityUpload(String user, String program, String[] credentials) throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Credentials")
+  public void shouldVerifyFacilityFeedForFacilityUpload(String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -456,5 +449,12 @@ public class FacilityFeed extends TestCaseHelper {
       {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
     };
   }
+
+    @DataProvider(name = "Data-Provider-Function-Credentials")
+    public Object[][] parameterIntTestProviderCredentials() {
+        return new Object[][]{
+                {new String[]{"Admin123", "Admin123"}}
+        };
+    }
 }
 

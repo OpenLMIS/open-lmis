@@ -492,6 +492,7 @@ public class TestCaseHelper {
     assertEquals(firstPageLink.getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
+
 }
 
 

@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.restapi.domain.Report;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -25,15 +24,10 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
-
-public class ApproveRequisitionTest extends TestCaseHelper {
+public class ApproveRequisitionTest extends JsonUtility {
 
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
-  public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
-
   public WebDriver driver;
 
   @BeforeMethod(groups = {"webservice"})
@@ -206,31 +200,6 @@ public class ApproveRequisitionTest extends TestCaseHelper {
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
-  }
-
-  private String submitReport() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      "POST",
-      "commTrack",
-      "Admin123");
-
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
-    return responseEntity.getResponse();
-  }
-
-
-  private Long getRequisitionIdFromResponse(String response) {
-    return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
   }
 
 }
