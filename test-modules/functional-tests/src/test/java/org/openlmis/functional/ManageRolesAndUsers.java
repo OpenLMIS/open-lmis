@@ -183,6 +183,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.createFacilityBasedRoleWithSuccessMessageExpected("Facility Based Role Name", "Facility Based Role Description");
   }
 
+    public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userName, password);
+        assertTrue(homePage.isHomeMenuTabDisplayed());
+        assertFalse(homePage.isRequisitionsMenuTabDisplayed());
+
+    }
+
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
@@ -266,6 +274,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyRemoveNotPresent();
 
     verifyWarehouseAvailableForWarehouseRoles(facilityCodeFirst);
+
+    userPage.clickDeliveryZonesAccordion();
+    testWebDriver.sleep(500);
+    userPage.clickRemoveButtonWithOk(1);
+    userPage.clickSaveButton();
+    testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE,"Admin123");
 
   }
 

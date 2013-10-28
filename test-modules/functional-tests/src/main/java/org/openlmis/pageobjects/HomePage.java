@@ -529,4 +529,12 @@ public class HomePage extends Page {
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
   }
+
+    public boolean isHomeMenuTabDisplayed(){
+        return homeMenuItem.isDisplayed();
+    }
+
+    public boolean isRequisitionsMenuTabDisplayed(){
+        return requisitionMenuItem.isDisplayed();
+    }
 }
