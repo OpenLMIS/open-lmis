@@ -11,15 +11,16 @@
 describe('CreateRequisitionController', function () {
 
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
+      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_, _requisitionService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
+    requisitionService =_requisitionService_;
     $rootScope.hasPermission = function () {
     };
     location = $location;

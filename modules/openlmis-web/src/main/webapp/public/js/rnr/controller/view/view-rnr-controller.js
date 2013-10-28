@@ -8,27 +8,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $location, messageService, pageSize, $routeParams) {
-  $scope.visibleTab = $routeParams.supplyType;
-  $scope.rnr = new Rnr(requisition, rnrColumns);
+function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, requisitionService) {
+
   $scope.rnrColumns = rnrColumns;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.currency = messageService.get('label.currency.symbol');
   $scope.pageSize = pageSize;
+  $scope.rnr = new Rnr(requisition, rnrColumns);
+  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   var APPROVED = "APPROVED";
   var RELEASED = "RELEASED";
-  var NON_FULL_SUPPLY = 'nonFullSupply';
-  var FULL_SUPPLY = 'fullSupply';
-  var REGIMEN = 'regimen';
 
-  var lineItemMap = {
-    'nonFullSupply': $scope.rnr.nonFullSupplyLineItems,
-    'fullSupply': $scope.rnr.fullSupplyLineItems,
-    'regimen': $scope.rnr.regimenLineItems
-  };
+  requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.requisitionType = $scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
@@ -37,40 +29,15 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
       return column.name != "quantityApproved";
     });
 
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.page[$scope.visibleTab][index].productCategory == $scope.page[$scope.visibleTab][index - 1].productCategory));
-  };
+  $scope.$on('$routeUpdate', function() {
+    requisitionService.refreshGrid($scope, $location, $routeParams, false);
+  });
 
-  var refreshGrid = function () {
-    $scope.page = {fullSupply: [], nonFullSupply: [], regimen: []};
-    $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
-
-    $location.search('supplyType', $scope.visibleTab);
-
-    if ($scope.visibleTab != REGIMEN) {
-      $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
-    } else {
-      $scope.numberOfPages = 1;
-    }
-
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-
-    $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
-  };
-
-  $scope.$on('$routeUpdate', refreshGrid);
-
-  refreshGrid();
+  requisitionService.refreshGrid($scope, $location, $routeParams, false);
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
   });
-
-  $scope.switchSupplyType = function (supplyType) {
-    if (supplyType === $scope.visibleTab)
-      return;
-    $location.search({page: 1, supplyType: supplyType});
-  };
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;

@@ -8,12 +8,10 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService) {
-  $scope.visibleTab = $routeParams.supplyType;
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService, requisitionService) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.currency = messageService.get('label.currency.symbol');
   $scope.pageSize = pageSize;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.error = $scope.message = "";
@@ -22,15 +20,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
 
-  var lineItemMap = {
-    'nonFullSupply': $scope.rnr.nonFullSupplyLineItems,
-    'fullSupply': $scope.rnr.fullSupplyLineItems,
-    'regimen': $scope.rnr.regimenLineItems
-  };
-
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
-  var REGIMEN = 'regimen';
 
   $scope.requisitionType = $scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
@@ -46,12 +37,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     return null;
   };
 
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) &&
-      ($scope.page[$scope.visibleTab][index].productCategory === $scope.page[$scope.visibleTab][index - 1].productCategory));
-  };
-
-  function updateShownErrorPages() {
+    function updateShownErrorPages() {
     $scope.shownErrorPages = $scope.visibleTab === FULL_SUPPLY ? $scope.errorPages.fullSupply : $scope.errorPages.nonFullSupply;
     $scope.errorPagesCount = !isUndefined($scope.shownErrorPages) ? $scope.shownErrorPages.length : null;
   }
@@ -75,27 +61,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.approvalForm.$setPristine();
   };
 
-  var refreshGrid = function () {
-    $scope.saveRnr();
-    $scope.page = {fullSupply: [], nonFullSupply: [], regimen: []};
-    $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
+  $scope.$on('$routeUpdate', function() {
+    requisitionService.refreshGrid($scope, $location, $routeParams, false);
+  });
 
-    $location.search('supplyType', $scope.visibleTab);
-    updateShownErrorPages();
-
-    if ($scope.visibleTab != REGIMEN) {
-      $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
-    } else {
-      $scope.numberOfPages = 1;
-    }
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-
-    $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
-  };
-
-  $scope.$on('$routeUpdate', refreshGrid);
-
-  refreshGrid();
+  requisitionService.refreshGrid($scope, $location, $routeParams, false);
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);

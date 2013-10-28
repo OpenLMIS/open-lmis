@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrController', function () {
-  var scope, httpBackend, controller, routeParams, requisition, location, messageService;
+  var scope, httpBackend, controller, routeParams, requisition, location, messageService, requisitionService;
   var columns = [
     {"id": 1, "name": "productCode", "position": 1, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product Code", "formula": "", "indicator": "O", "used": true, "visible": true, "mandatory": true, "description": "Unique identifier for each commodity", "formulaValidationRequired": true},
     {"id": 2, "name": "product", "position": 2, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product", "formula": "", "indicator": "R", "used": true, "visible": true, "mandatory": true, "description": "Primary name of the product", "formulaValidationRequired": true},
@@ -23,9 +23,10 @@ describe('ViewRnrController', function () {
 
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
-  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_, _requisitionService_) {
     routeParams = {'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'};
     scope = $rootScope.$new();
+    requisitionService = _requisitionService_;
     httpBackend = $httpBackend;
     controller = $controller;
     location = $location;

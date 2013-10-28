@@ -10,17 +10,18 @@
 
 describe('Approve Requisition controller', function () {
 
-  var scope, ctrl, httpBackend, location, routeParams, controller, requisition, messageService, regimenTemplate,
-    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns;
+  var scope, ctrl, httpBackend, location, routeParams, controller, requisition, regimenTemplate,
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns, requisitionService;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, _messageService_, _requisitionService_) {
     scope = $rootScope.$new();
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
+    requisitionService = _requisitionService_;
     spyOn(_messageService_, 'get').andCallFake(function (arg) {
       if (arg == 'label.currency.symbol') {
         return '$';
