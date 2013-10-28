@@ -65,7 +65,7 @@ function UploadController($scope, SupportedUploads, messageService, loginConfig)
         }
       }
       $scope.inProgress = false;
-    })
+    });
   };
 
   function processResponse(responseText) {
