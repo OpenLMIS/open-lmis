@@ -71,7 +71,7 @@ public class DBWrapper {
   }
 
   public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException, IOException {
-    insertProcessingPeriod(period, period, "2013-09-29 14:16:43.498429", "2020-09-30 14:16:43.498429", 66, schedule);
+    insertProcessingPeriod(period, period, "2013-09-29", "2020-09-30", 66, schedule);
   }
 
   public void DeleteProcessingPeriods() throws SQLException, IOException {
@@ -205,7 +205,7 @@ public class DBWrapper {
     }
 
     for (int i = numberOfRequisitionsAlreadyPresent + 1; i <= numberOfRequisitions + numberOfRequisitionsAlreadyPresent; i++) {
-      insertProcessingPeriod("PeriodName" + i, "PeriodDesc" + i, "2012-12-01 00:00:00", "2015-12-01 00:00:00", 1, "M");
+      insertProcessingPeriod("PeriodName" + i, "PeriodDesc" + i, "2012-12-01", "2015-12-01", 1, "M");
       update("insert into requisitions (facilityId, programId, periodId, status, emergency, " +
         "fullSupplyItemsSubmittedCost, nonFullSupplyItemsSubmittedCost, supervisoryNodeId) " +
         "values ((Select id from facilities where code='F10'),(Select id from programs where code='" + program + "')," +
@@ -575,7 +575,7 @@ public class DBWrapper {
   public void insertProcessingPeriod(String periodName, String periodDesc, String periodStartDate, String periodEndDate, Integer numberOfMonths, String scheduleId) throws SQLException, IOException {
     update("INSERT INTO processing_periods\n" +
       "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
-      "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + "', '" + periodEndDate + "', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleId + "'), (SELECT id FROM users LIMIT 1));");
+      "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + " 00:00:00', '" + periodEndDate + " 23:59:59', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleId + "'), (SELECT id FROM users LIMIT 1));");
   }
 
 
