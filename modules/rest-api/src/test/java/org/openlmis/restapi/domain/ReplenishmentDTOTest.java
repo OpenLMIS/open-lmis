@@ -49,7 +49,7 @@ public class ReplenishmentDTOTest {
     assertThat(rnr.isEmergency(), is(replenishmentDTO.isEmergency()));
     assertThat(rnr.getPeriod().getStartDate(), is(replenishmentDTO.getPeriodStartDate()));
     assertThat(rnr.getPeriod().getEndDate(), is(replenishmentDTO.getPeriodEndDate()));
-    assertThat(rnr.getStatus().name(), is(replenishmentDTO.getStatus()));
+    assertThat(rnr.getStatus().name(), is(replenishmentDTO.getRequisitionStatus()));
     assertThat(replenishmentDTO.getProducts().size(), is(2));
     assertThat(replenishmentDTO.getOrderId(), is(order.getId()));
     assertThat(replenishmentDTO.getOrderStatus(), is(order.getStatus().name()));

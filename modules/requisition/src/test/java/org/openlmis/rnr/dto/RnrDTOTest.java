@@ -55,7 +55,7 @@ public class RnrDTOTest {
     assertThat(rnrDTOs.size(), is(1));
     RnrDTO rnrDTO = rnrDTOs.get(0);
     assertRnrDTO(rnrDTO, rnr);
-    assertThat(rnrDTO.getStatus(), is(rnr.getStatus().name()));
+    assertThat(rnrDTO.getRequisitionStatus(), is(rnr.getStatus().name()));
   }
 
   private void assertRnrDTO(RnrDTO rnrDTO, Rnr rnr) {

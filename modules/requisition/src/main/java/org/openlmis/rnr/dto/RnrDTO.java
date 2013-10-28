@@ -13,16 +13,13 @@ package org.openlmis.rnr.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -46,7 +43,7 @@ public class RnrDTO {
   private Long facilityId;
   private String supplyingDepotName;
   private List<RnrLineItemDTO> products;
-  private String status;
+  private String requisitionStatus;
   private Long modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
@@ -61,7 +58,7 @@ public class RnrDTO {
     List<RnrDTO> result = new ArrayList<>();
     for (Rnr requisition : requisitions) {
       RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-      rnrDTO.status = requisition.getStatus().name();
+      rnrDTO.requisitionStatus = requisition.getStatus().name();
       result.add(rnrDTO);
     }
     return result;
