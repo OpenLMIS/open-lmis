@@ -55,7 +55,7 @@ public class RequisitionStatusChangeEventTest {
     assertThat(event.getTimeStamp(), is(date));
     assertThat(event.getUuid(), is(notNullValue()));
     assertThat(event.getContents(), is("serializedContents"));
-    assertThat(event.getCategory(), is(FEED_CATEGORY));
+    assertThat(event.getCategory(), is("requisition-status"));
     verify(feedDTO).getSerializedContents();
   }
 }

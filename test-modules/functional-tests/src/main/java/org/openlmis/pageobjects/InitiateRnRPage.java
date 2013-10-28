@@ -367,8 +367,7 @@ public class InitiateRnRPage extends RequisitionPage {
     enterQuantityReceived(B.toString());
     enterQuantityDispensed(C.toString());
     enterLossesAndAdjustments(D.toString());
-    testWebDriver.waitForElementToAppear(beginningBalance);
-    beginningBalance.click();
+
     testWebDriver.waitForElementToAppear(stockInHand);
     testWebDriver.sleep(2000);
     return stockInHand.getText();
@@ -513,9 +512,9 @@ public class InitiateRnRPage extends RequisitionPage {
 
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
-                                        String productPrimaryName, String productCode, String category,
-                                        String baseurl, String dbUrl) throws IOException, SQLException {
-    DBWrapper dbWrapper = new DBWrapper(baseurl, dbUrl);
+                                        String productPrimaryName, String productCode, String category)
+    throws IOException, SQLException {
+    DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();
     testWebDriver.sleep(1000);

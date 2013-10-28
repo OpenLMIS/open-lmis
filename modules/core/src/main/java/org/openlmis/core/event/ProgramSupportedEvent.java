@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class ProgramSupportedEvent extends Event {
 
-  public static final String CATEGORY = "programSupported";
+  public static final String CATEGORY = "program-supported";
   public static final String TITLE = "ProgramSupported";
 
   public ProgramSupportedEvent(ProgramSupportedEventDTO programSupportedEventDTO) throws URISyntaxException {

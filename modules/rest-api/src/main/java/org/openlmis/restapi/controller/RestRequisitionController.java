@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
-import static org.openlmis.rnr.dto.RnrDTO.prepareForREST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -62,9 +61,9 @@ public class RestRequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/requisitions/{id}", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getRequisition(@PathVariable Long id) {
+  public ResponseEntity<RestResponse> getReplenishment(@PathVariable Long id) {
     try {
-      return response("rnr", prepareForREST(restRequisitionService.getRequisition(id)));
+      return response("requisition", restRequisitionService.getReplenishmentDetails(id));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

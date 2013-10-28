@@ -27,7 +27,7 @@ module.exports = function (grunt) {
       all: ['src/main/webapp/public/js/**/*.js']
     },
     lesslint: {
-      src: ['src/main/webapp/public/less/*.less'],
+      src: ['src/main/webapp/public/less/*.less', '!**/ng-grid.less'],
       options: {
         quiet: true,
         formatters: [
@@ -39,6 +39,20 @@ module.exports = function (grunt) {
           "box-model": false,
           "box-sizing": false
         }
+      }
+    },
+    less: {
+      compile: {
+        files: [
+          {
+            expand: true,
+            cwd: "src/main/webapp/public/less/",
+            src: ["**/*.less"],
+            dest: "src/main/webapp/public/css/",
+            ext: ".css",
+            flatten: false
+          }
+        ]
       }
     },
     uglify: {

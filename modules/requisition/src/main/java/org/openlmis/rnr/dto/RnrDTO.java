@@ -97,29 +97,4 @@ public class RnrDTO {
     return rnrDTO;
   }
 
-  public static RnrDTO prepareForREST(final Rnr rnr) {
-    RnrDTO rnrDTO = new RnrDTO();
-    rnrDTO.id = rnr.getId();
-    rnrDTO.agentCode = rnr.getFacility().getCode();
-    rnrDTO.programCode = rnr.getProgram().getCode();
-    rnrDTO.periodEndDate = rnr.getPeriod().getEndDate();
-    rnrDTO.periodStartDate = rnr.getPeriod().getStartDate();
-    rnrDTO.status = rnr.getStatus().name();
-    rnrDTO.emergency = rnr.isEmergency();
-
-    ArrayList<RnrLineItem> lineItems = new ArrayList<RnrLineItem>() {{
-      addAll(rnr.getNonFullSupplyLineItems());
-      addAll(rnr.getFullSupplyLineItems());
-    }};
-
-    rnrDTO.products = (List<RnrLineItemDTO>) collect(lineItems, new Transformer() {
-      @Override
-      public Object transform(Object o) {
-        return new RnrLineItemDTO((RnrLineItem) o);
-      }
-    });
-    return rnrDTO;
-  }
-
-
 }

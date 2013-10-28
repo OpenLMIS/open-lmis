@@ -23,7 +23,9 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -48,7 +50,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestRequisitionService.class)
+@PrepareForTest({RestRequisitionService.class, ReplenishmentDTO.class})
 public class RestRequisitionServiceTest {
 
   @Rule
@@ -176,14 +178,20 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldGetRequisitionById() throws Exception {
+  public void shouldGetReplenishmentDTOByRequisitionId() throws Exception {
     Long rnrId = 3L;
     Rnr expectedRnr = new Rnr(rnrId);
+
+    mockStatic(ReplenishmentDTO.class);
+    Order order = mock(Order.class);
     when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(expectedRnr);
+    when(orderService.getOrder(rnrId)).thenReturn(order);
+    ReplenishmentDTO expectedReplenishmentDTO = new ReplenishmentDTO();
+    when(ReplenishmentDTO.prepareForREST(expectedRnr, order)).thenReturn(expectedReplenishmentDTO);
 
-    Rnr rnr = service.getRequisition(rnrId);
+    ReplenishmentDTO replenishmentDTO = service.getReplenishmentDetails(rnrId);
 
-    assertThat(rnr, is(expectedRnr));
+    assertThat(replenishmentDTO, is(expectedReplenishmentDTO));
     verify(requisitionService).getFullRequisitionById(rnrId);
   }
 }

@@ -30,70 +30,70 @@ import static org.openqa.selenium.support.How.XPATH;
 public class FacilityListPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//*[@id='select2-drop']/div/input")
-  private static WebElement inputFacilitySearch;
+  private static WebElement inputFacilitySearch = null;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'No facility selected')]")
-  private static WebElement noFacilitySelectedHeader;
+  private static WebElement noFacilitySelectedHeader = null;
 
   @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div[1]/div[1]/h2/span[3]")
-  private static WebElement facilityPageHeaderName;
+  private static WebElement facilityPageHeaderName = null;
 
   @FindBy(how = XPATH, using = "//div[@class='record-facility-data ng-scope']/div[1]/div[1]/h2/span[1]")
-  private static WebElement facilityPageHeaderZone;
+  private static WebElement facilityPageHeaderZone = null;
 
   @FindBy(how = XPATH, using = "//*[@id='s2id_selectFacility']/a")
-  private static WebElement facilityListSelect;
+  private static WebElement facilityListSelect = null;
 
   @FindBy(how = ID, using = "selectFacility")
-  private static WebElement facilityListDropDown;
+  private static WebElement facilityListDropDown = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement facilityListTextField;
+  private static WebElement facilityListTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li/ul/li/div/div")
-  private static WebElement facilityListSelectField;
+  private static WebElement facilityListSelectField = null;
 
   @FindBy(how = ID, using = "facilityIndicator")
-  private static WebElement facilityOverAllIndicator;
+  private static WebElement facilityOverAllIndicator = null;
 
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']/div/span[@class='status-icon']")
-  private static WebElement firstFacilityIndicator;
+  private static WebElement firstFacilityIndicator = null;
 
 
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[1]/span[2]")
-    private static WebElement legendNotStartedText;
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[2]")
+  private static WebElement legendNotStartedText = null;
 
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[1]/span[1]")
-    private static WebElement legendNotStartedIcon;
-
-
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[2]/span[2]")
-    private static WebElement legendPartiallyCompletedText;
-
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[2]/span[1]")
-    private static WebElement legendPartiallyCompletedIcon;
-
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[3]/span[2]")
-    private static WebElement legendCompletedText;
-
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[3]/span[1]")
-    private static WebElement legendCompletedIcon;
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[1]/span[1]")
+  private static WebElement legendNotStartedIcon = null;
 
 
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[4]/span[2]")
-    private static WebElement legendSynchronizedText;
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[2]")
+  private static WebElement legendPartiallyCompletedText = null;
 
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[4]/span[1]")
-    private static WebElement legendSynchronizedIcon;
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[2]/span[1]")
+  private static WebElement legendPartiallyCompletedIcon = null;
+
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[2]")
+  private static WebElement legendCompletedText = null;
+
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[3]/span[1]")
+  private static WebElement legendCompletedIcon = null;
 
 
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[5]/span[2]")
-    private static WebElement legendCannotSynchronizedText;
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[2]")
+  private static WebElement legendSynchronizedText = null;
 
-    @FindBy(how = XPATH, using =  "//div[@id='legend']/span[5]/span[1]")
-    private static WebElement legendCannotSynchronizedIcon;
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[4]/span[1]")
+  private static WebElement legendSynchronizedIcon = null;
 
-    public FacilityListPage(TestWebDriver driver) throws IOException {
+
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[2]")
+  private static WebElement legendCannotSynchronizedText = null;
+
+  @FindBy(how = XPATH, using = "//div[@id='legend']/span[5]/span[1]")
+  private static WebElement legendCannotSynchronizedIcon = null;
+
+  public FacilityListPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -105,12 +105,10 @@ public class FacilityListPage extends RequisitionPage {
   }
 
   public List<WebElement> getAllFacilitiesFromDropDown() {
-    List<WebElement> options = testWebDriver.getOptions(facilityListDropDown);
-    return options;
+    return testWebDriver.getOptions(facilityListDropDown);
   }
 
-  public void verifyHeaderElements(String deliveryZone, String program, String period)
-  {
+  public void verifyHeaderElements(String deliveryZone, String program, String period) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[2][@class='span3 offset1 info-box-labels']/span[@class='ng-binding']"));
     assertEquals(deliveryZone, testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[2][@class='span3 offset1 info-box-labels']/span[@class='ng-binding']").getText());
@@ -118,15 +116,13 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(period, testWebDriver.getElementByXpath("//div[@class='info-box']/div[@class='row-fluid']/div[4][@class='span2 info-box-labels']/span[@class='ng-binding']").getText());
   }
 
-  public void verifyGeographicZoneOrder(String geoZoneFirst, String geoZoneSecond)
-  {
+  public void verifyGeographicZoneOrder(String geoZoneFirst, String geoZoneSecond) {
     testWebDriver.sleep(1500);
     assertEquals(geoZoneFirst, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").getText());
     assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[2]/div").getText());
   }
 
-  public void selectFacility(String facilityCode)
-  {
+  public void selectFacility(String facilityCode) {
     clickFacilityListDropDown();
     testWebDriver.waitForElementToAppear(facilityListTextField);
     facilityListTextField.clear();
@@ -144,35 +140,33 @@ public class FacilityListPage extends RequisitionPage {
   }
 
 
-  public void verifyFacilityNameInHeader(String facilityName)
-  {
+  public void verifyFacilityNameInHeader(String facilityName) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(facilityPageHeaderName);
-    assertEquals(facilityPageHeaderName.getText(),facilityName);
+    assertEquals(facilityPageHeaderName.getText(), facilityName);
   }
 
-  public void verifyFacilityZoneInHeader(String facilityZone)
-  {
+  public void verifyFacilityZoneInHeader(String facilityZone) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(facilityPageHeaderZone);
-    assertEquals(facilityPageHeaderZone.getText(),facilityZone);
+    assertEquals(facilityPageHeaderZone.getText(), facilityZone);
   }
 
   public void verifyFacilityIndicatorColor(String whichIcon, String color) {
     testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(facilityOverAllIndicator);
-    if(color.toLowerCase().equals("RED".toLowerCase()))
-      color="rgba(203, 64, 64, 1)";
-    else if(color.toLowerCase().equals("GREEN".toLowerCase()))
-      color="rgba(82, 168, 30, 1)";
-    else if(color.toLowerCase().equals("AMBER".toLowerCase()))
-      color="rgba(240, 165, 19, 1)";
+    if (color.toLowerCase().equals("RED".toLowerCase()))
+      color = "rgba(203, 64, 64, 1)";
+    else if (color.toLowerCase().equals("GREEN".toLowerCase()))
+      color = "rgba(82, 168, 30, 1)";
+    else if (color.toLowerCase().equals("AMBER".toLowerCase()))
+      color = "rgba(240, 165, 19, 1)";
     else if (color.toLowerCase().equals("Blue".toLowerCase()))
-      color="rgba(75, 169, 253, 1)";
+      color = "rgba(75, 169, 253, 1)";
 
-    if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+    if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
       assertEquals(color, facilityOverAllIndicator.getCssValue("background-color"));
-    else if(whichIcon.toLowerCase().equals("Individual".toLowerCase())){
+    else if (whichIcon.toLowerCase().equals("Individual".toLowerCase())) {
       clickFacilityListDropDown();
       testWebDriver.waitForElementToAppear(facilityListTextField);
       testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
@@ -182,20 +176,20 @@ public class FacilityListPage extends RequisitionPage {
   }
 
   public void escapeFacilitySearchInput() {
-      inputFacilitySearch.sendKeys(Keys.ESCAPE);
+    inputFacilitySearch.sendKeys(Keys.ESCAPE);
   }
 
   public void verifyLegend() {
-      assertEquals(legendNotStartedText.getText(),"Not started");
-      assertEquals(legendPartiallyCompletedText.getText(),"Partially completed");
-      assertEquals(legendCompletedText.getText(),"Completed");
-      assertEquals(legendSynchronizedText.getText(),"Synchronized");
-      assertEquals(legendCannotSynchronizedText.getText(),"Cannot synchronize");
+    assertEquals(legendNotStartedText.getText(), "Not started");
+    assertEquals(legendPartiallyCompletedText.getText(), "Partially completed");
+    assertEquals(legendCompletedText.getText(), "Completed");
+    assertEquals(legendSynchronizedText.getText(), "Synchronized");
+    assertEquals(legendCannotSynchronizedText.getText(), "Cannot synchronize");
 
-      assertEquals(legendNotStartedIcon.getCssValue("background-color"),"rgba(203, 64, 64, 1)");
-      assertEquals(legendPartiallyCompletedIcon.getCssValue("background-color"),"rgba(240, 165, 19, 1)");
-      assertEquals(legendCompletedIcon.getCssValue("background-color"),"rgba(82, 168, 30, 1)");
-      assertEquals(legendSynchronizedIcon.getCssValue("background-color"),"rgba(75, 169, 253, 1)");
-      assertEquals(legendCannotSynchronizedIcon.getCssValue("background-color"),"rgba(124, 124, 124, 1)");
+    assertEquals(legendNotStartedIcon.getCssValue("background-color"), "rgba(203, 64, 64, 1)");
+    assertEquals(legendPartiallyCompletedIcon.getCssValue("background-color"), "rgba(240, 165, 19, 1)");
+    assertEquals(legendCompletedIcon.getCssValue("background-color"), "rgba(82, 168, 30, 1)");
+    assertEquals(legendSynchronizedIcon.getCssValue("background-color"), "rgba(75, 169, 253, 1)");
+    assertEquals(legendCannotSynchronizedIcon.getCssValue("background-color"), "rgba(124, 124, 124, 1)");
   }
 }

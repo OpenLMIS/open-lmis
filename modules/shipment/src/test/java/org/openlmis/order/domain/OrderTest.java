@@ -14,12 +14,15 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.SupplyLineBuilder;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 
@@ -34,5 +37,20 @@ public class OrderTest {
     Order order = new Order(rnr);
 
     assertThat(order.getRnr(), is(rnr));
+  }
+
+  @Test
+  public void shouldReturnSupplyingFacility() {
+    Order order = new Order();
+    SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine));
+    order.setSupplyLine(supplyLine);
+
+    assertThat(order.getSupplyingFacility(), is(supplyLine.getSupplyingFacility()));
+  }
+
+  @Test
+  public void shouldReturnNullAsSupplyingFacilityIfSupplyLineNotPresent() throws Exception {
+    Order order = new Order();
+    assertThat(order.getSupplyingFacility(), is(nullValue()));
   }
 }

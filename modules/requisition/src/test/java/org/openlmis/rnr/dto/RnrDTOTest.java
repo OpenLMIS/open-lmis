@@ -46,25 +46,6 @@ public class RnrDTOTest {
   }
 
   @Test
-  public void shouldPopulateRnrDTOFromRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
-    rnr.add(new RnrLineItem(), false);
-    RnrLineItemDTO expectedLineItemDTO = new RnrLineItemDTO(new RnrLineItem());
-    whenNew(RnrLineItemDTO.class).withAnyArguments().thenReturn(expectedLineItemDTO);
-
-    RnrDTO rnrDTO = RnrDTO.prepareForREST(rnr);
-
-    assertThat(rnr.getId(), is(rnrDTO.getId()));
-    assertThat(rnr.getFacility().getCode(), is(rnrDTO.getAgentCode()));
-    assertThat(rnr.getProgram().getCode(), is(rnrDTO.getProgramCode()));
-    assertThat(rnr.isEmergency(), is(rnrDTO.isEmergency()));
-    assertThat(rnr.getPeriod().getStartDate(), is(rnrDTO.getPeriodStartDate()));
-    assertThat(rnr.getPeriod().getEndDate(), is(rnrDTO.getPeriodEndDate()));
-    assertThat(rnr.getStatus().name(), is(rnrDTO.getStatus()));
-    assertThat(rnrDTO.getProducts().size(), is(2));
-  }
-
-  @Test
   public void shouldPrepareRequisitionsForView() throws Exception {
     Rnr rnr = make(a(defaultRnr, with(emergency, false)));
     List<Rnr> rnrList = Arrays.asList(rnr);

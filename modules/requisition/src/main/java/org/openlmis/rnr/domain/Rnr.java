@@ -349,5 +349,9 @@ public class Rnr extends BaseModel {
   public boolean isApprovable() {
     return status == AUTHORIZED || status == IN_APPROVAL;
   }
+
+  public boolean isInApproval() {
+    return status == IN_APPROVAL;
+  }
 }
 

@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
@@ -27,6 +28,7 @@ public class Order extends BaseModel {
   private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
   private String ftpComment;
+  private String supplyingFacility;
 
   public Order(Rnr rnr) {
     this(rnr.getId());
@@ -41,5 +43,9 @@ public class Order extends BaseModel {
   public Order(Rnr rnr, SupplyLine supplyLine) {
     this(rnr);
     this.supplyLine = supplyLine;
+  }
+
+  public Facility getSupplyingFacility() {
+    return supplyLine == null ? null : supplyLine.getSupplyingFacility() ;
   }
 }

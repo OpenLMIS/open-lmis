@@ -20,7 +20,9 @@ import java.util.UUID;
 
 public class ProgramChangeEvent extends Event {
 
+  public static final String FEED_CATEGORY = "program-catalog-changes";
+
   public ProgramChangeEvent(Program program) throws URISyntaxException {
-    super(UUID.randomUUID().toString(), "Program Catalog Changes", DateTime.now(), "", new ProgramFeedDTO(program).getSerializedContents(), "programCatalogChanges");
+    super(UUID.randomUUID().toString(), "Program Catalog Changes", DateTime.now(), "", new ProgramFeedDTO(program).getSerializedContents(), FEED_CATEGORY);
   }
 }

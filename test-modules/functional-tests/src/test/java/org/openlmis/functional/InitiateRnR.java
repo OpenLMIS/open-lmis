@@ -37,9 +37,7 @@ import static java.util.Arrays.asList;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
-
 @Listeners(CaptureScreenshotOnFailureListener.class)
-
 public class InitiateRnR extends TestCaseHelper {
 
   public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
@@ -430,13 +428,13 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyRequisitionAlreadySubmittedMessage(String program,
-                                                               String userSIC,
-                                                               String categoryCode,
-                                                               String password,
-                                                               String regimenCode,
-                                                               String regimenName,
-                                                               String regimenCode2,
-                                                               String regimenName2) throws Exception {
+                                                             String userSIC,
+                                                             String categoryCode,
+                                                             String password,
+                                                             String regimenCode,
+                                                             String regimenName,
+                                                             String regimenCode2,
+                                                             String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);

@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.Arrays.asList;
+import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
 @NoArgsConstructor
@@ -83,7 +86,9 @@ public class RestRequisitionService {
     return user;
   }
 
-  public Rnr getRequisition(Long id) {
-    return requisitionService.getFullRequisitionById(id);
+  public ReplenishmentDTO getReplenishmentDetails(Long id) {
+    Rnr requisition = requisitionService.getFullRequisitionById(id);
+    ReplenishmentDTO replenishmentDTO = prepareForREST(requisition, orderService.getOrder(id));
+    return replenishmentDTO;
   }
 }

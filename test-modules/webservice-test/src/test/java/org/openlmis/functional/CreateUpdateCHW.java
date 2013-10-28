@@ -66,7 +66,7 @@ public class CreateUpdateCHW extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
-    userPage.enterAndVerifyUserDetails("storeIncharge", userEmail, "Fatim", "Doe", DEFAULT_BASE_URL, DEFAULT_DB_URL);
+    userPage.enterAndVerifyUserDetails("storeIncharge", userEmail, "Fatim", "Doe");
     userPage.enterUserHomeFacility(DEFAULT_PARENT_FACILITY_CODE);
     userPage.verifyNoMatchedFoundMessage();
     homePage.logout(baseUrlGlobal);

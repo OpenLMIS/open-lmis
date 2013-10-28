@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class OrderStatusChangeEvent extends Event {
   static final String FEED_TITLE = "Requisition Status";
-  static final String FEED_CATEGORY = "requisitionStatus";
+  static final String FEED_CATEGORY = "requisition-status";
 
   public OrderStatusChangeEvent(Order order) throws URISyntaxException {
     super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",

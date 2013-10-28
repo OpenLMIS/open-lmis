@@ -11,7 +11,12 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 public abstract class Page {
 
@@ -27,5 +32,28 @@ public abstract class Page {
         locator.sendKeys(value);
     }
 
+    public void downloadFileWhileSaveDialogOPen(WebElement element) throws IOException, NullPointerException{
+        try {
+            Robot robot = new Robot();
+            //get the focus on the element..don't use click since it stalls the driver
+            element.sendKeys("");
+            element.sendKeys(Keys.RETURN);
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+            //wait for the modal dialog to open
+            Thread.sleep(2000);
+            //press s key to save
+            robot.keyPress(KeyEvent.VK_S);
+            robot.keyRelease(KeyEvent.VK_S);
+            Thread.sleep(2000);
+            //press enter to save the file with default name and in default location
+            robot.keyPress(KeyEvent.VK_ENTER);
+            robot.keyRelease(KeyEvent.VK_ENTER);
+        } catch (AWTException e) {
 
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -132,6 +132,7 @@ public class SupplyLineMapperIT {
     assertThat(supplyLineReturned.getSupplyingFacility().getId(), is(facility.getId()));
     assertThat(supplyLineReturned.getSupervisoryNode().getId(), is(supervisoryNode.getId()));
     assertThat(supplyLineReturned.getSupplyingFacility().getName(), is(facility.getName()));
+    assertThat(supplyLineReturned.getSupplyingFacility().getCode(), is(facility.getCode()));
   }
 
 

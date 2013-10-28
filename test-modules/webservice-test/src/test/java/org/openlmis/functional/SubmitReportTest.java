@@ -10,7 +10,6 @@
 
 package org.openlmis.functional;
 
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
@@ -26,7 +25,6 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.System.getProperty;
 import static org.openlmis.UiUtils.HttpClient.GET;
 import static org.openlmis.UiUtils.HttpClient.POST;
 import static org.openlmis.functional.JsonUtility.getJsonStringFor;
@@ -297,11 +295,7 @@ public class SubmitReportTest extends TestCaseHelper {
     assertEquals(401, responseEntity.getStatus());
   }
 
-  public String submitReport() throws Exception {
-    baseUrlGlobal = getProperty("baseurl", DEFAULT_BASE_URL);
-    dbUrlGlobal = getProperty("dbUrl", DEFAULT_DB_URL);
-    dbWrapper = new DBWrapper(baseUrlGlobal, dbUrlGlobal);
-
+  private String submitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
