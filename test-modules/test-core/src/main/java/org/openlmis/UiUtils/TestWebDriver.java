@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
@@ -221,14 +222,14 @@ public class TestWebDriver {
 
   public void keyPress(final WebElement element) {
     waitForElementToAppear(element);
-    if (element != null) {
+    if (element != null && !(driver instanceof FirefoxDriver)) {
       for (int i = 0; i < 15; i++) {
         element.sendKeys(Keys.TAB);
         if (driver.switchTo().activeElement().getText().equalsIgnoreCase(element.getText())) {
           break;
         }
       }
-      element.sendKeys(Keys.RETURN);
     }
+    element.sendKeys(Keys.RETURN);
   }
 }

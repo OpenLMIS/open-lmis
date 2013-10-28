@@ -231,11 +231,6 @@ public class HomePage extends Page {
     return new LoginPage(testWebDriver, baseurl);
   }
 
-  public boolean verifyWelcomeMessage(String user) {
-    testWebDriver.waitForTextToAppear("Welcome " + user);
-    return testWebDriver.getPageSource().contains("Welcome " + user);
-  }
-
   public CreateFacilityPage navigateCreateFacility() throws IOException {
     assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
