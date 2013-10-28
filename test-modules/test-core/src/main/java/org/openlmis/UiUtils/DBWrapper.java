@@ -1291,4 +1291,8 @@ public class DBWrapper {
         update("INSERT INTO facility_ftp_details(facilityid,serverhost,serverport,username,password,localfolderpath) VALUES" +
                 "((SELECT id FROM facilities WHERE code='"+facilityCode+"'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
     }
+
+    public void updateProductFullSupplyFlag(boolean flag,String productCode) throws SQLException {
+        update("update products set fullsupply="+flag+" where code='"+productCode+"';");
+    }
 }

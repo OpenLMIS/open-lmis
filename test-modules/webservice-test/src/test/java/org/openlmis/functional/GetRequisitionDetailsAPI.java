@@ -67,6 +67,38 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
   }
 
     @Test(groups = {"webservice"})
+    public void testGetRequisitionDetailsWithMultipleProducts() throws Exception {
+        dbWrapper = new DBWrapper();
+
+        HttpClient client = new HttpClient();
+        client.createContext();
+
+        Report reportFromJson = readObjectFromFile("ReportFullJson1.txt", Report.class);
+        reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
+        reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+        reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+
+        dbWrapper.updateProductFullSupplyFlag(true,"P11");
+
+        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+                "http://localhost:9091/rest-api/requisitions.json",
+                "POST",
+                "commTrack",
+                "Admin123");
+
+        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+
+        String response = responseEntity.getResponse();
+        Long id = getRequisitionIdFromResponse(response);
+
+        responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+        checkRequisitionStatus("AUTHORIZED",responseEntity );
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P11\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"beginningBalance\":6"));
+        dbWrapper.updateProductFullSupplyFlag(false,"P11");
+    }
+
+    @Test(groups = {"webservice"})
     public void testGetRequisitionDetailsWithInvalidRequisitionID() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
