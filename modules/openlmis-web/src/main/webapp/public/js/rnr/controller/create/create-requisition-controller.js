@@ -158,6 +158,15 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
         });
   };
 
+  $scope.callBack = function (result) {
+    if (result && $scope.rnr.status === 'INITIATED') {
+      submitValidatedRnr();
+    }
+    if (result && $scope.rnr.status === 'SUBMITTED') {
+      authorizeValidatedRnr();
+    }
+  }
+
   var showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
@@ -165,18 +174,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       body: messageService.get("msg.question.confirmation")
     };
 
-    OpenLmisDialog.newDialog(options, callback(), $dialog, messageService);
-
-    function callBack() {
-      return function (result) {
-        if (result && $scope.rnr.status === 'INITIATED') {
-          submitValidatedRnr();
-        }
-        if (result && $scope.rnr.status === 'SUBMITTED') {
-          authorizeValidatedRnr();
-        }
-      };
-    }
+    OpenLmisDialog.newDialog(options, $scope.callBack, $dialog, messageService);
   };
 
   $scope.authorizeRnr = function () {

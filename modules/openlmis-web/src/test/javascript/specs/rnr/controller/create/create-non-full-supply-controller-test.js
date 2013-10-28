@@ -88,6 +88,7 @@ describe('CreateNonFullSupplyController', function () {
     scope.$parent.rnr = {"id":1, "period":{}, "nonFullSupplyLineItems":[], "fillPacksToShip":fillPacksToShip};
 
     scope.addedNonFullSupplyProducts = [new RegularRnrLineItem({"code":"code2", "name":"Product2", "quantityRequested":20, "reasonForRequestedQuantity":"rain", "isNonNumeric":false})];
+    spyOn(scope, '$emit');
     scope.addNonFullSupplyLineItemsToRnr();
 
     expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(1);
@@ -108,7 +109,7 @@ describe('CreateNonFullSupplyController', function () {
     var rnrLineItem1 = new RegularRnrLineItem({productCategoryDisplayOrder:2});
     var rnrLineItem2 = new RegularRnrLineItem({productCategoryDisplayOrder:1});
     var rnrLineItem3 = new RegularRnrLineItem({productCategoryDisplayOrder:3});
-
+    spyOn(scope, '$emit');
     scope.addedNonFullSupplyProducts = [rnrLineItem1, rnrLineItem2, rnrLineItem3];
 
     spyOn(rnrLineItem1, "validateQuantityRequestedAndReason").andReturn(false);

@@ -157,6 +157,7 @@ describe('CreateRequisitionController', function () {
     scope.submitRnr();
     httpBackend.flush();
 
+    httpBackend.verifyNoOutstandingRequest();
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
     expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
     expect(scope.submitError).toEqual("");
@@ -243,9 +244,11 @@ describe('CreateRequisitionController', function () {
     scope.saveRnrForm = {$setPristine: function () {
     }};
     spyOn(scope.saveRnrForm, '$setPristine');
-    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
+    spyOn(OpenLmisDialog, 'newDialog');
 
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
+
+    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
     httpBackend.flush();
 
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
@@ -270,7 +273,7 @@ describe('CreateRequisitionController', function () {
     }};
     spyOn(scope.saveRnrForm, '$setPristine');
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond({'success': "R&R submitted successfully!"});
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
     httpBackend.flush();
     expect(scope.submitMessage).toEqual("R&R submitted successfully!");
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
@@ -500,7 +503,7 @@ describe('CreateRequisitionController', function () {
 
     httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond(200, {success: "R&R authorized successfully!"});
 
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
     httpBackend.flush();
 
     expect(scope.submitMessage).toEqual("R&R authorized successfully!");
@@ -526,7 +529,7 @@ describe('CreateRequisitionController', function () {
     spyOn(scope.saveRnrForm, '$setPristine');
 
     httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond({'success': "R&R authorized successfully!"});
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
     httpBackend.flush();
     expect(scope.submitMessage).toEqual("R&R authorized successfully!");
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
