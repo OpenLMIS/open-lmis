@@ -26,9 +26,12 @@ import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.mapper.FacilityVisitMapper;
 import org.springframework.dao.DuplicateKeyException;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -52,14 +55,15 @@ public class FacilityVisitRepositoryTest {
   }
 
   @Test
-  public void shouldThrowErrorIfFacilityVisitDataAlreadySynced() throws Exception {
-    FacilityVisit facilityVisit = new FacilityVisit();
+  public void shouldReturnFacilityVisit(){
 
-    doThrow(DuplicateKeyException.class).when(facilityVisitMapper).insert(facilityVisit);
+    FacilityVisit facilityVisit = new FacilityVisit().construct(1L,1L,1L);
+    when(facilityVisitMapper.getByDistributionAndFacility(1L, 1L)).thenReturn(facilityVisit);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.facility.data.already.synced");
+    FacilityVisit expectedFacilityVisit = facilityVisitRepository.get(facilityVisit);
 
-    facilityVisitRepository.insert(facilityVisit);
+    assertThat(expectedFacilityVisit, is(facilityVisit));
+
   }
 }
+

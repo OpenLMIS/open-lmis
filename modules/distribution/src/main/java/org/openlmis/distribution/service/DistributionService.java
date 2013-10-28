@@ -12,6 +12,7 @@
 
 package org.openlmis.distribution.service;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.repository.DistributionRepository;
@@ -37,7 +38,7 @@ public class DistributionService {
   }
 
   @Transactional
-  public void sync(FacilityDistributionData facilityDistributionData) {
-    facilityVisitService.save(facilityDistributionData.constructFacilityVisit());
+  public String sync(FacilityDistributionData facilityDistributionData) {
+    return facilityVisitService.save(facilityDistributionData.constructFacilityVisit());
   }
 }

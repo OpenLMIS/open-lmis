@@ -55,15 +55,17 @@ public class DistributionServiceTest {
   }
 
   @Test
-  public void shouldSyncFacilityDistributionData() {
+  public void shouldSyncFacilityDistributionDataAndReturnSyncStatus() {
     FacilityVisit facilityVisit = new FacilityVisit();
 
     FacilityDistributionData facilityDistributionData = mock(FacilityDistributionData.class);
     when(facilityDistributionData.constructFacilityVisit()).thenReturn(facilityVisit);
-    service.sync(facilityDistributionData);
+    when(facilityVisitService.save(facilityVisit)).thenReturn("Synced");
+    String syncStatus = service.sync(facilityDistributionData);
 
     verify(facilityVisitService).save(facilityVisit);
     verify(facilityDistributionData).constructFacilityVisit();
+    assertThat(syncStatus, is("Synced"));
   }
 
   @Test

@@ -26,10 +26,11 @@ public class FacilityVisitRepository {
   FacilityVisitMapper mapper;
 
   public void insert(FacilityVisit facilityVisit) {
-    try {
       mapper.insert(facilityVisit);
-    } catch (DuplicateKeyException exception) {
-      throw new DataException("error.facility.data.already.synced");
-    }
   }
+
+  public FacilityVisit get(FacilityVisit facilityVisit) {
+      return mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+  }
+
 }

@@ -14,7 +14,6 @@ package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistributionData;
@@ -31,7 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
@@ -71,12 +71,7 @@ public class DistributionController extends BaseController {
     facilityDistributionData.setFacilityId(facilityId);
     facilityDistributionData.setDistributionId(id);
     facilityDistributionData.setCreatedBy(loggedInUserId(httpServletRequest));
-    try {
-      distributionService.sync(facilityDistributionData);
-      return OpenLmisResponse.success(SUCCESS);
-    } catch (DataException e) {
-      return OpenLmisResponse.error(e, CONFLICT);
-    }
+    return OpenLmisResponse.response("syncStatus", distributionService.sync(facilityDistributionData));
   }
 
 

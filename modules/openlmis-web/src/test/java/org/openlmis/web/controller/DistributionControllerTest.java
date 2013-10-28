@@ -133,9 +133,11 @@ public class DistributionControllerTest {
     Long facilityId = 3l;
     FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
 
+    when(service.sync(facilityDistributionData)).thenReturn("Synced");
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat((String)response.getBody().getData().get("syncStatus") , is("Synced"));
     verify(service).sync(facilityDistributionData);
     assertThat(facilityDistributionData.getFacilityId(), is(facilityId));
     assertThat(facilityDistributionData.getDistributionId(), is(distributionId));
@@ -147,11 +149,10 @@ public class DistributionControllerTest {
     Long facilityId = 3l;
     FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
     String errorMessage = "some error";
-    doThrow(new DataException(errorMessage)).when(service).sync(facilityDistributionData);
+    when(service.sync(facilityDistributionData)).thenReturn("Failed");
 
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
 
-    assertThat(response.getStatusCode(),is(CONFLICT));
-    assertThat(response.getBody().getErrorMsg(),is(errorMessage));
+    assertThat((String)response.getBody().getData().get("syncStatus") , is("Failed"));
   }
 }
