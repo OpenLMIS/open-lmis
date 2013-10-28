@@ -163,10 +163,26 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
     public void testGetRequisitionDetailsWithNullRemarks() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
-        String response = submitReportWithNullRemark();
+        dbWrapper = new DBWrapper();
+
+        Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+        reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
+        reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+        reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+        reportFromJson.getProducts().get(0).setRemarks(null);
+
+        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+                "http://localhost:9091/rest-api/requisitions.json",
+                "POST",
+                "commTrack",
+                "Admin123");
+
+        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+        String response=responseEntity.getResponse();
+
         Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", URL+id , "GET", "commTrack", "Admin123");
+        responseEntity = client.SendJSON("", URL+id , "GET", "commTrack", "Admin123");
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("remarks:"));
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
@@ -292,27 +308,12 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
     return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
   }
 
-    public String submitReportWithNullRemark() throws Exception {
-        dbWrapper = new DBWrapper();
-
-        HttpClient client = new HttpClient();
-        client.createContext();
-
-        Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-        reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-        reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-        reportFromJson.getProducts().get(0).setRemarks(null);
-
-        return postJsonForRequisition(client, reportFromJson);
-    }
-
     public void checkRequisitionStatus(String requisitionStatus, ResponseEntity responseEntity){
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"emergency\":false"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359570599000"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\""+requisitionStatus+"\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"products\":[{"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
@@ -354,7 +355,7 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359484200000"));
+        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359570599000"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"status\":\""+requisitionStatus+"\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"beginningBalance\":3"));
