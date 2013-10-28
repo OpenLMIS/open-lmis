@@ -1,7 +1,7 @@
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
- *
+   *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *  
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
@@ -20,57 +20,57 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
 
   var APPROVED = "APPROVED";
   var RELEASED = "RELEASED";
-  var NON_FULL_SUPPLY = 'non-full-supply';
-  var FULL_SUPPLY = 'full-supply';
+  var NON_FULL_SUPPLY = 'nonFullSupply';
+  var FULL_SUPPLY = 'fullSupply';
   var REGIMEN = 'regimen';
 
-  $scope.requisitionType =
-    messageService.get($scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular");
+  var lineItemMap = {
+    'nonFullSupply': $scope.rnr.nonFullSupplyLineItems,
+    'fullSupply': $scope.rnr.fullSupplyLineItems,
+    'regimen': $scope.rnr.regimenLineItems
+  };
+
+  $scope.requisitionType = $scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
   if (!($scope.rnr.status == APPROVED || $scope.rnr.status == RELEASED))
     $scope.visibleColumns = _.filter($scope.visibleColumns, function (column) {
       return column.name != "quantityApproved";
     });
 
-  $scope.pageLineItems = [];
-
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.pageLineItems[index].productCategory == $scope.pageLineItems[index - 1].productCategory));
+    return !((index > 0 ) && ($scope.page[$scope.visibleTab][index].productCategory == $scope.page[$scope.visibleTab][index - 1].productCategory));
   };
 
-  $scope.$broadcast('$routeUpdate');
+  var refreshGrid = function () {
+    $scope.page = {fullSupply: [], nonFullSupply: [], regimen: []};
+    $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
 
-  function fillPageData() {
-    var pageLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
-    $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) ? Math.ceil(pageLineItems.length / $scope.pageSize) : 1;
+    $location.search('supplyType', $scope.visibleTab);
+
+    if ($scope.visibleTab != REGIMEN) {
+      $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
+    } else {
+      $scope.numberOfPages = 1;
+    }
+
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-    $scope.pageLineItems = pageLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
-  }
 
-  fillPageData();
+    $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+  };
 
-  $scope.currentPage = ($routeParams.page) ? utils.parseIntWithBaseTen($routeParams.page) || 1 : 1;
+  $scope.$on('$routeUpdate', refreshGrid);
+
+  refreshGrid();
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
   });
 
   $scope.switchSupplyType = function (supplyType) {
-    $scope.visibleTab = supplyType;
-    $location.search('page', 1);
-    $location.search('supplyType', supplyType);
-  };
-
-  $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY : ($routeParams.supplyType == REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
-    $location.search('supplyType', $scope.visibleTab);
-
-    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-      $location.search('page', 1);
+    if (supplyType === $scope.visibleTab)
       return;
-    }
-    fillPageData();
-  });
+    $location.search({page: 1, supplyType: supplyType});
+  };
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;

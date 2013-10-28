@@ -48,7 +48,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   $scope.showCategory = function (index) {
     return !((index > 0 ) &&
-      ($scope.pageLineItems[index].productCategory === $scope.pageLineItems[index - 1].productCategory));
+      ($scope.page[$scope.visibleTab][index].productCategory === $scope.page[$scope.visibleTab][index - 1].productCategory));
   };
 
   function updateShownErrorPages() {

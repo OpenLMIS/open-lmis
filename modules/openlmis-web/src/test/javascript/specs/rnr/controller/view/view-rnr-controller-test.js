@@ -24,7 +24,7 @@ describe('ViewRnrController', function () {
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(inject(function ($httpBackend, $rootScope, $controller, $location, _messageService_) {
-    routeParams = {'programId': 2, 'rnr': 1, 'supplyType': 'full-supply'};
+    routeParams = {'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'};
     scope = $rootScope.$new();
     httpBackend = $httpBackend;
     controller = $controller;
@@ -62,56 +62,53 @@ describe('ViewRnrController', function () {
   });
 
   it('should assign line items based on supply type', function () {
-    routeParams.supplyType = 'full-supply';
+    routeParams.supplyType = 'fullSupply';
     var rnr = {fullSupplyLineItems: [
       {'id': 1}
     ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
-    expect(rnr.fullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
+    expect(rnr.fullSupplyLineItems.length).toEqual(scope.page.fullSupply.length);
   });
 
   it('should set requisition type as Regular for regular requisition', function() {
-    var regular = "Regular";
     var rnr = {emergency: false, fullSupplyLineItems: [
       {'id': 1}
     ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
 
-    routeParams.supplyType = 'full-supply';
+    routeParams.supplyType = 'fullSupply';
 
-    spyOn(messageService, "get").andReturn(regular);
+    spyOn(messageService, "get").andReturn("requisition.type.regular");
 
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
-    expect(scope.requisitionType).toEqual(regular);
+    expect(scope.requisitionType).toEqual("requisition.type.regular");
   });
 
 
   it('should set requisition type as Emergency for emergency requisition', function() {
-    var emergency = "Emergency";
     var rnr = {emergency: true, fullSupplyLineItems: [
       {'id': 1}
     ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
 
-    routeParams.supplyType = 'full-supply';
+    routeParams.supplyType = 'fullSupply';
 
-    spyOn(messageService, "get").andReturn(emergency);
 
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
-    expect(scope.requisitionType).toEqual(emergency);
+    expect(scope.requisitionType).toEqual("requisition.type.emergency");
   });
 
   it('should assign non full supply line items based on supply type', function () {
-    routeParams.supplyType = 'non-full-supply';
+    routeParams.supplyType = 'nonFullSupply';
     var rnr = {fullSupplyLineItems: [], nonFullSupplyLineItems: [
       {'id': 1}
     ], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: rnr, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
-    expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.pageLineItems.length);
+    expect(rnr.nonFullSupplyLineItems.length).toEqual(scope.page.nonFullSupply.length);
   });
 
   it('should calculate number of pages for a pageSize of 2 and 4 lineItems', function () {
@@ -128,7 +125,7 @@ describe('ViewRnrController', function () {
   });
 
   it('should calculate number of pages for a pageSize of 2 and 4 nonFullSupplyLineItems', function () {
-    routeParams.supplyType = 'non-full-supply';
+    routeParams.supplyType = 'nonFullSupply';
     requisition.nonFullSupplyLineItems = [
       {'id': 1},
       {'id': 2},
@@ -151,9 +148,9 @@ describe('ViewRnrController', function () {
     controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', pageSize: pageSize,
       $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
-    expect(scope.pageLineItems[0].id).toEqual(1);
-    expect(scope.pageLineItems[1].id).toEqual(2);
-    expect(scope.pageLineItems.length).toEqual(2);
+    expect(scope.page.fullSupply[0].id).toEqual(1);
+    expect(scope.page.fullSupply[1].id).toEqual(2);
+    expect(scope.page.fullSupply.length).toEqual(2);
   });
 
   it('should determine lineItems to be displayed on page 2 for page size 2', function () {
@@ -167,9 +164,9 @@ describe('ViewRnrController', function () {
     controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', pageSize: pageSize,
       $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
 
-    expect(scope.pageLineItems[0].id).toEqual(3);
-    expect(scope.pageLineItems[1].id).toEqual(4);
-    expect(scope.pageLineItems.length).toEqual(2);
+    expect(scope.page.fullSupply[0].id).toEqual(3);
+    expect(scope.page.fullSupply[1].id).toEqual(4);
+    expect(scope.page.fullSupply.length).toEqual(2);
   });
 
   it('should determine lineItems to be displayed on page 2 after page changes to 2', function () {
@@ -186,9 +183,9 @@ describe('ViewRnrController', function () {
     routeParams.page = 2;
     scope.$broadcast('$routeUpdate');
 
-    expect(scope.pageLineItems[0].id).toEqual(3);
-    expect(scope.pageLineItems[1].id).toEqual(4);
-    expect(scope.pageLineItems.length).toEqual(2);
+    expect(scope.page.fullSupply[0].id).toEqual(3);
+    expect(scope.page.fullSupply[1].id).toEqual(4);
+    expect(scope.page.fullSupply.length).toEqual(2);
   });
 
   it('should change page in url if current page changes', function () {
@@ -238,7 +235,7 @@ describe('ViewRnrController', function () {
     controller(ViewRnrController, {$scope: scope, requisition: requisition, rnrColumns: columns, currency: '$', pageSize: pageSize,
       $location: location, $routeParams: routeParams, regimenTemplate: regimenTemplate});
     scope.$broadcast('$routeUpdate');
-    expect(location.search).toHaveBeenCalledWith('supplyType', 'full-supply');
+    expect(location.search).toHaveBeenCalledWith('supplyType', 'fullSupply');
   });
 
 
