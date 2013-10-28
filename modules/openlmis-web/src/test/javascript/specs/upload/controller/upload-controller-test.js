@@ -11,7 +11,7 @@
 describe('Upload Controller Test', function () {
 
   var scope, ctrl, httpBackend, supportedUploads, http, controller, messageService;
-
+  var loginConfig;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
@@ -21,32 +21,37 @@ describe('Upload Controller Test', function () {
     httpBackend = $httpBackend;
     http = $http;
     messageService = _messageService_;
-    spyOn(messageService, 'get').andCallFake(function(messageKey){
+    loginConfig = {modalShown: false, preventReload: true}
+    spyOn(messageService, 'get').andCallFake(function (messageKey) {
       if (messageKey == 'upload.select.type') return 'select upload type';
       if (messageKey == 'upload.select.file') return 'select file';
     });
-    supportedUploads = {"supportedUploads":{'product':{'displayName':'Product'}}};
+    supportedUploads = {"supportedUploads": {'product': {'displayName': 'Product'}}};
 
     httpBackend.when('GET', '/supported-uploads.json').respond(supportedUploads);
 
-    ctrl = controller(UploadController, {$scope:scope, $http:http, messageService:messageService});
+    ctrl = controller(UploadController,
+      {$scope: scope, $http: http, messageService: messageService, loginConfig: loginConfig});
   }));
 
   it('should get uploads supported by system data', function () {
     httpBackend.flush();
-    expect(scope.supportedUploads).toEqual({'product':{'displayName':'Product'}});
+    expect(scope.supportedUploads).toEqual({'product': {'displayName': 'Product'}});
   });
 
   describe('Upload form', function () {
 
     beforeEach(function () {
       scope.uploadForm = [];
-      scope.uploadForm['model'] = {'errorMessage':''};
-      scope.uploadForm['csvFile'] =  {'errorMessage':''};
+      scope.uploadForm['model'] = {'errorMessage': ''};
+      scope.uploadForm['csvFile'] = {'errorMessage': ''};
     });
 
     it('should show error message if first field is blank', function () {
-      var formData = [{value: ''}, {value: 'file'}];
+      var formData = [
+        {value: ''},
+        {value: 'file'}
+      ];
       scope.validate(formData);
       expect(scope.uploadForm['model'].errorMessage).toEqual('select upload type');
       expect(scope.uploadForm['csvFile'].errorMessage).toEqual('');
@@ -56,7 +61,10 @@ describe('Upload Controller Test', function () {
     });
 
     it('should show error message if second field is blank', function () {
-      var formData = [{value: 'facility'}, {value: ''}];
+      var formData = [
+        {value: 'facility'},
+        {value: ''}
+      ];
       scope.validate(formData);
       expect(scope.uploadForm['model'].errorMessage).toEqual('');
       expect(scope.uploadForm['csvFile'].errorMessage).toEqual('select file');
@@ -66,7 +74,10 @@ describe('Upload Controller Test', function () {
     });
 
     it('should show error message if all fields are blank', function () {
-      var formData = [{value: ''}, {value: ''}];
+      var formData = [
+        {value: ''},
+        {value: ''}
+      ];
       scope.validate(formData);
       expect(scope.uploadForm['model'].errorMessage).toEqual('select upload type');
       expect(scope.uploadForm['csvFile'].errorMessage).toEqual('select file');
@@ -76,7 +87,10 @@ describe('Upload Controller Test', function () {
     });
 
     it('should submit form if all fields are correctly filled', function () {
-      var formData = [{value: 'facility'}, {value: 'file'}];
+      var formData = [
+        {value: 'facility'},
+        {value: 'file'}
+      ];
       scope.validate(formData);
       expect(scope.inProgress).toEqual(true);
       expect(scope.errorMsg).toEqual('');
