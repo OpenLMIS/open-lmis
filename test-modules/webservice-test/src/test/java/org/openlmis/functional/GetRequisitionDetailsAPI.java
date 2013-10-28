@@ -64,8 +64,6 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
     Long id = getRequisitionIdFromResponse(response);
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED",responseEntity );
-    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
   }
 
     @Test(groups = {"webservice"})
@@ -155,8 +153,6 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
         checkRequisitionStatus("AUTHORIZED",responseEntity );
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
     }
 
     @Test(groups = {"webservice"})
@@ -199,10 +195,8 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
         checkRequisitionStatus("AUTHORIZED", responseEntity);
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
 
-        dbWrapper.setExportOrdersFlagInSupplyLinesTable(false,"F10");
+         dbWrapper.setExportOrdersFlagInSupplyLinesTable(false,"F10");
         approveRequisition(id, 65);
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
         checkOrderStatus("RELEASED",65,"READY_TO_PACK",responseEntity );
@@ -216,8 +210,6 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
         checkRequisitionStatus("AUTHORIZED", responseEntity);
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
 
         dbWrapper.setExportOrdersFlagInSupplyLinesTable(true,"F10");
         approveRequisition(id, 65);
@@ -236,8 +228,6 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
         checkRequisitionStatus("AUTHORIZED",responseEntity );
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
 
         dbWrapper.setExportOrdersFlagInSupplyLinesTable(true,"F10");
         dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
@@ -258,8 +248,7 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
         checkRequisitionStatus("AUTHORIZED",responseEntity );
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
+
         approveRequisition(id, 65);
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
         checkOrderStatus("RELEASED",65,"READY_TO_PACK",responseEntity );
@@ -329,6 +318,8 @@ public class GetRequisitionDetailsAPI extends TestCaseHelper {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
+        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
+        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
         assertEquals(200, responseEntity.getStatus());
     }
 
