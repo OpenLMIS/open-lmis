@@ -55,11 +55,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
         $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
-  $scope.goToPage = function (page, event) {
-    angular.element(event.target).parents(".dropdown").click();
-    $location.search('page', page);
-  };
-
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
   });
@@ -102,19 +97,13 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return fullSupplyError || nonFullSupplyError || regimenError;
   }
 
-  function setErrorPages() {
-    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
-    $scope.fullSupplyErrorPagesCount = $scope.errorPages.fullSupply.length;
-    $scope.nonFullSupplyErrorPagesCount = $scope.errorPages.nonFullSupply.length;
-  }
-
   $scope.submitRnr = function () {
     resetFlags();
-    resetErrorPages();
+    requisitionService.resetErrorPages($scope);
     $scope.saveRnr(true);
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
-      setErrorPages();
+      requisitionService.setErrorPages($scope);
       $scope.submitError = errorMessage;
       return;
     }
@@ -167,11 +156,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   $scope.authorizeRnr = function () {
     resetFlags();
-    resetErrorPages();
+    requisitionService.resetErrorPages($scope);
     $scope.saveRnr(true);
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
-      setErrorPages();
+      requisitionService.setErrorPages($scope);
       $scope.submitError = errorMessage;
       return;
     }
@@ -188,17 +177,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     }, function (data) {
       $scope.submitError = data.data.error;
     });
-  };
-
-  $scope.hide = function () {
-    return "";
-  };
-
-  $scope.highlightRequired = function (value) {
-    if ($scope.inputClass && (isUndefined(value))) {
-      return "required-error";
-    }
-    return null;
   };
 
   $scope.highlightRequiredFieldInModal = function (value) {
@@ -249,10 +227,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   });
 
   requisitionService.refreshGrid($scope, $location, $routeParams, true);
-
-  function resetErrorPages() {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
-  }
 
   function resetFlags() {
     $scope.submitError = $scope.submitMessage = $scope.error = $scope.message = "";

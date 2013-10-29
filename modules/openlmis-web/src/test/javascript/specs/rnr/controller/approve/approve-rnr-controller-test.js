@@ -22,6 +22,7 @@ describe('Approve Requisition controller', function () {
     controller = $controller;
     httpBackend = $httpBackend;
     requisitionService = _requisitionService_;
+    spyOn(requisitionService, 'populateScope');
     spyOn(_messageService_, 'get').andCallFake(function (arg) {
       if (arg == 'label.currency.symbol') {
         return '$';
@@ -47,7 +48,7 @@ describe('Approve Requisition controller', function () {
     regimenTemplate = {regimenColumns: regimenColumns};
     rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList,
-      regimenTemplate: regimenTemplate, currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams});
+      regimenTemplate: regimenTemplate, currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams, requisitionService: requisitionService});
   }));
 
   it('should set rnr in scope', function () {
@@ -57,8 +58,8 @@ describe('Approve Requisition controller', function () {
     expect(spyOnRnr).toHaveBeenCalledWith(requisition, programRnrColumnList);
   });
 
-  it('should set currency in scope', function () {
-    expect(scope.currency).toEqual('$');
+  it('should set scope variables', function () {
+    expect(requisitionService.populateScope).toHaveBeenCalledWith(scope, location, routeParams);
   });
 
   it('should save work in progress for rnr', function () {
@@ -106,7 +107,7 @@ describe('Approve Requisition controller', function () {
     expect(scope.visibleTab).toEqual("fullSupply");
   });
 
-  it('should set Error pages according to tab', function () {
+  it('should retain error pages on route change', function () {
     scope.numberOfPages = 5;
     scope.approvalForm.$dirty = true;
     scope.approvalForm.$setPristine = function () {
@@ -120,7 +121,8 @@ describe('Approve Requisition controller', function () {
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {"success": "saved successfully"});
     scope.$broadcast("$routeUpdate");
     httpBackend.flush();
-    expect(scope.shownErrorPages).toEqual(scope.errorPages.nonFullSupply);
+    expect(scope.errorPages.nonFullSupply).toEqual([7]);
+    expect(scope.errorPages.fullSupply).toEqual([5]);
   });
 
   it('should set showNonFullSupply flag if supply type is nonFullSupply', function () {

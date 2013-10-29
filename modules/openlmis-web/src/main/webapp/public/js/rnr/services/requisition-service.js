@@ -28,6 +28,29 @@ services.factory('requisitionService', function (messageService) {
     $scope.showCategory = function (index) {
       return !((index > 0 ) && ($scope.page[$scope.visibleTab][index].productCategory == $scope.page[$scope.visibleTab][index - 1].productCategory));
     };
+
+    $scope.goToPage = function (page, event) {
+      angular.element(event.target).parents(".dropdown").click();
+      $location.search('page', page);
+    };
+
+    $scope.highlightRequired = function (showError, value) {
+      if (showError && (isUndefined(value))) {
+        return "required-error";
+      }
+      return null;
+    };
+  };
+
+
+  var setErrorPages = function ($scope) {
+    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
+    $scope.fullSupplyErrorPagesCount = $scope.errorPages.fullSupply.length;
+    $scope.nonFullSupplyErrorPagesCount = $scope.errorPages.nonFullSupply.length;
+  };
+
+  var resetErrorPages = function ($scope) {
+    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   };
 
   var refreshGrid = function ($scope, $location, $routeParams, save) {
@@ -56,7 +79,9 @@ services.factory('requisitionService', function (messageService) {
 
   return{
     refreshGrid: refreshGrid,
-    populateScope: populateScope
+    populateScope: populateScope,
+    setErrorPages: setErrorPages,
+    resetErrorPages: resetErrorPages
   }
 
 });

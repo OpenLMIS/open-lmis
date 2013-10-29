@@ -52,7 +52,7 @@
                                ng-model = "rnrLineItem[column.name]"
                                rnr-validator = "positiveInteger" maxlength = "8"
                                ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
-                               ng-class = "highlightRequired(rnrLineItem[column.name])" /></span >
+                               ng-class = "highlightRequired(inputClass, rnrLineItem[column.name])" /></span >
                       <span ng-switch-default >
                         <span class = "cell-text text-right-align display-block" ng-bind = "rnrLineItem[column.name]"></span ></span >
                     </ng-switch >
@@ -74,7 +74,7 @@
                            ng-model = "rnrLineItem[column.name]"
                            rnr-validator = "positiveInteger" maxlength = "8"
                            ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                           ng-class = "highlightRequired(inputClass, rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "quantityReceived{{rnrLineItem['id']}}"
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
@@ -106,7 +106,7 @@
                            rnr-validator = "positiveInteger"
                            ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                            maxlength = "8"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                           ng-class = "highlightRequired(inputClass, rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "quantityDispensed{{rnrLineItem['id']}}"
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
@@ -137,7 +137,7 @@
                            rnr-validator = "positiveInteger"
                            ng-change = "rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                            maxlength = "8"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])" class="small-width-ie" />
+                           ng-class = "highlightRequired(inputClass, rnrLineItem[column.name])" class="small-width-ie" />
                     <span class = "rnr-form-error" id = "stockInHand{{rnrLineItem['id']}}"
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >
@@ -154,7 +154,7 @@
                            ng-model = "rnrLineItem[column.name]"
                            rnr-validator = "positiveInteger" maxlength = "8"
                            ng-change = "rnr.fillNormalizedConsumption(rnrLineItem)"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                           ng-class = "highlightRequired(inputClass, rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "newPatientCount{{rnrLineItem['id']}}"
                           style = "display:none;" openlmis-message="error.number.only" >
                     </span >
@@ -197,7 +197,7 @@
                            ng-model = "rnrLineItem[column.name]"
                            rnr-validator = "positiveInteger" maxlength = "8"
                            ng-change = "rnr.fillNormalizedConsumption(rnrLineItem)"
-                           ng-class = "highlightRequired(rnrLineItem[column.name])" />
+                           ng-class = "highlightRequired(inputClass, rnrLineItem[column.name])" />
                     <span class = "rnr-form-error" id = "stockOutDays{{rnrLineItem['id']}}"
                           style = "display:none;" openlmis-message="error.number.only">
                     </span >

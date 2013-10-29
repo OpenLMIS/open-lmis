@@ -21,26 +21,8 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.shownErrorPages = [];
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
-  var FULL_SUPPLY = 'fullSupply';
 
-  $scope.requisitionType = $scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular";
-
-  $scope.goToPage = function (page, event) {
-    angular.element(event.target).parents(".dropdown").click();
-    $location.search('page', page);
-  };
-
-  $scope.highlightRequired = function (value) {
-    if ($scope.approvedQuantityRequiredFlag && (isUndefined(value))) {
-      return "required-error";
-    }
-    return null;
-  };
-
-    function updateShownErrorPages() {
-    $scope.shownErrorPages = $scope.visibleTab === FULL_SUPPLY ? $scope.errorPages.fullSupply : $scope.errorPages.nonFullSupply;
-    $scope.errorPagesCount = !isUndefined($scope.shownErrorPages) ? $scope.shownErrorPages.length : null;
-  }
+  requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.saveRnr = function (preventMessage) {
     if (isUndefined($scope.approvalForm) || !$scope.approvalForm.$dirty) {
@@ -61,21 +43,15 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.approvalForm.$setPristine();
   };
 
-  $scope.$on('$routeUpdate', function() {
-    requisitionService.refreshGrid($scope, $location, $routeParams, false);
+  $scope.$on('$routeUpdate', function () {
+    requisitionService.refreshGrid($scope, $location, $routeParams, true);
   });
 
-  requisitionService.refreshGrid($scope, $location, $routeParams, false);
+  requisitionService.refreshGrid($scope, $location, $routeParams, true);
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
   });
-
-  $scope.switchSupplyType = function (supplyType) {
-    if (supplyType === $scope.visibleTab)
-      return;
-    $location.search({page: 1, supplyType: supplyType});
-  };
 
   $scope.getId = function (prefix, parent) {
     return prefix + "_" + parent.$parent.$index;
@@ -85,7 +61,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
-    rnr[$scope.visibleTab+'LineItems'] = _.map($scope.page[$scope.visibleTab], function(lineItem) {
+    rnr[$scope.visibleTab + 'LineItems'] = _.map($scope.page[$scope.visibleTab], function (lineItem) {
       return lineItem.reduceForApproval();
     });
 
@@ -109,19 +85,9 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     return fullSupplyError || nonFullSupplyError;
   }
 
-  function setErrorPages() {
-    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
-    updateShownErrorPages();
-  }
-
-  function resetErrorPages() {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
-    updateShownErrorPages();
-  }
-
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
-      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+        _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
   };
 
   $scope.dialogCloseCallback = function (result) {
@@ -144,11 +110,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = true;
     resetFlags();
-    resetErrorPages();
+    requisitionService.resetErrorPages($scope);
     $scope.saveRnr(true);
     var error = validateAndSetErrorClass();
     if (error) {
-      setErrorPages();
+      requisitionService.setErrorPages($scope);
       $scope.error = error;
       $scope.message = '';
       return;
