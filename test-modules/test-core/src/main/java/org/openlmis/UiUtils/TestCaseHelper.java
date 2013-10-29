@@ -65,6 +65,7 @@ public class TestCaseHelper {
         try {
           testWebDriver.quitDriver();
         } catch (UnreachableBrowserException e) {
+            e.printStackTrace();
         }
       }
       driverFactory.deleteExe();
