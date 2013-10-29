@@ -27,10 +27,10 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ReportPage extends RequisitionPage {
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Add New')]")
+  @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton=null;
 
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Add new report')]")
+  @FindBy(how = ID, using = "addNewHeader")
   private static WebElement addNewReportTitle=null;
 
   @FindBy(how = ID, using = "name")
@@ -42,10 +42,10 @@ public class ReportPage extends RequisitionPage {
   @FindBy(how = ID, using = "saveReport")
   private static WebElement saveButton=null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
+  @FindBy(how = ID, using = "cancelButton")
   private static WebElement cancelButton=null;
 
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMessage=null;
 
   @FindBy(how = ID, using = "error")
