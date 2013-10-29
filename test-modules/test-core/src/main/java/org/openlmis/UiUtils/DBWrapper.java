@@ -393,10 +393,13 @@ public class DBWrapper {
       supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode);
   }
 
-  public void insertSupervisoryNodeSecond(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNodeSecond(String facilityCode,
+                                          String supervisoryNodeCode,
+                                          String supervisoryNodeName,
+                                          String supervisoryNodeParentCode) throws SQLException, IOException {
     update("INSERT INTO supervisory_nodes" +
       "  (parentId, facilityId, name, code) VALUES" +
-      "  ((select id from  supervisory_nodes where code ='%'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')"
+      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')"
       , supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode);
   }
 
