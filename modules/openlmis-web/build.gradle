@@ -32,7 +32,7 @@ task npm(type: Exec) {
 }
 
 class GruntTask extends Exec {
-    private String gruntExecutable = "grunt"
+    private String gruntExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "grunt.cmd" : "grunt"
     private String switches = "--no-color"
 
     String gruntArgs = ""
