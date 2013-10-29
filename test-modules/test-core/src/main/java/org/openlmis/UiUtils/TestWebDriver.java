@@ -222,14 +222,20 @@ public class TestWebDriver {
 
   public void keyPress(final WebElement element) {
     waitForElementToAppear(element);
-    if (element != null && !(driver instanceof FirefoxDriver)) {
+
+    if (driver instanceof FirefoxDriver) {
+      element.sendKeys(Keys.RETURN);
+      return;
+    }
+
+    if (element != null) {
       for (int i = 0; i < 15; i++) {
         element.sendKeys(Keys.TAB);
         if (driver.switchTo().activeElement().getText().equalsIgnoreCase(element.getText())) {
           break;
         }
       }
+      element.sendKeys(Keys.RETURN);
     }
-    element.sendKeys(Keys.RETURN);
   }
 }
