@@ -987,17 +987,6 @@ public class DBWrapper {
 
   }
 
-  public String getOrderForRequisition(Long requisitionId) throws IOException, SQLException {
-    String requisitionStatus = null;
-    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
-
-    if (rs.next()) {
-      requisitionStatus = rs.getString("status");
-    }
-    return requisitionStatus;
-
-  }
-
   public String getOrderStatus(Long orderId) throws IOException, SQLException {
     String orderStatus = null;
     ResultSet rs = query("SELECT status from orders where id=" + orderId);
@@ -1287,10 +1276,10 @@ public class DBWrapper {
   public void verifyPODAndPODLineItems(String OrderId, String productCode, String quantityReceived) throws Exception {
     ResultSet rs = query("select id,receivedDate from pod where OrderId='" + OrderId + "';");
     while (rs.next()) {
-      rs = query("select productcode,quantityreceived from POD_line_items where podId='" + rs.getString("id").toString() + "';");
+      rs = query("select productcode,quantityreceived from POD_line_items where podId='" + rs.getString("id") + "';");
       while (rs.next()) {
-        assertEquals(rs.getString("productcode").toString(), productCode);
-        assertEquals(rs.getString("quantityreceived").toString(), quantityReceived);
+        assertEquals(rs.getString("productcode"), productCode);
+        assertEquals(rs.getString("quantityreceived"), quantityReceived);
       }
     }
   }
