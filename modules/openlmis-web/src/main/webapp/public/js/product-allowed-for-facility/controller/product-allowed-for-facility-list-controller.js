@@ -72,7 +72,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     };
 
     $scope.getFacilityTypeColor = function(facilityType){
-        if($scope.selectedFacilityType === null){
+        if(!$scope.selectedFacilityType){
             return 'none';
         }
 
@@ -91,7 +91,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     };
 
     $scope.getProgramColor = function(program){
-        if($scope.selectedProgram === null){
+        if(!$scope.selectedProgram){
             return 'none';
         }
 
@@ -115,7 +115,7 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
     });
 
     $scope.loadFacilityTypeProgramProducts = function (){
-        if($scope.selectedFacilityType === null || $scope.selectedProgram === null){
+        if(!$scope.selectedFacilityType || !$scope.selectedProgram){
             return;
         }
 
@@ -159,17 +159,17 @@ function ProductAllowedForFacilityListController($scope, $location, navigateBack
                 GetApprovedProductForFacilityTypeDetail.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.product.id}, function(data){
                     var facilityTypeApprovedProduct = data.facilityTypeApprovedProduct;
 
-                    if(facilityTypeApprovedProduct === null){
+                    if(!facilityTypeApprovedProduct){
                         facilityTypeApprovedProduct={};
                         facilityTypeApprovedProduct.programProduct = programProduct;
                         facilityTypeApprovedProduct.facilityType = $scope.selectedFacilityType;
                     }
 
-                    else if(facilityTypeApprovedProduct !== null && programProduct.isSelected === false){
+                    else if(facilityTypeApprovedProduct && !programProduct.isSelected){
                         RemoveApprovedProductForFacilityType.get({facilityTypeId: $scope.selectedFacilityType.id,programId: $scope.selectedProgram.id,productId: programProduct.product.id},successHandler,errorHandler);
                     }
 
-                    if(programProduct.isSelected === true){
+                    if(programProduct.isSelected){
 
                         facilityTypeApprovedProduct.maxMonthsOfStock = programProduct.maxMonthsOfStock;
                         facilityTypeApprovedProduct.minMonthsOfStock = programProduct.minMonthsOfStock;

@@ -46,7 +46,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
             $scope.error = response.data.error;
         };
 
-        if($scope.geographicZone.parent.id === null){
+        if(!$scope.geographicZone.parent.id){
             $scope.geographicZone.parent = null;
         }
 
@@ -56,7 +56,7 @@ function GeographicZonesController($scope, $routeParams, $location, GeographicZo
     };
 
     $scope.validateGeographicZoneName = function () {
-        $scope.geographicZoneNameInvalid = $scope.geographicZone.name !== null;
+        $scope.geographicZoneNameInvalid = $scope.geographicZone.name === null || $scope.geographicZone.name === undefined;
     };
 
     $scope.validateGeographicZoneLevelParent = function(){

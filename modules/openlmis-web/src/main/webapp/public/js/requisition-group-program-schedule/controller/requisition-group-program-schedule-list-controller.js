@@ -68,7 +68,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     };
 
     $scope.getReqColor = function(reqGroup){
-        if($scope.selectedRequisitionGroup === null){
+        if(!$scope.selectedRequisitionGroup){
             return 'none';
         }
 
@@ -87,7 +87,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     };
 
     $scope.getProgramColor = function(program){
-        if($scope.selectedProgram === null){
+        if(!$scope.selectedProgram){
             return 'none';
         }
 
@@ -102,7 +102,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
 
 
     $scope.getScheduleColor = function(schedule){
-        if($scope.selectedSchedule === null){
+        if(!$scope.selectedSchedule){
             return 'none';
         }
 
@@ -124,7 +124,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
     });
 
     $scope.loadRequisitionGroupProgramSchedule = function (){
-        if($scope.selectedRequisitionGroup === null || $scope.selectedProgram === null){
+        if(!$scope.selectedRequisitionGroup || !$scope.selectedProgram){
             return;
         }
 
@@ -176,7 +176,7 @@ function RequisitionGroupProgramScheduleListController($scope, $location, naviga
             $scope.error = response.data.error;
         };
 
-        if($scope.selectedRequisitionGroupProgramSchedule === null){
+        if(!$scope.selectedRequisitionGroupProgramSchedule){
             $scope.selectedRequisitionGroupProgramSchedule = {};
             $scope.selectedRequisitionGroupProgramSchedule.directDelivery = true;
         }

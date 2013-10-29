@@ -45,13 +45,13 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
             $scope.error = response.data.error;
         };
 
-        if($scope.supervisoryNode.facility === null || $scope.supervisoryNode.name === null || $scope.supervisoryNode.code === null){
+        if(!$scope.supervisoryNode.facility || !$scope.supervisoryNode.name || !$scope.supervisoryNode.code){
             $scope.showError = true;
             $scope.error = "Please fill in all required fields.";
             return false;
         }
 
-        if($scope.supervisoryNode.parent.id === null){
+        if(!$scope.supervisoryNode.parent.id){
             $scope.supervisoryNode.parent = null;
         }
 

@@ -15,7 +15,7 @@ function GeographicZonesSearchController($scope, $location, navigateBackService,
         var query = document.getElementById(id).value;
         $scope.query = query;
 
-        var len = (query === undefined) ? 0 : query.length;
+        var len = (query === undefined || query === null) ? 0 : query.length;
 
         filterGeographicZonesByName(query);
         return true;

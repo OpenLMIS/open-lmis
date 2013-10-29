@@ -84,7 +84,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     };
 
     $scope.validateRequisitionGroupName = function () {
-        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null;
+        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null || typeof ($scope.requisitionGroup.name) === "undefined"
     };
 
     $scope.addNewMemberFacility=function(){
