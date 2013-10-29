@@ -291,7 +291,7 @@ public class RequisitionPage extends Page {
   }
 
   public void verifySubmitSuccessMsg() {
-    testWebDriver.sleep(250);
+    testWebDriver.sleep(1000);
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 
