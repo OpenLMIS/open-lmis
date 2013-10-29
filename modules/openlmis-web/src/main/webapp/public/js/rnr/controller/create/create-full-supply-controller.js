@@ -58,7 +58,7 @@ function CreateFullSupplyController($scope, messageService) {
   function updateLossesAndAdjustmentTypesToDisplayForLineItem(lineItem) {
     var lossesAndAdjustmentTypesForLineItem = _.pluck(_.pluck(lineItem.lossesAndAdjustments, 'type'), 'name');
 
-    $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.allTypes, function (lAndATypeObject) {
+    $scope.lossesAndAdjustmentTypesToDisplay = $.grep($scope.lossesAndAdjustmentTypes, function (lAndATypeObject) {
       return $.inArray(lAndATypeObject.name, lossesAndAdjustmentTypesForLineItem) == -1;
     });
   }

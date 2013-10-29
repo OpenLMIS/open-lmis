@@ -9,16 +9,31 @@
   -->
 
 <div ng-controller="ApproveNonFullSupplyController">
+
+  <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
+    <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
+      <a href="" ng-switch-when="1" class="dropdown-toggle" openlmis-message="error.one.page"></a>
+      <a href="" ng-switch-default class="dropdown-toggle"
+         openlmis-message="error.multiple.pages|nonFullSupplyErrorPagesCount">
+      </a>
+      <ul class="dropdown-menu">
+        <li ng-repeat="page in errorPages.nonFullSupply">
+          <a href="" ng-click="goToPage(page, $event)">{{page}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
   <div id="approveRnr" class="rnr-table" custom-horizontal-scroll>
-    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-    <table ng-show="pageLineItems.length" id="nonFullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns class="table table-bordered scrollable">
+    <div ng-hide="page.nonFullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+    <table ng-show="page.nonFullSupply.length" id="nonFullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns class="table table-bordered scrollable">
       <thead>
-      <tr ng-show="pageLineItems.length">
+      <tr ng-show="page.nonFullSupply.length">
         <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
             ng-bind="programRnrColumn.label"></th>
       </tr>
       </thead>
-      <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in pageLineItems">
+      <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in page.nonFullSupply">
       <tr>
         <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
             ng-bind="rnrLineItem.productCategory"></td>
@@ -33,7 +48,7 @@
                            ng-model="rnrLineItem[column.name]" rnr-validator="positiveInteger" maxlength="8"
                            name="quantityApproved{{$parent.$parent.$index}}"
                            id="{{getId(column.name, $parent)}}"
-                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                           ng-class="highlightRequired(approvedQuantityRequiredFlag, rnrLineItem[column.name])"/>
                     <span class="rnr-form-error" id="quantityApproved{{$parent.$parent.$index}}"
                           style="display:none;" openlmis-message="error.number.only">
                     </span>

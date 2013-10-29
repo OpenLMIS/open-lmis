@@ -25,7 +25,6 @@ function CreateNonFullSupplyController($scope, messageService) {
     return prefix + "_" + parent.$parent.$index;
   };
 
-
   $scope.addNonFullSupplyLineItemsToRnr = function () {
     var validNonFullSupplyLineItems = [];
     var lineItem;
@@ -55,7 +54,7 @@ function CreateNonFullSupplyController($scope, messageService) {
       return lineItem1.compareTo(lineItem2);
     });
 
-    $scope.fillPagedGridData();
+    $scope.$emit('$routeUpdate');
     displayProductsAddedMessage();
     $scope.saveRnrForm.$dirty = (validNonFullSupplyLineItems.length > 0);
     $scope.nonFullSupplyProductsModal = false;

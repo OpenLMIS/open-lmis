@@ -14,24 +14,25 @@
 app.directive('fixedTableColumns', function () {
   return {
     restrict: 'A',
-    link: function (scope, element, attr, ctrl) {
+    link: function (scope, element) {
 
       var fixedColumns = $("<div class='column-fixed'></div>");
       var fixedTable = $("<table class='table table-bordered'></table>");
       var fixedTableHead = $("<thead><tr></tr></thead>");
 
       var setFixedTableColumnsOffset = function () {
+        if (!element.is(':visible')) return;
         var baseElementOffset = element.offset();
         fixedColumns.css({
           top: (baseElementOffset.top) + 'px',
           left: (baseElementOffset.left + element.parent().scrollLeft()) + 'px'
         });
-        $('.column-fixed th').each(function (index, tableHeaderElement) {
+        $('.column-fixed th:visible').each(function (index, tableHeaderElement) {
           copyWidthAndHeight($(element.find('th')[index]), $(tableHeaderElement));
         });
       };
 
-      scope.$watch('pageLineItems', function () {
+      scope.$watch('page', function () {
         setTimeout(function () {
           if (!element.is(':visible')) return;
 

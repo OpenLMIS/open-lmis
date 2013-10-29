@@ -8,115 +8,24 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService) {
-  $scope.visibleTab = $routeParams.supplyType;
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService, requisitionService) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.currency = messageService.get('label.currency.symbol');
   $scope.pageSize = pageSize;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
-  $scope.error = "";
-  $scope.message = "";
+  $scope.error = $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
-  $scope.pageLineItems = [];
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
 
-  var NON_FULL_SUPPLY = 'non-full-supply';
-  var FULL_SUPPLY = 'full-supply';
-  var REGIMEN = 'regimen';
+  var NON_FULL_SUPPLY = 'nonFullSupply';
 
-  $scope.goToPage = function (page, event) {
-    angular.element(event.target).parents(".dropdown").click();
-    $location.search('page', page);
-  };
-
-  if ($scope.rnr.emergency) {
-    $scope.requisitionType = messageService.get("requisition.type.emergency");
-  } else {
-    $scope.requisitionType = messageService.get("requisition.type.regular");
-  }
-
-  $scope.highlightRequired = function (value) {
-    if ($scope.approvedQuantityRequiredFlag && (isUndefined(value))) {
-      return "required-error";
-    }
-    return null;
-  };
-
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) &&
-      ($scope.pageLineItems[index].productCategory === $scope.pageLineItems[index - 1].productCategory));
-  };
-
-  function updateShownErrorPages() {
-    $scope.shownErrorPages = $scope.visibleTab ? $scope.errorPages.nonFullSupply : $scope.errorPages.fullSupply;
-    $scope.errorPagesCount = !isUndefined($scope.shownErrorPages) ? $scope.shownErrorPages.length : null;
-  }
-
-  function fillPageData() {
-    updateShownErrorPages();
-    var pageLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
-    $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) ? Math.ceil(pageLineItems.length / $scope.pageSize) : 1;
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-    $scope.pageLineItems = pageLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
-  }
-
-  fillPageData();
-
-  $scope.$watch("currentPage", function () {
-    $location.search("page", $scope.currentPage);
-  });
-
-  $scope.switchSupplyType = function (supplyType) {
-    $scope.visibleTab = supplyType;
-    $location.search('page', 1);
-    $location.search('supplyType', supplyType);
-  };
-
-  $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType == NON_FULL_SUPPLY ? NON_FULL_SUPPLY :
-      ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
-    $location.search('supplyType', $scope.visibleTab);
-
-    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-      $location.search('page', 1);
-      return;
-    }
-    if ($scope.approvalForm.$dirty) $scope.saveRnr();
-    fillPageData();
-  });
-
-  $scope.getId = function (prefix, parent) {
-    return prefix + "_" + parent.$parent.$index;
-  };
-
-  function removeExtraDataForPostFromRnr() {
-    var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    if (!$scope.pageLineItems[0].fullSupply) {
-      rnr.nonFullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-        return rnrLineItem.reduceForApproval();
-      });
-    } else if ($scope.pageLineItems[0].fullSupply) {
-      rnr.fullSupplyLineItems = _.map($scope.pageLineItems, function (rnrLineItem) {
-        return rnrLineItem.reduceForApproval();
-      });
-    }
-    return rnr;
-  }
-
-  var fadeSaveMessage = function () {
-    $scope.$apply(function () {
-      angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-        $scope.message = '';
-      });
-    });
-  };
+  requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.saveRnr = function (preventMessage) {
-    if (!$scope.approvalForm.$dirty) {
+    if (isUndefined($scope.approvalForm) || !$scope.approvalForm.$dirty) {
       return;
     }
     resetFlags();
@@ -134,6 +43,39 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.approvalForm.$setPristine();
   };
 
+  $scope.$on('$routeUpdate', function () {
+    requisitionService.refreshGrid($scope, $location, $routeParams, true);
+  });
+
+  requisitionService.refreshGrid($scope, $location, $routeParams, true);
+
+  $scope.$watch("currentPage", function () {
+    $location.search("page", $scope.currentPage);
+  });
+
+  $scope.getId = function (prefix, parent) {
+    return prefix + "_" + parent.$parent.$index;
+  };
+
+  function removeExtraDataForPostFromRnr() {
+    var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
+    if (!$scope.page[$scope.visibleTab].length) return rnr;
+
+    rnr[$scope.visibleTab + 'LineItems'] = _.map($scope.page[$scope.visibleTab], function (lineItem) {
+      return lineItem.reduceForApproval();
+    });
+
+    return rnr;
+  }
+
+  var fadeSaveMessage = function () {
+    $scope.$apply(function () {
+      angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
+        $scope.message = '';
+      });
+    });
+  };
+
   function validateAndSetErrorClass() {
     var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
@@ -143,19 +85,9 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     return fullSupplyError || nonFullSupplyError;
   }
 
-  function setErrorPages() {
-    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
-    updateShownErrorPages();
-  }
-
-  function resetErrorPages() {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
-    updateShownErrorPages();
-  }
-
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
-      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+        _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
   };
 
   $scope.dialogCloseCallback = function (result) {
@@ -178,11 +110,11 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = true;
     resetFlags();
-    resetErrorPages();
+    requisitionService.resetErrorPages($scope);
     $scope.saveRnr(true);
     var error = validateAndSetErrorClass();
     if (error) {
-      setErrorPages();
+      requisitionService.setErrorPages($scope);
       $scope.error = error;
       $scope.message = '';
       return;
