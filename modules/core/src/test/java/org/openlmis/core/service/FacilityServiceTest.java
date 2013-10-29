@@ -337,10 +337,12 @@ public class FacilityServiceTest {
     Facility expectedFacility = new Facility();
     when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
     when(facilityRepository.getById(facilityId)).thenReturn(expectedFacility);
+    when(programSupportedService.getAllByFacilityId(facilityId)).thenReturn(asList(new ProgramSupported()));
     Facility facility = facilityService.getFacilityWithReferenceDataForCode(facilityCode);
 
     verify(facilityRepository).getIdForCode(facilityCode);
     verify(facilityRepository).getById(facilityId);
+    verify(programSupportedService).getAllByFacilityId(facilityId);
     assertThat(facility, is(expectedFacility));
   }
 

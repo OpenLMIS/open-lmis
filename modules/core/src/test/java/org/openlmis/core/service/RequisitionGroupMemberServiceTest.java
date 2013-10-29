@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_CODE;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
@@ -169,5 +172,17 @@ public class RequisitionGroupMemberServiceTest {
     service.save(requisitionGroupMember);
 
     verify(requisitionGroupMemberRepository, never()).insert(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldGetAllRequisitionGroupMembersByFacilityId() throws Exception {
+    Long facilityId = 4L;
+    List<RequisitionGroupMember> expectedMembers = asList(new RequisitionGroupMember());
+    when(requisitionGroupMemberRepository.getAllRequisitionGroupMembersByFacility(facilityId)).thenReturn(expectedMembers);
+
+    List<RequisitionGroupMember> actualMembers = service.getAllRequisitionGroupMembersByFacility(facilityId);
+
+    verify(requisitionGroupMemberRepository).getAllRequisitionGroupMembersByFacility(facilityId);
+    assertThat(actualMembers, is(expectedMembers));
   }
 }

@@ -29,9 +29,11 @@ import org.openlmis.db.categories.UnitTests;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -121,6 +123,18 @@ public class RequisitionGroupMemberRepositoryTest {
         getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
 
     assertThat(returnedRGMember, is(requisitionGroupMember));
+  }
+
+  @Test
+  public void shouldGetAllRequisitionGroupMembersByFacilityId() throws Exception {
+    Long facilityId = 4L;
+    List<RequisitionGroupMember> expectedMembers = asList(new RequisitionGroupMember());
+    when(requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(facilityId)).thenReturn(expectedMembers);
+
+    List<RequisitionGroupMember> actualMembers = repository.getAllRequisitionGroupMembersByFacility(facilityId);
+
+    verify(requisitionGroupMemberMapper).getAllRequisitionGroupMembersByFacility(facilityId);
+    assertThat(actualMembers, is(expectedMembers));
   }
 }
 

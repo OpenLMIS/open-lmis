@@ -45,4 +45,11 @@ public interface RequisitionGroupMemberMapper {
     "SET modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE " +
     "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
   void update(RequisitionGroupMember requisitionGroupMember);
+
+  @Select("SELECT * FROM requisition_group_members WHERE facilityId = #{facilityId}")
+  @Results(value = {
+      @Result(property = "facility.id", column = "facilityId"),
+      @Result(property = "requisitionGroup.id", column = "requisitionGroupId")
+  })
+  List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId);
 }

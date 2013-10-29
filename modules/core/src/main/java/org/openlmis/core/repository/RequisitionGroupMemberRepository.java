@@ -53,4 +53,8 @@ public class RequisitionGroupMemberRepository {
   public void update(RequisitionGroupMember requisitionGroupMember) {
     mapper.update(requisitionGroupMember);
   }
+
+  public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
+    return mapper.getAllRequisitionGroupMembersByFacility(facilityId);
+  }
 }

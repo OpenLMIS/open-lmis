@@ -29,6 +29,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
@@ -64,11 +65,13 @@ public class RequisitionGroupMemberMapperIT {
 
   ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
 
+  Facility facility;
+
   @Before
   public void setUp() throws Exception {
     requisitionGroupMember = new RequisitionGroupMember();
 
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
+    facility = make(a(FacilityBuilder.defaultFacility));
     requisitionGroup = make(a(defaultRequisitionGroup));
 
     facilityMapper.insert(facility);
@@ -102,5 +105,15 @@ public class RequisitionGroupMemberMapperIT {
 
     assertThat(programIds.size(), is(1));
     assertThat(programIds.get(0), is(requisitionGroupProgramSchedule.getProgram().getId()));
+  }
+
+  @Test
+  public void shouldGetAllRequisitionGroupMembersByFacilityId() throws Exception {
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+    List<RequisitionGroupMember> actualMembers = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(facility.getId());
+
+    assertThat(actualMembers.size(), is(1));
+    assertThat(actualMembers.get(0).getRequisitionGroup().getId(), is(requisitionGroupMember.getRequisitionGroup().getId()));
+    assertThat(actualMembers.get(0).getFacility().getId(), is(requisitionGroupMember.getFacility().getId()));
   }
 }

@@ -103,4 +103,8 @@ public class RequisitionGroupMemberService {
     RequisitionGroup requisitionGroup = requisitionGroupRepository.getByCode(record.getRequisitionGroup());
     return requisitionGroupMemberRepository.getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
+
+  public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
+    return requisitionGroupMemberRepository.getAllRequisitionGroupMembersByFacility(facilityId);
+  }
 }
