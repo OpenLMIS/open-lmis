@@ -36,18 +36,18 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     $scope.error = "error.rnr.template.not.defined";
     $location.path("/init-rnr");
   }
+  $scope.hasPermission = function (permission) {
+    return _.find($scope.requisitionRights, function (right) {
+      return right.right === permission;
+    });
+  };
+
 
   $scope.formDisabled = function () {
     var status = $scope.rnr.status;
     if (status === 'INITIATED' && $scope.hasPermission('CREATE_REQUISITION')) return false;
     return !(status === 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION'));
   }();
-
-  $scope.hasPermission = function (permission) {
-    return _.find($scope.requisitionRights, function (right) {
-      return right.right === permission;
-    });
-  };
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
