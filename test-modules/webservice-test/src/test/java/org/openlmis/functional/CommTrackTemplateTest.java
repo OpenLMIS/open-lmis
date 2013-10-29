@@ -13,8 +13,6 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.restapi.domain.Report;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -27,19 +25,15 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 public class CommTrackTemplateTest extends JsonUtility {
   public static final String FULL_COMMTRACK_JSON_TXT_FILE_NAME = "CommTrackReportJson.txt";
-  public WebDriver driver;
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    driver.get("http://localhost:9091");
     super.setup();
     super.setupTestData(true);
   }
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws IOException, SQLException {
-    driver.close();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

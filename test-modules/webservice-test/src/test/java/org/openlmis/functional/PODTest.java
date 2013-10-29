@@ -18,10 +18,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
@@ -32,12 +30,8 @@ public class PODTest extends JsonUtility {
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
 
-  public WebDriver driver;
-
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    driver.get("http://localhost:9091");
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
@@ -45,7 +39,6 @@ public class PODTest extends JsonUtility {
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws IOException, SQLException {
-    driver.close();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }

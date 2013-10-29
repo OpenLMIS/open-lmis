@@ -15,15 +15,11 @@ import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.restapi.domain.Report;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -34,12 +30,9 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
-  public WebDriver driver;
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    driver.get("http://localhost:9091");
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
@@ -47,7 +40,6 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws IOException, SQLException {
-    driver.close();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
@@ -230,7 +222,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         checkOrderStatus("RELEASED",65,"READY_TO_PACK",responseEntity );
     }
 
-
+    @Test(groups = {"webservice"})
     public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetTrue() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
@@ -248,7 +240,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         checkOrderStatus("RELEASED", 65,"TRANSFER_FAILED", responseEntity);
     }
 
-
+    @Test(groups = {"webservice"})
     public void testRequisitionDetailsAfterApprovalForExportOrdersFlagSetTrueAndFtpDetailsValid() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();

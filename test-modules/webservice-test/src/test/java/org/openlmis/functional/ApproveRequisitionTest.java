@@ -13,27 +13,20 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.restapi.domain.Report;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.sql.SQLException;
-
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 public class ApproveRequisitionTest extends JsonUtility {
 
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
-  public WebDriver driver;
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
-    driver = new FirefoxDriver();
-    driver.get("http://localhost:9091");
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
@@ -41,7 +34,6 @@ public class ApproveRequisitionTest extends JsonUtility {
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws IOException, SQLException {
-    driver.close();
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
