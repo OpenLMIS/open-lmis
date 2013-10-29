@@ -82,6 +82,6 @@ services.factory('requisitionService', function (messageService) {
     populateScope: populateScope,
     setErrorPages: setErrorPages,
     resetErrorPages: resetErrorPages
-  }
+  };
 
 });

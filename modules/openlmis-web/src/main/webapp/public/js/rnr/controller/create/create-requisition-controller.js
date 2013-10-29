@@ -51,8 +51,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
-        _.contains($scope.errorPages.nonFullSupply, page) :
-        $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
+      _.contains($scope.errorPages.nonFullSupply, page) :
+      $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
   $scope.$watch("currentPage", function () {
@@ -117,7 +117,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
         if (regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
           setError = true;
           $scope.regimenLineItemInValid = true;
-          return;
         }
       });
     });
@@ -126,14 +125,14 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   var submitValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-        {}, function (data) {
-          $scope.rnr.status = "SUBMITTED";
-          $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
-          $scope.submitMessage = data.success;
-          $scope.saveRnrForm.$setPristine();
-        }, function (data) {
-          $scope.submitError = data.data.error;
-        });
+      {}, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
+        $scope.submitMessage = data.success;
+        $scope.saveRnrForm.$setPristine();
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
   };
 
   $scope.callBack = function (result) {
@@ -143,7 +142,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     if (result && $scope.rnr.status === 'SUBMITTED') {
       authorizeValidatedRnr();
     }
-  }
+  };
 
   var showConfirmModal = function () {
     var options = {
@@ -200,7 +199,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   $scope.getCellErrorClass = function (rnrLineItem) {
     return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ?
-        'cell-error-highlight' : '';
+      'cell-error-highlight' : '';
   };
 
   $scope.lineItemErrorMessage = function (rnrLineItem) {
