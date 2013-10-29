@@ -24,8 +24,7 @@ public class Unzip {
     boolean flag = false;
     File fileToBeDeleted = new File(file);
     if (fileToBeDeleted.exists()) {
-      fileToBeDeleted.delete();
-      flag = true;
+        flag=fileToBeDeleted.delete();
     }
     return flag;
   }
