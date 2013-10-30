@@ -27,7 +27,7 @@ public class DBWrapper {
   public static final String DEFAULT_DB_PASSWORD = "p@ssw0rd";
 
   public DBWrapper() throws IOException, SQLException {
-    String dbUser = getProperty("dbUrl", DEFAULT_DB_USERNAME);
+    String dbUser = getProperty("dbUser", DEFAULT_DB_USERNAME);
     String dbPassword = getProperty("dbPassword", DEFAULT_DB_PASSWORD);
     String dbUrl = getProperty("dbUrl", DEFAULT_DB_URL);
 
