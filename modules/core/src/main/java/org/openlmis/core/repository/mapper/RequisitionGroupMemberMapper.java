@@ -22,34 +22,35 @@ import java.util.List;
 public interface RequisitionGroupMemberMapper {
 
   @Insert("INSERT INTO requisition_group_members" +
-    "(requisitionGroupId, facilityId, createdBy, modifiedBy, modifiedDate) " +
-    "VALUES (#{requisitionGroup.id}, #{facility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+      "(requisitionGroupId, facilityId, createdBy, modifiedBy, modifiedDate) " +
+      "VALUES (#{requisitionGroup.id}, #{facility.id}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
   @Options(useGeneratedKeys = true)
   Integer insert(RequisitionGroupMember requisitionGroupMember);
 
   @Select({"SELECT rgps.programId FROM requisition_groups rg",
-    "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId",
-    "INNER JOIN requisition_group_members rgm ON rg.id = rgm.requisitionGroupId",
-    "WHERE rgm.facilityId = #{facilityId}"})
+      "INNER JOIN requisition_group_program_schedules rgps ON rg.id = rgps.requisitionGroupId",
+      "INNER JOIN requisition_group_members rgm ON rg.id = rgm.requisitionGroupId",
+      "WHERE rgm.facilityId = #{facilityId}"})
   List<Long> getRequisitionGroupProgramIdsForFacilityId(Long facilityId);
 
   @Select({"SELECT *",
-    "FROM requisition_group_members",
-    "WHERE requisitionGroupId = #{requisitionGroup.id}",
-    "AND facilityId = #{facility.id}"})
+      "FROM requisition_group_members",
+      "WHERE requisitionGroupId = #{requisitionGroup.id}",
+      "AND facilityId = #{facility.id}"})
   RequisitionGroupMember getMappingByRequisitionGroupIdAndFacilityId(
-    @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
-    @Param(value = "facility") Facility facility);
+      @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
+      @Param(value = "facility") Facility facility);
 
   @Update("UPDATE requisition_group_members " +
-    "SET modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE " +
-    "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
+      "SET modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE " +
+      "requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}")
   void update(RequisitionGroupMember requisitionGroupMember);
 
   @Select("SELECT * FROM requisition_group_members WHERE facilityId = #{facilityId}")
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "requisitionGroup.id", column = "requisitionGroupId")
+      @Result(property = "requisitionGroup", column = "requisitionGroupId", javaType = RequisitionGroup.class,
+          one = @One(select = "org.openlmis.core.repository.mapper.RequisitionGroupMapper.getRequisitionGroupById"))
   })
   List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId);
 }

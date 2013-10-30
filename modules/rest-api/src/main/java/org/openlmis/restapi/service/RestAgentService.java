@@ -38,7 +38,7 @@ public class RestAgentService {
   ProgramSupportedService programSupportedService;
 
   @Autowired
-  RequisitionGroupMemberService reguisitionGroupMemberService;
+  RequisitionGroupMemberService requisitionGroupMemberService;
 
   @Transactional
   public void create(Agent agent, String userName) {
@@ -57,12 +57,12 @@ public class RestAgentService {
 
   private void saveRequisitionGroupMembers(Facility facility, User user) {
     List<RequisitionGroupMember> requisitionGroupMembers =
-        reguisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(facility.getParentFacilityId());
+        requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(facility.getParentFacilityId());
     for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
       RequisitionGroupMember member = new RequisitionGroupMember(requisitionGroupMember.getRequisitionGroup(), facility);
       member.setCreatedBy(user.getId());
       member.setModifiedBy(user.getId());
-      reguisitionGroupMemberService.save(member);
+      requisitionGroupMemberService.save(member);
     }
   }
 

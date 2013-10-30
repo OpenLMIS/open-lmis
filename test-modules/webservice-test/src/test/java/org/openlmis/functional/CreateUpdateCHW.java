@@ -273,7 +273,6 @@ public class CreateUpdateCHW extends JsonUtility {
   public void testVerifyFieldsAfterChangeInParentFacilityCode() throws Exception {
     String typeId = "typeid";
     String geographicZoneId = "geographiczoneid";
-    String operatedById = "operatedbyid";
     String parentFacilityId = "parentfacilityid";
     String agentCode = "ABCDE";
     String firstParentFacility = DEFAULT_PARENT_FACILITY_CODE;
@@ -301,7 +300,6 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
     agentJson.setParentFacilityCode(updateParentFacility);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
@@ -314,14 +312,12 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, updateParentFacility), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
   }
 
   @Test(groups = {"webservice"})
   public void testVerifyFieldsAfterCHWCreation() throws Exception {
     String typeId = "typeid";
     String geographicZoneId = "geographiczoneid";
-    String operatedById = "operatedbyid";
     String parentFacilityId = "parentfacilityid";
     String agentCode = "commtrk";
     String agentName = DEFAULT_AGENT_NAME;
@@ -360,7 +356,6 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, firstParentFacility), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
     assertEquals(agentCode, dbWrapper.getFacilityFieldBYCode(code, agentCode));
     assertEquals(agentName, dbWrapper.getFacilityFieldBYCode(name, agentCode));
     assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainPhone, agentCode));
@@ -385,7 +380,6 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(operatedById, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(operatedById, agentCode));
     assertEquals(agentCode, dbWrapper.getFacilityFieldBYCode(code, agentCode));
     assertEquals(agentNameUpdated, dbWrapper.getFacilityFieldBYCode(name, agentCode));
     assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainPhone, agentCode));

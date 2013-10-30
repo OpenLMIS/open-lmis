@@ -113,7 +113,7 @@ public class RequisitionGroupMemberMapperIT {
     List<RequisitionGroupMember> actualMembers = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(facility.getId());
 
     assertThat(actualMembers.size(), is(1));
-    assertThat(actualMembers.get(0).getRequisitionGroup().getId(), is(requisitionGroupMember.getRequisitionGroup().getId()));
+    assertThat(actualMembers.get(0).getRequisitionGroup(), is(requisitionGroupMember.getRequisitionGroup()));
     assertThat(actualMembers.get(0).getFacility().getId(), is(requisitionGroupMember.getFacility().getId()));
   }
 }

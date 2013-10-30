@@ -93,7 +93,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     DateFormat formatter;
     Date d;
     formatter = new SimpleDateFormat("yyyyMMdd");
-    d = (Date) formatter.parse(str_date);
+    d = formatter.parse(str_date);
     long dateLong = d.getTime();
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
@@ -120,7 +120,6 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     createFacilityPage.saveFacility();
 
     Thread.sleep(5000);
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
     responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
