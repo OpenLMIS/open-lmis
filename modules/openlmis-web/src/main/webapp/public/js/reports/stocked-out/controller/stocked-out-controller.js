@@ -1,19 +1,6 @@
 function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $routeParams,$location ,
                                 StockedOutReport, ReportProductsByProgram , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, FacilitiesByProgramParams, GeographicZones,OperationYears,Months) {
 
-    //to minimize and maximize the filter section
-    var section = 1;
-
-    $scope.$window = $window;
-
-    $scope.section = function (id) {
-        section = id;
-    };
-
-    $scope.show = function (id) {
-        return section == id;
-    };
-
     $scope.startYears = [];
     OperationYears.get(function(data){
         $scope.startYears = $scope.endYears = data.years;
@@ -109,7 +96,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
             $scope.errorShown = true;
             //return;
         }
-        $scope.getPagedDataAsync(0, 0);
+        $scope.getPagedDataAsync();
     };
 
     //filter form data section
@@ -159,11 +146,6 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         $scope.productCategories = data.productCategoryList;
         $scope.productCategories.unshift({'name': '-- All Product Categories --'});
     });
-
-//    GeographicZones.get(function(data) {
-//        $scope.zones = data.zones;
-//        $scope.zones.unshift({'name': '-- All Geographic Zones --'});
-//    });
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
@@ -225,21 +207,6 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
          }else{
             $scope.filterObject.facilityTypeId =  0;
             $scope.filterObject.facilityType = "";
-        }
-        $scope.filterGrid();
-    });
-
-    $scope.$watch('facility.value', function(selection){
-        if(selection !== undefined || selection === ""){
-            $scope.filterObject.facilityId =  selection;
-            $.each( $scope.allFacilities,function( item,idx){
-                if(idx.id == selection){
-                    $scope.filterObject.facility = idx.name;
-                }
-            });
-        }else{
-            $scope.filterObject.facilityId =  0;
-            $scope.filterObject.facility = "";
         }
         $scope.filterGrid();
     });
@@ -404,22 +371,6 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
 
     });
 
-    $scope.$watch('productCategory', function(selection){
-        if(selection !== undefined || selection === ""){
-            $scope.filterObject.productCategoryId =  selection;
-            $.each( $scope.productCategories,function( item,idx){
-                if(idx.id == selection){
-                    $scope.filterObject.productCategory = idx.name;
-                }
-            });
-
-        }else{
-            $scope.filterObject.productCategoryId =  0;
-            $scope.filterObject.productCategory = "";
-        }
-        $scope.filterGrid();
-    });
-
 
     $scope.$watch('product', function(selection){
         if(selection !== undefined || selection === ""){
@@ -454,6 +405,9 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         $scope.filterGrid();
     });
 
+    $scope.$watch('filterObject.facilityId',function(){
+        $scope.filterGrid();
+    });
 
     $scope.exportReport   = function (type){
         $scope.filterObject.pdformat =1;
@@ -494,26 +448,19 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
     // watch for changes of parameters
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
-    $scope.getPagedDataAsync = function (pageSize, page) {
+    $scope.getPagedDataAsync = function () {
 
         if($scope.filterObject.program === undefined){
             return;
         }
 
-        var params =  {
-            "max" : 10000,
-            "page" : 1
-        };
-
-        $.each($scope.filterObject, function(index, value) {
-            if(value !== undefined)
-                params[index] = value;
-        });
+        $scope.filterObject.max = 10000;
+        $scope.filterObject.page = 1;
 
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
 
-        StockedOutReport.get(params, function (data) {
+        StockedOutReport.get($scope.filterObject, function (data) {
             if(data.pages !== undefined && data.pages.rows !== undefined ){
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);

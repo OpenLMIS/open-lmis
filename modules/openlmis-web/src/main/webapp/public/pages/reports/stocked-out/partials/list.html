@@ -131,7 +131,7 @@
                                     <label class="labels">Facility</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="facility"  ng-model="facility.value"  >
+                                        <select ui-select2 style="width:200px;" ng-model="filterObject.facilityId" ng-changed="filterGrid()"  >
                                             <option  ng-repeat="option in facilities" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
@@ -141,7 +141,7 @@
                                     <label class="labels">Product Category</label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" name="productCategory"  ng-model="productCategory"  >
+                                        <select ui-select2 style="width:200px;"  ng-model="filterObject.productCategoryId" ng-change="filterGrid()" >
                                             <option  ng-repeat="option in productCategories" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>

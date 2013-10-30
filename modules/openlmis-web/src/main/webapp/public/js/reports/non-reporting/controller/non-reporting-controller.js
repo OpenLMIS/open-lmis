@@ -1,7 +1,7 @@
 function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsByScheduleAndYear,RequisitionGroupsByProgramSchedule ,OperationYears, RequisitionGroups, NonReportingFacilities, ReportSchedules, ReportFacilityTypes , ReportPeriods, ReportPrograms, $http, $routeParams,$location) {
 
     $scope.filterGrid = function (){
-       $scope.getPagedDataAsync(50000, 1);
+       $scope.getPagedDataAsync();
     };
 
     ReportPrograms.get(function(data){
@@ -49,8 +49,9 @@ function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsBySc
         if($scope.year !== 0 ){
             ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.schedule, year: $scope.year}, function(data){
                 $scope.periods = data.periods;
-                $scope.periods.unshift({'name':'-- Select a Period --','id':''});
-
+                if(!isUndefined($scope.periods)){
+                    $scope.periods.unshift({'name':'-- Select a Period --','id':''});
+                }
             });
         }else{
             ReportPeriods.get({ scheduleId : $scope.schedule },function(data) {
@@ -76,7 +77,7 @@ function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsBySc
     };
 
 
-    $scope.getParams = function(pageSize, page){
+    $scope.getParams = function(){
         var params =  {
             "max" : 50000,
             "page" : 1
@@ -122,14 +123,14 @@ function NonReportingController($scope,ngTableParams, $filter, ReportPeriodsBySc
     // watch for changes of parameters
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
-    $scope.getPagedDataAsync = function (pageSize, page) {
+    $scope.getPagedDataAsync = function () {
         // clear the data that is showing up now.
         $scope.data = $scope.datarows = [];
         // if period or schedule group is not selected, there is no reason to ask the server
         if($scope.period === '' || $scope.program === '' || $scope.schedule === ''){
             return;
         }
-        var params = $scope.getParams(pageSize, page);
+        var params = $scope.getParams();
 
         NonReportingFacilities.get(params, function(data) {
             if(data.pages !== undefined){

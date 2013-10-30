@@ -6,39 +6,15 @@
 
 function ProductController($scope, $location, $dialog, messageService, ProductDetail , ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
-
-    $scope.newProduct = {};
-    $scope.products = {};
-    $scope.editProduct = {};
-    $scope.product={};
-    $scope.creationError = '';
     $scope.title = 'Products';
-    $scope.demoproducts = {};
-    $scope.AddEditMode = '';
-    $scope.programProductsCost = [];
     $scope.title = "Manage Products";
 
     // all products list
     ProductList.get({}, function (data) {
-        $scope.productsList = data.productList;
-        $scope.filteredProducts = $scope.productsList;
-
-        $scope.initialProducts = angular.copy(data.productList, $scope.initialProducts);
-        $scope.products = $scope.productsList;
-
-        //alert(JSON.stringify($scope.filteredProducts, null, 4));
-        for (var productIndex in data.productList) {
-            var product = data.productList[productIndex];
-        }
-
-        //alert(JSON.stringify($scope.products, null, 4));
+        $scope.filteredProducts = $scope.productsList = data.productList;
     }, function (data) {
         $location.path($scope.$parent.sourceUrl);
-
     });
-
-
-
 
     // apply filter
     $scope.filterProductsByProgram = function () {
@@ -78,7 +54,6 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
 
     };
 
-//  scope is undefined,
     $scope.productLoaded = function () {
         return !($scope.products === undefined || $scope.products === null);
     };

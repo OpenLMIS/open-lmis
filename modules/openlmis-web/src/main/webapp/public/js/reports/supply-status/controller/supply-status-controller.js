@@ -1,6 +1,6 @@
 function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , ReportProductsByProgram ,ReportFacilityTypes, FacilitiesByProgramParams,GetFacilityByFacilityType, GeographicZones, RequisitionGroups,SettingsByKey, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
-    var section = 1;
+
     $scope.showMessage = true;
     $scope.message = "Indicates a required field." ;
 
@@ -16,26 +16,6 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
     };
 
 
-    //filter form data section
-    $scope.filterObject =  {
-        facilityTypeId : $scope.facilityType,
-        facilityType : "",
-        programId : $scope.program,
-        program : "",
-        periodId : $scope.period,
-        period : "",
-        zoneId : $scope.zone,
-        zone : "",
-        productId : $scope.productId,
-        product : "",
-        scheduleId : $scope.schedule,
-        schedule : "",
-        rgroupId : $scope.rgroup,
-        rgroup : "",
-        facilityId : $scope.facility,
-        facility : ""
-    };
-
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
         $scope.programs.unshift({'name':'-- Select a Program --'});
@@ -49,23 +29,23 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
         $scope.facilityTypes.unshift({'name': '-- All Facility Types --', 'id' : '0'});
-        $scope.filterObject.type = '0';
     });
 
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
-        $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':''});
+        $scope.schedules.unshift({'name':'-- Select a Schedule --'});
 
         $scope.allFacilities = [];
         $scope.allFacilities.push({code:'-- Select a Facility --',id:''});
     });
 
-    $scope.ProgramChanged = function(){
-        if($scope.filterObject.schedule !== ''){
-            $scope.ChangeSchedule();
-        }
+    GeographicZones.get(function(data) {
+        $scope.zones = data.zones;
+        $scope.zones.unshift({'name': '-- All Zones --', 'id' : ''});
+    });
 
+    $scope.ProgramChanged = function(){
         ReportProductsByProgram.get({programId: $scope.filterObject.program}, function(data){
             $scope.products = data.productList;
             $scope.products.unshift({id: '',name: '-- Select Product --'});
@@ -75,7 +55,7 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
     $scope.ChangeSchedule = function(){
         ReportPeriods.get({ scheduleId : $scope.filterObject.schedule },function(data) {
             $scope.periods = data.periods;
-            $scope.periods.unshift({'name': '-- Select Period --', 'id':''});
+            $scope.periods.unshift({'name': '-- Select Period --'});
         });
         // load products
 
@@ -83,6 +63,10 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
     } ;
 
     $scope.loadFacilities = function(){
+        if(isUndefined($scope.filterObject.program) || isUndefined($scope.filterObject.schedule)){
+            return;
+        }
+
         // load facilities
         FacilitiesByProgramParams.get({
                 program: $scope.filterObject.program ,
@@ -94,11 +78,6 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
             }
         );
     };
-
-    GeographicZones.get(function(data) {
-        $scope.zones = data.zones;
-        $scope.zones.unshift({'name': '-- All Zones --', 'id' : ''});
-    });
 
 
     $scope.exportReport   = function (type){
@@ -142,6 +121,8 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
 
 
     $scope.getPagedDataAsync = function (pageSize, page) {
+
+
         $scope.datarows = $scope.data = [];
 
         var params =  {

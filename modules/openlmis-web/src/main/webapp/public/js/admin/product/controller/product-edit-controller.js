@@ -127,8 +127,6 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
     ProductForms.get(function (data) {
         $scope.productForms = data.productForms;
-        //alert(JSON.stringify( $scope.productCategories, null, 4));
-
     });
 
 
@@ -147,8 +145,9 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
             $location.path('');
             $scope.$parent.message = "The product record was successfully updated.";
         }, function (data) {
-            alert(JSON.stringify(data));
-            $scope.creationError = data.message;
+            $scope.error = true;
+            $scope.errorMessage = messageService.get(data.data.error);
+            alert( messageService.get(data.data.error ));
         });
     };
 

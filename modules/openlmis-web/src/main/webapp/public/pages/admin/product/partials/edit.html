@@ -32,15 +32,15 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <input ng-model="editProduct.code" name="code" id="code_edt" type="text" value="{{editProduct.code}}"
+        <input ng-model="editProduct.code" name="code" id="code" type="text" value="{{editProduct.code}}"
                ng-show="editProduct"
                maxlength="20"
 
                ng-required="true"/>
-                                        <span class="field-error"
-                                              ng-show="editProductForm.code.$error.required && showErrorForCreate"
-                                              openlmis-message="missing.value">
-                                        </span>
+            <span class="field-error"
+                  ng-show="editProductForm.code.$error.required && showErrorForCreate"
+                  openlmis-message="missing.value">
+            </span>
     </div>
 </div>
 
@@ -51,14 +51,14 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.packSize" type="text"
+        <input ng-model="editProduct.packSize" type="number" name="packSize" id="packSize"
                ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
-                                        <span class="field-error"
-                                              ng-show="editProductForm.packSize.$error.required && showErrorForCreate"
-                                              openlmis-message="missing.value">
-                                        </span>
+            <span class="field-error"
+                  ng-show="editProductForm.packSize.$error.required && showErrorForCreate"
+                  openlmis-message="missing.value">
+            </span>
     </div>
 </div>
 
@@ -68,14 +68,14 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.primaryName" name="primaryName" id="primaryName_edt" type="text"
+        <input ng-model="editProduct.primaryName" name="primaryName" id="primaryName" type="text"
                ng-show="editProduct"
                maxlength="150"
                ng-required="true"/>
-                                        <span class="field-error"
-                                              ng-show="editProductForm.primaryName.$error.required && showErrorForCreate"
-                                              openlmis-message="missing.value">
-                                        </span>
+                <span class="field-error"
+                      ng-show="editProductForm.primaryName.$error.required && showErrorForCreate"
+                      openlmis-message="missing.value">
+                </span>
     </div>
 </div>
 
@@ -86,15 +86,15 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.dispensingUnit" name="dispensingUnit" id="dispensingUnit_edt"
+        <input ng-model="editProduct.dispensingUnit" name="dispensingUnit" id="dispensingUnit"
                type="text"
                ng-show="editProduct"
                maxlength="20"
                ng-required="true"/>
-                                        <span class="field-error"
-                                              ng-show="editProductForm.dispensingUnit.$error.required && showErrorForCreate"
-                                              openlmis-message="missing.value">
-                                        </span>
+            <span class="field-error"
+                  ng-show="editProductForm.dispensingUnit.$error.required && showErrorForCreate"
+                  openlmis-message="missing.value">
+            </span>
 
     </div>
 </div>
@@ -106,7 +106,7 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.dosesPerDispensingUnit" name="dispensingUnit" id="dosesPerDispensingUnit_edt"
+        <input ng-model="editProduct.dosesPerDispensingUnit" name="dispensingUnit" id="dosesPerDispensingUnit"
                type="text"
                ng-show="editProduct"
                maxlength="20"
@@ -126,7 +126,7 @@ Edit Product
     </label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold_edt"
+        <input ng-model="editProduct.packRoundingThreshold" name="packRoundingThreshold" id="packRoundingThreshold"
                type="text"
                ng-show="editProduct"
                maxlength="20"
@@ -143,7 +143,7 @@ Edit Product
     <label for="strength">Strength</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.strength" name="strength" id="strength_edt" type="text"
+        <input ng-model="editProduct.strength" name="strength" id="strength" type="text"
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
@@ -158,7 +158,7 @@ Edit Product
     <label for="type">Type</label>
 
     <div class="form-field" style="width: 40%;">
-        <input ng-model="editProduct.type" name="type" id="type_edt" type="text"
+        <input ng-model="editProduct.type" name="type" id="type" type="text"
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
@@ -170,10 +170,10 @@ Edit Product
 
 <!-- Dosage Units-->
 <div class="form-cell">
-    <label for="dosageUnitId_edt">Dosage Unit</label>
+    <label for="dosageUnitId">Dosage Unit</label>
 
     <div class="form-field" style="width: 40%;">
-        <select
+        <select id="dosageUnitId"  name="dosageUnitId"
                 style="width:200px;"
                 ng-model="editProduct.dosageUnitId"
                 ng-show="editProduct"
@@ -195,7 +195,7 @@ Edit Product
         <input
                 ng-model="editProduct.displayOrder"
                 name="displayOrder"
-                id="displayOrder_edt"
+                id="displayOrder"
                 type="text"
                 ng-show="editProduct"
                 maxlength="20"/>
@@ -210,13 +210,13 @@ Edit Product
 <div class="form-cell">
     <label for="formid_edt">Product Form</label>
     <div class="form-field" style="width: 40%;">
-           <select style="width:200px;" name="formId" id="formid_edt"
+           <select style="width:200px;" name="formId" id="formid"
                 ng-model="editProduct.formId"
                 ng-show="editProduct"
                 ng-options="option.id as option.code for option in productForms">
            </select>
            <span class="field-error"
-                 ng-show="editProductForm.productForm.$error.required && showErrorForCreate"
+                 ng-show="editProductForm.formid.$error.required && showErrorForCreate"
                  openlmis-message="missing.value">
             </span>
     </div>
@@ -229,13 +229,13 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <select style="width:200px;" name="categoryid" id="categoryid_edt" ng-model="editProduct.categoryId"
+        <select style="width:200px;" name="categoryid" id="categoryid" ng-model="editProduct.categoryId"
                 ng-show="editProduct"
                 ng-options="option.id as option.name for option in productCategories">
 
         </select>
                                        <span class="field-error"
-                                             ng-show="editProductForm.productDisplayOrder.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.categoryid.$error.required && showErrorForCreate"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -247,7 +247,7 @@ Edit Product
 
     <div class="form-field" style="width: 40%;">
 
-        <select style="width:200px;" ng-model="editProduct.productGroupId"
+        <select name="productGroupId" id="productGroupId" style="width:200px;" ng-model="editProduct.productGroupId"
                 ng-options="option.id as option.name for option in productGroups">
 
         </select>
@@ -266,7 +266,7 @@ Edit Product
     <div class="form-field" style="width: 40%;">
         <table>
             <tr>
-                <td><input ng-model="editProduct.fullSupply" name="fullSupply" id="fullSupply_edt"
+                <td><input ng-model="editProduct.fullSupply" name="fullSupply" id="fullSupply"
                            type="checkbox"
                            ng-show="editProduct"
                            ng-required="false"/>
@@ -277,7 +277,7 @@ Edit Product
             </tr>
             <tr>
                 <td>
-                    <input ng-model="editProduct.tracer" name="tracer" id="tracer_edt" type="checkbox"
+                    <input ng-model="editProduct.tracer" name="tracer" id="tracer" type="checkbox"
                            ng-show="editProduct"
                            ng-required="false"/>
                 </td>
@@ -288,7 +288,7 @@ Edit Product
 
             <tr>
                 <td>
-                    <input ng-model="product.roundToZero" name="roundToZero" id="roundToZero_edt" type="checkbox"
+                    <input ng-model="product.roundToZero" name="roundToZero" id="roundToZero" type="checkbox"
                            ng-show="editProduct"
                            ng-checked="editProduct.roundToZero"
                            ng-required="false"/>
@@ -337,6 +337,7 @@ Edit Product
   <div form-toolbar id="action_buttons_edit" class="action-buttons" ng-show="editProductMode">
     <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save" ng-disabled="editProduct.active == false" />
+        <div class="alert-error" >{{errorMesssage}}</div>
         <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-show="editProduct.active"
            ng-click="showConfirmProductDeleteWindow(editProduct); ">Deactivate</a>
         <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-hide="editProduct.active"
@@ -344,7 +345,6 @@ Edit Product
         <a href="#list"
            class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
    </div>
-   <div class="toolbar-error" id="ediErrorMsgDiv" openlmis-message="error" ng-show="error"/>
 </div>
 </div>
 </form>

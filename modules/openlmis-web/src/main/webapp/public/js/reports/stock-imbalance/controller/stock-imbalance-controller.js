@@ -1,12 +1,11 @@
 function StockImbalanceController($scope, $filter, ngTableParams,
                                   StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
-    //to minimize and maximize the filter section
-    var section = 1;
+    $scope.filterObject = {};
     $scope.showMessage = true;
     $scope.message = "Indicates a required field." ;
 
     $scope.defaultFlag = true;
-   // $scope.reporting = "quarterly";
+
     $scope.IndicatorProductsKey = "INDICATOR_PRODUCTS";
 
     SettingsByKey.get({key: $scope.IndicatorProductsKey},function (data){
@@ -16,25 +15,16 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
     AllReportPeriods.get(function (data) {
         $scope.periods = data.periods;
-        $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
+        $scope.periods.unshift({'name':'-- Select a Period --'});
     });
-
-    $scope.section = function (id) {
-        section = id;
-    };
-
-
-    $scope.show = function (id) {
-        return section == id;
-    };
-    // lookups and references
 
 
     $scope.filterGrid = function () {
-        $scope.getPagedDataAsync(0, 0);
+        $scope.getPagedDataAsync();
     };
 
     $scope.startYears = [];
+
     OperationYears.get(function (data) {
         $scope.startYears = data.years;
         $scope.startYears.unshift('-- All Years --');
@@ -43,7 +33,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-        $scope.programs.unshift({'name':'-- All Programs --','id':'0'});
+        $scope.programs.unshift({'name':'-- Select a Programs --'});
     });
 
     ReportSchedules.get(function(data){
@@ -96,7 +86,6 @@ function StockImbalanceController($scope, $filter, ngTableParams,
             $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
         });
     };
-
 
     $scope.$watch('stockImbalance.facilityTypeId', function (selection) {
         if (selection == "All") {
@@ -258,7 +247,6 @@ function StockImbalanceController($scope, $filter, ngTableParams,
 
 
     $scope.exportReport = function (type) {
-
         $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/stock_imbalance/' + type + '?' + params;
@@ -266,34 +254,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
         localStorageService.remove(localStorageKeys.REPORTS.STOCK_IMBALANCE);
         localStorageService.add(localStorageKeys.REPORTS.STOCK_IMBALANCE, JSON.stringify($scope.filterObject));
         window.open(url);
-        //}
-    };
 
-    //filter form data section
-    $scope.filterObject = {
-        facilityTypeId: "",
-        facilityType: "",
-        periodId : "",
-        period : "",
-        programId: "",
-        program: "",
-        scheduleId: "",
-        schedule: "",
-        productId: "",
-        product : "",
-        productCategoryId: "",
-        productCategory : "",
-        rgroupId: "",
-        year : "",
-        rgroup: "",
-        facility: ""
-    };
-
-    //filter form data section
-    $scope.filterOptions = {
-        period: $scope.filterObject.periodId,
-        filterText: "",
-        useExternalFilter: false
     };
 
     // the grid options
@@ -328,19 +289,15 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     // watch for changes of parameters
     $scope.$watch('tableParams', $scope.paramsChanged , true);
 
-    $scope.getPagedDataAsync = function (pageSize, page) {
+    $scope.getPagedDataAsync = function () {
+        if(isUndefined($scope.filterObject.periodId) || isUndefined($scope.filterObject.programId)){
+            return;
+        }
 
-        var params = {
-            "max": 10000,
-            "page": 1
-        };
+        $scope.filterObject.max = 10000;
+        $scope.filterObject.page = 1;
 
-        $.each($scope.filterObject, function (index, value) {
-            //if(value != undefined)
-            params[index] = value;
-        });
-
-        StockImbalanceReport.get(params, function (data) {
+        StockImbalanceReport.get($scope.filterObject, function (data) {
             $scope.data = data.pages.rows;
             $scope.paramsChanged($scope.tableParams);
         });

@@ -1,47 +1,10 @@
 function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, ReportSchedules, ReportPrograms , ReportPeriods , Products ,ReportFacilityTypes,GeographicZones, RequisitionGroups, AllFacilites , $http, $routeParams,$location) {
 
-    $scope.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        total: 0,           // length of data
-        count: 25           // count per page
-    });
-
-    $scope.paramsChanged = function(params) {
-        // slice array data on pages
-        if($scope.data === undefined || $scope.data.pages === undefined || $scope.data.pages.rows === undefined){
-            $scope.datarows = [];
-            params.total = 0;
-        }else{
-            var data = $scope.data.pages.rows;
-            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
-
-            params.total = orderedData.length;
-            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
-        }
-    };
-
-    // watch for changes of parameters
-    $scope.$watch('tableParams', $scope.paramsChanged , true);
+    $scope.filterObject = {};
 
     // initialize the defaults for each of the modules
     $scope.filterGrid = function (){
-       $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-    };
-
-
-    //filter form data section
-    $scope.filterObject =  {
-         facilityTypeId : $scope.facilityType,
-         facilityType : "",
-         programId : $scope.program,
-         periodId : $scope.period,
-         zoneId : $scope.zone,
-         productId : $scope.productId,
-         scheduleId : $scope.schedule,
-         rgroupId : $scope.rgroup,
-         rgroup : "",
-         facilityName : $scope.facilityNameFilter
+       $scope.getPagedDataAsync();
     };
 
     ReportPrograms.get(function(data){
@@ -197,32 +160,40 @@ function SummaryReportController($scope,$filter ,ngTableParams , SummaryReport, 
 
     };
 
-    $scope.getPagedDataAsync = function (pageSize, page) {
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        total: 0,           // length of data
+        count: 25           // count per page
+    });
+
+    $scope.paramsChanged = function(params) {
+        // slice array data on pages
+        if($scope.data === undefined || $scope.data.pages === undefined || $scope.data.pages.rows === undefined){
+            $scope.datarows = [];
+            params.total = 0;
+        }else{
+            var data = $scope.data.pages.rows;
+            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+            orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+            params.total = orderedData.length;
+            $scope.datarows = orderedData.slice( (params.page - 1) * params.count,  params.page * params.count );
+        }
+    };
+
+    // watch for changes of parameters
+    $scope.$watch('tableParams', $scope.paramsChanged , true);
+
+    $scope.getPagedDataAsync = function () {
         if($scope.period === undefined){
             return;
         }
         $scope.data = [];
 
-        var params =  {
-            "max" : 10000,
-            "page" : 1
-        };
-        $.each($scope.filterObject, function(index, value) {
-            //if(value != undefined)
-                params[index] = value;
-        });
+        $scope.filterObject.max = 10000;
+        $scope.filterObject.page = 1;
 
-        params.facilityId = $scope.facility;
-
-        // put out the sort order
-        $.each($scope.sortInfo.fields, function(index, value) {
-            if(value !== undefined) {
-                params['sort-' + $scope.sortInfo.fields[index]] = $scope.sortInfo.directions[index];
-            }
-        });
-
-        SummaryReport.get(params, function(data) {
-           $scope.setPagingData(data.pages.rows,page,pageSize,data.pages.total);
+        SummaryReport.get($scope.filterObject, function(data) {
            $scope.data = data;
            $scope.paramsChanged($scope.tableParams);
         });

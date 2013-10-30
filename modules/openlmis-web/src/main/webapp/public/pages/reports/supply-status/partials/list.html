@@ -9,9 +9,6 @@
                     <div class="box-header">
                         <h2><i class="icon-edit"></i><span class="break"></span>Supply Status by Facility</h2>
                         <div class="box-icon">
-                            <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
-                            <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
-
                             <span id="pdf-button" ng-show="!filterForm.$valid" href="#" ng-click="" class='btn-small btn-disabled'>PDF</span>
                             <span id="xls-button" ng-show="!filterForm.$valid" href="#" ng-click="" class='btn-small btn-disabled'>Excel</span>
 
@@ -20,7 +17,7 @@
                         </div>
                     </div>
 
-            <div ng-show="show(1)">
+            <div >
                 <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()" name="filterForm" >
                             <div class="clearfix ">
@@ -76,15 +73,6 @@
                                     </div>
 
                                 </div>
-                                <!--<br style="clear: both">-->
-                                <!--<div class="form-cell horizontalFilters" >-->
-                                    <!--<label class="labels">Zone</label>-->
-                                    <!--<div class="form-field">-->
-                                        <!--<select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="filterObject.zone" ng-options="option.id as option.name group by option.parent for option in zones">-->
-                                            <!--<option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>-->
-                                        <!--</select>-->
-                                    <!--</div>-->
-                                <!--</div>-->
 
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Product</label>
