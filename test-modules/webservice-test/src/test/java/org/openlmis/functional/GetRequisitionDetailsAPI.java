@@ -51,7 +51,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkRequisitionStatus("AUTHORIZED",responseEntity );
+    checkRequisitionStatus("AUTHORIZED", responseEntity);
   }
 
     @Test(groups = {"webservice"})
@@ -93,11 +93,13 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
         ResponseEntity responseEntity = client.SendJSON("", URL + 100, "GET", "commTrack", "Admin123");
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"error\":\"Requisition Not Found\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"error\":\"Requisition Not Found\""));
         assertEquals(400, responseEntity.getStatus());
 
         responseEntity = client.SendJSON("", URL + "@", "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+        assertFalse("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"error\":\"Oops, something has gone wrong. Please try again later\""));
         assertEquals(500, responseEntity.getStatus());
     }
@@ -111,7 +113,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin");
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("Authentication Failed"));
         assertEquals(401, responseEntity.getStatus());
     }
 
@@ -124,7 +127,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "comm", "Admin123");
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Authentication Failed"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("Authentication Failed"));
         assertEquals(401, responseEntity.getStatus());
     }
 
@@ -135,7 +139,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
         ResponseEntity responseEntity = client.SendJSON("", URL , "GET", "commTrack", "Admin123");
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("Request method 'GET' not supported"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("Request method 'GET' not supported"));
         assertEquals(405, responseEntity.getStatus());
     }
 
@@ -146,7 +151,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         String response = submitReport();
         Long id = getRequisitionIdFromResponse(response);
 
-        ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/rest-api/requisition/"+id , "GET", "commTrack", "Admin123");
+        ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/rest-api/requisition/" + id, "GET",
+                "commTrack", "Admin123");
         assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
         assertEquals(404, responseEntity.getStatus());
@@ -160,7 +166,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         Long id = getRequisitionIdFromResponse(response);
 
         ResponseEntity responseEntity = client.SendJSON("", URL+id+"/programCode" , "GET", "commTrack", "Admin123");
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
+        assertFalse("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("NOT_FOUND"));
         assertEquals(404, responseEntity.getStatus());
     }
@@ -172,7 +179,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         String response = submitReport();
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-        checkRequisitionStatus("AUTHORIZED",responseEntity );
+        checkRequisitionStatus("AUTHORIZED", responseEntity);
     }
 
     @Test(groups = {"webservice"})
@@ -216,10 +223,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
         checkRequisitionStatus("AUTHORIZED", responseEntity);
 
-         dbWrapper.setExportOrdersFlagInSupplyLinesTable(false,"F10");
+         dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
         approveRequisition(id, 65);
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
-        checkOrderStatus("RELEASED",65,"READY_TO_PACK",responseEntity );
+        checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
     }
 
     @Test(groups = {"webservice"})
@@ -233,9 +240,11 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
         dbWrapper.setExportOrdersFlagInSupplyLinesTable(true,"F10");
         approveRequisition(id, 65);
+        waitUntilOrderStatusUpdatedOrTimeOut(id,"\"orderStatus\":\"IN_ROUTE\"");
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
         checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
-        testWebDriver.sleep(3000);
+
+        waitUntilOrderStatusUpdatedOrTimeOut(id,"\"orderStatus\":\"RELEASED\"");
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
         checkOrderStatus("RELEASED", 65,"TRANSFER_FAILED", responseEntity);
     }
@@ -247,14 +256,16 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         String response = submitReport();
         Long id = getRequisitionIdFromResponse(response);
         ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-        checkRequisitionStatus("AUTHORIZED",responseEntity );
+        checkRequisitionStatus("AUTHORIZED", responseEntity);
 
         dbWrapper.setExportOrdersFlagInSupplyLinesTable(true,"F10");
         dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
         approveRequisition(id, 65);
+        waitUntilOrderStatusUpdatedOrTimeOut(id,"\"orderStatus\":\"IN_ROUTE\"");
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
         checkOrderStatus("RELEASED",65,"IN_ROUTE",responseEntity );
-        testWebDriver.sleep(3000);
+
+        waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
         responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
         checkOrderStatus("RELEASED", 65,"RELEASED",responseEntity );
     }
@@ -311,28 +322,53 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
+        assertFalse("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"orderStatus\":"));
+        assertFalse("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
         assertEquals(200, responseEntity.getStatus());
     }
 
-    private void checkOrderStatus(String requisitionStatus, int quantityApproved, String orderStatus, ResponseEntity responseEntity)
-    {
+    private void checkOrderStatus(String requisitionStatus, int quantityApproved, String orderStatus, ResponseEntity responseEntity) throws Exception {
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":1358274600000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":1359570599000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"requisitionStatus\":\""+requisitionStatus+"\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"beginningBalance\":3"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"periodEndDate\":1359570599000"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"productCode\":\"P10\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"beginningBalance\":3"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockInHand\":0"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityRequested\":3"));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"quantityRequested\":3"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":"+quantityApproved));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
+        assertTrue("Response entity : " + responseEntity.getResponse(),
+                responseEntity.getResponse().contains("\"remarks\":\"1\""));
+
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":\""+ orderStatus+"\""));
         assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\":\"F10\""));
         assertEquals(200, responseEntity.getStatus());
+    }
+
+    public static void waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        ResponseEntity responseEntity;
+
+        responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
+        int time=0;
+        while(time<=5000){
+            if (responseEntity.getResponse().contains(expected))
+                break;
+            responseEntity = client.SendJSON("", URL+id, "GET", "commTrack", "Admin123");
+            time+=500;
+            Thread.sleep(500);
+        }
     }
 
 }

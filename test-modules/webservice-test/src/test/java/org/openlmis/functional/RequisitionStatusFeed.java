@@ -24,7 +24,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
  * Time: 2:20 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RequisitionStatusFeed extends JsonUtility{
+public class RequisitionStatusFeed extends JsonUtility {
 
     public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
     public static final String URL = "http://localhost:9091/feeds/requisition-status/";
@@ -48,39 +48,39 @@ public class RequisitionStatusFeed extends JsonUtility{
         client.createContext();
         String response = submitReport();
         Long id = getRequisitionIdFromResponse(response);
-        ResponseEntity responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkRequisitionStatusOnFeed("INITIATED", feedJSONList.get(0), id);
         checkRequisitionStatusOnFeed("SUBMITTED", feedJSONList.get(1), id);
         checkRequisitionStatusOnFeed("AUTHORIZED", feedJSONList.get(2), id);
 
-        dbWrapper.setExportOrdersFlagInSupplyLinesTable(false,"F10");
+        dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
         approveRequisition(id, 65);
-        responseEntity = client.SendJSON("", URL+"1", "GET", "", "");
+        responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkRequisitionStatusOnFeed("APPROVED", feedJSONList.get(3), id);
         checkRequisitionStatusOnFeed("RELEASED", feedJSONList.get(4), id);
-        responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkOrderStatusOnFeed("READY_TO_PACK", feedJSONList.get(0), id);
 
         dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-        dbWrapper.setupUserForFulfillmentRole("commTrack","store in-charge","F10");
+        dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
         POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
         PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
         PODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
         responseEntity = client.SendJSON(getJsonStringFor(PODFromJson),
-                "http://localhost:9091/rest-api/order/" + id +"/pod.json",
+                "http://localhost:9091/rest-api/order/" + id + "/pod.json",
                 "POST",
                 "commTrack",
                 "Admin123");
 
-        responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkOrderStatusOnFeed("RECEIVED", feedJSONList.get(1), id);
@@ -92,26 +92,27 @@ public class RequisitionStatusFeed extends JsonUtility{
         client.createContext();
         String response = submitReport();
         Long id = getRequisitionIdFromResponse(response);
-        ResponseEntity responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkRequisitionStatusOnFeed("INITIATED", feedJSONList.get(0), id);
         checkRequisitionStatusOnFeed("SUBMITTED", feedJSONList.get(1), id);
         checkRequisitionStatusOnFeed("AUTHORIZED", feedJSONList.get(2), id);
 
-        dbWrapper.setExportOrdersFlagInSupplyLinesTable(true,"F10");
+        dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
         approveRequisition(id, 65);
-        responseEntity = client.SendJSON("", URL+"1", "GET", "", "");
+        responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkRequisitionStatusOnFeed("APPROVED", feedJSONList.get(3), id);
         checkRequisitionStatusOnFeed("RELEASED", feedJSONList.get(4), id);
-        responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
+        waitUntilOrderStatusUpdatedOrTimeOut(0, "IN_ROUTE");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), id);
-        testWebDriver.sleep(3000);
-        responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        waitUntilOrderStatusUpdatedOrTimeOut(1, "TRANSFER_FAILED");
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkOrderStatusOnFeed("TRANSFER_FAILED", feedJSONList.get(1), id);
@@ -124,27 +125,29 @@ public class RequisitionStatusFeed extends JsonUtility{
         client.createContext();
         String response = submitReport();
         Long id = getRequisitionIdFromResponse(response);
-        ResponseEntity responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkRequisitionStatusOnFeed("INITIATED", feedJSONList.get(0), id);
         checkRequisitionStatusOnFeed("SUBMITTED", feedJSONList.get(1), id);
         checkRequisitionStatusOnFeed("AUTHORIZED", feedJSONList.get(2), id);
 
-        dbWrapper.setExportOrdersFlagInSupplyLinesTable(true,"F10");
+        dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
         dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
         approveRequisition(id, 65);
-        responseEntity = client.SendJSON("", URL+"1", "GET", "", "");
+        responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkRequisitionStatusOnFeed("APPROVED", feedJSONList.get(3), id);
         checkRequisitionStatusOnFeed("RELEASED", feedJSONList.get(4), id);
-        responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+        waitUntilOrderStatusUpdatedOrTimeOut(0, "IN_ROUTE");
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkOrderStatusOnFeed("IN_ROUTE", feedJSONList.get(0), id);
-        testWebDriver.sleep(3000);
-        responseEntity = client.SendJSON("", URL+"recent", "GET", "", "");
+
+        waitUntilOrderStatusUpdatedOrTimeOut(1, "RELEASED");
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
         assertEquals(200, responseEntity.getStatus());
         feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
         checkOrderStatusOnFeed("RELEASED", feedJSONList.get(1), id);
@@ -152,9 +155,11 @@ public class RequisitionStatusFeed extends JsonUtility{
     }
 
 
-    private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedSting, Long id) throws IOException, SAXException, ParserConfigurationException {
-        assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":"+id));
-        assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionStatus\":\""+requisitionStatus+"\""));
+    private void checkRequisitionStatusOnFeed(String requisitionStatus, String feedSting,
+                                              Long id) throws IOException, SAXException, ParserConfigurationException {
+        assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":" + id));
+        assertTrue("feed json list : " + feedSting,
+                feedSting.contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
         assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
         assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1358274600000"));
         assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1359570599000"));
@@ -162,14 +167,31 @@ public class RequisitionStatusFeed extends JsonUtility{
         assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderID\""));
     }
 
-    private void checkOrderStatusOnFeed(String orderStatus, String feedSting, Long id){
-        assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":"+id));
+    private void checkOrderStatusOnFeed(String orderStatus, String feedSting, Long id) {
+        assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":" + id));
         assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionStatus\":\"RELEASED\""));
         assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
         assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1358274600000"));
         assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1359570599000"));
-        assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":\""+orderStatus+"\""));
-        assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderId\":"+id));
+        assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":\"" + orderStatus + "\""));
+        assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderId\":" + id));
     }
 
+    public static void waitUntilOrderStatusUpdatedOrTimeOut(int index, String expected) throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        ResponseEntity responseEntity;
+
+        responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
+        List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
+        int time = 0;
+        while (time <= 5000) {
+            if (feedJSONList.size() == index+1)
+                break;
+            responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
+            feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
+            time += 500;
+            Thread.sleep(500);
+        }
+    }
 }
