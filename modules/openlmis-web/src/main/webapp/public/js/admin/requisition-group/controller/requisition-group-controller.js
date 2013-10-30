@@ -84,7 +84,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     };
 
     $scope.validateRequisitionGroupName = function () {
-        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null;
+        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null || typeof ($scope.requisitionGroup.name) === "undefined";
     };
 
     $scope.addNewMemberFacility=function(){
@@ -102,7 +102,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
 
     $scope.filterFacilityList=function(){
         $scope.allFacilitiesFiltered = [];
-        if($scope.facilityType === null && $scope.geographicZone === null){
+        if(!$scope.facilityType && !$scope.geographicZone){
             $scope.allFacilitiesFiltered = $scope.allFacilities;
         }
         else{

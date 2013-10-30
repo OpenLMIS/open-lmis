@@ -55,8 +55,11 @@ public class OrderSummaryQueryBuilder {
     private static void writePredicates(OrderReportFilter  filter){
         WHERE("req_status = 'RELEASED'");
         WHERE("program_id = "+filter.getProgramId());
-        WHERE("facility_id = "+filter.getFacilityId());
         WHERE("processing_periods_id = "+filter.getPeriodId());
+
+        if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
+            WHERE("facility_id = "+filter.getFacilityId());
+        }
 
         if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
             WHERE("zone_id = "+filter.getZoneId());

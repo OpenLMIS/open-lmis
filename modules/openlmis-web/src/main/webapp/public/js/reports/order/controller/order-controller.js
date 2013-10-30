@@ -23,7 +23,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     });
 
     $scope.filterGrid = function (){
-       $scope.getPagedDataAsync(0, 0);
+        $scope.getPagedDataAsync(0, 0);
     };
 
     //filter form data section
@@ -117,7 +117,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
                 type: 0
             }, function(data){
                 $scope.facilities = data.facilities;
-                $scope.facilities.unshift({name:'-- All Facilities --'});
+                $scope.facilities.unshift({name:'-- All Facilities --','id':'0'});
             }
         );
 
@@ -135,6 +135,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
         }else{
             $scope.filterObject.scheduleId =  0;
         }
+        $scope.filterGrid();
     });
 
 
@@ -146,6 +147,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
         } else {
             $scope.filterObject.year = 0;
         }
+        $scope.filterGrid();
 
     });
 
@@ -319,6 +321,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
         $.each($scope.filterObject, function(index, value) {
                 params[index] = value;
         });
+        //alert(JSON.stringify($scope.filterObject, null, 4));
 
         OrderReport.get(params, function(data) {
             $scope.data = data.pages.rows;
