@@ -31,13 +31,13 @@ public class TestWebDriver {
   private int DEFAULT_WAIT_TIME = 10;
 
   public TestWebDriver(WebDriver driver) {
-    this.driver = driver;
+    TestWebDriver.driver = driver;
     maximizeBrowser();
   }
 
   public void setBaseURL(String BASE_URL) {
     driver.manage().deleteAllCookies();
-    this.BASE_URL = BASE_URL;
+    TestWebDriver.BASE_URL = BASE_URL;
     get();
   }
 
