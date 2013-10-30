@@ -1,4 +1,5 @@
 Feature: End to end requisition flow
+
   @e2e
   Scenario: Requisition initiate, authorize, approve & convert to oder.
     Given I am logged in as Admin
@@ -11,10 +12,10 @@ Feature: End to end requisition flow
     And I create "lmu" role having "Fulfillment" based "Convert To Order Requisition,View Orders Requisition" rights
     And I create "Medical-officer" role having "Requisition" based "Approve Requisition" rights
     And I create users:
-      |Email                  |Firstname|Lastname|UserName       |Role           |RoleType    |FacilityCode|Program|Node    |Warehouse          |WarehouseRole  |
-      |Fatima_Doe@openlmis.com|Fatima   |Doe     |storeIncharge  |Store-in-charge|REQUISITION |F10         |HIV    |Node 1  |Central Hospital   |lmu            |
-      |Jane_Doe@openlmis.com  |Jane     |Doe     |medicalofficer |Medical-Officer|REQUISITION |F11         |HIV    |Node 2  |Central Hospital   |lmu            |
-      |Jake_Doe@openlmis.com  |Jake     |Doe     |lmu            |Store-in-charge|FULFILLMENT |F10         |HIV    |Node 1  |Central Hospital   |lmu            |
+      | Email                   | Firstname | Lastname | UserName       | Role            | RoleType    | FacilityCode | Program | Node   | Warehouse        | WarehouseRole |
+      | Fatima_Doe@openlmis.com | Fatima    | Doe      | storeIncharge  | Store-in-charge | REQUISITION | F10          | HIV     | Node 1 | Central Hospital | lmu           |
+      | Jane_Doe@openlmis.com   | Jane      | Doe      | medicalofficer | Medical-Officer | REQUISITION | F11          | HIV     | Node 2 | Central Hospital | lmu           |
+      | Jake_Doe@openlmis.com   | Jake      | Doe      | lmu            | Store-in-charge | FULFILLMENT | F10          | HIV     | Node 1 | Central Hospital | lmu           |
     And I update "storeIncharge" home facility
     And I setup product & requisition group data
     And I setup period, schedule & requisition group data
@@ -22,7 +23,6 @@ Feature: End to end requisition flow
     And I logout
     And I am logged in as "storeIncharge"
     And I initiate and submit requisition
-    Then I verify Regular RnR Type
     When I add comments
     And I update & verify ordered quantities
     And I update & verify requested quantities
@@ -65,7 +65,6 @@ Feature: End to end requisition flow
     When I logout
     And I am logged in as "storeIncharge"
     And I initiate and submit emergency requisition
-    Then I verify Emergency RnR Type
     And I update & verify ordered quantities for emergency RnR
     And I update & verify requested quantities
     And I add non full supply items & verify total cost

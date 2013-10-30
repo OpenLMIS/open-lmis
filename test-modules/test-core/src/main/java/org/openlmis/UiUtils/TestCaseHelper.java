@@ -65,7 +65,7 @@ public class TestCaseHelper {
         try {
           testWebDriver.quitDriver();
         } catch (UnreachableBrowserException e) {
-            e.printStackTrace();
+          e.printStackTrace();
         }
       }
       driverFactory.deleteExe();
@@ -399,13 +399,11 @@ public class TestCaseHelper {
   }
 
   public void switchOffNetwork() throws IOException {
-    testWebDriver.sleep(2000);
     Runtime.getRuntime().exec("sudo ifconfig en1 down");
     testWebDriver.sleep(2000);
   }
 
   public void switchOnNetwork() throws IOException {
-    testWebDriver.sleep(2000);
     Runtime.getRuntime().exec("sudo ifconfig en1 up");
     testWebDriver.sleep(2000);
   }

@@ -121,7 +121,6 @@ public class DistributionPage extends Page {
   }
 
   public FacilityListPage clickRecordData() throws IOException {
-    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(recordDataButton);
     recordDataButton.click();
     testWebDriver.sleep(250);

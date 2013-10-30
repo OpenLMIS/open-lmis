@@ -169,7 +169,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
 
-    //dbWrapper.insertSupplyLines("N1", program, facilityCodePrefix + date_time);
   }
 
   @And("^I initiate and submit requisition$")

@@ -29,70 +29,88 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class RequisitionPage extends Page {
   @FindBy(how = ID, using = "comments")
-  private static WebElement commentsButton;
-  @FindBy(how = ID, using = "addComment")
-  private static WebElement addCommentTextArea;
-  @FindBy(how = ID, using = "addButton")
-  private static WebElement addCommentButton;
-  @FindBy(how = ID, using = "commentClose")
-  private static WebElement commentCloseIcon;
-  @FindBy(how = ID, using = "button_OK")
-  private static WebElement okButton;
-  @FindBy(how = ID, using = "button_Cancel")
-  private static WebElement cancelButton;
-  @FindBy(how = ID, using = "total_0")
-  private static WebElement total;
-  @FindBy(how = ID, using = "beginningBalance_0")
-  private static WebElement beginningBalance;
-  @FindBy(how = ID, using = "quantityReceived_0")
-  private static WebElement quantityReceived;
-  @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab;
-  @FindBy(how = ID, using = "fullSupplyTab")
-  private static WebElement fullSupplyTab;
-  @FindBy(how = ID, using = "regimenTab")
-  private static WebElement regimenTab;
-  @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCost;
-  @FindBy(how = XPATH, using = "//input[@value='Add']")
-  private static WebElement addNonFullSupplyButtonScreen;
-  @FindBy(how = ID, using = "regimenTable")
-  private static WebElement regimenTable;
-  @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement SaveButton;
-  @FindBy(how = XPATH, using = "//input[@value='Submit']")
-  private static WebElement SubmitButton;
-  @FindBy(how = XPATH, using = "//input[@value='Authorize']")
-  private static WebElement AuthorizeButton;
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
-  private static WebElement saveSuccessMessage;
+  private static WebElement commentsButton = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
-  private static WebElement approveSuccessMessage;
+  @FindBy(how = ID, using = "addComment")
+  private static WebElement addCommentTextArea = null;
+
+  @FindBy(how = ID, using = "addButton")
+  private static WebElement addCommentButton = null;
+
+  @FindBy(how = ID, using = "commentClose")
+  private static WebElement commentCloseIcon = null;
+
+  @FindBy(how = ID, using = "button_OK")
+  private static WebElement okButton = null;
+
+  @FindBy(how = ID, using = "total_0")
+  private static WebElement total = null;
+
+  @FindBy(how = ID, using = "beginningBalance_0")
+  private static WebElement beginningBalance = null;
+
+  @FindBy(how = ID, using = "quantityReceived_0")
+  private static WebElement quantityReceived = null;
+
+  @FindBy(how = ID, using = "nonFullSupplyTab")
+  private static WebElement nonFullSupplyTab = null;
+
+  @FindBy(how = ID, using = "fullSupplyTab")
+  private static WebElement fullSupplyTab = null;
+
+  @FindBy(how = ID, using = "regimenTab")
+  private static WebElement regimenTab = null;
+
+  @FindBy(how = ID, using = "cost_0")
+  private static WebElement totalCost = null;
+
+  @FindBy(how = XPATH, using = "//input[@value='Add']")
+  private static WebElement addNonFullSupplyButtonScreen = null;
+
+  @FindBy(how = ID, using = "regimenTable")
+  private static WebElement regimenTable = null;
+
+  @FindBy(how = XPATH, using = "//input[@value='Save']")
+  private static WebElement SaveButton = null;
+
+  @FindBy(how = XPATH, using = "//input[@value='Submit']")
+  private static WebElement SubmitButton = null;
+
+  @FindBy(how = XPATH, using = "//input[@value='Authorize']")
+  private static WebElement AuthorizeButton = null;
+
+  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
+  private static WebElement saveSuccessMessage = null;
 
   @FindBy(how = ID, using = "saveFailMessage")
-  private static WebElement errorMessage;
+  private static WebElement errorMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
-  private static WebElement submitSuccessMessage;
+  private static WebElement submitSuccessMessage = null;
 
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/span")
-  private static WebElement patientsOnTreatmentTextField;
+  private static WebElement patientsOnTreatmentTextField = null;
+
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/span")
-  private static WebElement patientsToInitiateTreatmentTextField;
+  private static WebElement patientsToInitiateTreatmentTextField = null;
+
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/span")
-  private static WebElement patientsStoppedTreatmentTextField;
+  private static WebElement patientsStoppedTreatmentTextField = null;
+
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/span")
-  private static WebElement remarksTextField;
+  private static WebElement remarksTextField = null;
 
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[3]/ng-switch/span/input")
-  private static WebElement patientsOnTreatmentInputField;
+  private static WebElement patientsOnTreatmentInputField = null;
+
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[4]/ng-switch/span/input")
-  private static WebElement patientsToInitiateTreatmentInputField;
+  private static WebElement patientsToInitiateTreatmentInputField = null;
+
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[5]/ng-switch/span/input")
-  private static WebElement patientsStoppedTreatmentInputField;
+  private static WebElement patientsStoppedTreatmentInputField = null;
+
   @FindBy(how = XPATH, using = "//table[@id='regimenTable']/tbody[1]/tr[2]/td[6]/ng-switch/span/input")
-  private static WebElement remarksInputField;
+  private static WebElement remarksInputField = null;
 
 
   protected RequisitionPage(TestWebDriver driver) {
@@ -168,15 +186,13 @@ public class RequisitionPage extends Page {
   }
 
   public void clickOk() {
-    testWebDriver.sleep(3000);
+    testWebDriver.waitForElementToAppear(okButton);
+
     okButton.click();
+
     testWebDriver.sleep(500);
   }
 
-  public void clickCancel() {
-    testWebDriver.waitForElementToAppear(cancelButton);
-    cancelButton.click();
-  }
 
   public void verifyTotalField() {
     testWebDriver.waitForElementToAppear(total);
@@ -286,12 +302,14 @@ public class RequisitionPage extends Page {
   }
 
   public void clickAuthorizeButton() {
-    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(AuthorizeButton);
+
     AuthorizeButton.click();
   }
 
   public void verifySubmitSuccessMsg() {
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(submitSuccessMessage);
+
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 
@@ -299,17 +317,9 @@ public class RequisitionPage extends Page {
     assertTrue("RnR Submit Success message not displayed", saveSuccessMessage.isDisplayed());
   }
 
-  public void verifyAuthorizeSuccessMsg() {
-    assertTrue("RnR Authorize Success message not displayed", submitSuccessMessage.isDisplayed());
-  }
-
-  public void verifyApproveSuccessMsg() {
-    testWebDriver.sleep(500);
-    assertTrue("RnR Approved Success message not displayed", approveSuccessMessage.isDisplayed());
-  }
-
   public void verifyApproveErrorDiv() {
-    testWebDriver.sleep(500);
+    testWebDriver.waitForElementToAppear(errorMessage);
+
     assertTrue("RnR Approved error message not displayed", errorMessage.isDisplayed());
   }
 

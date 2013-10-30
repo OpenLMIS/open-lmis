@@ -189,7 +189,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    //facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
     generalObservationPage.navigate();
     generalObservationPage.verifyAllFieldsDisabled();
 
@@ -199,8 +198,6 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.navigateToRefrigeratorTab();
     refrigeratorPage.clickShow();
     refrigeratorPage.verifyAllFieldsDisabled();
-
-
   }
 
   @AfterMethod(groups = {"offline"})
