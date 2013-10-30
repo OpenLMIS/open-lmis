@@ -94,7 +94,6 @@ describe('CreateNonFullSupplyController', function () {
     expect(scope.$parent.rnr.nonFullSupplyLineItems.length).toEqual(1);
     expect(scope.$parent.rnr.nonFullSupplyLineItems[0].quantityRequested).toEqual(20);
     expect(scope.$parent.rnr.nonFullSupplyLineItems[0].reasonForRequestedQuantity).toEqual("rain");
-    expect(scope.$parent.$parent.$parent.message).toEqual("msg.product.added");
     expect(scope.nonFullSupplyProductsModal).toBeFalsy();
   });
 

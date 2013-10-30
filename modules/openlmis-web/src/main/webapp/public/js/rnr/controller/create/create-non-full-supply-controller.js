@@ -55,7 +55,6 @@ function CreateNonFullSupplyController($scope, messageService) {
     });
 
     $scope.$emit('$routeUpdate');
-    displayProductsAddedMessage();
     $scope.saveRnrForm.$dirty = (validNonFullSupplyLineItems.length > 0);
     $scope.nonFullSupplyProductsModal = false;
   };
@@ -112,18 +111,7 @@ function CreateNonFullSupplyController($scope, messageService) {
     $scope.updateNonFullSupplyProductsToDisplay();
   };
 
-  function displayProductsAddedMessage() {
-    if ($scope.addedNonFullSupplyProducts.length > 0) {
-      $scope.$parent.$parent.$parent.message = "msg.product.added";
-      setTimeout(function () {
-        $scope.$apply(function () {
-          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $scope.$parent.$parent.$parent.message = '';
-          });
-        });
-      }, 3000);
-    }
-  }
+
 
   function populateProductInformation() {
     var product = {};
