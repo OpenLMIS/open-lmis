@@ -62,6 +62,7 @@ public class RestAgentService {
       RequisitionGroupMember member = new RequisitionGroupMember(requisitionGroupMember.getRequisitionGroup(), facility);
       member.setCreatedBy(user.getId());
       member.setModifiedBy(user.getId());
+      member.setModifiedDate(new Date());
       requisitionGroupMemberService.save(member);
     }
   }
