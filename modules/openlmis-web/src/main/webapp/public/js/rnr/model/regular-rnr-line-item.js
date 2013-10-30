@@ -297,7 +297,7 @@ var RegularRnrLineItem = base2.Base.extend({
     var visibleColumns = _.where(this.programRnrColumnList, {"visible": true});
 
     $(visibleColumns).each(function (i, column) {
-        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved"];
+        var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skip"];
         if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
         if (column.name === 'quantityRequested') {
           valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
