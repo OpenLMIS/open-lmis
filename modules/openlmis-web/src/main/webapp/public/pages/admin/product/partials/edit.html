@@ -16,7 +16,7 @@ Edit Product
 <form name="editProductForm"
       ng-submit="updateProduct();"
      novalidate select2-blur>
-    <input type="hidden" ng-model="backupProductRow"/>
+
     <div ng-class="editProductMode">
     <div class="row-fluid list-row" ng-show="editProductMode">
     <div class="app-form">
@@ -73,7 +73,7 @@ Edit Product
                maxlength="150"
                ng-required="true"/>
                                         <span class="field-error"
-                                              ng-show="editProductForm.fullName.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.primaryName.$error.required && showErrorForCreate"
                                               openlmis-message="missing.value">
                                         </span>
     </div>

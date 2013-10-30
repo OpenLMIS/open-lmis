@@ -1,9 +1,5 @@
 function ProductEditController($scope, $route, $location, $dialog, messageService, ProductDetail, PriceHistory , ProductGroups , CreateProduct, UpdateProduct,ProductCategories, ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
 
-    $scope.products = {};
-    $scope.editProduct = {};
-    $scope.product={};
-    $scope.creationError = '';
     $scope.title = 'Products';
     $scope.AddEditMode = '';
     $scope.programProductsCost = [];
@@ -116,7 +112,6 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
     // drop down lists
     ProductCategories.get(function (data) {
         $scope.productCategories = data.productCategoryList;
-        //alert(JSON.stringify( $scope.productCategories, null, 4));
     });
 
     // load the product group dropdown list
@@ -136,31 +131,16 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
 
     });
 
-    $scope.YesNo = function (tf) {
-        var retval = '';
-        if (tf === true) {
-            retval = 'Yes';
-        } else
-        {
-            retval = 'No';
-        }
-        return retval;
-    };
-
-
-
-
 
     $scope.updateProduct = function () {
 
         product = $scope.editProduct;
 
         $scope.error = "";
-        if (editProductForm.$invalid) {
-            $scope.showErrorForEdit = true;
+        if ($scope.editProductForm.$invalid) {
+            $scope.showErrorForCreate = $scope.showErrorForEdit = true ;
             return;
         }
-        $scope.showErrorForEdit = true;
 
         UpdateProduct.update($scope.editProduct, function (data) {
         var returnedProduct = data.product;
