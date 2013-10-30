@@ -25,10 +25,9 @@ import java.util.Date;
 public interface ShipmentMapper {
 
   @Insert({"INSERT INTO shipment_line_items ",
-    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate, createdBy, modifiedBy)",
+    "(orderId, productCode, quantityShipped, cost, packedDate, shippedDate)",
     "VALUES",
-    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate}," +
-      "(SELECT id FROM users where userName = 'Admin123'), (SELECT id FROM users where userName = 'Admin123'))"})
+    "(#{orderId}, #{productCode}, #{quantityShipped}, #{cost}, #{packedDate}, #{shippedDate})"})
   @Options(useGeneratedKeys = true)
   public void insertShippedLineItem(ShipmentLineItem shipmentLineItem);
 
