@@ -191,4 +191,7 @@ public class FacilityRepository {
     return mapper.getEnabledWarehouses();
   }
 
+  public List<Facility> getChildFacilities(Facility facility) {
+    return mapper.getChildFacilities(facility);
+  }
 }

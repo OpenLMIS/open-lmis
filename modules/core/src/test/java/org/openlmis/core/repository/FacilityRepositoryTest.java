@@ -30,12 +30,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -248,7 +248,7 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
+    List<Facility> facilityList = asList(new Facility());
     when(mapper.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
 
     List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrName("query");
@@ -258,7 +258,7 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
+    List<Facility> facilityList = asList(new Facility());
     when(mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
 
     List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
@@ -353,5 +353,16 @@ public class FacilityRepositoryTest {
     assertThat(facilities, is(expectedFacilities));
     verify(mapper).getAllByProgramSupportedModifiedDate(dateModified);
 
+  }
+
+  @Test
+  public void shouldGetChildFacilities() throws Exception {
+    Facility facility = new Facility(1L);
+    List<Facility> expectedFacilities = asList(new Facility(5L));
+    when(mapper.getChildFacilities(facility)).thenReturn(expectedFacilities);
+
+    List<Facility> childFacilities = repository.getChildFacilities(facility);
+    verify(mapper).getChildFacilities(facility);
+    assertThat(childFacilities, is(expectedFacilities));
   }
 }
