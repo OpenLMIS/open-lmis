@@ -48,10 +48,8 @@
             <a class="rnr-column-formula" href="" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
           </span>
 
-          <span class="tpl-source" ng-show="rnrColumn.formula && rnrColumn.options.formulas != undefined">
-              <span>
-                  Applied Formula
-              </span>
+          <span class="tpl-source" ng-show="rnrColumn.options.formulas != undefined">
+              <span openlmis-message="rnrColumn.column.options"></span>
               <select ng-model="rnrColumn.calculationOption" ng-options="option.id as option.name for option in rnrColumn.options.formulas">
                   <option ng-repeat="option in rnrColumn.options.formulas" value="{{ option.id }}">{{option.name}}</option>
             </select>
