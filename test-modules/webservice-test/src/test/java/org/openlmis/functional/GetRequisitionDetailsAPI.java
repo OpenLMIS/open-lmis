@@ -239,12 +239,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     approveRequisition(id, 65);
-    waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
-    responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
     checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
 
-    waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
-    responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
     checkOrderStatus("RELEASED", 65, "TRANSFER_FAILED", responseEntity);
   }
 
@@ -254,18 +252,18 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     client.createContext();
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
+
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
     approveRequisition(id, 65);
-    waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
-    responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+
+    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
     checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
 
-    waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
-    responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
     checkOrderStatus("RELEASED", 65, "RELEASED", responseEntity);
   }
 
@@ -354,7 +352,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
   }
 
-  private void waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws Exception {
+  private ResponseEntity waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity;
@@ -368,6 +366,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
       time += 500;
       Thread.sleep(500);
     }
+    return responseEntity;
   }
 
 }
