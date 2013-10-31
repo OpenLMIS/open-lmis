@@ -287,6 +287,12 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @When("^I sync recorded data$")
+  public void syncDistribution() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.syncDistribution();
+  }
+
+  @When("^I try to sync recorded data$")
   public void clickSyncLink() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
     distributionPage.clickSyncDistribution();
