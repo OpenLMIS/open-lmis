@@ -141,7 +141,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
         List<String> rightsList = new ArrayList<String>();
         rightsList.add("CREATE_REQUISITION");
         rightsList.add("VIEW_REQUISITION");
-        setupTestDataToInitiateRnR(true, "HIV", credentials[2], "200", "openLmis", rightsList);
+        //setupTestDataToInitiateRnR(true, "HIV", credentials[2], "200", "openLmis", rightsList);
         dbWrapper.assignRight(STORE_IN_CHARGE, APPROVE_REQUISITION);
         dbWrapper.assignRight(STORE_IN_CHARGE, CONVERT_TO_ORDER);
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
