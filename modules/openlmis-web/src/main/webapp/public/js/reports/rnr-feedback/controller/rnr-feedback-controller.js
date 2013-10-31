@@ -39,7 +39,9 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
 
     $scope.filterGrid = function (){
-        $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        if (checkMinimumFilled()) {
+         $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
+        }
     };
 
     //filter form data section
@@ -88,14 +90,15 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
     AllFacilites.get(function(data){
         $scope.allFacilities = data.allFacilities;
+        $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
     });
 
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
         var ind_prod = $scope.IndicatorProductsDescription;
         $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'), 'id':'-1'});
+        $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
     });
 
     AllReportPeriods.get(function (data) {
@@ -326,6 +329,7 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
             params.total = 0;
         }else{
             var data = $scope.data;
+            //alert(JSON.stringify($scope.data, null, 4));
             var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
             orderedData = params.sorting ?  $filter('orderBy')(orderedData, params.orderBy()) : data;
 
@@ -365,5 +369,21 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
     $scope.formatNumber = function(value){
         return utils.formatNumber(value,'0,000');
     };
+
+    function checkMinimumFilled()
+    {
+        // check valid value of each field minimum selection to run the application
+        if ($scope.program > 0 && $scope.schedule > 0 && $scope.period > 0 && (typeof($scope.orderType) !== "undefined")){
+            return true;        }
+        return false;
+    }
+    $scope.currentFacility = 'something';
+    $scope.CreateHeader = function(fac) {
+        showHeader = (fac!==$scope.currentFacility);
+        $scope.currentFacility = fac;
+        //return showHeader;
+        return true;
+    }
+
 
 }
