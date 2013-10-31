@@ -39,9 +39,9 @@
       ng-bind="rnrLineItem.productCategory"></td>
 </tr>
 <tr ng-class="getRowErrorClass(rnrLineItem)">
-  <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns"
-      ng-hide="column.name == 'quantityApproved'">
-    <ng-switch on="column.source.name">
+<td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns"
+    ng-hide="column.name == 'quantityApproved'">
+  <ng-switch on="column.source.name">
               <span ng-switch-when="USER_INPUT">
                 <ng-switch on="column.name">
                   <span ng-switch-when="beginningBalance"
@@ -104,7 +104,7 @@
                     <input ng-disabled="formDisabled"
                            id="{{getId(column.name, $parent)}}" type="checkbox"
                            name="skip{{rnrLineItem['id']}}"
-                          style="margin-left: 20px"/>
+                           style="margin-left: 20px"/>
                   </span>
 
                   <span ng-switch-when="quantityDispensed"
@@ -129,7 +129,7 @@
 
                   <span ng-switch-when="lossesAndAdjustments">
                     <div
-                        ng-class="highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')">
+                      ng-class="highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')">
                       <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)"
                          class="rnr-adjustment">
                         <span class="adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
@@ -195,7 +195,7 @@
                            ng-required="rnrLineItem.quantityRequested"
                            ng-class="highlightWarningBasedOnField(rnrLineItem[column.name],rnrLineItem.quantityRequested)"
                            maxlength="250"/>
-                    <span class="alert alert-warning warning-alert"
+                    <span id='{{getId(column.name, $parent)}}_warning' class="alert alert-warning warning-alert"
                           ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity"
                           openlmis-message="error.reason.required">
                     </span>
@@ -207,7 +207,7 @@
                            ng-model="rnrLineItem[column.name]"
                            rnr-validator="positiveInteger" maxlength="8"
                            ng-change="rnr.fillNormalizedConsumption(rnrLineItem)"
-                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                           ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/>
                     <span class="rnr-form-error" id="stockOutDays{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">
                     </span>
@@ -237,8 +237,8 @@
                         class="cell-text"></span>
                 </ng-switch>
               </span>
-    </ng-switch>
-  </td>
+  </ng-switch>
+</td>
 </tr>
 </tbody>
 </table>
@@ -305,7 +305,7 @@
                      maxlength="8"
                      ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
                      keyboard="false"
-                  />
+                />
 
               <div class="rnr-form-error"
                    id="{{adjustment.type.displayOrder}}"
@@ -319,7 +319,7 @@
     <div class="adjustment-total clearfix alert alert-warning"
          ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
       <span class="pull-left" openlmis-message="label.losses.total"></span><span
-        ng-bind="currentRnrLineItem.totalLossesAndAdjustments"></span>
+      ng-bind="currentRnrLineItem.totalLossesAndAdjustments"></span>
     </div>
     <div class="alert alert-danger" id="modalErrorMessage"
          ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0 && modalError"
