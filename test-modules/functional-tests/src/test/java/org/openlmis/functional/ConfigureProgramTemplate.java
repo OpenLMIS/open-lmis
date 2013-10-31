@@ -64,6 +64,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     String newColumnHeading = "Altered";
       templateConfigPage.unClickExpirationDate();
       templateConfigPage.unClickTotal();
+      templateConfigPage.checkSkip();
+      templateConfigPage.setSkipTextBox("Product Skip");
     templateConfigPage.alterBeginningBalanceLabel(newColumnHeading);
 
 
@@ -79,6 +81,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Expiration Date", columns);
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);
+      initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, "Product Skip", columns);
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Column-Label-Source")

@@ -595,6 +595,7 @@ public class DBWrapper {
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
       "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
+      "(1, (select id from programs where code = '" + program + "'),  true, 'U', 24,  'Skip'),\n" +
       "(2, (select id from programs where code = '" + program + "'),  true, 'R', 1,  'Product Code'),\n" +
       "(3, (select id from programs where code = '" + program + "'),  true, 'R', 2,  'Product'),\n" +
       "(4, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Unit/Unit of Issue'),\n" +
