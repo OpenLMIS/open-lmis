@@ -12,10 +12,8 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -24,16 +22,12 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-import static org.openlmis.functional.JsonUtility.getJsonStringFor;
-import static org.openlmis.functional.JsonUtility.readObjectFromFile;
 
 
-public class FacilityFeed extends TestCaseHelper {
-  public WebDriver driver;
+public class FacilityFeed extends JsonUtility {
   public static final String FULL_JSON_TXT_FILE_NAME = "AgentValid.txt";
-  public static final String userEmail = "Fatim_Doe@openlmis.com";
-  public static final String CREATE_URL = "http://localhost:9091/rest-api/agent.json";
-  public static final String UPDATE_URL = "http://localhost:9091/rest-api/agent/";
+  public static final String CREATE_URL = "http://localhost:9091/rest-api/agents.json";
+  public static final String UPDATE_URL = "http://localhost:9091/rest-api/agents/";
   public static final String commTrackUser = "commTrack";
   public static final String PHONE_NUMBER = "0099887766";
   public static final String DEFAULT_AGENT_NAME = "AgentVinod";
@@ -41,7 +35,6 @@ public class FacilityFeed extends TestCaseHelper {
   public static final String ACTIVE_STATUS = "true";
   public static final String DEFAULT_AGENT_CODE = "A2";
   public static final String JSON_EXTENSION = ".json";
-  public static final String GET = "GET";
   public static final String POST = "POST";
   public static final String PUT = "PUT";
 
@@ -150,8 +143,8 @@ public class FacilityFeed extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
   }
 
-  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldVerifyFacilityFeedForFacilityUpload(String user, String program, String[] credentials) throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Credentials")
+  public void shouldVerifyFacilityFeedForFacilityUpload(String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -234,10 +227,10 @@ public class FacilityFeed extends TestCaseHelper {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-      CREATE_URL,
-      POST,
-      commTrackUser,
-      "Admin123");
+        CREATE_URL,
+        POST,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -245,7 +238,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
@@ -259,10 +251,10 @@ public class FacilityFeed extends TestCaseHelper {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-      PUT,
-      commTrackUser,
-      "Admin123");
+        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+        PUT,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
@@ -294,10 +286,10 @@ public class FacilityFeed extends TestCaseHelper {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(agentJson),
-      CREATE_URL,
-      POST,
-      "",
-      "");
+        CREATE_URL,
+        POST,
+        "",
+        "");
 
     assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus() == 401);
 
@@ -316,10 +308,10 @@ public class FacilityFeed extends TestCaseHelper {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-      CREATE_URL,
-      POST,
-      commTrackUser,
-      "Admin123");
+        CREATE_URL,
+        POST,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -327,7 +319,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
@@ -335,10 +326,10 @@ public class FacilityFeed extends TestCaseHelper {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-      PUT,
-      commTrackUser,
-      "Admin123");
+        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+        PUT,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
@@ -365,10 +356,10 @@ public class FacilityFeed extends TestCaseHelper {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-      CREATE_URL,
-      POST,
-      commTrackUser,
-      "Admin123");
+        CREATE_URL,
+        POST,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -376,7 +367,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
@@ -384,10 +374,10 @@ public class FacilityFeed extends TestCaseHelper {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-      PUT,
-      commTrackUser,
-      "Admin123");
+        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+        PUT,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
@@ -414,10 +404,10 @@ public class FacilityFeed extends TestCaseHelper {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-      CREATE_URL,
-      POST,
-      commTrackUser,
-      "Admin123");
+        CREATE_URL,
+        POST,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityCode\":\"" + DEFAULT_AGENT_CODE + "\""));
@@ -425,7 +415,6 @@ public class FacilityFeed extends TestCaseHelper {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityMainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityOperatedBy\":\"NGO\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsActive\":" + ACTIVE_STATUS + ""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityGoLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
@@ -433,10 +422,10 @@ public class FacilityFeed extends TestCaseHelper {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-      PUT,
-      commTrackUser,
-      "Admin123");
+        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+        PUT,
+        commTrackUser,
+        "Admin123");
 
     ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsActive\":false"));
@@ -453,7 +442,14 @@ public class FacilityFeed extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+        {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+    };
+  }
+
+  @DataProvider(name = "Data-Provider-Function-Credentials")
+  public Object[][] parameterIntTestProviderCredentials() {
+    return new Object[][]{
+        {new String[]{"Admin123", "Admin123"}}
     };
   }
 }

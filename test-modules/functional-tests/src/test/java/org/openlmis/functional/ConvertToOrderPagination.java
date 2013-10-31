@@ -61,8 +61,11 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   @And("^I select \"([^\"]*)\" requisition on page \"([^\"]*)\"$")
   public void selectRequisition(String numberOfRequisitions, String page) throws IOException, SQLException {
-    testWebDriver.sleep(3000);
-    testWebDriver.getElementByXpath("//a[contains(text(), '" + page + "') and @class='ng-binding']").click();
+    testWebDriver.sleep(5000);
+    testWebDriver.handleScrollByPixels(0, 1000);
+    String url = testWebDriver.getCurrentUrl().substring(0, testWebDriver.getCurrentUrl().length() - 1) + page;
+    testWebDriver.getUrl(url);
+    //testWebDriver.getElementByXpath("//a[contains(text(), '" + page + "') and @class='ng-binding']").click();
     selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
 
@@ -230,8 +233,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
 
-  public void convertToOrder(ConvertOrderPage convertOrderPage) {
-    testWebDriver.sleep(2000);
+  private void convertToOrder(ConvertOrderPage convertOrderPage) {
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
   }
@@ -278,22 +280,22 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     assertTrue("Link number" + i + " should not appear", flag);
   }
 
-    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-    public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws Exception {
-        setUpData(program, userSIC);
-        dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
-        dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
-        dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-        dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
-        dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-        dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
-        dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-        dbWrapper.updateSupplyLines("F10","F11");
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userSIC, password);
-        ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-        assertEquals("No requisitions to be converted to orders", convertOrderPage.getNoRequisitionPendingMessage());
-    }
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws Exception {
+    setUpData(program, userSIC);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
+    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+    dbWrapper.updateSupplyLines("F10", "F11");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
+    assertEquals("No requisitions to be converted to orders", convertOrderPage.getNoRequisitionPendingMessage());
+  }
 
   @AfterMethod(groups = "requisition")
   @After

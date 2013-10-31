@@ -155,7 +155,7 @@ public class FacilityService {
 
   public Facility getFacilityWithReferenceDataForCode(String facilityCode) {
     Long facilityId = facilityRepository.getIdForCode(facilityCode);
-    return facilityRepository.getById(facilityId);
+    return getById(facilityId);
   }
 
   public List<Facility> searchFacilitiesByCodeOrNameAndVirtualFacilityFlag(String query, Boolean virtualFacility) {

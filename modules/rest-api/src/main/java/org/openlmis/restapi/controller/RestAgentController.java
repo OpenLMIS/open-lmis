@@ -26,35 +26,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
+import static org.openlmis.restapi.response.RestResponse.error;
+import static org.openlmis.restapi.response.RestResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
+@RequestMapping("/rest-api/")
 public class RestAgentController extends BaseController {
 
   @Autowired
   private RestAgentService restAgentService;
 
-  @RequestMapping(value = "/rest-api/agent", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/agents", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> createCHW(@RequestBody Agent agent, Principal principal) {
     try {
       restAgentService.create(agent, principal.getName());
+      return success("message.success.agent.created");
+
     } catch (DataException e) {
-      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return RestResponse.success("message.success.agent.created");
   }
 
-  @RequestMapping(value = "/rest-api/agent/{agentCode}", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> updateCHW(@RequestBody Agent agent, @PathVariable String agentCode, Principal principal) {
+  @RequestMapping(value = "/agents/{agentCode}", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> updateCHW(@RequestBody Agent agent,
+                                                @PathVariable String agentCode,
+                                                Principal principal) {
     try {
       agent.setAgentCode(agentCode);
       restAgentService.update(agent, principal.getName());
+      return success("message.success.agent.updated");
+
     } catch (DataException e) {
-      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return RestResponse.success("message.success.agent.updated");
   }
 }

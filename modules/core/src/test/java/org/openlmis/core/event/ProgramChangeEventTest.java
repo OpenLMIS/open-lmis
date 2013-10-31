@@ -27,7 +27,7 @@ public class ProgramChangeEventTest {
   public void shouldCreateAProgramChangeEvent() throws Exception {
     ProgramChangeEvent programChangeEvent = new ProgramChangeEvent(make(a(ProgramBuilder.defaultProgram)));
 
-    assertThat(programChangeEvent.getCategory(), is("programCatalogChanges"));
+    assertThat(programChangeEvent.getCategory(), is("program-catalog-changes"));
     assertThat(programChangeEvent.getTitle(), is("Program Catalog Changes"));
   }
 }

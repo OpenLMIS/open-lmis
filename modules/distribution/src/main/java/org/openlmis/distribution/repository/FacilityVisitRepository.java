@@ -12,11 +12,9 @@
 
 package org.openlmis.distribution.repository;
 
-import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.mapper.FacilityVisitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -26,10 +24,11 @@ public class FacilityVisitRepository {
   FacilityVisitMapper mapper;
 
   public void insert(FacilityVisit facilityVisit) {
-    try {
-      mapper.insert(facilityVisit);
-    } catch (DuplicateKeyException exception) {
-      throw new DataException("error.facility.data.already.synced");
-    }
+    mapper.insert(facilityVisit);
   }
+
+  public FacilityVisit get(FacilityVisit facilityVisit) {
+    return mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+  }
+
 }

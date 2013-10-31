@@ -19,6 +19,8 @@ import org.mockito.Mock;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
+import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
@@ -37,10 +39,13 @@ import static org.openlmis.restapi.controller.RestRequisitionController.RNR;
 import static org.openlmis.restapi.controller.RestRequisitionController.UNEXPECTED_EXCEPTION;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestResponse.class)
+@PrepareForTest({RestResponse.class, ReplenishmentDTO.class})
 public class RestRequisitionControllerTest {
 
   @Mock
@@ -68,7 +73,7 @@ public class RestRequisitionControllerTest {
     Rnr requisition = new Rnr();
     requisition.setId(1L);
     when(service.submitReport(report)).thenReturn(requisition);
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), HttpStatus.OK);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), OK);
     when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.submitRequisition(report);
@@ -100,7 +105,7 @@ public class RestRequisitionControllerTest {
     Rnr expectedRnr = new Rnr();
     when(service.approve(report)).thenReturn(expectedRnr);
 
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), HttpStatus.OK);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), OK);
     when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.approve(id, report);
@@ -141,4 +146,36 @@ public class RestRequisitionControllerTest {
     assertThat((String) body.getData().get(ERROR), is(errorMessage));
   }
 
+  @Test
+  public void shouldGetRequisitionById() throws Exception {
+    mockStatic(ReplenishmentDTO.class);
+    Long rnrId = 3L;
+    Rnr rnr = new Rnr(rnrId);
+    ReplenishmentDTO replenishmentDTO = new ReplenishmentDTO();
+    Order order = mock(Order.class);
+    when(ReplenishmentDTO.prepareForREST(rnr, order)).thenReturn(replenishmentDTO);
+    when(service.getReplenishmentDetails(rnrId)).thenReturn(replenishmentDTO);
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("requisition", replenishmentDTO), OK);
+    when(RestResponse.response("requisition", replenishmentDTO)).thenReturn(expectedResponse);
+
+    ResponseEntity<RestResponse> response = controller.getReplenishment(rnrId);
+
+    assertThat(response, is(expectedResponse));
+    verify(service).getReplenishmentDetails(rnrId);
+  }
+
+  @Test
+  public void shouldThrowErrorIfGetServiceThrowsError() throws Exception {
+    Long rnrId = 3L;
+    ReplenishmentDTO replenishmentDTO = new ReplenishmentDTO();
+    DataException exception = new DataException("some error");
+    doThrow(exception).when(service).getReplenishmentDetails(rnrId);
+
+    ResponseEntity<RestResponse> expectedResponse = new ResponseEntity<>(new RestResponse("requisition", replenishmentDTO), BAD_REQUEST);
+    when(RestResponse.error(exception.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectedResponse);
+
+    ResponseEntity<RestResponse> response = controller.getReplenishment(rnrId);
+
+    assertThat(response, is(expectedResponse));
+  }
 }

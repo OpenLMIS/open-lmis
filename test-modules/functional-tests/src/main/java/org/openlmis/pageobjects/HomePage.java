@@ -242,7 +242,6 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//div/div/div[1]/div[2]/div/span")
   private static WebElement firstPeriodLabel;
 
-
   public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -258,11 +257,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
     return new LoginPage(testWebDriver, baseurl);
-  }
-
-  public boolean verifyWelcomeMessage(String user) {
-    testWebDriver.waitForTextToAppear("Welcome " + user);
-    return testWebDriver.getPageSource().contains("Welcome " + user);
   }
 
   public CreateFacilityPage navigateCreateFacility() throws IOException {
@@ -588,9 +582,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(errorMsg);
     return errorMsg.getText().trim();
   }
-  public void goBack(){
-      TestWebDriver.getDriver().navigate().back();
-  }
 
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);
@@ -628,4 +619,21 @@ public class HomePage extends Page {
     return firstPeriodLabel.getText().trim();
   }
 
+  public void navigateRnr() throws IOException {
+    testWebDriver.waitForElementToAppear(requisitionsLink);
+    testWebDriver.keyPress(requisitionsLink);
+    testWebDriver.waitForElementToAppear(createLink);
+    testWebDriver.sleep(2000);
+    testWebDriver.keyPress(createLink);
+    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(myFacilityRadioButton);
+  }
+
+    public boolean isHomeMenuTabDisplayed(){
+        return homeMenuItem.isDisplayed();
+    }
+
+    public boolean isRequisitionsMenuTabDisplayed(){
+        return requisitionMenuItem.isDisplayed();
+    }
 }

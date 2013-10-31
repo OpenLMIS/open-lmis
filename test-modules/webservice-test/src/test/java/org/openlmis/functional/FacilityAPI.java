@@ -13,7 +13,6 @@ package org.openlmis.functional;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -22,7 +21,7 @@ import org.testng.annotations.Test;
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 
-public class FacilityAPI extends TestCaseHelper {
+public class FacilityAPI extends JsonUtility {
   public static final String URL = "http://localhost:9091/rest-api/facility.json";
   public static final String commTrackUser = "commTrack";
   public static final String GET = "GET";

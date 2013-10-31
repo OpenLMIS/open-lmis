@@ -30,7 +30,6 @@ services.factory('SupplyStatusReport', function($resource){
     return $resource('/reports/reportdata/supply_status.json', {}, {});
 }) ;
 
-
 services.factory('NonReportingFacilities', function($resource){
     return $resource('/reports/reportdata/non_reporting.json', {}, {});
 });
@@ -326,7 +325,6 @@ services.factory('GetProductsCompleteListForAProgram',function($resource){
 services.factory('ReportProductsByProgram',function($resource){
     return $resource('/reports/program-products/:programId.json',{},{});
 });
-
 
 services.factory('GetApprovedProductForFacilityTypeDetail', function($resource){
     return $resource('/facilityApprovedProducts/facilityType/:facilityTypeId/program/:programId/product/:productId',{},{});

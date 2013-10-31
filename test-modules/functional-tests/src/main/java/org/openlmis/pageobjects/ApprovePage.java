@@ -71,7 +71,7 @@ public class ApprovePage extends RequisitionPage {
   private static WebElement totalRnrCost;
 
   @FindBy(how = ID, using = "quantityApproved_0")
-  private static WebElement quantityApproved;
+  private static WebElement quantityApproved = null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
   private static WebElement adjustedTotalConsumption;
@@ -146,7 +146,6 @@ public class ApprovePage extends RequisitionPage {
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
 
-    testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);
     assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
@@ -160,7 +159,6 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void verifyEmergencyStatus() throws IOException {
-    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }
@@ -169,7 +167,6 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     testWebDriver.waitForElementToAppear(quantityApproved);
-    testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(calculateOrderQuantity);
     String actualCalculatedOrderQuantity = calculateOrderQuantity.getText();
     String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
@@ -202,11 +199,10 @@ public class ApprovePage extends RequisitionPage {
 
     assertEquals(String.valueOf(cost), new BigDecimal(lineItemCost).setScale(2, ROUND_HALF_UP));
     float totalCostFullSupplyLineItem = lineItemCost;
-    testWebDriver.sleep(1000);
 
+    testWebDriver.waitForElementToAppear(nonFullSupplyTab);
     nonFullSupplyTab.click();
 
-    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityApproved);
     quantityApproved.clear();
     quantityApproved.sendKeys(approvedQuantity);
@@ -228,7 +224,6 @@ public class ApprovePage extends RequisitionPage {
   public void editApproveQuantity(String approvedQuantity) {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     fullSupplyTab.click();
-    testWebDriver.sleep(1000);
 
     testWebDriver.waitForElementToAppear(quantityApproved);
     int length = testWebDriver.getAttribute(quantityApproved, "value").length();
@@ -271,12 +266,14 @@ public class ApprovePage extends RequisitionPage {
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
+
     testWebDriver.sleep(250);
   }
 
   public void clickApproveButton() {
     testWebDriver.waitForElementToAppear(approveButton);
     approveButton.click();
+
     testWebDriver.sleep(250);
   }
 
@@ -288,10 +285,10 @@ public class ApprovePage extends RequisitionPage {
     BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) * parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
     assertEquals(String.valueOf(cost), lineItemCost.getText().substring(1));
     String totalCostFullSupplyLineItem = lineItemCost.getText().substring(1);
-    testWebDriver.sleep(1000);
-
 
     BigDecimal totalOverAllCost = new BigDecimal(parseFloat(totalCostFullSupplyLineItem)).setScale(2, ROUND_HALF_UP);
+
+    testWebDriver.waitForElementToAppear(totalRnrCost);
     assertEquals(String.valueOf(totalOverAllCost), totalRnrCost.getText().substring(1).trim());
 
 

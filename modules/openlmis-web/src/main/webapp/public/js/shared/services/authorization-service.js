@@ -13,8 +13,7 @@ services.factory('AuthorizationService', function (localStorageService, $window)
   var rights = localStorageService.get(localStorageKeys.RIGHT);
 
   var preAuthorize = function () {
-
-    if (rights === undefined || rights === null) return;
+    if (rights === undefined || rights === null) return false;
 
     var permissions = Array.prototype.slice.call(arguments);
     var permitted = false;
@@ -23,13 +22,33 @@ services.factory('AuthorizationService', function (localStorageService, $window)
         permitted = true;
         return false;
       }
+      return true;
     });
     if (permitted) return true;
 
     $window.location = "/public/pages/access-denied.html";
+    return false;
+  };
+
+  var hasPermission = function () {
+    if (rights === undefined || rights === null) return false;
+
+    var permissions = Array.prototype.slice.call(arguments);
+    var permitted = false;
+
+    $(permissions).each(function (i, permission) {
+      if (rights.indexOf(permission) > -1) {
+        permitted = true;
+        return false;
+      }
+      return true;
+    });
+
+    return permitted;
   };
 
   return{
-    preAuthorize: preAuthorize
+    preAuthorize: preAuthorize,
+    hasPermission: hasPermission
   };
 });

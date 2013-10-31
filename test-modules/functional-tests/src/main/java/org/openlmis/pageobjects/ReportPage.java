@@ -18,8 +18,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -29,53 +27,47 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ReportPage extends RequisitionPage {
 
-  @FindBy(how = XPATH, using = "//div[contains(text(),'No Reports')]")
-  private static WebElement noReportsMessage;
+  @FindBy(how = ID, using = "addNew")
+  private static WebElement addNewButton=null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Add New')]")
-  private static WebElement addNewButton;
-
-  @FindBy(how = XPATH, using = "//h2[contains(text(),'Add new report')]")
-  private static WebElement addNewReportTitle;
+  @FindBy(how = ID, using = "addNewHeader")
+  private static WebElement addNewReportTitle=null;
 
   @FindBy(how = ID, using = "name")
-  private static WebElement reportNameTextField;
+  private static WebElement reportNameTextField=null;
 
   @FindBy(how = ID, using = "file")
-  private static WebElement uploadField;
+  private static WebElement uploadField=null;
 
   @FindBy(how = ID, using = "saveReport")
-  private static WebElement saveButton;
+  private static WebElement saveButton=null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton;
+  @FindBy(how = ID, using = "cancelButton")
+  private static WebElement cancelButton=null;
 
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement saveSuccessMessage;
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
+  private static WebElement saveSuccessMessage=null;
 
   @FindBy(how = ID, using = "error")
-  private static WebElement saveErrorMessage;
-
-  @FindBy(how = XPATH, using = "//span[contains(text(),'Active Facility Report')]")
-  private static WebElement ActiveFacilityHeader;
+  private static WebElement saveErrorMessage=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'PDF')]")
-  private static WebElement PDF;
+  private static WebElement PDF=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'XLS')]")
-  private static WebElement XLS;
+  private static WebElement XLS=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'CSV')]")
-  private static WebElement CSV;
+  private static WebElement CSV=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'HTML')]")
-  private static WebElement HTML;
+  private static WebElement HTML=null;
 
   @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[1]")
-  private static WebElement errorReportName;
+  private static WebElement errorReportName=null;
 
   @FindBy(how = XPATH, using = "(//span[contains(text(),'Please fill this value')])[2]")
-  private static WebElement errorFile;
+  private static WebElement errorFile=null;
 
 
   public ReportPage(TestWebDriver driver) throws IOException {
@@ -85,12 +77,8 @@ public class ReportPage extends RequisitionPage {
 
   }
 
-  public void verifyNoReportsMessage() {
-    testWebDriver.waitForElementToAppear(noReportsMessage);
-    assertTrue("No reports message should be displayed", noReportsMessage.isDisplayed());
-  }
-
   public void clickAddNewButton() {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
     testWebDriver.waitForElementToAppear(addNewReportTitle);

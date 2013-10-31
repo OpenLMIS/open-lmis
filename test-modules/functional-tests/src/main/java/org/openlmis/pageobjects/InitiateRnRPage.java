@@ -145,11 +145,11 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
   private static WebElement adjList;
 
-  @FindBy(how = XPATH, using = "//input[@value='Done']")
-  private static WebElement doneButton;
+  @FindBy(how = ID, using = "lossesAndAdjustmentsDone")
+  private static WebElement lossesAndAdjustmentsDone = null;
 
-  @FindBy(how = XPATH, using = "//span[@class='alert alert-warning warning-alert']")
-  private static WebElement requestedQtyWarningMessage;
+  @FindBy(how = ID, using = "reasonForRequestedQuantity_0_warning")
+  private static WebElement requestedQtyWarningMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
   private static WebElement reportingPeriodInitRnRScreen;
@@ -163,8 +163,8 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
   private static WebElement operatedByInitRnRScreen;
 
-  @FindBy(how = XPATH, using = "//input[@id='addNonFullSupply' and @value='Add']")
-  private static WebElement addNonFullSupplyButton;
+  @FindBy(how = ID, using = "addNonFullSupply")
+  private static WebElement addNonFullSupplyItemButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Add']")
   private static WebElement addNonFullSupplyButtonScreen;
@@ -217,8 +217,11 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "reasonForRequestedQuantity")
   private static WebElement requestedQuantityExplanationField;
 
-  @FindBy(how = XPATH, using = "//input[@value='Add']")
-  private static WebElement addButton;
+  @FindBy(how = ID, using = "showNonFullSupplyModal")
+  private static WebElement addButtonOnNonFullSupplyTab = null;
+
+  @FindBy(how = ID, using = "addLossesAndAdjustment")
+  private static WebElement addLossesAndAdjustmentButton = null;
 
   @FindBy(how = XPATH, using = "//input[@ng-click='addNonFullSupplyLineItem()']")
   private static WebElement addButtonEnabled;
@@ -339,19 +342,20 @@ public class InitiateRnRPage extends RequisitionPage {
     addDescription.click();
     testWebDriver.waitForElementToAppear(lossesAndAdjustmentSelect);
     testWebDriver.selectByVisibleText(lossesAndAdjustmentSelect, "Transfer In");
+
     testWebDriver.waitForElementToAppear(quantityAdj);
     quantityAdj.clear();
     quantityAdj.sendKeys(adj);
-    addButton.click();
+
+    testWebDriver.waitForElementToBeEnabled(addLossesAndAdjustmentButton);
+    addLossesAndAdjustmentButton.click();
+
     testWebDriver.waitForElementToAppear(adjList);
     String labelAdj = testWebDriver.getText(adjList);
+
     assertEquals("Transfer In", labelAdj.trim());
-    testWebDriver.sleep(1000);
-    testWebDriver.sleep(1000);
-    doneButton.click();
-    testWebDriver.sleep(1000);
 
-
+    lossesAndAdjustmentsDone.click();
   }
 
 
@@ -367,7 +371,7 @@ public class InitiateRnRPage extends RequisitionPage {
     enterQuantityReceived(B.toString());
     enterQuantityDispensed(C.toString());
     enterLossesAndAdjustments(D.toString());
-    beginningBalance.click();
+
     testWebDriver.waitForElementToAppear(stockInHand);
     testWebDriver.sleep(2000);
     return stockInHand.getText();
@@ -403,6 +407,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public String enterRequestedQuantity(Integer A) {
     testWebDriver.waitForElementToAppear(requestedQuantity);
     requestedQuantity.sendKeys(A.toString());
+
     testWebDriver.waitForElementToAppear(requestedQtyWarningMessage);
     return testWebDriver.getText(requestedQtyWarningMessage);
   }
@@ -512,14 +517,16 @@ public class InitiateRnRPage extends RequisitionPage {
 
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
-                                        String productPrimaryName, String productCode, String category,
-                                        String baseurl, String dbUrl) throws IOException, SQLException {
-    DBWrapper dbWrapper = new DBWrapper(baseurl, dbUrl);
+                                        String productPrimaryName, String productCode, String category)
+    throws IOException, SQLException {
+    DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
-    addButton.click();
+
+    addButtonOnNonFullSupplyTab.click();
     testWebDriver.sleep(1000);
+
     assertFalse("Add button not enabled", addButtonNonFullSupply.isEnabled());
     assertTrue("Close button not displayed", cancelButton.isDisplayed());
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
@@ -571,10 +578,10 @@ public class InitiateRnRPage extends RequisitionPage {
     requestedQuantityField.sendKeys(requestedQuantityValue);
     requestedQuantityExplanationField.clear();
     requestedQuantityExplanationField.sendKeys(requestedQuantityExplanationValue);
-    testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
-    testWebDriver.sleep(1000);
-    addNonFullSupplyButton.click();
-    testWebDriver.sleep(500);
+
+    testWebDriver.waitForElementToBeEnabled(addNonFullSupplyItemButton);
+    addNonFullSupplyItemButton.click();
+
     testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
     assertEquals(productCode + " | " + productPrimaryName, nonFullSupplyProductCodeAndName.getText().trim());
     assertEquals(requestedQuantityValue, nonFullSupplyProductQuantityRequested.getAttribute("value").trim());
@@ -620,7 +627,6 @@ public class InitiateRnRPage extends RequisitionPage {
     String actualColumnHeading = null;
     for (int i = 0; i < noOfColumns; i++) {
       try {
-//        testWebDriver.sleep(100);
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
         columnElement.click();
         actualColumnHeading = columnElement.getText();
@@ -641,7 +647,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public void addMultipleNonFullSupplyLineItems(int numberOfLineItems, boolean isMultipleCategories) throws IOException, SQLException {
     clickNonFullSupplyTab();
     testWebDriver.sleep(1000);
-    addButton.click();
+    addButtonOnNonFullSupplyTab.click();
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(categoryDropDownLink);
 
@@ -666,9 +672,10 @@ public class InitiateRnRPage extends RequisitionPage {
       requestedQuantityField.sendKeys("10");
       requestedQuantityExplanationField.clear();
       requestedQuantityExplanationField.sendKeys("Due to certain reasons: " + i);
-      testWebDriver.waitForElementToAppear(addNonFullSupplyButton);
-      testWebDriver.sleep(1000);
-      addNonFullSupplyButton.click();
+
+      testWebDriver.waitForElementToBeEnabled(addNonFullSupplyItemButton);
+      addNonFullSupplyItemButton.click();
+
       testWebDriver.sleep(500);
       testWebDriver.waitForElementToAppear(nonFullSupplyProductCodeAndName);
     }
@@ -679,7 +686,6 @@ public class InitiateRnRPage extends RequisitionPage {
   public void saveRnR() {
     saveButton.click();
     testWebDriver.sleep(1500);
-//    assertTrue("R&R saved successfully! message not displayed", successMessage.isDisplayed());
   }
 
   public void submitRnR() {
@@ -758,10 +764,12 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public String getEmergencyLabelText() {
+     testWebDriver.waitForElementToAppear(rnrEmergrncyLabel);
     return rnrEmergrncyLabel.getText();
   }
 
   public String getRegularLabelText() {
+    testWebDriver.waitForElementToAppear(rnrRegularLabel);
     return rnrRegularLabel.getText();
   }
 

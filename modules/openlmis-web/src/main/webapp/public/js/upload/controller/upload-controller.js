@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UploadController($scope, SupportedUploads, messageService) {
+function UploadController($scope, SupportedUploads, messageService, loginConfig) {
 
   SupportedUploads.get({}, function (data) {
     $scope.supportedUploads = data.supportedUploads;
@@ -52,12 +52,18 @@ function UploadController($scope, SupportedUploads, messageService) {
   }
 
   var failureHandler = function (response) {
-    var errorMessage;
-    if (response.responseText.length)
-      errorMessage = JSON.parse(response.responseText).error;
-    errorMessage = messageService.get('error.upload.network.server.down');
     $scope.$apply(function () {
-      $scope.errorMsg = errorMessage;
+      if (response.status == 401) {
+        loginConfig.modalShown = loginConfig.preventReload = true;
+      }
+      else {
+        try {
+          $scope.errorMsg = JSON.parse(response.responseText).error;
+        } catch (e) {
+          $scope.errorMsg = messageService.get('error.upload.network.server.down');
+          $scope.inProgress = false;
+        }
+      }
       $scope.inProgress = false;
     });
   };

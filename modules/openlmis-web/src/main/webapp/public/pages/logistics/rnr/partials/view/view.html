@@ -11,26 +11,32 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
   <ul class="clearfix">
-    <li ng-class="{'selected': (visibleTab != 'non-full-supply' && visibleTab != 'regimen')}">
-      <a href="" ng-click="switchSupplyType('full-supply')" id="fullSupplyTab" openlmis-message="label.full.supply.products"></a></li>
-    <li ng-class="{'selected': visibleTab == 'non-full-supply'}">
-      <a href="" ng-click="switchSupplyType('non-full-supply')" id="nonFullSupplyTab" openlmis-message="label.non.full.supply.products"></a></li>
-    <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show = "regimenCount">
+    <li ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen')}">
+      <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+         openlmis-message="label.full.supply.products"></a></li>
+    <li ng-class="{'selected': visibleTab == 'nonFullSupply'}">
+      <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
+         openlmis-message="label.non.full.supply.products"></a></li>
+    <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
       <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a></li>
   </ul>
 </div>
 
-<ng-switch on="visibleTab">
-         <span ng-switch-when="non-full-supply">
+
+<span ng-show="visibleTab === 'nonFullSupply'">
         <ng-include src="'/public/pages/logistics/rnr/partials/view/view-non-full-supply.html'"></ng-include>
       </span>
-      <span ng-switch-when="regimen">
+<span ng-show="visibleTab === 'regimen'">
         <ng-include src="'/public/pages/logistics/rnr/partials/view/view-regimen-line-item.html'"></ng-include>
       </span>
-      <span ng-switch-default>
+<span ng-show="visibleTab === 'fullSupply'">
         <ng-include src="'/public/pages/logistics/rnr/partials/view/view-full-supply.html'"></ng-include>
       </span>
-</ng-switch>
+<div ng-hide="visibleTab === 'regimen'">
+  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
+                       check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
+</div>
+
 <br><br>
 
 <div form-toolbar id="action_buttons" class="action-buttons">
@@ -41,8 +47,4 @@
            openlmis-message="comments.header"/>
     <comment-box updatable="false" show="showCommentBox"></comment-box>
   </div>
-</div>
-
-<div ng-hide="visibleTab == 'regimen'">
-  <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"></openlmis-pagination>
 </div>

@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -23,13 +22,11 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
-public class ProgramProductAPI extends TestCaseHelper {
+public class ProgramProductAPI extends JsonUtility {
 
   public static final String URL = "http://localhost:9091/rest-api/programProducts.json";
   public static final String commTrackUser = "commTrack";
   public static final String GET = "GET";
-  public static final String POST = "POST";
-  public static final String PUT = "PUT";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {

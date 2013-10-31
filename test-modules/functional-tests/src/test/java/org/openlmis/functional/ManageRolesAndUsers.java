@@ -69,7 +69,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-      userPage.enterAndVerifyUserDetails(map.get("UserName").toString(), map.get("Email").toString(), map.get("FirstName").toString(), map.get("LastName").toString(), baseUrlGlobal, dbUrlGlobal);
+      userPage.enterAndVerifyUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
+        map.get("FirstName").toString(), map.get("LastName").toString());
   }
 
   @When("^I disable user \"([^\"]*)\"$")
@@ -182,6 +183,14 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.createFacilityBasedRoleWithSuccessMessageExpected("Facility Based Role Name", "Facility Based Role Description");
   }
 
+    public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userName, password);
+        assertTrue(homePage.isHomeMenuTabDisplayed());
+        assertFalse(homePage.isRequisitionsMenuTabDisplayed());
+
+    }
+
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                             String deliveryZoneNameFirst, String deliveryZoneNameSecond,
@@ -219,12 +228,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     setupWarehouseRolesAndRights(facilityCodeFirst, facilityCodeSecond, programFirst, schedule, "SHIPMENT");
     warehouseName = dbWrapper.getWarehouse1Name(facilityCodeFirst);
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
-    userPage.assignWarehouse(warehouseName,warehouseRole);
+    userPage.assignWarehouse(warehouseName, warehouseRole);
     userPage.saveUser();
     userPage.verifyUserUpdated("Jasmine", "Doe");
     setupDeliveryZoneRolesAndRightsAfterWarehouse(deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst,
-            deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule,
-            rolename);
+      deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule,
+      rolename);
     userPage.clickViewHere();
     userPage.enterDeliveryZoneData(deliveryZoneNameFirst, programFirst, rolename);
     userPage.clickSaveButton();
@@ -266,6 +275,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     verifyWarehouseAvailableForWarehouseRoles(facilityCodeFirst);
 
+    userPage.clickDeliveryZonesAccordion();
+    testWebDriver.sleep(500);
+    userPage.clickRemoveButtonWithOk(1);
+    userPage.clickSaveButton();
+    testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE,"Admin123");
+
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
@@ -282,7 +297,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = homePage.navigateToUser();
     String email = "Jasmine_Doe@openlmis.com";
-    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dbUrlGlobal);
+    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
     dbWrapper.updateUser(passwordUsers, email);
 
     userPage.enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(deliveryZoneNameFirst, programFirst, FIELD_COORDINATOR);
@@ -305,7 +320,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
 
     String email = "Jasmine_Doe@openlmis.com";
-    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe", baseUrlGlobal, dbUrlGlobal);
+    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
     dbWrapper.updateUser(passwordUsers, email);
 
     homePage.navigateToUser();
@@ -346,7 +361,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
                                           String facility, String program, String supervisoryNode, String role,
                                           String roleType) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName, baseUrlGlobal, dbUrlGlobal);
+    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName);
     dbWrapper.updateUser(passwordUsers, userEmail);
 
     userPage.verifyExpandAll();
@@ -378,7 +393,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.clickWarehouseRolesAccordion();
     assertFalse(userPage.getAllWarehouseToSelect().contains(warehouseName));
     dbWrapper.enableFacility(warehouseName);
-    dbWrapper.updateActiveStatusOfFacility(FacilityCode,"true");
+    dbWrapper.updateActiveStatusOfFacility(FacilityCode, "true");
     userPage.clickSaveButton();
     userPage.clickViewHere();
     userPage.clickWarehouseRolesAccordion();

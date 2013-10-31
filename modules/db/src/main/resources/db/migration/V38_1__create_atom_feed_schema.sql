@@ -14,7 +14,7 @@ CREATE TABLE atomfeed.event_records (
   title VARCHAR(255),
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   uri VARCHAR(255),
-  object VARCHAR(2000),
+  object VARCHAR(5000),
   category VARCHAR(255)
 );
 

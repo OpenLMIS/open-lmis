@@ -15,12 +15,13 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Agent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -31,7 +32,13 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.code;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.restapi.builder.AgentBuilder.defaultCHW;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -49,11 +56,17 @@ public class RestAgentServiceTest {
   @Mock
   private UserService userService;
 
+  @Mock
+  private ProgramSupportedService programSupportedService;
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   Principal principal;
   private User user;
+
+  @Mock
+  private RequisitionGroupMemberService requisitionGroupMemberService;
 
   @Before
   public void setUp() throws Exception {
@@ -75,6 +88,12 @@ public class RestAgentServiceTest {
     Date currentTimeStamp = mock(Date.class);
     whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
 
+    when(facility.getParentFacilityId()).thenReturn(baseFacility.getId());
+
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    when(requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(baseFacility.getId())).
+        thenReturn(asList(new RequisitionGroupMember(requisitionGroup, baseFacility)));
+
     restAgentService.create(agent, principal.getName());
 
     verify(facility, times(2)).setCode(agent.getAgentCode());
@@ -87,9 +106,16 @@ public class RestAgentServiceTest {
     verify(facility).setVirtualFacility(true);
     verify(facility).setSdp(true);
     verify(facility).setEnabled(true);
-    verify(facility).setOperatedBy(baseFacility.getOperatedBy());
     verify(facility).setGoLiveDate(currentTimeStamp);
     verify(facilityService).save(facility);
+    verify(requisitionGroupMemberService).getAllRequisitionGroupMembersByFacility(baseFacility.getId());
+    ArgumentCaptor<RequisitionGroupMember> captor = ArgumentCaptor.forClass(RequisitionGroupMember.class);
+    verify(requisitionGroupMemberService).save(captor.capture());
+    assertThat(captor.getValue().getRequisitionGroup(), is(requisitionGroup));
+    assertThat(captor.getValue().getFacility(), is(facility));
+    assertThat(captor.getValue().getCreatedBy(), is(user.getId()));
+    assertThat(captor.getValue().getModifiedBy(), is(user.getId()));
+    verify(programSupportedService).updateSupportedPrograms(facility);
   }
 
   @Test
@@ -117,7 +143,6 @@ public class RestAgentServiceTest {
     verify(chwFacility).setParentFacilityId(baseFacility.getId());
     verify(chwFacility).setGeographicZone(baseFacility.getGeographicZone());
     verify(chwFacility).setFacilityType(baseFacility.getFacilityType());
-    verify(chwFacility).setOperatedBy(baseFacility.getOperatedBy());
     verify(facilityService).update(chwFacility);
   }
 

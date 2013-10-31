@@ -34,32 +34,25 @@ public class DriverFactory {
   private String driverType;
   private String INPUT_ZIP_FILE_IEDRIVER = null;
   private String INPUT_ZIP_FILE_CHROMEDRIVER = null;
-  private String INPUT_ZIP_FILE_CHROMEDRIVER_MAC = null;
   private String CHROME_FOLDER = null;
   private String OUTPUT_FOLDER = null;
-  private String Separator = null;
   Unzip unZip;
 
   public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
 
-    Separator = getProperty("file.separator");
+    String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator  + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;;
+    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator  + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.33.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
-    INPUT_ZIP_FILE_CHROMEDRIVER_MAC = CHROME_FOLDER + "chromedriver_mac.zip";
 
     return loadDriver(true, browser);
   }
 
   public String driverType() throws InterruptedException {
     return driverType.trim();
-  }
-
-  public WebDriver loadDriverWithJavascriptDisabledIfPossible(String browser) throws InterruptedException, IOException {
-    return loadDriver(false, browser);
   }
 
   public void deleteExe() throws InterruptedException, IOException {
@@ -128,8 +121,7 @@ public class DriverFactory {
     Runtime.getRuntime().exec("RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 255");
     DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
     ieCapabilities.setCapability("ignoreZoomSetting", true);
-    InternetExplorerDriver driver = new InternetExplorerDriver(ieCapabilities);
-    return driver;
+    return new InternetExplorerDriver(ieCapabilities);
   }
 
 

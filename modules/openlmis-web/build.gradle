@@ -15,21 +15,20 @@ import org.gradle.api.tasks.Exec
 apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'js'
+
 apply plugin: 'cobertura'
 
-task jsHint(type: GruntTask) {
-    workingDir '.'
-    gruntArgs = "jshint"
-}
-
-task lesslint(type: GruntTask) {
-    workingDir '.'
-    gruntArgs = "lesslint --force"
-}
-
-task uglify(type: GruntTask) {
-    workingDir '.'
-    gruntArgs = "uglify"
+task npm(type: Exec) {
+   group = "Build"
+   description = "Installs all Node.js dependencies defined in package.json"
+//   commandLine = ["npm", "install"]
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine 'cmd', '/c', 'npm', 'install'
+    } else {
+        commandLine 'npm', 'install'
+    }
+   inputs.file "package.json"
+   outputs.dir "node_modules"
 }
 
 class GruntTask extends Exec {
@@ -46,6 +45,30 @@ class GruntTask extends Exec {
     public void setGruntArgs(String gruntArgs) {
         this.args = "$switches $gruntArgs".trim().split(" ") as List
     }
+}
+
+task jsHint(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "jshint"
+    dependsOn npm
+}
+
+task lesslint(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "lesslint --force"
+    dependsOn npm
+}
+
+task less(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "less"
+    dependsOn npm
+}
+
+task uglify(type: GruntTask) {
+    workingDir '.'
+    gruntArgs = "uglify"
+    dependsOn npm
 }
 
 buildscript {
@@ -106,7 +129,6 @@ war.doLast {
 
 build.doLast {
     tasks.jsHint.execute()
-    tasks.lesslint.execute()
     tasks.cleanMinJs.execute()
 }
 
@@ -156,10 +178,10 @@ dependencies {
 }
 
 task jettyDaemon(dependsOn: war) {
-  doFirst {
-    jettyRun.daemon = true
-    jettyRun.execute()
-  }
+    doFirst {
+        jettyRun.daemon = true
+        jettyRun.execute()
+    }
 }
 
 jettyRun {
@@ -192,23 +214,16 @@ task deployOpenLmis(type: GradleBuild) {
     tasks = ['cargoRedeployRemote']
 }
 
-task compileLess << {
-    println "Running lessCompile task..."
-    def lessCompiler = new org.lesscss.LessCompiler()
-    def tree = fileTree('src/main/webapp/public/less').include('**/*.less')
-    tree.each { File file ->
-        def outputCss = new File("${projectDir}/src/main/webapp/public/css/" + file.name.replace(".less", ".css"))
-        println "LESS: Compiling ${file} to ${outputCss}..."
-        lessCompiler.compile(file, outputCss)
-    }
-}
-
 task phantomRun(type: Exec) {
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
 
-compileJava.dependsOn compileLess
+compileJava.dependsOn less
 
 task runJsCover(type: Exec) {
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
+}
+
+cobertura {
+    coverageFormats << 'xml'
 }

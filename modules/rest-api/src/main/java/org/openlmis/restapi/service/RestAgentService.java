@@ -10,8 +10,12 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramSupportedService;
+import org.openlmis.core.service.RequisitionGroupMemberService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.restapi.domain.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class RestAgentService {
@@ -29,16 +34,37 @@ public class RestAgentService {
   @Autowired
   UserService userService;
 
+  @Autowired
+  ProgramSupportedService programSupportedService;
+
+  @Autowired
+  RequisitionGroupMemberService requisitionGroupMemberService;
+
   @Transactional
   public void create(Agent agent, String userName) {
     agent.validate();
     if (getExistingFacilityForCode(agent.getAgentCode()) != null) {
       throw new DataException("error.agent.already.registered");
     }
-    Facility facility = getFacilityForCHW(agent);
-    facility.setCreatedBy(userService.getByUserName(userName).getId());
+    Facility facility = createFacilityFrom(agent);
+    User user = userService.getByUserName(userName);
+    facility.setCreatedBy(user.getId());
     facility.setModifiedBy(facility.getCreatedBy());
     facilityService.save(facility);
+    programSupportedService.updateSupportedPrograms(facility);
+    saveRequisitionGroupMembers(facility, user);
+  }
+
+  private void saveRequisitionGroupMembers(Facility facility, User user) {
+    List<RequisitionGroupMember> requisitionGroupMembers =
+        requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(facility.getParentFacilityId());
+    for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
+      RequisitionGroupMember member = new RequisitionGroupMember(requisitionGroupMember.getRequisitionGroup(), facility);
+      member.setCreatedBy(user.getId());
+      member.setModifiedBy(user.getId());
+      member.setModifiedDate(new Date());
+      requisitionGroupMemberService.save(member);
+    }
   }
 
   public void update(Agent agent, String userName) {
@@ -65,7 +91,7 @@ public class RestAgentService {
     return facilityService.getByCode(facility);
   }
 
-  private Facility getFacilityForCHW(Agent agent) {
+  private Facility createFacilityFrom(Agent agent) {
     Facility facility = new Facility();
     facility.setCode(agent.getAgentCode());
     facility.setName(agent.getAgentName());
@@ -84,11 +110,12 @@ public class RestAgentService {
     facility.setParentFacilityId(baseFacility.getId());
     facility.setFacilityType(baseFacility.getFacilityType());
     facility.setGeographicZone(baseFacility.getGeographicZone());
-    facility.setOperatedBy(baseFacility.getOperatedBy());
+    facility.setSupportedPrograms(baseFacility.getSupportedPrograms());
   }
 
   private Facility getValidatedBaseFacility(Agent agent) {
     Facility baseFacility = facilityService.getFacilityWithReferenceDataForCode(agent.getParentFacilityCode());
+
     if (baseFacility.getVirtualFacility()) {
       throw new DataException("error.reference.data.parent.facility.virtual");
     }

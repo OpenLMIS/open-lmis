@@ -544,8 +544,6 @@ Feature: Smoke Tests
     Then Verify "epi use" indicator should be "GREEN"
 
   @smokeDistribution
-
-
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -572,7 +570,7 @@ Feature: Smoke Tests
     Then I see "Overall" facility icon as "RED"
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
-    When I sync recorded data
+    When I try to sync recorded data
     Then I verify sync message as "No facility for the chosen zone, program and period is ready to be synced"
     When I record data
 
@@ -599,7 +597,7 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
     When I sync recorded data
-    Then I verify sync message as "F10 - Village Dispensary synced successfully"
+#    Then I verify sync message as "F10 - Village Dispensary synced successfully"
     And I view observations data in DB:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |

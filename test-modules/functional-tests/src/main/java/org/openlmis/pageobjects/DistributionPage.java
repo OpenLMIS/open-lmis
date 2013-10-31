@@ -112,7 +112,11 @@ public class DistributionPage extends Page {
   public void clickSyncDistribution() {
     testWebDriver.waitForElementToAppear(syncLink);
     syncLink.click();
-    testWebDriver.sleep(200);
+  }
+
+  public void syncDistribution() {
+    clickSyncDistribution();
+    okButton.click();
   }
 
   public String getSyncMessage() {
@@ -121,7 +125,6 @@ public class DistributionPage extends Page {
   }
 
   public FacilityListPage clickRecordData() throws IOException {
-    testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(recordDataButton);
     recordDataButton.click();
     testWebDriver.sleep(250);
@@ -142,6 +145,7 @@ public class DistributionPage extends Page {
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
+
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
@@ -150,7 +154,6 @@ public class DistributionPage extends Page {
 
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
-
 
   public List<WebElement> getAllSelectOptionsFromDeliveryZone() {
     testWebDriver.waitForElementToAppear(selectDeliveryZoneSelectBox);
@@ -253,5 +256,4 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(noDistributionCachedMessage);
     assertEquals("No distributions cached", noDistributionCachedMessage.getText());
   }
-
 }

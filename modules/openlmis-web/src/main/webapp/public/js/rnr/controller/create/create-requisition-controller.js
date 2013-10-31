@@ -8,12 +8,17 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService) {
-  $scope.visibleTab = $routeParams.supplyType;
-  $scope.baseUrl = "/create-rnr/" + $routeParams.rnr + '/' + $routeParams.facility + '/' + $routeParams.program;
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService, requisitionService) {
+
+  var NON_FULL_SUPPLY = 'nonFullSupply';
+  var FULL_SUPPLY = 'fullSupply';
+
   $scope.pageSize = pageSize;
-  $scope.rnr = requisition;
-  $scope.allTypes = lossesAndAdjustmentsTypes;
+  $scope.rnr = new Rnr(requisition, rnrColumns);
+
+  resetCostsIfNull();
+
+  $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
   $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
   $scope.programRnrColumnList = rnrColumns;
@@ -23,38 +28,26 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
   $scope.errorPages = {fullSupply: [], nonFullSupply: []};
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
-  $scope.currency = messageService.get('label.currency.symbol');
+
+  requisitionService.populateScope($scope, $location, $routeParams);
   resetFlags();
 
-  var NON_FULL_SUPPLY = 'non-full-supply';
-  var FULL_SUPPLY = 'full-supply';
-  var REGIMEN = 'regimen';
-
-  if ($scope.rnr.emergency) {
-    $scope.requisitionType = messageService.get("requisition.type.emergency");
-  } else {
-    $scope.requisitionType = messageService.get("requisition.type.regular");
+  if (!($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0)) {
+    $scope.error = "error.rnr.template.not.defined";
+    $location.path("/init-rnr");
   }
-  $scope.fillPagedGridData = function () {
-    if ($scope.visibleTab == REGIMEN) {
-      $scope.numberOfPages = 1;
-      $scope.pageLineItems = $scope.rnr.regimenLineItems;
-    } else {
-      var gridLineItems = $scope.visibleTab == NON_FULL_SUPPLY ? $scope.rnr.nonFullSupplyLineItems : $scope.visibleTab == FULL_SUPPLY ? $scope.rnr.fullSupplyLineItems : [];
-      $scope.numberOfPages = Math.ceil(gridLineItems.length / $scope.pageSize) ? Math.ceil(gridLineItems.length / $scope.pageSize) : 1;
-      $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
-      $scope.pageLineItems = gridLineItems.slice(($scope.pageSize * ($scope.currentPage - 1)), $scope.pageSize * $scope.currentPage);
-    }
-  };
-
-
   $scope.hasPermission = function (permission) {
     return _.find($scope.requisitionRights, function (right) {
       return right.right === permission;
     });
   };
 
-  prepareRnr();
+
+  $scope.formDisabled = function () {
+    var status = $scope.rnr.status;
+    if (status === 'INITIATED' && $scope.hasPermission('CREATE_REQUISITION')) return false;
+    return !(status === 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION'));
+  }();
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
@@ -62,44 +55,12 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
-  if ($scope.programRnrColumnList && $scope.programRnrColumnList.length > 0) {
-  } else {
-    $scope.error = "error.rnr.template.not.defined";
-    $location.path("/init-rnr");
-  }
-
-  $scope.currentPage = ($routeParams.page) ? utils.parseIntWithBaseTen($routeParams.page) || 1 : 1;
-
-  $scope.switchSupplyType = function (supplyType) {
-    $scope.visibleTab = supplyType;
-    $location.search('page', 1);
-    $location.search('supplyType', supplyType);
-  };
-
-  $scope.goToPage = function (page, event) {
-    angular.element(event.target).parents(".dropdown").click();
-    $location.search('page', page);
-  };
-
-  $scope.$on('$routeUpdate', function () {
-    $scope.visibleTab = $routeParams.supplyType === NON_FULL_SUPPLY ? NON_FULL_SUPPLY :
-      ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
-    $location.search('supplyType', $scope.visibleTab);
-
-    if (!utils.isValidPage($routeParams.page, $scope.numberOfPages)) {
-      $location.search('page', 1);
-      return;
-    }
-    if ($scope.saveRnrForm.$dirty) $scope.saveRnr();
-    $scope.fillPagedGridData();
-  });
-
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
   });
 
   $scope.saveRnr = function (preventMessage) {
-    if (!$scope.saveRnrForm.$dirty) {
+    if (!$scope.saveRnrForm || !$scope.saveRnrForm.$dirty) {
       return;
     }
     resetFlags();
@@ -133,28 +94,20 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     if ($scope.regimenLineItemInValid) {
       regimenError = messageService.get("error.rnr.validation");
     }
-
     return fullSupplyError || nonFullSupplyError || regimenError;
-  }
-
-  function setErrorPages() {
-    $scope.errorPages = $scope.rnr.getErrorPages($scope.pageSize);
-    $scope.fullSupplyErrorPagesCount = $scope.errorPages.fullSupply.length;
-    $scope.nonFullSupplyErrorPagesCount = $scope.errorPages.nonFullSupply.length;
   }
 
   $scope.submitRnr = function () {
     resetFlags();
-    resetErrorPages();
+    requisitionService.resetErrorPages($scope);
     $scope.saveRnr(true);
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
-      setErrorPages();
+      requisitionService.setErrorPages($scope);
       $scope.submitError = errorMessage;
       return;
     }
     showConfirmModal();
-
   };
 
   function validateRegimenLineItems() {
@@ -164,7 +117,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
         if (regimenColumn.name !== "remarks" && isUndefined(regimenLineItem[regimenColumn.name])) {
           setError = true;
           $scope.regimenLineItemInValid = true;
-          return;
         }
       });
     });
@@ -183,11 +135,13 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       });
   };
 
-  $scope.dialogCloseCallback = function (result) {
-    if (result && $scope.rnr.status === 'INITIATED')
+  $scope.callBack = function (result) {
+    if (result && $scope.rnr.status === 'INITIATED') {
       submitValidatedRnr();
-    if (result && $scope.rnr.status === 'SUBMITTED')
+    }
+    if (result && $scope.rnr.status === 'SUBMITTED') {
       authorizeValidatedRnr();
+    }
   };
 
   var showConfirmModal = function () {
@@ -196,16 +150,16 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       header: messageService.get("label.confirm.action"),
       body: messageService.get("msg.question.confirmation")
     };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
+    OpenLmisDialog.newDialog(options, $scope.callBack, $dialog, messageService);
   };
 
   $scope.authorizeRnr = function () {
     resetFlags();
-    resetErrorPages();
+    requisitionService.resetErrorPages($scope);
     $scope.saveRnr(true);
     var errorMessage = validateAndSetErrorClass();
     if (errorMessage) {
-      setErrorPages();
+      requisitionService.setErrorPages($scope);
       $scope.submitError = errorMessage;
       return;
     }
@@ -222,17 +176,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     }, function (data) {
       $scope.submitError = data.data.error;
     });
-  };
-
-  $scope.hide = function () {
-    return "";
-  };
-
-  $scope.highlightRequired = function (value) {
-    if ($scope.inputClass && (isUndefined(value))) {
-      return "required-error";
-    }
-    return null;
   };
 
   $scope.highlightRequiredFieldInModal = function (value) {
@@ -254,11 +197,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return null;
   };
 
-  $scope.showCategory = function (index) {
-    return !((index > 0 ) &&
-      ($scope.pageLineItems[index].productCategory === $scope.pageLineItems[index - 1].productCategory));
-  };
-
   $scope.getCellErrorClass = function (rnrLineItem) {
     return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ?
       'cell-error-highlight' : '';
@@ -275,31 +213,19 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   function resetCostsIfNull() {
     var rnr = $scope.rnr;
     if (rnr === null) return;
-    if (!rnr.fullSupplyItemsSubmittedCost)
+    if (!rnr.fullSupplyItemsSubmittedCost) {
       rnr.fullSupplyItemsSubmittedCost = 0;
-    if (!rnr.nonFullSupplyItemsSubmittedCost)
+    }
+    if (!rnr.nonFullSupplyItemsSubmittedCost) {
       rnr.nonFullSupplyItemsSubmittedCost = 0;
+    }
   }
 
-  function prepareRnr() {
-    var rnr = $scope.rnr;
-    $scope.rnr = new Rnr(rnr, rnrColumns);
+  $scope.$on('$routeUpdate', function () {
+    requisitionService.refreshGrid($scope, $location, $routeParams, true);
+  });
 
-    resetCostsIfNull();
-    $scope.fillPagedGridData();
-    $scope.formDisabled = (function () {
-      if ($scope.rnr) {
-        var status = $scope.rnr.status;
-        if (status === 'INITIATED' && $scope.hasPermission('CREATE_REQUISITION')) return false;
-        if (status === 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION')) return false;
-      }
-      return true;
-    })();
-  }
-
-  function resetErrorPages() {
-    $scope.errorPages = {fullSupply: [], nonFullSupply: []};
-  }
+  requisitionService.refreshGrid($scope, $location, $routeParams, true);
 
   function resetFlags() {
     $scope.submitError = $scope.submitMessage = $scope.error = $scope.message = "";
@@ -307,21 +233,17 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   function removeExtraDataForPostFromRnr() {
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
-    if (!$scope.pageLineItems.length) return rnr;
-    if ($scope.pageLineItems[0].fullSupply === false) {
-      _.each($scope.rnr.nonFullSupplyLineItems, function (lineItem) {
-        rnr.nonFullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
-      });
-    } else if ($scope.pageLineItems[0].fullSupply === true) {
-      _.each($scope.pageLineItems, function (lineItem) {
-        rnr.fullSupplyLineItems.push(_.omit(lineItem, ['rnr', 'programRnrColumnList']));
+    if (!$scope.page[$scope.visibleTab].length) return rnr;
+
+    function transform(copyFrom) {
+      return _.map(copyFrom, function (lineItem) {
+        return _.omit(lineItem, ['rnr', 'programRnrColumnList']);
       });
     }
-    else {
-      _.each($scope.pageLineItems, function (regimenLineItem) {
-        rnr.regimenLineItems.push(regimenLineItem);
-      });
-    }
+
+    //Who wrote this? This is awesome!!
+    rnr[$scope.visibleTab + 'LineItems'] = transform($scope.page[$scope.visibleTab]);
+
     return rnr;
   }
 }

@@ -51,7 +51,7 @@ public class OrderDTOTest {
     order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
     order1.setSupplyLine(supplyLine);
     final Order order2 = new Order();
-    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L, "name")))));
+    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L)))));
     order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
     final RnrDTO dtoForOrder1 = new RnrDTO();
     dtoForOrder1.setId(1L);

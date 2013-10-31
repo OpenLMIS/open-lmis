@@ -8,32 +8,33 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog','ui.bootstrap.accordion']).
-    config(['$routeProvider', function ($routeProvider) {
-  $routeProvider.
-      when('/search', {controller:UserSearchController, templateUrl:'partials/search.html'}).
-      when('/create-user', {controller:UserController, templateUrl:'partials/create.html', resolve: UserController.resolve}).
-      when('/edit/:userId', {controller:UserController, templateUrl:'partials/create.html', resolve: UserController.resolve}).
-    otherwise({redirectTo:'/search'});
-}]).directive('onKeyup', function () {
-      return function (scope, elm, attrs) {
-        elm.bind("keyup", function () {
-          scope.$apply(attrs.onKeyup);
-        });
-      };
-    })
-  .directive('select2Blur', function() {
+var userModule = angular.module('user', ['openlmis', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion']);
+
+userModule.config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.
+      when('/search', {controller: UserSearchController, templateUrl: 'partials/search.html'}).
+      when('/create-user', {controller: UserController, templateUrl: 'partials/create.html', resolve: UserController.resolve}).
+      when('/edit/:userId', {controller: UserController, templateUrl: 'partials/create.html', resolve: UserController.resolve}).
+      otherwise({redirectTo: '/search'});
+  }]).directive('onKeyup', function () {
     return function (scope, elm, attrs) {
-      angular.element("body").on('mousedown', function(e) {
-        $('.select2-dropdown-open').each(function() {
-          if(!$(this).hasClass('select2-container-active')) {
+      elm.bind("keyup", function () {
+        scope.$apply(attrs.onKeyup);
+      });
+    };
+  })
+  .directive('select2Blur', function () {
+    return function (scope, elm, attrs) {
+      angular.element("body").on('mousedown', function (e) {
+        $('.select2-dropdown-open').each(function () {
+          if (!$(this).hasClass('select2-container-active')) {
             $(this).data("select2").blur();
           }
         });
       });
     };
   })
-  .run(function($rootScope, AuthorizationService) {
+  .run(function ($rootScope, AuthorizationService) {
     $rootScope.userSelected = "selected";
     AuthorizationService.preAuthorize('MANAGE_USER');
   });

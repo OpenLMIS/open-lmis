@@ -54,6 +54,9 @@ public class OrderService {
   @Autowired
   private ProgramService programService;
 
+  @Autowired
+  private OrderEventService orderEventService;
+
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
   private int pageSize;
@@ -61,10 +64,6 @@ public class OrderService {
   @Autowired
   public void setPageSize(@Value("${order.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
-  }
-
-  public void save(Order order) {
-    orderRepository.save(order);
   }
 
   @Transactional
@@ -85,6 +84,8 @@ public class OrderService {
       }
       order.setStatus(status);
       orderRepository.save(order);
+      order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+      orderEventService.notifyForStatusChange(order);
     }
   }
 
@@ -132,6 +133,9 @@ public class OrderService {
     for (Long orderId : orderIds) {
       OrderStatus status = (shipmentFileInfo.isProcessingError()) ? RELEASED : PACKED;
       orderRepository.updateStatusAndShipmentIdForOrder(orderId, status, shipmentFileInfo.getId());
+      Order order = orderRepository.getById(orderId);
+      order.setRnr(requisitionService.getFullRequisitionById(order.getRnr().getId()));
+      orderEventService.notifyForStatusChange(order);
     }
   }
 
@@ -155,6 +159,8 @@ public class OrderService {
 
   public void updateOrderStatus(Order order) {
     orderRepository.updateOrderStatus(order);
+    order.setRnr(requisitionService.getFullRequisitionById(order.getId()));
+    orderEventService.notifyForStatusChange(order);
   }
 
   public boolean isShippable(Long orderId) {

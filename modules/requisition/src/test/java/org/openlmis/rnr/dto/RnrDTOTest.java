@@ -12,19 +12,26 @@ package org.openlmis.rnr.dto;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
 import static org.openlmis.rnr.builder.RequisitionBuilder.emergency;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RnrDTO.class)
 public class RnrDTOTest {
   @Test
   public void shouldPrepareRequisitionsForApproval() throws Exception {
@@ -35,17 +42,7 @@ public class RnrDTOTest {
 
     assertThat(rnrDTOs.size(), is(1));
     RnrDTO rnrDTO = rnrDTOs.get(0);
-    assertThat(rnrDTO.getId(), is(rnr.getId()));
-    assertThat(rnrDTO.getProgramId(), is(rnr.getProgram().getId()));
-    assertThat(rnrDTO.getFacilityId(), is(rnr.getFacility().getId()));
-    assertThat(rnrDTO.getProgramName(), is(rnr.getProgram().getName()));
-    assertThat(rnrDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
-    assertThat(rnrDTO.getFacilityName(), is(rnr.getFacility().getName()));
-    assertThat(rnrDTO.getSubmittedDate(), is(rnr.getSubmittedDate()));
-    assertThat(rnrDTO.getModifiedDate(), is(rnr.getModifiedDate()));
-    assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
-    assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
-    assertTrue(rnrDTO.isEmergency());
+    assertRnrDTO(rnrDTO, rnr);
   }
 
   @Test
@@ -57,6 +54,11 @@ public class RnrDTOTest {
 
     assertThat(rnrDTOs.size(), is(1));
     RnrDTO rnrDTO = rnrDTOs.get(0);
+    assertRnrDTO(rnrDTO, rnr);
+    assertThat(rnrDTO.getRequisitionStatus(), is(rnr.getStatus().name()));
+  }
+
+  private void assertRnrDTO(RnrDTO rnrDTO, Rnr rnr) {
     assertThat(rnrDTO.getId(), is(rnr.getId()));
     assertThat(rnrDTO.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(rnrDTO.getFacilityId(), is(rnr.getFacility().getId()));
@@ -67,8 +69,7 @@ public class RnrDTOTest {
     assertThat(rnrDTO.getModifiedDate(), is(rnr.getModifiedDate()));
     assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
     assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
-    assertThat(rnrDTO.getStatus(), is(rnr.getStatus().name()));
-    assertFalse(rnrDTO.isEmergency());
+    assertThat(rnrDTO.isEmergency(), is(rnr.isEmergency()));
   }
 
 

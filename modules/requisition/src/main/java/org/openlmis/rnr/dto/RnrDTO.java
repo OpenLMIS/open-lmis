@@ -29,9 +29,11 @@ public class RnrDTO {
 
   private Long id;
   private String programName;
+  private String programCode;
   private Long programId;
   private String facilityName;
   private String facilityCode;
+  private String agentCode;
   private boolean emergency;
   private Date submittedDate;
   private Date modifiedDate;
@@ -40,7 +42,8 @@ public class RnrDTO {
   private String periodName;
   private Long facilityId;
   private String supplyingDepotName;
-  private String status;
+  private List<RnrLineItemDTO> products;
+  private String requisitionStatus;
   private Long modifiedBy;
 
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
@@ -55,7 +58,7 @@ public class RnrDTO {
     List<RnrDTO> result = new ArrayList<>();
     for (Rnr requisition : requisitions) {
       RnrDTO rnrDTO = populateDTOWithRequisition(requisition);
-      rnrDTO.status = requisition.getStatus().name();
+      rnrDTO.requisitionStatus = requisition.getStatus().name();
       result.add(rnrDTO);
     }
     return result;
@@ -90,4 +93,5 @@ public class RnrDTO {
     rnrDTO.emergency = requisition.isEmergency();
     return rnrDTO;
   }
+
 }

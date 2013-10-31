@@ -202,14 +202,17 @@ public class RequisitionService {
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
 
+    boolean notifyStatusChange = true;
     if (parent == null) {
       savedRnr.prepareForFinalApproval();
     } else {
+      if (savedRnr.isInApproval())
+        notifyStatusChange = false;
       savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
     savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
-    logStatusChangeAndNotify(savedRnr);
+    logStatusChangeAndNotify(savedRnr, notifyStatusChange);
     return savedRnr;
   }
 
@@ -390,8 +393,13 @@ public class RequisitionService {
   }
 
   private void logStatusChangeAndNotify(Rnr requisition) {
+    logStatusChangeAndNotify(requisition, true);
+  }
+
+  private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange) {
     requisitionRepository.logStatusChange(requisition);
-    requisitionEventService.notifyForStatusChange(requisition);
+    if (notifyStatusChange)
+      requisitionEventService.notifyForStatusChange(requisition);
   }
 
   private void insert(Rnr requisition) {

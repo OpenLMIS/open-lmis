@@ -545,6 +545,7 @@ span[class^="tpl-"] {
     }
     .ng-scope {
       position: relative;
+      display:block;
     }
   }
   .table-bordered th:first-child,
@@ -601,7 +602,7 @@ span[class^="tpl-"] {
     min-width: 92px;
     padding: 0px 6px;
     position: absolute;
-    bottom: 27px;
+    bottom: 33px;
     left: -3px;
     border-radius: 10px;
     background: rgba(153, 77, 77, 0.8);
@@ -686,7 +687,7 @@ span[class^="tpl-"] {
 }
 
 #header-columns-fixed {
-  z-index: 5;
+  z-index: 11;
   table {
     width: auto;
   }
@@ -694,10 +695,10 @@ span[class^="tpl-"] {
 
 .column-fixed {
   position: fixed;
-  z-index: 3;
+  z-index: 10;
   table {
     width: auto;
-    box-shadow: #ddd 2px 0px 0px;
+    box-shadow: #ddd 1px 0px 0px;
   }
 }
 
@@ -795,15 +796,17 @@ td.col-price,
 td.col-cost,
 td.col-lossesAndAdjustments {
   span {
-    text-align: right;
     display: block;
   }
 }
+
+
 
 #viewRnr {
   td.col-beginningBalance,
   td.col-quantityReceived,
   td.col-quantityDispensed,
+  td.col-stockInHand,
   td.col-newPatientCount,
   td.col-stockOutDays,
   td.col-quantityRequested,
@@ -820,10 +823,12 @@ td.col-lossesAndAdjustments {
 
 #approveRnr {
   td.col-beginningBalance,
+  td.col-stockInHand,
   td.col-quantityReceived,
   td.col-quantityDispensed,
   td.col-newPatientCount,
   td.col-stockOutDays,
+  td.col-stockInHand,
   td.col-quantityRequested,
   td.col-patientsOnTreatment,
   td.col-patientsToInitiateTreatment,
@@ -838,10 +843,6 @@ td.col-lossesAndAdjustments {
       width: 93%;
     }
   }
-}
-
-.col-packsToShip {
-  min-width: 170px;
 }
 
 table td.col-formula {
@@ -906,6 +907,9 @@ table td.cell-input .cell-text {
   display: inline-block;
   font-size: 0.8em;
   line-height: 18px;
+}
+table td.cell-input .display-block,.display-block {
+  display: block;
 }
 
 .cell-input input[type="text"] {
@@ -998,7 +1002,7 @@ table td.cell-input .cell-text {
         background-color: #f9f9f9;
       }
       &:hover .user-actions a {
-        display: inline-block !important;
+        display: inline-block;
       }
     }
     .user-actions {
@@ -1416,7 +1420,8 @@ table td.delete-button {
 }
 
 .row-specific-error {
-  width: 140px;
+  width: 100%;
+  max-width: 160px;
   padding: 6px;
   margin-left: -82px;
   display: none;
@@ -2392,28 +2397,28 @@ input[rnr-validator="positiveInteger"] {
   padding: 8px 0px 0px
 }
 
-.Regular {
+.regular {
   .right-arrow(#DBDBDB);
 }
 
-.Regular:after, .Regular:before {
+.regular:after, .regular:before {
   .right-arrow-after-before();
 }
 
-.Regular:after {
+.regular:after {
   .right-arrow-after(#DBDBDB);
 }
 
-.Emergency {
+.emergency {
   .right-arrow(#D25F5B);
   color: #fff;
 }
 
-.Emergency:after, .Emergency:before {
+.emergency:after, .emergency:before {
   .right-arrow-after-before();
 }
 
-.Emergency:after {
+.emergency:after {
   .right-arrow-after(#D25F5B);
 }
 
@@ -2459,20 +2464,20 @@ input[rnr-validator="positiveInteger"] {
 }
 
 @media screen and (max-width: 1050px) {
-  .Regular {
+  .regular {
     padding: 29px 15px;
   }
 
-  .Regular:after {
+  .regular:after {
     border-width: 39px 0 39px 15px;
     margin-top: -39px;
   }
 
-  .Emergency {
+  .emergency {
     padding: 29px 15px;
   }
 
-  .Emergency:after {
+  .emergency:after {
     border-width: 39px 0 39px 15px;
     margin-top: -39px;
   }
@@ -2486,4 +2491,12 @@ input[rnr-validator="positiveInteger"] {
     min-width: 300px;
     width: 300px;
   }
+  th.col-skip, td.col-skip{
+    min-width: 40px;
+    width: 40px;
+  }
+}
+
+.text-right-align{
+  text-align: right;
 }

@@ -28,7 +28,7 @@
         </th>
       </tr>
       </thead>
-      <tbody ng-repeat="regimenLineItem in pageLineItems">
+      <tbody ng-repeat="regimenLineItem in page.regimen">
       <tr>
         <td class="productCategory" colspan="{{visibleRegimenColumns.length}}" ng-show="showCategory($index)"
             ng-bind="regimenLineItem.category.name"></td>

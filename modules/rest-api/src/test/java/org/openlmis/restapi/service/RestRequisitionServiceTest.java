@@ -23,7 +23,9 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -39,14 +41,16 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestRequisitionService.class)
+@PrepareForTest({RestRequisitionService.class, ReplenishmentDTO.class})
 public class RestRequisitionServiceTest {
 
   @Rule
@@ -173,4 +177,21 @@ public class RestRequisitionServiceTest {
     service.approve(report);
   }
 
+  @Test
+  public void shouldGetReplenishmentDTOByRequisitionId() throws Exception {
+    Long rnrId = 3L;
+    Rnr expectedRnr = new Rnr(rnrId);
+
+    mockStatic(ReplenishmentDTO.class);
+    Order order = mock(Order.class);
+    when(requisitionService.getFullRequisitionById(rnrId)).thenReturn(expectedRnr);
+    when(orderService.getOrder(rnrId)).thenReturn(order);
+    ReplenishmentDTO expectedReplenishmentDTO = new ReplenishmentDTO();
+    when(ReplenishmentDTO.prepareForREST(expectedRnr, order)).thenReturn(expectedReplenishmentDTO);
+
+    ReplenishmentDTO replenishmentDTO = service.getReplenishmentDetails(rnrId);
+
+    assertThat(replenishmentDTO, is(expectedReplenishmentDTO));
+    verify(requisitionService).getFullRequisitionById(rnrId);
+  }
 }

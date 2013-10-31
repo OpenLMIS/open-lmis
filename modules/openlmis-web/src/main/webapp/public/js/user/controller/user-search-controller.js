@@ -60,8 +60,7 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
     var reWhiteSpace = new RegExp("\\s");
     var digits = new RegExp("\\d");
     if ($scope.password1.length < 8 || $scope.password1.length > 16 || !digits.test($scope.password1) ||
-      reWhiteSpace.test($scope.password1))
-    {
+      reWhiteSpace.test($scope.password1)) {
       $scope.error = messageService.get("error.password.invalid");
       return;
     }
@@ -98,23 +97,15 @@ function UserSearchController($scope, $location, Users, navigateBackService, Upd
         user.lastName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
         fullName.indexOf(query.trim().toLowerCase()) >= 0 ||
         user.email.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0 ||
-        user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0)
-      {
+        user.userName.toLowerCase().indexOf(query.trim().toLowerCase()) >= 0) {
         $scope.filteredUsers.push(user);
       }
     });
     $scope.resultCount = $scope.filteredUsers.length;
   };
 
-  setTimeout(function() {
-    angular.element(".user-list a").live("focus", function() {
-      $(".user-actions a").hide();
-      $(this).parents("li").find(".user-actions a").css("display", "inline-block");
-    });
-  });
-
   $scope.YesNo = function (tf) {
     return (tf === true)? "Yes" : "No";
-  };
-
+  };  
+  
 }

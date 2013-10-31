@@ -163,7 +163,6 @@ public class EPIUse extends DistributionTab {
   }
 
   public void verifyProductGroup(String productGroup, int rownumber) {
-    testWebDriver.sleep(2000);
     WebElement productGroupLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rownumber + "]/td[1]/span");
     testWebDriver.waitForElementToAppear(productGroupLbl);
     assertEquals(productGroup, productGroupLbl.getText());

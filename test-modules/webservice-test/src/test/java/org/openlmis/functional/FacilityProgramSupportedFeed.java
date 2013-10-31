@@ -12,25 +12,20 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
-public class FacilityProgramSupportedFeed extends TestCaseHelper {
-  public WebDriver driver;
+public class FacilityProgramSupportedFeed extends JsonUtility {
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -57,13 +52,13 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_WebService.csv");
     Thread.sleep(5000);
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
     String expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000}";
     assertTrue(responseEntity.getResponse().contains(expected));
 
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent_WebService.csv");
     Thread.sleep(5000);
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000}";
@@ -98,10 +93,10 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     DateFormat formatter;
     Date d;
     formatter = new SimpleDateFormat("yyyyMMdd");
-    d = (Date) formatter.parse(str_date);
+    d = formatter.parse(str_date);
     long dateLong = d.getTime();
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
     String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
     assertTrue(responseEntity.getResponse().contains(expected));
 
@@ -112,7 +107,7 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     createFacilityPage.saveFacility();
 
     Thread.sleep(5000);
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertTrue("responseEntity.getResponse() : "+responseEntity.getResponse(),feedJSONList.get(1).contains("\"active\":true"));
@@ -125,8 +120,7 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     createFacilityPage.saveFacility();
 
     Thread.sleep(5000);
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertTrue("feedJSONList.get(2) : "+feedJSONList.get(2),feedJSONList.get(2).contains("\"active\":false"));
@@ -139,7 +133,7 @@ public class FacilityProgramSupportedFeed extends TestCaseHelper {
     createFacilityPage.saveFacility();
 
     Thread.sleep(5000);
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/programSupported/recent", "GET", "", "");
+    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/program-supported/recent", "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     assertTrue("responseEntity.getResponse() : "+responseEntity.getResponse(),feedJSONList.get(3).contains("\"active\":true"));

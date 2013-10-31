@@ -126,7 +126,7 @@ public class RequisitionController extends BaseController {
       Rnr submittedRnr = requisitionService.submit(rnr);
 
       return success(messageService.message(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(),
-        submittedRnr.getProgram())));
+          submittedRnr.getProgram())));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -148,7 +148,7 @@ public class RequisitionController extends BaseController {
       rnr.setModifiedBy(loggedInUserId(request));
       Rnr authorizedRnr = requisitionService.authorize(rnr);
       return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
-        authorizedRnr.getFacility(), authorizedRnr.getProgram())));
+          authorizedRnr.getFacility(), authorizedRnr.getProgram())));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
@@ -177,6 +177,7 @@ public class RequisitionController extends BaseController {
 
   @RequestMapping(value = "/requisitions-for-convert-to-order", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONVERT_TO_ORDER')")
+  //TODO: move request params into form
   public ResponseEntity<OpenLmisResponse> listForConvertToOrder(@RequestParam(value = "searchType", required = false, defaultValue = SEARCH_ALL) String searchType,
                                                                 @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
                                                                 @RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
@@ -188,7 +189,7 @@ public class RequisitionController extends BaseController {
     try {
       Integer numberOfPages = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, loggedInUserId(request), Right.CONVERT_TO_ORDER);
       List<Rnr> approvedRequisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(
-        searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+          searchType, searchVal, page, numberOfPages, loggedInUserId(request), Right.CONVERT_TO_ORDER, sortBy, sortDirection);
       List<RnrDTO> rnrDTOs = prepareForListApproval(approvedRequisitions);
       OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, rnrDTOs);
       response.addData(NUMBER_OF_PAGES, numberOfPages);
@@ -201,7 +202,7 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
-    RequisitionSearchCriteria criteria, HttpServletRequest request) {
+      RequisitionSearchCriteria criteria, HttpServletRequest request) {
 
     criteria.setUserId(loggedInUserId(request));
 

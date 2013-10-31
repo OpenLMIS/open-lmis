@@ -11,15 +11,16 @@
 describe('CreateRequisitionController', function () {
 
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate;
+      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_, _requisitionService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
+    requisitionService =_requisitionService_;
     $rootScope.hasPermission = function () {
     };
     location = $location;
@@ -113,7 +114,7 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should get lossesAndAdjustments types', function () {
-    expect(lossesAndAdjustmentTypes).toEqual(scope.allTypes);
+    expect(lossesAndAdjustmentTypes).toEqual(scope.lossesAndAdjustmentTypes);
   });
 
   it('should get facility approved products', function () {
@@ -157,6 +158,7 @@ describe('CreateRequisitionController', function () {
     scope.submitRnr();
     httpBackend.flush();
 
+    httpBackend.verifyNoOutstandingRequest();
     expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
     expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
     expect(scope.submitError).toEqual("");
@@ -243,9 +245,11 @@ describe('CreateRequisitionController', function () {
     scope.saveRnrForm = {$setPristine: function () {
     }};
     spyOn(scope.saveRnrForm, '$setPristine');
-    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
+    spyOn(OpenLmisDialog, 'newDialog');
 
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
+
+    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
     httpBackend.flush();
 
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
@@ -270,7 +274,7 @@ describe('CreateRequisitionController', function () {
     }};
     spyOn(scope.saveRnrForm, '$setPristine');
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond({'success': "R&R submitted successfully!"});
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
     httpBackend.flush();
     expect(scope.submitMessage).toEqual("R&R submitted successfully!");
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
@@ -500,7 +504,7 @@ describe('CreateRequisitionController', function () {
 
     httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond(200, {success: "R&R authorized successfully!"});
 
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
     httpBackend.flush();
 
     expect(scope.submitMessage).toEqual("R&R authorized successfully!");
@@ -526,7 +530,7 @@ describe('CreateRequisitionController', function () {
     spyOn(scope.saveRnrForm, '$setPristine');
 
     httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond({'success': "R&R authorized successfully!"});
-    scope.dialogCloseCallback(true);
+    scope.callBack(true);
     httpBackend.flush();
     expect(scope.submitMessage).toEqual("R&R authorized successfully!");
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
@@ -534,28 +538,28 @@ describe('CreateRequisitionController', function () {
 
   it('should return true if error on full supply page', function () {
     scope.errorPages = {fullSupply: [1]};
-    scope.visibleTab = 'full-supply';
+    scope.visibleTab = 'fullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on full supply page', function () {
     scope.errorPages = {fullSupply: []};
-    scope.visibleTab = 'full-supply';
+    scope.visibleTab = 'fullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });
 
   it('should return true if error on non full supply page', function () {
     scope.errorPages = {nonFullSupply: [1]};
-    scope.visibleTab = 'non-full-supply';
+    scope.visibleTab = 'nonFullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeTruthy();
   });
 
   it('should return false if no error on non full supply page', function () {
     scope.errorPages = {nonFullSupply: []};
-    scope.visibleTab = 'non-full-supply';
+    scope.visibleTab = 'nonFullSupply';
     var result = scope.checkErrorOnPage(1);
     expect(result).toBeFalsy();
   });

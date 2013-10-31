@@ -82,7 +82,7 @@ public class RequisitionGroupMemberService {
         getProgramIDsForRequisitionGroup(requisitionGroupMember.getRequisitionGroup().getId());
 
     if (programIDsForRG.size() == 0)
-      throw new DataException("No Program(s) mapped for Requisition Group");
+      throw new DataException("error.no.program.mapped.requisition.group");
 
     return intersection(requisitionGroupProgramIdsForFacility, programIDsForRG);
   }
@@ -106,5 +106,9 @@ public class RequisitionGroupMemberService {
 
   public void removeRequisitionGroupMember(RequisitionGroup requisitionGroup, Facility facility){
       requisitionGroupMemberRepository.removeRequisitionGroupMember(requisitionGroup, facility);
+  }
+
+  public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
+    return requisitionGroupMemberRepository.getAllRequisitionGroupMembersByFacility(facilityId);
   }
 }

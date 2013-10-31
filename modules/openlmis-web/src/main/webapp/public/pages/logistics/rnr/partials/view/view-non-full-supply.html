@@ -10,15 +10,15 @@
 
 <div ng-controller="ViewNonFullSupplyController">
   <div id="viewRnr" class="rnr-table" custom-horizontal-scroll>
-    <div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+    <div ng-hide="page.nonFullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
     <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable">
       <thead>
-      <tr ng-show="pageLineItems.length">
+      <tr ng-show="page.nonFullSupply.length">
         <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
             ng-bind="programRnrColumn.label"></th>
       </tr>
       </thead>
-      <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in pageLineItems">
+      <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in page.nonFullSupply">
       <tr>
         <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
             ng-bind="rnrLineItem.productCategory"></td>

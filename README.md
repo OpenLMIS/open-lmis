@@ -18,19 +18,34 @@ System Requirement
 ---------------------------
 
 - JDK 7
+- Postgresql 9
+- Git
 - Gradle 1.6
-
   ### For Linux users
-   Download the source binary directly from the gradle website.
-   Copy the downloaded folder to /usr/bin. Add the path to gradle bin folder to your /etc/profile file
+   * Download the source binary directly from the gradle website.
+   Copy the downloaded folder to /usr/bin. 
+   * Add the path to gradle bin folder to your /etc/profile file
    export PATH="$PATH:/usr/bin/gradle-1.6/bin"
-
+   
   ### For Mac users
    * Install HomeBrew
-   * Run ```brew install gradle```
-- Git
-- Postgresql 9
+   * Run ```brew install gradle```         
 
+- Node.js
+
+  ### For Linux users
+   * Install Nodejs as described [here](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager#rhelcentosscientific-linux-6) based on your Linux flavour.
+
+  ### For Mac users
+  * Install Node,js [directly](http://nodejs.org/) or using homebrew as described [link](http://)
+  * Those who install Node.js using Homebrew should export the following (or include in ```$HOME/.bash_profile``` or ```$HOME/.profile``` or ```$HOME/.bashrc``` or ```$HOME/.zshrc```, depending on your shell.
+      - **export NODE_PATH="/usr/local/bin/node"**
+      - **export PATH="/usr/local/share/npm/bin:$PATH"**  
+  
+- Grunt.js (used for linting JS, LESS files, minifying JS files etc.)
+  * Install Grunt command-line runner by running (after installing Node.js as mentioned in aformentioned step) ```npm install -g grunt-cli```
+  * Install project-specific grunt dependencies by navigating to ```modules/openlmis-web``` from project root directory and run ```npm install``` (one-time activity)
+  * Grunt tasks available can be found in ```modules/openlmis-web/Gruntfile.js``` 
 
 Source code 
 ------------------
@@ -72,5 +87,7 @@ Tech Stack
  - Mybatis
  - Angularjs
  - Jasmine
+ - Node.js
+ - Grunt.js
 
 

@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
@@ -30,13 +31,13 @@ public class TestWebDriver {
   private int DEFAULT_WAIT_TIME = 10;
 
   public TestWebDriver(WebDriver driver) {
-    this.driver = driver;
+    TestWebDriver.driver = driver;
     maximizeBrowser();
   }
 
   public void setBaseURL(String BASE_URL) {
     driver.manage().deleteAllCookies();
-    this.BASE_URL = BASE_URL;
+    TestWebDriver.BASE_URL = BASE_URL;
     get();
   }
 
@@ -114,6 +115,14 @@ public class TestWebDriver {
     });
   }
 
+  public void waitForElementToBeEnabled(final WebElement element) {
+    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver d) {
+        return (element.isEnabled());
+      }
+    });
+  }
+
   public void waitForElementsToAppear(final WebElement element, final WebElement elementSecond) {
     (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver d) {
@@ -126,15 +135,6 @@ public class TestWebDriver {
     (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver d) {
         return (element.isDisplayed() || elementSecond.isDisplayed() || elementThird.isDisplayed());
-      }
-    });
-  }
-
-
-  public void waitForTextToAppear(final String textToWaitFor) {
-    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
-      public Boolean apply(WebDriver d) {
-        return (getPageSource().contains(textToWaitFor));
       }
     });
   }
@@ -221,6 +221,12 @@ public class TestWebDriver {
 
   public void keyPress(final WebElement element) {
     waitForElementToAppear(element);
+
+    if (driver instanceof FirefoxDriver) {
+      element.sendKeys(Keys.RETURN);
+      return;
+    }
+
     if (element != null) {
       for (int i = 0; i < 15; i++) {
         element.sendKeys(Keys.TAB);
