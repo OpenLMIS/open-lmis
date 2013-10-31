@@ -33,7 +33,10 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     });
 
     $scope.filterGrid = function (){
-        $scope.getPagedDataAsync(0, 0);
+        if (checkMinimumFilled()) {
+          //alert(JSON.stringify($scope.program + ">>>" + $scope.schedule  + ">>>" + $scope.period  + ">>>" + $scope.orderType, null, 4));
+          $scope.getPagedDataAsync(0, 0);
+        }
     };
 
     //filter form data section
@@ -331,6 +334,7 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
         $.each($scope.filterObject, function(index, value) {
                 params[index] = value;
         });
+        //alert(JSON.stringify($scope.program , null, 4));
         //alert(JSON.stringify($scope.filterObject, null, 4));
 
         OrderReport.get(params, function(data) {
@@ -344,5 +348,14 @@ function OrderReportController($scope, ngTableParams, $filter, OrderReport, Repo
     $scope.formatNumber = function(value){
         return utils.formatNumber(value,'0,000');
     };
+
+    function checkMinimumFilled()
+    {
+        // check valid value of each field minimum selection to run the application
+        if ($scope.program > 0 && $scope.schedule > 0 && $scope.period > 0 && (typeof($scope.orderType) !== "undefined")){
+            return true;        }
+        return false;
+    }
+
 
 }

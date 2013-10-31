@@ -20,9 +20,7 @@
             </div>
         </div>
 
-        <div >
-            <div class="row-fluid">
-                <div class="sidebar">
+               <div class="box-content" >
                     <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
 
@@ -38,10 +36,7 @@
 
 
                                 </div>
-                            </div>
-                            <br style="clear: both">
-                            <div class="clearfix ">
-                                   <!-- Program-->
+                                <!-- Program-->
 
                                     <div class="form-cell horizontalFilters" >
                                         <label class="labels">Program<span
@@ -53,6 +48,18 @@
                                             </select>
                                         </div>
                                     </div>
+
+ <!--                               <div class="form-cell horizontalFilters">
+                                    <label class="labels">Year <span class="label-required"></span></label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="year">
+                                            <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+-->
                                     <div class="form-cell horizontalFilters" >
                                         <label class="labels">Schedule <span class="label-required">*</span></label>
 
@@ -63,17 +70,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-cell horizontalFilters">
-                                        <label class="labels">Year <span class="label-required"></span></label>
-
-                                        <div class="form-field">
-                                            <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="year">
-                                                <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                    <!-- Period-->
+                                     <!-- Period-->
                                     <div class="form-cell horizontalFilters">
                                         <label class="labels">Period<span  class="label-required"> *</span></label>
 
@@ -95,6 +92,7 @@
                                         </div>
                                     </div>
                                     <!-- Facility Type-->
+<!--
                                     <div class="form-cell horizontalFilters" >
                                         <label class="labels">Facility Type</label>
 
@@ -104,12 +102,13 @@
                                             </select>
                                         </div>
                                     </div>
+-->
                                     <!-- Facility-->
                                     <div class="form-cell horizontalFilters">
                                         <label class="labels">Facility Name<span  class="label-required"> *</span></label>
                                         <div class="form-field">
                                             <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
-                                                <option value="">-- Select Facility --</option>
+                                                <option value="">-- All Facilities --</option>
                                             </select>
                                         </div>
 
@@ -119,13 +118,14 @@
                         <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
                     </div>
                 </div>
-                <div class="content-body">
 
-                    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-                        <tr>
-                            <td>No data to show under selected filters</td>
-                        </tr>
-                    </table>
+
+                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                    <tr>
+                        <td>No data to show under selected filters</td>
+                    </tr>
+                </table>
+
 
                     <div ng-show="datarows.length > 0">
 
@@ -135,26 +135,30 @@
                              <span class="report-label">{{summary.name}}</span> : <span class="report-data">{{summary.count}}</span>
                          </span>
                         </div>
+
                         <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams" style="padding-top: 20px;">
                             <tbody>
                             <th>#</th>
+                            <th>Facility</th>
                             <th>Product<br>Code</th>
                             <th>Product<br>Name</th>
                             <th>Unit</th>
                             <th>Beginning<br>Balance</th>
                             <th>Quantity<br>Received</th>
                             <th>Quanity<br>Dispensed</th>
-                            <th>Adjustments</th>
+                            <th>Adjust-<br>ments</th>
                             <th>Physical<br>Count</th>
                             <th>Adjusted<br>AMC</th>
                             <th>New<br>EOP</th>
                             <th>Quantity<br>Ordered</th>
                             <th>Quantity<br>Supplied</th>
-                            <tr ng-repeat="row in datarows">
-                                <td class="number" style="width:20px" >{{row.no}}</td>
+
+                            <tr ng-repeat="row in datarows | orderBy:['facility','productMain','productIndex']">
+                                <td style="width:10px" >{{row.no}}</td>
+                                <td style="..." >{{row.facility}}</td>
                                 <td style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
                                 <td style="width:30%" sortable="product"  >{{ row.product }}</td>
-                                <td class="number" style="width:80px" sortable="unit"  >{{ row.unit }}</td>
+                                <td style="width:80px" sortable="unit"  >{{ row.unit }}</td>
                                 <td class="number" style="{{ row.productIndex == 0 && row.err_open_balance == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
                                 <td class="number" style="{{ row.productIndex == 0 && row.err_qty_received == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
                                 <td class="number" style="width:80px" sortable="totalQuantityDispensed"  >{{ row.productIndex == 0 && (row.totalQuantityDispensed | number) || ''}}</td>
@@ -168,12 +172,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                </div>
-            </div>
-
-        </div>
-
 
     </div>
 </div>
