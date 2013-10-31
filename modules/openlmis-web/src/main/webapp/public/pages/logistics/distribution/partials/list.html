@@ -58,7 +58,8 @@
 
   <!--modal-->
 
-  <div id="synchronizationModal" show="requestInProgress" modal="synchronizationModal" options="{'backdrop':'static', 'escape':false}">
+  <div id="synchronizationModal" show="requestInProgress" modal="synchronizationModal"
+       options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header">
       <h3>
         <span openlmis-message="syncProgressHeader"></span>
@@ -128,6 +129,10 @@
              ng-click="syncDistribution(distributionData.id)"/>
       <input type="button" class="btn btn-cancel" openlmis-message="button.cancel"
              ng-click="synchronizationModal = false" ng-show="syncResult[COMPLETE].length"/>
+      <div class="pull-right" ng-show="syncResult[COMPLETE].length">
+        <i class="icon icon-exclamation-sign"></i>
+        <span openlmis-message="message.sync.failure.retry"></span>
+      </div>
     </div>
   </div>
 </div>
