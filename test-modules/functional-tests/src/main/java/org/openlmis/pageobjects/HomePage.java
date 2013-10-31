@@ -599,15 +599,6 @@ public class HomePage extends Page {
     //testWebDriver.waitForElementToAppear(startDate);
   }
 
-    public void navigateRnr() throws IOException {
-        testWebDriver.waitForElementToAppear(requisitionsLink);
-        testWebDriver.keyPress(requisitionsLink);
-        testWebDriver.waitForElementToAppear(createLink);
-        testWebDriver.sleep(2000);
-        testWebDriver.keyPress(createLink);
-        testWebDriver.sleep(2000);
-        testWebDriver.waitForElementToAppear(myFacilityRadioButton);
-    }
 
     public boolean reportMenuIsDisplayed(){
           return true;

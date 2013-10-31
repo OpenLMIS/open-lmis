@@ -14,7 +14,6 @@ import org.ict4h.atomfeed.server.service.Event;
 import org.joda.time.DateTime;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
-import org.openlmis.rnr.dto.RnrFeedDTO;
 import org.openlmis.rnr.service.NotificationServices;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,7 +29,6 @@ public class RequisitionStatusChangeEvent extends Event {
   public RequisitionStatusChangeEvent(Rnr requisition, NotificationServices nServices) throws URISyntaxException {
     super(UUID.randomUUID().toString(), FEED_TITLE, DateTime.now(), "",
             new RequisitionStatusFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
-            new RnrFeedDTO(requisition).getSerializedContents(), FEED_CATEGORY);
 
     if(requisition != null)  {
       notificationService = nServices;
