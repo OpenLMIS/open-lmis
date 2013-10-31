@@ -24,16 +24,16 @@
 </div>
 
 <div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
-<div ng-hide="pageLineItems.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+<div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
 <table id="fullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns
        class="table table-bordered scrollable">
 <thead>
-<tr ng-show="pageLineItems.length">
+<tr ng-show="page.fullSupply.length">
   <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
       ng-hide="programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
 </tr>
 </thead>
-<tbody ng-show="visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat="rnrLineItem in pageLineItems">
+<tbody ng-show="visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat="rnrLineItem in page.fullSupply">
 <tr>
   <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
       ng-bind="rnrLineItem.productCategory"></td>
@@ -54,7 +54,7 @@
                                ng-model="rnrLineItem[column.name]"
                                rnr-validator="positiveInteger" maxlength="8"
                                ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
-                               ng-class="highlightRequired(rnrLineItem[column.name])"/></span>
+                               ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/></span>
                       <span ng-switch-default>
                         <span class="cell-text text-right-align display-block"
                               ng-bind="rnrLineItem[column.name]"></span></span>
@@ -77,7 +77,7 @@
                            ng-model="rnrLineItem[column.name]"
                            rnr-validator="positiveInteger" maxlength="8"
                            ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
-                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                           ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/>
                     <span class="rnr-form-error" id="quantityReceived{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">
                     </span>
@@ -116,7 +116,7 @@
                            rnr-validator="positiveInteger"
                            ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                            maxlength="8"
-                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                           ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/>
                     <span class="rnr-form-error" id="quantityDispensed{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">
                     </span>
@@ -147,7 +147,7 @@
                            rnr-validator="positiveInteger"
                            ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                            maxlength="8"
-                           ng-class="highlightRequired(rnrLineItem[column.name])" class="small-width-ie"/>
+                           ng-class="highlightRequired(inputClass, rnrLineItem[column.name])" class="small-width-ie"/>
                     <span class="rnr-form-error" id="stockInHand{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">
                     </span>
@@ -164,7 +164,7 @@
                            ng-model="rnrLineItem[column.name]"
                            rnr-validator="positiveInteger" maxlength="8"
                            ng-change="rnr.fillNormalizedConsumption(rnrLineItem)"
-                           ng-class="highlightRequired(rnrLineItem[column.name])"/>
+                           ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/>
                     <span class="rnr-form-error" id="newPatientCount{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">
                     </span>
@@ -271,7 +271,7 @@
           </div>
         </div>
         <div class="span4">
-          <input type="button"
+          <input type="button" id="addLossesAndAdjustment"
                  ng-click="addLossAndAdjustment(lossAndAdjustment)"
                  ng-disabled="!(lossAndAdjustment.type && lossAndAdjustment.quantity)"
                  class="btn btn-primary"
@@ -326,7 +326,7 @@
          ng-bind="modalError"></div>
   </div>
   <div class="modal-footer">
-    <input type="button" class="btn btn-primary save-button"
+    <input type="button" id="lossesAndAdjustmentsDone" class="btn btn-primary save-button"
            ng-click="saveLossesAndAdjustmentsForRnRLineItem()"
            openlmis-message="button.done"/>
     <input type="button"
