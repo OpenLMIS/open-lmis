@@ -9,77 +9,76 @@
  */
 
 function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, messageService, distributionService, $dialog) {
-  var COMPLETE = 'is-complete';
-  var SYNCED = 'is-synced';
-  var DUPLICATE = 'is-duplicate';
+  $scope.COMPLETE = 'is-complete';
+  $scope.SYNCED = 'is-synced';
+  $scope.DUPLICATE = 'is-duplicate';
+  var SYNC_COMPLETE = 'label.distribution.synchronization.complete';
+  var SYNC_IN_PROGRESS = 'label.distribution.synchronization.progress';
+  var totalFacilityCount;
+
+  $scope.synchronizationModal = false;
 
   SharedDistributions.update();
 
   $scope.sharedDistributions = SharedDistributions;
 
-  $scope.message = null;
 
   $scope.syncDistribution = function (distributionId) {
+    $scope.syncMessage = null;
+    $scope.syncResult = {};
+    $scope.syncProgressHeader = SYNC_IN_PROGRESS;
+    $scope.requestInProgress = $scope.synchronizationModal = true;
     var promises = [];
-    var facilitySelected;
-    var distributionData = _.findWhere(SharedDistributions.distributionList, {id: distributionId});
-    var facilities;
 
     distributionService.getReferenceData(distributionId, function (referenceData) {
-      facilities = referenceData.facilities;
-      syncFacilities();
+      syncFacilities(referenceData.facilities);
     });
 
-    function syncFacilities() {
-      $.each(distributionData.facilityDistributionData, function (facilityId, facilityDistributionData) {
-        facilityId = utils.parseIntWithBaseTen(facilityId);
-        var computedStatus = facilityDistributionData.computeStatus();
-        if (computedStatus !== COMPLETE)  return;
+    function syncFacilities(facilities) {
+      var synchronizedFacilityCount = $scope.progressValue = totalFacilityCount = 0;
 
+      $.each($scope.distributionData.facilityDistributionData, function (facilityId, facilityDistributionData) {
+        if (facilityDistributionData.status !== $scope.COMPLETE)  return;
+        ++totalFacilityCount;
+
+        facilityId = utils.parseIntWithBaseTen(facilityId);
         var defer = $q.defer();
         promises.push(defer.promise);
 
         SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistributionData,
-          function () {
-            facilityDistributionData.status = SYNCED;
-            facilitySelected = _.findWhere(facilities, {id: facilityId});
-            defer.resolve({facility: facilitySelected, facilityDistributionData: facilityDistributionData});
+          function (data) {
+            if (data.syncStatus === 'Synced') {
+              facilityDistributionData.status = $scope.SYNCED;
+            } else if (data.syncStatus === 'AlreadySynced') {
+              facilityDistributionData.status = $scope.DUPLICATE;
+            }
+            defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistributionData: facilityDistributionData});
+            updateProgressBar();
           }, function () {
-            facilityDistributionData.status = DUPLICATE;
-            facilitySelected = _.findWhere(facilities, {id: facilityId});
-            defer.resolve({facility: facilitySelected, facilityDistributionData: facilityDistributionData});
+            defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistributionData: facilityDistributionData});
+            updateProgressBar();
           });
       });
 
+      function updateProgressBar() {
+        ++synchronizedFacilityCount;
+        $scope.progressValue = (synchronizedFacilityCount / totalFacilityCount) * 100;
+      }
+
       $q.all(promises).then(function (resolves) {
-        distributionService.save(distributionData);
+        $scope.requestInProgress = false;
+        $scope.syncProgressHeader = SYNC_COMPLETE;
+        distributionService.save($scope.distributionData);
 
-        if (!promises.length) {
-          $scope.message = 'message.no.facility.synced';
-          return;
-        }
-
-        var syncedFacilities = _.filter(resolves, function (resolve) {
-          return resolve.facilityDistributionData.status === SYNCED;
+        $scope.syncResult = _.groupBy(resolves, function (resolve) {
+          return resolve.facilityDistributionData.status;
         });
-
-        if (!syncedFacilities.length) {
-          $scope.message = 'error.facility.data.already.synced';
-          return;
-        }
-
-        var facilities = [];
-        $(syncedFacilities).each(function (index, resolve) {
-          facilities.push(resolve.facility.code + ' - ' + resolve.facility.name);
-        });
-
-        $scope.message = messageService.get("message.facility.synced.successfully", facilities.join(', '));
       });
     }
   };
 
   $scope.deleteDistribution = function (id) {
-    $scope.message = '';
+    $scope.syncMessage = '';
     var dialogOpts = {
       id: "distributionInitiated",
       header: messageService.get('label.delete.distribution.header'),
@@ -95,4 +94,33 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
     OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
   };
+
+
+  $scope.showConfirmDistributionSync = function (distributionId) {
+    $scope.distributionData = _.findWhere(SharedDistributions.distributionList, {id: distributionId});
+
+    var facilityDataToSync = _.filter($scope.distributionData.facilityDistributionData, function (facilityDistributionData) {
+      return facilityDistributionData.computeStatus() === $scope.COMPLETE;
+    });
+
+    if (!facilityDataToSync.length) {
+      $scope.syncMessage = 'message.no.facility.synced';
+      return;
+    }
+
+    function syncDistributionCallBack(distributionId) {
+      return function (result) {
+        if (!result) return;
+        $scope.syncDistribution(distributionId);
+      };
+    }
+
+    var dialogOpts = {
+      id: "syncDistributionDialog",
+      header: messageService.get('sync.distribution.header'),
+      body: messageService.get('sync.distribution.confirm')
+    };
+    OpenLmisDialog.newDialog(dialogOpts, syncDistributionCallBack(distributionId), $dialog, messageService);
+  };
+
 }

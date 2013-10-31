@@ -11,7 +11,6 @@ public class FacilityVisitService {
 
   public static final String SYNCED_SUCCESSFULLY_STATUS = "Synced";
   public static final String ALREADY_SYNCED_STATUS = "AlreadySynced";
-  public static final String SYNC_FAILED_STATUS = "Failed";
   @Autowired
   FacilityVisitRepository repository;
 
@@ -23,7 +22,7 @@ public class FacilityVisitService {
     try {
       repository.insert(facilityVisit);
     } catch (Exception exception) {
-      return SYNC_FAILED_STATUS;
+      throw exception;
     }
     return SYNCED_SUCCESSFULLY_STATUS;
   }

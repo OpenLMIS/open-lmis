@@ -11,34 +11,37 @@
 //  Description:
 //  Bringing focus on the first field of modal upon open, restricting focus within the modal on tabbing
 
-app.directive('modal', function() {
+app.directive('modal', function () {
   return {
     restrict: 'EA',
-    link: function(scope, elm, attrs) {
-      var shownExpr = attrs.modal || attrs.show;
+    link: function (scope, elm, attrs) {
+      var shownExpr = attrs.modal;
 
-      scope.$watch(shownExpr, function(isShown, oldShown) {
+      if (attrs.show)
+        shownExpr = '[' + shownExpr + ', ' + attrs.show + ']';
+
+      scope.$watch(shownExpr, function (isShown, oldShown) {
         var tabbables;
         var backdrop;
         var focusTabbableFirstChild = function (e) {
           tabbables.first().focus();
         };
 
-        setTimeout(function() {
+        setTimeout(function () {
           if (isShown) {
             tabbables = elm.find(":tabbable");
             backdrop = angular.element("body .modal-backdrop");
 
             tabbables.first().focus();
 
-            tabbables.last().bind("keydown", function(e) {
+            tabbables.last().bind("keydown", function (e) {
               if (e.which == 9 && !e.shiftKey) {
                 tabbables.first().focus();
                 e.preventDefault();
               }
             });
 
-            tabbables.first().bind("keydown", function(e) {
+            tabbables.first().bind("keydown", function (e) {
               if (e.which == 9 && e.shiftKey) {
                 tabbables.last().focus();
                 e.preventDefault();
@@ -57,7 +60,7 @@ app.directive('modal', function() {
           }
         });
 
-      });
+      }, true);
     }
   };
 });

@@ -31,7 +31,7 @@ distributionModule.service('SharedDistributions', function (IndexedDB, $rootScop
 
       transaction.oncomplete = function (e) {
         thisService.distributionList = aggregate;
-        $rootScope.$apply();
+        if (!$rootScope.$$phase)$rootScope.$apply();
       };
     });
   };
