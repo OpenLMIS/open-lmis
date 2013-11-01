@@ -79,6 +79,9 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
   private static WebElement syncAlertMessage = null;
 
+  @FindBy(how = ID, using = "duplicateFacilities")
+  private static WebElement facilityAlreadySyncMessage = null;
+
     public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -153,12 +156,10 @@ public class DistributionPage extends Page {
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
-  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period) {
-    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-
-    String message = String.format("The data for the selected %s, %s, %s is already cached", deliveryZone, program, period);
-    assertEquals(message, saveSuccessMessageDiv.getText());
-  }
+  public String getFacilityAlreadySyncMessage() {
+    testWebDriver.waitForElementToAppear(facilityAlreadySyncMessage);
+      return facilityAlreadySyncMessage.getText();
+    }
 
 
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {

@@ -23,6 +23,7 @@ import org.testng.annotations.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
@@ -45,9 +46,9 @@ public class DistributionSyncTest extends TestCaseHelper {
   public void testMultipleFacilitySync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                        String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                        String facilityCodeFirst, String facilityCodeSecond,
-                                       String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                       String programFirst, String programSecond, String schedule) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
@@ -166,9 +167,108 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     epiUse.navigate();
     epiUse.verifyAllFieldsDisabled();
+
+    homePage.navigatePlanDistribution();
+      distributionPage.deleteDistribution();
+      distributionPage.ConfirmDeleteDistribution();
+
   }
 
-  @AfterMethod(groups = "distribution")
+    @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
+    public void testDeleteDistributionAfterSync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                         String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                         String facilityCodeFirst, String facilityCodeSecond,
+                                         String programFirst, String programSecond, String schedule) throws Exception {
+
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add("MANAGE_DISTRIBUTION");
+        setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+                deliveryZoneNameFirst, deliveryZoneNameSecond,
+                facilityCodeFirst, facilityCodeSecond,
+                programFirst, programSecond, schedule);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+        dbWrapper.insertProductGroup("PG1");
+        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
+        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
+        dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+        dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        DistributionPage distributionPage = homePage.navigatePlanDistribution();
+        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+        distributionPage.selectValueFromProgram(programFirst);
+        distributionPage.clickInitiateDistribution();
+
+        distributionPage.clickRecordData();
+        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+        facilityListPage.selectFacility("F10");
+
+        EPIUse epiUse = new EPIUse(testWebDriver);
+        epiUse.navigate();
+        epiUse.checkApplyNRToAllFields(true);
+
+        GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+        generalObservationPage.navigate();
+        generalObservationPage.setObservations("Some observations");
+        generalObservationPage.setConfirmedByName("samuel");
+        generalObservationPage.setConfirmedByTitle("Doe");
+        generalObservationPage.setVerifiedByName("Mai ka");
+        generalObservationPage.setVerifiedByTitle("Laal");
+
+        homePage.navigateHomePage();
+        homePage.navigatePlanDistribution();
+
+        distributionPage.syncDistribution();
+        distributionPage.syncDistributionMessageDone();
+
+        distributionPage.deleteDistribution();
+        distributionPage.ConfirmDeleteDistribution();
+        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+        distributionPage.selectValueFromProgram(programFirst);
+        distributionPage.clickInitiateDistribution();
+        distributionPage.ConfirmDeleteDistribution();
+
+        distributionPage.clickRecordData();
+        facilityListPage.selectFacility("F10");
+
+        epiUse.navigate();
+        epiUse.checkApplyNRToAllFields(true);
+
+        generalObservationPage.navigate();
+        generalObservationPage.setObservations("Some observations");
+        generalObservationPage.setConfirmedByName("samuel");
+        generalObservationPage.setConfirmedByTitle("Doe");
+        generalObservationPage.setVerifiedByName("Mai ka");
+        generalObservationPage.setVerifiedByTitle("Laal");
+
+        facilityListPage.selectFacility("F11");
+        epiUse.navigate();
+        epiUse.checkApplyNRToAllFields(true);
+
+        generalObservationPage.navigate();
+        generalObservationPage.setObservations("Some observations");
+        generalObservationPage.setConfirmedByName("samuel");
+        generalObservationPage.setConfirmedByTitle("Doe");
+        generalObservationPage.setVerifiedByName("Mai ka");
+        generalObservationPage.setVerifiedByTitle("Laal");
+
+        homePage.navigateHomePage();
+        homePage.navigatePlanDistribution();
+
+        distributionPage.syncDistribution();
+        assertEquals(distributionPage.getFacilityAlreadySyncMessage(),"Already synced facilities : \n" +
+                "F10-Village Dispensary");
+        assertEquals(distributionPage.getSyncMessage(),"Synced facilities : \n" +
+                "F11-Central Hospital");
+        distributionPage.syncDistributionMessageDone();
+
+
+    }
+
+    @AfterMethod(groups = "distribution")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
@@ -183,8 +283,8 @@ public class DistributionSyncTest extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
+      {"fieldCoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
+        "F10", "F11", "VACCINES", "TB", "M"}
     };
 
   }

@@ -25,19 +25,19 @@ import static org.openqa.selenium.support.How.XPATH;
 public class EPIUse extends DistributionTab {
 
   @FindBy(how = XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[4]/a/span[2]")
-  private static WebElement epiUseTab;
+  private static WebElement epiUseTab=null;
 
   @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[4]/a/span[1][@class='status-icon']")
-  public static WebElement overallEPIUseIcon;
+  public static WebElement overallEPIUseIcon=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Apply NR to all fields']")
-  private static WebElement applyNRToAllFieldsCheckbox;
+  private static WebElement applyNRToAllFieldsCheckbox=null;
 
   @FindBy(how = ID, using = "button_OK")
-  private static WebElement okButton;
+  private static WebElement okButton=null;
 
   @FindBy(how = ID, using = "button_Cancel")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton=null;
 
   public EPIUse(TestWebDriver driver) {
     super(driver);
