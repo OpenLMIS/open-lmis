@@ -52,9 +52,6 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[6]/a")
   private static WebElement syncLink = null;
 
-  @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
-  private static WebElement syncMessage = null;
-
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
   private static WebElement deleteDistributionIcon = null;
 
@@ -73,7 +70,14 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='noDistributionInitiated']/span")
   private static WebElement noDistributionCachedMessage = null;
 
-  public DistributionPage(TestWebDriver driver) throws IOException {
+  @FindBy(how = XPATH, using = "//div[@id='synchronizationModal']/div[3]/input[1]")
+  private static WebElement distributionSyncMessageDone = null;
+
+  @FindBy(how = ID, using = "syncedFacilities")
+  private static WebElement syncMessage = null;
+
+
+    public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
@@ -112,11 +116,16 @@ public class DistributionPage extends Page {
   public void clickSyncDistribution() {
     testWebDriver.waitForElementToAppear(syncLink);
     syncLink.click();
+    okButton.click();
   }
 
   public void syncDistribution() {
     clickSyncDistribution();
     okButton.click();
+  }
+
+  public void syncDistributionMessageDone() {
+    distributionSyncMessageDone.click();
   }
 
   public String getSyncMessage() {

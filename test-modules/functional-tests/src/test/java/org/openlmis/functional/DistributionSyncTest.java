@@ -141,8 +141,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     homePage.navigatePlanDistribution();
 
     distributionPage.clickSyncDistribution();
-    assertTrue(distributionPage.getSyncMessage().contains("F10 - Village Dispensary"));
-    assertTrue(distributionPage.getSyncMessage().contains("F11 - Central Hospital"));
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
+    distributionPage.syncDistributionMessageDone();
 
     dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
     distributionPage.clickRecordData();
