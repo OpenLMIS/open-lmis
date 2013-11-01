@@ -20,8 +20,8 @@ public class RestPODService {
   private OrderService orderService;
 
   public void updatePOD(POD pod, String userName) {
-    pod.setModifiedBy(userService.getByUserName(userName).getId());
     pod.setCreatedBy(userService.getByUserName(userName).getId());
+    pod.setModifiedBy(userService.getByUserName(userName).getId());
     pod.validate();
     validateOrderForPOD(pod);
     podService.updatePOD(pod);

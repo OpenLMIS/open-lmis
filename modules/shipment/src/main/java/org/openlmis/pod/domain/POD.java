@@ -37,6 +37,7 @@ public class POD extends BaseModel {
     if (podLineItems == null || podLineItems.size() == 0) throw new DataException("error.restapi.mandatory.missing");
     for (PODLineItem lineItem : podLineItems) {
       lineItem.validate();
+      lineItem.setCreatedBy(createdBy);
       lineItem.setModifiedBy(modifiedBy);
     }
 
