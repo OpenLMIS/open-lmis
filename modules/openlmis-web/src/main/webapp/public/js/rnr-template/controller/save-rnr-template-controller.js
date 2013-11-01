@@ -8,7 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList, $location) {
+function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList,
+                                   $location) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
   $scope.sources = rnrTemplateForm.sources;
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
@@ -16,6 +17,13 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.$parent.message = "";
   $scope.selectProgramUrl = "/public/pages/admin/rnr-template/index.html#/select-program";
   $scope.arithmeticValidationLabel = false;
+  $scope.rnrSortableColumns = _.filter($scope.rnrColumns, function (rnrColumn) {
+    return !(rnrColumn.name == 'skip' || rnrColumn.name == 'productCode' || rnrColumn.name == 'product');
+  });
+  $scope.rnrNonSortableColumns = _.sortBy(_.difference($scope.rnrColumns, $scope.rnrSortableColumns),
+    function (rnrColumn) {
+      return rnrColumn.position;
+    });
 
   var setRnRTemplateValidateFlag = function () {
     $.each($scope.rnrColumns, function (index, column) {
@@ -23,7 +31,9 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
     });
   };
 
+
   $scope.save = function () {
+    $scope.rnrColumns = _.union($scope.rnrNonSortableColumns, $scope.rnrSortableColumns);
     updatePosition();
     setRnRTemplateValidateFlag();
     RnRColumnList.post({programId: $routeParams.programId}, $scope.rnrColumns, function () {
@@ -76,8 +86,8 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
       $scope.arithmeticValidationToggleLabel = messageService.get("label.off");
       $scope.arithmeticValidationMessage = "msg.rnr.arithmeticValidation.turned.on";
     } else {
-      $scope.arithmeticValidationStatusLabel =  messageService.get("label.off");
-      $scope.arithmeticValidationToggleLabel =  messageService.get("label.on");
+      $scope.arithmeticValidationStatusLabel = messageService.get("label.off");
+      $scope.arithmeticValidationToggleLabel = messageService.get("label.on");
       $scope.arithmeticValidationMessage = "";
     }
   };
@@ -90,12 +100,12 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
 }
 
 SaveRnrTemplateController.resolve = {
-  rnrTemplateForm:function ($q, RnRColumnList, $location, $route, $timeout) {
+  rnrTemplateForm: function ($q, RnRColumnList, $location, $route, $timeout) {
     var deferred = $q.defer();
     var id = $route.current.params.programId;
 
     $timeout(function () {
-      RnRColumnList.get({programId:id}, function (data) {
+      RnRColumnList.get({programId: id}, function (data) {
         deferred.resolve(data.rnrTemplateForm);
       }, function () {
         $location.path('select-program');
@@ -105,12 +115,12 @@ SaveRnrTemplateController.resolve = {
     return deferred.promise;
   },
 
-  program:function ($q, Program, $location, $route, $timeout) {
+  program: function ($q, Program, $location, $route, $timeout) {
     var deferred = $q.defer();
     var id = $route.current.params.programId;
 
     $timeout(function () {
-      Program.get({id:id}, function (data) {
+      Program.get({id: id}, function (data) {
         deferred.resolve(data.program);
       }, function () {
         $location.path('select-program');
