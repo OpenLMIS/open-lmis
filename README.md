@@ -1,16 +1,14 @@
-License Terms
----------------------------
+This site contains code and related material necessary to implement a configuration of the OpenLMIS logistics management information system platform.  See https://github.com/OpenLMIS/open-lmis/ for details of OpenLMIS.
 
-This program is part of the OpenLMIS logistics management information system platform software.
-Copyright © 2013 VillageReach
+This site contains free software: you can redistribute it and/or modify it under the terms of the appropriate license.  As this site contains code developed by more than one organization and licensed under different terms you should refer to the license terms stated in each component for details.
 
+The programs and documents on this site are distributed in the hope that they will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the applicable License for more details.
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
 
+You should also have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+For additional information contact AskDeliver@jsi.com
 
 
 
@@ -49,7 +47,7 @@ System Requirement
 
 Source code 
 ------------------
- 1. Get the source code using ``git clone http://github.com/OpenLMIS/open-lmis/``
+ 1. Get the source code using ``git clone https://github.com/USAID-DELIVER-PROJECT/elmis.git``
  2. Also resolve dependencies on submodule using command ``git submodule init`` and then ``git submodule update``
  
 
@@ -71,6 +69,7 @@ Running App on embedded Jetty server
 
  - ```build``` is to build the app.
  - ```setupdb``` is to recreate the database and schema.
+ - ```setupExtensions``` is to apply the database schema exentions added.
  - ```seed``` is to seed in the reference data.
  - ```testseed``` puts in some test data which can be used to browse through basic functionality in the system.
  - ```run``` is to start the embedded jetty server.
