@@ -29,17 +29,13 @@ import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 @NoArgsConstructor
 public class FacilityRepository {
 
+  @Autowired
   private FacilityMapper mapper;
+  @Autowired
   private CommaSeparator commaSeparator;
+  @Autowired
   private GeographicZoneRepository geographicZoneRepository;
   private static Integer LOWEST_GEO_LEVEL;
-
-  @Autowired
-  public FacilityRepository(FacilityMapper facilityMapper, CommaSeparator commaSeparator, GeographicZoneRepository geographicZoneRepository) {
-    this.mapper = facilityMapper;
-    this.commaSeparator = commaSeparator;
-    this.geographicZoneRepository = geographicZoneRepository;
-  }
 
   public List<Facility> getAll() {
     return mapper.getAll();
