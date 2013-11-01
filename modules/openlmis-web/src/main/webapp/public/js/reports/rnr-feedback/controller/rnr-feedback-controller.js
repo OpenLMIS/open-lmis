@@ -387,13 +387,15 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
             return true;        }
         return false;
     }
+
     $scope.currentFacility = 'something';
+
     $scope.CreateHeader = function(fac) {
         showHeader = (fac!==$scope.currentFacility);
         $scope.currentFacility = fac;
         //return showHeader;
         return true;
-    }
+    };
 
 
 }
