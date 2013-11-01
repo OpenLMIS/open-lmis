@@ -359,7 +359,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     int time = 0;
-    while (time <= 5000) {
+    while (time <= 30000) {
       if (responseEntity.getResponse().contains(expected))
         break;
       responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
