@@ -84,6 +84,10 @@
       <div ng-show="requestInProgress" class="row-fluid">
         <progress id="progressbar" max="100" value="{{ progressValue }}"></progress>
       </div>
+      <div class="sync-failure-message" ng-show="syncResult[COMPLETE].length">
+        <i class="icon icon-exclamation-sign"></i>
+        <span openlmis-message="message.sync.failure.retry"></span>
+      </div>
       <div class="row-fluid" ng-hide="requestInProgress">
         <div class="span4" ng-show="syncResult[SYNCED].length">
           <strong openlmis-message="label.facilities.synced"> </strong> <span>:&nbsp;</span>
@@ -129,10 +133,6 @@
              ng-click="syncDistribution(distributionData.id)"/>
       <input type="button" class="btn btn-cancel" openlmis-message="button.cancel"
              ng-click="synchronizationModal = false" ng-show="syncResult[COMPLETE].length"/>
-      <div class="pull-right" ng-show="syncResult[COMPLETE].length">
-        <i class="icon icon-exclamation-sign"></i>
-        <span openlmis-message="message.sync.failure.retry"></span>
-      </div>
     </div>
   </div>
 </div>
