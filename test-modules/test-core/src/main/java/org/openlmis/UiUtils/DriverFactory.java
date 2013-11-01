@@ -131,10 +131,10 @@ public class DriverFactory {
       prefs.put("download.prompt_for_download", "false");
       prefs.put("download.default_directory", "C:\\Users\\openlmis\\Downloads");
 
-    String[] switches = {"--start-maximized"};
-    capabilities.setCapability("chrome.switches", Arrays.asList(switches));
+    String[] switches = {"--start-maximized","--ignore-certificate-errors"};
     capabilities.setCapability("chrome.prefs", prefs);
-    capabilities.setCapability("chrome.switches", Arrays.asList("--ignore-certificate-errors"));
+    capabilities.setCapability("chrome.switches", Arrays.asList(switches));
+
     return new ChromeDriver(capabilities);
   }
 }
