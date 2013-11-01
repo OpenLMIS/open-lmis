@@ -301,7 +301,13 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I verify sync message as \"([^\"]*)\"$")
   public void verifySyncMessage(String message) throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    assertEquals(message, distributionPage.getSyncMessage());
+    assertEquals(message, distributionPage.getSyncAlertMessage());
+  }
+
+  @Then("^I check confirm sync message as \"([^\"]*)\"$")
+  public void verifyConfirmSyncMessage(String message) throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains(message));
   }
 
   @When("^I view observations data in DB:$")

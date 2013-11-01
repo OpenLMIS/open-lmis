@@ -76,6 +76,8 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "syncedFacilities")
   private static WebElement syncMessage = null;
 
+  @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
+  private static WebElement syncAlertMessage = null;
 
     public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -116,7 +118,6 @@ public class DistributionPage extends Page {
   public void clickSyncDistribution() {
     testWebDriver.waitForElementToAppear(syncLink);
     syncLink.click();
-    okButton.click();
   }
 
   public void syncDistribution() {
@@ -131,6 +132,11 @@ public class DistributionPage extends Page {
   public String getSyncMessage() {
     testWebDriver.waitForElementToAppear(syncMessage);
     return syncMessage.getText();
+  }
+
+  public String getSyncAlertMessage() {
+    testWebDriver.waitForElementToAppear(syncAlertMessage);
+    return syncAlertMessage.getText();
   }
 
   public FacilityListPage clickRecordData() throws IOException {
