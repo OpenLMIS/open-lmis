@@ -106,7 +106,7 @@ public class UserService {
 
   private SimpleMailMessage createEmailMessage(User user, String resetPasswordLink, String subject) {
     String passwordResetToken = generateUUID();
-    String[] passwordResetLink = new String[]{user.getUserName(), resetPasswordLink + passwordResetToken};
+    String[] passwordResetLink = new String[]{user.getFirstName(),user.getLastName(),user.getUserName(), resetPasswordLink + passwordResetToken};
     String mailBody = messageService.message("passwordreset.email.body", (Object[]) passwordResetLink);
 
     userRepository.insertPasswordResetToken(user, passwordResetToken);
