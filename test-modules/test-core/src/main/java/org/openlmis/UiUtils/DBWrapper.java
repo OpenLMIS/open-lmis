@@ -1308,4 +1308,41 @@ public class DBWrapper {
   public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
     update("update products set fullsupply=" + flag + " where code='" + productCode + "';");
   }
+
+  public int getRequisitionGroupId(String facilityCode) throws SQLException {
+     int rgId=0;
+    ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+    if (rs.next()) {
+      rgId = rs.getInt("requisitiongroupid");
+    }
+    return rgId;
+  }
+
+  public List getAllProgramsOfFacility(String facilityCode) throws SQLException {
+    List <Integer> l1 = new ArrayList<>();
+    ResultSet rs = query("SELECT programId FROM programs_supported where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+    while (rs.next()) {
+      l1.add(rs.getInt("programid"));
+    }
+    return l1;
+  }
+  public String getProgramFieldForProgramIdAndFacilityCode(int programId, String facilityCode, String field) throws SQLException {
+    String res=null;
+    ResultSet rs = query("select " + field + " from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+
+    if (rs.next()) {
+      res = rs.getString(1);
+    }
+    return res;
+  }
+
+  public Date getProgramStartDateForProgramIdAndFacilityCode(int programId, String facilityCode) throws SQLException {
+    Date date=null;
+    ResultSet rs = query("select startdate from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+
+    if (rs.next()) {
+      date = rs.getDate(1);
+    }
+    return date;
+  }
 }

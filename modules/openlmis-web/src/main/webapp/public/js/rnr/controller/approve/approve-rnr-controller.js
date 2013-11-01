@@ -59,7 +59,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   function removeExtraDataForPostFromRnr() {
     var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    if (!$scope.page[$scope.visibleTab].length) return rnr;
+    if ($scope.visibleTab == "Regimen" || !$scope.page[$scope.visibleTab].length) return rnr;
 
     rnr[$scope.visibleTab + 'LineItems'] = _.map($scope.page[$scope.visibleTab], function (lineItem) {
       return lineItem.reduceForApproval();

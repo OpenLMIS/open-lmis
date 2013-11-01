@@ -12,7 +12,7 @@ delete from program_rnr_columns;
 insert into program_rnr_columns
 (masterColumnId, programId, visible, source, position, label)
 values
-(1, (select id from programs where code = 'TB'),  false,'U', 1,  'Skip'),
+(1, (select id from programs where code = 'TB'),  true,'U', 1,  'Skip'),
 (2, (select id from programs where code = 'TB'),  true, 'R', 2,  'Product Code'),
 (3, (select id from programs where code = 'TB'),  true, 'R', 3,  'Product'),
 (5, (select id from programs where code = 'TB'),  true, 'U', 4,  'Beginning Balance'),
@@ -23,7 +23,7 @@ values
 (16, (select id from programs where code = 'TB'), true, 'C', 9, 'Calculated Order Quantity'),
 (17, (select id from programs where code = 'TB'), true, 'U', 10, 'Requested Quantity'),
 (18, (select id from programs where code = 'TB'), true, 'U', 11, 'Requested Quantity Explanation'),
-(1, (select id from programs where code = 'MALARIA'),  false,'U', 1,  'Skip'),
+(1, (select id from programs where code = 'MALARIA'),  true,'U', 1,  'Skip'),
 (2, (select id from programs where code = 'MALARIA'),  true, 'R', 2,  'Product Code'),
 (3, (select id from programs where code = 'MALARIA'),  true, 'R', 3,  'Product'),
 (4, (select id from programs where code = 'MALARIA'),  true, 'R', 4,  'Unit/Unit of Issue'),
@@ -47,6 +47,7 @@ values
 (22, (select id from programs where code = 'MALARIA'), true, 'C', 22, 'Total Cost'),
 (23, (select id from programs where code = 'MALARIA'), true, 'U', 23, 'Expiration Date(MM/YYYY)'),
 (24, (select id from programs where code = 'MALARIA'), true, 'U', 24, 'Remarks'),
+(1, (select id from programs where code = 'ESS_MEDS'),  true,'U', 1,  'Skip'),
 (2, (select id from programs where code = 'ESS_MEDS'),  true, 'R', 2,  'Product Code'),
 (3, (select id from programs where code = 'ESS_MEDS'),  true, 'R', 3,  'Product'),
 (4, (select id from programs where code = 'ESS_MEDS'),  true, 'R', 4,  'Unit/Unit of Issue'),

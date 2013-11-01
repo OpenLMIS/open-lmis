@@ -24,8 +24,38 @@
   </div>
   <form name="configureRnRTemplateForm" ng-submit="save()">
     <div class="rnr-template-columns">
-      <ul ui-sortable ng-model="rnrColumns" id="sortable">
-        <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrColumns">
+
+      <ul id="not-sortable">
+        <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrNonSortableColumns">
+          <div class="drag-handle"></div>
+          <span class="tpl-visible">
+            <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
+          </span>
+          <span class="tpl-indicator">
+            <div class="indicator" openlmis-message="rnrColumn.indicator"></div>
+          </span>
+          <span class="tpl-label">
+            <input name="label" type="text" ng-model="rnrColumn.label" required maxlength="200"/>
+            <span class="col-desc" openlmis-message="rnrColumn.description"></span>
+          </span>
+          <span class="tpl-source">
+            <span ng-show="rnrColumn.sourceConfigurable">
+              <select ng-model="rnrColumn.source.code" ng-options="c.code as c.description for c in sources"
+                      ng-change="setArithmeticValidationMessageShown()">
+              </select>
+            </span>
+            <span ng-hide="rnrColumn.sourceConfigurable" openlmis-message="rnrColumn.source.description"></span>
+            <br/>
+            <a class="rnr-column-formula" href="" ng-show="rnrColumn.formula" openlmis-message="rnrColumn.formula"></a>
+          </span>
+          <span class="tpl-error" ng-show="errorMap[rnrColumn.name]">
+            <div class="alert alert-error" ng-bind="errorMap[rnrColumn.name]"></div>
+          </span>
+        </li>
+      </ul>
+
+      <ul ui-sortable ng-model="rnrSortableColumns" id="sortable">
+        <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrSortableColumns">
           <div class="drag-handle"></div>
           <span class="tpl-visible">
             <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>

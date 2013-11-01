@@ -114,7 +114,7 @@ public class FacilityService {
       Facility parentFacility = facilityRepository.getById(newFacility.getParentFacilityId());
       FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(newFacility, parentFacility);
       eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "",
-        facilityFeedDTO.getSerializedContents(), "facility"));
+          facilityFeedDTO.getSerializedContents(), "facility"));
     } catch (URISyntaxException e) {
       logger.error("Unable to generate facility event", e);
     }
@@ -177,6 +177,10 @@ public class FacilityService {
     Facility facility = facilityRepository.getById(facilityId);
     facility.setSupportedPrograms(programSupportedService.getActiveByFacilityId(facility.getId()));
     return facility;
+  }
+
+  public List<Facility> getChildFacilities(Facility facility) {
+    return facilityRepository.getChildFacilities(facility);
   }
 
   public List<Facility> getAllFacilitiesDetail(){

@@ -38,18 +38,15 @@ public abstract class Page {
             //get the focus on the element..don't use click since it stalls the driver
             element.sendKeys("");
             element.sendKeys(Keys.RETURN);
-            robot.keyPress(KeyEvent.VK_ENTER);
-            robot.keyRelease(KeyEvent.VK_ENTER);
             //wait for the modal dialog to open
             Thread.sleep(2000);
             //press s key to save
+            robot.keyPress(KeyEvent.VK_ALT);
             robot.keyPress(KeyEvent.VK_S);
             robot.keyRelease(KeyEvent.VK_S);
+            robot.keyRelease(KeyEvent.VK_ALT);
             Thread.sleep(2000);
-            //press enter to save the file with default name and in default location
-            robot.keyPress(KeyEvent.VK_ENTER);
-            robot.keyRelease(KeyEvent.VK_ENTER);
-        } catch (AWTException e) {
+            } catch (AWTException e) {
 
             e.printStackTrace();
         } catch (InterruptedException e) {
