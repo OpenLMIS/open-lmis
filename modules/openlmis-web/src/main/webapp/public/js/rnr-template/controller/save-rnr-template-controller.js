@@ -17,6 +17,13 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.$parent.message = "";
   $scope.selectProgramUrl = "/public/pages/admin/rnr-template/index.html#/select-program";
   $scope.arithmeticValidationLabel = false;
+  $scope.rnrSortableColumns = _.filter($scope.rnrColumns, function (rnrColumn) {
+    return !(rnrColumn.name == 'skip' || rnrColumn.name == 'productCode' || rnrColumn.name == 'product');
+  });
+  $scope.rnrNonSortableColumns = _.sortBy(_.difference($scope.rnrColumns, $scope.rnrSortableColumns),
+    function (rnrColumn) {
+      return rnrColumn.position;
+    });
 
   var setRnRTemplateValidateFlag = function () {
     $.each($scope.rnrColumns, function (index, column) {
@@ -99,13 +106,6 @@ SaveRnrTemplateController.resolve = {
 
     $timeout(function () {
       RnRColumnList.get({programId: id}, function (data) {
-
-          angular.forEach(data.rnrTemplateForm.rnrColumns, function(col){
-            if(col.calculationOptions != 'DEFAULT'){
-                col.calculationOptions = angular.fromJson( col.calculationOptions );
-            }
-        });
-        
         deferred.resolve(data.rnrTemplateForm);
       }, function () {
         $location.path('select-program');
