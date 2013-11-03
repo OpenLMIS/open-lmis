@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport, Products ,ReportFacilityTypes,OperationYears,ReportPeriods,ReportPeriodsByScheduleAndYear,AllReportPeriods,ReportFilteredPeriods, $http,ReportSchedules, ReportPrograms,AllFacilites,GetFacilityByFacilityType,SettingsByKey, $routeParams,$location) {
+function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport, Products ,ReportFacilityTypes,OperationYears,ReportPeriods,ReportPeriodsByScheduleAndYear,AllReportPeriods,ReportFilteredPeriods, $http,ReportSchedules, ReportPrograms,RequisitionGroups,AllFacilites,GetFacilityByFacilityType,SettingsByKey, $routeParams,$location) {
     //to minimize and maximize the filter section
     var section = 1;
 
@@ -75,6 +75,8 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
         scheduleId : $scope.schedule,
         facilityName : $scope.facilityNameFilter,
         facilityId: $scope.facility,
+        rgroupId : $scope.rgroup,
+        rgroup : "",
         orderType: ""
     };
 
@@ -91,6 +93,11 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
+    });
+
+    RequisitionGroups.get(function(data){
+        $scope.requisitionGroups = data.requisitionGroupList;
+        $scope.requisitionGroups.unshift({'name':'All Reporting Groups'});
     });
 
     ReportFacilityTypes.get(function(data) {
@@ -249,6 +256,24 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
         $scope.filterGrid();
     });
 
+    $scope.$watch('rgroup', function(selection){
+        if(selection === ""){
+            $scope.filterObject.rgroupId =  0;
+            $scope.filterObject.rgroup =  "";
+        }else if(selection !== undefined || selection === ""){
+            $scope.filterObject.rgroupId =  selection;
+            $.each( $scope.requisitionGroups,function( item,idx){
+                if(idx.id == selection){
+                    $scope.filterObject.rgroup = idx.name;
+                }
+            });
+        }else{
+            $scope.filterObject.rgroupId =  0;
+            $scope.filterObject.rgroup =  "";
+        }
+        $scope.filterGrid();
+    });
+
     $scope.$watch('period', function(selection){
         if(selection == "All"){
             $scope.filterObject.periodId =  -1;
@@ -387,12 +412,15 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
             return true;        }
         return false;
     }
-    $scope.currentFacility = 'something';
-    $scope.CreateHeader = function(fac) {
-        showHeader = (fac!==$scope.currentFacility);
+    $scope.currentFacility = "something";
+
+
+    $scope.showFacility = function(fac) {
+        //alert($scope.currentFacility);
+        showFacilityName = (fac!=$scope.currentFacility);
+
         $scope.currentFacility = fac;
-        //return showHeader;
-        return true;
+        return showFacilityName;
     }
 
 

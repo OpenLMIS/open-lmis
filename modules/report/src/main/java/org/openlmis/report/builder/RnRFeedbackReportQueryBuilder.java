@@ -70,14 +70,14 @@ public class RnRFeedbackReportQueryBuilder {
     private static void writePredicates(RnRFeedbackReportFilter  filter){
         WHERE("req_status = 'RELEASED'");
         WHERE("program_id = "+filter.getProgramId());
-
+        if(filter.getRgroupId() != 0){
+            WHERE("requisition_group_id ="+ filter.getRgroupId());
+        }
         if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
             WHERE("facility_id = "+filter.getFacilityId());
         }
-
         //WHERE("facility_id = "+filter.getFacilityId());
         WHERE("processing_periods_id = "+filter.getPeriodId());
-
         if (filter.getProductId() != -1 && filter.getProductId() != 0) {
             WHERE("product_id ="+ filter.getProductId());
         }else if(filter.getProductId()== -1){

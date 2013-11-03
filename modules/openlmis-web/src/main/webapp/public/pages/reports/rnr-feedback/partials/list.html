@@ -24,7 +24,7 @@
                     <div class="app-form" style="padding: 5px;">
                         <form ng-submit="filterGrid()"  name="filterForm" novalidate>
 
-                            <div class="clearfix ">
+                            <div class="clearfix">
                                 <!-- Order Type-->
 
                                 <div class="form-cell horizontalFilters" >
@@ -80,17 +80,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <!-- Product-->
 
-                                    <div class="form-cell horizontalFilters" >
-                                        <label class="labels">Product</label>
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Reporting Groups</label>
 
-                                        <div class="form-field">
-                                            <select ui-select2 style="width:200px;" name="product"  ng-model="product">
-                                                <option ng-repeat="option in products" value="{{option.id}}">{{option.name}}</option>
-                                            </select>
-                                        </div>
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:250px;" name="requisitionGroup"  ng-model="rgroup" >
+                                            <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
                                     </div>
+                                </div>
+                                </div>
+                                <div class="clearfix">
                                     <!-- Facility Type-->
 <!--
                                     <div class="form-cell horizontalFilters" >
@@ -113,6 +114,18 @@
                                         </div>
 
                                     </div>
+
+                                <!-- Product-->
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Product</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" name="product"  ng-model="product">
+                                            <option ng-repeat="option in products" value="{{option.id}}">{{option.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </form>
                         <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
