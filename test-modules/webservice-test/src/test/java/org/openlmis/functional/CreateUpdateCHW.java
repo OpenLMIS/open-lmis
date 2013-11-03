@@ -14,15 +14,20 @@ import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.*;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.testng.Assert.assertNull;
 
 
 public class CreateUpdateCHW extends JsonUtility {
@@ -57,7 +62,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void shouldNotShowSatelliteFacilityOnManageUserScreen(String user, String program, String[] credentials) throws Exception {
+  public void shouldNotShowVirtualFacilityOnManageUserScreen(String user, String program, String[] credentials) throws Exception {
     dbWrapper.updateVirtualPropertyOfFacility(DEFAULT_PARENT_FACILITY_CODE, ACTIVE_STATUS);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -141,7 +146,25 @@ public class CreateUpdateCHW extends JsonUtility {
         "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
         responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+
+    assertEquals(dbWrapper.getRequisitionGroupId(DEFAULT_PARENT_FACILITY_CODE), dbWrapper.getRequisitionGroupId(DEFAULT_AGENT_CODE));
+    List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
+    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(DEFAULT_PARENT_FACILITY_CODE);
+    List<Integer> listOfProgramsSupportedByVirtualFacility = new ArrayList();
+    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(DEFAULT_AGENT_CODE);
+    Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
+    setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
+    Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
+    setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
+    assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
+    assertEquals(listOfProgramsSupportedByParentFacility.size(),listOfProgramsSupportedByVirtualFacility.size());
+    for(Integer programId : listOfProgramsSupportedByParentFacility){
+      assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, DEFAULT_PARENT_FACILITY_CODE, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, DEFAULT_AGENT_CODE, "active"));
+      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,DEFAULT_PARENT_FACILITY_CODE),dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,DEFAULT_AGENT_CODE));
+    }
   }
+
+
 
   @Test(groups = {"webservice"})
   public void testUpdateChwFeedForEnableScenarios() throws Exception {
@@ -270,9 +293,9 @@ public class CreateUpdateCHW extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testVerifyFieldsAfterChangeInParentFacilityCode() throws Exception {
-    String typeId = "typeid";
-    String geographicZoneId = "geographiczoneid";
-    String parentFacilityId = "parentfacilityid";
+    String typeId = "typeId";
+    String geographicZoneId = "geographicZoneId";
+    String parentFacilityId = "parentFacilityId";
     String agentCode = "ABCDE";
     String firstParentFacility = DEFAULT_PARENT_FACILITY_CODE;
     String updateParentFacility = "F11";
@@ -299,6 +322,21 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("name", agentCode), DEFAULT_AGENT_NAME);
+    assertNotEquals(dbWrapper.getFacilityFieldBYCode("id", agentCode), dbWrapper.getFacilityFieldBYCode("id", firstParentFacility));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("code", agentCode), agentCode);
+    assertNull(dbWrapper.getFacilityFieldBYCode("description", agentCode));
+    assertNull(dbWrapper.getFacilityFieldBYCode("gln", agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("mainPhone", agentCode), PHONE_NUMBER);
+    assertNull(dbWrapper.getFacilityFieldBYCode("fax", agentCode));
+    assertNull(dbWrapper.getFacilityFieldBYCode("address1", agentCode));
+    assertNull(dbWrapper.getFacilityFieldBYCode("address2", agentCode));
+    assertNull(dbWrapper.getFacilityFieldBYCode("catchmentPopulation", agentCode));
+    assertNull(dbWrapper.getFacilityFieldBYCode("operatedById", agentCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("active", agentCode), "t");
+    assertEquals(dbWrapper.getFacilityFieldBYCode("enabled", agentCode), TRUE_FLAG);
+    assertEquals(dbWrapper.getFacilityFieldBYCode("virtualFacility", agentCode), TRUE_FLAG);
+
     agentJson.setParentFacilityCode(updateParentFacility);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),

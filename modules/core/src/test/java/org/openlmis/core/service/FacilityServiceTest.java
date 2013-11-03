@@ -45,7 +45,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
@@ -127,7 +128,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
-      facilityFeedDTO.getSerializedContents(), "facility")));
+        facilityFeedDTO.getSerializedContents(), "facility")));
 
   }
 
@@ -138,7 +139,7 @@ public class FacilityServiceTest {
       public boolean matches(Object argument) {
         Event event = (Event) argument;
         return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+            event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
   }
@@ -355,7 +356,7 @@ public class FacilityServiceTest {
     List<Facility> wareshouses = facilityService.getEnabledWarehouses();
 
     verify(facilityRepository).getEnabledWarehouses();
-    assertThat(wareshouses,is(expectedWarehouses));
+    assertThat(wareshouses, is(expectedWarehouses));
   }
 
   @Test
@@ -376,7 +377,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).getIdForCode(facilityCode);
     verify(facilityRepository).getById(facilityId);
     verify(programSupportedService).getActiveByFacilityId(facilityId);
-    assertThat(facility.getSupportedPrograms(),is(programSupported));
+    assertThat(facility.getSupportedPrograms(), is(programSupported));
   }
 
   @Test
@@ -388,5 +389,16 @@ public class FacilityServiceTest {
     expectedEx.expectMessage("error.facility.code.invalid");
 
     facilityService.getFacilityByCode(invalidCode);
+  }
+
+  @Test
+  public void shouldGetAllChildFacilitiesForFacility() throws Exception {
+    Facility facility = new Facility(1L);
+    List<Facility> expectedFacilities = asList(new Facility(5L));
+    when(facilityRepository.getChildFacilities(facility)).thenReturn(expectedFacilities);
+
+    List<Facility> childFacilities = facilityService.getChildFacilities(facility);
+    verify(facilityRepository).getChildFacilities(facility);
+    assertThat(childFacilities, is(expectedFacilities));
   }
 }

@@ -17,11 +17,13 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -30,12 +32,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -57,7 +59,12 @@ public class FacilityRepositoryTest {
   @Mock
   private GeographicZoneRepository geographicZoneRepository;
 
+  @Mock
+  private CommaSeparator commaSeparator;
+
+  @InjectMocks
   private FacilityRepository repository;
+
   private DateTime now;
   private GeographicLevel defaultGeographicLevel = new GeographicLevel(1L, "levelCode", "levelName", 4);
 
@@ -72,7 +79,6 @@ public class FacilityRepositoryTest {
     when(geographicZoneRepository.getByCode(GEOGRAPHIC_ZONE_CODE)).thenReturn(geographicZone);
     when(geographicZoneRepository.getLowestGeographicLevel()).thenReturn(4);
     when(mapper.getFacilityTypeForCode(FacilityBuilder.FACILITY_TYPE_CODE)).thenReturn(new FacilityType(FACILITY_TYPE_ID));
-    repository = new FacilityRepository(mapper, null, geographicZoneRepository);
   }
 
   @Test
@@ -248,7 +254,7 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldSearchFacilitiesByCodeOrName() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
+    List<Facility> facilityList = asList(new Facility());
     when(mapper.searchFacilitiesByCodeOrName("query")).thenReturn(facilityList);
 
     List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrName("query");
@@ -258,7 +264,7 @@ public class FacilityRepositoryTest {
 
   @Test
   public void shouldSearchFacilitiesByCodeOrNameAndVirtualFacilityFlag() throws Exception {
-    List<Facility> facilityList = Arrays.asList(new Facility());
+    List<Facility> facilityList = asList(new Facility());
     when(mapper.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true)).thenReturn(facilityList);
 
     List<Facility> returnedFacilities = repository.searchFacilitiesByCodeOrNameAndVirtualFacilityFlag("query", true);
@@ -353,5 +359,16 @@ public class FacilityRepositoryTest {
     assertThat(facilities, is(expectedFacilities));
     verify(mapper).getAllByProgramSupportedModifiedDate(dateModified);
 
+  }
+
+  @Test
+  public void shouldGetChildFacilities() throws Exception {
+    Facility facility = new Facility(1L);
+    List<Facility> expectedFacilities = asList(new Facility(5L));
+    when(mapper.getChildFacilities(facility)).thenReturn(expectedFacilities);
+
+    List<Facility> childFacilities = repository.getChildFacilities(facility);
+    verify(mapper).getChildFacilities(facility);
+    assertThat(childFacilities, is(expectedFacilities));
   }
 }

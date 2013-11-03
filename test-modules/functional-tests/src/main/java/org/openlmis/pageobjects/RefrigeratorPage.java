@@ -24,127 +24,97 @@ import static org.openqa.selenium.support.How.*;
 public class RefrigeratorPage extends Page {
 
   @FindBy(how = ID, using = "addNew")
-  private static WebElement addNewButton;
+  private static WebElement addNewButton=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Show')]")
-  public static WebElement showButton;
+  public static WebElement showButton=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Delete']")
-  private static WebElement deleteButton;
+  private static WebElement deleteButton=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
-  private static WebElement doneButton;
+  private static WebElement doneButton=null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Refrigerators')]")
-  private static WebElement refrigeratorTab;
+  private static WebElement refrigeratorTab=null;
 
   @FindBy(how = NAME, using = "temperature0")
-  public static WebElement refrigeratorTemperatureTextField;
+  public static WebElement refrigeratorTemperatureTextField=null;
 
   @FindBy(how = NAME, using = "lowAlarmEvent0")
-  private static WebElement lowAlarmEventsTextField;
+  private static WebElement lowAlarmEventsTextField=null;
 
   @FindBy(how = NAME, using = "highAlarmEvent0")
-  private static WebElement highAlarmEventsTextField;
+  private static WebElement highAlarmEventsTextField=null;
 
   @FindBy(how = ID, using = "temperature0")
-  private static WebElement refrigeratorTemperatureNR;
+  private static WebElement refrigeratorTemperatureNR=null;
 
   @FindBy(how = ID, using = "functioningCorrectlyYes0")
-  private static WebElement functioningCorrectlyYesRadio;
+  private static WebElement functioningCorrectlyYesRadio=null;
 
   @FindBy(how = ID, using = "functioningCorrectlyNo0")
-  private static WebElement functioningCorrectlyNoRadio;
+  private static WebElement functioningCorrectlyNoRadio=null;
 
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
-  private static WebElement functioningCorrectlyDontKnowRadio;
+  private static WebElement functioningCorrectlyDontKnowRadio=null;
 
   @FindBy(how = ID, using = "functioningCorrectly0")
-  private static WebElement functioningCorrectlyNR;
+  private static WebElement functioningCorrectlyNR=null;
 
   @FindBy(how = ID, using = "lowAlarmEvent0")
-  private static WebElement lowAlarmEventNR;
+  private static WebElement lowAlarmEventNR=null;
 
   @FindBy(how = ID, using = "highAlarmEvent0")
-  private static WebElement highAlarmEventNR;
+  private static WebElement highAlarmEventNR=null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitYes0")
-  private static WebElement problemSinceLastVisitYesRadio;
+  private static WebElement problemSinceLastVisitYesRadio=null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitNo0")
-  private static WebElement problemSinceLastVisitNoRadio;
+  private static WebElement problemSinceLastVisitNoRadio=null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
-  private static WebElement problemSinceLastVisitDontKnowRadio;
+  private static WebElement problemSinceLastVisitDontKnowRadio=null;
 
   @FindBy(how = ID, using = "problemSinceLastVisit0")
-  private static WebElement problemSinceLastVisitNR;
-
-  @FindBy(how = ID, using = "operatorError0")
-  private static WebElement operatorError;
-
-  @FindBy(how = ID, using = "burnerProblem0")
-  private static WebElement burnerProblem;
-
-  @FindBy(how = ID, using = "gasLeakage0")
-  private static WebElement gasLeakage;
-
-  @FindBy(how = ID, using = "gasFault0")
-  private static WebElement gasFault;
-
-  @FindBy(how = ID, using = "other0")
-  private static WebElement other;
-
-  @FindBy(how = ID, using = "otherTextbox")
-  private static WebElement otherTextBox;
+  private static WebElement problemSinceLastVisitNR=null;
 
   @FindBy(how = ID, using = "notes")
-  private static WebElement notesTextArea;
+  private static WebElement notesTextArea=null;
 
   @FindBy(how = XPATH, using = "//h3/span[contains(text(),'Refrigerators')]")
-  private static WebElement refrigeratorsHeader;
+  private static WebElement refrigeratorsHeader=null;
 
   @FindBy(how = ID, using = "brand")
-  private static WebElement brandTextField;
+  private static WebElement brandTextField=null;
 
   @FindBy(how = ID, using = "model")
-  private static WebElement modelTextField;
+  private static WebElement modelTextField=null;
 
   @FindBy(how = ID, using = "manufacturerSerialNumber")
-  private static WebElement manufacturerSerialNumberTextField;
+  private static WebElement manufacturerSerialNumberTextField=null;
 
   @FindBy(how = ID, using = "done-button")
-  private static WebElement doneButtonOnModal;
-
-  @FindBy(how = ID, using = "button-cancel")
-  private static WebElement cancelButtonOnModal;
+  private static WebElement doneButtonOnModal=null;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")
-  public static WebElement newRefrigeratorHeaderOnModal;
-
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Next »')]")
-  private static WebElement nextLink;
-
-  @FindBy(how = XPATH, using = "//a[contains(text(),'« Previous')]")
-  private static WebElement previousLink;
-
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement saveSuccessMessageDiv;
+  public static WebElement newRefrigeratorHeaderOnModal=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'OK')]")
-  public static WebElement OKButton;
+  public static WebElement OKButton=null;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'Delete Refrigerator')]")
-  public static WebElement deletePopUpHeader;
+  public static WebElement deletePopUpHeader=null;
 
   @FindBy(how = XPATH, using = "//form/div[1]/div[1]/span[@class='status-icon']")
-  public static WebElement individualRefrigeratorIcon;
+  public static WebElement individualRefrigeratorIcon=null;
 
   @FindBy(how = XPATH, using = "//ng-include/div/ul/li[2]/a/span[@class='status-icon']")
-  public static WebElement overallRefrigeratorIcon;
+  public static WebElement overallRefrigeratorIcon=null;
 
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
-  public static WebElement duplicateRefrigeratorMessage;
+  public static WebElement duplicateRefrigeratorMessage=null;
 
     public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
@@ -211,31 +181,6 @@ public class RefrigeratorPage extends Page {
     problemSinceLastVisitNR.click();
   }
 
-  public void clickOperatorError() {
-    testWebDriver.waitForElementToAppear(operatorError);
-    operatorError.click();
-  }
-
-  public void clickBurnerProblem() {
-    testWebDriver.waitForElementToAppear(burnerProblem);
-    burnerProblem.click();
-  }
-
-  public void clickGasLeakage() {
-    testWebDriver.waitForElementToAppear(gasLeakage);
-    gasLeakage.click();
-  }
-
-  public void clickGasFault() {
-    testWebDriver.waitForElementToAppear(gasFault);
-    gasFault.click();
-  }
-
-  public void clickOther() {
-    testWebDriver.waitForElementToAppear(other);
-    other.click();
-  }
-
   public void enterValueInLowAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(lowAlarmEventsTextField);
     sendKeys(lowAlarmEventsTextField, value);
@@ -261,40 +206,15 @@ public class RefrigeratorPage extends Page {
     sendKeys(highAlarmEventsTextField, value);
   }
 
-  public void enterValueInOtherTextBox(String value) {
-    testWebDriver.waitForElementToAppear(otherTextBox);
-    sendKeys(otherTextBox, value);
-  }
-
   public void enterValueInNotesTextArea(String value) {
     testWebDriver.waitForElementToAppear(notesTextArea);
     sendKeys(notesTextArea, value);
-  }
-
-  public void clickRefrigeratorTemperatureNR() {
-    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
-    refrigeratorTemperatureNR.click();
   }
 
   public void clickDoneOnModal() {
     testWebDriver.waitForElementToAppear(doneButtonOnModal);
     doneButtonOnModal.click();
     //testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//a[contains(text(),'Show')])[1]"));
-  }
-
-  public void clickCancelOnModal() {
-    testWebDriver.waitForElementToAppear(cancelButtonOnModal);
-    cancelButtonOnModal.click();
-  }
-
-  public void clickLowAlarmEventNR() {
-    testWebDriver.waitForElementToAppear(lowAlarmEventNR);
-    lowAlarmEventNR.click();
-  }
-
-  public void clickHighAlarmEventNR() {
-    testWebDriver.waitForElementToAppear(highAlarmEventNR);
-    highAlarmEventNR.click();
   }
 
   public void clickFunctioningCorrectlyYesRadio() {
@@ -391,10 +311,6 @@ public class RefrigeratorPage extends Page {
     clickDoneOnModal();
   }
 
-  public void verifySuccessMessage(String message) {
-    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-    assertEquals(saveSuccessMessageDiv.getText(), message);
-  }
 
     public void verifyDuplicateErrorMessage(String message) {
         testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);

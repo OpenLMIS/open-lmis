@@ -28,10 +28,10 @@ public interface GeographicZoneMapper {
   @Select("SELECT * FROM geographic_levels WHERE LOWER(code) = LOWER(#{code})")
   GeographicLevel getGeographicLevelByCode(String code);
 
-  @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id as levelId, GL.code as levelCode, GL.name as levelName, GL.levelNumber as levelNumber ",
+  @Select({"SELECT GZ.id, GZ.code, GZ.name, GL.id AS levelId, GL.code AS levelCode, GL.name AS levelName, GL.levelNumber AS levelNumber ",
     "FROM geographic_zones GZ, geographic_levels GL ",
-    "where GZ.levelId = GL.id AND LOWER(GZ.code) <> 'root' AND ",
-    "GL.levelNumber = (SELECT MAX(levelNumber) FROM geographic_levels)"})
+    "WHERE GZ.levelId = GL.id AND LOWER(GZ.code) <> 'root' AND ",
+    "GL.levelNumber = (SELECT MAX(levelNumber) FROM geographic_levels) ORDER BY GZ.name"})
   @Results({
     @Result(column = "levelId", property = "level.id"),
     @Result(column = "levelCode", property = "level.code"),

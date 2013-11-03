@@ -46,7 +46,7 @@
                 <ng-switch on="column.name">
                   <span ng-switch-when="beginningBalance"
                         ng-class="getCellErrorClass(rnrLineItem)">
-                    <ng-switch on="rnrLineItem.previousStockInHandAvailable">
+                    <ng-switch on="rnrLineItem.previousStockInHandAvailable && !rnrLineItem.allowOverridingBeginningBalance">
                       <span ng-switch-when='false'>
                         <input id="{{getId(column.name, $parent.$parent)}}" type="text"
                                ng-required="true" ng-disabled="formDisabled"

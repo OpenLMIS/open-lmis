@@ -21,15 +21,15 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 
-public class JsonUtility extends TestCaseHelper{
-    public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
-    public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
+public class JsonUtility extends TestCaseHelper {
+  public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
+  public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
 
- public static <T> T readObjectFromFile(String fullJsonTxtFileName, Class<T> clazz) throws IOException {
+  public static <T> T readObjectFromFile(String fullJsonTxtFileName, Class<T> clazz) throws IOException {
     String classPathFile = JsonUtility.class.getClassLoader().getResource(fullJsonTxtFileName).getFile();
     ObjectMapper mapper = new ObjectMapper();
     return mapper.readValue(new File(classPathFile), clazz);
- }
+  }
 
   public static String getJsonStringFor(Object object) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
@@ -37,79 +37,79 @@ public class JsonUtility extends TestCaseHelper{
     objectMapper.writeValue(writer, object);
     return writer.toString();
   }
-    public static String submitReport() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  public static String submitReport() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-        reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-        reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
+    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
 
-        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions.json",
-                "POST",
-                "commTrack",
-                "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions.json",
+      "POST",
+      "commTrack",
+      "Admin123");
 
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-        return responseEntity.getResponse();
-    }
+    return responseEntity.getResponse();
+  }
 
 
-    public static Long getRequisitionIdFromResponse(String response) {
-        return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
-    }
+  public static Long getRequisitionIdFromResponse(String response) {
+    return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
+  }
 
-    public static String createApproveRequisition() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  public static String createApproveRequisition() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-        reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-        reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
+    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
+    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
 
-        ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions.json",
-                "POST",
-                "commTrack",
-                "Admin123");
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions.json",
+      "POST",
+      "commTrack",
+      "Admin123");
 
-        client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-        Long id = getRequisitionIdFromResponse(responseEntity.getResponse());
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    Long id = getRequisitionIdFromResponse(responseEntity.getResponse());
 
-        reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-        reportFromJson.setUserId("commTrack1");
-        reportFromJson.setRequisitionId(id);
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+    reportFromJson.setUserId("commTrack1");
+    reportFromJson.setRequisitionId(id);
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
-        responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-                "PUT",
-                "commTrack",
-                "Admin123");
-        return responseEntity.getResponse();
-    }
+    responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
+    return responseEntity.getResponse();
+  }
 
-    public static void approveRequisition(Long id, int quantityApproved) throws Exception {
+  public static void approveRequisition(Long id, int quantityApproved) throws Exception {
 
-        HttpClient client = new HttpClient();
-        client.createContext();
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-        reportFromJson.setUserId("commTrack1");
-        reportFromJson.setRequisitionId(id);
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
+    Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+    reportFromJson.setUserId("commTrack1");
+    reportFromJson.setRequisitionId(id);
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
 
-        client.SendJSON(getJsonStringFor(reportFromJson),
-                "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-                "PUT",
-                "commTrack",
-                "Admin123");
-    }
+    client.SendJSON(getJsonStringFor(reportFromJson),
+      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+      "PUT",
+      "commTrack",
+      "Admin123");
+  }
 }
 

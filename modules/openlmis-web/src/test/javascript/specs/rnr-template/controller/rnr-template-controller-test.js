@@ -17,7 +17,7 @@ describe('Rnr Template controllers', function () {
     beforeEach(module('openlmis.services'));
     beforeEach(module('openlmis.localStorage'));
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams,_messageService_) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $location, $routeParams, _messageService_) {
       scope = $rootScope.$new();
       $httpBackend = _$httpBackend_;
       location = $location;
@@ -25,33 +25,58 @@ describe('Rnr Template controllers', function () {
       messageService = _messageService_;
 
       rnrColumnList = [
-        {"id":1, "name":"product_code", "sourceConfigurable":true, "source":{'code':"U"}, "formulaValidationRequired":true, "visible":true},
-        {"id":2, "name":"product", "sourceConfigurable":true, "source":{'code':"U"}, "formulaValidationRequired":true, "visible":true}
+        {"id": 2, "name": "productCode", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": false, "visible": true, "position": 2},
+        {"id": 1, "name": "skip", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 1},
+        {"id": 3, "name": "product", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 3},
+        {"id": 4, "name": "beginningBalance", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 4}
       ];
 
       sources = [
-        {"code":"U", "description":"User Input"},
-        {"code":"C", "description":"Calculated"}
+        {"code": "U", "description": "User Input"},
+        {"code": "C", "description": "Calculated"}
       ];
 
-      rnrTemplateForm = { 'rnrColumns':rnrColumnList, 'sources':sources};
-      program = {id:1, name:'HIV'};
-      ctrl = $controller(SaveRnrTemplateController, {$scope:scope, $location: location, rnrTemplateForm:rnrTemplateForm, program:program});
+      rnrTemplateForm = { 'rnrColumns': rnrColumnList, 'sources': sources};
+      program = {id: 1, name: 'HIV'};
+      ctrl = $controller(SaveRnrTemplateController,
+        {$scope: scope, $location: location, rnrTemplateForm: rnrTemplateForm, program: program});
 
     }));
 
     it('should set program in scope', function () {
-      expect(program).toEqual(scope.program);
+      spyOn(messageService, 'get');
+      expect(scope.program).toEqual(program);
     });
 
-    it('should save R&R template', function() {
+    it('should filter sortable from non sortable columns and sort non sortable columns according to position', function () {
+      var rnrNonSortableColumnList = [
+        {"id": 1, "name": "skip", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 1},
+        {"id": 2, "name": "productCode", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": false, "visible": true, "position": 2},
+        {"id": 3, "name": "product", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 3}
+      ];
+      var rnrSortableColumnList = [
+        {"id": 4, "name": "beginningBalance", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 4}
+      ];
+      expect(scope.rnrSortableColumns).toEqual(rnrSortableColumnList);
+      expect(scope.rnrNonSortableColumns).toEqual(rnrNonSortableColumnList);
+    });
+
+
+    it('should set arithmetic validation message shown flag to False', function () {
+      scope.rnrColumns = rnrColumnList;
+      scope.rnrColumns[0].source.code = 'C';
+      scope.setArithmeticValidationMessageShown();
+      expect(scope.arithmeticValidationMessageShown).toBeFalsy();
+    });
+
+    it('should save R&R template', function () {
       routeParams.programId = 1;
       $httpBackend.expect('POST', '/program/1/rnr-template.json').respond(200);
       scope.save();
       $httpBackend.flush();
     });
 
-    it('should save R&R template and redirect to select program page', function() {
+    it('should save R&R template and redirect to select program page', function () {
       spyOn(location, 'path').andCallThrough();
       spyOn(messageService, 'get');
       routeParams.programId = 1;
@@ -68,13 +93,13 @@ describe('Rnr Template controllers', function () {
     });
 
     it('should set validateFormula flag on load', function () {
-      expect(scope.validateFormula).toBeTruthy();
+      expect(scope.validateFormula).toBeFalsy();
     });
 
     it('should toggle arithmetic validation flag', function () {
-      spyOn(messageService, 'get').andCallFake(function(arg) {
-        if(arg == 'label.on') return 'ON';
-        if(arg == 'label.off') return 'OFF';
+      spyOn(messageService, 'get').andCallFake(function (arg) {
+        if (arg == 'label.on') return 'ON';
+        if (arg == 'label.off') return 'OFF';
       })
       scope.validateFormula = true;
       scope.toggleValidateFormulaFlag();
@@ -92,13 +117,5 @@ describe('Rnr Template controllers', function () {
       scope.setArithmeticValidationMessageShown();
       expect(scope.arithmeticValidationMessageShown).toBeTruthy();
     });
-
-    it('should set arithmetic validation message shown flag to False', function () {
-      scope.rnrColumns = rnrColumnList;
-      scope.rnrColumns[0].source.code = 'C';
-      scope.setArithmeticValidationMessageShown();
-      expect(scope.arithmeticValidationMessageShown).toBeFalsy();
-    });
-
   });
 });

@@ -26,6 +26,8 @@ var RegularRnrLineItem = base2.Base.extend({
 
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
+    //read beginning balance column option
+    this.allowOverridingBeginningBalance = (this.getCalcOption('beginningBalance') == 'ALLOW_USER_OVERRIDE');
   },
 
   initLossesAndAdjustments: function () {
@@ -154,7 +156,11 @@ var RegularRnrLineItem = base2.Base.extend({
       this.packsToShip = 0;
       return;
     }
-    this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
+
+    if(this.getCalcOption('quantityApproved') == 'ACCEPT_PACKS'){
+        this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
+    }
+
     this.applyRoundingRulesToPacksToShip(quantity);
   },
 

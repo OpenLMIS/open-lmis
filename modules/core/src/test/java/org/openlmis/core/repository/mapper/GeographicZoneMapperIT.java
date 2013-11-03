@@ -71,13 +71,13 @@ public class GeographicZoneMapperIT {
   }
 
   @Test
-  public void shouldGetAllGeographicZonesOfLowestLevelExceptRootGeographicZone() throws Exception {
+  public void shouldGetAllGeographicZonesOfLowestLevelExceptRootGeographicZoneSortedByName() throws Exception {
     List<GeographicZone> allGeographicZones = mapper.getAllGeographicZones();
     assertThat(allGeographicZones.size(), is(10));
     GeographicZone geographicZone = allGeographicZones.get(0);
 
-    assertThat(geographicZone.getCode(), is("Ngorongoro"));
-    assertThat(geographicZone.getName(), is("Ngorongoro"));
+    assertThat(geographicZone.getCode(), is("District1"));
+    assertThat(geographicZone.getName(), is("District1"));
     assertThat(geographicZone.getLevel().getName(), is("District"));
     assertThat(geographicZone.getLevel().getLevelNumber(), is(4));
   }

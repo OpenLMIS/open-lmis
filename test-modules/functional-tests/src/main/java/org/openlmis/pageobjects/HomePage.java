@@ -13,6 +13,10 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openlmis.extension.pageobjects.ManageGeographicZonesPage;
+import org.openlmis.extension.pageobjects.ManageRequisitionGroupsPage;
+import org.openlmis.extension.pageobjects.ManageSupervisoryNodesPage;
+import org.openlmis.extension.pageobjects.ManageSupplylinePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;

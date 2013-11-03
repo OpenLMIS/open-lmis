@@ -59,6 +59,7 @@ services.factory('requisitionService', function (messageService) {
       'fullSupply': $scope.rnr.fullSupplyLineItems,
       'regimen': $scope.rnr.regimenLineItems
     };
+    if (save) $scope.saveRnr();
 
     $scope.page = {fullSupply: [], nonFullSupply: [], regimen: []};
     $scope.visibleTab = ($routeParams.supplyType === NON_FULL_SUPPLY) ? NON_FULL_SUPPLY : ($routeParams.supplyType === REGIMEN && $scope.regimenCount) ? REGIMEN : FULL_SUPPLY;
@@ -75,7 +76,6 @@ services.factory('requisitionService', function (messageService) {
 
     $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
 
-    if (save) $scope.saveRnr();
   };
 
   return{

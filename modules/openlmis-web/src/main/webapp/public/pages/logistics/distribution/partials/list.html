@@ -58,7 +58,8 @@
 
   <!--modal-->
 
-  <div id="synchronizationModal" show="requestInProgress" modal="synchronizationModal" options="{'backdrop':'static', 'escape':false}">
+  <div id="synchronizationModal" show="requestInProgress" modal="synchronizationModal"
+       options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header">
       <h3>
         <span openlmis-message="syncProgressHeader"></span>
@@ -83,9 +84,13 @@
       <div ng-show="requestInProgress" class="row-fluid">
         <progress id="progressbar" max="100" value="{{ progressValue }}"></progress>
       </div>
+      <div class="sync-failure-message" ng-show="syncResult[COMPLETE].length">
+        <i class="icon icon-exclamation-sign"></i>
+        <span openlmis-message="message.sync.failure.retry"></span>
+      </div>
       <div class="row-fluid" ng-hide="requestInProgress">
-        <div class="span4" ng-show="syncResult[SYNCED].length">
-          <strong openlmis-message="label.facilities.synced"> </strong> <span>:&nbsp;</span>
+        <div id="syncedFacilities" class="span4" ng-show="syncResult[SYNCED].length">
+          <strong id="syncedFacilityHeader" openlmis-message="label.facilities.synced"> </strong> <span>:&nbsp;</span>
 
           <div ng-repeat="result in syncResult[SYNCED]">
           <span class="is-synced">
@@ -96,8 +101,8 @@
           </div>
         </div>
 
-        <div class="span4" ng-show="syncResult[DUPLICATE].length">
-          <strong openlmis-message="label.facilities.already.synced"> </strong> <span>:&nbsp;</span>
+        <div id="duplicateFacilities" class="span4" ng-show="syncResult[DUPLICATE].length">
+          <strong id="duplicateFacilityHeader" openlmis-message="label.facilities.already.synced"> </strong> <span>:&nbsp;</span>
 
           <div ng-repeat="result in syncResult[DUPLICATE]">
           <span class="is-duplicate">
@@ -108,8 +113,8 @@
           </div>
         </div>
 
-        <div class="span4" ng-show="syncResult[COMPLETE].length">
-          <strong openlmis-message="label.facilities.synchronization.failed"> </strong> <span>:&nbsp;</span>
+        <div id="failedFacilities" class="span4" ng-show="syncResult[COMPLETE].length">
+          <strong id="failedFacilityHeader" openlmis-message="label.facilities.synchronization.failed"> </strong> <span>:&nbsp;</span>
 
           <div ng-repeat="result in syncResult[COMPLETE]">
             <i class="icon icon-exclamation-sign"></i>

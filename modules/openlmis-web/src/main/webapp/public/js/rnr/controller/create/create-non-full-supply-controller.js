@@ -54,6 +54,8 @@ function CreateNonFullSupplyController($scope, messageService) {
       return lineItem1.compareTo(lineItem2);
     });
 
+    $scope.page.nonFullSupply = $scope.rnr.nonFullSupplyLineItems.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+
     $scope.$emit('$routeUpdate');
     $scope.saveRnrForm.$dirty = (validNonFullSupplyLineItems.length > 0);
     $scope.nonFullSupplyProductsModal = false;
@@ -82,8 +84,8 @@ function CreateNonFullSupplyController($scope, messageService) {
 
   $scope.shouldDisableAddButton = function () {
     return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested &&
-      $scope.newNonFullSupply.reasonForRequestedQuantity &&
-      $scope.facilityApprovedProduct);
+        $scope.newNonFullSupply.reasonForRequestedQuantity &&
+        $scope.facilityApprovedProduct);
   };
 
   $scope.addNonFullSupplyProductsByCategory = function () {
@@ -96,12 +98,12 @@ function CreateNonFullSupplyController($scope, messageService) {
 
   $scope.updateNonFullSupplyProductsToDisplay = function () {
     var addedNonFullSupplyProductList =
-      _.pluck($scope.addedNonFullSupplyProducts, 'productCode')
-        .concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
+        _.pluck($scope.addedNonFullSupplyProducts, 'productCode')
+            .concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
     if ($scope.nonFullSupplyProductCategory !== undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
         return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1 &&
-          $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
+            $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
       });
     }
   };
@@ -112,7 +114,6 @@ function CreateNonFullSupplyController($scope, messageService) {
   };
 
 
-
   function populateProductInformation() {
     var product = {};
     if ($scope.facilityApprovedProduct !== undefined) {
@@ -120,9 +121,9 @@ function CreateNonFullSupplyController($scope, messageService) {
       $scope.newNonFullSupply.productCode = product.code;
       $scope.newNonFullSupply.productName = product.primaryName;
       $scope.newNonFullSupply.product = (product.primaryName === null ? "" : (product.primaryName + " ")) +
-        (product.form.code === null ? "" : (product.form.code + " ")) +
-        (product.strength === null ? "" : (product.strength + " ")) +
-        (product.dosageUnit.code === null ? "" : product.dosageUnit.code);
+          (product.form.code === null ? "" : (product.form.code + " ")) +
+          (product.strength === null ? "" : (product.strength + " ")) +
+          (product.dosageUnit.code === null ? "" : product.dosageUnit.code);
       $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
         $scope.newNonFullSupply[field] = product[field];
       });
@@ -139,8 +140,8 @@ function CreateNonFullSupplyController($scope, messageService) {
     populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-        $scope.newNonFullSupply[field] = 0;
-      });
+          $scope.newNonFullSupply[field] = 0;
+        });
     $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 

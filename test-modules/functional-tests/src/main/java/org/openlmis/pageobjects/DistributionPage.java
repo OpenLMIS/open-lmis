@@ -52,9 +52,6 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[6]/a")
   private static WebElement syncLink = null;
 
-  @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
-  private static WebElement syncMessage = null;
-
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
   private static WebElement deleteDistributionIcon = null;
 
@@ -73,7 +70,19 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='noDistributionInitiated']/span")
   private static WebElement noDistributionCachedMessage = null;
 
-  public DistributionPage(TestWebDriver driver) throws IOException {
+  @FindBy(how = XPATH, using = "//div[@id='synchronizationModal']/div[3]/input[1]")
+  private static WebElement distributionSyncMessageDone = null;
+
+  @FindBy(how = ID, using = "syncedFacilities")
+  private static WebElement syncMessage = null;
+
+  @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
+  private static WebElement syncAlertMessage = null;
+
+  @FindBy(how = ID, using = "duplicateFacilities")
+  private static WebElement facilityAlreadySyncMessage = null;
+
+    public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
@@ -119,9 +128,18 @@ public class DistributionPage extends Page {
     okButton.click();
   }
 
+  public void syncDistributionMessageDone() {
+    distributionSyncMessageDone.click();
+  }
+
   public String getSyncMessage() {
     testWebDriver.waitForElementToAppear(syncMessage);
     return syncMessage.getText();
+  }
+
+  public String getSyncAlertMessage() {
+    testWebDriver.waitForElementToAppear(syncAlertMessage);
+    return syncAlertMessage.getText();
   }
 
   public FacilityListPage clickRecordData() throws IOException {
@@ -138,12 +156,10 @@ public class DistributionPage extends Page {
     assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
-  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period) {
-    testWebDriver.waitForElementToAppear(saveSuccessMessageDiv);
-
-    String message = String.format("The data for the selected %s, %s, %s is already cached", deliveryZone, program, period);
-    assertEquals(message, saveSuccessMessageDiv.getText());
-  }
+  public String getFacilityAlreadySyncMessage() {
+    testWebDriver.waitForElementToAppear(facilityAlreadySyncMessage);
+      return facilityAlreadySyncMessage.getText();
+    }
 
 
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {
