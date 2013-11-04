@@ -428,7 +428,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
     distributionPage.clickInitiateDistribution();
-//    distributionPage.verifyDataAlreadyCachedMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
+    distributionPage.verifyDataAlreadyCachedMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
 

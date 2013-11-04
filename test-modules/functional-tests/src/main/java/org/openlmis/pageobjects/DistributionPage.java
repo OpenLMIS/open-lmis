@@ -46,7 +46,7 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'Record Data')]")
   private static WebElement recordDataButton = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[6]/a")
@@ -109,6 +109,11 @@ public class DistributionPage extends Page {
     viewLoadAmountButton.click();
     testWebDriver.sleep(1000);
 
+  }
+
+  public void verifyDataAlreadyCachedMessage(String deliveryZone, String program, String period) {
+    String message = String.format("The data for the selected %s, %s, %s is already cached", deliveryZone, program, period);
+    assertEquals(message, saveSuccessMessageDiv.getText());
   }
 
   public void clickInitiateDistribution() {
