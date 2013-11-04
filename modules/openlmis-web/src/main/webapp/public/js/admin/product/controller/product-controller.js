@@ -50,7 +50,7 @@ function ProductController($scope, $location, $dialog, messageService, ProductDe
 
         var result = [];
         angular.forEach(arrayOfProducts, function(product){
-            if(product.primaryName.indexOf($scope.productName) === 0){
+            if(product.primaryName.toLowerCase().indexOf($scope.productName.toLowerCase()) === 0){
                 result.push(product);
             }
         });
