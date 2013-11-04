@@ -30,17 +30,9 @@
                         <option value="">All Programs</option>
                         <option ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
                     </select>
-                </div>
-
-            </div>
-
-            <div class="form-cell horizontalFilters">
-                <label class="labels">Product Name</label>
-
-                <div class="form-fields">
-                    <input  style="search-query" class="large-input"
+                    <input
                             ng-change="filterProductsByProgram()"
-                            ng-model="productName"></input>
+                            ng-model="productName" placeholder="Product Name"></input>
                 </div>
 
             </div>
@@ -92,8 +84,6 @@
                 <td>
                     <div>{{YesNo(pr.fullSupply)}}</div>
                 </td>
-
-
             </tr>
         </tbody>
     </table>
