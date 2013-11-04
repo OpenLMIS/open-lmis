@@ -133,6 +133,7 @@ public class ProductController extends BaseController {
         product.setModifiedDate(new Date());
         return saveProduct(product, false);
     }
+
     // create product
     @RequestMapping(value = "/createProduct", method = RequestMethod.POST ,  headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_PRODUCT')")

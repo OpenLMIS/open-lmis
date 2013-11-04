@@ -289,12 +289,14 @@
         <tr>
             <th style="width:200px;text-align: left;">Program</th>
             <th style="width:50px"></th>
+            <th style="width:100px">Display Order</th>
             <th style="text-align: left; width:200px;">Price Per Pack</th>
             <th style="text-align:left;width:200px">Doses Per Month</th>
         </tr>
         <tr ng-repeat="pg in product.programProducts">
             <td>{{ pg.programName }}</td>
             <td><input type="checkbox" ng-model="pg.active"/></td>
+            <td><input type="number" ng-model="pg.displayOrder"/></td>
             <td>
                 <input ng-model="pg.currentPrice"
                        type="text"/>

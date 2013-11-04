@@ -319,6 +319,7 @@ Edit Product
             <th></th>
             <th style="text-align:left;">Program</th>
             <th></th>
+            <th>Display Order</th>
             <th style="text-align: left">Price Per Pack</th>
             <th style="text-align: left">Doses Per Month</th>
         </tr>
@@ -328,6 +329,10 @@ Edit Product
             <td style="width: 200px;text-align:left;">
                 <input type="checkbox" ng-disabled="!editProduct.active"
                        ng-model="pp.active"/>
+            </td>
+            <td>
+                <input type="number" ng-disabled="(!pp.active || !editProduct.active)"
+                       ng-model="pp.displayOrder"/>
             </td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>

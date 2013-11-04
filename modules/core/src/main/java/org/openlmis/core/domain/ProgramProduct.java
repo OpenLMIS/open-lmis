@@ -37,6 +37,8 @@ public class ProgramProduct extends BaseModel implements Importable {
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
 
+  private Integer displayOrder;
+
   ProgramProductISA programProductIsa;
 
   // this section is added here to ensure that the product edit form has a way to show the price information along with the program product.
