@@ -21,7 +21,6 @@ apply plugin: 'cobertura'
 task npm(type: Exec) {
    group = "Build"
    description = "Installs all Node.js dependencies defined in package.json"
-//   commandLine = ["npm", "install"]
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         commandLine 'cmd', '/c', 'npm', 'install'
     } else {
@@ -68,6 +67,14 @@ task less(type: GruntTask) {
 task uglify(type: GruntTask) {
     workingDir '.'
     gruntArgs = "uglify"
+    dependsOn npm
+}
+
+task lesswatch(type: GruntTask) {
+    description = 'Looks for changes in LESS and recompiles to CSS upon detecting change'
+    workingDir '.'
+    gruntArgs = 'watch'
+    ignoreExitValue = true
     dependsOn npm
 }
 
@@ -199,7 +206,7 @@ def configureHttps(keystore, password) {
     return ext.connectors;
 }
 
-task run(dependsOn: jettyRun)
+task run(dependsOn: [jettyDaemon, lesswatch])
 
 task explodedWar(type: Copy) {
     into "$buildDir/exploded"
