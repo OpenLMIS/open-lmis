@@ -109,6 +109,7 @@ public class EPIUse extends DistributionTab {
     rownumber = rownumber - 1;
     WebElement stockAtEndOfMonth = testWebDriver.getElementByName("stockAtEndOfMonth" + rownumber);
     sendKeys(stockAtEndOfMonth, value);
+    stockAtEndOfMonth.sendKeys(Keys.TAB);
   }
 
   public void enterValueInExpirationDate(String value, int rownumber) {
