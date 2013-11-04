@@ -416,12 +416,10 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
 
     $scope.showFacility = function(fac) {
-        //alert($scope.currentFacility);
         showFacilityName = (fac!=$scope.currentFacility);
-
         $scope.currentFacility = fac;
         return showFacilityName;
-    }
+    };
 
 
 }
