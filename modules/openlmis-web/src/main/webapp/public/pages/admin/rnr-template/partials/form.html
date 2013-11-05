@@ -27,7 +27,6 @@
 
       <ul id="not-sortable">
         <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrNonSortableColumns">
-          <div class="drag-handle"></div>
           <span class="tpl-visible">
             <input type="checkbox" ng-model="rnrColumn.visible" ng-click="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>
           </span>
