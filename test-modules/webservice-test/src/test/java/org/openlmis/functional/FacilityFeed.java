@@ -37,6 +37,7 @@ public class FacilityFeed extends JsonUtility {
   public static final String JSON_EXTENSION = ".json";
   public static final String POST = "POST";
   public static final String PUT = "PUT";
+  public static final String FACILITY_FEED_URL = "http://localhost:9091/feeds/facilities/recent";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -72,7 +73,7 @@ public class FacilityFeed extends JsonUtility {
     String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
     createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + facilityNamePrefix + date_time + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"" + facilityType + "\""));
@@ -103,7 +104,7 @@ public class FacilityFeed extends JsonUtility {
     deleteFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     deleteFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     deleteFacilityPage.enableFacility();
-    responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
 
@@ -167,7 +168,7 @@ public class FacilityFeed extends JsonUtility {
     uploadPage.uploadFacilities("QA_facilities_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + facilityNamePrefix + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"" + facilityType + "\""));
@@ -198,7 +199,7 @@ public class FacilityFeed extends JsonUtility {
     uploadPage.uploadFacilities("QA_facilities_Subsequent_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    ResponseEntity responseEntityUpdated = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
 
@@ -227,12 +228,12 @@ public class FacilityFeed extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
@@ -251,12 +252,12 @@ public class FacilityFeed extends JsonUtility {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent", "GET", "", "");
+    ResponseEntity responseEntityUpdated = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
     assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsOnline\":"));
     assertFalse("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"hasElectricity\":"));
@@ -286,10 +287,10 @@ public class FacilityFeed extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        "",
-        "");
+      CREATE_URL,
+      POST,
+      "",
+      "");
 
     assertTrue("Showing response as : " + responseEntity.getStatus(), responseEntity.getStatus() == 401);
 
@@ -308,12 +309,12 @@ public class FacilityFeed extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL + "?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
@@ -326,12 +327,12 @@ public class FacilityFeed extends JsonUtility {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=openlmis", "GET", "", "");
+    ResponseEntity responseEntityUpdated = client.SendJSON("", FACILITY_FEED_URL + "?vendor=openlmis", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
@@ -356,12 +357,12 @@ public class FacilityFeed extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
+    ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL + "?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
@@ -374,12 +375,12 @@ public class FacilityFeed extends JsonUtility {
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=testing", "GET", "", "");
+    ResponseEntity responseEntityUpdated = client.SendJSON("", FACILITY_FEED_URL + "?vendor=testing", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"active\":false"));
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
@@ -404,30 +405,31 @@ public class FacilityFeed extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntity = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityCode\":\"" + DEFAULT_AGENT_CODE + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityName\":\"" + DEFAULT_AGENT_NAME + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityMainPhone\":\"" + PHONE_NUMBER + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsActive\":" + ACTIVE_STATUS + ""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityGoLiveDate\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityIsVirtual\":true"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacilityCode\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
+    ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL + "?vendor=commtrack", "GET", "", "");
+    String response = responseEntity.getResponse();
+    assertTrue("Response entity : " + response, response.contains("\"facilityCode\":\"" + DEFAULT_AGENT_CODE + "\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityName\":\"" + DEFAULT_AGENT_NAME + "\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityType\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityMainPhone\":\"" + PHONE_NUMBER + "\""));
+    assertTrue("Response entity : " + response, response.contains("\"geographicZone\":\"Ngorongoro\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityIsActive\":" + ACTIVE_STATUS + ""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityGoLiveDate\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityIsVirtual\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"parentFacilityCode\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
 
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
-    ResponseEntity responseEntityUpdated = client.SendJSON("", "http://localhost:9091/feeds/facility/recent?vendor=commtrack", "GET", "", "");
+    ResponseEntity responseEntityUpdated = client.SendJSON("", FACILITY_FEED_URL + "?vendor=commtrack", "GET", "", "");
     assertTrue("Response entity : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("\"facilityIsActive\":false"));
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntityUpdated.getResponse(), "content");
@@ -442,14 +444,14 @@ public class FacilityFeed extends JsonUtility {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
     };
   }
 
   @DataProvider(name = "Data-Provider-Function-Credentials")
   public Object[][] parameterIntTestProviderCredentials() {
     return new Object[][]{
-        {new String[]{"Admin123", "Admin123"}}
+      {new String[]{"Admin123", "Admin123"}}
     };
   }
 }

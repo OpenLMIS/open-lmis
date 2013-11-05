@@ -32,6 +32,9 @@ import java.util.*;
 @NoArgsConstructor
 public class FacilityService {
 
+  public static final String FACILITY_CATEGORY = "facilities";
+  public static final String FACILITY_TITLE = "Facility";
+
   @Autowired
   private FacilityRepository facilityRepository;
 
@@ -113,8 +116,8 @@ public class FacilityService {
     try {
       Facility parentFacility = facilityRepository.getById(newFacility.getParentFacilityId());
       FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(newFacility, parentFacility);
-      eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "",
-          facilityFeedDTO.getSerializedContents(), "facility"));
+      eventService.notify(new Event(UUID.randomUUID().toString(), FACILITY_TITLE, DateTime.now(), "",
+        facilityFeedDTO.getSerializedContents(), FACILITY_CATEGORY));
     } catch (URISyntaxException e) {
       logger.error("Unable to generate facility event", e);
     }

@@ -128,7 +128,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
-        facilityFeedDTO.getSerializedContents(), "facility")));
+      facilityFeedDTO.getSerializedContents(), "facilities")));
 
   }
 
@@ -139,7 +139,7 @@ public class FacilityServiceTest {
       public boolean matches(Object argument) {
         Event event = (Event) argument;
         return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-            event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
   }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<mapping>
+    <field openlmis-name="code" vendor-name="facilityCode"/>
+    <field openlmis-name="name" vendor-name="facilityName"/>
+    <field openlmis-name="description" vendor-name="facilityDescription"/>
+    <field openlmis-name="gln" vendor-name="GLN"/>
+    <field openlmis-name="mainPhone" vendor-name="facilityMainPhone"/>
+    <field openlmis-name="fax" vendor-name="facilityFax"/>
+    <field openlmis-name="address1" vendor-name="facilityAddress1"/>
+    <field openlmis-name="address2" vendor-name="facilityAddress2"/>
+    <field openlmis-name="latitude" vendor-name="facilityLAT"/>
+    <field openlmis-name="longitude" vendor-name="facilityLONG"/>
+    <field openlmis-name="altitude" vendor-name="facilityAltitude"/>
+    <field openlmis-name="operatedBy" vendor-name="facilityOperatedBy"/>
+    <field openlmis-name="sdp" vendor-name="facilityIsSDP"/>
+    <field openlmis-name="online" vendor-name="facilityIsOnline"/>
+    <field openlmis-name="suppliesOthers" vendor-name="facilitySuppliesOthers"/>
+    <field openlmis-name="hasElectricity" vendor-name="facilityHasElectricity"/>
+    <field openlmis-name="hasElectronicSCC" vendor-name="facilityHasElectronicSCC"/>
+    <field openlmis-name="hasElectronicDAR" vendor-name="facilityHasElectronicDAR"/>
+    <field openlmis-name="satellite" vendor-name="facilityIsSatellite"/>
+    <field openlmis-name="virtualFacility" vendor-name="facilityIsVirtual"/>
+    <field openlmis-name="active" vendor-name="facilityIsActive"/>
+    <field openlmis-name="goLiveDate" vendor-name="facilityGoLiveDate"/>
+    <field openlmis-name="goDownDate" vendor-name="facilityGoDownDate"/>
+    <field openlmis-name="parentFacility" vendor-name="parentFacilityCode"/>
+    <field openlmis-name="comment" vendor-name="facilityComments"/>
+    <field openlmis-name="modifiedDate" vendor-name="lastModifiedDate"/>
+</mapping>

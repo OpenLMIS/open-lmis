@@ -20,7 +20,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -46,11 +45,11 @@ public class ProgramSupportedEventTest {
 
     ProgramSupportedEvent programSupportedEvent = new ProgramSupportedEvent(programSupportedEventDTO);
 
-    assertThat(programSupportedEvent.getTitle(), is("ProgramSupported"));
+    assertThat(programSupportedEvent.getTitle(), is("Programs Supported"));
     assertNotNull(programSupportedEvent.getUuid());
-    assertThat(programSupportedEvent.getCategory(), is("program-supported"));
-    assertThat(programSupportedEvent.getTimeStamp(),is(dateTime));
-    assertThat(programSupportedEvent.getContents(),is("serializedContents"));
+    assertThat(programSupportedEvent.getCategory(), is("programs-supported"));
+    assertThat(programSupportedEvent.getTimeStamp(), is(dateTime));
+    assertThat(programSupportedEvent.getContents(), is("serializedContents"));
     verify(programSupportedEventDTO).getSerializedContents();
   }
 }
