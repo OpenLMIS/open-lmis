@@ -19,10 +19,11 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.lang.String.format;
 
 
 public class FacilityAPI extends JsonUtility {
-  public static final String URL = "http://localhost:9091/rest-api/facility.json";
+  public static final String URL = "http://localhost:9091/rest-api/facilities/%s";
   public static final String commTrackUser = "commTrack";
   public static final String GET = "GET";
 
@@ -38,110 +39,113 @@ public class FacilityAPI extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-    @Test(groups = {"webservice"})
-    public void testFacilityAPI() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testFacilityAPI() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"F10\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"Village Dispensary\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"facilityType\":\"Lvl3 Hospital\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"description\":\"IT department\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"gln\":\"G7645\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"9876234981\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"fax\":\"fax\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"address1\":\"A\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"address2\":\"B\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"catchmentPopulation\":333"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"latitude\":22.1"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"longitude\":1.2"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"altitude\":3.3"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"operatedBy\":\"NGO\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"coldStorageGrossCapacity\":9.9"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"coldStorageNetCapacity\":6.6"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"suppliesOthers\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"sdp\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectricity\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"online\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicSCC\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\":1352572200000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\":-2592106200000"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satellite\":true"));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
-        assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"fc\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"modifiedDate\":"));
-        assertTrue("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"programsSupported\":["));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"ESS_MEDS\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"VACCINES\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":true"));
+    ResponseEntity responseEntity = client.SendJSON("", format(URL, "F10"), GET, commTrackUser, "Admin123");
+    String response = responseEntity.getResponse();
+    assertTrue("Response entity : " + response, response.contains("\"code\":\"F10\""));
+    assertTrue("Response entity : " + response, response.contains("\"name\":\"Village Dispensary\""));
+    assertTrue("Response entity : " + response, response.contains("\"facilityType\":\"Lvl3 Hospital\""));
+    assertTrue("Response entity : " + response, response.contains("\"description\":\"IT department\""));
+    assertTrue("Response entity : " + response, response.contains("\"gln\":\"G7645\""));
+    assertTrue("Response entity : " + response, response.contains("\"mainPhone\":\"9876234981\""));
+    assertTrue("Response entity : " + response, response.contains("\"fax\":\"fax\""));
+    assertTrue("Response entity : " + response, response.contains("\"address1\":\"A\""));
+    assertTrue("Response entity : " + response, response.contains("\"address2\":\"B\""));
+    assertTrue("Response entity : " + response, response.contains("\"geographicZone\":\"Ngorongoro\""));
+    assertTrue("Response entity : " + response, response.contains("\"catchmentPopulation\":333"));
+    assertTrue("Response entity : " + response, response.contains("\"latitude\":22.1"));
+    assertTrue("Response entity : " + response, response.contains("\"longitude\":1.2"));
+    assertTrue("Response entity : " + response, response.contains("\"altitude\":3.3"));
+    assertTrue("Response entity : " + response, response.contains("\"operatedBy\":\"NGO\""));
+    assertTrue("Response entity : " + response, response.contains("\"coldStorageGrossCapacity\":9.9"));
+    assertTrue("Response entity : " + response, response.contains("\"coldStorageNetCapacity\":6.6"));
+    assertTrue("Response entity : " + response, response.contains("\"suppliesOthers\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"sdp\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"hasElectricity\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"online\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"hasElectronicSCC\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"hasElectronicDAR\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"active\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"goLiveDate\":1352572200000"));
+    assertTrue("Response entity : " + response, response.contains("\"goDownDate\":-2592106200000"));
+    assertTrue("Response entity : " + response, response.contains("\"satellite\":true"));
+    assertTrue("Response entity : " + response, response.contains("\"virtualFacility\":false"));
+    assertFalse("Response entity : " + response, response.contains("\"parentFacility\""));
+    assertTrue("Response entity : " + response, response.contains("\"comment\":\"fc\""));
+    assertTrue("Response entity : " + response, response.contains("\"modifiedDate\":"));
+    assertTrue("Response entity : " + response, response.contains("\"programsSupported\":["));
+    assertTrue("Response entity : " + response, response.contains("\"HIV\""));
+    assertTrue("Response entity : " + response, response.contains("\"ESS_MEDS\""));
+    assertTrue("Response entity : " + response, response.contains("\"VACCINES\""));
+    assertTrue("Response entity : " + response, response.contains("\"enabled\":true"));
 
-        assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"),35);
+    assertEquals(StringUtils.countMatches(response, ":"), 35);
 
-        dbWrapper.disableFacility("Village Dispensary");
-        responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"enabled\":false"));
+    dbWrapper.disableFacility("Village Dispensary");
+    responseEntity = client.SendJSON("", format(URL, "F10"), GET, commTrackUser, "Admin123");
+    response = responseEntity.getResponse();
+    assertTrue("Response entity : " + response, response.contains("\"enabled\":false"));
 
-        dbWrapper.deleteProgramToFacilityMapping("ESS_MEDS");
-        responseEntity = client.SendJSON("", URL + "?facilityCode=F10", GET, commTrackUser, "Admin123");
-        assertTrue("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"programsSupported\":["));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"HIV\""));
-        assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"VACCINES\""));
+    dbWrapper.deleteProgramToFacilityMapping("ESS_MEDS");
+    responseEntity = client.SendJSON("", format(URL, "F10"), GET, commTrackUser, "Admin123");
+    response = responseEntity.getResponse();
+    assertTrue("Response entity : " + response, response.contains("\"programsSupported\":["));
+    assertTrue("Response entity : " + response, response.contains("\"HIV\""));
+    assertTrue("Response entity : " + response, response.contains("\"VACCINES\""));
 
-        responseEntity = client.SendJSON("", URL + "?facilityCode=%20F10", GET, commTrackUser, "Admin123");
-        assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
-        assertEquals(responseEntity.getStatus(), 400) ;
+    responseEntity = client.SendJSON("", format(URL, "INVALID_FACILITY_CODE"), GET, commTrackUser, "Admin123");
+    response = responseEntity.getResponse();
+    assertEquals(response, "{\"error\":\"Invalid Facility code\"}");
+    assertEquals(responseEntity.getStatus(), 400);
 
-    }
+  }
 
-    @Test(groups = {"webservice"})
-    public void testInvalidFacilityCode() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testInvalidFacilityCode() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, commTrackUser, "Admin123");
-        assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
-        assertEquals(responseEntity.getStatus(), 400) ;
+    ResponseEntity responseEntity = client.SendJSON("", format(URL, "F100"), GET, commTrackUser, "Admin123");
+    assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
+    assertEquals(responseEntity.getStatus(), 400);
 
-    }
+  }
 
-    @Test(groups = {"webservice"})
-    public void testBlankFacilityCode() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testBlankFacilityCode() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=", GET, commTrackUser, "Admin123");
-        assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
-        assertEquals(responseEntity.getStatus(), 400) ;
+    ResponseEntity responseEntity = client.SendJSON("", format(URL, ""), GET, commTrackUser, "Admin123");
+    assertEquals(responseEntity.getStatus(), 404);
 
-    }
+  }
 
-    @Test(groups = {"webservice"})
-    public void testInvalidUser() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testInvalidUser() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, "ABCD", "Admin123");
-        assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed")) ;
-        assertEquals(responseEntity.getStatus(), 401) ;
+    ResponseEntity responseEntity = client.SendJSON("", format(URL, "F100"), GET, "ABCD", "Admin123");
+    assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed"));
+    assertEquals(responseEntity.getStatus(), 401);
 
-    }
+  }
 
-    @Test(groups = {"webservice"})
-    public void testInvalidPassword() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testInvalidPassword() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        ResponseEntity responseEntity = client.SendJSON("", URL + "?facilityCode=F100" + "", GET, commTrackUser, "ABCD");
-        assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed")) ;
-        assertEquals(responseEntity.getStatus(), 401) ;
+    ResponseEntity responseEntity = client.SendJSON("", format(URL, "F100"), GET, commTrackUser, "ABCD");
+    assertTrue("Response:" + responseEntity.getResponse(), responseEntity.getResponse().contains("Error 401 Authentication Failed"));
+    assertEquals(responseEntity.getStatus(), 401);
 
-    }
+  }
 
 
   @DataProvider(name = "Data-Provider-Function-Positive")

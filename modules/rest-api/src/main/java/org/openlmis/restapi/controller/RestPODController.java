@@ -24,7 +24,7 @@ public class RestPODController extends BaseController {
   @Autowired
   private RestPODService restPODService;
 
-  @RequestMapping(value = "/rest-api/order/{orderId}/pod", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/orders/{orderId}/pod", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> createCHW(@RequestBody POD pod, @PathVariable Long orderId, Principal principal) {
     try {
       pod.setOrderId(orderId);

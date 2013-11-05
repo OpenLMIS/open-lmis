@@ -24,7 +24,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 public class ProgramProductAPI extends JsonUtility {
 
-  public static final String URL = "http://localhost:9091/rest-api/programProducts.json";
+  public static final String URL = "http://localhost:9091/rest-api/program-products.json";
   public static final String commTrackUser = "commTrack";
   public static final String GET = "GET";
 

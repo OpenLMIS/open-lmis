@@ -21,8 +21,8 @@ import org.openlmis.restapi.service.RestFacilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -34,8 +34,8 @@ public class RestFacilityController extends BaseController {
   @Autowired
   RestFacilityService restFacilityService;
 
-  @RequestMapping(value = "/rest-api/facility", method = GET, headers = BaseController.ACCEPT_JSON)
-  public ResponseEntity<RestResponse> getFacilityByCode(@RequestParam(required = true) String facilityCode) {
+  @RequestMapping(value = "/rest-api/facilities/{facilityCode}", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getFacilityByCode(@PathVariable String facilityCode) {
     FacilityFeedDTO facilityFeedDTO;
     try {
       facilityFeedDTO = restFacilityService.getFacilityByCode(facilityCode);

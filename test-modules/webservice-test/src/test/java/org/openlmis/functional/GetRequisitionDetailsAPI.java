@@ -23,12 +23,15 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.lang.String.format;
+import static org.openlmis.functional.PODTest.POD_URL;
 
 public class GetRequisitionDetailsAPI extends JsonUtility {
 
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
+
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -289,7 +292,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
     client.SendJSON(getJsonStringFor(PODFromJson),
-      "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+      format(POD_URL, id),
       "POST",
       "commTrack",
       "Admin123");
