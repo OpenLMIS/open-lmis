@@ -45,9 +45,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -240,6 +239,46 @@ public class FacilityServiceTest {
   }
 
   @Test
+  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfFacilityTypeChange() throws Exception {
+    Long parentId = 59L;
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "NGO")));
+    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "GOVT")));
+
+    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
+
+    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
+    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
+
+    facilityService.update(parentFacility);
+
+    verify(facilityRepository).save(parentFacility);
+    verify(programSupportedService).updateSupportedPrograms(parentFacility);
+    verify(facilityRepository).getChildFacilities(parentFacility);
+    verify(facilityRepository).updateVirtualFacilities(parentFacility);
+    verify(eventService, times(2)).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfGeoZoneChange() throws Exception {
+    Long parentId = 59L;
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "AAA")));
+    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "BBB")));
+
+    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
+
+    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
+    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
+
+    facilityService.update(parentFacility);
+
+    verify(facilityRepository).save(parentFacility);
+    verify(programSupportedService).updateSupportedPrograms(parentFacility);
+    verify(facilityRepository).getChildFacilities(parentFacility);
+    verify(facilityRepository).updateVirtualFacilities(parentFacility);
+    verify(eventService, times(2)).notify(any(Event.class));
+  }
+
+  @Test
   public void shouldGetAllFacilitiesForUserAndRights() throws Exception {
     //Arrange
     Right[] rights = {Right.VIEW_REQUISITION, Right.APPROVE_REQUISITION};
@@ -353,10 +392,10 @@ public class FacilityServiceTest {
     List<Facility> expectedWarehouses = asList(new Facility());
     when(facilityRepository.getEnabledWarehouses()).thenReturn(expectedWarehouses);
 
-    List<Facility> wareshouses = facilityService.getEnabledWarehouses();
+    List<Facility> warehouses = facilityService.getEnabledWarehouses();
 
     verify(facilityRepository).getEnabledWarehouses();
-    assertThat(wareshouses, is(expectedWarehouses));
+    assertThat(warehouses, is(expectedWarehouses));
   }
 
   @Test

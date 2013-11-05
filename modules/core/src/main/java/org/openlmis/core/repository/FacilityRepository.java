@@ -79,7 +79,7 @@ public class FacilityRepository {
       throw new DataException("error.reference.data.invalid.geo.zone.code");
     }
 
-    if (facility.getGeographicZone().getLevel().getLevelNumber() != LOWEST_GEO_LEVEL) {
+    if (!facility.getGeographicZone().getLevel().getLevelNumber().equals(LOWEST_GEO_LEVEL)) {
       throw new DataException("error.geo.zone.not.at.lowest.level");
     }
   }
@@ -189,5 +189,9 @@ public class FacilityRepository {
 
   public List<Facility> getChildFacilities(Facility facility) {
     return mapper.getChildFacilities(facility);
+  }
+
+  public void updateVirtualFacilities(Facility parentFacility) {
+    mapper.updateVirtualFacilities(parentFacility);
   }
 }
