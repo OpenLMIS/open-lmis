@@ -137,6 +137,7 @@ public class RnrCalcStrategy {
   }
 
   public Integer calculateDefaultApprovedQuantity(boolean fullSupply, Integer calculatedOrderQuantity, Integer quantityRequested) {
-    return fullSupply ? calculatedOrderQuantity : quantityRequested;
+    // the quantity requested should always override the calculated quantity.
+    return quantityRequested;
   }
 }
