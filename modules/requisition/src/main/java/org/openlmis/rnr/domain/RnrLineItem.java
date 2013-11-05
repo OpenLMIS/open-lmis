@@ -253,10 +253,18 @@ public class RnrLineItem extends LineItem {
       columnOption = column.getCalculationOption();
     }
     if(columnOption == "DISPENSED_PLUS_NEW_PATIENTS"){
-      // ONLY GOD AND I KNOW THAT THIS DOES NOT MAKE SENSE.
-      // I WONDER WHY THE COUNTRY PEOPLE ARE PUSHING FOR THIS.
+      // what appears to have happened is the direct translation of the column name
+      // on new patient is (number of additional units required)
+      // essentially wrong usage of the column.
       normalizedConsumption = quantityDispensed + newPatientCount;
-    } else{
+    }else if(columnOption == "MAX_X_90"){
+        if(stockOutDays != 90){
+          normalizedConsumption = (90 * maxStockQuantity) / 90 - stockOutDays;
+        } else{
+          normalizedConsumption = (90 * maxStockQuantity);
+        }
+    }
+    else{
       normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit);
     }
 
