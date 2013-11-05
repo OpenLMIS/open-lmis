@@ -157,10 +157,6 @@ var RegularRnrLineItem = base2.Base.extend({
       return;
     }
 
-    if(this.getCalcOption('quantityApproved') == 'ACCEPT_PACKS'){
-        this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
-    }
-
     this.applyRoundingRulesToPacksToShip(quantity);
   },
 
