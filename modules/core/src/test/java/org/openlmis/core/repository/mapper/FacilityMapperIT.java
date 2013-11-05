@@ -98,18 +98,21 @@ public class FacilityMapperIT {
   @Autowired
   SupplyLineMapper supplyLineMapper;
 
+  @Autowired
+  GeographicZoneMapper geographicZoneMapper;
+
   @Test
   public void shouldFetchAllFacilitiesAvailable() throws Exception {
     Facility trz001 = make(a(defaultFacility,
-        with(code, "TRZ001"),
-        with(name, "Ngorongoro Hospital"),
-        with(type, "warehouse"),
-        with(geographicZoneId, 1L)));
+      with(code, "TRZ001"),
+      with(name, "Ngorongoro Hospital"),
+      with(type, "warehouse"),
+      with(geographicZoneId, 1L)));
     Facility trz002 = make(a(defaultFacility,
-        with(code, "TRZ002"),
-        with(name, "Rural Clinic"),
-        with(type, "lvl3_hospital"),
-        with(geographicZoneId, 2L)));
+      with(code, "TRZ002"),
+      with(name, "Rural Clinic"),
+      with(type, "lvl3_hospital"),
+      with(geographicZoneId, 2L)));
     mapper.insert(trz001);
     mapper.insert(trz002);
 
@@ -317,12 +320,12 @@ public class FacilityMapperIT {
 
 
     programSupportedMapper.insert(make(a(defaultProgramSupported,
-        with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
-        with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
+      with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
+      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
     programSupportedMapper.insert(make(a(defaultProgramSupported,
-        with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
-        with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
+      with(supportedFacilityId, facilitySupportingProgramNotInAnyRG.getId()),
+      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
 
@@ -368,9 +371,9 @@ public class FacilityMapperIT {
 
     for (Facility facility : returnedFacilityList) {
       assertThat(facility.getCode().equals(facility1.getCode())
-          || facility.getCode().equals(facility2.getCode())
-          || facility.getCode().equals(facility3.getCode())
-          || facility.getCode().equals(facility5.getCode()), is(true));
+        || facility.getCode().equals(facility2.getCode())
+        || facility.getCode().equals(facility3.getCode())
+        || facility.getCode().equals(facility5.getCode()), is(true));
     }
   }
 
@@ -415,8 +418,8 @@ public class FacilityMapperIT {
 
     for (Facility facility : returnedFacilityList) {
       assertThat(facility.getCode().equals(facility1.getCode())
-          || facility.getCode().equals(facility2.getCode())
-          || facility.getCode().equals(facility3.getCode()), is(true));
+        || facility.getCode().equals(facility2.getCode())
+        || facility.getCode().equals(facility3.getCode()), is(true));
     }
 
   }
@@ -496,9 +499,9 @@ public class FacilityMapperIT {
     Date date = new Date();
 
     ProgramSupported programSupported = make(a(defaultProgramSupported,
-        with(supportedProgram, program),
-        with(supportedFacilityId, facility.getId()),
-        with(dateModified, date)));
+      with(supportedProgram, program),
+      with(supportedFacilityId, facility.getId()),
+      with(dateModified, date)));
     programSupportedMapper.insert(programSupported);
 
     Facility facilityFromDatabase = mapper.getByCode(facility.getCode());
@@ -535,7 +538,7 @@ public class FacilityMapperIT {
     deliveryZoneMapper.insert(deliveryZone);
 
     deliveryZoneProgramScheduleMapper.insert(new DeliveryZoneProgramSchedule(deliveryZone.getId(),
-        program.getId(), processingSchedule.getId()));
+      program.getId(), processingSchedule.getId()));
 
     Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
 
@@ -575,21 +578,21 @@ public class FacilityMapperIT {
     Program program2 = new Program(2L);
 
     ProgramSupported programSupported1 = make(a(defaultProgramSupported,
-        with(supportedProgram, program1),
-        with(supportedFacilityId, facility1.getId()),
-        with(dateModified, date1)));
+      with(supportedProgram, program1),
+      with(supportedFacilityId, facility1.getId()),
+      with(dateModified, date1)));
     programSupportedMapper.insert(programSupported1);
 
     ProgramSupported programSupported2 = make(a(defaultProgramSupported,
-        with(supportedProgram, program1),
-        with(supportedFacilityId, facility2.getId()),
-        with(dateModified, date2)));
+      with(supportedProgram, program1),
+      with(supportedFacilityId, facility2.getId()),
+      with(dateModified, date2)));
     programSupportedMapper.insert(programSupported2);
 
     ProgramSupported programSupported3 = make(a(defaultProgramSupported,
-        with(supportedProgram, program2),
-        with(supportedFacilityId, facility1.getId()),
-        with(dateModified, date2)));
+      with(supportedProgram, program2),
+      with(supportedFacilityId, facility1.getId()),
+      with(dateModified, date2)));
     programSupportedMapper.insert(programSupported3);
 
 
@@ -617,7 +620,7 @@ public class FacilityMapperIT {
     supervisoryNodeMapper.insert(supervisoryNode);
 
     SupplyLine supplyLine = make(a(SupplyLineBuilder.defaultSupplyLine, with(SupplyLineBuilder.defaultProgram, program), with(SupplyLineBuilder.facility, enabledFacility),
-        with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);
 
     List<Facility> warehouses = mapper.getEnabledWarehouses();
@@ -651,7 +654,7 @@ public class FacilityMapperIT {
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
                                         Long geoZoneId, Boolean facilityActive) {
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(code, facilityCode), with(name, facilityName),
-        with(geographicZoneId, geoZoneId), with(active, facilityActive)));
+      with(geographicZoneId, geoZoneId), with(active, facilityActive)));
     mapper.insert(facility);
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityId(facility.getId());
@@ -661,4 +664,56 @@ public class FacilityMapperIT {
     deliveryZoneMemberMapper.insert(member1);
     return facility;
   }
+
+  @Test
+  public void shouldUpdateOnlyTypeAndGeoZoneInVirtualFacilities() throws Exception {
+
+    GeographicLevel level = new GeographicLevel(1L);
+    GeographicZone zone0 = new GeographicZone(3000L, "Z0", "Z0", level, null);
+    geographicZoneMapper.insert(zone0);
+    GeographicZone zone1 = new GeographicZone(1000L, "Z1", "Z1", level, zone0);
+    geographicZoneMapper.insert(zone1);
+    GeographicZone zone2 = new GeographicZone(2000L, "Z2", "Z2", level, zone1);
+    geographicZoneMapper.insert(zone2);
+
+
+    List<FacilityType> allTypes = mapper.getAllTypes();
+    FacilityType facilityType1 = allTypes.get(1);
+    FacilityType facilityType2 = allTypes.get(2);
+
+    Facility parentFacility = insertFacility("FF110", facilityType1, zone1, null);
+
+    Facility facility = insertFacility("F2222", facilityType1, zone1, null);
+
+    Facility virtualFacility = insertFacility("F3333", facilityType1, zone1, parentFacility.getId());
+
+    parentFacility.setFacilityType(facilityType2);
+    parentFacility.setGeographicZone(zone2);
+
+    mapper.updateVirtualFacilities(parentFacility);
+
+    Facility fetchedVirtualFacility = mapper.getById(virtualFacility.getId());
+    assertThat(fetchedVirtualFacility.getFacilityType().getCode(), is(facilityType2.getCode()));
+    assertThat(fetchedVirtualFacility.getGeographicZone().getCode(), is(zone2.getCode()));
+
+    Facility fetchedFacility = mapper.getById(facility.getId());
+    assertThat(fetchedFacility.getFacilityType().getCode(), is(facilityType1.getCode()));
+    assertThat(fetchedFacility.getGeographicZone().getCode(), is(zone1.getCode()));
+
+  }
+
+  private Facility insertFacility(String facilityCode, FacilityType facilityType, GeographicZone zone, Long parentId) {
+    Facility facility = make(a(defaultFacility,
+      with(code, facilityCode),
+      with(typeId, facilityType.getId()),
+      with(parentFacilityId, parentId)));
+
+    facility.setGeographicZone(zone);
+
+    mapper.insert(facility);
+
+    return facility;
+  }
+
+
 }

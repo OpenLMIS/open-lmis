@@ -24,6 +24,7 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 
 public class FacilityBuilder {
 
+  public static final Property<Facility, Long> facilityId = newProperty();
   public static final Property<Facility, String> code = newProperty();
   public static final Property<Facility, String> name = newProperty();
   public static final Property<Facility, String> type = newProperty();
@@ -47,6 +48,7 @@ public class FacilityBuilder {
   public static final Long FACILITY_TYPE_ID = 1L;
   public static final Long PARENT_FACILITY_ID = null;
   public static final Long GEOGRAPHIC_ZONE_ID = 3L;
+  public static final Long DEFAULT_FACILITY_ID = null;
 
   public static final String GEOGRAPHIC_ZONE_CODE = "GEOGRAPHIC_ZONE_CODE";
   public static final List EMPTY_LIST = new ArrayList<>();
@@ -55,6 +57,7 @@ public class FacilityBuilder {
     @Override
     public Facility instantiate(PropertyLookup<Facility> lookup) {
       Facility facility = new Facility();
+      facility.setId(lookup.valueOf(facilityId, DEFAULT_FACILITY_ID));
       facility.setCode(lookup.valueOf(code, FACILITY_CODE));
       FacilityType facilityType = new FacilityType();
       facilityType.setCode(lookup.valueOf(type, FACILITY_TYPE_CODE));
@@ -65,18 +68,20 @@ public class FacilityBuilder {
       facility.setFacilityType(facilityType);
       facility.setName(lookup.valueOf(name, "Apollo Hospital"));
 
-      GeographicZone geographicZone = new GeographicZone();
-      geographicZone.setLevel(new GeographicLevel(1L, "levelCode", "levelName", 4));
-      geographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
-      geographicZone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
-      geographicZone.setName("Lusaka");
+      //TODO refactor zone
+      GeographicZone zone = new GeographicZone();
+      zone.setLevel(new GeographicLevel(1L, "levelCode", "levelName", 4));
+      zone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
+      zone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
+      zone.setName("Lusaka");
       GeographicZone parentGeographicZone = new GeographicZone();
       parentGeographicZone.setLevel(new GeographicLevel(2L, "parentLevelCode", "parentLevelName", 3));
       parentGeographicZone.setId(lookup.valueOf(geographicZoneId, GEOGRAPHIC_ZONE_ID));
       parentGeographicZone.setCode(lookup.valueOf(geographicZoneCode, GEOGRAPHIC_ZONE_CODE));
       parentGeographicZone.setName("Zambia");
-      geographicZone.setParent(parentGeographicZone);
-      facility.setGeographicZone(lookup.valueOf(FacilityBuilder.geographicZone, geographicZone));
+      zone.setParent(parentGeographicZone);
+
+      facility.setGeographicZone(lookup.valueOf(geographicZone, zone));
       facility.setVirtualFacility(lookup.valueOf(virtualFacility, false));
 
       facility.setSdp(lookup.valueOf(sdp, true));
