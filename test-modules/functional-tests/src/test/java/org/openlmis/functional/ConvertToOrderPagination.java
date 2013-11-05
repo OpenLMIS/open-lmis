@@ -23,6 +23,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewOrdersPage;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -227,9 +228,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
     testWebDriver.waitForPageToLoad();
-    String baseXpath = "(//input[@class='ngSelectionCheckbox'])";
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]"));
-    testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]").click();
+    List <WebElement> x= testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
+    testWebDriver.waitForElementToAppear(x.get(whichRequisition-1));
+    x.get(whichRequisition-1).click();
   }
 
 
