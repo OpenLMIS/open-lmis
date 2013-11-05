@@ -79,3 +79,24 @@ rnrModule.date = function (element, ctrl, scope) {
       ctrl.$setValidity('date', valid);
   }
 };
+
+rnrModule.directive('adjustHeight', function ($timeout) {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var adjustHeight = function () {
+        element.css('height', 'auto');
+        var referenceElement = $('.' + attrs.adjustHeight);
+
+        if (element.height() > referenceElement.height()) return;
+
+        element.css({height: referenceElement.height() + "px"});
+      };
+
+      $timeout(adjustHeight);
+      $(window).on('resize', adjustHeight);
+    }
+  };
+});
+
+
