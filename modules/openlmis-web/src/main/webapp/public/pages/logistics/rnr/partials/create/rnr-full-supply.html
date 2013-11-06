@@ -27,7 +27,7 @@
 
 <div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180">
 <div class="float-left left-table">
-  <table id="fullSupplyFrozen" class="table table-bordered scrollable" fixed-table-header>
+  <table id="fullSupplyFrozenTable" class="table table-bordered scrollable" fixed-table-header>
     <thead>
     <tr class="fixed-head" adjust-height="scrollable-head">
       <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fixed" ng-bind="column.label"></th>
@@ -61,9 +61,8 @@
 <div class="float-left right-table">
 <table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
-<tr class="scrollable-head" adjust-height="fixed-head" ng-show="page.fullSupply.length">
-  <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
-      ng-hide="column.name == 'quantityApproved'" ng-bind="column.label"></th>
+<tr class="scrollable-head" adjust-height="fixed-head">
+  <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable" ng-hide="column.name == 'quantityApproved'" ng-bind="column.label"></th>
 </tr>
 </thead>
 <tbody ng-show="visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat="rnrLineItem in page.fullSupply">

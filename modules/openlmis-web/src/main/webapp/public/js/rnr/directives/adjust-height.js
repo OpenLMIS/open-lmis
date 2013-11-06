@@ -16,8 +16,8 @@ rnrModule.directive('adjustHeight', function ($timeout) {
       var timeoutId;
       var adjustHeight = function () {
         $timeout.cancel(timeoutId);
-        if (element.is(':hidden')) return;
         timeoutId = $timeout(function () {
+          if (element.is(':hidden')) return;
           element.css('height', 'auto');
           var referenceElement = $('.' + attrs.adjustHeight + ':visible');
 
