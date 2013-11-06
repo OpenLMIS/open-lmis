@@ -382,7 +382,8 @@ var RegularRnrLineItem = base2.Base.extend({
     return (isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
   }
 }, {
-  visibleForNonFullSupplyColumns: ['dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks']
+  visibleForNonFullSupplyColumns: ['dispensingUnit', 'quantityRequested', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks'],
+  frozenColumns: ['skip', 'product', 'productCode']
 });
 
 

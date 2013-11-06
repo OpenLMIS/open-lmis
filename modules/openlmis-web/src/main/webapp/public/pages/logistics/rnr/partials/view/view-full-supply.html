@@ -9,24 +9,47 @@
   -->
 
 <div ng-controller="ViewFullSupplyController">
-  <div id="viewRnr" class="rnr-table rnr-approval" custom-horizontal-scroll>
-    <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-    <table id="fullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns class="table table-bordered scrollable">
-      <thead>
-      <tr ng-show="page.fullSupply.length">
-        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
-            ng-bind="programRnrColumn.label"></th>
-      </tr>
-      </thead>
-      <tbody ng-show="visibleColumns && page.fullSupply" ng-repeat="rnrLineItem in page.fullSupply">
-      <tr>
-        <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
-            ng-bind="rnrLineItem.productCategory"></td>
-      </tr>
-      <tr>
-        <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns">
-            <span ng-switch on="column.name">
+  <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+  <div id="viewRnr" class="rnr-table rnr-approval">
+    <div class="float-left left-table">
+      <table class="table table-bordered" fixed-table-header>
+        <thead>
+        <tr ng-show="page.fullSupply.length" class="fixed-head" adjust-height="scrollable-head">
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fixed"
+              ng-bind="column.label"></th>
+        </tr>
+        </thead>
 
+        <tbody ng-show="visibleColumns.fixed && page.fullSupply" ng-repeat="rnrLineItem in page.fullSupply">
+        <tr>
+          <td class="productCategory" colspan="{{visibleColumns.fixed.length}}" ng-show="showCategory($index)"
+              ng-bind="rnrLineItem.productCategory"></td>
+        </tr>
+        <tr class="fixed-body{{ $index }}" adjust-height="scrollable-body{{ $index }}">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fixed">
+            <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                  class="cell-text"></span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="float-left right-table" custom-horizontal-scroll>
+      <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
+        <thead>
+        <tr ng-show="page.fullSupply.length" adjust-height="fixed-head" class="scrollable-head">
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
+              ng-bind="column.label"></th>
+        </tr>
+        </thead>
+        <tbody ng-show="visibleColumns.scrollable && page.fullSupply" ng-repeat="rnrLineItem in page.fullSupply">
+        <tr>
+          <td class="productCategory" colspan="{{visibleColumns.scrollable.length}}" ng-show="showCategory($index)"
+              ng-bind="rnrLineItem.productCategory"></td>
+        </tr>
+        <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.scrollable">
+            <span ng-switch on="column.name">
               <span ng-switch-when="lossesAndAdjustments">
                 <div>
                   <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)" class="rnr-adjustment">
@@ -48,10 +71,12 @@
                 <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                       class="cell-text"></span>
             </span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clear-both"></div>
   </div>
 
   <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>

@@ -21,12 +21,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
 
-  $scope.visibleColumns = _.groupBy(_.where(rnrColumns, {'visible': true}), function (column) {
-    if (['skip', 'product', 'productCode'].indexOf(column.name) > -1)
-      return 'fixed';
-
-    return 'scrollable';
-  });
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns);
 
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
