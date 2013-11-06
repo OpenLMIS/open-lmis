@@ -182,6 +182,10 @@ public interface FacilityMapper {
   List<Facility> getEnabledWarehouses();
 
   @Select({"SELECT * FROM facilities WHERE parentFacilityId = #{id}"})
+  @Results(value = {
+    @Result(property = "geographicZone.id", column = "geographicZoneId"),
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById"))
+  })
   List<Facility> getChildFacilities(Facility facility);
 
 
