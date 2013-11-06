@@ -423,7 +423,7 @@ function StockedOutController($scope, $window,$filter, ngTableParams,  $http, $r
         $scope.filterObject.pdformat =1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/stocked_out/' + type + '?' + params;
-        $scope.$window.open(url);
+        $window.open(url);
     };
 
     // the grid options
