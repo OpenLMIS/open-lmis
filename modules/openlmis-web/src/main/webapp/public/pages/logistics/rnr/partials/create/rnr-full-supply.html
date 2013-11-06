@@ -27,7 +27,7 @@
 
 <div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180">
 <div class="float-left left-table">
-  <table class="table table-bordered scrollable">
+  <table id="fullSupplyFrozen" class="table table-bordered scrollable" fixed-table-header>
     <thead>
     <tr class="fixed-head" adjust-height="scrollable-head">
       <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fixed" ng-bind="column.label"></th>
@@ -59,7 +59,7 @@
   </table>
 </div>
 <div class="float-left right-table">
-<table id="fullSupplyTable" class="table table-bordered scrollable">
+<table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
 <tr class="scrollable-head" adjust-height="fixed-head" ng-show="page.fullSupply.length">
   <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"

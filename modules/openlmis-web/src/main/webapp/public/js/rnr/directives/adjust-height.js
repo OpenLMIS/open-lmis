@@ -12,8 +12,12 @@ rnrModule.directive('adjustHeight', function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
+      var previousWindowWidth = window.innerWidth;
+      var timeoutId;
       var adjustHeight = function () {
-        $timeout(function () {
+        $timeout.cancel(timeoutId);
+        if (element.is(':hidden')) return;
+        timeoutId = $timeout(function () {
           element.css('height', 'auto');
           var referenceElement = $('.' + attrs.adjustHeight + ':visible');
 
@@ -23,7 +27,11 @@ rnrModule.directive('adjustHeight', function ($timeout) {
         });
       };
 
-      $(window).on('resize', adjustHeight);
+      $(window).on('resize', function () {
+        if (previousWindowWidth !== window.innerWidth) {
+          adjustHeight();
+        }
+      });
       scope.$watch('visibleTab', adjustHeight)
 
     }

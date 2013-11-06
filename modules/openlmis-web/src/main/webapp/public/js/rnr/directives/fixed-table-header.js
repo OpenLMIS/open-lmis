@@ -16,6 +16,7 @@ app.directive('fixedTableHeader', function () {
     restrict: 'EA',
     link: function (scope, element) {
       var fixedHeader = $("<div class='header-fixed'></div>");
+      var previousWidth = 0, previousHeight = 0;
       fixedHeader.hide();
 
       var cloneAndAppendTableHeader = function () {
@@ -27,19 +28,41 @@ app.directive('fixedTableHeader', function () {
 
       setTimeout(function () {
         cloneAndAppendTableHeader();
-        fixedHeader.css('width', element.parent().css('width'));
-        viewFixedHeaderOnScroll(fixedHeader, element);
         element.parent().scroll(function () {
-          fixedHeader.scrollLeft(angular.element(this).scrollLeft());
+          fixedHeader.scrollLeft(element.parent().scrollLeft());
         });
-      }, 1000);
+      });
+
+      function setWidthAndHeightFromParent() {
+        var parentWidth = element.parent().width();
+        var parentHeight = element.find('thead').height();
+
+        if (previousWidth != parentWidth) {
+          fixedHeader.width(parentWidth);
+          previousWidth = parentWidth;
+        }
+
+        if (previousHeight != parentHeight) {
+          fixedHeader.find('thead tr').height(parentHeight);
+          previousHeight = parentHeight;
+        }
+      }
+
+      angular.element('.rnr-body').scroll(function () {
+        fixedHeader.hide();
+        if (element.offset().top < 0 && element.is(':visible')) {
+          setWidthAndHeightFromParent();
+          fixedHeader.show();
+        }
+      });
 
       $(window).on('resize', function () {
-        fixedHeader.css('width', element.parent().css('width'));
+        setWidthAndHeightFromParent();
       });
     }
   };
 });
+
 
 var viewFixedHeaderOnScroll = function (fixedHeaderElement, element) {
   angular.element('.rnr-body').scroll(function () {
