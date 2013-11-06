@@ -23,8 +23,9 @@
 
 </div>
 
-<div class="rnr-table" tab-scroll bottom-offset="180">
 <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+
+<div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180">
 <div class="float-left left-table">
   <table class="table table-bordered scrollable">
     <thead>
