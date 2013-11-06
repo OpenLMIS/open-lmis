@@ -10,18 +10,31 @@
 
 package org.openlmis.core.dto;
 
+import org.ict4h.atomfeed.server.service.Event;
+import org.joda.time.DateTime;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
 import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.db.categories.UnitTests;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@PrepareForTest(DateTime.class)
+@RunWith(PowerMockRunner.class)
+@Category(UnitTests.class)
 public class ProgramSupportedEventDTOTest {
   @Test
   public void shouldCreateProgramSupportedEventDTO() throws Exception {
@@ -37,7 +50,27 @@ public class ProgramSupportedEventDTOTest {
     assertThat(programSupportedDTO.getName(), is(programSupported.getProgram().getName()));
     assertThat(programSupportedDTO.getCode(), is(programSupported.getProgram().getCode()));
     assertThat(programSupportedDTO.getStartDate(), is(programSupported.getStartDate()));
-
   }
 
+  @Test
+  public void shouldCreateEvent() throws Exception {
+
+    List<ProgramSupported> programSupportedList = asList(make(a(defaultProgramSupported)));
+
+    ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO("F10", programSupportedList);
+
+    mockStatic(DateTime.class);
+    DateTime dateTime = new DateTime();
+    when(DateTime.now()).thenReturn(dateTime);
+
+    Event event = programSupportedEventDTO.createEvent();
+
+    assertThat(event.getTitle(), is(ProgramSupportedEventDTO.TITLE));
+    assertThat(event.getCategory(), is(ProgramSupportedEventDTO.CATEGORY));
+    assertNotNull(event.getUuid());
+    assertThat(event.getTimeStamp(), is(dateTime));
+    assertThat(event.getContents(), is(programSupportedEventDTO.getSerializedContents()));
+
+
+  }
 }

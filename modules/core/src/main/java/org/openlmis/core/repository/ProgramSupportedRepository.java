@@ -28,24 +28,20 @@ import java.util.List;
 @Repository
 public class ProgramSupportedRepository {
 
-  private ProgramSupportedMapper programSupportedMapper;
-
   @Autowired
-  public ProgramSupportedRepository(ProgramSupportedMapper programSupportedMapper) {
-    this.programSupportedMapper = programSupportedMapper;
-  }
+  private ProgramSupportedMapper mapper;
 
   public Date getProgramStartDate(Long facilityId, Long programId) {
-    return programSupportedMapper.getBy(facilityId, programId).getStartDate();
+    return mapper.getBy(facilityId, programId).getStartDate();
   }
 
   public void deleteSupportedPrograms(Long facilityId, Long programId) {
-    programSupportedMapper.delete(facilityId, programId);
+    mapper.delete(facilityId, programId);
   }
 
   public void addSupportedProgram(ProgramSupported programSupported) {
     try {
-      programSupportedMapper.insert(programSupported);
+      mapper.insert(programSupported);
     } catch (DuplicateKeyException duplicateKeyException) {
       throw new DataException("error.facility.program.mapping.exists");
     } catch (DataIntegrityViolationException integrityViolationException) {
@@ -55,7 +51,7 @@ public class ProgramSupportedRepository {
 
   //TODO simplify
   public void updateSupportedPrograms(Facility facility) {
-    List<ProgramSupported> previouslySupportedPrograms = programSupportedMapper.getAllByFacilityId(facility.getId());
+    List<ProgramSupported> previouslySupportedPrograms = mapper.getAllByFacilityId(facility.getId());
     Iterator<ProgramSupported> previousPSIterator = previouslySupportedPrograms.iterator();
     while (previousPSIterator.hasNext()) {
       ProgramSupported previousProgramSupported = previousPSIterator.next();
@@ -65,7 +61,7 @@ public class ProgramSupportedRepository {
         if (previousProgramSupported.getProgram().getId().equals(newProgramSupported.getProgram().getId())) {
           newProgramSupported.setFacilityId(facility.getId());
           newProgramSupported.setModifiedBy(facility.getModifiedBy());
-          programSupportedMapper.update(newProgramSupported);
+          mapper.update(newProgramSupported);
           newPSIterator.remove();
           previousPSIterator.remove();
           break;
@@ -77,27 +73,33 @@ public class ProgramSupportedRepository {
       ps.setFacilityId(facility.getId());
       ps.setModifiedBy(facility.getModifiedBy());
       ps.setCreatedBy(facility.getModifiedBy());
-      programSupportedMapper.insert(ps);
+      mapper.insert(ps);
     }
     for (ProgramSupported ps : previouslySupportedPrograms) {
-      programSupportedMapper.delete(facility.getId(), ps.getProgram().getId());
+      mapper.delete(facility.getId(), ps.getProgram().getId());
     }
 
   }
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
-    return programSupportedMapper.getAllByFacilityId(facilityId);
+    return mapper.getAllByFacilityId(facilityId);
   }
 
   public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
-    return programSupportedMapper.getBy(facilityId, programId);
+    return mapper.getBy(facilityId, programId);
   }
 
   public void updateSupportedProgram(ProgramSupported programSupported) {
-    programSupportedMapper.update(programSupported);
+    mapper.update(programSupported);
   }
 
   public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
-    return programSupportedMapper.getActiveProgramsByFacilityId(facilityId);
+    return mapper.getActiveProgramsByFacilityId(facilityId);
   }
+
+  public void updateForVirtualFacilities(Facility parentFacility) {
+    mapper.deleteVirtualFacilityProgramSupported(parentFacility);
+    mapper.copyToVirtualFacilities(parentFacility);
+  }
+
 }

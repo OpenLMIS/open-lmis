@@ -32,7 +32,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class ProgramSupportedEventDTO extends BaseFeedDTO {
 
   private String facilityCode;
-  private List<ProgramSupportedDTO> programsSupported;
+  private List<ProgramSupportedDTO> programsSupported = new ArrayList<>();
 
   public static final String CATEGORY = "programs-supported";
   public static final String TITLE = "Programs Supported";
@@ -41,7 +41,6 @@ public class ProgramSupportedEventDTO extends BaseFeedDTO {
   public ProgramSupportedEventDTO(String facilityCode, List<ProgramSupported> programSupportedList) {
     this.facilityCode = facilityCode;
 
-    this.programsSupported = new ArrayList<>();
     for (ProgramSupported ps : programSupportedList) {
       ProgramSupportedDTO psDTO = new ProgramSupportedDTO(ps.getProgram().getCode(), ps.getProgram().getName(),
         ps.getActive(), ps.getStartDate());

@@ -19,6 +19,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -56,7 +57,9 @@ public class ProgramSupportedRepositoryTest {
   @Mock
   private ProgramSupportedMapper programSupportedMapper;
 
+  @InjectMocks
   private ProgramSupportedRepository programSupportedRepository;
+
   private DateTime now;
 
   @Before
@@ -64,7 +67,6 @@ public class ProgramSupportedRepositoryTest {
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
-    programSupportedRepository = new ProgramSupportedRepository(programSupportedMapper);
   }
 
   @Test

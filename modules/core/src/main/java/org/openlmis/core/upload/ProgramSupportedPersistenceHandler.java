@@ -45,6 +45,7 @@ public class ProgramSupportedPersistenceHandler extends AbstractModelPersistence
   public void postProcess(AuditFields auditFields) {
     List<Facility> facilities = facilityService.getAllByProgramSupportedModifiedDate(auditFields.getCurrentTimestamp());
     for (Facility facility : facilities) {
+      service.updateForVirtualFacilities(facility);
       service.notifyProgramSupportedUpdated(facility);
     }
   }

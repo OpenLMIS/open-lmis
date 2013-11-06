@@ -54,6 +54,7 @@ public class ProgramSupportedService {
   public void updateSupportedPrograms(Facility facility) {
     Facility facilityForNotification = cloneFacility(facility);
     repository.updateSupportedPrograms(facility);
+    repository.updateForVirtualFacilities(facility);
     notifyProgramSupportedUpdated(facilityForNotification);
   }
 
@@ -125,9 +126,16 @@ public class ProgramSupportedService {
 
   public void notifyProgramSupportedUpdated(Facility facility) {
     try {
-      ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
-        facility.getCode(), facility.getSupportedPrograms());
-      eventService.notify(programSupportedEventDTO.createEvent());
+      List<ProgramSupported> programsSupported = facility.getSupportedPrograms();
+
+      ProgramSupportedEventDTO eventDTO = new ProgramSupportedEventDTO(facility.getCode(), programsSupported);
+      eventService.notify(eventDTO.createEvent());
+
+      for (Facility virtualFacility : facilityService.getChildFacilities(facility)) {
+        eventDTO = new ProgramSupportedEventDTO(virtualFacility.getCode(), programsSupported);
+        eventService.notify(eventDTO.createEvent());
+      }
+
     } catch (URISyntaxException e) {
       logger.error("Failed to generate program supported event feed", e);
     }
@@ -135,5 +143,9 @@ public class ProgramSupportedService {
 
   public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
     return repository.getActiveByFacilityId(facilityId);
+  }
+
+  public void updateForVirtualFacilities(Facility parentFacility) {
+    repository.updateForVirtualFacilities(parentFacility);
   }
 }
