@@ -199,4 +199,8 @@ public class FacilityService {
   public List<Facility> getChildFacilities(Facility facility) {
     return facilityRepository.getChildFacilities(facility);
   }
+
+  public List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate) {
+    return facilityRepository.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
+  }
 }

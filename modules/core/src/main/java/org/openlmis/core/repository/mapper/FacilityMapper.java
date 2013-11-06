@@ -178,7 +178,7 @@ public interface FacilityMapper {
   List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
 
 
-  @Select({"SELECT * FROM facilities WHERE id IN (SELECT supplyingfacilityid FROM supply_lines) AND enabled = true"})
+  @Select({"SELECT * FROM facilities WHERE id IN (SELECT supplyingFacilityId FROM supply_lines) AND enabled = true"})
   List<Facility> getEnabledWarehouses();
 
   @Select({"SELECT * FROM facilities WHERE parentFacilityId = #{id}"})
@@ -190,4 +190,9 @@ public interface FacilityMapper {
     "geographicZoneId = #{geographicZone.id}",
     "WHERE parentFacilityId = #{id}"})
   void updateVirtualFacilities(Facility parentFacility);
+
+
+  @Select({"SELECT F.id AS id, F.code AS code FROM facilities F INNER JOIN requisition_group_members RGM ON",
+    "F.id = RGM.facilityId WHERE RGM.modifiedDate = #{modifiedDate}"})
+  List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate);
 }

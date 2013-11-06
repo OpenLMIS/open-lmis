@@ -194,4 +194,8 @@ public class FacilityRepository {
   public void updateVirtualFacilities(Facility parentFacility) {
     mapper.updateVirtualFacilities(parentFacility);
   }
+
+  public List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate) {
+    return mapper.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
+  }
 }

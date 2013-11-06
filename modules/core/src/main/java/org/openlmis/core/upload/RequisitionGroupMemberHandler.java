@@ -12,21 +12,26 @@ package org.openlmis.core.upload;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RequisitionGroupMemberService;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Component
 public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandler {
 
+  @Autowired
   private RequisitionGroupMemberService requisitionGroupMemberService;
 
   @Autowired
-  public RequisitionGroupMemberHandler(RequisitionGroupMemberService requisitionGroupMemberService) {
-    this.requisitionGroupMemberService = requisitionGroupMemberService;
-  }
+  private FacilityService facilityService;
+
 
   @Override
   protected BaseModel getExisting(BaseModel record) {
@@ -36,6 +41,14 @@ public class RequisitionGroupMemberHandler extends AbstractModelPersistenceHandl
   @Override
   protected void save(BaseModel record) {
     requisitionGroupMemberService.save((RequisitionGroupMember) record);
+  }
+
+  @Override
+  public void postProcess(AuditFields auditFields) {
+    List<Facility> facilities = facilityService.getAllByRequisitionGroupMemberModifiedDate(auditFields.getCurrentTimestamp());
+    for (Facility facility : facilities) {
+      requisitionGroupMemberService.updateMembersForVirtualFacilities(facility);
+    }
   }
 
   @Override

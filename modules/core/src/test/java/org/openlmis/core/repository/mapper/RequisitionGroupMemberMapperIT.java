@@ -27,11 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Arrays.asList;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.parentFacilityId;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 
@@ -69,14 +69,14 @@ public class RequisitionGroupMemberMapperIT {
 
   @Before
   public void setUp() throws Exception {
-    requisitionGroupMember = new RequisitionGroupMember();
 
-    facility = make(a(FacilityBuilder.defaultFacility));
+    facility = make(a(defaultFacility));
     requisitionGroup = make(a(defaultRequisitionGroup));
 
     facilityMapper.insert(facility);
     requisitionGroupMapper.insert(requisitionGroup);
 
+    requisitionGroupMember = new RequisitionGroupMember();
     requisitionGroupMember.setFacility(facility);
     requisitionGroupMember.setRequisitionGroup(requisitionGroup);
     requisitionGroupMember.setModifiedBy(1L);
@@ -115,5 +115,51 @@ public class RequisitionGroupMemberMapperIT {
     assertThat(actualMembers.size(), is(1));
     assertThat(actualMembers.get(0).getRequisitionGroup(), is(requisitionGroupMember.getRequisitionGroup()));
     assertThat(actualMembers.get(0).getFacility().getId(), is(requisitionGroupMember.getFacility().getId()));
+  }
+
+  @Test
+  public void shouldDeleteVirtualFacilityMembersFromRequisitionGroup() throws Exception {
+    Facility parentFacility = make(a(defaultFacility, with(FacilityBuilder.code, "PF")));
+    facilityMapper.insert(parentFacility);
+    Facility virtualFacility = make(a(defaultFacility, with(FacilityBuilder.code, "VF"), with(parentFacilityId, parentFacility.getId())));
+    facilityMapper.insert(virtualFacility);
+    requisitionGroupMember = new RequisitionGroupMember();
+    requisitionGroupMember.setFacility(virtualFacility);
+    requisitionGroupMember.setRequisitionGroup(requisitionGroup);
+    requisitionGroupMember.setModifiedBy(1L);
+
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    requisitionGroupMemberMapper.deleteMembersForVirtualFacility(parentFacility);
+
+    List<RequisitionGroupMember> requisitionGroupMembers = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(virtualFacility.getId());
+
+    assertThat(requisitionGroupMembers.size(), is(0));
+  }
+
+  @Test
+  public void shouldCopyRequisitionGroupMembersFromParentToVirtualFacilities() throws Exception {
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    Facility virtualFacility1 = make(a(defaultFacility, with(FacilityBuilder.code, "VF1"), with(parentFacilityId, facility.getId())));
+    facilityMapper.insert(virtualFacility1);
+
+    Facility virtualFacility2 = make(a(defaultFacility, with(FacilityBuilder.code, "VF2"), with(parentFacilityId, facility.getId())));
+    facilityMapper.insert(virtualFacility2);
+
+    Facility rootFacility = make(a(defaultFacility, with(FacilityBuilder.code, "root")));
+    facilityMapper.insert(rootFacility);
+    requisitionGroupMember.setFacility(rootFacility);
+
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    requisitionGroupMemberMapper.copyToVirtualFacilities(facility);
+
+    List<RequisitionGroupMember> member1 = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(virtualFacility1.getId());
+    assertThat(member1.size(), is(1));
+    List<RequisitionGroupMember> member2 = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(virtualFacility2.getId());
+    assertThat(member2.size(), is(1));
+    List<RequisitionGroupMember> requisitionGroupMembersRoot = requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(rootFacility.getId());
+    assertThat(requisitionGroupMembersRoot.size(), is(1));
   }
 }

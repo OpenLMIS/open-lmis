@@ -39,6 +39,7 @@ import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcess
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
+import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.core.builder.UserBuilder.facilityId;
 import static org.openlmis.core.domain.Right.CONFIGURE_RNR;
@@ -299,8 +300,8 @@ public class FacilityMapperIT {
 
   @Test
   public void shouldGetAllFacilitiesForRequisitionGroupsWhichSupportGivenProgram() {
-    RequisitionGroup rg1 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
-    RequisitionGroup rg2 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
+    RequisitionGroup rg1 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
+    RequisitionGroup rg2 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
     requisitionGroupMapper.insert(rg1);
     requisitionGroupMapper.insert(rg2);
 
@@ -451,8 +452,8 @@ public class FacilityMapperIT {
   @Test
   public void shouldGetDistinctFacilitiesInARequisitionGroup() throws Exception {
     //Arrange
-    final RequisitionGroup rg1 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
-    final RequisitionGroup rg2 = make(a(RequisitionGroupBuilder.defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
+    final RequisitionGroup rg1 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
+    final RequisitionGroup rg2 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
     requisitionGroupMapper.insert(rg1);
     requisitionGroupMapper.insert(rg2);
 
@@ -569,8 +570,8 @@ public class FacilityMapperIT {
     Date date1 = new Date();
     Date date2 = new Date(date1.getTime() + 123123);
 
-    Facility facility1 = make(a(defaultFacility, with(code, facilityCode1), with(modifiedDate, date1)));
-    Facility facility2 = make(a(defaultFacility, with(code, facilityCode2), with(modifiedDate, date1)));
+    Facility facility1 = make(a(defaultFacility, with(code, facilityCode1), with(FacilityBuilder.modifiedDate, date1)));
+    Facility facility2 = make(a(defaultFacility, with(code, facilityCode2), with(FacilityBuilder.modifiedDate, date1)));
 
     mapper.insert(facility1);
     mapper.insert(facility2);
@@ -603,6 +604,25 @@ public class FacilityMapperIT {
     assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(2));
   }
 
+  @Test
+  public void getAllFacilitiesByRequisitionGroupMembersModifiedDate() throws Exception {
+    Date modifiedDate = new Date();
+    Facility facility = make(a(defaultFacility));
+    mapper.insert(facility);
+
+    RequisitionGroup requisitionGroup = make(a(defaultRequisitionGroup));
+    requisitionGroupMapper.insert(requisitionGroup);
+
+    RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember(requisitionGroup, facility);
+    requisitionGroupMember.setModifiedDate(modifiedDate);
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    List<Facility> facilities = mapper.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
+
+    assertThat(facilities.size(), is(1));
+    assertThat(facilities.get(0).getId(), is(facility.getId()));
+    assertThat(facilities.get(0).getCode(), is(facility.getCode()));
+  }
 
   @Test
   public void shouldGetEnabledWarehouses() throws Exception {
@@ -653,9 +673,13 @@ public class FacilityMapperIT {
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
                                         Long geoZoneId, Boolean facilityActive) {
-    Facility facility = make(a(FacilityBuilder.defaultFacility, with(code, facilityCode), with(name, facilityName),
-      with(geographicZoneId, geoZoneId), with(active, facilityActive)));
+    Facility facility = make(a(FacilityBuilder.defaultFacility,
+      with(code, facilityCode),
+      with(name, facilityName),
+      with(geographicZoneId, geoZoneId),
+      with(active, facilityActive)));
     mapper.insert(facility);
+
     ProgramSupported programSupported = new ProgramSupported();
     programSupported.setFacilityId(facility.getId());
     programSupported.setProgram(program);
