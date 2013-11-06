@@ -29,7 +29,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 
@@ -50,7 +50,7 @@ public class ProgramSupportedMapperIT {
   private FacilityMapper facilityMapper;
 
   @Autowired
-  private ProgramSupportedMapper programSupportedMapper;
+  private ProgramSupportedMapper mapper;
 
   @Test
   public void shouldSaveProgramSupported() throws Exception {
@@ -64,9 +64,9 @@ public class ProgramSupportedMapperIT {
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
 
-    programSupportedMapper.insert(programSupported);
+    mapper.insert(programSupported);
 
-    ProgramSupported result = programSupportedMapper.getBy(facility.getId(), program.getId());
+    ProgramSupported result = mapper.getBy(facility.getId(), program.getId());
     assertThat(result.getFacilityId(), is(facility.getId()));
     assertThat(result.getProgram().getId(), is(program.getId()));
     assertThat(result.getStartDate(), is(programSupported.getStartDate()));
@@ -83,11 +83,11 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.insert(programSupported);
+    mapper.insert(programSupported);
 
-    programSupportedMapper.delete(facility.getId(), program.getId());
+    mapper.delete(facility.getId(), program.getId());
 
-    ProgramSupported programsSupported = programSupportedMapper.getBy(facility.getId(), program.getId());
+    ProgramSupported programsSupported = mapper.getBy(facility.getId(), program.getId());
     assertThat(programsSupported, is(nullValue()));
   }
 
@@ -102,9 +102,9 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.insert(programSupported);
+    mapper.insert(programSupported);
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getAllByFacilityId(facility.getId());
+    List<ProgramSupported> programsSupported = mapper.getAllByFacilityId(facility.getId());
     assertThat(programsSupported.size(), is(1));
     assertThat(programsSupported.get(0).getFacilityId(), is(programSupported.getFacilityId()));
     assertThat(programsSupported.get(0).getStartDate(), is(programSupported.getStartDate()));
@@ -125,13 +125,13 @@ public class ProgramSupportedMapperIT {
     ProgramSupported programSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
       with(supportedProgram, program)));
-    programSupportedMapper.insert(programSupported);
+    mapper.insert(programSupported);
 
     programSupported.setActive(Boolean.FALSE);
 
-    programSupportedMapper.update(programSupported);
+    mapper.update(programSupported);
 
-    ProgramSupported programSupportedFromDb = programSupportedMapper.getBy(programSupported.getFacilityId(), programSupported.getProgram().getId());
+    ProgramSupported programSupportedFromDb = mapper.getBy(programSupported.getFacilityId(), programSupported.getProgram().getId());
 
     assertThat(programSupportedFromDb.getActive(), is(Boolean.FALSE));
   }
@@ -154,19 +154,107 @@ public class ProgramSupportedMapperIT {
       with(supportedProgram, program)));
     ProgramSupported programSupported2 = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
-      with(supportedProgram, program2),with(isActive,false)));
+      with(supportedProgram, program2), with(isActive, false)));
     ProgramSupported inactiveProgramSupported = make(a(defaultProgramSupported,
       with(supportedFacilityId, facility.getId()),
-      with(supportedProgram, inactiveProgram),with(isActive,true)));
+      with(supportedProgram, inactiveProgram), with(isActive, true)));
 
-    programSupportedMapper.insert(programSupported);
-    programSupportedMapper.insert(programSupported2);
-    programSupportedMapper.insert(inactiveProgramSupported);
+    mapper.insert(programSupported);
+    mapper.insert(programSupported2);
+    mapper.insert(inactiveProgramSupported);
 
-    List<ProgramSupported> programsSupported = programSupportedMapper.getActiveProgramsByFacilityId(facility.getId());
+    List<ProgramSupported> programsSupported = mapper.getActiveProgramsByFacilityId(facility.getId());
 
     assertThat(programsSupported.size(), is(1));
     assertThat(programsSupported.get(0).getProgram().getCode(), is(programSupported.getProgram().getCode()));
   }
 
+  @Test
+  public void shouldDeleteProgramsSupportedForVirtualFacilities() throws Exception {
+    Facility parentFacility = make(a(defaultFacility));
+    facilityMapper.insert(parentFacility);
+
+    Facility virtualFacility = make(a(defaultFacility,
+      with(code, "Child"),
+      with(parentFacilityId, parentFacility.getId())));
+
+    facilityMapper.insert(virtualFacility);
+
+
+    Program program = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    programMapper.insert(program);
+
+    ProgramSupported programSupportedParent = make(a(defaultProgramSupported,
+      with(supportedFacilityId, parentFacility.getId()),
+      with(supportedProgram, program)));
+
+    ProgramSupported programSupportedVirtual = make(a(defaultProgramSupported,
+      with(supportedFacilityId, virtualFacility.getId()),
+      with(supportedProgram, program)));
+
+    mapper.insert(programSupportedParent);
+    mapper.insert(programSupportedVirtual);
+
+
+    assertThat(mapper.deleteVirtualFacilityProgramSupported(parentFacility), is(1));
+
+    assertThat(mapper.getAllByFacilityId(virtualFacility.getId()).size(), is(0));
+    assertThat(mapper.getAllByFacilityId(parentFacility.getId()).size(), is(1));
+  }
+
+  @Test
+  public void shouldCopyProgramSupportedFromParentFacility() throws Exception {
+    Facility parentFacility = make(a(defaultFacility));
+    facilityMapper.insert(parentFacility);
+
+    Facility virtualFacility = make(a(defaultFacility, with(code, "Child"), with(parentFacilityId, parentFacility.getId())));
+    facilityMapper.insert(virtualFacility);
+
+    Facility virtualFacility2 = make(a(defaultFacility, with(code, "Child2"), with(parentFacilityId, parentFacility.getId())));
+    facilityMapper.insert(virtualFacility2);
+
+    Facility facility = make(a(defaultFacility, with(code, "root")));
+    facilityMapper.insert(facility);
+
+
+    Program program1 = make(a(defaultProgram, with(programCode, YELLOW_FEVER)));
+    Program program2 = make(a(defaultProgram, with(programCode, GREEN_FEVER)));
+    programMapper.insert(program1);
+    programMapper.insert(program2);
+
+    ProgramSupported programSupportedParent1 = make(a(defaultProgramSupported,
+      with(supportedFacilityId, parentFacility.getId()), with(supportedProgram, program1)));
+    mapper.insert(programSupportedParent1);
+
+    ProgramSupported programSupportedParent2 = make(a(defaultProgramSupported,
+      with(supportedFacilityId, parentFacility.getId()), with(supportedProgram, program2)));
+    mapper.insert(programSupportedParent2);
+
+    ProgramSupported rootProgramSupported = make(a(defaultProgramSupported,
+      with(supportedFacilityId, facility.getId()), with(supportedProgram, program2)));
+    mapper.insert(rootProgramSupported);
+
+
+    mapper.copyToVirtualFacilities(parentFacility);
+
+
+    List<ProgramSupported> programsSupported = mapper.getAllByFacilityId(virtualFacility.getId());
+
+    assertThat(programsSupported.size(), is(2));
+    assertThat(programsSupported.get(0).getActive(), is(programSupportedParent1.getActive()));
+    assertThat(programsSupported.get(0).getStartDate(), is(programSupportedParent1.getStartDate()));
+    assertThat(programsSupported.get(0).getModifiedBy(), is(programSupportedParent1.getModifiedBy()));
+    assertThat(programsSupported.get(0).getCreatedBy(), is(programSupportedParent1.getCreatedBy()));
+
+    assertThat(programsSupported.get(1).getActive(), is(programSupportedParent2.getActive()));
+    assertThat(programsSupported.get(1).getStartDate(), is(programSupportedParent2.getStartDate()));
+    assertThat(programsSupported.get(1).getModifiedBy(), is(programSupportedParent2.getModifiedBy()));
+    assertThat(programsSupported.get(1).getCreatedBy(), is(programSupportedParent2.getCreatedBy()));
+
+
+    List<ProgramSupported> programsSupported2 = mapper.getAllByFacilityId(virtualFacility2.getId());
+    assertThat(programsSupported2.size(), is(2));
+
+    assertThat(mapper.getAllByFacilityId(facility.getId()).size(), is(1));
+  }
 }

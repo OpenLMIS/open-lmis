@@ -11,6 +11,7 @@
 package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.springframework.stereotype.Repository;
@@ -36,8 +37,9 @@ public interface ProgramSupportedMapper {
   @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
   void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
-  @Select("SELECT * FROM programs_supported " +
-    "WHERE facilityId = #{facilityId}")
+  @Select({"SELECT * FROM programs_supported",
+    "WHERE facilityId = #{facilityId}",
+    "ORDER BY programId"})
   @Results({
     @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
   })
@@ -54,4 +56,16 @@ public interface ProgramSupportedMapper {
     @Result(property = "program.code", column = "code")
   })
   List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
+
+
+  @Delete({"DELETE FROM programs_supported PS USING facilities F",
+    "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
+  int deleteVirtualFacilityProgramSupported(Facility parentFacility);
+
+  @Insert({"INSERT INTO programs_supported(facilityId, programId, active, startDate, createdBy, modifiedBy)",
+    "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
+    "FROM programs_supported PS, ",
+    "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
+    "WHERE PS.facilityId = #{id}"})
+  void copyToVirtualFacilities(Facility parentFacility);
 }
