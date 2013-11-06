@@ -16,7 +16,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
-import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +127,7 @@ public class ProgramSupportedService {
     try {
       ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
         facility.getCode(), facility.getSupportedPrograms());
-      eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
+      eventService.notify(programSupportedEventDTO.createEvent());
     } catch (URISyntaxException e) {
       logger.error("Failed to generate program supported event feed", e);
     }
