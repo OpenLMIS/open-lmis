@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , ReportProductsByProgram ,ReportFacilityTypes, FacilitiesByProgramParams,GetFacilityByFacilityType, GeographicZones, RequisitionGroups,SettingsByKey, $http, $routeParams,$location) {
+function SupplyStatusController($scope, $window, $filter, ngTableParams , SupplyStatusReport, ReportSchedules, ReportPrograms , ReportPeriods , ReportProductsByProgram ,ReportFacilityTypes, FacilitiesByProgramParams,GetFacilityByFacilityType, GeographicZones, RequisitionGroups,SettingsByKey, $http, $routeParams,$location) {
     //to minimize and maximize the filter section
 
     $scope.showMessage = true;
@@ -94,7 +94,7 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
         $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/supply_status/' + type +'?' + params;
-        window.open(url);
+        $window.open(url);
     };
 
     // the grid options
@@ -135,15 +135,10 @@ function SupplyStatusController($scope, $filter, ngTableParams , SupplyStatusRep
 
         $scope.datarows = $scope.data = [];
 
-        var params =  {
-            "max" : 10000,
-            "page" : 1
-        };
+        $scope.filterObject.max = 10000;
+        $scope.filterObject.page = 1;
 
-        $.each($scope.filterObject, function(index, value) {
-            params[index] = value;
-        });
-        SupplyStatusReport.get(params, function(data) {
+        SupplyStatusReport.get($scope.filterObject , function(data) {
             $scope.data = data.pages.rows;
             $scope.paramsChanged($scope.tableParams);
         });
