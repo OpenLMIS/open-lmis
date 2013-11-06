@@ -11,6 +11,7 @@
 package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -77,6 +78,8 @@ public class GeneralObservationPage extends DistributionTab {
     sendKeys(fieldMap.get(VERIFIED_BY_TITLE), data.get(VERIFIED_BY_TITLE));
     sendKeys(fieldMap.get(CONFIRMED_BY_NAME), data.get(CONFIRMED_BY_NAME));
     sendKeys(fieldMap.get(CONFIRMED_BY_TITLE), data.get(CONFIRMED_BY_TITLE));
+    sendKeys(fieldMap.get(OBSERVATIONS), data.get(OBSERVATIONS));
+    fieldMap.get(OBSERVATIONS).sendKeys(Keys.TAB);
   }
 
   @Override

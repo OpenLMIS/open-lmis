@@ -310,6 +310,12 @@ public class ManageDistribution extends TestCaseHelper {
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains(message));
   }
 
+  @When("^I done sync message$")
+  public void doneSyncMessage() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.syncDistributionMessageDone();
+  }
+
   @When("^I view observations data in DB:$")
   public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();

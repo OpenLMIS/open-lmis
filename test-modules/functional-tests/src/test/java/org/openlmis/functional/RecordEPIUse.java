@@ -94,7 +94,7 @@ public class RecordEPIUse extends TestCaseHelper {
   }
 
   @When("^I enter EPI end of month as \"([^\"]*)\"")
-  public void enterEPIEndOfMonth(String endOfMonth) {
+  public void enterEPIEndOfMonth(String endOfMonth) throws InterruptedException {
     new EPIUse(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
   }
 

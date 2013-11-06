@@ -164,12 +164,12 @@ public class FacilityListPage extends RequisitionPage {
       color = "rgba(75, 169, 253, 1)";
 
     if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
-      assertEquals(color, facilityOverAllIndicator.getCssValue("background-color"));
+      assertEquals(facilityOverAllIndicator.getCssValue("background-color"),color);
     else if (whichIcon.toLowerCase().equals("Individual".toLowerCase())) {
       clickFacilityListDropDown();
       testWebDriver.waitForElementToAppear(facilityListTextField);
       testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
-      assertEquals(color, firstFacilityIndicator.getCssValue("background-color"));
+      assertEquals(firstFacilityIndicator.getCssValue("background-color"),color);
       escapeFacilitySearchInput();
     }
   }

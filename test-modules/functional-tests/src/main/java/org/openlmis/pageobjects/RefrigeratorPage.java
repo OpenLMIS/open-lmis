@@ -12,6 +12,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -179,6 +180,7 @@ public class RefrigeratorPage extends Page {
   public void clickProblemSinceLastVisitNR() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNR);
     problemSinceLastVisitNR.click();
+    problemSinceLastVisitNR.sendKeys(Keys.TAB);
   }
 
   public void enterValueInLowAlarmEvents(String value) {

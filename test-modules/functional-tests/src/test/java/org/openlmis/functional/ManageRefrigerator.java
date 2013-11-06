@@ -172,7 +172,8 @@ public class ManageRefrigerator extends TestCaseHelper {
   }
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")
-  public void clickFunctioningCorrectly(String flag) throws IOException, SQLException {
+  public void clickFunctioningCorrectly(String flag) throws InterruptedException {
+    Thread.sleep(1000);
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     if (flag.equalsIgnoreCase("Yes"))
       refrigeratorPage.clickFunctioningCorrectlyYesRadio();
@@ -196,7 +197,6 @@ public class ManageRefrigerator extends TestCaseHelper {
     else
       refrigeratorPage.clickProblemSinceLastVisitNR();
   }
-
   @Then("^I should see Refrigerators screen")
   public void onRefrigeratorScreen() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);

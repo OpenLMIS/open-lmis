@@ -598,6 +598,7 @@ Feature: Smoke Tests
     When I access plan my distribution page
     When I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
+    When I done sync message
     And I view observations data in DB:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | mai ka         | lal             |
