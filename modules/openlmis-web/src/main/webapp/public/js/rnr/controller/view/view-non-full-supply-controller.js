@@ -8,8 +8,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 function ViewNonFullSupplyController($scope) {
-
-  $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
-    return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name) || column.name == 'quantityApproved';
-  });
+  $scope.visibleNonFullSupplyColumns = {
+    fixed: _.filter($scope.visibleColumns.fixed, function (column) {
+      return _.contains(['product', 'productCode'], column.name);
+    }),
+    scrollable: _.filter($scope.visibleColumns.scrollable, function (column) {
+      return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name);
+    })
+  };
 }

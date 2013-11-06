@@ -10,17 +10,17 @@
 
 <div ng-controller="ViewFullSupplyController">
   <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-  <div id="viewRnr" class="rnr-table rnr-approval">
+  <div id="viewRnr" ng-show="page.fullSupply.length" class="rnr-table rnr-approval">
     <div class="float-left left-table">
-      <table class="table table-bordered" fixed-table-header>
+      <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
         <thead>
-        <tr ng-show="page.fullSupply.length" class="fixed-head" adjust-height="scrollable-head">
+        <tr class="fixed-head" adjust-height="scrollable-head">
           <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fixed"
               ng-bind="column.label"></th>
         </tr>
         </thead>
 
-        <tbody ng-show="visibleColumns.fixed && page.fullSupply" ng-repeat="rnrLineItem in page.fullSupply">
+        <tbody ng-repeat="rnrLineItem in page.fullSupply">
         <tr>
           <td class="productCategory" colspan="{{visibleColumns.fixed.length}}" ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
@@ -37,12 +37,12 @@
     <div class="float-left right-table" custom-horizontal-scroll>
       <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
-        <tr ng-show="page.fullSupply.length" adjust-height="fixed-head" class="scrollable-head">
+        <tr adjust-height="fixed-head" class="scrollable-head">
           <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
               ng-bind="column.label"></th>
         </tr>
         </thead>
-        <tbody ng-show="visibleColumns.scrollable && page.fullSupply" ng-repeat="rnrLineItem in page.fullSupply">
+        <tbody ng-repeat="rnrLineItem in page.fullSupply">
         <tr>
           <td class="productCategory" colspan="{{visibleColumns.scrollable.length}}" ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
