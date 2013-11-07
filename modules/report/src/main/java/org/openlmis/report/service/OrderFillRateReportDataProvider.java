@@ -1,7 +1,11 @@
 /*
- * Copyright © 2013 John Snow, Inc. (JSI). All Rights Reserved.
+ * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
  *
- * The U.S. Agency for International Development (USAID) funded this section of the application development under the terms of the USAID | DELIVER PROJECT contract no. GPO-I-00-06-00007-00.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ *
+ * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
 package org.openlmis.report.service;
@@ -19,11 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Hassan
- * Date: 7/27/13
- * Time: 4:45 PM
- */
+
 @Service
 @NoArgsConstructor
 public class OrderFillRateReportDataProvider extends ReportDataProvider {
@@ -55,7 +55,6 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         return reportMapper.getReport(getReportFilterData(filterCriteria), SortCriteria, rowBounds);
     }
 
-    @Override
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         OrderFillRateReportFilter orderFillRateReportFilter = null;
 
@@ -96,4 +95,9 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         }
         return orderFillRateReportFilter;
     }
+
+  @Override
+  public String getFilterSummary(Map<String, String[]> params){
+    return getReportFilterData(params).toString();
+  }
 }
