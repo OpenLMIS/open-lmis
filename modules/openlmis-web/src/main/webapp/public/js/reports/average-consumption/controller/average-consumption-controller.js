@@ -402,7 +402,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
         var url = '/reports/download/average_consumption/' + type +'?' + params;
-        $scope.$window.open(url);
+        window.open(url);
     };
 
     // the grid options

@@ -345,3 +345,7 @@ services.factory("SupplyingFacilities",function($resource)  {
 services.factory("GetRequisitionGroupsForSupervisoryNode", function($resource) {
     return $resource('/requisitionGroup/getForSupervisoryNode/:supervisoryNodeId.json',{},{});
 });
+
+services.factory('OrderFillRateReport', function ($resource) {
+    return $resource('/reports/reportdata/orderFillRate.json', {}, {});
+});
