@@ -56,8 +56,8 @@ public class ProgramSupportedService {
     boolean updated = repository.updateSupportedPrograms(facility);
     if (updated) {
       repository.updateForVirtualFacilities(facility);
+      notifyProgramSupportedUpdated(facilityForNotification);
     }
-    notifyProgramSupportedUpdated(facilityForNotification);
   }
 
   private Facility cloneFacility(Facility facility) {

@@ -278,7 +278,7 @@ public class ProgramSupportedServiceTest {
 
     verify(repository).updateSupportedPrograms(facility);
     verify(repository, never()).updateForVirtualFacilities(facility);
-    verify(eventService).notify(event);
+    verify(eventService, never()).notify(event);
   }
 
   @Test
