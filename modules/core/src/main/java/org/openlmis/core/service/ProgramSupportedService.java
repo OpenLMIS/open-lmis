@@ -53,8 +53,10 @@ public class ProgramSupportedService {
 
   public void updateSupportedPrograms(Facility facility) {
     Facility facilityForNotification = cloneFacility(facility);
-    repository.updateSupportedPrograms(facility);
-    repository.updateForVirtualFacilities(facility);
+    boolean updated = repository.updateSupportedPrograms(facility);
+    if (updated) {
+      repository.updateForVirtualFacilities(facility);
+    }
     notifyProgramSupportedUpdated(facilityForNotification);
   }
 

@@ -244,7 +244,7 @@ public class ProgramSupportedServiceTest {
   }
 
   @Test
-  public void shouldUpdateSupportedPrograms() throws Exception {
+  public void shouldUpdateSupportedProgramsAndVirtualIfParentChanged() throws Exception {
     List<ProgramSupported> programsSupported = asList(make(a(defaultProgramSupported)));
     Facility facility = make(a(defaultFacility, with(programSupportedList, programsSupported)));
 
@@ -253,10 +253,31 @@ public class ProgramSupportedServiceTest {
 
     whenNew(ProgramSupportedEventDTO.class).withArguments(facility.getCode(), programsSupported).thenReturn(programSupportedEventDTO);
     when(programSupportedEventDTO.createEvent()).thenReturn(event);
+    when(repository.updateSupportedPrograms(facility)).thenReturn(true);
 
     service.updateSupportedPrograms(facility);
 
     verify(repository).updateSupportedPrograms(facility);
+    verify(repository).updateForVirtualFacilities(facility);
+    verify(eventService).notify(event);
+  }
+
+  @Test
+  public void shouldNotUpdateSupportedProgramsForVirtualIfParentNotChanged() throws Exception {
+    List<ProgramSupported> programsSupported = asList(make(a(defaultProgramSupported)));
+    Facility facility = make(a(defaultFacility, with(programSupportedList, programsSupported)));
+
+    ProgramSupportedEventDTO programSupportedEventDTO = mock(ProgramSupportedEventDTO.class);
+    Event event = mock(Event.class);
+
+    whenNew(ProgramSupportedEventDTO.class).withArguments(facility.getCode(), programsSupported).thenReturn(programSupportedEventDTO);
+    when(programSupportedEventDTO.createEvent()).thenReturn(event);
+    when(repository.updateSupportedPrograms(facility)).thenReturn(false);
+
+    service.updateSupportedPrograms(facility);
+
+    verify(repository).updateSupportedPrograms(facility);
+    verify(repository, never()).updateForVirtualFacilities(facility);
     verify(eventService).notify(event);
   }
 

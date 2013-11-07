@@ -50,7 +50,8 @@ public class ProgramSupportedRepository {
   }
 
   //TODO simplify
-  public void updateSupportedPrograms(Facility facility) {
+  public boolean updateSupportedPrograms(Facility facility) {
+    boolean change = false;
     List<ProgramSupported> previouslySupportedPrograms = mapper.getAllByFacilityId(facility.getId());
     Iterator<ProgramSupported> previousPSIterator = previouslySupportedPrograms.iterator();
     while (previousPSIterator.hasNext()) {
@@ -58,10 +59,16 @@ public class ProgramSupportedRepository {
       Iterator<ProgramSupported> newPSIterator = facility.getSupportedPrograms().iterator();
       while (newPSIterator.hasNext()) {
         ProgramSupported newProgramSupported = newPSIterator.next();
-        if (previousProgramSupported.getProgram().getId().equals(newProgramSupported.getProgram().getId())) {
-          newProgramSupported.setFacilityId(facility.getId());
-          newProgramSupported.setModifiedBy(facility.getModifiedBy());
-          mapper.update(newProgramSupported);
+        Long newProgramSupportedId = newProgramSupported.getProgram().getId();
+        Long previousProgramSupportedId = previousProgramSupported.getProgram().getId();
+
+        if (previousProgramSupportedId.equals(newProgramSupportedId)) {
+          if (changeInProgramSupported(previousProgramSupported, newProgramSupported)) {
+            newProgramSupported.setFacilityId(facility.getId());
+            newProgramSupported.setModifiedBy(facility.getModifiedBy());
+            mapper.update(newProgramSupported);
+            change = true;
+          }
           newPSIterator.remove();
           previousPSIterator.remove();
           break;
@@ -74,11 +81,13 @@ public class ProgramSupportedRepository {
       ps.setModifiedBy(facility.getModifiedBy());
       ps.setCreatedBy(facility.getModifiedBy());
       mapper.insert(ps);
+      change = true;
     }
     for (ProgramSupported ps : previouslySupportedPrograms) {
       mapper.delete(facility.getId(), ps.getProgram().getId());
+      change = true;
     }
-
+    return change;
   }
 
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
@@ -100,6 +109,11 @@ public class ProgramSupportedRepository {
   public void updateForVirtualFacilities(Facility parentFacility) {
     mapper.deleteVirtualFacilityProgramSupported(parentFacility);
     mapper.copyToVirtualFacilities(parentFacility);
+  }
+
+  private boolean changeInProgramSupported(ProgramSupported ps1, ProgramSupported ps2) {
+    return !(ps1.getActive() == ps2.getActive() &&
+      ps1.getStartDate().equals(ps2.getStartDate()));
   }
 
 }
