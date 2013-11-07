@@ -8,7 +8,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<div ng-controller="ApproveNonFullSupplyController">
+<div>
 
   <div id="pageErrors" class="rnr-page-errors" ng-show="errorPages.nonFullSupply">
     <div ng-switch on="errorPages.nonFullSupply.length" class="dropdown">
@@ -31,18 +31,18 @@
       <table id="nonFullSupplyFrozenTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
         <tr adjust-height="scrollable-head" class="fixed-head">
-          <th class="col-{{column.name}}" ng-repeat="column in visibleNonFullSupplyColumns.fixed"
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed"
               ng-bind="column.label"></th>
         </tr>
         </thead>
         <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
         <tr>
-          <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.fixed.length}}"
+          <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.fixed.length}}"
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
         <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}">
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleNonFullSupplyColumns.fixed">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.fixed">
             <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}" class="cell-text"></span>
           </td>
         </tr>
@@ -54,18 +54,18 @@
       <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
         <tr adjust-height="fixed-head" class="scrollable-head">
-          <th class="col-{{column.name}}" ng-repeat="column in visibleNonFullSupplyColumns.scrollable"
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable"
               ng-bind="column.label"></th>
         </tr>
         </thead>
         <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
         <tr>
-          <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.scrollable.length}}"
+          <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
         <tr adjust-height="fixed-body{{ $index }}" class="scrollable-body{{ $index }}">
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleNonFullSupplyColumns.scrollable">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">
             <span ng-switch on="column.name">
                <span ng-switch-when="quantityApproved">
                   <div>

@@ -21,7 +21,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
 
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns);
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['quantityApproved']);
 
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;

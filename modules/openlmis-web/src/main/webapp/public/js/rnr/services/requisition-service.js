@@ -84,12 +84,24 @@ services.factory('requisitionService', function (messageService) {
       return (skipped.indexOf(column.name) !== -1) || (column.visible !== true);
     });
 
-    return _.groupBy(filteredColumns, function (column) {
+    var fullSupplyVisibleColumns = _.groupBy(filteredColumns, function (column) {
       if ((fixedColumns.indexOf(column.name) > -1))
         return 'fixed';
 
       return 'scrollable';
     });
+
+    return {
+      fullSupply: fullSupplyVisibleColumns,
+      nonFullSupply: {
+        fixed: _.filter(fullSupplyVisibleColumns.fixed, function (column) {
+          return _.contains(['product', 'productCode'], column.name);
+        }),
+        scrollable: _.filter(fullSupplyVisibleColumns.scrollable, function (column) {
+          return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name);
+        })
+      }
+    };
   }
 
   return{
@@ -99,5 +111,4 @@ services.factory('requisitionService', function (messageService) {
     resetErrorPages: resetErrorPages,
     getMappedVisibleColumns: getMappedVisibleColumns
   };
-
 });

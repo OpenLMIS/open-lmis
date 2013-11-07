@@ -14,22 +14,19 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skip']);
 
-  if (!($scope.rnr.status == APPROVED || $scope.rnr.status == RELEASED))
-    $scope.visibleColumns.scrollable = _.filter($scope.visibleColumns.scrollable, function (column) {
+  if (!($scope.rnr.status == "APPROVED" || $scope.rnr.status == "RELEASED")) {
+    rnrColumns = _.filter(rnrColumns, function (column) {
       return column.name != "quantityApproved";
     });
+  }
 
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skip']);
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
-
-  var APPROVED = "APPROVED";
-  var RELEASED = "RELEASED";
 
   requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.requisitionType = $scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular";
-
 
   $scope.$on('$routeUpdate', function () {
     requisitionService.refreshGrid($scope, $location, $routeParams, false);

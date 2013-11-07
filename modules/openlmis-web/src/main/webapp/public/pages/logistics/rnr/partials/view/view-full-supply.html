@@ -15,18 +15,19 @@
       <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
         <thead>
         <tr class="fixed-head" adjust-height="scrollable-head">
-          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fixed"
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed"
               ng-bind="column.label"></th>
         </tr>
         </thead>
 
         <tbody ng-repeat="rnrLineItem in page.fullSupply">
         <tr>
-          <td class="productCategory" colspan="{{visibleColumns.fixed.length}}" ng-show="showCategory($index)"
+          <td class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}"
+              ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
         <tr class="fixed-body{{ $index }}" adjust-height="scrollable-body{{ $index }}">
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fixed">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
             <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                   class="cell-text"></span>
           </td>
@@ -38,17 +39,18 @@
       <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
         <tr adjust-height="fixed-head" class="scrollable-head">
-          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
               ng-bind="column.label"></th>
         </tr>
         </thead>
         <tbody ng-repeat="rnrLineItem in page.fullSupply">
         <tr>
-          <td class="productCategory" colspan="{{visibleColumns.scrollable.length}}" ng-show="showCategory($index)"
+          <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}"
+              ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
         <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}">
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.scrollable">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
             <span ng-switch on="column.name">
               <span ng-switch-when="lossesAndAdjustments">
                 <div>

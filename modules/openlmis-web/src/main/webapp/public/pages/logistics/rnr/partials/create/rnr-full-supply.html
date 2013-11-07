@@ -30,18 +30,18 @@
   <table id="fullSupplyFrozenTable" class="table table-bordered scrollable" fixed-table-header>
     <thead>
     <tr class="fixed-head" adjust-height="scrollable-head">
-      <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fixed" ng-bind="column.label"></th>
+      <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed" ng-bind="column.label"></th>
     </tr>
     </thead>
-    <tbody ng-show="visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat="rnrLineItem in page.fullSupply">
+    <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
+           ng-repeat="rnrLineItem in page.fullSupply">
     <tr>
-      <td class="productCategory" colspan="{{visibleColumns.fixed.length}}" ng-show="showCategory($index)"
+      <td class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}" ng-show="showCategory($index)"
           ng-bind="rnrLineItem.productCategory"></td>
     </tr>
     <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}"
         ng-class="getRowErrorClass(rnrLineItem)">
-      <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fixed"
-          ng-hide="column.name == 'quantityApproved'">
+      <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
         <ng-switch on="column.name">
           <span ng-switch-when="skip">
             <input ng-disabled="formDisabled"
@@ -62,17 +62,18 @@
 <table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
 <tr class="scrollable-head" adjust-height="fixed-head">
-  <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
-      ng-hide="column.name == 'quantityApproved'" ng-bind="column.label"></th>
+  <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
+      ng-bind="column.label"></th>
 </tr>
 </thead>
-<tbody ng-show="visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat="rnrLineItem in page.fullSupply">
+<tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
+       ng-repeat="rnrLineItem in page.fullSupply">
 <tr>
-  <td class="productCategory" colspan="{{visibleColumns.scrollable.length}}" ng-show="showCategory($index)">&nbsp;</td>
+  <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}" ng-show="showCategory($index)">
+    &nbsp;</td>
 </tr>
 <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}" ng-class="getRowErrorClass(rnrLineItem)">
-  <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
-      ng-hide="column.name == 'quantityApproved'">
+  <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
     <ng-switch on="column.source.name">
               <span ng-switch-when="USER_INPUT">
                 <ng-switch on="column.name">

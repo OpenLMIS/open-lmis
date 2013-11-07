@@ -9,15 +9,6 @@
  */
 
 function CreateNonFullSupplyController($scope, messageService) {
-  $scope.visibleNonFullSupplyColumns = {
-    fixed: _.filter($scope.visibleColumns.fixed, function (column) {
-      return _.contains(['product', 'productCode'], column.name);
-    }),
-    scrollable: _.filter($scope.visibleColumns.scrollable, function (column) {
-      return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name);
-    })
-  };
-
   var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
     return facilitySupportedProduct.programProduct.product.category;
   });
