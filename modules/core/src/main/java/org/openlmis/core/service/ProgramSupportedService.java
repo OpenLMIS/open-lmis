@@ -61,6 +61,7 @@ public class ProgramSupportedService {
   private Facility cloneFacility(Facility facility) {
     Facility facilityForNotification = new Facility();
     facilityForNotification.setCode(facility.getCode());
+    facilityForNotification.setId(facility.getId());
     ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
     for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
       supportedPrograms.add(programSupported);
