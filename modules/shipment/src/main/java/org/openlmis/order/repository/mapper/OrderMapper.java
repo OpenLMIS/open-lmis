@@ -29,7 +29,7 @@ public interface OrderMapper {
   @Insert("INSERT INTO orders(id, status, ftpcomment, supplyLineId, createdBy, modifiedBy) VALUES (#{rnr.id}, #{status}, #{ftpComment}, #{supplyLine.id}, #{createdBy}, #{createdBy})")
   void insert(Order order);
 
-  @Select({"SELECT * FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+  @Select({"SELECT DISTINCT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
     "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId ",
     "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId",
     "WHERE FRA.userid = #{userId} AND RR.rightName = #{right} ORDER BY O.createdDate DESC LIMIT #{limit} OFFSET #{offset}"})
