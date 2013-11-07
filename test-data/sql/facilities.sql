@@ -73,7 +73,9 @@ INSERT INTO facilities
 ('W17','Warehouse17','Warehouse Province Sul','G7646',9876234981,'fax','A','B',4,2,0,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012'),
 ('W18','Warehouse18','Backup Warehouse Province Sul','G7646',9876234981,'fax','A','B',4,2,0,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','FALSE','11/11/2012');
 
-
+INSERT INTO facilities
+(code, name, description, gln, mainPhone, fax, address1, address2, geographiczoneid, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility, parentfacilityid, modifieddate) values
+('V10','Virtual Facility1','Virtual IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code ='District1'),1,0,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','TRUE',(select id from facilities where code ='F10'),'11/11/2012');
 
 
 INSERT INTO programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES
@@ -128,8 +130,12 @@ INSERT INTO programs_supported(facilityId, programId, startDate, active, modifie
 ((SELECT id FROM facilities WHERE code = 'W15'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'W16'), 5, '11/11/12', true, 1),
 ((SELECT id FROM facilities WHERE code = 'W17'), 5, '11/11/12', true, 1),
-((SELECT id FROM facilities WHERE code = 'W18'), 5, '11/11/12', true, 1);
+((SELECT id FROM facilities WHERE code = 'W18'), 5, '11/11/12', true, 1),
 
+((SELECT id FROM facilities WHERE code = 'V10'), 3, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'V10'), 2, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'V10'), 4, '11/11/12', true, 1),
+((SELECT id FROM facilities WHERE code = 'V10'), 5, '11/11/12', true, 1);
 
 INSERT INTO refrigerators(brand, model, serialNumber, facilityId, createdBy , modifiedBy) VALUES
 ('SAM','SAM1','SER11',(SELECT id FROM facilities WHERE code = 'F10'),1,1);
