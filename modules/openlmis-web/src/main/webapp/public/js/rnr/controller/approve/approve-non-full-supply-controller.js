@@ -9,9 +9,15 @@
  */
 function ApproveNonFullSupplyController($scope) {
 
-  $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
-    return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name) || column.name == 'quantityApproved';
-  });
+  $scope.visibleNonFullSupplyColumns = {
+    fixed: _.filter($scope.visibleColumns.fixed, function (column) {
+      return _.contains(['product', 'productCode'], column.name);
+    }),
+    scrollable: _.filter($scope.visibleColumns.scrollable, function (column) {
+
+      return _.contains(_.union(RegularRnrLineItem.visibleForNonFullSupplyColumns, ['quantityApproved']), column.name);
+    })
+  };
 
 
 }

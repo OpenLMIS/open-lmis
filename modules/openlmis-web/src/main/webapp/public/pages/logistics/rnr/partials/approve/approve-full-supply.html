@@ -42,10 +42,7 @@
         </tr>
         <tr class="fixed-body{{ $index }}" adjust-height="scrollable-body{{ $index }}">
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fixed">
-            <span ng-switch on="column.name">
-                <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
-                      class="cell-text"></span>
-            </span>
+            <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}" class="cell-text"></span>
           </td>
         </tr>
         </tbody>
@@ -55,8 +52,7 @@
       <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
         <tr class="scrollable-head" adjust-height="fixed-head">
-          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable"
-              ng-bind="column.label"></th>
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.scrollable" ng-bind="column.label"></th>
         </tr>
         </thead>
         <tbody ng-repeat="rnrLineItem in page.fullSupply">
@@ -67,7 +63,6 @@
         <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}">
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.scrollable">
             <span ng-switch on="column.name">
-
               <span ng-switch-when="lossesAndAdjustments">
                 <div>
                   <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)" class="rnr-adjustment">
