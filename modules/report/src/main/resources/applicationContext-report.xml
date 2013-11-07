@@ -160,6 +160,18 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="order_fill_rate"/>
+                    <property name="template" value="order-fill-rate.jasper"/>
+                    <property name="reportDataProvider" ref="orderFillRateReportDataProvider"/>
+                    <property name="id" value="RP-Order-Fill-Rate"/>
+                    <property name="name" value="Order Fill Rate by Facility Report"/>
+                    <property name="title" value="Order Fill Rate by Facility"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+
+
             </list>
         </constructor-arg>
     </bean>
