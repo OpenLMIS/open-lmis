@@ -83,7 +83,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     var query = $scope.query || "";
 
     $scope.filteredRequisitions = $.grep($scope.requisitions, function (rnr) {
-      return contains(rnr.status, query);
+      return contains(rnr.requisitionStatus, query);
     });
 
   };
