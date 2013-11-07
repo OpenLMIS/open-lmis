@@ -126,6 +126,7 @@ public class RefrigeratorPage extends Page {
   public void enterValueInRefrigeratorTemperature(String value) {
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureTextField);
     sendKeys(refrigeratorTemperatureTextField, value);
+    refrigeratorTemperatureTextField.sendKeys(Keys.TAB);
   }
 
   public void clickProblemSinceLastVisitYesRadio() {
@@ -186,6 +187,7 @@ public class RefrigeratorPage extends Page {
   public void enterValueInLowAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(lowAlarmEventsTextField);
     sendKeys(lowAlarmEventsTextField, value);
+    lowAlarmEventsTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInBrandModal(String value) {
@@ -206,6 +208,7 @@ public class RefrigeratorPage extends Page {
   public void enterValueInHighAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(highAlarmEventsTextField);
     sendKeys(highAlarmEventsTextField, value);
+    highAlarmEventsTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInNotesTextArea(String value) {
@@ -222,6 +225,7 @@ public class RefrigeratorPage extends Page {
   public void clickFunctioningCorrectlyYesRadio() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyYesRadio);
     functioningCorrectlyYesRadio.click();
+    functioningCorrectlyYesRadio.sendKeys(Keys.TAB);
   }
 
   public void clickFunctioningCorrectlyNoRadio() {
