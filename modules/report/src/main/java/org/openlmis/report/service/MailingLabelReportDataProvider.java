@@ -30,75 +30,73 @@ import java.util.Map;
 @NoArgsConstructor
 public class MailingLabelReportDataProvider extends ReportDataProvider {
 
-    private FacilityService facilityService;
-    private MailingLabelReportMapper mailingLabelReportMapper;
+  @Autowired
+  private FacilityService facilityService;
 
-    @Autowired
-    public MailingLabelReportDataProvider(FacilityService facilityService, MailingLabelReportMapper mailingLabelReportMapper) {
-        this.facilityService = facilityService;
-        this.mailingLabelReportMapper = mailingLabelReportMapper;
+  @Autowired
+  private MailingLabelReportMapper mailingLabelReportMapper;
+
+  private MailingLabelReportFilter mailingLabelReportFilter = null;
+
+  private ReportData getMailingLabelReport(Facility facility){
+    if(facility == null) return null;
+      return new MailingLabelReport();
+  }
+
+  @Override
+  protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> params) {
+
+      return getReportDataByFilterCriteriaAndPagingAndSorting(params,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+  }
+
+  @Override
+  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
+
+     return getReportDataByFilterCriteriaAndPagingAndSorting(params,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+
+  }
+
+  private List<ReportData> getListMailingLabelsReport(List<Facility> facilityList){
+
+      if (facilityList == null) return null;
+
+      List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
+
+      for(Facility facility: facilityList){
+          facilityReportList.add(getMailingLabelReport(facility));
+      }
+
+      return facilityReportList;
+  }
+
+  @Override
+  public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> sorterCriteria, int page, int pageSize) {
+
+      RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
+
+      MailingLabelReportSorter mailingLabelReportSorter = null;
+
+      if(sorterCriteria != null){
+        mailingLabelReportSorter = new MailingLabelReportSorter();
+        mailingLabelReportSorter.setFacilityName(sorterCriteria.get("facilityName") == null ? "" : sorterCriteria.get("facilityName")[0]);
+        mailingLabelReportSorter.setCode( sorterCriteria.get("code") == null ? "" :  sorterCriteria.get("code")[0]);
+        mailingLabelReportSorter.setFacilityType(sorterCriteria.get("facilityType") == null ? "ASC" : sorterCriteria.get("facilityType")[0]);
+      }
+      return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria),mailingLabelReportSorter,rowBounds);
+  }
+
+  public MailingLabelReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
+    if(filterCriteria != null ){
+      mailingLabelReportFilter = new MailingLabelReportFilter();
+      mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
+      mailingLabelReportFilter.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
     }
+    return mailingLabelReportFilter;
+  }
 
-    private ReportData getMailingLabelReport(Facility facility){
-        if(facility == null) return null;
-        return new MailingLabelReport();
-    }
-
-    @Override
-    protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> params) {
-
-        return getReportDataByFilterCriteriaAndPagingAndSorting(params,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    }
-
-    @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> params) {
-
-       return getReportDataByFilterCriteriaAndPagingAndSorting(params,null,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-
-    }
-
-    private List<ReportData> getListMailingLabelsReport(List<Facility> facilityList){
-
-        if (facilityList == null) return null;
-
-        List<ReportData> facilityReportList = new ArrayList<>(facilityList.size());
-
-        for(Facility facility: facilityList){
-            facilityReportList.add(getMailingLabelReport(facility));
-        }
-
-        return facilityReportList;
-    }
-
-    @Override
-    public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> sorterCriteria, int page, int pageSize) {
-
-        RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
-
-        MailingLabelReportSorter mailingLabelReportSorter = null;
-
-        if(sorterCriteria != null){
-            mailingLabelReportSorter = new MailingLabelReportSorter();
-            mailingLabelReportSorter.setFacilityName(sorterCriteria.get("facilityName") == null ? "" : sorterCriteria.get("facilityName")[0]);
-            mailingLabelReportSorter.setCode( sorterCriteria.get("code") == null ? "" :  sorterCriteria.get("code")[0]);
-            mailingLabelReportSorter.setFacilityType(sorterCriteria.get("facilityType") == null ? "ASC" : sorterCriteria.get("facilityType")[0]);
-        }
-
-        return mailingLabelReportMapper.SelectFilteredSortedPagedFacilities(getReportFilterData(filterCriteria),mailingLabelReportSorter,rowBounds);
-    }
-
-    @Override
-    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
-        MailingLabelReportFilter mailingLabelReportFilter = new MailingLabelReportFilter();
-        if(filterCriteria != null){
-            mailingLabelReportFilter.setFacilityTypeId((filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])));
-            //mailingLabelReportFilter.setFacilityType((filterCriteria.get("facilityType")[0]));
-            mailingLabelReportFilter.setRgroupId((filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])));
-            //mailingLabelReportFilter.setRgroup((filterCriteria.get("rgroup")[0]));
-
-        }
-
-        return mailingLabelReportFilter;
-    }
+  @Override
+  public String getFilterSummary(Map<String, String[]> params){
+    return getReportFilterData(params).toString();
+  }
 
 }

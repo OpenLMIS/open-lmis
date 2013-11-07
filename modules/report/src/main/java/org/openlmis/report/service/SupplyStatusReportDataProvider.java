@@ -27,7 +27,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class SupplyStatusReportDataProvider extends ReportDataProvider {
 
-
   @Autowired
   private SupplyStatusReportMapper reportMapper;
 
@@ -37,7 +36,6 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
   @Autowired
   private SelectedFilterHelper filterHelper;
 
-
   @Override
   protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
       RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
@@ -46,18 +44,13 @@ public class SupplyStatusReportDataProvider extends ReportDataProvider {
 
   @Override
   protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.0
+      return null;
   }
 
   @Override
   public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
       RowBounds rowBounds = new RowBounds((page-1) * pageSize,pageSize);
       return reportMapper.getSupplyStatus(filterCriteria, rowBounds);
-  }
-
-  @Override
-  public ReportData getReportFilterData(Map<String, String[]> params) {
-    return null;
   }
 
   @Override

@@ -23,14 +23,8 @@ import java.util.*;
 @NoArgsConstructor
 public class SummaryReportDataProvider extends ReportDataProvider {
 
-
-    private SummaryReportMapper reportMapper;
-
-
     @Autowired
-    public SummaryReportDataProvider(SummaryReportMapper mapper) {
-        this.reportMapper = mapper;
-    }
+    private SummaryReportMapper reportMapper;
 
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
@@ -48,8 +42,9 @@ public class SummaryReportDataProvider extends ReportDataProvider {
         RowBounds rowBounds = new RowBounds((page-1) * pageSize,pageSize);
         return reportMapper.getReport(filterCriteria, rowBounds);
     }
+
     @Override
-    public ReportData getReportFilterData(Map<String, String[]> params) {
+    public String getFilterSummary(Map<String, String[]> params) {
         String facilityTypeId =  params.get("facilityTypeId")[0];
         String rgroupId =     params.get("rgroupId")[0];
         String facilityType =  "";
@@ -68,14 +63,10 @@ public class SummaryReportDataProvider extends ReportDataProvider {
             else
                 rgroup = params.get("rgroup")[0];
         }
-        final String finalFacilityType = facilityType;
-        final String finalRgroup = rgroup;
+        String finalFacilityType = facilityType;
+        String finalRgroup = rgroup;
 
-        return new ReportData() {
-           @Override
-           public String toString() {
-               return finalFacilityType +"\n"+ finalRgroup +"\n";
-           }
-       };
+        return finalFacilityType +"\n"+ finalRgroup +"\n";
+
     }
 }

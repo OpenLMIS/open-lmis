@@ -29,63 +29,62 @@ import java.util.Map;
 @NoArgsConstructor
 public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
+  @Autowired
+  private OrderSummaryReportMapper reportMapper;
 
-    private OrderSummaryReportMapper reportMapper;
-    private ConfigurationSettingService configurationService;
+  @Autowired
+  private ConfigurationSettingService configurationService;
 
+  private OrderReportFilter orderReportFilter;
 
-    @Autowired
-    public OrderSummaryReportDataProvider(OrderSummaryReportMapper mapper, ConfigurationSettingService configurationService) {
-        this.reportMapper = mapper;
-        this.configurationService = configurationService;
-    }
+  @Override
+  protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
 
-    @Override
-    protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
+      return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+     // return reportMapper.getReportData(filterCriteria);
+  }
 
-        return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-       // return reportMapper.getReportData(filterCriteria);
-    }
+  @Override
+  protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
+      return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+  }
 
-    @Override
-    protected List<? extends ReportData> getResultSetReportData(Map<String, String[]> filterCriteria) {
-        return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    }
+  @Override
+  public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
+      RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
+      return reportMapper.getFilteredSortedPagedOrderSummaryReport(getReportFilterData(filterCriteria),SortCriteria, rowBounds);
+  }
 
-    @Override
-    public List<? extends ReportData> getReportDataByFilterCriteriaAndPagingAndSorting(Map<String, String[]> filterCriteria, Map<String, String[]> SortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page-1)*pageSize,pageSize);
-        return reportMapper.getFilteredSortedPagedOrderSummaryReport(getReportFilterData(filterCriteria),SortCriteria, rowBounds);
-    }
+  public OrderReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
 
-    @Override
-    public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
+    if(filterCriteria != null ){
+        orderReportFilter = new OrderReportFilter();
 
-        OrderReportFilter orderReportFilter = null;
+        orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
+        orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
+        orderReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
 
-        if(filterCriteria != null){
-            orderReportFilter = new OrderReportFilter();
+        orderReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
+        orderReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
 
-            orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
-            orderReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
+        orderReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+        if(orderReportFilter.getProductId() == 0){
+            orderReportFilter.setProduct("All Products");
+        }else if(orderReportFilter.getProductId() == -1){
+            orderReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
+        }
+        orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
+        orderReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
+        orderReportFilter.setPeriod(filterCriteria.get("period")[0]);
+        orderReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+        orderReportFilter.setProgram(filterCriteria.get("program")[0]);
+      }
+      return orderReportFilter;
+  }
 
-            orderReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
-            orderReportFilter.setSchedule(filterCriteria.get("schedule")[0]);
-            //orderReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
+  @Override
+  public String getFilterSummary(Map<String, String[]> params){
+    return getReportFilterData(params).toString();
+  }
 
-            orderReportFilter.setProductId(filterCriteria.get("productId") == null ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
-            if(orderReportFilter.getProductId() == 0){
-                orderReportFilter.setProduct("All Products");
-            }else if(orderReportFilter.getProductId() == -1){
-                orderReportFilter.setProduct(configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS).isEmpty() ? "Indicator Products" : configurationService.getConfigurationStringValue(Constants.CONF_INDICATOR_PRODUCTS));
-            }
-            orderReportFilter.setOrderType(filterCriteria.get("orderType") == null ? "" : filterCriteria.get("orderType")[0]);
-            orderReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
-            orderReportFilter.setPeriod(filterCriteria.get("period")[0]);
-            orderReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
-            orderReportFilter.setProgram(filterCriteria.get("program")[0]);
-            }
-        return orderReportFilter;
-    }
 }

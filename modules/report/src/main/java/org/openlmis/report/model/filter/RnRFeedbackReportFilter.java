@@ -18,11 +18,6 @@ import org.openlmis.report.model.ReportData;
 import java.text.DateFormat;
 import java.util.Date;
 
-/**
- * User: Wolde
- * Date: 8/5/13
- * Time: 6:32 PM
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

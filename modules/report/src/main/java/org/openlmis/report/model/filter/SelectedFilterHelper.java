@@ -10,15 +10,19 @@
 
 package org.openlmis.report.model.filter;
 
+import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.ProcessingPeriodService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
+@NoArgsConstructor
 public class SelectedFilterHelper {
 
   @Autowired
@@ -41,7 +45,7 @@ public class SelectedFilterHelper {
     // these filters are essential for all reports and these lines should be fairly re-used.
 
     filterSummary = "Program: " + programService.getById(Long.parseLong(program)).getName();
-    filterSummary += "Period: " + periodService.getById(Long.parseLong(period)).getName();
+    filterSummary += "\nPeriod: " + periodService.getById(Long.parseLong(period)).getName();
 
     if(product.isEmpty()){
       filterSummary += "\nProduct: All Products" ;
@@ -51,7 +55,7 @@ public class SelectedFilterHelper {
       filterSummary += "Product: " + productService.getById(Long.parseLong(product)).getFullName();
     }
 
-    return "";
+    return filterSummary;
   }
 
 }
