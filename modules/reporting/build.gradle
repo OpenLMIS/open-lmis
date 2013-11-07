@@ -23,6 +23,7 @@ dependencies {
             'commons-lang:commons-lang:2.6',
             'commons-collections:commons-collections:20040616',
             'net.sf.jasperreports:jasperreports:5.0.4',
+            'org.codehaus.groovy:groovy-all:2.0.1',
             'com.lowagie:itext:4.2.0',
             'org.apache.poi:poi:3.7',
             project(':modules:core')
