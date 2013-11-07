@@ -136,10 +136,10 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "addNonFullSupply")
   private static WebElement addButtonNonFullSupply;
 
-  @FindBy(how = XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[2]/ng-switch/span")
+  @FindBy(how = XPATH, using = "//table[@id='nonFullSupplyFrozenTable']/tbody/tr/td[2]/span")
   private static WebElement productDescriptionNonFullSupply;
 
-  @FindBy(how = XPATH, using = "//table[@id='nonFullSupplyTable']/tbody/tr/td[1]/ng-switch/span")
+  @FindBy(how = XPATH, using = "//table[@id='nonFullSupplyFrozenTable']/tbody/tr/td[1]/span")
   private static WebElement productCodeNonFullSupply;
 
   @FindBy(how = XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
@@ -244,7 +244,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
   private static WebElement rnrRegularLabel;
 
-  @FindBy(how = XPATH, using = "//table[@id='fullSupplyTable']/tbody/tr[2]/td[4]/ng-switch/span/ng-switch/span/ng-switch/span/span")
+  @FindBy(how = ID, using = "beginningBalance_0")
   private static WebElement beginningBalanceLabel;
 
   String successText = "R&R saved successfully!";
@@ -776,5 +776,14 @@ public class InitiateRnRPage extends RequisitionPage {
   public String getBeginningBalance() {
     testWebDriver.waitForElementToAppear(beginningBalanceLabel);
     return beginningBalanceLabel.getText();
+  }
+
+
+  public String getCategoryText(Integer rowNumber) {
+    return testWebDriver.getElementById("category_" + rowNumber).getText();
+  }
+
+  public String getProductCode(Integer rowNumber) {
+    return testWebDriver.getElementById("productCode_" + rowNumber).getText();
   }
 }

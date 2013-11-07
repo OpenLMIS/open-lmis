@@ -36,7 +36,7 @@
     <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
            ng-repeat="rnrLineItem in page.fullSupply">
     <tr>
-      <td class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}" ng-show="showCategory($index)"
+      <td class="productCategory" id="category_{{ $index }}" colspan="{{visibleColumns.fullSupply.fixed.length}}" ng-show="showCategory($index)"
           ng-bind="rnrLineItem.productCategory"></td>
     </tr>
     <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}"
@@ -49,8 +49,7 @@
                    name="skip{{rnrLineItem['id']}}"
                    style="margin-left: 20px"/>
           </span>
-          <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
-                class="cell-text">
+          <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$parent.$index}}" class="cell-text">
           </span>
         </ng-switch>
       </td>
@@ -89,8 +88,9 @@
                                ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                                ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/></span>
                       <span ng-switch-default>
-                        <span class="cell-text text-right-align display-block"
-                              ng-bind="rnrLineItem[column.name]"></span></span>
+                        <span id="{{getId(column.name, $parent.$parent)}}" class="cell-text text-right-align display-block"
+                              ng-bind="rnrLineItem[column.name]"></span>
+                      </span>
                     </ng-switch>
                     <span class="rnr-form-error" id="beginningBalance{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">

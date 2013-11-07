@@ -41,16 +41,14 @@
       </thead>
       <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
       <tr>
-        <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
+        <td id="category_{{ $index }}" class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
             ng-show="showCategory($index)"
             ng-bind="rnrLineItem.productCategory"></td>
       </tr>
       <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}"
           ng-class="getRowErrorClass(rnrLineItem)">
-        <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed"
-            ng-hide="column.name == 'quantityApproved'">
-          <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
-                class="cell-text">
+        <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed">
+          <span ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$index}}" class="cell-text">
           </span>
         </td>
       </tr>
@@ -68,8 +66,7 @@
       <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
       <tr>
         <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
-            ng-show="showCategory($index)"
-            ng-bind="rnrLineItem.productCategory"></td>
+            ng-show="showCategory($index)">&nbsp;</td>
       </tr>
       <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}">
         <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">
