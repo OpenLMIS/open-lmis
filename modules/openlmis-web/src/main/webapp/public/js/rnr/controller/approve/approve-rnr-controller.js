@@ -13,7 +13,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.pageSize = pageSize;
-  $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skip']);
   $scope.error = $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
@@ -31,15 +31,15 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
-        rnr, function (data) {
-          if (preventMessage === true) return;
-          $scope.message = data.success;
-          $scope.error = "";
-          setTimeout(fadeSaveMessage, 3000);
-        }, function (data) {
-          $scope.error = data.data.error;
-          $scope.message = "";
-        });
+      rnr, function (data) {
+        if (preventMessage === true) return;
+        $scope.message = data.success;
+        $scope.error = "";
+        setTimeout(fadeSaveMessage, 3000);
+      }, function (data) {
+        $scope.error = data.data.error;
+        $scope.message = "";
+      });
     $scope.approvalForm.$setPristine();
   };
 
@@ -87,7 +87,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
-        _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
   };
 
   $scope.dialogCloseCallback = function (result) {

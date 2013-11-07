@@ -34,13 +34,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
-@RequestMapping("/rest-api/")
 public class RestAgentController extends BaseController {
 
   @Autowired
   private RestAgentService restAgentService;
 
-  @RequestMapping(value = "/agents", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/agents", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> createCHW(@RequestBody Agent agent, Principal principal) {
     try {
       restAgentService.create(agent, principal.getName());
@@ -51,7 +50,7 @@ public class RestAgentController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/agents/{agentCode}", method = PUT, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/agents/{agentCode}", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> updateCHW(@RequestBody Agent agent,
                                                 @PathVariable String agentCode,
                                                 Principal principal) {

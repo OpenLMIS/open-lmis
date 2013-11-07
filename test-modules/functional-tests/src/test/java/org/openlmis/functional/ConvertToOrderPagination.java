@@ -17,12 +17,15 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewOrdersPage;
 import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -63,9 +66,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void selectRequisition(String numberOfRequisitions, String page) throws IOException, SQLException {
     testWebDriver.sleep(5000);
     testWebDriver.handleScrollByPixels(0, 1000);
-    String url = testWebDriver.getCurrentUrl().substring(0, testWebDriver.getCurrentUrl().length() - 1) + page;
+    String url = ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("return window.location.href").toString();
+    url = url.substring(0, url.length() - 1) + page;
     testWebDriver.getUrl(url);
-    //testWebDriver.getElementByXpath("//a[contains(text(), '" + page + "') and @class='ng-binding']").click();
     selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
 
@@ -227,9 +230,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
     testWebDriver.waitForPageToLoad();
-    String baseXpath = "(//input[@class='ngSelectionCheckbox'])";
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]"));
-    testWebDriver.getElementByXpath(baseXpath + "[" + whichRequisition + "]").click();
+    List <WebElement> x= testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
+    testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
+    x.get(whichRequisition-1).click();
   }
 
 

@@ -8,7 +8,7 @@
 
 package org.openlmis.core.service;
 
-import org.hamcrest.CoreMatchers;
+import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +22,6 @@ import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
-import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -35,15 +34,12 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.programSupportedList;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -248,19 +244,41 @@ public class ProgramSupportedServiceTest {
   }
 
   @Test
-  public void shouldUpdateSupportedPrograms() throws Exception {
+  public void shouldUpdateSupportedProgramsAndVirtualIfParentChanged() throws Exception {
     List<ProgramSupported> programsSupported = asList(make(a(defaultProgramSupported)));
     Facility facility = make(a(defaultFacility, with(programSupportedList, programsSupported)));
 
     ProgramSupportedEventDTO programSupportedEventDTO = mock(ProgramSupportedEventDTO.class);
-    ProgramSupportedEvent programSupportedEvent = mock(ProgramSupportedEvent.class);
+    Event event = mock(Event.class);
 
     whenNew(ProgramSupportedEventDTO.class).withArguments(facility.getCode(), programsSupported).thenReturn(programSupportedEventDTO);
-    whenNew(ProgramSupportedEvent.class).withArguments(programSupportedEventDTO).thenReturn(programSupportedEvent);
+    when(programSupportedEventDTO.createEvent()).thenReturn(event);
+    when(repository.updateSupportedPrograms(facility)).thenReturn(true);
+
     service.updateSupportedPrograms(facility);
 
     verify(repository).updateSupportedPrograms(facility);
-    verify(eventService).notify(programSupportedEvent);
+    verify(repository).updateForVirtualFacilities(facility);
+    verify(eventService).notify(event);
+  }
+
+  @Test
+  public void shouldNotUpdateSupportedProgramsForVirtualIfParentNotChanged() throws Exception {
+    List<ProgramSupported> programsSupported = asList(make(a(defaultProgramSupported)));
+    Facility facility = make(a(defaultFacility, with(programSupportedList, programsSupported)));
+
+    ProgramSupportedEventDTO programSupportedEventDTO = mock(ProgramSupportedEventDTO.class);
+    Event event = mock(Event.class);
+
+    whenNew(ProgramSupportedEventDTO.class).withArguments(facility.getCode(), programsSupported).thenReturn(programSupportedEventDTO);
+    when(programSupportedEventDTO.createEvent()).thenReturn(event);
+    when(repository.updateSupportedPrograms(facility)).thenReturn(false);
+
+    service.updateSupportedPrograms(facility);
+
+    verify(repository).updateSupportedPrograms(facility);
+    verify(repository, never()).updateForVirtualFacilities(facility);
+    verify(eventService, never()).notify(event);
   }
 
   @Test
@@ -274,6 +292,35 @@ public class ProgramSupportedServiceTest {
 
     verify(repository).getActiveByFacilityId(facilityId);
     assertThat(activeProgramSupported, equalTo(programSupported));
+
+  }
+
+  @Test
+  public void shouldNotifyProgramsSupportedUpdateForParentAndVirtualFacility() throws Exception {
+    Facility facility = mock(Facility.class);
+    String facilityCode = "F1111";
+    List<ProgramSupported> supportedPrograms = new ArrayList<>();
+    when(facility.getCode()).thenReturn(facilityCode);
+    when(facility.getSupportedPrograms()).thenReturn(supportedPrograms);
+    ProgramSupportedEventDTO programSupportedEventDTO = mock(ProgramSupportedEventDTO.class);
+    whenNew(ProgramSupportedEventDTO.class).withArguments(facilityCode, supportedPrograms).thenReturn(programSupportedEventDTO);
+    Event event = mock(Event.class);
+    when(programSupportedEventDTO.createEvent()).thenReturn(event);
+    Facility mockVirtualFacility = mock(Facility.class);
+    List<Facility> virtualFacilities = asList(mockVirtualFacility);
+    when(facilityService.getChildFacilities(facility)).thenReturn(virtualFacilities);
+
+    String virtualFacilityCode = "VVF1111";
+    when(mockVirtualFacility.getCode()).thenReturn(virtualFacilityCode);
+    ProgramSupportedEventDTO virtualProgramSupportedEventDTO = mock(ProgramSupportedEventDTO.class);
+    whenNew(ProgramSupportedEventDTO.class).withArguments(virtualFacilityCode, supportedPrograms).thenReturn(virtualProgramSupportedEventDTO);
+    Event virtualFacilityEvent = mock(Event.class);
+    when(virtualProgramSupportedEventDTO.createEvent()).thenReturn(virtualFacilityEvent);
+
+    service.notifyProgramSupportedUpdated(facility);
+
+    verify(eventService).notify(event);
+    verify(eventService).notify(virtualFacilityEvent);
 
   }
 

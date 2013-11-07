@@ -30,24 +30,47 @@
          ng-disabled="formDisabled || !(addNonFullSupplyLineItemButtonShown.visible)" openlmis-message="button.add"/>
 </div>
 
-<div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
-  <table id="nonFullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns
-         class="table table-bordered scrollable"
-         ng-show="page.nonFullSupply.length > 0">
-    <thead>
-    <tr>
-      <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
-          ng-bind="programRnrColumn.label"></th>
-    </tr>
-    </thead>
-    <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
-    <tr>
-      <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
-          ng-bind="rnrLineItem.productCategory"></td>
-    </tr>
-    <tr>
-      <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleNonFullSupplyColumns">
-        <ng-switch on="column.name">
+<div class="rnr-table" tab-scroll bottom-offset="180" ng-show="page.nonFullSupply.length">
+  <div class="float-left left-table">
+    <table id="nonFullSupplyFrozenTable" class="table table-bordered scrollable" fixed-table-header>
+      <thead>
+      <tr adjust-height="scrollable-head" class="fixed-head">
+        <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed"
+            ng-bind="column.label"></th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
+      <tr>
+        <td id="category_{{ $index }}" class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
+            ng-show="showCategory($index)"
+            ng-bind="rnrLineItem.productCategory"></td>
+      </tr>
+      <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}"
+          ng-class="getRowErrorClass(rnrLineItem)">
+        <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed">
+          <span ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$index}}" class="cell-text">
+          </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="float-left right-table" custom-horizontal-scroll>
+    <table id="nonFullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
+      <thead>
+      <tr adjust-height="fixed-head" class="scrollable-head">
+        <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable"
+            ng-bind="column.label"></th>
+      </tr>
+      </thead>
+      <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
+      <tr>
+        <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
+            ng-show="showCategory($index)">&nbsp;</td>
+      </tr>
+      <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}">
+        <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">
+          <ng-switch on="column.name">
               <span ng-switch-when="remarks">
                 <input ng-disabled="formDisabled" id="{{getId(column.name, $parent)}}" type="text"
                        name="remarks{{rnrLineItem['id']}}"
@@ -95,12 +118,15 @@
                 <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}" class="cell-text"></span>
               </span>
 
-        </ng-switch>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+          </ng-switch>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="clear-both"></div>
 </div>
+
 <form name="nonFullSupplyForm">
   <div id="nonFullSupplyProductsModal" modal="nonFullSupplyProductsModal"
        options="{ backdrop: 'static', escape: false}">

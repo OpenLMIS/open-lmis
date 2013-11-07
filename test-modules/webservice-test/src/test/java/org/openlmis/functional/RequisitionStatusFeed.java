@@ -26,6 +26,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.lang.String.format;
+import static org.openlmis.functional.PODTest.POD_URL;
 
 public class RequisitionStatusFeed extends JsonUtility {
 
@@ -83,7 +85,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
     client.SendJSON(getJsonStringFor(PODFromJson),
-      "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+      format(POD_URL, id),
       "POST",
       "commTrack",
       "Admin123");

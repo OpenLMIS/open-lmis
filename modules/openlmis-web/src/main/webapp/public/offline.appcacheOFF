@@ -16,6 +16,7 @@ CACHE:
 /public/lib/select2/select2.js
 /public/js/shared/select2-ext.js
 /public/lib/select2/select2.css
+
 /public/js/shared/directives/form-toolbar.js
 /public/js/shared/directives/openlmis-message.js
 /public/js/shared/directives/openlmis-pagination.js
@@ -23,6 +24,8 @@ CACHE:
 /public/js/shared/directives/ui-nav.js
 /public/js/shared/directives/tab-scroll.js
 /public/js/shared/directives/modal-events.js
+/public/js/shared/directives/fade-out.js
+/public/js/shared/directives/auto-save.js
 
 /public/css/app.css
 /public/js/shared/services/services.js
@@ -58,7 +61,6 @@ CACHE:
 /public/js/distribution/model/facility-visit.js
 /public/js/distribution/model/facility-distribution-data.js
 
-
 /public/js/distribution/service/shared-distributions.js
 /public/js/distribution/service/distribution-service.js
 
@@ -71,7 +73,6 @@ CACHE:
 /public/js/distribution/controller/epi-use-controller.js
 /public/js/distribution/controller/facility-visit-controller.js
 
-/public/js/shared/directives/auto-save.js
 /public/js/shared/controller/locale-controller.js
 /public/lib/select2/select2.png
 

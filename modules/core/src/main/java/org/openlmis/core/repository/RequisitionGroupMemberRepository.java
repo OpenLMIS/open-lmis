@@ -46,7 +46,7 @@ public class RequisitionGroupMemberRepository {
   }
 
   public RequisitionGroupMember getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(
-      RequisitionGroup requisitionGroup, Facility facility) {
+    RequisitionGroup requisitionGroup, Facility facility) {
     return mapper.getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
   }
 
@@ -61,5 +61,10 @@ public class RequisitionGroupMemberRepository {
 
   public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
     return mapper.getAllRequisitionGroupMembersByFacility(facilityId);
+  }
+
+  public void updateMembersForVirtualFacilities(Facility parentFacility) {
+    mapper.deleteMembersForVirtualFacility(parentFacility);
+    mapper.copyToVirtualFacilities(parentFacility);
   }
 }

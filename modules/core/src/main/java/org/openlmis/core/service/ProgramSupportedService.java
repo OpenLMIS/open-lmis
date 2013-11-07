@@ -16,7 +16,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
-import org.openlmis.core.event.ProgramSupportedEvent;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,13 +53,17 @@ public class ProgramSupportedService {
 
   public void updateSupportedPrograms(Facility facility) {
     Facility facilityForNotification = cloneFacility(facility);
-    repository.updateSupportedPrograms(facility);
-    notifyProgramSupportedUpdated(facilityForNotification);
+    boolean updated = repository.updateSupportedPrograms(facility);
+    if (updated) {
+      repository.updateForVirtualFacilities(facility);
+      notifyProgramSupportedUpdated(facilityForNotification);
+    }
   }
 
   private Facility cloneFacility(Facility facility) {
     Facility facilityForNotification = new Facility();
     facilityForNotification.setCode(facility.getCode());
+    facilityForNotification.setId(facility.getId());
     ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
     for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
       supportedPrograms.add(programSupported);
@@ -126,9 +129,16 @@ public class ProgramSupportedService {
 
   public void notifyProgramSupportedUpdated(Facility facility) {
     try {
-      ProgramSupportedEventDTO programSupportedEventDTO = new ProgramSupportedEventDTO(
-        facility.getCode(), facility.getSupportedPrograms());
-      eventService.notify(new ProgramSupportedEvent(programSupportedEventDTO));
+      List<ProgramSupported> programsSupported = facility.getSupportedPrograms();
+
+      ProgramSupportedEventDTO eventDTO = new ProgramSupportedEventDTO(facility.getCode(), programsSupported);
+      eventService.notify(eventDTO.createEvent());
+
+      for (Facility virtualFacility : facilityService.getChildFacilities(facility)) {
+        eventDTO = new ProgramSupportedEventDTO(virtualFacility.getCode(), programsSupported);
+        eventService.notify(eventDTO.createEvent());
+      }
+
     } catch (URISyntaxException e) {
       logger.error("Failed to generate program supported event feed", e);
     }
@@ -136,5 +146,9 @@ public class ProgramSupportedService {
 
   public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
     return repository.getActiveByFacilityId(facilityId);
+  }
+
+  public void updateForVirtualFacilities(Facility parentFacility) {
+    repository.updateForVirtualFacilities(parentFacility);
   }
 }

@@ -55,6 +55,13 @@ module.exports = function (grunt) {
         ]
       }
     },
+    watch: {
+      files: "src/main/webapp/public/less/*.less",
+      tasks: ["less"],
+      options: {
+        spawn: false
+      }
+    },
     uglify: {
       options: {
         mangle: false,

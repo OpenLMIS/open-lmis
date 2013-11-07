@@ -12,6 +12,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -125,6 +126,7 @@ public class RefrigeratorPage extends Page {
   public void enterValueInRefrigeratorTemperature(String value) {
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureTextField);
     sendKeys(refrigeratorTemperatureTextField, value);
+    refrigeratorTemperatureTextField.sendKeys(Keys.TAB);
   }
 
   public void clickProblemSinceLastVisitYesRadio() {
@@ -179,11 +181,13 @@ public class RefrigeratorPage extends Page {
   public void clickProblemSinceLastVisitNR() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitNR);
     problemSinceLastVisitNR.click();
+    problemSinceLastVisitNR.sendKeys(Keys.TAB);
   }
 
   public void enterValueInLowAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(lowAlarmEventsTextField);
     sendKeys(lowAlarmEventsTextField, value);
+    lowAlarmEventsTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInBrandModal(String value) {
@@ -204,6 +208,7 @@ public class RefrigeratorPage extends Page {
   public void enterValueInHighAlarmEvents(String value) {
     testWebDriver.waitForElementToAppear(highAlarmEventsTextField);
     sendKeys(highAlarmEventsTextField, value);
+    highAlarmEventsTextField.sendKeys(Keys.TAB);
   }
 
   public void enterValueInNotesTextArea(String value) {
@@ -220,6 +225,7 @@ public class RefrigeratorPage extends Page {
   public void clickFunctioningCorrectlyYesRadio() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyYesRadio);
     functioningCorrectlyYesRadio.click();
+    functioningCorrectlyYesRadio.sendKeys(Keys.TAB);
   }
 
   public void clickFunctioningCorrectlyNoRadio() {

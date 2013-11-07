@@ -9,22 +9,14 @@
   -->
 
 <div ng-controller="CreateRegimenLineItemController">
-  <div class="rnr-table" tab-scroll bottom-offset="180">
+  <div class="rnr-table regimen-table" tab-scroll bottom-offset="180">
     <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
       <thead>
       <tr>
         <th class="col-{{regimenColumn.name}}" ng-repeat="regimenColumn in visibleRegimenColumns">
-          <ng-switch on="regimenColumn.label">
-            <div ng-switch-when="header.name">
-              <div class="regimen-heading" openlmis-message="header.name"></div>
-            </div>
-            <div class="regimen-heading" ng-switch-when="header.code">
-              <span openlmis-message="header.code"></span>
-            </div>
-            <div class="regimen-heading" ng-switch-default>
-              <span ng-bind="regimenColumn.label"/>
-            </div>
-          </ng-switch>
+          <div class="regimen-heading">
+            <span openlmis-message="regimenColumn.label"></span>
+          </div>
         </th>
       </tr>
       </thead>

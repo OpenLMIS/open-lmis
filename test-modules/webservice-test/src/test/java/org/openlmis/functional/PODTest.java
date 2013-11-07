@@ -13,22 +13,22 @@ package org.openlmis.functional;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pod.domain.POD;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.io.IOException;
 import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static java.lang.String.format;
 
 
 public class PODTest extends JsonUtility {
 
-  public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
-  public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
+  public static final String POD_URL = "http://localhost:9091/rest-api/orders/%s/pod.json";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -61,7 +61,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");
@@ -76,7 +76,7 @@ public class PODTest extends JsonUtility {
 
     responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");
@@ -104,7 +104,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");
@@ -135,7 +135,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");
@@ -164,7 +164,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");
@@ -191,7 +191,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/19999999/pod.json",
+        format(POD_URL, 19999999),
         "POST",
         "commTrack",
         "Admin123");
@@ -221,7 +221,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");
@@ -251,7 +251,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack100",
         "Admin123");
@@ -281,7 +281,7 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        "http://localhost:9091/rest-api/order/" + id + "/pod.json",
+        format(POD_URL, id),
         "POST",
         "commTrack",
         "Admin123");

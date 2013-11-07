@@ -19,16 +19,15 @@ apply plugin: 'js'
 apply plugin: 'cobertura'
 
 task npm(type: Exec) {
-   group = "Build"
-   description = "Installs all Node.js dependencies defined in package.json"
-//   commandLine = ["npm", "install"]
+    group = "Build"
+    description = "Installs all Node.js dependencies defined in package.json"
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
         commandLine 'cmd', '/c', 'npm', 'install'
     } else {
         commandLine 'npm', 'install'
     }
-   inputs.file "package.json"
-   outputs.dir "node_modules"
+    inputs.file "package.json"
+    outputs.dir "node_modules"
 }
 
 class GruntTask extends Exec {
@@ -48,26 +47,38 @@ class GruntTask extends Exec {
 }
 
 task jsHint(type: GruntTask) {
+    description = 'Runs JSHint against all JS files and fails upon JSHint error'
     workingDir '.'
     gruntArgs = "jshint"
     dependsOn npm
 }
 
 task lesslint(type: GruntTask) {
+    description = 'Runs LessLint against all LESS files'
     workingDir '.'
     gruntArgs = "lesslint --force"
     dependsOn npm
 }
 
 task less(type: GruntTask) {
+    description = 'Compiles all LESS files to CSS'
     workingDir '.'
     gruntArgs = "less"
     dependsOn npm
 }
 
 task uglify(type: GruntTask) {
+    description = 'Minifies JS files'
     workingDir '.'
     gruntArgs = "uglify"
+    dependsOn npm
+}
+
+task lesswatch(type: GruntTask) {
+    description = 'Looks for changes in LESS and recompiles to CSS upon detecting change'
+    workingDir '.'
+    gruntArgs = 'watch'
+    ignoreExitValue = true
     dependsOn npm
 }
 
@@ -179,6 +190,7 @@ dependencies {
 }
 
 task jettyDaemon(dependsOn: war) {
+    description = 'Brings up the Jetty server as a daemon process returning the terminal to continue with other tasks'
     doFirst {
         jettyRun.daemon = true
         jettyRun.execute()
@@ -203,9 +215,12 @@ def configureHttps(keystore, password) {
     return ext.connectors;
 }
 
-task run(dependsOn: jettyRun)
+task run(dependsOn: [jettyDaemon, lesswatch]) {
+    description = 'Runs the Jetty server and starts watching LESS files for changes'
+}
 
 task explodedWar(type: Copy) {
+    description = 'Explodes WAR file'
     into "$buildDir/exploded"
     with war
 }
@@ -216,12 +231,14 @@ task deployOpenLmis(type: GradleBuild) {
 }
 
 task phantomRun(type: Exec) {
+    description = 'Runs Jasmine specs in PhantomJS'
     commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
 }
 
 compileJava.dependsOn less
 
 task runJsCover(type: Exec) {
+    description = 'Generates a JS code coverage report for Jasmine specs'
     commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
 }
 

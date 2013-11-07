@@ -14,11 +14,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.ict4h.atomfeed.server.service.Event;
+import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProgramSupported;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -28,12 +32,15 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class ProgramSupportedEventDTO extends BaseFeedDTO {
 
   private String facilityCode;
-  private List<ProgramSupportedDTO> programsSupported;
+  private List<ProgramSupportedDTO> programsSupported = new ArrayList<>();
+
+  public static final String CATEGORY = "programs-supported";
+  public static final String TITLE = "Programs Supported";
+
 
   public ProgramSupportedEventDTO(String facilityCode, List<ProgramSupported> programSupportedList) {
     this.facilityCode = facilityCode;
 
-    this.programsSupported = new ArrayList<>();
     for (ProgramSupported ps : programSupportedList) {
       ProgramSupportedDTO psDTO = new ProgramSupportedDTO(ps.getProgram().getCode(), ps.getProgram().getName(),
         ps.getActive(), ps.getStartDate());
@@ -50,6 +57,10 @@ public class ProgramSupportedEventDTO extends BaseFeedDTO {
     private String name;
     private Boolean active;
     private Date startDate;
+  }
+
+  public Event createEvent() throws URISyntaxException {
+    return new Event(UUID.randomUUID().toString(), TITLE, DateTime.now(), "", getSerializedContents(), CATEGORY);
   }
 
 }

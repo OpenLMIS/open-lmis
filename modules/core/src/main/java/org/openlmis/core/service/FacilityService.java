@@ -28,9 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+
 @Service
 @NoArgsConstructor
 public class FacilityService {
+
+  public static final String FACILITY_CATEGORY = "facilities";
+  public static final String FACILITY_TITLE = "Facility";
 
   @Autowired
   private FacilityRepository facilityRepository;
@@ -87,7 +92,7 @@ public class FacilityService {
   @Transactional
   public void updateEnabledAndActiveFor(Facility facility) {
     facility = facilityRepository.updateEnabledAndActiveFor(facility);
-    notify(facility, null);
+    notify(asList(facility));
   }
 
   public List<Facility> getUserSupervisedFacilities(Long userId, Long programId, Right... rights) {
@@ -99,26 +104,38 @@ public class FacilityService {
   public void save(Facility newFacility) {
     newFacility.validate();
 
-    Facility oldFacility = facilityRepository.getById(newFacility.getId());
+    Facility storedFacility = facilityRepository.getById(newFacility.getId());
 
     facilityRepository.save(newFacility);
 
-    //TODO newFacility doesn't have modifiedDate populated
-    notify(newFacility, oldFacility);
+    if (!newFacility.equals(storedFacility)) {
+      notify(asList(newFacility));
+      if (canUpdateVirtualFacilities(newFacility, storedFacility)) {
+        facilityRepository.updateVirtualFacilities(newFacility);
+        notify(getChildFacilities(newFacility));
+      }
+    }
   }
 
-  private void notify(Facility newFacility, Facility oldFacility) {
-    if (newFacility.equals(oldFacility)) return;
+  private boolean canUpdateVirtualFacilities(Facility newFacility, Facility oldFacility) {
+    return (oldFacility == null ||
+      !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
+      !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
+    );
+  }
 
-    try {
-      Facility parentFacility = facilityRepository.getById(newFacility.getParentFacilityId());
-      FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(newFacility, parentFacility);
-      eventService.notify(new Event(UUID.randomUUID().toString(), "Facility", DateTime.now(), "",
-          facilityFeedDTO.getSerializedContents(), "facility"));
-    } catch (URISyntaxException e) {
-      logger.error("Unable to generate facility event", e);
+  private void notify(List<Facility> facilities) {
+    //TODO newFacility doesn't have modifiedDate populated
+    for (Facility facility : facilities) {
+      try {
+        Facility parentFacility = facilityRepository.getById(facility.getParentFacilityId());
+        FacilityFeedDTO facilityFeedDTO = new FacilityFeedDTO(facility, parentFacility);
+        String content = facilityFeedDTO.getSerializedContents();
+        eventService.notify(new Event(UUID.randomUUID().toString(), FACILITY_TITLE, DateTime.now(), "", content, FACILITY_CATEGORY));
+      } catch (URISyntaxException e) {
+        logger.error("Unable to generate facility event", e);
+      }
     }
-
   }
 
   public List<Facility> getForUserAndRights(Long userId, Right... rights) {
@@ -181,6 +198,10 @@ public class FacilityService {
 
   public List<Facility> getChildFacilities(Facility facility) {
     return facilityRepository.getChildFacilities(facility);
+  }
+
+  public List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate) {
+    return facilityRepository.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
   }
 
   public List<Facility> getAllFacilitiesDetail(){

@@ -304,15 +304,11 @@ span[class^="tpl-"] {
       .drag-handle {
         .size(16px,12px);
         margin-top: -9px;
-        display: none;
         position: absolute;
         top: 50%;
         left: 10px;
         background: url("../images/sort-icon.png") no-repeat left center;
         cursor: move;
-      }
-      &:hover .drag-handle {
-        display: block;
       }
     }
   }
@@ -383,9 +379,6 @@ span[class^="tpl-"] {
     margin-bottom: 0px;
     &:hover {
       background-color: #ececec;
-      .drag-handle {
-        display: block;
-      }
     }
     input[type="text"] {
       margin-bottom: 8px;
@@ -395,7 +388,6 @@ span[class^="tpl-"] {
     }
     .drag-handle {
       .size(16px,12px);
-      display: none;
       position: absolute;
       top: 33%;
       left: 9px;
@@ -428,7 +420,7 @@ span[class^="tpl-"] {
 }
 
 .rnr-tabs {
-  margin: 5px 0 0;
+  margin: 5px 0 20px;
   border-bottom: 2px solid #307579;
   font-size: 0.9em;
   font-weight: bold;
@@ -514,9 +506,38 @@ span[class^="tpl-"] {
 }
 
 .rnr-table {
-  width: 100%;
-  padding-top: 20px;
-  overflow: auto;
+  .float-left {
+    float: left
+  }
+  .clear-both {
+    clear: both
+  }
+  .left-table, .right-table {
+    overflow: auto;
+    position: relative;
+    table {
+      margin-bottom: 0px;
+      thead {
+        top: 0px;
+        th {
+          text-align: left;
+        }
+      }
+    }
+  }
+  .left-table {
+    width: 30%;
+    max-width: 30%;
+    .cell-text {
+      min-height: 29px;
+    }
+  }
+  .right-table {
+    width: 69.6%;
+    max-width: 69.6%;
+    border-left: #ccc solid 1px;
+  }
+
   th {
     min-width: 123px;
     padding: 3px 6px;
@@ -545,7 +566,7 @@ span[class^="tpl-"] {
     }
     .ng-scope {
       position: relative;
-      display:block;
+      display: block;
     }
   }
   .table-bordered th:first-child,
@@ -555,7 +576,8 @@ span[class^="tpl-"] {
   td {
     font-family: Verdana, Arial, sans-serif;
   }
-  #regimenTable {
+
+  &.regimen-table {
     .col-code {
       min-width: 100px;
     }
@@ -800,14 +822,12 @@ td.col-lossesAndAdjustments {
     display: block;
     text-align: right;
   }
-  span.row-specific-error{
-    span{
+  span.row-specific-error {
+    span {
       text-align: left;
     }
   }
 }
-
-
 
 #viewRnr {
   td.col-beginningBalance,
@@ -915,7 +935,8 @@ table td.cell-input .cell-text {
   font-size: 0.8em;
   line-height: 18px;
 }
-table td.cell-input .display-block,.display-block {
+
+table td.cell-input .display-block, .display-block {
   display: block;
 }
 
@@ -1009,7 +1030,7 @@ table td.cell-input .display-block,.display-block {
         background-color: #f9f9f9;
       }
       &:hover .user-actions a {
-        display: inline-block!important;
+        display: inline-block !important;
       }
     }
     .user-actions {
@@ -1110,7 +1131,7 @@ h3 {
   padding: 7px 0;
 }
 
-.gradient-header{
+.gradient-header {
   th {
     min-width: 93px;
     background: #EEE;
@@ -1849,7 +1870,7 @@ input[placeholder].placeholder {
   .ngRow.even:hover, .ngRow.even:hover + .ngRow.even {
     background-color: #bdd0cb;
   }
-  .ngCellText{
+  .ngCellText {
     span {
       cursor: pointer !important;
     }
@@ -1872,7 +1893,7 @@ input[placeholder].placeholder {
       line-height: 20px;
       color: #777;
     }
-    &.errorpage{
+    &.errorpage {
       a {
         border-color: rgb(221, 42, 42);
         background-color: red;
@@ -1880,7 +1901,7 @@ input[placeholder].placeholder {
       }
     }
 
-    &.active{
+    &.active {
       a {
         border-color: #419EA2;
         background-color: #60ACAF;
@@ -1907,7 +1928,7 @@ input[placeholder].placeholder {
   label {
     text-align: right;
   }
-  .ISAFormulaModalSubContent{
+  .ISAFormulaModalSubContent {
     h5 {
       margin-bottom: 0px;
     }
@@ -2229,7 +2250,7 @@ input[placeholder].placeholder {
   }
 }
 
-.geo-zone-facility-list{
+.geo-zone-facility-list {
   h3 {
     margin: 3px 0;
     font-weight: normal;
@@ -2281,7 +2302,7 @@ input[placeholder].placeholder {
 
 }
 
-.manage-distribution,.distribution-grid {
+.manage-distribution, .distribution-grid {
   .distribution-section {
     margin-bottom: 20px;
   }
@@ -2396,7 +2417,7 @@ input[rnr-validator="positiveInteger"] {
   text-align: right;
 }
 
-.cell-input{
+.cell-input {
   input[type="text"].small-width-ie {
     width: 86%;
   }
@@ -2495,21 +2516,23 @@ input[rnr-validator="positiveInteger"] {
     margin-top: -39px;
   }
 }
-.rnr-table{
-  th.col-productCode,td.col-productCode{
-    min-width: 93px;
-    width: 93px;
+
+.rnr-table {
+  overflow: auto;
+  padding-top: 10px;
+  th.col-productCode, td.col-productCode {
+    min-width: 75px;
+    width: 75px;
   }
-  th.col-product, td.col-product{
-    min-width: 300px;
-    width: 300px;
+  th.col-product, td.col-product {
+    min-width: 250px;
   }
-  th.col-skip, td.col-skip{
+  th.col-skip, td.col-skip {
     min-width: 40px;
     width: 40px;
   }
 }
 
-.text-right-align{
+.text-right-align {
   text-align: right;
 }

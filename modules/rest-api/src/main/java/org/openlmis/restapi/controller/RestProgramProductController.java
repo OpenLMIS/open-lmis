@@ -19,10 +19,7 @@ import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,7 +29,7 @@ import java.util.List;
 import static org.apache.commons.collections.CollectionUtils.forAllDo;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -44,7 +41,7 @@ public class RestProgramProductController extends BaseController {
   @Autowired
   private ProgramProductService service;
 
-  @RequestMapping(value = "/rest-api/programProducts", method = GET, headers = BaseController.ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/program-products", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<RestResponse> getProgramProductsBy(@RequestParam String programCode,
                                                            @RequestParam(required = false) String facilityTypeCode) {
     try {

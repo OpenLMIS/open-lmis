@@ -1,7 +1,7 @@
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
-   *
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *  
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
@@ -14,22 +14,21 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.visibleColumns = _.where(rnrColumns, {'visible': true});
-  $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
-  var APPROVED = "APPROVED";
-  var RELEASED = "RELEASED";
+  if (!($scope.rnr.status == "APPROVED" || $scope.rnr.status == "RELEASED")) {
+    rnrColumns = _.filter(rnrColumns, function (column) {
+      return column.name != "quantityApproved";
+    });
+  }
+
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skip']);
+  $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.requisitionType = $scope.rnr.emergency ? "requisition.type.emergency" : "requisition.type.regular";
 
-  if (!($scope.rnr.status == APPROVED || $scope.rnr.status == RELEASED))
-    $scope.visibleColumns = _.filter($scope.visibleColumns, function (column) {
-      return column.name != "quantityApproved";
-    });
-
-  $scope.$on('$routeUpdate', function() {
+  $scope.$on('$routeUpdate', function () {
     requisitionService.refreshGrid($scope, $location, $routeParams, false);
   });
 

@@ -45,9 +45,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -128,7 +127,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
-        facilityFeedDTO.getSerializedContents(), "facility")));
+      facilityFeedDTO.getSerializedContents(), "facilities")));
 
   }
 
@@ -139,7 +138,7 @@ public class FacilityServiceTest {
       public boolean matches(Object argument) {
         Event event = (Event) argument;
         return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-            event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
   }
@@ -237,6 +236,46 @@ public class FacilityServiceTest {
     verify(facilityRepository).save(facility);
     verify(programSupportedService).updateSupportedPrograms(facility);
     verify(eventService, never()).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfFacilityTypeChange() throws Exception {
+    Long parentId = 59L;
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "NGO")));
+    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(type, "GOVT")));
+
+    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
+
+    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
+    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
+
+    facilityService.update(parentFacility);
+
+    verify(facilityRepository).save(parentFacility);
+    verify(programSupportedService).updateSupportedPrograms(parentFacility);
+    verify(facilityRepository).getChildFacilities(parentFacility);
+    verify(facilityRepository).updateVirtualFacilities(parentFacility);
+    verify(eventService, times(2)).notify(any(Event.class));
+  }
+
+  @Test
+  public void shouldUpdateFacilityAndNotifyChildFacilitiesIfGeoZoneChange() throws Exception {
+    Long parentId = 59L;
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "AAA")));
+    Facility savedFacility = make(a(defaultFacility, with(facilityId, parentId), with(geographicZoneCode, "BBB")));
+
+    Facility childFacility = make(a(defaultFacility, with(parentFacilityId, parentId)));
+
+    when(facilityRepository.getById(59L)).thenReturn(savedFacility);
+    when(facilityRepository.getChildFacilities(parentFacility)).thenReturn(asList(childFacility));
+
+    facilityService.update(parentFacility);
+
+    verify(facilityRepository).save(parentFacility);
+    verify(programSupportedService).updateSupportedPrograms(parentFacility);
+    verify(facilityRepository).getChildFacilities(parentFacility);
+    verify(facilityRepository).updateVirtualFacilities(parentFacility);
+    verify(eventService, times(2)).notify(any(Event.class));
   }
 
   @Test
@@ -353,10 +392,10 @@ public class FacilityServiceTest {
     List<Facility> expectedWarehouses = asList(new Facility());
     when(facilityRepository.getEnabledWarehouses()).thenReturn(expectedWarehouses);
 
-    List<Facility> wareshouses = facilityService.getEnabledWarehouses();
+    List<Facility> warehouses = facilityService.getEnabledWarehouses();
 
     verify(facilityRepository).getEnabledWarehouses();
-    assertThat(wareshouses, is(expectedWarehouses));
+    assertThat(warehouses, is(expectedWarehouses));
   }
 
   @Test

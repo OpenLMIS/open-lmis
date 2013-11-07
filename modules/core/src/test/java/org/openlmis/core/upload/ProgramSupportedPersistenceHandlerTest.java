@@ -66,6 +66,7 @@ public class ProgramSupportedPersistenceHandlerTest {
     programSupportedPersistenceHandler.postProcess(auditFields);
 
     verify(facilityService).getAllByProgramSupportedModifiedDate(currentTimestamp);
+    verify(service).updateForVirtualFacilities(facility);
     verify(service).notifyProgramSupportedUpdated(facility);
   }
 

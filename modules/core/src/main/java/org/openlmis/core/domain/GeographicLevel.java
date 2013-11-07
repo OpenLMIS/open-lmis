@@ -32,5 +32,9 @@ public class GeographicLevel extends BaseModel {
     this(code, name, levelNumber);
     this.id = id;
   }
+
+  public GeographicLevel(Long id) {
+    this.id = id;
+  }
 }
 

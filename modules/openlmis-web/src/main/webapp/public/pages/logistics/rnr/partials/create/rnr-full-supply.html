@@ -23,25 +23,57 @@
 
 </div>
 
-<div class="rnr-table" tab-scroll bottom-offset="180" custom-horizontal-scroll>
 <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-<table id="fullSupplyTable" fixed-table-header fixed-table-columns fixed-table-header-columns
-       class="table table-bordered scrollable">
+
+<div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180">
+<div class="float-left left-table">
+  <table id="fullSupplyFrozenTable" class="table table-bordered scrollable" fixed-table-header>
+    <thead>
+    <tr class="fixed-head" adjust-height="scrollable-head">
+      <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed" ng-bind="column.label"></th>
+    </tr>
+    </thead>
+    <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
+           ng-repeat="rnrLineItem in page.fullSupply">
+    <tr>
+      <td class="productCategory" id="category_{{ $index }}" colspan="{{visibleColumns.fullSupply.fixed.length}}" ng-show="showCategory($index)"
+          ng-bind="rnrLineItem.productCategory"></td>
+    </tr>
+    <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}"
+        ng-class="getRowErrorClass(rnrLineItem)">
+      <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+        <ng-switch on="column.name">
+          <span ng-switch-when="skip">
+            <input ng-disabled="formDisabled"
+                   id="{{getId(column.name, $parent)}}" type="checkbox"
+                   name="skip{{rnrLineItem['id']}}"
+                   style="margin-left: 20px"/>
+          </span>
+          <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$parent.$index}}" class="cell-text">
+          </span>
+        </ng-switch>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="float-left right-table" custom-horizontal-scroll>
+<table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
-<tr ng-show="page.fullSupply.length">
-  <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleColumns"
-      ng-hide="programRnrColumn.name == 'quantityApproved'" ng-bind="programRnrColumn.label"></th>
+<tr class="scrollable-head" adjust-height="fixed-head">
+  <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
+      ng-bind="column.label"></th>
 </tr>
 </thead>
-<tbody ng-show="visibleColumns && (rnr.fullSupplyLineItems.length > 0)" ng-repeat="rnrLineItem in page.fullSupply">
+<tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
+       ng-repeat="rnrLineItem in page.fullSupply">
 <tr>
-  <td class="productCategory" colspan="{{visibleColumns.length}}" ng-show="showCategory($index)"
-      ng-bind="rnrLineItem.productCategory"></td>
+  <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}" ng-show="showCategory($index)">
+    &nbsp;</td>
 </tr>
-<tr ng-class="getRowErrorClass(rnrLineItem)">
-<td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns"
-    ng-hide="column.name == 'quantityApproved'">
-  <ng-switch on="column.source.name">
+<tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}" ng-class="getRowErrorClass(rnrLineItem)">
+  <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+    <ng-switch on="column.source.name">
               <span ng-switch-when="USER_INPUT">
                 <ng-switch on="column.name">
                   <span ng-switch-when="beginningBalance"
@@ -56,8 +88,9 @@
                                ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
                                ng-class="highlightRequired(inputClass, rnrLineItem[column.name])"/></span>
                       <span ng-switch-default>
-                        <span class="cell-text text-right-align display-block"
-                              ng-bind="rnrLineItem[column.name]"></span></span>
+                        <span id="{{getId(column.name, $parent.$parent)}}" class="cell-text text-right-align display-block"
+                              ng-bind="rnrLineItem[column.name]"></span>
+                      </span>
                     </ng-switch>
                     <span class="rnr-form-error" id="beginningBalance{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.number.only">
@@ -98,13 +131,6 @@
                     <span class="alert alert-warning warning-alert" id="expirationDate{{rnrLineItem['id']}}"
                           style="display:none;" openlmis-message="error.invalid.date.format">
                     </span>
-                  </span>
-
-                  <span ng-switch-when="skip">
-                    <input ng-disabled="formDisabled"
-                           id="{{getId(column.name, $parent)}}" type="checkbox"
-                           name="skip{{rnrLineItem['id']}}"
-                           style="margin-left: 20px"/>
                   </span>
 
                   <span ng-switch-when="quantityDispensed"
@@ -237,12 +263,16 @@
                         class="cell-text"></span>
                 </ng-switch>
               </span>
-  </ng-switch>
-</td>
+    </ng-switch>
+  </td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="clear-both"></div>
+</div>
+
+
 <div id="lossesAndAdjustments" modal="lossesAndAdjustmentsModal"
      options="{'backdrop':'static', 'escape':false}">
   <div class="modal-header"><h3 openlmis-message="label.losses.adjustments"></h3></div>

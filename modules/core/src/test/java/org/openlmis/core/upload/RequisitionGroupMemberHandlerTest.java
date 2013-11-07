@@ -10,20 +10,27 @@
 
 package org.openlmis.core.upload;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RequisitionGroupMember;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RequisitionGroupMemberService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.upload.model.AuditFields;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
+import java.util.Date;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.*;
+
 @Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
 public class RequisitionGroupMemberHandlerTest {
 
   public static final Integer USER = 1;
@@ -31,17 +38,32 @@ public class RequisitionGroupMemberHandlerTest {
   @Mock
   RequisitionGroupMemberService requisitionGroupMemberService;
 
-  @Before
-  public void setUp() throws Exception {
-    initMocks(this);
-  }
+  @Mock
+  FacilityService facilityService;
+
+
+  @InjectMocks
+  RequisitionGroupMemberHandler requisitionGroupMemberHandler;
 
   @Test
   public void shouldSaveRGMembersTaggedWithModifiedBy() throws Exception {
     RequisitionGroupMember requisitionGroupMember = new RequisitionGroupMember();
 
-    new RequisitionGroupMemberHandler(requisitionGroupMemberService).save(requisitionGroupMember);
+    requisitionGroupMemberHandler.save(requisitionGroupMember);
 
     verify(requisitionGroupMemberService).save(requisitionGroupMember);
+  }
+
+  @Test
+  public void shouldUpdateVirtualFacilitiesInPostProcess() throws Exception {
+    Date modifiedDate = new Date();
+    AuditFields auditFields = new AuditFields(modifiedDate);
+    Facility facility = mock(Facility.class);
+    List<Facility> facilities = asList(facility);
+    when(facilityService.getAllByRequisitionGroupMemberModifiedDate(modifiedDate)).thenReturn(facilities);
+
+    requisitionGroupMemberHandler.postProcess(auditFields);
+
+    verify(requisitionGroupMemberService).updateMembersForVirtualFacilities(facility);
   }
 }

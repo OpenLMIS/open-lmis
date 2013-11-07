@@ -9,10 +9,6 @@
  */
 
 function CreateNonFullSupplyController($scope, messageService) {
-  $scope.visibleNonFullSupplyColumns = _.filter($scope.visibleColumns, function (column) {
-    return _.contains(RegularRnrLineItem.visibleForNonFullSupplyColumns, column.name);
-  });
-
   var map = _.map($scope.facilityApprovedProducts, function (facilitySupportedProduct) {
     return facilitySupportedProduct.programProduct.product.category;
   });
@@ -84,8 +80,8 @@ function CreateNonFullSupplyController($scope, messageService) {
 
   $scope.shouldDisableAddButton = function () {
     return !($scope.newNonFullSupply && $scope.newNonFullSupply.quantityRequested &&
-        $scope.newNonFullSupply.reasonForRequestedQuantity &&
-        $scope.facilityApprovedProduct);
+      $scope.newNonFullSupply.reasonForRequestedQuantity &&
+      $scope.facilityApprovedProduct);
   };
 
   $scope.addNonFullSupplyProductsByCategory = function () {
@@ -98,12 +94,12 @@ function CreateNonFullSupplyController($scope, messageService) {
 
   $scope.updateNonFullSupplyProductsToDisplay = function () {
     var addedNonFullSupplyProductList =
-        _.pluck($scope.addedNonFullSupplyProducts, 'productCode')
-            .concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
+      _.pluck($scope.addedNonFullSupplyProducts, 'productCode')
+        .concat(_.pluck($scope.rnr.nonFullSupplyLineItems, 'productCode'));
     if ($scope.nonFullSupplyProductCategory !== undefined) {
       $scope.nonFullSupplyProductsToDisplay = $.grep($scope.facilityApprovedProducts, function (facilityApprovedProduct) {
         return $.inArray(facilityApprovedProduct.programProduct.product.code, addedNonFullSupplyProductList) == -1 &&
-            $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
+          $.inArray(facilityApprovedProduct.programProduct.product.category.name, [$scope.nonFullSupplyProductCategory.name]) === 0;
       });
     }
   };
@@ -121,9 +117,9 @@ function CreateNonFullSupplyController($scope, messageService) {
       $scope.newNonFullSupply.productCode = product.code;
       $scope.newNonFullSupply.productName = product.primaryName;
       $scope.newNonFullSupply.product = (product.primaryName === null ? "" : (product.primaryName + " ")) +
-          (product.form.code === null ? "" : (product.form.code + " ")) +
-          (product.strength === null ? "" : (product.strength + " ")) +
-          (product.dosageUnit.code === null ? "" : product.dosageUnit.code);
+        (product.form.code === null ? "" : (product.form.code + " ")) +
+        (product.strength === null ? "" : (product.strength + " ")) +
+        (product.dosageUnit.code === null ? "" : product.dosageUnit.code);
       $(['dosesPerDispensingUnit', 'packSize', 'roundToZero', 'packRoundingThreshold', 'dispensingUnit', 'fullSupply']).each(function (index, field) {
         $scope.newNonFullSupply[field] = product[field];
       });
@@ -140,8 +136,8 @@ function CreateNonFullSupplyController($scope, messageService) {
     populateProductInformation();
     $(['quantityReceived', 'quantityDispensed', 'beginningBalance', 'stockInHand', 'totalLossesAndAdjustments', 'calculatedOrderQuantity', 'newPatientCount',
       'stockOutDays', 'normalizedConsumption', 'amc', 'maxStockQuantity']).each(function (index, field) {
-          $scope.newNonFullSupply[field] = 0;
-        });
+        $scope.newNonFullSupply[field] = 0;
+      });
     $scope.newNonFullSupply.rnrId = $scope.$parent.rnr.id;
   }
 

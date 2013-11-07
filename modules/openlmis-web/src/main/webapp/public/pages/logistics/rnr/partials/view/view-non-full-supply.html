@@ -8,25 +8,50 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<div ng-controller="ViewNonFullSupplyController">
-  <div id="viewRnr" class="rnr-table" custom-horizontal-scroll>
-    <div ng-hide="page.nonFullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-    <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable">
-      <thead>
-      <tr ng-show="page.nonFullSupply.length">
-        <th class="col-{{programRnrColumn.name}}" ng-repeat="programRnrColumn in visibleNonFullSupplyColumns"
-            ng-bind="programRnrColumn.label"></th>
-      </tr>
-      </thead>
-      <tbody ng-show="visibleNonFullSupplyColumns" ng-repeat="rnrLineItem in page.nonFullSupply">
-      <tr>
-        <td class="productCategory" colspan="{{visibleNonFullSupplyColumns.length}}" ng-show="showCategory($index)"
-            ng-bind="rnrLineItem.productCategory"></td>
-      </tr>
-      <tr>
-        <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleNonFullSupplyColumns">
-            <span ng-switch on="column.name">
+<div>
+  <div ng-hide="page.nonFullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+  <div ng-show="page.nonFullSupply.length" id="viewRnr" class="rnr-table">
+    <div class="float-left left-table">
+      <table id="nonFullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+        <thead>
+        <tr class="fixed-head" adjust-height="scrollable-head">
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed"
+              ng-bind="column.label"></th>
+        </tr>
+        </thead>
 
+        <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
+        <tr>
+          <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.fixed.length}}"
+              ng-show="showCategory($index)"
+              ng-bind="rnrLineItem.productCategory"></td>
+        </tr>
+        <tr class="fixed-body{{ $index }}" adjust-height="scrollable-body{{ $index }}">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.fixed">
+            <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                  class="cell-text"></span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="float-left right-table" custom-horizontal-scroll>
+      <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable">
+        <thead>
+        <tr adjust-height="fixed-head" class="scrollable-head">
+          <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable"
+              ng-bind="column.label"></th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="rnrLineItem in page.nonFullSupply">
+        <tr>
+          <td class="productCategory" colspan="{{visibleColumns.nonFullSupply.scrollable.length}}"
+              ng-show="showCategory($index)"
+              ng-bind="rnrLineItem.productCategory"></td>
+        </tr>
+        <tr class="scrollable-body{{$index}}" adjust-height="fixed-body{{$index}}">
+          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">
+            <span ng-switch on="column.name">
                 <span ng-switch-when="price">
                   <span ng-bind='rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}"
                         class="cell-text"></span>
@@ -42,9 +67,11 @@
                         class="cell-text"></span>
                   </span>
             </span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="clear-both"></div>
   </div>
 </div>

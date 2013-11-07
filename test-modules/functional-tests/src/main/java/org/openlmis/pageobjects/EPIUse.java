@@ -85,30 +85,35 @@ public class EPIUse extends DistributionTab {
     rownumber = rownumber - 1;
     WebElement stockAtFirstOfMonth = testWebDriver.getElementByName("stockAtFirstOfMonth" + rownumber);
     sendKeys(stockAtFirstOfMonth, value);
+    stockAtFirstOfMonth.sendKeys(Keys.TAB);
   }
 
   public void enterValueInReceived(String value, int rownumber) {
     rownumber = rownumber - 1;
     WebElement received = testWebDriver.getElementByName("received" + rownumber);
     sendKeys(received, value);
+    received.sendKeys(Keys.TAB);
   }
 
   public void enterValueInDistributed(String value, int rownumber) {
     rownumber = rownumber - 1;
     WebElement distributed = testWebDriver.getElementByName("distributed" + rownumber);
     sendKeys(distributed, value);
+    distributed.sendKeys(Keys.TAB);
   }
 
   public void enterValueInLoss(String value, int rownumber) {
     rownumber = rownumber - 1;
     WebElement loss = testWebDriver.getElementByName("loss" + rownumber);
     sendKeys(loss, value);
+    loss.sendKeys(Keys.TAB);
   }
 
   public void enterValueInStockAtEndOfMonth(String value, int rownumber) {
     rownumber = rownumber - 1;
     WebElement stockAtEndOfMonth = testWebDriver.getElementByName("stockAtEndOfMonth" + rownumber);
     sendKeys(stockAtEndOfMonth, value);
+    stockAtEndOfMonth.sendKeys(Keys.TAB);
   }
 
   public void enterValueInExpirationDate(String value, int rownumber) {

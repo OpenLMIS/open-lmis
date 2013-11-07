@@ -79,3 +79,6 @@ rnrModule.date = function (element, ctrl, scope) {
       ctrl.$setValidity('date', valid);
   }
 };
+
+
+

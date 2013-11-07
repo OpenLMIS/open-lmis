@@ -19,6 +19,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatcher;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -36,6 +37,8 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -56,7 +59,9 @@ public class ProgramSupportedRepositoryTest {
   @Mock
   private ProgramSupportedMapper programSupportedMapper;
 
+  @InjectMocks
   private ProgramSupportedRepository programSupportedRepository;
+
   private DateTime now;
 
   @Before
@@ -64,7 +69,6 @@ public class ProgramSupportedRepositoryTest {
     mockStatic(DateTime.class);
     now = new DateTime(2012, 10, 10, 8, 0);
     when(DateTime.now()).thenReturn(now);
-    programSupportedRepository = new ProgramSupportedRepository(programSupportedMapper);
   }
 
   @Test
@@ -121,7 +125,7 @@ public class ProgramSupportedRepositoryTest {
     when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
 
 
-    programSupportedRepository.updateSupportedPrograms(facility);
+    assertTrue(programSupportedRepository.updateSupportedPrograms(facility));
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
     verify(programSupportedMapper).insert(argThat(programSupportedMatcher(facilityId, programSupported.getActive(),
@@ -140,7 +144,7 @@ public class ProgramSupportedRepositoryTest {
     List<ProgramSupported> previouslyProgramSupportedList = asList(programSupported);
     when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
 
-    programSupportedRepository.updateSupportedPrograms(facility);
+    assertTrue(programSupportedRepository.updateSupportedPrograms(facility));
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
     verify(programSupportedMapper).delete(facilityId, program.getId());
@@ -148,7 +152,29 @@ public class ProgramSupportedRepositoryTest {
   }
 
   @Test
-  public void shouldUpdateIfExist() throws Exception {
+  public void shouldNotUpdateIfAttributesDoesNotChanged() throws Exception {
+    Long facilityId = 100L;
+    Program program = new Program(1232L);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedProgram, program)));
+
+    Facility facility = make(a(defaultFacility, with(programSupportedList, new LinkedList<>(asList(programSupported)))));
+    facility.setId(facilityId);
+
+    List<ProgramSupported> previouslyProgramSupportedList = new LinkedList<>(asList(programSupported));
+    when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
+
+
+    assertFalse(programSupportedRepository.updateSupportedPrograms(facility));
+
+
+    verify(programSupportedMapper).getAllByFacilityId(facilityId);
+    verify(programSupportedMapper, never()).delete(anyLong(), anyLong());
+    verify(programSupportedMapper, never()).insert(any(ProgramSupported.class));
+  }
+
+  @Test
+  public void shouldUpdateIfAttributesChanged() throws Exception {
     Long facilityId = 100L;
     Program program = new Program(1232L);
 
@@ -163,7 +189,7 @@ public class ProgramSupportedRepositoryTest {
     when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
 
 
-    programSupportedRepository.updateSupportedPrograms(facility);
+    assertTrue(programSupportedRepository.updateSupportedPrograms(facility));
 
 
     verify(programSupportedMapper).getAllByFacilityId(facilityId);
@@ -172,8 +198,8 @@ public class ProgramSupportedRepositoryTest {
 
     verify(programSupportedMapper).update(argThat(programSupportedMatcher(facilityId, editedProgramSupported.getActive(),
       editedProgramSupported.getStartDate(), facility.getModifiedBy(), null)));
-  }
 
+  }
 
   @Test
   public void shouldGetAllSupportedProgramsForFacility() throws Exception {

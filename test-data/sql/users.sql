@@ -62,7 +62,7 @@ INSERT INTO users
 
 INSERT INTO USERS
 (id, userName, password, facilityId, firstName, lastName, email, verified, active) VALUES
-(700, 'commTrack', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
+(700, 'commTrack1', '0DShprXfNKp4xUug7wQQFpYzrQURNmRx1E73PJISTGQllQzpBGYgPcXQ9Zgp8BG49TvaxVBHjAK45wTTSt58bgieie',
  (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrack', 'Doe', 'commTrack@openlmis.com', TRUE, TRUE);
 
 
@@ -214,8 +214,8 @@ INSERT INTO role_assignments
   code = 'N3')),
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'Admin'), null, null),
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'View-Report'), null, null),
-((SELECT ID FROM USERS WHERE username = 'commTrack'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
-((SELECT ID FROM USERS WHERE username = 'commTrack'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null);
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null);
 
 INSERT INTO fulfillment_role_assignments
 (userId, roleId, facilityId) VALUES
@@ -232,5 +232,8 @@ INSERT INTO fulfillment_role_assignments
   code = 'F10')),
 ((SELECT ID FROM USERS WHERE username = 'lmuincharge'), (SELECT id FROM roles WHERE name = 'Shipment'), (SELECT id FROM
                                                                                                                      facilities WHERE
-  code = 'F11'));
+  code = 'F11')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Shipment'), (SELECT id FROM
+                                                                                                                       facilities WHERE
+    code = 'F10'));
 
