@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -368,6 +369,7 @@ public class TestCaseHelper {
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
+      assertFalse("Order file not downloaded",true);
     } finally {
       if (br != null) {
         try {
