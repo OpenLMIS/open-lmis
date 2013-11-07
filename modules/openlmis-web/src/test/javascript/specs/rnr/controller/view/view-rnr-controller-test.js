@@ -27,6 +27,7 @@ describe('ViewRnrController', function () {
     routeParams = {'programId': 2, 'rnr': 1, 'supplyType': 'fullSupply'};
     scope = $rootScope.$new();
     requisitionService = _requisitionService_;
+    spyOn(requisitionService, 'getMappedVisibleColumns');
     httpBackend = $httpBackend;
     controller = $controller;
     location = $location;
@@ -43,23 +44,30 @@ describe('ViewRnrController', function () {
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
-    expect(scope.visibleColumns.length).toEqual(5);
+    var expectedColumns = angular.copy(columns);
+
+    expect(requisitionService.getMappedVisibleColumns).toHaveBeenCalledWith(expectedColumns, jasmine.any(Array), jasmine.any(Array));
   });
 
-  it('should include approved quantity column if status  ordered', function () {
+  it('should include approved quantity column if status released', function () {
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'RELEASED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
-    expect(scope.visibleColumns.length).toEqual(5);
+    var expectedColumns = angular.copy(columns);
+
+    expect(requisitionService.getMappedVisibleColumns).toHaveBeenCalledWith(expectedColumns, jasmine.any(Array), jasmine.any(Array));
   });
 
-  it('should not include approved quantity column if status not approved nor ordered', function () {
+  it('should not include approved quantity column if status not approved nor released', function () {
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], status: 'INITIATED'};
     controller(ViewRnrController, {$scope: scope, $routeParams: routeParams, requisition: requisition, currency: {},
       pageSize: pageSize, rnrColumns: columns, regimenTemplate: regimenTemplate});
 
-    expect(scope.visibleColumns.length).toEqual(4);
+    var expectedColumns = angular.copy(columns);
+    expectedColumns.splice(5, 1);
+
+    expect(requisitionService.getMappedVisibleColumns).toHaveBeenCalledWith(expectedColumns, jasmine.any(Array), jasmine.any(Array));
   });
 
   it('should assign line items based on supply type', function () {
@@ -72,7 +80,7 @@ describe('ViewRnrController', function () {
     expect(rnr.fullSupplyLineItems.length).toEqual(scope.page.fullSupply.length);
   });
 
-  it('should set requisition type as Regular for regular requisition', function() {
+  it('should set requisition type as Regular for regular requisition', function () {
     var rnr = {emergency: false, fullSupplyLineItems: [
       {'id': 1}
     ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};
@@ -88,7 +96,7 @@ describe('ViewRnrController', function () {
   });
 
 
-  it('should set requisition type as Emergency for emergency requisition', function() {
+  it('should set requisition type as Emergency for emergency requisition', function () {
     var rnr = {emergency: true, fullSupplyLineItems: [
       {'id': 1}
     ], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 5}, status: 'INITIATED'};

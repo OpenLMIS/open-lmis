@@ -32,8 +32,7 @@ rnrModule.directive('adjustHeight', function ($timeout) {
           adjustHeight();
         }
       });
-      scope.$watch('visibleTab', adjustHeight)
-
+      scope.$watch('visibleTab', adjustHeight);
     }
   };
 });
