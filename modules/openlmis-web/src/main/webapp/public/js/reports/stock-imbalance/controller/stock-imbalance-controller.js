@@ -9,7 +9,7 @@
  */
 
 function StockImbalanceController($scope, $filter, ngTableParams,
-                                  StockImbalanceReport,RequisitionGroupsByProgramSchedule, AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
+                                  StockImbalanceReport,RequisitionGroupsByProgramSchedule,AllFacilites,GetFacilityByFacilityType,AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
     $scope.filterObject = {};
     $scope.showMessage = true;
     $scope.message = "Indicates a required field." ;
@@ -27,6 +27,8 @@ function StockImbalanceController($scope, $filter, ngTableParams,
         $scope.periods = data.periods;
         $scope.periods.unshift({'name':'-- Select a Period --'});
     });
+
+
 
 
     $scope.filterGrid = function () {
@@ -49,16 +51,25 @@ function StockImbalanceController($scope, $filter, ngTableParams,
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
-    });
+
+        });
 
     RequisitionGroups.get(function (data) {
         $scope.requisitionGroups = data.requisitionGroupList;
         $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
     });
+   /*
+   AllFacilites.get(function(data){
+        $scope.allFacilities = data.allFacilities;
+        $scope.allFacilities.unshift({'name':'-- All Facilities --','id':'0'});
+    }); */
 
     ReportFacilityTypes.get(function (data) {
         $scope.facilityTypes = data.facilityTypes;
         $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
+
+        $scope.allFacilities = [];
+        $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
     });
 
     Products.get(function (data) {
@@ -95,6 +106,7 @@ function StockImbalanceController($scope, $filter, ngTableParams,
             $scope.requisitionGroups = data.requisitionGroupList;
             $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
         });
+        $scope.loadFacilities();
     };
 
     $scope.$watch('stockImbalance.facilityTypeId', function (selection) {
@@ -110,19 +122,43 @@ function StockImbalanceController($scope, $filter, ngTableParams,
         } else {
             $scope.filterObject.facilityTypeId = 0;
         }
+        $scope.ChangeFacility();
         $scope.filterGrid();
 
     });
 
-    $scope.$watch('stockImbalance.facilityName', function (selection) {
-        if (selection !== undefined || selection === "") {
-            $scope.filterObject.facilityName = selection;
+
+    $scope.$watch('orderFillRate.facilityId', function (selection) {
+        if (selection == "All") {
+            $scope.filterObject.facilityId = -1;
+        } else if (selection !== undefined || selection === "") {
+            $scope.filterObject.facilityId = selection;
+            $.each($scope.allFacilities, function (item, idx) {
+                if (idx.id == selection) {
+                    $scope.filterObject.facility = idx.name;
+                }
+            });
 
         } else {
-            $scope.filterObject.facilityName = "";
+            $scope.filterObject.facilityId = 0;
+            $scope.filterObject.facility = "";
         }
         $scope.filterGrid();
+
     });
+
+    $scope.ChangeFacility = function(){
+
+        if(isUndefined($scope.filterObject.facilityType) || isUndefined($scope.filterObject.program)){
+            return;
+        }
+
+        GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
+
+            $scope.allFacilities =  data.facilities;
+            $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
+        });
+    };
 
     $scope.$watch('stockImbalance.productCategoryId', function (selection) {
         if (selection == "All") {
