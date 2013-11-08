@@ -41,8 +41,8 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td style="vertical-align: top">
-                        <table class="table table-hover table-bordered">
+                    <td style="vertical-align: top;width:250px">
+                        <table class="table table-hover table-bordered" style="width:250px">
                             <thead>
                             <tr class="gradient-header">
                                 <th>Facility Type
@@ -60,9 +60,8 @@
                             </tbody>
                         </table>
                     </td>
-                    <td>&nbsp;</td>
-                    <td style="vertical-align: top">
-                        <table class="table table-hover table-bordered">
+                    <td style="vertical-align: top;width:250px" >
+                        <table class="table table-hover table-bordered" style="width:250px">
                             <thead>
                             <tr class="gradient-header">
                                 <th>Code
@@ -111,14 +110,14 @@
                                 <td>
                                     <div>{{programProduct.product.code}}</div>
                                 </td>
-                                <td>
+                                <td style="width: 350px">
                                     <div>{{programProduct.product.primaryName}}</div>
                                 </td>
                                 <td style="padding-bottom:0px;padding-top:4px;">
-                                    <input type="text" ng-model="programProduct.minMonthsOfStock" ng-change="setDataChanged(programProduct)"/>
+                                    <input style="width: 100px" type="text" ng-model="programProduct.minMonthsOfStock" ng-change="setDataChanged(programProduct)"/>
                                 </td>
                                 <td style="padding-bottom:0px;padding-top:4px;">
-                                    <input type="text" ng-model="programProduct.maxMonthsOfStock" ng-change="setDataChanged(programProduct)"/>
+                                    <input style="width: 100px" type="text" ng-model="programProduct.maxMonthsOfStock" ng-change="setDataChanged(programProduct)"/>
                                 </td>
                             </tr>
                             </tbody>
