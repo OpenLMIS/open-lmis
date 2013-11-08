@@ -29,7 +29,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
-public class E2EManageFacility extends TestCaseHelper {
+public class ManageFacility extends TestCaseHelper {
 
 
   @BeforeMethod(groups = {"admin"})
@@ -83,36 +83,29 @@ public class E2EManageFacility extends TestCaseHelper {
 
     @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
     public void testVirtualFacilityDataPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+        String geoZone = "District 1";
+        String facilityType = "Lvl2 Hospital";
+
         setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertFacilities("F10", "F11");
         dbWrapper.insertVirtualFacility("V10","F10");
-
+        dbWrapper.insertGeographicZone("District 1","District 1","");
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
         ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+        manageFacilityPage.searchFacility("F10");
+        manageFacilityPage.clickFacilityList("F10");
+        manageFacilityPage.editFacilityType(facilityType);
+        manageFacilityPage.editGeographicZone(geoZone) ;
+        manageFacilityPage.saveFacility();
+
         manageFacilityPage.searchFacility("V10");
         manageFacilityPage.clickFacilityList("V10");
 
-        /*
-        manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-        manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-        HomePage homePageRestore = manageFacilityPage.enableFacility();
+        assertEquals(facilityType,manageFacilityPage.getFacilityType());
+        //assertEquals(geoZone,manageFacilityPage.getGeographicZone());
 
-        ManageFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
-        deleteFacilityPageRestore.searchFacility(date_time);
-        deleteFacilityPageRestore.clickFacilityList(date_time);
-        HomePage homePageEdit = deleteFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
-
-        ManageFacilityPage deleteFacilityPageEdit = homePageEdit.navigateSearchFacility();
-        deleteFacilityPageEdit.searchFacility(date_time);
-
-        ArrayList<String> programsSupported = new ArrayList<String>();
-        programsSupported.add("HIV");
-        programsSupported.add("ESSENTIAL MEDICINES");
-        deleteFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
-
-*/
     }
 
   @AfterMethod(groups = {"admin"})

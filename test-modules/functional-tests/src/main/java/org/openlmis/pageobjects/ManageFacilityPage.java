@@ -567,4 +567,24 @@ public class ManageFacilityPage extends Page {
     return new HomePage(testWebDriver);
   }
 
+  public void editFacilityType(String facilityTypeValue){
+    testWebDriver.waitForElementToAppear(facilityType);
+    testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
+  }
+
+  public String getFacilityType(){
+    testWebDriver.waitForElementToAppear(facilityType);
+    return testWebDriver.getFirstSelectedOption(facilityType).getText();
+  }
+
+  public void editGeographicZone(String geographicZoneValue){
+    testWebDriver.waitForElementToAppear(geographicZone);
+    testWebDriver.selectByVisibleText(geographicZone, geographicZoneValue);
+  }
+
+  public String getGeographicZone(){
+    testWebDriver.waitForElementToAppear(geographicZone);
+    return testWebDriver.getFirstSelectedOption(geographicZone).getText();
+  }
+
 }
