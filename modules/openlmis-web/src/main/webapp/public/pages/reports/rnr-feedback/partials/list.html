@@ -49,17 +49,6 @@
                                         </div>
                                     </div>
 
- <!--                               <div class="form-cell horizontalFilters">
-                                    <label class="labels">Year <span class="label-required"></span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="year">
-                                            <option ng-repeat="year in startYears" value="{{year}}">{{year}}</option>
-                                        </select>
-
-                                    </div>
-                                </div>
--->
                                     <div class="form-cell horizontalFilters" >
                                         <label class="labels">Schedule <span class="label-required">*</span></label>
 
@@ -92,28 +81,17 @@
                                 </div>
                                 </div>
                                 <div class="clearfix">
-                                    <!-- Facility Type-->
-<!--
-                                    <div class="form-cell horizontalFilters" >
-                                        <label class="labels">Facility Type</label>
 
-                                        <div class="form-field">
-                                            <select ui-select2 style="width:200px;" id="facility-type"  name="facilityType" ng-model="facilityType" ng-options="option.id as option.name for option in facilityTypes">
-                                                <option value="">-- All Facility Types --</option>
-                                            </select>
-                                        </div>
+                                <!-- Facility-->
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Facility Name<span  class="label-required"> *</span></label>
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
+                                            <option value="">-- All Facilities --</option>
+                                        </select>
                                     </div>
--->
-                                    <!-- Facility-->
-                                    <div class="form-cell horizontalFilters">
-                                        <label class="labels">Facility Name<span  class="label-required"> *</span></label>
-                                        <div class="form-field">
-                                            <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="facility" ng-options="option.id as option.code.concat('-').concat.(option.name) for option in allFacilities">
-                                                <option value="">-- All Facilities --</option>
-                                            </select>
-                                        </div>
 
-                                    </div>
+                                </div>
 
                                 <!-- Product-->
                                 <div class="form-cell horizontalFilters" >
@@ -149,28 +127,32 @@
                          </span>
                         </div>
 
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams" style="padding-top: 20px;">
-                            <tbody>
-                            <th>#</th>
-                            <th>Facility</th>
-                            <th>Product<br>Code</th>
-                            <th>Product<br>Name</th>
-                            <th>Unit</th>
-                            <th>Beginning<br>Balance</th>
-                            <th>Quantity<br>Received</th>
-                            <th>Quanity<br>Dispensed</th>
-                            <th>Adjust-<br>ments</th>
-                            <th>Physical<br>Count</th>
-                            <th>Adjusted<br>AMC</th>
-                            <th>New<br>EOP</th>
-                            <th>Quantity<br>Ordered</th>
-                            <th>Quantity<br>Supplied</th>
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                            <thead>
+                                <tr>
+                                    <!--<th style="font-size:12px">#</th>-->
+                                    <th style="font-size:12px">Facility</th>
+                                    <th style="font-size:12px">Product<br>Code</th>
+                                    <th style="font-size:12px">Product<br>Name</th>
+                                    <th style="font-size:12px">Unit</th>
+                                    <th style="font-size:12px">Beginning<br>Balance</th>
+                                    <th style="font-size:12px">Quantity<br>Received</th>
+                                    <th style="font-size:12px">Quanity<br>Dispensed</th>
+                                    <th style="font-size:12px">Adjust-<br>ments</th>
+                                    <th style="font-size:12px">Physical<br>Count</th>
+                                    <th style="font-size:12px">Adjusted<br>AMC</th>
+                                    <th style="font-size:12px">New<br>EOP</th>
+                                    <th style="font-size:12px">Quantity<br>Ordered</th>
+                                    <th style="font-size:12px">Quantity<br>Supplied</th>
+                                </tr>
+                            </thead>
 
+                            <tbody>
                             <tr ng-repeat="row in datarows | orderBy:['facility','productMain','productIndex']">
-                                <td style="width:10px" >{{row.no}}</td>
-                                <td style="..." >{{row.facility}}</td>
-                                <td style="width:150px" sortable="productCode" >{{ row.productCode }}</td>
-                                <td style="width:30%" sortable="product"  >{{ row.product }}</td>
+                                <!--<td style="width:10px" >{{row.no}}</td>-->
+                                <td style="width:150px" >{{row.facility}}</td>
+                                <td style="width:50px" sortable="productCode" >{{ row.productCode }}</td>
+                                <td style="width:200px" sortable="product"  >{{ row.product }}</td>
                                 <td style="width:80px" sortable="unit"  >{{ row.unit }}</td>
                                 <td class="number" style="{{ row.productIndex == 0 && row.err_open_balance == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="beginningBalance"  >{{ row.productIndex == 0 && (row.beginningBalance | number) || ''}}</td>
                                 <td class="number" style="{{ row.productIndex == 0 && row.err_qty_received == 1 && 'font-style: italic;font-weight: bold;' || ''}}" sortable="totalQuantityReceived"  >{{ row.productIndex == 0 && (row.totalQuantityReceived | number) || ''}}</td>
