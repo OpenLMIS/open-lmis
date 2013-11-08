@@ -412,15 +412,13 @@ public class ManageFacilityPage extends Page {
 
 
   public void searchFacility(String facilityCodeValue) {
-
     testWebDriver.waitForElementToAppear(searchFacilityTextField);
     sendKeys(searchFacilityTextField, facilityCodeValue);
-    testWebDriver.sleep(2000);
+    //testWebDriver.sleep(2000);
   }
 
   public void clickFacilityList(String facility){
-    testWebDriver.sleep(2000);
-
+    //testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]"));
     testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]").click();
     testWebDriver.waitForElementToAppear(facilityCode);
@@ -592,7 +590,8 @@ public class ManageFacilityPage extends Page {
     return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber +"]/td[1]").getText();
   }
 
-  public boolean getFirstProgramSupportedActive(){
-    return programsSupportedFirstActiveFlag.isSelected();
+  public boolean getProgramSupportedActive(int serialNumber){
+      testWebDriver.waitForElementToAppear(programsSupported);
+      return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber +"]/td[2]/input").isSelected();
   }
 }

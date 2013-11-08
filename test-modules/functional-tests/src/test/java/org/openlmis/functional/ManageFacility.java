@@ -142,12 +142,12 @@ public class ManageFacility extends TestCaseHelper {
         manageFacilityPage.clickFacilityList("V10");
 
         assertEquals("VACCINES",manageFacilityPage.getProgramSupported(1));
-        assertFalse("Program supported flag incorrect",manageFacilityPage.getFirstProgramSupportedActive());
+        assertFalse("Program supported flag incorrect",manageFacilityPage.getProgramSupportedActive(1));
 
         manageFacilityPage.activeInactiveFirstProgram();
         manageFacilityPage.saveFacility();
         manageFacilityPage.clickFacilityList("V10");
-        assertTrue("Program supported flag incorrect", manageFacilityPage.getFirstProgramSupportedActive());
+        assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
 
         homePage.navigateSearchFacility();
         manageFacilityPage.searchFacility("F10");
@@ -157,7 +157,21 @@ public class ManageFacility extends TestCaseHelper {
         manageFacilityPage.searchFacility("V10");
         manageFacilityPage.clickFacilityList("V10");
 
-        assertTrue("Program supported flag incorrect",manageFacilityPage.getFirstProgramSupportedActive());
+        assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+
+        homePage.navigateSearchFacility();
+        manageFacilityPage.searchFacility("F10");
+        manageFacilityPage.clickFacilityList("F10");
+        manageFacilityPage.addProgram("HIV",false);
+        manageFacilityPage.saveFacility();
+
+        manageFacilityPage.searchFacility("V10");
+        manageFacilityPage.clickFacilityList("V10");
+
+        assertEquals("HIV",manageFacilityPage.getProgramSupported(1));
+        assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+        assertEquals("VACCINES",manageFacilityPage.getProgramSupported(2));
+        assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
 
     }
 
