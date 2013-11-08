@@ -69,16 +69,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @And("^I access create facility page$")
-  public void nevigateCreateFacilityPage() throws Exception {
+  public void nevigateManageFacilityPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateCreateFacility();
   }
 
   @When("^I create \"([^\"]*)\" program supported facility$")
   public void createFacilityForProgram(String program) throws Exception {
-    CreateFacilityPage createFacilityPage = new CreateFacilityPage(testWebDriver);
+    ManageFacilityPage ManageFacilityPage = new ManageFacilityPage(testWebDriver);
 
-    date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    date_time = ManageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, catchmentPopulation);
     facility_code = facilityCodePrefix + date_time;
     facility_name = facilityNamePrefix + date_time;
@@ -86,8 +86,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see message for successfully created facility$")
   public void verify() throws Exception {
-    CreateFacilityPage createFacilityPage = new CreateFacilityPage(testWebDriver);
-    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
+    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
   }
 
   @When("^I create \"([^\"]*)\" role having \"([^\"]*)\" based \"([^\"]*)\" rights$")

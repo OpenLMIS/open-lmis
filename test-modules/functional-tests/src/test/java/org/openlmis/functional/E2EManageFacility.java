@@ -13,10 +13,9 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.CreateFacilityPage;
-import org.openlmis.pageobjects.DeleteFacilityPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ManageFacilityPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -47,40 +46,74 @@ public class E2EManageFacility extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
     String facilityCodePrefix = "FCcode";
     String facilityNamePrefix = "FCname";
 
-    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
-    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
     assertEquals("f", dbWrapper.getVirtualPropertyOfFacility(facilityCodePrefix+date_time));
 
-    DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
-    deleteFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    HomePage homePageRestore = deleteFacilityPage.enableFacility();
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
+    manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    HomePage homePageRestore = manageFacilityPage.enableFacility();
 
-    DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
-    deleteFacilityPageRestore.searchFacility(date_time);
-    deleteFacilityPageRestore.clickFacilityList(date_time);
-    HomePage homePageEdit = deleteFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
+    ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
+    manageFacilityPageRestore.searchFacility(date_time);
+    manageFacilityPageRestore.clickFacilityList(date_time);
+    HomePage homePageEdit = manageFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
 
-    DeleteFacilityPage deleteFacilityPageEdit = homePageEdit.navigateSearchFacility();
-    deleteFacilityPageEdit.searchFacility(date_time);
+    ManageFacilityPage manageFacilityPageEdit = homePageEdit.navigateSearchFacility();
+    manageFacilityPageEdit.searchFacility(date_time);
 
     ArrayList<String> programsSupported = new ArrayList<String>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");
-    deleteFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
+    manageFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
 
 
   }
+
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+    public void testVirtualFacilityDataPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+        dbWrapper.insertFacilities("F10", "F11");
+        dbWrapper.insertVirtualFacility("V10","F10");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+
+        ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+        manageFacilityPage.searchFacility("V10");
+        manageFacilityPage.clickFacilityList("V10");
+
+        /*
+        manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+        manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+        HomePage homePageRestore = manageFacilityPage.enableFacility();
+
+        ManageFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
+        deleteFacilityPageRestore.searchFacility(date_time);
+        deleteFacilityPageRestore.clickFacilityList(date_time);
+        HomePage homePageEdit = deleteFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
+
+        ManageFacilityPage deleteFacilityPageEdit = homePageEdit.navigateSearchFacility();
+        deleteFacilityPageEdit.searchFacility(date_time);
+
+        ArrayList<String> programsSupported = new ArrayList<String>();
+        programsSupported.add("HIV");
+        programsSupported.add("ESSENTIAL MEDICINES");
+        deleteFacilityPageEdit.verifyProgramSupported(programsSupported, date_time);
+
+*/
+    }
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {

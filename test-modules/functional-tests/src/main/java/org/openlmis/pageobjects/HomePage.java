@@ -231,7 +231,7 @@ public class HomePage extends Page {
     return new LoginPage(testWebDriver, baseurl);
   }
 
-  public CreateFacilityPage navigateCreateFacility() throws IOException {
+  public ManageFacilityPage navigateCreateFacility() throws IOException {
     assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
@@ -240,7 +240,7 @@ public class HomePage extends Page {
     verifyTabs();
     clickCreateFacilityButton();
     verifyHeader("Add new facility");
-    return new CreateFacilityPage(testWebDriver);
+    return new ManageFacilityPage(testWebDriver);
   }
 
   private void clickCreateFacilityButton() {
@@ -362,7 +362,7 @@ public class HomePage extends Page {
     return new ReportPage(testWebDriver);
   }
 
-  public DeleteFacilityPage navigateSearchFacility() throws IOException {
+  public ManageFacilityPage navigateSearchFacility() throws IOException {
     assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
@@ -370,7 +370,7 @@ public class HomePage extends Page {
     testWebDriver.keyPress(manageLink);
     testWebDriver.waitForElementToAppear(facilitiesTab);
     facilitiesTab.click();
-    return new DeleteFacilityPage(testWebDriver);
+    return new ManageFacilityPage(testWebDriver);
   }
 
 

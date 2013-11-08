@@ -14,7 +14,6 @@ import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pageobjects.*;
 import org.openlmis.restapi.domain.Agent;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -109,19 +108,19 @@ public class CreateUpdateCHW extends JsonUtility {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(agentCode);
-    deleteFacilityPage.clickFacilityList(agentCode);
-    deleteFacilityPage.disableFacility(agentCode, DEFAULT_AGENT_NAME);
+    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(agentCode);
+    manageFacilityPage.clickFacilityList(agentCode);
+    manageFacilityPage.disableFacility(agentCode, DEFAULT_AGENT_NAME);
 
-    deleteFacilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
-    HomePage homePageRestore = deleteFacilityPage.enableFacility();
+    manageFacilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
+    HomePage homePageRestore = manageFacilityPage.enableFacility();
 
-    DeleteFacilityPage deleteFacilityPageRestore = homePageRestore.navigateSearchFacility();
-    deleteFacilityPageRestore.searchFacility(agentCode);
-    deleteFacilityPageRestore.clickFacilityList(agentCode);
-    deleteFacilityPage.saveFacility();
-    deleteFacilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
+    ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
+    manageFacilityPageRestore.searchFacility(agentCode);
+    manageFacilityPageRestore.clickFacilityList(agentCode);
+    manageFacilityPage.saveFacility();
+    manageFacilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
     assertEquals(TRUE_FLAG, dbWrapper.getVirtualPropertyOfFacility(agentCode));
     homePage.logout(baseUrlGlobal);
 

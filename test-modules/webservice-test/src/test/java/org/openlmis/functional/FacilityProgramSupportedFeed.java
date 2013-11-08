@@ -104,9 +104,9 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
     assertTrue(responseEntity.getResponse().contains(expected));
 
-    DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
+    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
     createFacilityPage.addProgram("VACCINES", true);
     createFacilityPage.saveFacility();
 
@@ -117,9 +117,9 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     assertTrue("responseEntity.getResponse() : " + responseEntity.getResponse(), feedJSONList.get(1).contains("\"active\":true"));
     assertTrue("responseEntity.getResponse() : " + responseEntity.getResponse(), feedJSONList.get(1).contains("\"active\":false"));
 
-    deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
+    manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
     createFacilityPage.removeFirstProgram();
     createFacilityPage.saveFacility();
 
@@ -130,9 +130,9 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     assertTrue("feedJSONList.get(2) : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":false"));
     assertFalse("feedJSONList.get(2) : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":true"));
 
-    deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
+    manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
     createFacilityPage.activeInactiveFirstProgram();
     createFacilityPage.saveFacility();
 

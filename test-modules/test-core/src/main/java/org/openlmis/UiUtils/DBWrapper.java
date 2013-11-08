@@ -285,6 +285,18 @@ public class DBWrapper {
 
   }
 
+  public void insertVirtualFacility(String facilityCode, String parentFacilityCode) throws IOException, SQLException {
+    update("INSERT INTO facilities\n" +
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility,parentfacilityid) values\n" +
+      "('" + facilityCode + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'TRUE',(SELECT id FROM facilities WHERE code = '" + parentFacilityCode + "'))");
+
+    update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES" +
+                " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 1, '11/11/12', true, 1)," +
+                " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 2, '11/11/12', true, 1)," +
+                " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 5, '11/11/12', true, 1)");
+
+  }
+
   public void deletePeriod(String periodName) throws IOException, SQLException {
     update("delete from processing_periods where name='" + periodName + "';");
   }

@@ -201,12 +201,12 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
-    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
+    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     String facility_code = facilityCodePrefix + date_time;
     String facility_name = facilityNamePrefix + date_time;
-    createFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
+    manageFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
 
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add(CREATE_REQUISITION);
