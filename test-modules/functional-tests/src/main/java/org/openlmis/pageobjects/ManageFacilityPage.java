@@ -587,4 +587,12 @@ public class ManageFacilityPage extends Page {
     return testWebDriver.getFirstSelectedOption(geographicZone).getText();
   }
 
+  public String getProgramSupported(int serialNumber){
+    testWebDriver.waitForElementToAppear(programsSupported);
+    return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber +"]/td[1]").getText();
+  }
+
+  public boolean getFirstProgramSupportedActive(){
+    return programsSupportedFirstActiveFlag.isSelected();
+  }
 }

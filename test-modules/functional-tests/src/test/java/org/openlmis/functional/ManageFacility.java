@@ -23,6 +23,8 @@ import org.testng.annotations.*;
 import java.util.ArrayList;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -82,14 +84,14 @@ public class ManageFacility extends TestCaseHelper {
   }
 
     @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-    public void testVirtualFacilityDataPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+    public void testFacilityTypeAndGeoZonePropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
         String geoZone = "District 1";
         String facilityType = "Lvl2 Hospital";
 
         setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertFacilities("F10", "F11");
-        dbWrapper.insertVirtualFacility("V10","F10");
-        dbWrapper.insertGeographicZone("District 1","District 1","");
+        dbWrapper.insertVirtualFacility("V10", "F10");
+        dbWrapper.insertGeographicZone("District 1","District 1","Dodoma");
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
@@ -104,7 +106,58 @@ public class ManageFacility extends TestCaseHelper {
         manageFacilityPage.clickFacilityList("V10");
 
         assertEquals(facilityType,manageFacilityPage.getFacilityType());
-        //assertEquals(geoZone,manageFacilityPage.getGeographicZone());
+        assertEquals(geoZone,manageFacilityPage.getGeographicZone());
+
+    }
+
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+    public void testProgramSupportedPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+        dbWrapper.insertFacilities("F10", "F11");
+        dbWrapper.insertVirtualFacility("V10","F10");
+        dbWrapper.insertGeographicZone("District 1","District 1","Dodoma");
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+
+        ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+        manageFacilityPage.searchFacility("F10");
+        manageFacilityPage.clickFacilityList("F10");
+        manageFacilityPage.removeFirstProgram();
+        manageFacilityPage.saveFacility();
+
+        manageFacilityPage.searchFacility("V10");
+        manageFacilityPage.clickFacilityList("V10");
+
+        assertEquals("ESSENTIAL MEDICINES",manageFacilityPage.getProgramSupported(1));
+        assertEquals("VACCINES",manageFacilityPage.getProgramSupported(2));
+
+        homePage.navigateSearchFacility();
+        manageFacilityPage.searchFacility("F10");
+        manageFacilityPage.clickFacilityList("F10");
+        manageFacilityPage.removeFirstProgram();
+        manageFacilityPage.activeInactiveFirstProgram();
+        manageFacilityPage.saveFacility();
+
+        manageFacilityPage.searchFacility("V10");
+        manageFacilityPage.clickFacilityList("V10");
+
+        assertEquals("VACCINES",manageFacilityPage.getProgramSupported(1));
+        assertFalse("Program supported flag incorrect",manageFacilityPage.getFirstProgramSupportedActive());
+
+        manageFacilityPage.activeInactiveFirstProgram();
+        manageFacilityPage.saveFacility();
+        manageFacilityPage.clickFacilityList("V10");
+        assertTrue("Program supported flag incorrect", manageFacilityPage.getFirstProgramSupportedActive());
+
+        homePage.navigateSearchFacility();
+        manageFacilityPage.searchFacility("F10");
+        manageFacilityPage.clickFacilityList("F10");
+        manageFacilityPage.saveFacility();
+
+        manageFacilityPage.searchFacility("V10");
+        manageFacilityPage.clickFacilityList("V10");
+
+        assertTrue("Program supported flag incorrect",manageFacilityPage.getFirstProgramSupportedActive());
 
     }
 
