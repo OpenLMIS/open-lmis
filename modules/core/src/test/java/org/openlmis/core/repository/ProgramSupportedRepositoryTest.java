@@ -155,13 +155,16 @@ public class ProgramSupportedRepositoryTest {
   public void shouldNotUpdateIfAttributesDoesNotChanged() throws Exception {
     Long facilityId = 100L;
     Program program = new Program(1232L);
+    Program program2 = new Program(555L);
+    Date nullDate = null;
 
     ProgramSupported programSupported = make(a(defaultProgramSupported, with(supportedProgram, program)));
+    ProgramSupported programSupported2 = make(a(defaultProgramSupported, with(supportedProgram, program2), with(startDate, nullDate)));
 
-    Facility facility = make(a(defaultFacility, with(programSupportedList, new LinkedList<>(asList(programSupported)))));
+    Facility facility = make(a(defaultFacility, with(programSupportedList, new LinkedList<>(asList(programSupported, programSupported2)))));
     facility.setId(facilityId);
 
-    List<ProgramSupported> previouslyProgramSupportedList = new LinkedList<>(asList(programSupported));
+    List<ProgramSupported> previouslyProgramSupportedList = new LinkedList<>(asList(programSupported, programSupported2));
     when(programSupportedMapper.getAllByFacilityId(facilityId)).thenReturn(previouslyProgramSupportedList);
 
 
