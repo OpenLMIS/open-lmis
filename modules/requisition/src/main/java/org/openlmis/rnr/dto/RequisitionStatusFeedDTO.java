@@ -10,9 +10,7 @@
 
 package org.openlmis.rnr.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Delegate;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.dto.BaseFeedDTO;
 import org.openlmis.rnr.domain.Rnr;
@@ -31,9 +29,10 @@ public class RequisitionStatusFeedDTO extends BaseFeedDTO {
     this.requisitionId = rnr.getId();
     this.requisitionStatus = rnr.getStatus();
     this.emergency = rnr.isEmergency();
-    // TODO - Send UTC timestamps - open issue
-    if (rnr.getPeriod() == null) return;
-    this.startDate = rnr.getPeriod().getStartDate().getTime();
-    this.endDate = rnr.getPeriod().getEndDate().getTime();
+
+    if (rnr.getPeriod() != null) {
+      this.startDate = rnr.getPeriod().getStartDate().getTime();
+      this.endDate = rnr.getPeriod().getEndDate().getTime();
+    }
   }
 }

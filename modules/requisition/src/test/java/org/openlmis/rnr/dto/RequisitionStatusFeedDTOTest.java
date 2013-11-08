@@ -17,6 +17,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -28,22 +29,24 @@ public class RequisitionStatusFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
+    long startDate = rnr.getPeriod().getStartDate().getTime();
+    long endDate = rnr.getPeriod().getEndDate().getTime();
 
     RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
     assertThat(feed.getRequisitionId(), is(rnr.getId()));
     assertThat(feed.getRequisitionStatus(), is(rnr.getStatus()));
     assertThat(feed.isEmergency(), is(rnr.isEmergency()));
-    assertThat(feed.getStartDate(), is(rnr.getPeriod().getStartDate().getTime()));
-    assertThat(feed.getEndDate(), is(rnr.getPeriod().getEndDate().getTime()));
-    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325356200000,\"endDate\":1328034600000}"));
+    assertThat(feed.getStartDate(), is(startDate));
+    assertThat(feed.getEndDate(), is(endDate));
+    String serializedContent = format("{\"requisitionId\":%d,\"requisitionStatus\":\"%s\",\"emergency\":%s,\"startDate\":%d,\"endDate\":%d}",
+      rnr.getId(), rnr.getStatus(), rnr.isEmergency(), startDate, endDate);
+    assertThat(feed.getSerializedContents(), is(serializedContent));
   }
 
   @Test
   public void shouldNotSetStartDateAndEndDateIfPeriodIsNull() throws Exception {
-    ProcessingPeriod processingPeriod = null;
-    Rnr rnr = make(a(defaultRnr, with(period, processingPeriod)));
-    rnr.setPeriod(null);
+    Rnr rnr = make(a(defaultRnr, with(period, (ProcessingPeriod) null)));
 
     RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
