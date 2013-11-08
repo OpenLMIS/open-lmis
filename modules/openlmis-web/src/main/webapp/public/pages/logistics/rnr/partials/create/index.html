@@ -12,7 +12,7 @@
 <div xmlns="http://www.w3.org/1999/html">
 
   <div class="rnr-tabs clearfix">
-    <ul class="clearfix">
+    <ul class="clearfix" set-focus>
       <li
         ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
         <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
@@ -29,7 +29,8 @@
       </a>
     </span>
     <span class="pull-right print-button">
-      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" ng-show="fullScreen" openlmis-message="button.print" target="_blank"></a>
+      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" ng-show="fullScreen"
+         openlmis-message="button.print" target="_blank"></a>
     </span>
   </div>
 
@@ -44,7 +45,8 @@
       <span ng-show="visibleTab === 'fullSupply'">
         <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
       </span>
-    <div ng-hide="visibleTab === 'regimen'">
+
+    <div ng-hide="visibleTab === 'regimen'" set-focus>
       <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"
                            check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
     </div>
