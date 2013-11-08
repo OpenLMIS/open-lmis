@@ -62,7 +62,7 @@ public class FacilityFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
@@ -70,8 +70,8 @@ public class FacilityFeed extends JsonUtility {
     String facilityNamePrefix = "FCname";
     String catchmentPopulationValue = "100";
 
-    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
-    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
+    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
     ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\""));
@@ -98,7 +98,7 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"Comments\""));
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+    homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
     manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
@@ -127,16 +127,16 @@ public class FacilityFeed extends JsonUtility {
     manageFacilityPage = homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.addProgram("VACCINES", true);
-    createFacilityPage.saveFacility();
+    manageFacilityPage.addProgram("VACCINES", true);
+    manageFacilityPage.saveFacility();
     Thread.sleep(5000);
     assertEquals(3, feedJSONList.size());
 
     manageFacilityPage = homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.removeFirstProgram();
-    createFacilityPage.saveFacility();
+    manageFacilityPage.removeFirstProgram();
+    manageFacilityPage.saveFacility();
 
     Thread.sleep(5000);
     assertEquals(3, feedJSONList.size());

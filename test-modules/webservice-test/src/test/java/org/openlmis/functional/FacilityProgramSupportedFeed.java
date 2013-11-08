@@ -83,15 +83,15 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
     String facilityCodePrefix = "FCcode";
     String facilityNamePrefix = "FCname";
 
-    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
-    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
+    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
     String str_date = date_time.split("-")[0].substring(0, 6) + "25";
     DateFormat formatter;
@@ -104,11 +104,11 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
     assertTrue(responseEntity.getResponse().contains(expected));
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+    homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.addProgram("VACCINES", true);
-    createFacilityPage.saveFacility();
+    manageFacilityPage.addProgram("VACCINES", true);
+    manageFacilityPage.saveFacility();
 
     Thread.sleep(5000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
@@ -120,8 +120,8 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage = homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.removeFirstProgram();
-    createFacilityPage.saveFacility();
+    manageFacilityPage.removeFirstProgram();
+    manageFacilityPage.saveFacility();
 
     Thread.sleep(5000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
@@ -133,8 +133,8 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage = homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.activeInactiveFirstProgram();
-    createFacilityPage.saveFacility();
+    manageFacilityPage.activeInactiveFirstProgram();
+    manageFacilityPage.saveFacility();
 
     Thread.sleep(5000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
