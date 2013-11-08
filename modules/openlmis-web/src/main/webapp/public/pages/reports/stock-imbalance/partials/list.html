@@ -35,7 +35,7 @@
                                     <label class="labels">Schedule <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule"  ng-model="stockImbalance.scheduleId">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule"  ng-change="ChangeSchedule()" ng-model="stockImbalance.scheduleId">
                                             <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
                                         </select>
                                     </div>
@@ -101,6 +101,18 @@
                                             <option ng-repeat="option in requisitionGroups" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
+                                </div>
+
+                                <div class="form-cell horizontalFilters">
+
+                                    <label class="labels">Facility Name</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" id="facility-name"  name="facility" ng-model="orderFillRate.facilityId" ng-change="filterGrid();" required="true">
+                                            <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                                        </select>
+                                    </div>
+
                                 </div>
                                 <div class="clearfix"></div>
 
