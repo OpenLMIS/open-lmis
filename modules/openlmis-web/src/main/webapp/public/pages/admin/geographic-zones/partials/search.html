@@ -21,7 +21,7 @@
           ng-init="showGeographicZonesSearchResults('searchGeographicZone')" on-keyup="filterGeographicZones('searchGeographicZone')" placeholder="Enter geographic zone name"/>
 
 
-    <div>  <!--ng-show="query.length > 2">-->
+    <div>
         <h3 ng-show="query.length>0">
             <ng-pluralize count="resultCount"
                           when="{ 0: 'No matches found for \'{{query}}\'',
