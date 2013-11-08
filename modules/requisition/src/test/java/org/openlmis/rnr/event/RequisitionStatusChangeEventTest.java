@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RequisitionStatusFeedDTO;
+import org.openlmis.rnr.service.NotificationServices;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
