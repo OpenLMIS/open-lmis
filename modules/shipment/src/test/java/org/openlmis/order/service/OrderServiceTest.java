@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
@@ -66,6 +67,9 @@ public class OrderServiceTest {
 
   @Mock
   private OrderEventService orderEventService;
+
+  @Mock
+  private ProgramService programService;
 
   @Mock
   private SupplyLineService supplyLineService;
@@ -265,6 +269,7 @@ public class OrderServiceTest {
 
     Rnr rnr = new Rnr();
     rnr.setId(rnrId);
+    rnr.setProgram(new Program());
     RnrLineItem rnrLineItem = new RnrLineItem();
     List<RnrLineItem> lineItems = new ArrayList<>();
     rnrLineItem.setPacksToShip(0);
@@ -275,7 +280,7 @@ public class OrderServiceTest {
 
     when(orderRepository.getById(orderId)).thenReturn(order);
     when(requisitionService.getFullRequisitionById(rnr.getId())).thenReturn(rnr);
-
+    when(programService.getById(rnr.getProgram().getId())).thenReturn(new Program());
     Order expectedOrder = orderService.getOrder(orderId);
 
     verify(orderRepository).getById(orderId);

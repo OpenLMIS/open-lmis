@@ -18,6 +18,7 @@ import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
@@ -39,6 +40,6 @@ public class OrderStatusFeedDTOTest {
     assertThat(feed.getEndDate(), is(rnr.getPeriod().getEndDate().getTime()));
     assertThat(feed.getOrderId(), is(order.getId()));
     assertThat(feed.getOrderStatus(), is(order.getStatus()));
-    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325356200000,\"endDate\":1328034600000,\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
+      assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325394000000,\"endDate\":1328072400000,\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
   }
 }
