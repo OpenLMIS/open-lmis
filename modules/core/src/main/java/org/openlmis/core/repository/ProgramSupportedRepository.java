@@ -112,8 +112,13 @@ public class ProgramSupportedRepository {
   }
 
   private boolean changeInProgramSupported(ProgramSupported ps1, ProgramSupported ps2) {
-    return !(ps1.getActive() == ps2.getActive() &&
-      ps1.getStartDate().equals(ps2.getStartDate()));
+    if (ps1.getActive() != ps2.getActive()) {
+      return true;
+    }
+    if (ps1.getStartDate() == null) {
+      return ps2.getStartDate() != null;
+    }
+    return !(ps1.getStartDate().equals(ps2.getStartDate()));
   }
 
 }

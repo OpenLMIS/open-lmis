@@ -62,7 +62,7 @@ public class FacilityFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    CreateFacilityPage createFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";
@@ -70,8 +70,8 @@ public class FacilityFeed extends JsonUtility {
     String facilityNamePrefix = "FCname";
     String catchmentPopulationValue = "100";
 
-    String date_time = createFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
-    createFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
+    String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, catchmentPopulationValue);
+    manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
     ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + facilityCodePrefix + date_time + "\""));
@@ -98,12 +98,12 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"Comments\""));
 
-    DeleteFacilityPage deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
-    deleteFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
-    deleteFacilityPage.enableFacility();
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
+    manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
+    manageFacilityPage.enableFacility();
     responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -124,19 +124,19 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"operatedBy\":\"" + operatedBy + "\""));
 
-    deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.addProgram("VACCINES", true);
-    createFacilityPage.saveFacility();
+    manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
+    manageFacilityPage.addProgram("VACCINES", true);
+    manageFacilityPage.saveFacility();
     Thread.sleep(5000);
     assertEquals(3, feedJSONList.size());
 
-    deleteFacilityPage = homePage.navigateSearchFacility();
-    deleteFacilityPage.searchFacility(date_time);
-    deleteFacilityPage.clickFacilityList(date_time);
-    createFacilityPage.removeFirstProgram();
-    createFacilityPage.saveFacility();
+    manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
+    manageFacilityPage.removeFirstProgram();
+    manageFacilityPage.saveFacility();
 
     Thread.sleep(5000);
     assertEquals(3, feedJSONList.size());

@@ -99,7 +99,7 @@ describe('ViewRnrListController', function () {
 
   it('should filter requisitions against program name and return no results if not found', function () {
     scope.requisitions = [
-      {'status': "abcd"}
+      {'requisitionStatus': "abcd"}
     ];
     scope.query = "first";
 
@@ -110,8 +110,8 @@ describe('ViewRnrListController', function () {
 
   it('should filter requisitions against program name and return results', function () {
     scope.requisitions = [
-      {'status': "first requisition"},
-      {'status': "abcd"}
+      {'requisitionStatus': "first requisition"},
+      {'requisitionStatus': "abcd"}
     ];
     scope.query = "first";
 
