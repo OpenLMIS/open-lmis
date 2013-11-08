@@ -126,7 +126,7 @@ public class RequisitionGroupMemberServiceTest {
     when(requisitionGroupProgramScheduleRepository.getProgramIDsForRequisitionGroup(RG_ID)).thenReturn(new ArrayList<Long>());
 
     expectedEx.expect(DataException.class);
-    expectedEx.expect(dataExceptionMatcher("No Program(s) mapped for Requisition Group"));
+    expectedEx.expect(dataExceptionMatcher("error.no.program.mapped.requisition.group"));
 
     service.save(requisitionGroupMember);
   }

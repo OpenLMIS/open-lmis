@@ -104,7 +104,8 @@ public class RoleRightsServiceTest {
             VIEW_DISTRICT_CONSUMPTION_REPORT,
             VIEW_ORDER_REPORT,
             VIEW_STOCK_IMBALANCE_REPORT,
-            VIEW_RNR_FEEDBACK_REPORT);
+            VIEW_RNR_FEEDBACK_REPORT,
+            VIEW_ORDER_FILL_RATE_REPORT);
 
     assertThat(allRights, is(alphabeticalRights));
   }
