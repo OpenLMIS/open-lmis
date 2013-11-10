@@ -18,10 +18,12 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.builder.RequisitionGroupBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.*;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramSupportedService;
+import org.openlmis.core.service.RequisitionGroupMemberService;
+import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Agent;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -32,13 +34,10 @@ import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.code;
-import static org.openlmis.core.builder.RequisitionGroupBuilder.defaultRequisitionGroup;
 import static org.openlmis.restapi.builder.AgentBuilder.defaultCHW;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -92,7 +91,7 @@ public class RestAgentServiceTest {
 
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     when(requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(baseFacility.getId())).
-        thenReturn(asList(new RequisitionGroupMember(requisitionGroup, baseFacility)));
+      thenReturn(asList(new RequisitionGroupMember(requisitionGroup, baseFacility)));
 
     restAgentService.create(agent, principal.getName());
 
@@ -131,9 +130,43 @@ public class RestAgentServiceTest {
     Facility chwFacility = spy(new Facility());
     chwFacility.setVirtualFacility(true);
     chwFacility.setEnabled(true);
+    chwFacility.setParentFacilityId(1l);
     whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
     when(userService.getByUserName(user.getUserName())).thenReturn(user);
+
+    restAgentService.update(agent, principal.getName());
+
+    verify(chwFacility).setName(agent.getAgentName());
+    verify(chwFacility).setMainPhone(agent.getPhoneNumber());
+    verify(chwFacility).setActive(Boolean.parseBoolean(agent.getActive()));
+    verify(chwFacility, times(2)).setParentFacilityId(baseFacility.getId());
+    verify(chwFacility).setGeographicZone(baseFacility.getGeographicZone());
+    verify(chwFacility).setFacilityType(baseFacility.getFacilityType());
+    verify(facilityService).update(chwFacility);
+    verify(requisitionGroupMemberService, never()).deleteMembersFor(chwFacility);
+  }
+
+  @Test
+  public void shouldUpdateACHWFacilityAndRequisitionGroupIfParentChanges() throws Exception {
+    Agent agent = make(a(defaultCHW));
+
+    Facility baseFacility = getBaseFacility(agent);
+
+    when(facilityService.getFacilityWithReferenceDataForCode(agent.getParentFacilityCode())).thenReturn(baseFacility);
+    Date currentTimeStamp = mock(Date.class);
+    whenNew(Date.class).withNoArguments().thenReturn(currentTimeStamp);
+
+    Facility chwFacility = spy(new Facility());
+    chwFacility.setVirtualFacility(true);
+    chwFacility.setEnabled(true);
+    chwFacility.setParentFacilityId(3l);
+    whenNew(Facility.class).withNoArguments().thenReturn(chwFacility);
+    when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
+    when(userService.getByUserName(user.getUserName())).thenReturn(user);
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    when(requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(baseFacility.getId())).
+      thenReturn(asList(new RequisitionGroupMember(requisitionGroup, baseFacility)));
 
     restAgentService.update(agent, principal.getName());
 
@@ -144,6 +177,10 @@ public class RestAgentServiceTest {
     verify(chwFacility).setGeographicZone(baseFacility.getGeographicZone());
     verify(chwFacility).setFacilityType(baseFacility.getFacilityType());
     verify(facilityService).update(chwFacility);
+    verify(requisitionGroupMemberService).deleteMembersFor(chwFacility);
+    verify(requisitionGroupMemberService).getAllRequisitionGroupMembersByFacility(baseFacility.getId());
+    ArgumentCaptor<RequisitionGroupMember> captor = ArgumentCaptor.forClass(RequisitionGroupMember.class);
+    verify(requisitionGroupMemberService).save(captor.capture());
   }
 
   @Test

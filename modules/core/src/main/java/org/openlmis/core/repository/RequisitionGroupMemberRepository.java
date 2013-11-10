@@ -62,4 +62,8 @@ public class RequisitionGroupMemberRepository {
     mapper.deleteMembersForVirtualFacility(parentFacility);
     mapper.copyToVirtualFacilities(parentFacility);
   }
+
+  public void deleteMembersFor(Facility facility){
+    mapper.deleteMembersFor(facility);
+  }
 }

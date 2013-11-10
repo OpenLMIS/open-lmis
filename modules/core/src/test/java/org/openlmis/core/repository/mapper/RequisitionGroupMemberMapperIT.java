@@ -91,6 +91,15 @@ public class RequisitionGroupMemberMapperIT {
   }
 
   @Test
+  public void shouldDeleteRequisitionGroupToFacilityMapping(){
+    requisitionGroupMemberMapper.insert(requisitionGroupMember);
+
+    requisitionGroupMemberMapper.deleteMembersFor(facility);
+
+    assertThat(requisitionGroupMemberMapper.getAllRequisitionGroupMembersByFacility(facility.getId()).size(), is(0));
+  }
+
+  @Test
   public void shouldGetProgramsMappedToRequisitionGroupByFacilityId() throws Exception {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = new RequisitionGroupProgramSchedule();
     requisitionGroupProgramSchedule.setProgram(make(a(defaultProgram)));

@@ -68,6 +68,7 @@ public class RestAgentService {
   }
 
   public void update(Agent agent, String userName) {
+    User user = userService.getByUserName(userName);
     if (agent.getActive() == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
@@ -79,9 +80,14 @@ public class RestAgentService {
     chwFacility.setName(agent.getAgentName());
     chwFacility.setMainPhone(agent.getPhoneNumber() == null ? chwFacility.getMainPhone() : agent.getPhoneNumber());
     chwFacility.setActive(Boolean.parseBoolean(agent.getActive()));
+    Long previousParent = chwFacility.getParentFacilityId();
     fillBaseFacility(agent, chwFacility);
+    if(!previousParent.equals(chwFacility.getParentFacilityId())) {
+      requisitionGroupMemberService.deleteMembersFor(chwFacility);
+      saveRequisitionGroupMembers(chwFacility, user);
+    }
     chwFacility.setModifiedDate(new Date());
-    chwFacility.setModifiedBy(userService.getByUserName(userName).getId());
+    chwFacility.setModifiedBy(user.getId());
     facilityService.update(chwFacility);
   }
 
