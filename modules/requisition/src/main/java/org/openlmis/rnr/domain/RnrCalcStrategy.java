@@ -38,7 +38,6 @@ public class RnrCalcStrategy {
     int denominator = period.getNumberOfMonths() * (1 + previousNormalizedConsumptions.size());
     return (new BigDecimal(normalizedConsumption).add(sumOfPreviousNormalizedConsumptions(previousNormalizedConsumptions))).
       divide(new BigDecimal(denominator), DECIMAL64).setScale(0, HALF_UP).intValue();
-
   }
 
   public Integer calculateMaxStockQuantity(Integer maxMonthsOfStock, Integer amc) {
@@ -138,6 +137,9 @@ public class RnrCalcStrategy {
 
   public Integer calculateDefaultApprovedQuantity(boolean fullSupply, Integer calculatedOrderQuantity, Integer quantityRequested) {
     // the quantity requested should always override the calculated quantity.
+    if(quantityRequested == null && calculatedOrderQuantity != null){
+      return calculatedOrderQuantity;
+    }
     return quantityRequested;
   }
 }
