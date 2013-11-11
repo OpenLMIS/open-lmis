@@ -335,8 +335,9 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode("active", agentCode), "t");
     assertEquals(dbWrapper.getFacilityFieldBYCode("enabled", agentCode), TRUE_FLAG);
     assertEquals(dbWrapper.getFacilityFieldBYCode("virtualFacility", agentCode), TRUE_FLAG);
+    assertEquals(dbWrapper.getRequisitionGroupId(firstParentFacility) , dbWrapper.getRequisitionGroupId(agentCode));
 
-    agentJson.setParentFacilityCode(updateParentFacility);
+      agentJson.setParentFacilityCode(updateParentFacility);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
         UPDATE_URL + agentCode + JSON_EXTENSION,
