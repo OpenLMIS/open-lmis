@@ -578,28 +578,14 @@ public class FacilityMapperIT {
     Program program1 = new Program(1L);
     Program program2 = new Program(2L);
 
-    ProgramSupported programSupported1 = make(a(defaultProgramSupported,
-      with(supportedProgram, program1),
-      with(supportedFacilityId, facility1.getId()),
-      with(dateModified, date1)));
-    programSupportedMapper.insert(programSupported1);
-
-    ProgramSupported programSupported2 = make(a(defaultProgramSupported,
-      with(supportedProgram, program1),
-      with(supportedFacilityId, facility2.getId()),
-      with(dateModified, date2)));
-    programSupportedMapper.insert(programSupported2);
-
-    ProgramSupported programSupported3 = make(a(defaultProgramSupported,
-      with(supportedProgram, program2),
-      with(supportedFacilityId, facility1.getId()),
-      with(dateModified, date2)));
-    programSupportedMapper.insert(programSupported3);
-
+    insertProgramSupported(program1, facility1, date1);
+    insertProgramSupported(program1, facility2, date2);
+    insertProgramSupported(program2, facility1, date2);
 
     List<Facility> allByDateModified = mapper.getAllByProgramSupportedModifiedDate(date1);
 
     assertThat(allByDateModified.size(), is(1));
+    assertThat(allByDateModified.get(0).getId(), is(facility1.getId()));
     assertThat(allByDateModified.get(0).getCode(), is(facilityCode1));
     assertThat(allByDateModified.get(0).getSupportedPrograms().size(), is(2));
   }
@@ -671,24 +657,6 @@ public class FacilityMapperIT {
     assertThat(actualChildFacilities.get(1).getId(), is(expectedFacilities.get(1).getId()));
   }
 
-  private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
-                                        Long geoZoneId, Boolean facilityActive) {
-    Facility facility = make(a(FacilityBuilder.defaultFacility,
-      with(code, facilityCode),
-      with(name, facilityName),
-      with(geographicZoneId, geoZoneId),
-      with(active, facilityActive)));
-    mapper.insert(facility);
-
-    ProgramSupported programSupported = new ProgramSupported();
-    programSupported.setFacilityId(facility.getId());
-    programSupported.setProgram(program);
-    programSupportedMapper.insert(programSupported);
-    DeliveryZoneMember member1 = new DeliveryZoneMember(zone, facility);
-    deliveryZoneMemberMapper.insert(member1);
-    return facility;
-  }
-
   @Test
   public void shouldUpdateOnlyTypeAndGeoZoneInVirtualFacilities() throws Exception {
 
@@ -724,6 +692,35 @@ public class FacilityMapperIT {
     assertThat(fetchedFacility.getFacilityType().getCode(), is(facilityType1.getCode()));
     assertThat(fetchedFacility.getGeographicZone().getCode(), is(zone1.getCode()));
 
+  }
+
+  private ProgramSupported insertProgramSupported(Program program, Facility supportedFacility, Date modifiedDate) {
+    ProgramSupported programSupported = make(a(defaultProgramSupported,
+      with(supportedProgram, program),
+      with(supportedFacilityId, supportedFacility.getId()),
+      with(dateModified, modifiedDate)));
+
+    programSupportedMapper.insert(programSupported);
+
+    return programSupported;
+  }
+
+  private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
+                                        Long geoZoneId, Boolean facilityActive) {
+    Facility facility = make(a(FacilityBuilder.defaultFacility,
+      with(code, facilityCode),
+      with(name, facilityName),
+      with(geographicZoneId, geoZoneId),
+      with(active, facilityActive)));
+    mapper.insert(facility);
+
+    ProgramSupported programSupported = new ProgramSupported();
+    programSupported.setFacilityId(facility.getId());
+    programSupported.setProgram(program);
+    programSupportedMapper.insert(programSupported);
+    DeliveryZoneMember member1 = new DeliveryZoneMember(zone, facility);
+    deliveryZoneMemberMapper.insert(member1);
+    return facility;
   }
 
   private Facility insertFacility(String facilityCode, FacilityType facilityType, GeographicZone zone, Long parentId) {

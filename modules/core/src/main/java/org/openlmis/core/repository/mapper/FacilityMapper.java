@@ -173,10 +173,12 @@ public interface FacilityMapper {
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
-  @Select({"SELECT f.id AS id, f.code AS code FROM facilities f INNER JOIN programs_supported ps ON",
-    "f.id = ps.facilityId WHERE ps.modifiedDate = #{modifiedDate}"})
-  @Results(value =
-    {@Result(property = "supportedPrograms", column = "id", javaType = List.class,
+  @Select({"SELECT F.id AS id, F.code AS code",
+    "FROM facilities F INNER JOIN programs_supported PS ON F.id = PS.facilityId",
+    "WHERE PS.modifiedDate = #{modifiedDate}"})
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "supportedPrograms", column = "id", javaType = List.class,
       many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))})
   List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
 
