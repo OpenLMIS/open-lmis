@@ -879,7 +879,7 @@ public class CreateUpdateCHW extends JsonUtility {
         commTrackUser,
         "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
+        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -910,7 +910,7 @@ public class CreateUpdateCHW extends JsonUtility {
         commTrackUser,
         "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
+        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
