@@ -154,7 +154,6 @@ public interface FacilityMapper {
   @Select("SELECT * from facilities WHERE LOWER(code)=LOWER(#{code})")
   @Results(value =
     {
-      @Result(property = "id", column = "id"),
       @Result(property = "supportedPrograms", column = "id", javaType = List.class,
         many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
     })

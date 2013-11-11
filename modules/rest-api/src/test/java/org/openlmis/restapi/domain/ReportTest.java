@@ -31,11 +31,11 @@ public class ReportTest {
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 
-  private final Long nullLong = null;
+  private String nullString = null;
 
   @Test
-  public void shouldThrowExceptionIfReportDoesNotContainFacilityId() {
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.facilityId, nullLong)));
+  public void shouldThrowExceptionIfReportDoesNotContainAgentCode() {
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, nullString)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.restapi.mandatory.missing");
@@ -44,8 +44,8 @@ public class ReportTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfReportDoesNotContainProgramId() {
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programId, nullLong)));
+  public void shouldThrowExceptionIfReportContainsBlankAgentCode() {
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, "")));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.restapi.mandatory.missing");
@@ -54,9 +54,8 @@ public class ReportTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfReportDoesNotContainUserId() {
-    String nullString = null;
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.userId, nullString)));
+  public void shouldThrowExceptionIfReportDoesNotContainProgramCode() {
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programCode, nullString)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.restapi.mandatory.missing");
@@ -65,8 +64,8 @@ public class ReportTest {
   }
 
   @Test
-  public void shouldThrowExceptionIfReportDoesNotContainPeriodId() {
-    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.periodId, nullLong)));
+  public void shouldThrowExceptionIfReportContainsBlankProgramCode() {
+    Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programCode, "")));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.restapi.mandatory.missing");

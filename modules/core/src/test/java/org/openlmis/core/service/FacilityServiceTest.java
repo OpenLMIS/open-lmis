@@ -127,7 +127,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
-      facilityFeedDTO.getSerializedContents(), "facilities")));
+        facilityFeedDTO.getSerializedContents(), "facilities")));
 
   }
 
@@ -138,7 +138,7 @@ public class FacilityServiceTest {
       public boolean matches(Object argument) {
         Event event = (Event) argument;
         return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+            event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
   }
@@ -439,5 +439,26 @@ public class FacilityServiceTest {
     List<Facility> childFacilities = facilityService.getChildFacilities(facility);
     verify(facilityRepository).getChildFacilities(facility);
     assertThat(childFacilities, is(expectedFacilities));
+  }
+
+  @Test
+  public void shouldGetVirtualFacility() throws Exception {
+    Facility expectedFacility = make(a(defaultFacility, with(enabled, true), with(active, true), with(parentFacilityId, 333L)));
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, 333L)));
+    when(facilityRepository.getByCode("code")).thenReturn(expectedFacility);
+    when(facilityRepository.getById(333L)).thenReturn(parentFacility);
+    Facility actualFacility = facilityService.getValidatedVirtualFacilityByCode("code");
+
+    assertThat(actualFacility, is(expectedFacility));
+  }
+
+  @Test
+  public void shouldThrowErrorIfCodeInvalid() throws Exception {
+    when(facilityRepository.getByCode("code")).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.code.invalid");
+
+    facilityService.getValidatedVirtualFacilityByCode("code");
   }
 }

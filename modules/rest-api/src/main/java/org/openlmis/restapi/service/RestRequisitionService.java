@@ -43,21 +43,16 @@ public class RestRequisitionService {
   @Autowired
   private OrderService orderService;
 
+  @Autowired
+  private FacilityService facilityService;
+
   @Transactional
-  public Rnr submitReport(Report report) {
+  public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
-    User user = getValidatedUser(report);
+    Facility reportingFacility = facilityService.getValidatedVirtualFacilityByCode(report.getAgentCode());
 
-    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency());
-
-    Rnr reportedRequisition = createReportedRequisition(report, requisition);
-
-    requisitionService.save(reportedRequisition);
-
-    requisitionService.submit(reportedRequisition);
-
-    requisitionService.authorize(requisition);
+    Rnr requisition = requisitionService.initiate(reportingFacility.getId(), report.getProgramId(), report.getPeriodId(), userId, report.getEmergency());
 
     return requisition;
   }
@@ -79,14 +74,6 @@ public class RestRequisitionService {
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
     return requisition;
-  }
-
-  private Rnr createReportedRequisition(Report report, Rnr requisition) {
-    Rnr reportedRequisition = new Rnr(requisition.getId());
-    reportedRequisition.setModifiedBy(requisition.getModifiedBy());
-    reportedRequisition.setFullSupplyLineItems(report.getProducts());
-    reportedRequisition.setStatus(requisition.getStatus());
-    return reportedRequisition;
   }
 
   private User getValidatedUser(Report report) {

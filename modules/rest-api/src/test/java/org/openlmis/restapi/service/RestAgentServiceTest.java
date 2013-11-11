@@ -93,7 +93,7 @@ public class RestAgentServiceTest {
     when(requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(baseFacility.getId())).
       thenReturn(asList(new RequisitionGroupMember(requisitionGroup, baseFacility)));
 
-    restAgentService.create(agent, principal.getName());
+    restAgentService.create(agent, user.getId());
 
     verify(facility, times(2)).setCode(agent.getAgentCode());
     verify(facility).setParentFacilityId(baseFacility.getId());
@@ -135,7 +135,7 @@ public class RestAgentServiceTest {
     when(facilityService.getByCode(chwFacility)).thenReturn(chwFacility);
     when(userService.getByUserName(user.getUserName())).thenReturn(user);
 
-    restAgentService.update(agent, principal.getName());
+    restAgentService.update(agent, user.getId());
 
     verify(chwFacility).setName(agent.getAgentName());
     verify(chwFacility).setMainPhone(agent.getPhoneNumber());
@@ -168,7 +168,7 @@ public class RestAgentServiceTest {
     when(requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(baseFacility.getId())).
       thenReturn(asList(new RequisitionGroupMember(requisitionGroup, baseFacility)));
 
-    restAgentService.update(agent, principal.getName());
+    restAgentService.update(agent, user.getId());
 
     verify(chwFacility).setName(agent.getAgentName());
     verify(chwFacility).setMainPhone(agent.getPhoneNumber());
@@ -192,7 +192,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restAgentService.create(agent, principal.getName());
+    restAgentService.create(agent, user.getId());
   }
 
   @Test
@@ -204,7 +204,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restAgentService.create(agent, principal.getName());
+    restAgentService.create(agent, user.getId());
   }
 
   @Test
@@ -216,7 +216,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restAgentService.create(agent, principal.getName());
+    restAgentService.create(agent, user.getId());
   }
 
   @Test
@@ -230,7 +230,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.reference.data.parent.facility.virtual");
 
-    restAgentService.create(agent, principal.getName());
+    restAgentService.create(agent, user.getId());
   }
 
   @Test
@@ -244,7 +244,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.agent.already.registered");
 
-    restAgentService.create(agent, principal.getName());
+    restAgentService.create(agent, user.getId());
   }
 
   @Test
@@ -255,7 +255,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
-    restAgentService.update(agent, principal.getName());
+    restAgentService.update(agent, user.getId());
   }
 
   @Test
@@ -270,7 +270,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.agent.not.virtual");
 
-    restAgentService.update(agent, principal.getName());
+    restAgentService.update(agent, user.getId());
   }
 
   @Test
@@ -283,7 +283,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.invalid.agent.code");
 
-    restAgentService.update(agent, principal.getName());
+    restAgentService.update(agent, user.getId());
   }
 
   @Test
@@ -299,7 +299,7 @@ public class RestAgentServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.agent.deleted");
 
-    restAgentService.update(agent, principal.getName());
+    restAgentService.update(agent, user.getId());
 
   }
 

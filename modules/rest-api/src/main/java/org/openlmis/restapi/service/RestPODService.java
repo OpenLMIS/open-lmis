@@ -11,17 +11,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class RestPODService {
   @Autowired
-  private UserService userService;
-
-  @Autowired
   private PODService podService;
 
   @Autowired
   private OrderService orderService;
 
-  public void updatePOD(POD pod, String userName) {
-    pod.setCreatedBy(userService.getByUserName(userName).getId());
-    pod.setModifiedBy(userService.getByUserName(userName).getId());
+  public void updatePOD(POD pod, Long userId) {
+    pod.setCreatedBy(userId);
+    pod.setModifiedBy(userId);
     pod.validate();
     validateOrderForPOD(pod);
     podService.updatePOD(pod);

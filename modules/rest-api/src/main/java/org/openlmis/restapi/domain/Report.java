@@ -12,12 +12,15 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
 @NoArgsConstructor
@@ -31,8 +34,12 @@ public class Report {
   private Boolean emergency;
   private List<RnrLineItem> products;
 
+  private String agentCode;
+  private String programCode;
+
+
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userName == null) {
+    if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
   }

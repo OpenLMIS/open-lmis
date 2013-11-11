@@ -10,8 +10,11 @@
 
 package org.openlmis.core.domain;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.exception.DataException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +31,9 @@ import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSu
 import static org.openlmis.core.builder.ProgramSupportedBuilder.supportedProgram;
 
 public class FacilityTest {
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void shouldReturnTrueIfTwoFacilityAreEqualIgnoringProgramsSupported() {
@@ -69,7 +75,7 @@ public class FacilityTest {
   }
 
   @Test
-  public void shouldCreateSetWithDifferentFacilities(){
+  public void shouldCreateSetWithDifferentFacilities() {
     Facility facilityWithParentZone = make(a(defaultFacility)), facilityWithoutParentZone = make(a(defaultFacility));
     facilityWithoutParentZone.getGeographicZone().setName("Different name");
     facilityWithoutParentZone.getGeographicZone().setParent(null);
@@ -80,5 +86,61 @@ public class FacilityTest {
 
     assertThat(facilitiesSet.size(), is(2));
     assertThat(facilitiesSet, hasItems(facilityWithoutParentZone, facilityWithParentZone));
+  }
+
+  @Test
+  public void shouldThrowErrorIfVirtualFacilityInactive() throws Exception {
+    Facility inactiveFacility = new Facility(3L);
+    inactiveFacility.setActive(false);
+    inactiveFacility.setEnabled(true);
+
+    Facility parentFacility = make(a(FacilityBuilder.defaultFacility));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.inoperative");
+
+    inactiveFacility.validateVirtualFacility(parentFacility);
+  }
+
+  @Test
+  public void shouldThrowErrorIfVirtualFacilityDisabled() throws Exception {
+    Facility disabledFacility = new Facility(3L);
+    disabledFacility.setEnabled(false);
+    disabledFacility.setActive(true);
+
+    Facility parentFacility = make(a(FacilityBuilder.defaultFacility));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.inoperative");
+
+    disabledFacility.validateVirtualFacility(parentFacility);
+  }
+
+  @Test
+  public void shouldThrowErrorIfParentFacilityInactive() throws Exception {
+    Facility inactiveParentFacility = new Facility(3L);
+    inactiveParentFacility.setEnabled(false);
+    inactiveParentFacility.setActive(true);
+
+    Facility virtualFacility = make(a(FacilityBuilder.defaultFacility));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.inoperative");
+
+    virtualFacility.validateVirtualFacility(inactiveParentFacility);
+  }
+
+  @Test
+  public void shouldThrowErrorIfParentFacilityDisabled() throws Exception {
+    Facility disabledParentFacility = new Facility(3L);
+    disabledParentFacility.setEnabled(false);
+    disabledParentFacility.setActive(true);
+
+    Facility virtualFacility = make(a(FacilityBuilder.defaultFacility));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.inoperative");
+
+    virtualFacility.validateVirtualFacility(disabledParentFacility);
   }
 }

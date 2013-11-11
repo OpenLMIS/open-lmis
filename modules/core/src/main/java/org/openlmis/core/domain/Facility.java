@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -153,7 +154,7 @@ public class Facility extends BaseModel implements Importable {
   public boolean equals(Object o) {
 
     return reflectionEquals(this, o, false, Facility.class, "supportedPrograms", "geographicZone") &&
-      reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
+        reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
   }
 
   @Override
@@ -176,6 +177,12 @@ public class Facility extends BaseModel implements Importable {
   public void validate() {
     for (ProgramSupported programSupported : supportedPrograms) {
       programSupported.isValid();
+    }
+  }
+
+  public void validateVirtualFacility(Facility parentFacility) {
+    if (!(active && enabled && parentFacility.active && parentFacility.enabled)) {
+      throw new DataException("error.facility.inoperative");
     }
   }
 }

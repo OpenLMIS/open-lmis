@@ -19,16 +19,19 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.domain.Facility;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.builder.ReportBuilder;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
@@ -40,12 +43,16 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.*;
+import static org.openlmis.restapi.builder.ReportBuilder.DEFAULT_AGENT_CODE;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -97,18 +104,15 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(userService.getByUserName("1")).thenReturn(user);
-    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(new Facility(5L));
+    when(requisitionService.initiate(5L, report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
-    Rnr expectedRequisition = service.submitReport(report);
 
-    verify(requisitionService).initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false);
-    verify(requisitionService).submit(reportedRequisition);
-    verify(requisitionService).authorize(expectedRequisition);
-    verify(reportedRequisition).setStatus(requisition.getStatus());
-    verify(reportedRequisition).setModifiedBy(requisition.getModifiedBy());
-    verify(reportedRequisition).setFullSupplyLineItems(products);
+    Rnr expectedRequisition = service.submitReport(report, 1L);
+
+    verify(facilityService).getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE);
+    verify(requisitionService).initiate(5L, report.getProgramId(), report.getPeriodId(), 1L, false);
     assertThat(expectedRequisition, is(requisition));
   }
 
@@ -116,38 +120,11 @@ public class RestRequisitionServiceTest {
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
 
-    when(userService.getByUserName("1")).thenReturn(user);
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(new Facility(5L));
 
-    service.submitReport(spyReport);
+    service.submitReport(spyReport, 1L);
 
     verify(spyReport).validate();
-  }
-
-  @Test
-  public void shouldValidateUserThrowErrorIfInvalid() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
-    report.setProducts(products);
-    when(userService.getByUserName(user.getUserName())).thenReturn(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("user.username.incorrect");
-
-    service.submitReport(report);
-  }
-
-  @Test
-  public void shouldValidateUserAndThrowErrorIfUsernameDoesNotMatchVendor() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
-    report.setProducts(products);
-    whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUserName(user.getUserName())).thenReturn(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("user.username.incorrect");
-
-    service.submitReport(report);
   }
 
   @Test
