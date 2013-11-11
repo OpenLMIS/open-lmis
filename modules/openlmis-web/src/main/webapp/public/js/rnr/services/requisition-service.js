@@ -69,7 +69,8 @@ services.factory('requisitionService', function (messageService) {
     if ($scope.visibleTab != REGIMEN) {
       $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
     } else {
-      $scope.numberOfPages = 1;
+        // I see no reason why we should not page through the regimens
+        $scope.numberOfPages = Math.ceil(lineItemMap[$scope.visibleTab].length / $scope.pageSize) || 1;
     }
 
     $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
