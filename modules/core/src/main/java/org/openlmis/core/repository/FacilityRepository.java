@@ -220,4 +220,8 @@ public class FacilityRepository {
   public List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate) {
     return mapper.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
   }
+
+  public List<Facility> getAllByModifiedDate(Date modifiedDate) {
+    return mapper.getAllByModifiedDate(modifiedDate);
+  }
 }

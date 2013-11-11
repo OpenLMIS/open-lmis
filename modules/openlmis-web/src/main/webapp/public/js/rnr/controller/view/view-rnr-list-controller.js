@@ -49,7 +49,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
 
   $scope.openRequisition = function () {
     var url = "requisition/";
-    url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=full-supply&page=1";
+    url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
     $location.url(url);
   };
 

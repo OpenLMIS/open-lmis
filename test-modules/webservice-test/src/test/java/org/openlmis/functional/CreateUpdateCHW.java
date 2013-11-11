@@ -335,6 +335,7 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode("active", agentCode), "t");
     assertEquals(dbWrapper.getFacilityFieldBYCode("enabled", agentCode), TRUE_FLAG);
     assertEquals(dbWrapper.getFacilityFieldBYCode("virtualFacility", agentCode), TRUE_FLAG);
+    assertEquals(dbWrapper.getRequisitionGroupId(firstParentFacility) , dbWrapper.getRequisitionGroupId(agentCode));
 
     agentJson.setParentFacilityCode(updateParentFacility);
 
@@ -344,10 +345,26 @@ public class CreateUpdateCHW extends JsonUtility {
         commTrackUser,
         "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-        responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+    responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getRequisitionGroupId(updateParentFacility) , dbWrapper.getRequisitionGroupId(agentCode));
+
+    List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
+    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(updateParentFacility);
+    List<Integer> listOfProgramsSupportedByVirtualFacility = new ArrayList();
+    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(agentCode);
+    Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
+    setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
+    Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
+    setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
+    assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
+    assertEquals(listOfProgramsSupportedByParentFacility.size(),listOfProgramsSupportedByVirtualFacility.size());
+    for(Integer programId : listOfProgramsSupportedByParentFacility){
+       assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, updateParentFacility, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, agentCode, "active"));
+       assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,updateParentFacility),dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,agentCode));
+    }
   }
 
   @Test(groups = {"webservice"})
@@ -862,7 +879,7 @@ public class CreateUpdateCHW extends JsonUtility {
         commTrackUser,
         "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
+        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -893,7 +910,7 @@ public class CreateUpdateCHW extends JsonUtility {
         commTrackUser,
         "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Active should be True/False\"}"));
+        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 

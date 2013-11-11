@@ -115,4 +115,8 @@ public class RequisitionGroupMemberService {
   public List<RequisitionGroupMember> getAllRequisitionGroupMembersByFacility(Long facilityId) {
     return requisitionGroupMemberRepository.getAllRequisitionGroupMembersByFacility(facilityId);
   }
+
+  public void deleteMembersFor(Facility facility){
+    requisitionGroupMemberRepository.deleteMembersFor(facility);
+  }
 }

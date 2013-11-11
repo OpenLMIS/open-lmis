@@ -402,7 +402,7 @@ public class ManageDistribution extends TestCaseHelper {
       "/div[1]/div[5]/a").getText(), "Record Data");
 
     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]" +
-      "/div[1]/div[6]/a").getText(), "Sync");
+      "/div[1]/div[6]/a").getText(), "Synchronize");
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")

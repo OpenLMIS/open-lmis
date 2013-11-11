@@ -198,10 +198,12 @@ public interface FacilityMapper {
   })
   List<Facility> getAllInDeliveryZoneFor(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
-  @Select({"SELECT f.id AS id, f.code AS code FROM facilities f INNER JOIN programs_supported ps ON",
-    "f.id = ps.facilityId WHERE ps.modifiedDate = #{modifiedDate}"})
-  @Results(value =
-    {@Result(property = "supportedPrograms", column = "id", javaType = List.class,
+  @Select({"SELECT F.id AS id, F.code AS code",
+    "FROM facilities F INNER JOIN programs_supported PS ON F.id = PS.facilityId",
+    "WHERE PS.modifiedDate = #{modifiedDate}"})
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "supportedPrograms", column = "id", javaType = List.class,
       many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))})
   List<Facility> getAllByProgramSupportedModifiedDate(Date modifiedDate);
 
@@ -254,9 +256,8 @@ public interface FacilityMapper {
   List<Facility> getChildFacilities(Facility facility);
 
 
-  @Update({"UPDATE facilities set",
-    "typeId = #{facilityType.id},",
-    "geographicZoneId = #{geographicZone.id}",
+  @Update({"UPDATE facilities SET typeId = Parent.typeId, geographicZoneId = Parent.geographicZoneId",
+    "FROM (SELECT typeId, geographicZoneId FROM facilities WHERE id = #{id}) AS Parent",
     "WHERE parentFacilityId = #{id}"})
   void updateVirtualFacilities(Facility parentFacility);
 
@@ -264,4 +265,8 @@ public interface FacilityMapper {
   @Select({"SELECT F.id AS id, F.code AS code FROM facilities F INNER JOIN requisition_group_members RGM ON",
     "F.id = RGM.facilityId WHERE RGM.modifiedDate = #{modifiedDate}"})
   List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate);
+
+
+  @Select({"SELECT id, code FROM facilities WHERE modifiedDate = #{modifiedDate}"})
+  List<Facility> getAllByModifiedDate(Date modifiedDate);
 }

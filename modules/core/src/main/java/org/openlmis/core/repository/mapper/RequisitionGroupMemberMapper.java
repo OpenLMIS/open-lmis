@@ -73,4 +73,6 @@ public interface RequisitionGroupMemberMapper {
     "WHERE RGM.facilityId = #{id}"})
   void copyToVirtualFacilities(Facility parentFacility);
 
+  @Delete({"DELETE FROM requisition_group_members where facilityId = #{id}"})
+  void deleteMembersFor(Facility facility);
 }

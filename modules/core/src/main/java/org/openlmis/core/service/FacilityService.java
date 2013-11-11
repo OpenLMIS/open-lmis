@@ -111,10 +111,14 @@ public class FacilityService {
     if (!newFacility.equals(storedFacility)) {
       notify(asList(newFacility));
       if (canUpdateVirtualFacilities(newFacility, storedFacility)) {
-        facilityRepository.updateVirtualFacilities(newFacility);
-        notify(getChildFacilities(newFacility));
+        updateAndNotifyForVirtualFacilities(newFacility);
       }
     }
+  }
+
+  public void updateAndNotifyForVirtualFacilities(Facility parentFacility) {
+    facilityRepository.updateVirtualFacilities(parentFacility);
+    notify(getChildFacilities(parentFacility));
   }
 
   private boolean canUpdateVirtualFacilities(Facility newFacility, Facility oldFacility) {
@@ -202,6 +206,10 @@ public class FacilityService {
 
   public List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate) {
     return facilityRepository.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
+  }
+
+  public List<Facility> getAllByModifiedDate(Date modifiedDate) {
+    return facilityRepository.getAllByModifiedDate(modifiedDate);
   }
 
   public List<Facility> getAllFacilitiesDetail(){

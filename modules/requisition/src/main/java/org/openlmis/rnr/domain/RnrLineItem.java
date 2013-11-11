@@ -94,6 +94,8 @@ public class RnrLineItem extends LineItem {
 
   private Integer total;
 
+  private Boolean skip;
+
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
   public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy, Long createdBy) {

@@ -172,6 +172,7 @@ public class ManageFacility extends TestCaseHelper {
         assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
         assertEquals("VACCINES",manageFacilityPage.getProgramSupported(2));
         assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
+        assertEquals(dbWrapper.getRequisitionGroupId("F10") , dbWrapper.getRequisitionGroupId("V10"));
 
     }
 

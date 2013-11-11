@@ -10,11 +10,11 @@
 
 <div>
   <div ng-hide="page.nonFullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-  <div ng-show="page.nonFullSupply.length" id="viewRnr" class="rnr-table">
+  <div ng-show="page.nonFullSupply.length" id="viewRnr" class="rnr-table" adjust-height>
     <div class="float-left left-table">
       <table id="nonFullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
         <thead>
-        <tr class="fixed-head" adjust-height="scrollable-head">
+        <tr>
           <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.fixed"
               ng-bind="column.label"></th>
         </tr>
@@ -26,7 +26,7 @@
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
-        <tr class="fixed-body{{ $index }}" adjust-height="scrollable-body{{ $index }}">
+        <tr>
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.fixed">
             <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                   class="cell-text"></span>
@@ -38,7 +38,7 @@
     <div class="float-left right-table" custom-horizontal-scroll>
       <table id="nonFullSupplyTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
-        <tr adjust-height="fixed-head" class="scrollable-head">
+        <tr>
           <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable"
               ng-bind="column.label"></th>
         </tr>
@@ -49,7 +49,7 @@
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
-        <tr class="scrollable-body{{$index}}" adjust-height="fixed-body{{$index}}">
+        <tr>
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.nonFullSupply.scrollable">
             <span ng-switch on="column.name">
                 <span ng-switch-when="price">

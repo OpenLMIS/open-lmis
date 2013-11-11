@@ -116,11 +116,11 @@ public class RequisitionGroupMemberRepositoryTest {
     requisitionGroup.setId(5L);
     facility.setId(4L);
     when(requisitionGroupMemberMapper.
-        getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
-        thenReturn(requisitionGroupMember);
+      getMappingByRequisitionGroupIdAndFacilityId(requisitionGroup, facility)).
+      thenReturn(requisitionGroupMember);
 
     RequisitionGroupMember returnedRGMember = repository.
-        getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
+      getRequisitionGroupMemberForRequisitionGroupIdAndFacilityId(requisitionGroup, facility);
 
     assertThat(returnedRGMember, is(requisitionGroupMember));
   }
@@ -135,6 +135,12 @@ public class RequisitionGroupMemberRepositoryTest {
 
     verify(requisitionGroupMemberMapper).getAllRequisitionGroupMembersByFacility(facilityId);
     assertThat(actualMembers, is(expectedMembers));
+  }
+
+  @Test
+  public void shouldDeleteRequisitionGroupToFacilityMapping() {
+    repository.deleteMembersFor(facility);
+    verify(requisitionGroupMemberMapper).deleteMembersFor(facility);
   }
 }
 

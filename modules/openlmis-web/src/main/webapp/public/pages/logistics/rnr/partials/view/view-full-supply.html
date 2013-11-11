@@ -10,11 +10,11 @@
 
 <div ng-controller="ViewFullSupplyController">
   <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
-  <div id="viewRnr" ng-show="page.fullSupply.length" class="rnr-table rnr-approval">
+  <div id="viewRnr" ng-show="page.fullSupply.length" class="rnr-table rnr-approval" adjust-height>
     <div class="float-left left-table">
       <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
         <thead>
-        <tr class="fixed-head" adjust-height="scrollable-head">
+        <tr>
           <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed"
               ng-bind="column.label"></th>
         </tr>
@@ -26,7 +26,7 @@
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
-        <tr class="fixed-body{{ $index }}" adjust-height="scrollable-body{{ $index }}">
+        <tr>
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
             <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                   class="cell-text"></span>
@@ -38,7 +38,7 @@
     <div class="float-left right-table" custom-horizontal-scroll>
       <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
         <thead>
-        <tr adjust-height="fixed-head" class="scrollable-head">
+        <tr>
           <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
               ng-bind="column.label"></th>
         </tr>
@@ -49,7 +49,7 @@
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
-        <tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}">
+        <tr>
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
             <span ng-switch on="column.name">
               <span ng-switch-when="lossesAndAdjustments">

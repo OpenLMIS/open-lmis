@@ -25,11 +25,11 @@
 
 <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
 
-<div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180">
+<div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180" adjust-height>
 <div class="float-left left-table">
   <table id="fullSupplyFrozenTable" class="table table-bordered scrollable" fixed-table-header>
     <thead>
-    <tr class="fixed-head" adjust-height="scrollable-head">
+    <tr>
       <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed" ng-bind="column.label"></th>
     </tr>
     </thead>
@@ -39,8 +39,7 @@
       <td class="productCategory" id="category_{{ $index }}" colspan="{{visibleColumns.fullSupply.fixed.length}}" ng-show="showCategory($index)"
           ng-bind="rnrLineItem.productCategory"></td>
     </tr>
-    <tr adjust-height="scrollable-body{{ $index }}" class="fixed-body{{ $index }}"
-        ng-class="getRowErrorClass(rnrLineItem)">
+    <tr ng-class="getRowErrorClass(rnrLineItem)">
       <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
         <ng-switch on="column.name">
           <span ng-switch-when="skip">
@@ -60,7 +59,7 @@
 <div class="float-left right-table" custom-horizontal-scroll>
 <table id="fullSupplyTable" class="table table-bordered scrollable" fixed-table-header>
 <thead>
-<tr class="scrollable-head" adjust-height="fixed-head">
+<tr>
   <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable"
       ng-bind="column.label"></th>
 </tr>
@@ -71,7 +70,7 @@
   <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}" ng-show="showCategory($index)">
     &nbsp;</td>
 </tr>
-<tr class="scrollable-body{{ $index }}" adjust-height="fixed-body{{ $index }}" ng-class="getRowErrorClass(rnrLineItem)">
+<tr ng-class="getRowErrorClass(rnrLineItem)">
   <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
     <ng-switch on="column.source.name">
               <span ng-switch-when="USER_INPUT">

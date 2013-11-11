@@ -813,6 +813,15 @@ public class DBWrapper {
     update("update requisitions set createdBy= (select id from users where username = '" + username + "') , modifiedBy= (select id from users where username = '" + username + "');");
   }
 
+  public void updateRequisitionStatusByRnrId(String status, String username, int rnrId) throws IOException, SQLException {
+    update("update requisitions set status='" + status + "' where id=" +  rnrId +";");
+      update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rnrId + ", '" + status + "', " +
+      "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
+
+    update("update requisitions set supervisoryNodeId = (select id from supervisory_nodes where code='N1');");
+    update("update requisitions set createdBy= (select id from users where username = '" + username + "') , modifiedBy= (select id from users where username = '" + username + "');");
+  }
+
   public void updateRequisitionStatus(String status) throws IOException, SQLException {
     update("update requisitions set status='" + status + "';");
     ResultSet rs = query("select id from requisitions ;");
@@ -845,6 +854,15 @@ public class DBWrapper {
       userId = rs.getString("id");
     }
     return userId;
+  }
+
+  public int getMaxRnrID() throws IOException, SQLException {
+    int rnrId=0;
+    ResultSet rs = query("select max(id) from requisitions");
+    if (rs.next()) {
+        rnrId = Integer.parseInt(rs.getString("max"));
+    }
+    return rnrId;
   }
 
   public void setupMultipleProducts(String program, String facilityType, int numberOfProductsOfEachType, boolean defaultDisplayOrder) throws SQLException, IOException {
