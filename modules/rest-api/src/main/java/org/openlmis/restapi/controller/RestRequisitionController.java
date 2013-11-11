@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -39,10 +41,11 @@ public class RestRequisitionController extends BaseController {
   private RestRequisitionService restRequisitionService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity submitRequisition(@RequestBody Report report) {
+  public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
     Rnr requisition;
+
     try {
-      requisition = restRequisitionService.submitReport(report);
+      requisition = restRequisitionService.submitReport(report, loggedInUserId(principal));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

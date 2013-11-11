@@ -37,13 +37,15 @@ public class RestApiAuthenticationProvider implements AuthenticationProvider {
     user.setUserName(authentication.getPrincipal().toString());
     user.setPassword(authentication.getCredentials().toString());
 
-    if (userService.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword()) == null)
+    User authenticatedUser = userService.selectUserByUserNameAndPassword(user.getUserName(), user.getPassword());
+
+    if (authenticatedUser == null)
       throw new BadCredentialsException(messageService.message("error.authentication.failed"));
 
     Collection<? extends GrantedAuthority> authorities = null;
 
-    return new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword(),
-      authorities);
+    return new UsernamePasswordAuthenticationToken(authenticatedUser.getId(), user.getPassword(),
+        authorities);
   }
 
   @Override

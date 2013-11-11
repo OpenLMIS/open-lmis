@@ -64,7 +64,7 @@ public class RestRequisitionControllerTest {
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
-    when(principal.getName()).thenReturn("vendor name");
+    when(principal.getName()).thenReturn("1");
     mockStatic(RestResponse.class);
   }
 
@@ -74,11 +74,11 @@ public class RestRequisitionControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1L);
-    when(service.submitReport(report)).thenReturn(requisition);
+    when(service.submitReport(report, 1L)).thenReturn(requisition);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), OK);
     when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(1L));
   }
@@ -91,11 +91,11 @@ public class RestRequisitionControllerTest {
     Rnr requisition = new Rnr();
     requisition.setId(1L);
     DataException dataException = new DataException(errorMessage);
-    doThrow(dataException).when(service).submitReport(report);
+    doThrow(dataException).when(service).submitReport(report, 1L);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }

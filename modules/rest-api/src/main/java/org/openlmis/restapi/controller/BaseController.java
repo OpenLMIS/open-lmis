@@ -18,6 +18,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.security.Principal;
+
+import static java.lang.Long.valueOf;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.*;
 
@@ -35,5 +38,9 @@ public class BaseController {
       return error(ex.getMessage(), BAD_REQUEST);
     }
     return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
+  }
+
+  public Long loggedInUserId(Principal principal) {
+    return valueOf(principal.getName());
   }
 }

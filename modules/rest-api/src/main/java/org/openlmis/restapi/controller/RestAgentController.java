@@ -42,7 +42,7 @@ public class RestAgentController extends BaseController {
   @RequestMapping(value = "/rest-api/agents", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> createCHW(@RequestBody Agent agent, Principal principal) {
     try {
-      restAgentService.create(agent, principal.getName());
+      restAgentService.create(agent, loggedInUserId(principal));
       return success("message.success.agent.created");
 
     } catch (DataException e) {
@@ -56,7 +56,7 @@ public class RestAgentController extends BaseController {
                                                 Principal principal) {
     try {
       agent.setAgentCode(agentCode);
-      restAgentService.update(agent, principal.getName());
+      restAgentService.update(agent, loggedInUserId(principal));
       return success("message.success.agent.updated");
 
     } catch (DataException e) {
