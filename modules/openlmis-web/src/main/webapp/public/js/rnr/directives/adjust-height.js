@@ -18,12 +18,46 @@ rnrModule.directive('adjustHeight', function ($timeout) {
         $timeout.cancel(timeoutId);
         timeoutId = $timeout(function () {
           if (element.is(':hidden')) return;
-          element.css('height', 'auto');
-          var referenceElement = $('.' + attrs.adjustHeight + ':visible');
 
-          if (element.height() > referenceElement.height()) return;
+          var leftTable = $(element).find('.left-table');
+          var rightTable = $(element).find('.right-table');
 
-          element.css({height: referenceElement.height() + "px"});
+          var fixHeightOfTh = function () {
+            var leftThHeight = leftTable.find('th:first-child').height();
+            var rightThHeight = rightTable.find('th:first-child').height();
+            if (leftThHeight > rightThHeight) {
+              $(element).find('.right-table th').css({
+                height: leftThHeight + "px"
+              });
+            } else {
+              leftTable.find('th').css({
+                height: rightThHeight + "px"
+              });
+            }
+          };
+
+          var fixHeightOfTd = function () {
+            var leftTableBody = leftTable.find('tbody');
+            var rightTableBody = rightTable.find('tbody');
+            leftTableBody.find('tr').each(function (index) {
+              if ($(this).find('td:first-child').height() > rightTableBody.find('tr').eq(index).find('td:first-child').height()) {
+                rightTableBody.find('tr').eq(index).find('td').css({
+                  height: leftTableBody.find('tr').eq(index).find('td:first-child').height() + "px"
+                });
+              } else {
+                leftTableBody.find('tr').eq(index).find('td').css({
+                  height: rightTableBody.find('tr').eq(index).find('td:first-child').height() + "px"
+                });
+              }
+            });
+          };
+
+          var setHeightOfTdAndTh = function () {
+            fixHeightOfTh();
+            fixHeightOfTd();
+          };
+          setHeightOfTdAndTh();
+
         });
       };
 
@@ -32,7 +66,7 @@ rnrModule.directive('adjustHeight', function ($timeout) {
           adjustHeight();
         }
       });
-      scope.$watch('visibleTab', adjustHeight);
+      scope.$watch('page[visibleTab]', adjustHeight);
     }
   };
 });
