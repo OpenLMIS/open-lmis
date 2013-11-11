@@ -20,4 +20,4 @@ rnrModule.directive('setFocus', function () {
 var focusTextbox = function () {
   $("input[type='text']:visible").first().focus();
 }
-setTimeout(focusTextbox, 500);
+setTimeout(focusTextbox, 2000);
