@@ -696,6 +696,7 @@ public class FacilityMapperIT {
 
     parentFacility.setFacilityType(facilityType2);
     parentFacility.setGeographicZone(zone2);
+    mapper.update(parentFacility);
 
     mapper.updateVirtualFacilities(parentFacility);
 

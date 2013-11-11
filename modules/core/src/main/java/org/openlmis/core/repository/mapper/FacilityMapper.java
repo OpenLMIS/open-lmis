@@ -194,9 +194,8 @@ public interface FacilityMapper {
   List<Facility> getChildFacilities(Facility facility);
 
 
-  @Update({"UPDATE facilities set",
-    "typeId = #{facilityType.id},",
-    "geographicZoneId = #{geographicZone.id}",
+  @Update({"UPDATE facilities SET typeId = Parent.typeId, geographicZoneId = Parent.geographicZoneId",
+    "FROM (SELECT typeId, geographicZoneId FROM facilities WHERE id = #{id}) AS Parent",
     "WHERE parentFacilityId = #{id}"})
   void updateVirtualFacilities(Facility parentFacility);
 
