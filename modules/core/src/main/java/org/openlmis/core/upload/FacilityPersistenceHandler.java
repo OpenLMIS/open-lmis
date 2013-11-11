@@ -14,8 +14,11 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.upload.model.AuditFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @NoArgsConstructor
@@ -36,6 +39,13 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
   @Override
   protected void save(BaseModel record) {
     facilityService.save((Facility) record);
+  }
+  @Override
+  public void postProcess(AuditFields auditFields) {
+    List<Facility> facilities = facilityService.getAllByModifiedDate(auditFields.getCurrentTimestamp());
+    for (Facility facility : facilities) {
+      facilityService.updateAndNotifyForVirtualFacilities(facility);
+    }
   }
 
   @Override

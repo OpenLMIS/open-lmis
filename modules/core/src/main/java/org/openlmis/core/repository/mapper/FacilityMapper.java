@@ -204,4 +204,8 @@ public interface FacilityMapper {
   @Select({"SELECT F.id AS id, F.code AS code FROM facilities F INNER JOIN requisition_group_members RGM ON",
     "F.id = RGM.facilityId WHERE RGM.modifiedDate = #{modifiedDate}"})
   List<Facility> getAllByRequisitionGroupMemberModifiedDate(Date modifiedDate);
+
+
+  @Select({"SELECT id, code FROM facilities WHERE modifiedDate = #{modifiedDate}"})
+  List<Facility> getAllByModifiedDate(Date modifiedDate);
 }

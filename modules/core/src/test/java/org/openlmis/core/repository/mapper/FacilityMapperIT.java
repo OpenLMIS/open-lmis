@@ -140,6 +140,21 @@ public class FacilityMapperIT {
   }
 
   @Test
+  public void shouldGetAllFacilitiesByModifiedDate() {
+    Facility facility = make(a(defaultFacility));
+    mapper.insert(facility);
+    Date modifiedDate = new Date();
+    facility.setName("New Facility");
+    facility.setModifiedDate(modifiedDate);
+
+    mapper.update(facility);
+    List<Facility> facilities = mapper.getAllByModifiedDate(modifiedDate);
+
+    assertThat(facilities.size(), is(1));
+    assertThat(facilities.get(0).getId(), is(facility.getId()));
+  }
+
+  @Test
   public void shouldGetAllOperators() throws Exception {
     List<FacilityOperator> allOperators = mapper.getAllOperators();
     assertThat(allOperators.size(), is(4));
