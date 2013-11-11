@@ -13,10 +13,10 @@ rnrModule.directive('setFocus', function () {
   return{
     restrict: 'A',
     link: function ($scope, element) {
-      element.on('click', focusTextbox);
       var focusTextbox = function () {
         $("input[type='text']:visible").first().focus();
-      }
+      };
+      element.on('click', focusTextbox);
       setTimeout(focusTextbox, 2000);
     }
   };
