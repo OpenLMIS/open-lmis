@@ -24,14 +24,16 @@ import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.restapi.builder.ReportBuilder;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
@@ -52,8 +54,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.*;
-import static org.openlmis.restapi.builder.ReportBuilder.DEFAULT_AGENT_CODE;
-import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
+import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.FacilityBuilder.facilityId;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
+import static org.openlmis.restapi.builder.ReportBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -82,6 +86,12 @@ public class RestRequisitionServiceTest {
   private String credentials;
   byte[] encodedCredentialsBytes;
 
+  @Mock
+  private ProgramService programService;
+
+  @Mock
+  private ProcessingScheduleService processingScheduleService;
+
   @Before
   public void setUp() throws Exception {
     credentials = "1:correct token";
@@ -94,7 +104,7 @@ public class RestRequisitionServiceTest {
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUserName(user.getUserName())).thenReturn(user);
     when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency()))
-      .thenReturn(requisition);
+        .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
   }
@@ -104,15 +114,27 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(new Facility(5L));
-    when(requisitionService.initiate(5L, report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
+
+    Long facility_id = 5L;
+    Long period_id = 8L;
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported))));
+
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(period_id));
+    when(requisitionService.initiate(facility_id, PROGRAM_ID, period_id, user.getId(), false)).thenReturn(requisition);
+
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
 
     Rnr expectedRequisition = service.submitReport(report, 1L);
 
     verify(facilityService).getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE);
-    verify(requisitionService).initiate(5L, report.getProgramId(), report.getPeriodId(), 1L, false);
+    verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
+    verify(processingScheduleService).getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate());
+    verify(requisitionService).initiate(facility_id, PROGRAM_ID, period_id, 1L, false);
     assertThat(expectedRequisition, is(requisition));
   }
 
@@ -120,11 +142,63 @@ public class RestRequisitionServiceTest {
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
 
-    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(new Facility(5L));
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported))));
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(8L));
 
     service.submitReport(spyReport, 1L);
 
     verify(spyReport).validate();
+  }
+
+  @Test
+  public void shouldThrowErrorIfProgramNotSupportedByVirtualFacility() throws Exception {
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    List<ProgramSupported> supportedPrograms = new ArrayList();
+    supportedPrograms.add(programSupported);
+    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, supportedPrograms)));
+
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(555L));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.permission.denied");
+
+    service.submitReport(report, 1L);
+  }
+
+  @Test
+  public void shouldThrowErrorIfProgramInactiveAtVirtualFacility() throws Exception {
+    ProgramSupported programSupported = make(a(defaultProgramSupported, with(isActive, false)));
+    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported))));
+
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.permission.denied");
+
+    service.submitReport(report, 1L);
+  }
+
+  @Test
+  public void shouldThrowErrorIfCurrentPeriodNotDefined() throws Exception {
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    List<ProgramSupported> supportedPrograms = new ArrayList();
+    supportedPrograms.add(programSupported);
+    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, supportedPrograms)));
+
+    when(facilityService.getValidatedVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(null);
+
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.permission.denied");
+
+    service.submitReport(report, 1L);
   }
 
   @Test

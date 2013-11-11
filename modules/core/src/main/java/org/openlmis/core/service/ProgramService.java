@@ -103,4 +103,15 @@ public class ProgramService {
       }
     }
   }
+
+  public Program getValidatedProgramByCode(String programCode) {
+    Program program = programRepository.getByCode(programCode);
+    if (program == null) {
+      throw new DataException("program.code.invalid");
+    }
+    if (!program.getActive()) {
+      throw new DataException("error.permission.denied");
+    }
+    return program;
+  }
 }

@@ -11,10 +11,12 @@
 package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.User;
+import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
@@ -25,6 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.apache.commons.collections.CollectionUtils.filter;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
@@ -38,23 +44,50 @@ public class RestRequisitionService {
   private RequisitionService requisitionService;
 
   @Autowired
-  private FacilityService facilityService;
-
-  @Autowired
   private OrderService orderService;
 
   @Autowired
   private FacilityService facilityService;
+
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
     Facility reportingFacility = facilityService.getValidatedVirtualFacilityByCode(report.getAgentCode());
+    Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+    ProgramSupported validatedProgramSupported = getValidatedProgramSupported(reportingFacility.getSupportedPrograms(), reportingProgram.getId());
+    ProcessingPeriod reportingPeriod = getValidatedProcessingPeriod(reportingFacility, reportingProgram, validatedProgramSupported);
 
-    Rnr requisition = requisitionService.initiate(reportingFacility.getId(), report.getProgramId(), report.getPeriodId(), userId, report.getEmergency());
+    Rnr requisition = requisitionService.initiate(reportingFacility.getId(), reportingProgram.getId(), reportingPeriod.getId(), userId, false);
 
     return requisition;
+  }
+
+  private ProcessingPeriod getValidatedProcessingPeriod(Facility reportingFacility, Program reportingProgram, ProgramSupported validatedProgramSupported) {
+    ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(reportingFacility.getId(), reportingProgram.getId(), validatedProgramSupported.getStartDate());
+    if (currentPeriod == null) {
+      throw new DataException("error.permission.denied");
+    }
+    return currentPeriod;
+  }
+
+  private ProgramSupported getValidatedProgramSupported(List<ProgramSupported> supportedPrograms, final Long programId) {
+    filter(supportedPrograms, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return (((ProgramSupported) o).getProgram().getId() == programId);
+      }
+    });
+    if (!(supportedPrograms.size() != 0 && supportedPrograms.get(0).getActive())) {
+      throw new DataException("error.permission.denied");
+    }
+    return supportedPrograms.get(0);
   }
 
   @Transactional

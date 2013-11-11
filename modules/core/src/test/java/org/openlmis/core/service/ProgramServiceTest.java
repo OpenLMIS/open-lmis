@@ -11,14 +11,17 @@
 package org.openlmis.core.service;
 
 import org.ict4h.atomfeed.server.service.EventService;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.event.ProgramChangeEvent;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -52,6 +55,9 @@ public class ProgramServiceTest {
 
   @InjectMocks
   private ProgramService service;
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void shouldGetProgramStartDate() throws Exception {
@@ -132,5 +138,27 @@ public class ProgramServiceTest {
     verify(programRepository).setFeedSendFlag(programList.get(0), false);
     verify(programRepository).setFeedSendFlag(programList.get(1), false);
   }
-}
 
+  @Test
+  public void shouldGetValidatedProgram() throws Exception {
+    String programCode = "p_code";
+    Program program = make(a(defaultProgram));
+    when(programRepository.getByCode(programCode)).thenReturn(program);
+    Program actualProgram = service.getValidatedProgramByCode(programCode);
+    verify(programRepository).getByCode(programCode);
+    assertThat(actualProgram, is(program));
+  }
+
+  @Test
+  public void shouldThrowErrorIfProgramInactive() throws Exception {
+    Program inactiveProgram = new Program(44L);
+    inactiveProgram.setActive(false);
+
+    when(programRepository.getByCode("HIV")).thenReturn(inactiveProgram);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.permission.denied");
+
+    service.getValidatedProgramByCode("HIV");
+  }
+}
