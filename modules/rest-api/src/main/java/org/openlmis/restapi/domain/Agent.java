@@ -26,13 +26,12 @@ public class Agent {
   private String active;
 
   public void validate() {
-    if (StringUtils.isEmpty(agentCode) || StringUtils.isEmpty(agentName) || StringUtils.isEmpty(parentFacilityCode)) {
+    if (StringUtils.isEmpty(agentCode) || StringUtils.isEmpty(agentName) || StringUtils.isEmpty(parentFacilityCode) || StringUtils.isEmpty(active)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
-    if (active != null && !validateActive(active)) {
+    if (!validateActive(active)) {
       throw new DataException("error.active.invalid");
     }
-    active = StringUtils.isEmpty(active) ? "true" : active;
   }
 
   private boolean validateActive(String active) {
