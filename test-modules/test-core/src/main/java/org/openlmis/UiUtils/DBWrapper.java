@@ -206,7 +206,7 @@ public class DBWrapper {
   }
 
 
-  public void insertRequisitionsToBeConvertedToOrder(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
+  public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
     ResultSet rs = query("select count(*) from requisitions");
@@ -221,6 +221,11 @@ public class DBWrapper {
         "values ((Select id from facilities where code='F10'),(Select id from programs where code='" + program + "')," +
         "(Select id from processing_periods where name='PeriodName" + i + "'), 'APPROVED', 'false', 50.0000, 0.0000, " +
         "(select id from supervisory_nodes where code='N1'))");
+
+        update("INSERT INTO requisition_line_items " +
+                "(rnrId, productCode,product,productDisplayOrder,productCategory,productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, " +
+                "dispensingUnit, maxMonthsOfStock, dosesPerMonth, dosesPerDispensingUnit, packSize,fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price,roundToZero,packRoundingThreshold) VALUES" +
+                "((SELECT max(id) FROM requisitions), 'P10','antibiotic Capsule 300/200/600 mg',1,'Antibiotics',1, '0', '11' , '1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1);");
     }
     if (withSupplyLine) {
       ResultSet rs1 = query("select * from supply_lines where supervisoryNodeId = " +

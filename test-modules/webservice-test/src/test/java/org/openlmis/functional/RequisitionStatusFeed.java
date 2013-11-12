@@ -39,7 +39,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
-    dbWrapper.insertFulfilmentRoleAssignment("commTrack","store in-charge","F10");
+    dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -54,8 +54,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
@@ -105,9 +105,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -143,8 +142,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");

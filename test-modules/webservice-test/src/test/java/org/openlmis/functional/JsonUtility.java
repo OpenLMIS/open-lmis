@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.UiUtils.HttpClient;
-import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
@@ -41,24 +40,9 @@ public class JsonUtility extends TestCaseHelper {
     objectMapper.writeValue(writer, object);
     return writer.toString();
   }
-  public static String submitReport() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      "POST",
-      "commTrack",
-      "Admin123");
-
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
-    return responseEntity.getResponse();
+  public static void submitRequisition(String userName, String program) throws Exception {
+      dbWrapper.insertRequisitions(1, program, true);
+      dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
   }
 
 
@@ -67,11 +51,13 @@ public class JsonUtility extends TestCaseHelper {
   }
 
   public static void createOrder(String userName, String status, String program) throws Exception {
-      dbWrapper.insertRequisitionsToBeConvertedToOrder(1, program, true);
+      dbWrapper.insertRequisitions(1, program, true);
       dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
       dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
+      dbWrapper.insertApprovedQuantity(1);
       dbWrapper.insertFulfilmentRoleAssignment(userName,"store in-charge","F10");
       dbWrapper.insertOrders(status, userName, program);
+      dbWrapper.updatePacksToShip("1");
   }
 
   public static void approveRequisition(Long id, int quantityApproved) throws Exception {

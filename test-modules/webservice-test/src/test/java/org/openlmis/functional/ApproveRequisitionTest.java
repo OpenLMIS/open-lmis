@@ -44,9 +44,9 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     client.createContext();
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
-    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setUserName("commTrack1");
@@ -61,7 +61,7 @@ public class ApproveRequisitionTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"R&R\":"));
@@ -69,12 +69,9 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
-  }
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":"));
+    assertTrue(responseEntity1.getResponse().contains(",\"endDate\":"));
+    }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionInValidUser() throws Exception {
@@ -82,8 +79,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -95,7 +92,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
       "commTrack", "Admin123");
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Please provide a valid username\"}", response);
@@ -107,8 +104,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -131,8 +128,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -148,7 +145,7 @@ public class ApproveRequisitionTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product code\"}", response);
   }
@@ -159,9 +156,9 @@ public class ApproveRequisitionTest extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
+    submitRequisition("commTrack1","HIV");
     Long id = 999999L;
-    Long id2 = getRequisitionIdFromResponse(response);
+    Long id2 = (long)dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -173,7 +170,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
       "commTrack", "Admin123");
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid RequisitionID\"}", response);
@@ -185,8 +182,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     client.createContext();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
@@ -202,7 +199,7 @@ public class ApproveRequisitionTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
