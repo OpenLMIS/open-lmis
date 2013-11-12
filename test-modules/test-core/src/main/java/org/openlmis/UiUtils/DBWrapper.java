@@ -1364,4 +1364,38 @@ public class DBWrapper {
     }
     return date;
   }
+
+  public void changeVirtualFacilityTypeId(String facilityCode,int facilityTypeId) throws SQLException {
+     update("UPDATE facilities SET typeid="+facilityTypeId+"WHERE code='"+facilityCode+"';");
+  }
+
+  public String getGeographicZoneId(String geographicZone) throws SQLException{
+    String res=null;
+    ResultSet rs = query("select id  from geographic_zones WHERE code ='"+geographicZone+"';");
+
+    if (rs.next()) {
+      res = rs.getString(1);
+    }
+    return res;
+  }
+
+  public String getFacilityTypeId(String facilityType) throws SQLException{
+    String res=null;
+    ResultSet rs = query("select id  from facility_types WHERE code ='"+facilityType+"';");
+
+    if (rs.next()) {
+      res = rs.getString(1);
+    }
+    return res;
+  }
+
+  public int getRequisitionIdForGroup(String requisitionGroup) throws SQLException {
+    int rgId=0;
+    ResultSet rs = query("SELECT id FROM requisition_groups WHERE code ='"+requisitionGroup+"';");
+    if (rs.next()) {
+      rgId = rs.getInt(1);
+    }
+    return rgId;
+  }
+
 }
