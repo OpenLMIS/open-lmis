@@ -12,12 +12,10 @@ package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.order.service.OrderService;
@@ -28,8 +26,6 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 import static java.util.Arrays.asList;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
@@ -53,27 +49,14 @@ public class RestRequisitionService {
   @Autowired
   private ProgramService programService;
 
-  @Autowired
-  private ProcessingScheduleService processingScheduleService;
-
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
     Facility reportingFacility = facilityService.getVirtualFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
-    ProcessingPeriod reportingPeriod = getValidatedProcessingPeriod(reportingFacility, reportingProgram);
 
-    return requisitionService.initiate(reportingFacility.getId(), reportingProgram.getId(), reportingPeriod.getId(), userId, false);
-  }
-
-  private ProcessingPeriod getValidatedProcessingPeriod(Facility reportingFacility, Program reportingProgram) {
-    Date programStartDate = programService.getProgramStartDate(reportingFacility.getId(), reportingProgram.getId());
-    ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(reportingFacility.getId(), reportingProgram.getId(), programStartDate);
-    if (currentPeriod == null) {
-      throw new DataException("error.permission.denied");
-    }
-    return currentPeriod;
+    return requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
   }
 
   @Transactional

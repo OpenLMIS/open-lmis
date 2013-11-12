@@ -11,9 +11,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
@@ -85,11 +83,10 @@ public class RequisitionController extends BaseController {
   @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
                                                       @RequestParam("programId") Long programId,
-                                                      @RequestParam("periodId") Long periodId,
                                                       @RequestParam("emergency") Boolean emergency,
                                                       HttpServletRequest request) {
     try {
-      return response(RNR, requisitionService.initiate(facilityId, programId, periodId, loggedInUserId(request), emergency));
+      return response(RNR, requisitionService.initiate(new Facility(facilityId), new Program(programId), loggedInUserId(request), emergency));
     } catch (DataException e) {
       return error(e, BAD_REQUEST);
     }
