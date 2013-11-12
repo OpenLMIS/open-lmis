@@ -41,16 +41,15 @@ public class ApproveRequisitionTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void testApproveRequisitionValidRnR() throws Exception {
     HttpClient client = new HttpClient();
-
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     client.createContext();
 
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
-
-    assertEquals("AUTHORIZED", dbWrapper.getRequisitionStatus(id));
+    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack1");
+    reportFromJson.setUserName("commTrack1");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -66,26 +65,29 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"R&R\":"));
-    assertEquals("RELEASED", dbWrapper.getRequisitionStatus(id));
+    assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
 
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"RELEASED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000,\"orderId\":" + id + ",\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":1358274600000,\"endDate\":1359570599000}"));
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionInValidUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("ABCD");
+    reportFromJson.setUserName("ABCD");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -103,12 +105,15 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionUnauthorizedAccess() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setRequisitionId(id);
-    reportFromJson.setUserId("commTrack100");
+    reportFromJson.setUserName("commTrack100");
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
@@ -124,11 +129,14 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionInvalidProduct() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack");
+    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P1000");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -149,13 +157,16 @@ public class ApproveRequisitionTest extends JsonUtility {
   public void testApproveRequisitionInvalidRequisitionId() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
     String response = submitReport();
     Long id = 999999L;
     Long id2 = getRequisitionIdFromResponse(response);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setRequisitionId(id2);
-    reportFromJson.setUserId("commTrack");
+    reportFromJson.setUserName("commTrack");
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
@@ -165,19 +176,22 @@ public class ApproveRequisitionTest extends JsonUtility {
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"Requisition Not Found\"}", response);
+    assertEquals("{\"error\":\"Invalid Requisition id\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionBlankQuantityApproved() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
     String response = submitReport();
     Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setRequisitionId(id);
-    reportFromJson.setUserId("commTrack1");
+    reportFromJson.setUserName("commTrack1");
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
@@ -191,7 +205,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
+    assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
   }
 
 }

@@ -3,7 +3,7 @@
     "programId": "",
     "periodId": "",
     "emergency" : "false",
-    "userId": "commTrack",
+    "userName": "commTrack",
     "products": [
         {
             "productCode": "",

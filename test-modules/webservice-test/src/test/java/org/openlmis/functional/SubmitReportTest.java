@@ -216,7 +216,7 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack");
+    reportFromJson.setUserName("commTrack");
     reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
     reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
     reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
@@ -243,7 +243,7 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack100");
+    reportFromJson.setUserName("commTrack100");
     reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
     reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
     reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
@@ -268,7 +268,7 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack");
+    reportFromJson.setUserName("commTrack");
     reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
     reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
     reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));

@@ -2,7 +2,7 @@
        "facilityId": "",
        "programId": "",
        "periodId": "",
-       "userId": "",
+       "userName": "",
        "emergency" : "false",
        "products": [
            {

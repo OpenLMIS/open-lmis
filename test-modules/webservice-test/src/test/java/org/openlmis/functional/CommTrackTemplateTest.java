@@ -44,7 +44,7 @@ public class CommTrackTemplateTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_COMMTRACK_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack");
+    reportFromJson.setUserName("commTrack");
     reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
     reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
     reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));

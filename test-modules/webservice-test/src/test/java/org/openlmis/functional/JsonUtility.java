@@ -80,7 +80,7 @@ public class JsonUtility extends TestCaseHelper {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack1");
+    reportFromJson.setUserName("commTrack1");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
