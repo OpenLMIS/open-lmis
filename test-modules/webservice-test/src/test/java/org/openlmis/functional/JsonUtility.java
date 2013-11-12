@@ -14,6 +14,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
+import org.openlmis.pageobjects.ConvertOrderPage;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.restapi.domain.Report;
 
 import java.io.File;
@@ -88,5 +91,13 @@ public class JsonUtility extends TestCaseHelper {
       "commTrack",
       "Admin123");
   }
+
+  public static void convertToOrder(String userName,String password) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userName, password);
+    ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
+    convertOrderPage.convertToOrder();
+  }
+
 }
 
