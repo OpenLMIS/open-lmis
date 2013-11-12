@@ -50,6 +50,8 @@ public class RestRequisitionControllerTest {
 
   @Mock
   RestRequisitionService service;
+  @Mock
+  Report report;
 
   @InjectMocks
   RestRequisitionController controller;
@@ -100,27 +102,29 @@ public class RestRequisitionControllerTest {
 
   @Test
   public void shouldApproveReport() throws Exception {
-    Report report = new Report();
+
     Long id = 1L;
     Rnr expectedRnr = new Rnr();
-    when(service.approve(report)).thenReturn(expectedRnr);
+    expectedRnr.setId(1L);
 
+    when(service.approve(report)).thenReturn(expectedRnr);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), OK);
     when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
+    doNothing().when(report).validateForApproval();
 
     ResponseEntity<RestResponse> response = controller.approve(id, report);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
-    assertThat(report.getRequisitionId(), is(1L));
     verify(service).approve(report);
+    verify(report).setRequisitionId(expectedRnr.getId());
   }
 
   @Test
   public void shouldGiveErrorMessageIfSomeErrorOccursWhileApproving() throws Exception {
     String errorMessage = "some error";
     Long requisitionId = 1L;
-    Report report = new Report();
 
+    doNothing().when(report).validateForApproval();
     DataException dataException = new DataException(errorMessage);
     doThrow(dataException).when(service).approve(report);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);

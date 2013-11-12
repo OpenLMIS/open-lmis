@@ -11,10 +11,11 @@
 package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
@@ -24,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.Arrays.asList;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
@@ -36,6 +36,9 @@ public class RestRequisitionService {
 
   @Autowired
   private RequisitionService requisitionService;
+
+  @Autowired
+  private FacilityService facilityService;
 
   @Autowired
   private OrderService orderService;
@@ -64,9 +67,17 @@ public class RestRequisitionService {
     User user = getValidatedUser(report);
     Rnr requisition = report.getRequisition();
     requisition.setModifiedBy(user.getId());
+
+    Long facilityId = requisitionService.getFacilityId(requisition.getId());
+    if(facilityId == null){
+      throw new DataException("error.invalid.requisition.id");
+    }
+    Facility facility = facilityService.getById(facilityId);
+    if (!facility.getVirtualFacility())
+      throw new DataException("error.approval.not.allowed");
+
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
-    orderService.convertToOrder(asList(requisition), user.getId());
     return requisition;
   }
 
@@ -79,7 +90,7 @@ public class RestRequisitionService {
   }
 
   private User getValidatedUser(Report report) {
-    User user = userService.getByUserName(report.getUserId());
+    User user = userService.getByUserName(report.getUserName());
     if (user == null) {
       throw new DataException("user.username.incorrect");
     }

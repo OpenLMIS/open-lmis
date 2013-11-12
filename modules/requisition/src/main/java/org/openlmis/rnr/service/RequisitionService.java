@@ -144,6 +144,8 @@ public class RequisitionService {
     }
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
+      if (savedRnr.getFullSupplyLineItems().size() != rnr.getFullSupplyLineItems().size())
+        throw new DataException("error.number.of.lineitems.mismatch");
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
@@ -480,6 +482,10 @@ public class RequisitionService {
 
     criteria.setWithoutLineItems(true);
     return get(criteria);
+  }
+
+  public Long getFacilityId(Long id) {
+    return requisitionRepository.getFacilityId(id);
   }
 }
 

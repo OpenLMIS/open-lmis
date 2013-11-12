@@ -27,12 +27,12 @@ public class Report {
   private Long facilityId;
   private Long programId;
   private Long periodId;
-  private String userId;
+  private String userName;
   private Boolean emergency;
   private List<RnrLineItem> products;
 
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userId == null) {
+    if (facilityId == null || programId == null || periodId == null || userName == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
   }
@@ -42,5 +42,15 @@ public class Report {
     rnr.setId(requisitionId);
     rnr.setFullSupplyLineItems(products);
     return rnr;
+  }
+
+  public void validateForApproval() {
+    if (products == null) {
+      throw new DataException("error.restapi.mandatory.missing");
+    }
+    for (RnrLineItem rnrLineItem : products) {
+      if (rnrLineItem.getProductCode() == null || rnrLineItem.getQuantityApproved() == null)
+        throw new DataException("error.restapi.mandatory.missing");
+    }
   }
 }

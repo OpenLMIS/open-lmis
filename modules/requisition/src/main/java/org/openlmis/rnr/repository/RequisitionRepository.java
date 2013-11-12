@@ -199,5 +199,9 @@ public class RequisitionRepository {
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, Right right) {
     return requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, right);
   }
+
+  public Long getFacilityId(Long id) {
+    return requisitionMapper.getFacilityId(id);
+  }
 }
 

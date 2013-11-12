@@ -17,9 +17,11 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -78,5 +80,39 @@ public class ReportTest {
     Rnr requisition = report.getRequisition();
     assertThat(requisition.getId(), is(report.getRequisitionId()));
     assertThat(requisition.getFullSupplyLineItems(), is(report.getProducts()));
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProductsAreMissing() throws Exception {
+    Report report = make(a(ReportBuilder.defaultReport));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.restapi.mandatory.missing");
+
+    report.validateForApproval();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfProductCodeMissing() throws Exception {
+    Report report = make(a(ReportBuilder.defaultReport));
+    String productCode = null;
+    report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.restapi.mandatory.missing");
+
+    report.validateForApproval();
+  }
+
+  @Test
+  public void shouldThrowExceptionIfQuantityApprovedMissing() throws Exception {
+    Report report = make(a(ReportBuilder.defaultReport));
+    Integer quantityApproved = null;
+    report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.quantityApproved, quantityApproved)))));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.restapi.mandatory.missing");
+
+    report.validateForApproval();
   }
 }

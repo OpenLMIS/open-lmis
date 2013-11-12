@@ -19,8 +19,12 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
@@ -36,9 +40,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static java.util.Arrays.asList;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -62,6 +64,8 @@ public class RestRequisitionServiceTest {
   UserService userService;
   @Mock
   private OrderService orderService;
+  @Mock
+  private FacilityService facilityService;
 
   @InjectMocks
   RestRequisitionService service;
@@ -147,12 +151,56 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldApproveAndOrderRequisition() throws Exception {
+  public void shouldThrowErrorIfInvalidRequisitionIdPassed() throws Exception {
     Rnr requisitionFromReport = new Rnr();
+    requisitionFromReport.setId(1L);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.requisition.id");
 
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
     when(userService.getByUserName("1")).thenReturn(user);
+    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(null);
+
+    service.approve(spyReport);
+
+    verify(requisitionService).getFacilityId(requisitionFromReport.getId());
+  }
+
+  @Test
+  public void shouldNotApproveRnrIfDoesNotBelongToVirtualFacility() throws Exception {
+    Rnr requisitionFromReport = new Rnr();
+    requisitionFromReport.setId(1L);
+    Long facilityId = 2L;
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.approval.not.allowed");
+
+    Report spyReport = spy(report);
+    when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    when(userService.getByUserName("1")).thenReturn(user);
+    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(facilityId);
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, false)));
+    Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
+
+    service.approve(spyReport);
+
+    verify(requisitionService).getFacilityId(requisitionFromReport.getId());
+    verify(facilityService).getById(facilityId);
+
+  }
+
+  @Test
+  public void shouldApproveIfRnrBelongsToVirtualFacility() throws Exception {
+    Rnr requisitionFromReport = new Rnr();
+    Long facilityId = 2L;
+    Report spyReport = spy(report);
+    when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    when(userService.getByUserName("1")).thenReturn(user);
+    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(facilityId);
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
 
     service.approve(spyReport);
 
@@ -160,7 +208,6 @@ public class RestRequisitionServiceTest {
     verify(spyReport).getRequisition();
     verify(requisitionService).save(requisitionFromReport);
     verify(requisitionService).approve(requisitionFromReport);
-    verify(orderService).convertToOrder(asList(requisitionFromReport), user.getId());
   }
 
   @Test

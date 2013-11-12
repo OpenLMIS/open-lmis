@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.controller;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -30,7 +31,7 @@ public class BaseController {
     if (ex instanceof AccessDeniedException) {
       return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
     }
-    if (ex instanceof MissingServletRequestParameterException || ex instanceof HttpMessageNotReadableException) {
+    if (ex instanceof MissingServletRequestParameterException || ex instanceof HttpMessageNotReadableException || ex instanceof DataException) {
       return error(ex.getMessage(), BAD_REQUEST);
     }
     return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);

@@ -28,6 +28,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RequisitionBuilder;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -1443,6 +1444,27 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).getById(emergencyRequisition.getId());
 
     assertThat(result, is(emergencyRequisition));
+  }
+
+  @Test
+  public void shouldGetFacilityIdFromRnrId() throws Exception {
+    Mockito.when(requisitionRepository.getFacilityId(1L)).thenReturn(1L);
+    assertThat(requisitionService.getFacilityId(1L), is(1L));
+  }
+
+  @Test
+  public void shouldThrowAnExceptionIfNumberOfLineItemsMismatchBetweenAuthorizedAndToBeApprovedRnr() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.number.of.lineitems.mismatch");
+    Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr, with(modifiedBy, USER_ID)));
+    rnrForApproval.add(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode,"P10"))), true);
+    Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+
+    when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+    doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
+
+    requisitionService.save(rnrForApproval);
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

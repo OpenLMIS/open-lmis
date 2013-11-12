@@ -41,10 +41,10 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.FacilityBuilder.name;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.*;
-import static org.openlmis.core.builder.ProcessingScheduleBuilder.*;
+import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 import static org.openlmis.core.builder.ProgramBuilder.programName;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultProgram;
@@ -799,7 +799,7 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name, ProcessingSchedule processingSchedule, Date periodStartDate, Date periodEndDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()), with(startDate, periodStartDate),with(endDate,periodEndDate),
+      with(scheduleId, processingSchedule.getId()), with(startDate, periodStartDate), with(endDate, periodEndDate),
       with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
@@ -842,5 +842,12 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(0));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(0));
     assertThat(fetchedRequisition.getRegimenLineItems().size(), is(0));
+  }
+
+  @Test
+  public void shouldGetFacilityIdGivenARnrId() throws Exception {
+    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    assertThat(mapper.getFacilityId(requisition.getId()), is(requisition.getFacility().getId()));
   }
 }

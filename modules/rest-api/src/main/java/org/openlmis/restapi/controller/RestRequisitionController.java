@@ -51,6 +51,7 @@ public class RestRequisitionController extends BaseController {
 
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report) {
+    report.validateForApproval();
     report.setRequisitionId(id);
     try {
       Rnr approveRnr = restRequisitionService.approve(report);
