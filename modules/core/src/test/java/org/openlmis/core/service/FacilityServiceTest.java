@@ -468,6 +468,7 @@ public class FacilityServiceTest {
   @Test
   public void shouldThrowErrorIfFacilityInoperative() throws Exception {
     Facility facility = spy(new Facility());
+    facility.setVirtualFacility(true);
     Facility parent = new Facility(23L);
     facility.setParentFacilityId(23L);
     doReturn(false).when(facility).isValid(parent);
@@ -479,5 +480,18 @@ public class FacilityServiceTest {
     expectedEx.expectMessage("error.facility.inoperative");
 
     facilityService.getVirtualFacilityByCode("code");
+  }
+
+  @Test
+  public void shouldNotCheckForParentIfFacilityNotVirtual() throws Exception {
+    Facility facility = spy(new Facility());
+    facility.setVirtualFacility(false);
+    doReturn(true).when(facility).isValid(null);
+
+    when(facilityRepository.getByCode("code")).thenReturn(facility);
+
+    facilityService.getVirtualFacilityByCode("code");
+
+    verify(facilityRepository, never()).getById(anyLong());
   }
 }

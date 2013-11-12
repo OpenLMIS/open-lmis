@@ -180,6 +180,9 @@ public class Facility extends BaseModel implements Importable {
   }
 
   public boolean isValid(Facility parentFacility) {
+    if (parentFacility == null)
+      return active && enabled;
+
     return active && enabled && parentFacility.active && parentFacility.enabled;
   }
 }

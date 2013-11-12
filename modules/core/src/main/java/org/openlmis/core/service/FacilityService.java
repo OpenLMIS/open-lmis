@@ -220,7 +220,11 @@ public class FacilityService {
       throw new DataException(ERROR_FACILITY_CODE_INVALID);
     }
 
-    Facility parentFacility = facilityRepository.getById(facility.getParentFacilityId());
+    Facility parentFacility = null;
+
+    if (facility.getVirtualFacility()) {
+      parentFacility = facilityRepository.getById(facility.getParentFacilityId());
+    }
 
     if (!facility.isValid(parentFacility)) {
       throw new DataException("error.facility.inoperative");

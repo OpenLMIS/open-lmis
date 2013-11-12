@@ -26,8 +26,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItems;
-import static org.openlmis.core.builder.FacilityBuilder.code;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.supportedProgram;
 
@@ -144,4 +143,19 @@ public class FacilityTest {
 
     assertTrue(virtualFacility.isValid(disabledParentFacility));
   }
+
+  @Test
+  public void shouldValidateOnlyFacilityIfParentNull() throws Exception {
+    Facility facility = make(a(defaultFacility, with(active, true)));
+
+    assertTrue(facility.isValid(null));
+  }
+
+  @Test
+  public void shouldValidateOnlyFacilityAndThrowErrorBasedOnThatIfParentNull() throws Exception {
+    Facility facility = make(a(defaultFacility, with(active, false)));
+
+    assertFalse(facility.isValid(null));
+  }
+
 }
