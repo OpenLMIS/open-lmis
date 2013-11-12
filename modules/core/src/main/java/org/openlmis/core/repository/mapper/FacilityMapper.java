@@ -43,7 +43,7 @@ public interface FacilityMapper {
   List<Facility> getAll();
 
   @Select("SELECT * FROM users U, facilities F " +
-    "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true")
+    "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true AND f.virtualFacility = false")
   @Results(value = {@Result(property = "id", column = "facilityId")})
   Facility getHomeFacility(Long userId);
 
@@ -108,7 +108,8 @@ public interface FacilityMapper {
     "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
     "AND rgps.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
     "AND f.active = true " +
-    "AND ps.active = true ")
+    "AND ps.active = true " +
+    "AND f.virtualFacility = false ")
   @Results(value = {
     @Result(property = "geographicZone.id", column = "geographicZoneId"),
     @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
