@@ -259,11 +259,16 @@ public class RnrLineItem extends LineItem {
       // on new patient is (number of additional units required)
       // essentially wrong usage of the column.
       normalizedConsumption = quantityDispensed + newPatientCount;
-    }else if(columnOption == "MAX_X_90"){
-        if(stockOutDays != 90){
-          normalizedConsumption = (90 * maxStockQuantity) / 90 - stockOutDays;
+    }else if(columnOption == "DISPENSED_X_90"){
+        if(stockOutDays < 90){
+          normalizedConsumption = (new BigDecimal(
+                                      (90 * quantityDispensed))
+                                             .divide(
+                                                 new BigDecimal( (90 - stockOutDays))
+                                      , mathContext)
+                                   ).intValue();
         } else{
-          normalizedConsumption = (90 * maxStockQuantity);
+          normalizedConsumption = (90 * quantityDispensed);
         }
     }
     else{

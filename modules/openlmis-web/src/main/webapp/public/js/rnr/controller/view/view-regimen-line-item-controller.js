@@ -12,6 +12,6 @@ function ViewRegimenLineItemController($scope) {
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
 
   $scope.showCategory = function (index) {
-    return !((index > 0 ) && ($scope.rnr.regimenLineItems[index].category.name == $scope.rnr.regimenLineItems[index - 1].category.name));
+    return !((index >= 0 ) && ($scope.rnr.regimenLineItems[index].category.name == $scope.rnr.regimenLineItems[index - 1].category.name));
   };
 }

@@ -228,13 +228,14 @@ var RegularRnrLineItem = base2.Base.extend({
 
     if(normalizedConsumptionCalcOption == 'DISPENSED_PLUS_NEW_PATIENTS'){
        this.normalizedConsumption = this.quantityDispensed  + this.newPatientCount;
-    } else if(normalizedConsumptionCalcOption == "MAX_X_90") {
-        if(this.stockOutDays != 90){
-            this.normalizedConsumption = (90 * this.maxStockQuantity) / (90 - this.stockOutDays);
+    } else if(normalizedConsumptionCalcOption == "DISPENSED_X_90") {
+        if(this.stockOutDays < 90){
+            this.normalizedConsumption = Math.round((90 * this.quantityDispensed) / (90 - this.stockOutDays));
         }else{
-            this.normalizedConsumption = 90 * this.maxStockQuantity;
+            this.normalizedConsumption = Math.round(90 * this.quantityDispensed);
         }
     } else{
+        // this is the default behavior
         if(!utils.isNumber(this.stockOutDays)){
           return;
         }
