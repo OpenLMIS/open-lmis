@@ -30,6 +30,8 @@ function CreateFullSupplyController($scope, messageService) {
   $scope.clearAndCloseLossesAndAdjustmentModal = function () {
     $scope.lossAndAdjustment = undefined;
     $scope.lossesAndAdjustmentsModal = false;
+
+    $('#' + $scope.currentLinkId).focus();
   };
 
   $scope.resetModalErrorAndSetFormDirty = function () {

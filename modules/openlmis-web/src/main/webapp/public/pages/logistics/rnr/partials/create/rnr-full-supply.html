@@ -153,9 +153,10 @@
                   </span>
 
                   <span ng-switch-when="lossesAndAdjustments">
-                    <div
+                    <div ng-init="controllerScope = $parent.$parent.$parent.$parent"
                       ng-class="highlightNestedFieldsWithError(rnrLineItem[column.name], 'quantity')">
-                      <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)"
+                      <a id="{{getId('lossesAndAdjustmentLink', $parent)}}" href=""
+                         ng-click="showLossesAndAdjustments(rnrLineItem); controllerScope.currentLinkId = getId('lossesAndAdjustmentLink', $parent)"
                          class="rnr-adjustment">
                         <span class="adjustment-value" ng-bind="rnrLineItem.totalLossesAndAdjustments"></span>
                       </a>
