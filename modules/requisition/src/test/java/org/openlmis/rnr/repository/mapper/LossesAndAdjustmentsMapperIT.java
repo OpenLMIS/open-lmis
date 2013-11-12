@@ -93,7 +93,7 @@ public class LossesAndAdjustmentsMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
 
-    Rnr requisition = new Rnr(facility.getId(), HIV, processingPeriod.getId(), false, MODIFIED_BY, 1L);
+    Rnr requisition = new Rnr(facility, new Program(HIV), processingPeriod, false, MODIFIED_BY, 1L);
     requisition.setStatus(INITIATED);
     requisitionMapper.insert(requisition);
 

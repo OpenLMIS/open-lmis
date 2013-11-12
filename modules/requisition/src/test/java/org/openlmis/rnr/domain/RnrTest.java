@@ -30,9 +30,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.eq;
@@ -131,7 +129,7 @@ public class RnrTest {
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
     facilityTypeApprovedProducts.add(facilityTypeApprovedProduct);
 
-    Rnr requisition = new Rnr(1L, 2L, 3L, false, facilityTypeApprovedProducts, regimens, 4L, 1L);
+    Rnr requisition = new Rnr(new Facility(1L), new Program(2L), new ProcessingPeriod(3L), false, facilityTypeApprovedProducts, regimens, 4L);
 
     assertThat(requisition.getRegimenLineItems().size(), is(1));
     assertThat(requisition.getFullSupplyLineItems().size(), is(1));
@@ -234,18 +232,18 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShip() throws Exception {
     RnrLineItem fullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-      with(roundToZero, true),
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10),
-      with(roundToZero, false))));
+        with(roundToZero, true),
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10),
+        with(roundToZero, false))));
 
     RnrLineItem nonFullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-      with(roundToZero, true),
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10),
-      with(roundToZero, false))));
+        with(roundToZero, true),
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10),
+        with(roundToZero, false))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -264,18 +262,18 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShipInCaseOfEmergencyRequisition() throws Exception {
     RnrLineItem fullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-      with(roundToZero, true),
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10),
-      with(roundToZero, false))));
+        with(roundToZero, true),
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10),
+        with(roundToZero, false))));
 
     RnrLineItem nonFullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-      with(roundToZero, true),
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10),
-      with(roundToZero, false))));
+        with(roundToZero, true),
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10),
+        with(roundToZero, false))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));

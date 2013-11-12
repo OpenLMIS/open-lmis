@@ -134,7 +134,7 @@ public class RequisitionMapperIT {
 
   private void insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
     supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
+        with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
     supplyLineMapper.insert(supplyLine);
   }
 
@@ -289,8 +289,8 @@ public class RequisitionMapperIT {
     DateTime date2 = date1.plusMonths(1);
 
     ProcessingPeriod processingPeriod4 = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, "Period4")));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, "Period4")));
     processingPeriod4.setStartDate(new Date());
 
     processingPeriodMapper.insert(processingPeriod4);
@@ -337,7 +337,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "F10", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -371,7 +371,7 @@ public class RequisitionMapperIT {
     String sortBy = "submittedDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Apollo", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -397,7 +397,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "apollo", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -423,7 +423,7 @@ public class RequisitionMapperIT {
     String sortDirection = "asc";
     String sortBy = "submittedDate";
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, "Yellow", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
     populateProgramValuesForComparison(requisition1, 0, requisitions);
@@ -449,7 +449,7 @@ public class RequisitionMapperIT {
     Rnr submittedRequisition = insertRequisition(processingPeriod1, program, SUBMITTED, true, facility, supervisoryNode, modifiedDate);
 
     List<Rnr> actualRequisitions =
-      mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
+        mapper.getInitiatedOrSubmittedEmergencyRequisitions(facility.getId(), program.getId());
 
     verifyRequisition(initiatedRequisition, actualRequisitions.get(0), INITIATED);
     verifyRequisition(submittedRequisition, actualRequisitions.get(1), SUBMITTED);
@@ -478,7 +478,7 @@ public class RequisitionMapperIT {
     String sortBy = "programName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -508,7 +508,7 @@ public class RequisitionMapperIT {
     String sortBy = "facilityName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -536,7 +536,7 @@ public class RequisitionMapperIT {
     String sortBy = "facilityCode";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -571,7 +571,7 @@ public class RequisitionMapperIT {
     String sortBy = "supplyingDepotName";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -600,7 +600,7 @@ public class RequisitionMapperIT {
     String sortBy = "modifiedDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -624,7 +624,7 @@ public class RequisitionMapperIT {
     String sortBy = "emergency";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -663,7 +663,7 @@ public class RequisitionMapperIT {
     String sortBy = "periodStartDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -703,7 +703,7 @@ public class RequisitionMapperIT {
     String sortBy = "periodEndDate";
 
     List<Rnr> requisitions = mapper.getApprovedRequisitionsForCriteriaAndPageNumber("", "", pageNumber,
-      pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, userId, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(2));
 
@@ -751,7 +751,7 @@ public class RequisitionMapperIT {
   }
 
   private Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency, Facility facility, SupervisoryNode supervisoryNode, Date modifiedDate) {
-    Rnr rnr = new Rnr(facility.getId(), program.getId(), period.getId(), emergency, MODIFIED_BY, 1L);
+    Rnr rnr = new Rnr(new Facility(facility.getId()), new Program(program.getId()), new ProcessingPeriod(period.getId()), emergency, MODIFIED_BY, 1L);
     rnr.setStatus(status);
     rnr.setEmergency(emergency);
     rnr.setModifiedDate(modifiedDate);
@@ -799,8 +799,8 @@ public class RequisitionMapperIT {
 
   private ProcessingPeriod insertPeriod(String name, ProcessingSchedule processingSchedule, Date periodStartDate, Date periodEndDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()), with(startDate, periodStartDate), with(endDate, periodEndDate),
-      with(ProcessingPeriodBuilder.name, name)));
+        with(scheduleId, processingSchedule.getId()), with(startDate, periodStartDate), with(endDate, periodEndDate),
+        with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

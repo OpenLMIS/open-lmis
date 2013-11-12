@@ -17,10 +17,7 @@ import org.junit.runner.RunWith;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProcessingPeriodMapper;
@@ -37,7 +34,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -82,12 +78,12 @@ public class RegimenLineItemMapperIT {
     processingScheduleMapper.insert(processingSchedule);
 
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, "Period1")));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, "Period1")));
 
     processingPeriodMapper.insert(processingPeriod);
 
-    rnr = new Rnr(facility.getId(), 2L, processingPeriod.getId(), false, 1L, 1L);
+    rnr = new Rnr(facility, new Program(2L), processingPeriod, false, 1L, 1L);
     rnr.setStatus(RnrStatus.INITIATED);
     requisitionMapper.insert(rnr);
     RegimenCategory category = new RegimenCategory("categoryCode", "categoryName", 1);
