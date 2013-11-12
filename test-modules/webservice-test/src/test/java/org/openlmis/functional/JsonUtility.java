@@ -24,6 +24,7 @@ import java.io.StringWriter;
 public class JsonUtility extends TestCaseHelper {
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
+  public static final String STORE_IN_CHARGE = "store in-charge";
 
   public static <T> T readObjectFromFile(String fullJsonTxtFileName, Class<T> clazz) throws IOException {
     String classPathFile = JsonUtility.class.getClassLoader().getResource(fullJsonTxtFileName).getFile();
@@ -62,36 +63,12 @@ public class JsonUtility extends TestCaseHelper {
     return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
   }
 
-  public static String createApproveRequisition() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      "POST",
-      "commTrack",
-      "Admin123");
-
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    Long id = getRequisitionIdFromResponse(responseEntity.getResponse());
-
-    reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack1");
-    reportFromJson.setRequisitionId(id);
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-    reportFromJson.getProducts().get(0).setQuantityApproved(65);
-
-    responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-      "PUT",
-      "commTrack",
-      "Admin123");
-    return responseEntity.getResponse();
+  public static void createOrder(String userName, String status, String program) throws Exception {
+      dbWrapper.insertRequisitionsToBeConvertedToOrder(1, program, true);
+      dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
+      dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
+      dbWrapper.insertFulfilmentRoleAssignment(userName,"store in-charge","F10");
+      dbWrapper.insertOrders(status, userName, program);
   }
 
   public static void approveRequisition(Long id, int quantityApproved) throws Exception {

@@ -15,6 +15,7 @@ import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pod.domain.POD;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -43,17 +44,17 @@ public class PODTest extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
-  public void testValidAndDuplicatePOD() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void testValidAndDuplicatePOD(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
 
     HttpClient client = new HttpClient();
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "RELEASED", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -66,7 +67,7 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
@@ -86,17 +87,16 @@ public class PODTest extends JsonUtility {
     assertEquals(response, "{\"error\":\"Delivery already confirmed\"}");
   }
 
-  @Test(groups = {"webservice"})
-  public void verifyPODHavingProductNotAvailableinRnR() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyPODHavingProductNotAvailableinRnR(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
     HttpClient client = new HttpClient();
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "RELEASED", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P11");
@@ -109,7 +109,7 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
@@ -118,16 +118,15 @@ public class PODTest extends JsonUtility {
     dbWrapper.verifyPODAndPODLineItems(id.toString(), "P11", "650");
   }
 
-  @Test(groups = {"webservice"})
-  public void verifyUserPermissionOnWarehouse() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyUserPermissionOnWarehouse(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-
     HttpClient client = new HttpClient();
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "READY_TO_PACK", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -140,23 +139,21 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"User does not have permission\"}");
     assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
   }
 
-  @Test(groups = {"webservice"})
-  public void verifyRoleManagePOD() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyRoleManagePOD(String userName, String program) throws Exception {
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
     HttpClient client = new HttpClient();
 
     client.createContext();
-
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "READY_TO_PACK", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -169,7 +166,7 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"User does not have permission\"}");
@@ -182,9 +179,6 @@ public class PODTest extends JsonUtility {
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
-
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
     PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
@@ -196,24 +190,22 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"Invalid Order ID\"}");
-    assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
   }
 
-  @Test(groups = {"webservice"})
-  public void verifyInvalidProductCode() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyInvalidProductCode(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
     HttpClient client = new HttpClient();
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "READY_TO_PACK", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P1000000");
@@ -226,24 +218,23 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"[P1000000] Invalid product code\"}");
     assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
   }
 
-  @Test(groups = {"webservice"})
-  public void verifyAuthentication() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyAuthentication(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
     HttpClient client = new HttpClient();
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "READY_TO_PACK", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -256,24 +247,23 @@ public class PODTest extends JsonUtility {
         "commTrack100",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(401, responseEntity.getStatus());
     assertTrue(response.contains("Error 401 Authentication Failed"));
     assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
   }
 
-  @Test(groups = {"webservice"})
-  public void verifyInvalidQuantity() throws Exception {
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void verifyInvalidQuantity(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
     HttpClient client = new HttpClient();
 
     client.createContext();
 
-    String response = createApproveRequisition();
-    Long id = getRequisitionIdFromResponse(response);
+    createOrder(userName, "TRANSFER_FAILED", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -286,12 +276,18 @@ public class PODTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    response = responseEntity.getResponse();
+    String response = responseEntity.getResponse();
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"Invalid received quantity\"}");
-    assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    assertEquals("TRANSFER_FAILED", dbWrapper.getOrderStatus(id));
   }
 
+    @DataProvider(name = "Data-Provider")
+    public Object[][] parameterIntTest() {
+        return new Object[][]{
+                {"commTrack1","HIV"}
+        };
+    }
 }
 
