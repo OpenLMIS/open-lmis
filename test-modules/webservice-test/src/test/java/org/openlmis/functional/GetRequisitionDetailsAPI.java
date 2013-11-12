@@ -226,7 +226,12 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkRequisitionStatus("AUTHORIZED", responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
+
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
   }
@@ -241,7 +246,12 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkRequisitionStatus("AUTHORIZED", responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
+
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
     checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
 
@@ -261,7 +271,12 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
+
 
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
     checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
@@ -280,12 +295,16 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
 
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
+
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
+
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);

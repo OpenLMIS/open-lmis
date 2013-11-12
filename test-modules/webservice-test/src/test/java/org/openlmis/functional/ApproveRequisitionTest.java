@@ -176,7 +176,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
     assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"Invalid Requisition id\"}", response);
+    assertEquals("{\"error\":\"Invalid RequisitionID\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
