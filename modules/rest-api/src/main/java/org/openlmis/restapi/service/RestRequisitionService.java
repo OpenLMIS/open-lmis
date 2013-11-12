@@ -59,7 +59,7 @@ public class RestRequisitionService {
   public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
-    Facility reportingFacility = facilityService.getValidatedVirtualFacilityByCode(report.getAgentCode());
+    Facility reportingFacility = facilityService.getVirtualFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
     ProgramSupported validatedProgramSupported = getValidatedProgramSupported(reportingFacility.getSupportedPrograms(), reportingProgram.getId());
     ProcessingPeriod reportingPeriod = getValidatedProcessingPeriod(reportingFacility, reportingProgram, validatedProgramSupported);
@@ -81,7 +81,7 @@ public class RestRequisitionService {
     filter(supportedPrograms, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
-        return (((ProgramSupported) o).getProgram().getId() == programId);
+        return (((ProgramSupported) o).getProgram().getId().equals(programId));
       }
     });
     if (!(supportedPrograms.size() != 0 && supportedPrograms.get(0).getActive())) {

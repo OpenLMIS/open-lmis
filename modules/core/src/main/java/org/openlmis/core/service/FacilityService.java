@@ -213,7 +213,7 @@ public class FacilityService {
     return facilityRepository.getAllByModifiedDate(modifiedDate);
   }
 
-  public Facility getValidatedVirtualFacilityByCode(String facilityCode) {
+  public Facility getVirtualFacilityByCode(String facilityCode) {
     Facility facility = facilityRepository.getByCode(facilityCode);
 
     if (facility == null) {
@@ -222,7 +222,9 @@ public class FacilityService {
 
     Facility parentFacility = facilityRepository.getById(facility.getParentFacilityId());
 
-    facility.validateVirtualFacility(parentFacility);
+    if (!facility.isValid(parentFacility)) {
+      throw new DataException("error.facility.inoperative");
+    }
 
     return facility;
   }

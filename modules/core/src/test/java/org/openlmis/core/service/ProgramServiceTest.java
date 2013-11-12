@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.event.ProgramChangeEvent;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.openlmis.db.categories.UnitTests;
@@ -147,18 +146,5 @@ public class ProgramServiceTest {
     Program actualProgram = service.getValidatedProgramByCode(programCode);
     verify(programRepository).getByCode(programCode);
     assertThat(actualProgram, is(program));
-  }
-
-  @Test
-  public void shouldThrowErrorIfProgramInactive() throws Exception {
-    Program inactiveProgram = new Program(44L);
-    inactiveProgram.setActive(false);
-
-    when(programRepository.getByCode("HIV")).thenReturn(inactiveProgram);
-
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.permission.denied");
-
-    service.getValidatedProgramByCode("HIV");
   }
 }

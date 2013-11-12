@@ -11,10 +11,8 @@
 package org.openlmis.rnr.service;
 
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.RoleAssignment;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.rnr.domain.Rnr;
@@ -36,8 +34,15 @@ public class RequisitionPermissionService {
   private RoleRightsService roleRightsService;
   @Autowired
   private RoleAssignmentService roleAssignmentService;
+  @Autowired
+  ProgramSupportedService programSupportedService;
 
   public Boolean hasPermission(Long userId, Facility facility, Program program, Right right) {
+    ProgramSupported programSupported = programSupportedService.getByFacilityIdAndProgramId(facility.getId(), program.getId());
+    if (!(programSupported != null && programSupported.getActive() && programSupported.getProgram().getActive())) {
+      return false;
+    }
+
     Set<Right> userRights = roleRightsService.getRightsForUserAndFacilityProgram(userId, facility, program);
     return userRights.contains(right);
   }
@@ -51,9 +56,9 @@ public class RequisitionPermissionService {
 
   public boolean hasPermissionToSave(Long userId, Rnr rnr) {
     return (rnr.getStatus() == INITIATED && hasPermission(userId, rnr, CREATE_REQUISITION)) ||
-      (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
-      (rnr.getStatus() == AUTHORIZED && hasPermissionToApprove(userId, rnr)) ||
-      (rnr.getStatus() == IN_APPROVAL && hasPermissionToApprove(userId, rnr));
+        (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
+        (rnr.getStatus() == AUTHORIZED && hasPermissionToApprove(userId, rnr)) ||
+        (rnr.getStatus() == IN_APPROVAL && hasPermissionToApprove(userId, rnr));
   }
 
   private boolean hasPermissionToApprove(Long userId, final Rnr rnr) {

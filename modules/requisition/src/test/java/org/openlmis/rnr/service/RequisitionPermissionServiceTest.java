@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.db.categories.UnitTests;
@@ -35,8 +36,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.isActive;
 import static org.openlmis.core.domain.Right.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.program;
 import static org.openlmis.rnr.builder.RequisitionBuilder.status;
@@ -51,6 +53,10 @@ public class RequisitionPermissionServiceTest {
   private RoleRightsService roleRightsService;
   @Mock
   private RoleAssignmentService roleAssignmentService;
+
+  @Mock
+  private ProgramSupportedService programSupportedService;
+
   @InjectMocks
   private RequisitionPermissionService requisitionPermissionService;
   private Long userId;
@@ -78,10 +84,47 @@ public class RequisitionPermissionServiceTest {
   }
 
   @Test
+  public void shouldReturnFalseIfFacilityDoesNotSupportAProgram() throws Exception {
+    Facility facility = new Facility(facilityId);
+    Program program = new Program(programId);
+
+    when(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), program.getId())).thenReturn(null);
+
+    assertThat(requisitionPermissionService.hasPermission(userId, facility, program, CREATE_REQUISITION), is(false));
+    verify(programSupportedService).getByFacilityIdAndProgramId(facility.getId(), program.getId());
+  }
+
+  @Test
+  public void shouldReturnFalseIfSupportedProgramNotActive() throws Exception {
+    Facility facility = new Facility(facilityId);
+    Program program = new Program(programId);
+
+    when(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), program.getId())).thenReturn(make(a(defaultProgramSupported, with(isActive, false))));
+
+    assertThat(requisitionPermissionService.hasPermission(userId, facility, program, CREATE_REQUISITION), is(false));
+    verify(programSupportedService).getByFacilityIdAndProgramId(facility.getId(), program.getId());
+  }
+
+  @Test
+  public void shouldReturnFalseIfProgramNotActive() throws Exception {
+    Facility facility = new Facility(facilityId);
+    Program program = new Program(programId);
+    program.setActive(false);
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    programSupported.setProgram(program);
+    when(programSupportedService.getByFacilityIdAndProgramId(facility.getId(), program.getId())).thenReturn(programSupported);
+
+    assertThat(requisitionPermissionService.hasPermission(userId, facility, program, CREATE_REQUISITION), is(false));
+    verify(programSupportedService).getByFacilityIdAndProgramId(facility.getId(), program.getId());
+  }
+
+  @Test
   public void shouldReturnTrueIfUserHasRequiredPermissionOnProgramAndFacility() throws Exception {
     Set<Right> rights = new HashSet<Right>() {{
       add(CREATE_REQUISITION);
     }};
+    when(programSupportedService.getByFacilityIdAndProgramId(facilityId, programId)).thenReturn(make(a(defaultProgramSupported)));
     when(roleRightsService.getRightsForUserAndFacilityProgram(eq(userId), any(Facility.class), any(Program.class))).thenReturn(rights);
 
     assertThat(requisitionPermissionService.hasPermission(userId, new Facility(facilityId), new Program(programId), CREATE_REQUISITION), is(true));

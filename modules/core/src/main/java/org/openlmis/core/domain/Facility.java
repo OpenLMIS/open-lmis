@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -180,9 +179,7 @@ public class Facility extends BaseModel implements Importable {
     }
   }
 
-  public void validateVirtualFacility(Facility parentFacility) {
-    if (!(active && enabled && parentFacility.active && parentFacility.enabled)) {
-      throw new DataException("error.facility.inoperative");
-    }
+  public boolean isValid(Facility parentFacility) {
+    return active && enabled && parentFacility.active && parentFacility.enabled;
   }
 }

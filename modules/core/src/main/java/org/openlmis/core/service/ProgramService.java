@@ -109,9 +109,6 @@ public class ProgramService {
     if (program == null) {
       throw new DataException("program.code.invalid");
     }
-    if (!program.getActive()) {
-      throw new DataException("error.permission.denied");
-    }
     return program;
   }
 }
