@@ -11,8 +11,10 @@
 package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
@@ -27,10 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Date;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.collections.CollectionUtils.filter;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
@@ -61,33 +62,18 @@ public class RestRequisitionService {
 
     Facility reportingFacility = facilityService.getVirtualFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
-    ProgramSupported validatedProgramSupported = getValidatedProgramSupported(reportingFacility.getSupportedPrograms(), reportingProgram.getId());
-    ProcessingPeriod reportingPeriod = getValidatedProcessingPeriod(reportingFacility, reportingProgram, validatedProgramSupported);
+    ProcessingPeriod reportingPeriod = getValidatedProcessingPeriod(reportingFacility, reportingProgram);
 
-    Rnr requisition = requisitionService.initiate(reportingFacility.getId(), reportingProgram.getId(), reportingPeriod.getId(), userId, false);
-
-    return requisition;
+    return requisitionService.initiate(reportingFacility.getId(), reportingProgram.getId(), reportingPeriod.getId(), userId, false);
   }
 
-  private ProcessingPeriod getValidatedProcessingPeriod(Facility reportingFacility, Program reportingProgram, ProgramSupported validatedProgramSupported) {
-    ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(reportingFacility.getId(), reportingProgram.getId(), validatedProgramSupported.getStartDate());
+  private ProcessingPeriod getValidatedProcessingPeriod(Facility reportingFacility, Program reportingProgram) {
+    Date programStartDate = programService.getProgramStartDate(reportingFacility.getId(), reportingProgram.getId());
+    ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(reportingFacility.getId(), reportingProgram.getId(), programStartDate);
     if (currentPeriod == null) {
       throw new DataException("error.permission.denied");
     }
     return currentPeriod;
-  }
-
-  private ProgramSupported getValidatedProgramSupported(List<ProgramSupported> supportedPrograms, final Long programId) {
-    filter(supportedPrograms, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        return (((ProgramSupported) o).getProgram().getId().equals(programId));
-      }
-    });
-    if (!(supportedPrograms.size() != 0 && supportedPrograms.get(0).getActive())) {
-      throw new DataException("error.permission.denied");
-    }
-    return supportedPrograms.get(0);
   }
 
   @Transactional

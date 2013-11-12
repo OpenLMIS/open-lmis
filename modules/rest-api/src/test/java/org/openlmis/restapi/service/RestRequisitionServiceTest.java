@@ -83,7 +83,7 @@ public class RestRequisitionServiceTest {
   Rnr requisition;
   Report report;
   User user;
-  private String credentials;
+
   byte[] encodedCredentialsBytes;
 
   @Mock
@@ -94,7 +94,6 @@ public class RestRequisitionServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    credentials = "1:correct token";
     report = make(a(defaultReport));
     String encodedCredentials = "1:correct token";
     requisition = new Rnr();
@@ -123,6 +122,7 @@ public class RestRequisitionServiceTest {
 
     when(facilityService.getVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(programService.getProgramStartDate(facility_id, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
     when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(period_id));
     when(requisitionService.initiate(facility_id, PROGRAM_ID, period_id, user.getId(), false)).thenReturn(requisition);
 
@@ -146,6 +146,7 @@ public class RestRequisitionServiceTest {
     Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported))));
     when(facilityService.getVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(programService.getProgramStartDate(5L, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
     when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(8L));
 
     service.submitReport(spyReport, 1L);
