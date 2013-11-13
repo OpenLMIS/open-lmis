@@ -631,23 +631,8 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldDoFinalApprovalOfAnRnrAndTagWithSupplyLine() throws Exception {
-    Long supervisoryNodeId = 1L;
-    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
-    savedRnr.setSupervisoryNodeId(supervisoryNodeId);
-    SupervisoryNode supervisoryNode = new SupervisoryNode();
-    supervisoryNode.setId(supervisoryNodeId);
-    SupplyLine supplyLine = new SupplyLine();
-
-    when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
-
-    Rnr rnr = requisitionService.approve(authorizedRnr);
-
-  }
-
-  @Test
   public void shouldValidateRnrForApproval() throws Exception {
-    Rnr spyRnr = spy(authorizedRnr);
+    Rnr spyRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
     spyRnr.setFacility(FACILITY);
     spyRnr.setProgram(PROGRAM);
     spyRnr.setPeriod(PERIOD);

@@ -197,8 +197,6 @@ public class RequisitionService {
   @Transactional
   public Rnr approve(Rnr requisition) {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
-    savedRnr.validateForApproval();
-
     if (!savedRnr.isApprovable())
       throw new DataException(APPROVAL_NOT_ALLOWED);
 
@@ -206,7 +204,10 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
 
+    savedRnr.validateForApproval();
+
     savedRnr.calculateForApproval();
+
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
 
     boolean notifyStatusChange = true;
@@ -217,6 +218,7 @@ public class RequisitionService {
         notifyStatusChange = false;
       savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
+
     savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
     logStatusChangeAndNotify(savedRnr, notifyStatusChange);
