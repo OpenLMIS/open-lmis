@@ -114,7 +114,7 @@ public class RestRequisitionServiceTest {
     ProgramSupported programSupported = make(a(defaultProgramSupported));
     Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported))));
 
-    when(facilityService.getVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
     when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false)).thenReturn(requisition);
 
@@ -123,7 +123,7 @@ public class RestRequisitionServiceTest {
 
     Rnr expectedRequisition = service.submitReport(report, 1L);
 
-    verify(facilityService).getVirtualFacilityByCode(DEFAULT_AGENT_CODE);
+    verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
     verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
     verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false);
     assertThat(expectedRequisition, is(requisition));
@@ -135,7 +135,7 @@ public class RestRequisitionServiceTest {
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
     Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported))));
-    when(facilityService.getVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
     when(programService.getProgramStartDate(5L, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
     when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(8L));

@@ -121,7 +121,6 @@ public class RequisitionService {
     fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
-    logStatusChangeAndNotify(requisition);
 
     requisition = requisitionRepository.getById(requisition.getId());
 
@@ -406,12 +405,8 @@ public class RequisitionService {
 
   private Rnr update(Rnr requisition) {
     requisitionRepository.update(requisition);
-    logStatusChangeAndNotify(requisition);
-    return requisition;
-  }
-
-  private void logStatusChangeAndNotify(Rnr requisition) {
     logStatusChangeAndNotify(requisition, true);
+    return requisition;
   }
 
   private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange) {
@@ -422,6 +417,7 @@ public class RequisitionService {
 
   private void insert(Rnr requisition) {
     requisitionRepository.insert(requisition);
+    logStatusChangeAndNotify(requisition, true);
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {

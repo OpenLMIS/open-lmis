@@ -47,7 +47,7 @@ public class RestRequisitionService {
   public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
-    Facility reportingFacility = facilityService.getVirtualFacilityByCode(report.getAgentCode());
+    Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
     return requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
