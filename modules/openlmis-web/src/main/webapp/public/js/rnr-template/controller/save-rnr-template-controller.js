@@ -18,7 +18,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   $scope.selectProgramUrl = "/public/pages/admin/rnr-template/index.html#/select-program";
   $scope.arithmeticValidationLabel = false;
   $scope.rnrSortableColumns = _.filter($scope.rnrColumns, function (rnrColumn) {
-    return !(rnrColumn.name == 'skip' || rnrColumn.name == 'productCode' || rnrColumn.name == 'product');
+    return !(rnrColumn.name == 'skipped' || rnrColumn.name == 'productCode' || rnrColumn.name == 'product');
   });
   $scope.rnrNonSortableColumns = _.sortBy(_.difference($scope.rnrColumns, $scope.rnrSortableColumns),
     function (rnrColumn) {

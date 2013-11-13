@@ -21,7 +21,7 @@ function ViewRnrController($scope, requisition, rnrColumns, regimenTemplate, $lo
     });
   }
 
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skip']);
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skipped']);
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
   requisitionService.populateScope($scope, $location, $routeParams);

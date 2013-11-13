@@ -26,7 +26,7 @@ describe('Rnr Template controllers', function () {
 
       rnrColumnList = [
         {"id": 2, "name": "productCode", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": false, "visible": true, "position": 2},
-        {"id": 1, "name": "skip", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 1},
+        {"id": 1, "name": "skipped", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 1},
         {"id": 3, "name": "product", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 3},
         {"id": 4, "name": "beginningBalance", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 4}
       ];
@@ -50,7 +50,7 @@ describe('Rnr Template controllers', function () {
 
     it('should filter sortable from non sortable columns and sort non sortable columns according to position', function () {
       var rnrNonSortableColumnList = [
-        {"id": 1, "name": "skip", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 1},
+        {"id": 1, "name": "skipped", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 1},
         {"id": 2, "name": "productCode", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": false, "visible": true, "position": 2},
         {"id": 3, "name": "product", "sourceConfigurable": true, "source": {'code': "U"}, "formulaValidationRequired": true, "visible": true, "position": 3}
       ];

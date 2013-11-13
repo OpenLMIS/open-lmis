@@ -42,7 +42,7 @@
     <tr ng-class="getRowErrorClass(rnrLineItem)">
       <td class="cell-input col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
         <ng-switch on="column.name">
-          <span ng-switch-when="skip">
+          <span ng-switch-when="skipped">
             <input ng-disabled="formDisabled"
                    id="{{getId(column.name, $parent)}}" type="checkbox"
                    name="skip{{rnrLineItem['id']}}"

@@ -8,7 +8,6 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DROP TABLE IF EXISTS requisition_line_items;
 CREATE TABLE requisition_line_items (
 id                                    SERIAL PRIMARY KEY,
 rnrId                                 INT NOT NULL REFERENCES requisitions(id),
@@ -44,6 +43,7 @@ roundToZero                           BOOLEAN,
 packRoundingThreshold                 INTEGER,
 fullSupply                            BOOLEAN NOT NULL,
 previousStockInHandAvailable          BOOLEAN NOT NULL DEFAULT FALSE,
+skipped                               BOOLEAN NOT NULL DEFAULT FALSE,
 createdBy                             INTEGER,
 createdDate                           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 modifiedBy                            INTEGER,

@@ -87,7 +87,7 @@ public class RnrLineItem extends LineItem {
 
   private Integer total;
 
-  private Boolean skip;
+  private Boolean skipped;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 
