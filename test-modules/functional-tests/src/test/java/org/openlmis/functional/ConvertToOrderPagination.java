@@ -59,6 +59,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updatePacksToShip("1");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "store in-charge", "F10");
   }
 
