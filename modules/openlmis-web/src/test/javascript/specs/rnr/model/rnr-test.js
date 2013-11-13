@@ -93,6 +93,21 @@ describe('R&R test', function () {
     expect(errorMessage).toEqual('error.rnr.validation');
   });
 
+  it("should not validate R&R full supply line items if line item is skipped", function(){
+    var lineItem1 = {"lineItem": "lineItem1", skipped: true};
+    var rnr = {period: {numberOfMonths: 3}, status: 'INITIATED', 'fullSupplyLineItems': [lineItem1]};
+
+    var programRnrColumnList = [
+      {"name": "beginningBalance"},
+      {"name": "noOfPatients"}
+    ];
+    rnr = createRegularRnr(rnr, programRnrColumnList);
+    spyOn(rnr.fullSupplyLineItems[0], 'validateRequiredFieldsForFullSupply').andReturn(false);
+
+    var errorMessage = rnr.validateFullSupply();
+    expect(errorMessage).toEqual('');
+  });
+
   it('should validate R&R full supply line items and return true if required field is not missing', function () {
     var lineItem1 = {"lineItem": "lineItem1"};
     var lineItem2 = {};

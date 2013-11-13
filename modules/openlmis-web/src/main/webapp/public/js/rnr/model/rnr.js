@@ -71,6 +71,7 @@ var Rnr = function (rnr, programRnrColumns) {
     }
 
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
+      if (lineItem.skipped) return;
       if (!validateRequiredFields(lineItem)) return false;
       if (!validateFormula(lineItem)) return false;
     });

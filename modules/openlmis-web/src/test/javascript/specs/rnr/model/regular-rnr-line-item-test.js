@@ -652,6 +652,31 @@ describe('RegularRnrLineItem', function () {
       ];
     });
 
+    it("should not give error if line item is skipped", function () {
+      var regularRnrLineItem = new RegularRnrLineItem(
+          {"id": "1",
+            "beginningBalance": 3,
+            "quantityReceived": 3,
+            "quantityDispensed": 3,
+            "stockInHand": 3,
+            "skipped": true}
+          , null, programRnrColumnList);
+
+      spyOn(regularRnrLineItem, 'arithmeticallyInvalid').andReturn("error");
+      var errorMsg = regularRnrLineItem.getErrorMessage();
+      expect(errorMsg).toEqual('');
+
+    });
+
+    it("should give error message for negative stock in hand", function () {
+      var regularRnrLineItem = new RegularRnrLineItem(
+          {"id": "1", "stockInHand": -3},
+          null, programRnrColumnList);
+
+      var errorMsg = regularRnrLineItem.getErrorMessage();
+
+      expect(errorMsg).toEqual("error.stock.on.hand.negative");
+    });
 
     it("should give error message for arithmetic validation error ", function () {
       var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "stockInHand":3};
@@ -661,16 +686,6 @@ describe('RegularRnrLineItem', function () {
       spyOn(regularRnrLineItem, 'arithmeticallyInvalid').andReturn("error");
       var errorMsg = regularRnrLineItem.getErrorMessage();
       expect(errorMsg).toEqual("error.arithmetically.invalid");
-    });
-
-    it("should give error message for negative stock in hand", function () {
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":33, "stockInHand":-3};
-      var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
-      jQuery.extend(regularRnrLineItem, lineItem);
-
-      var errorMsg = regularRnrLineItem.getErrorMessage();
-
-      expect(errorMsg).toEqual("error.stock.on.hand.negative");
     });
 
     it("should give error message for negative quantity dispensed ", function () {

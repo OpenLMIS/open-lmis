@@ -34,8 +34,8 @@ services.factory('requisitionService', function (messageService) {
       $location.search('page', page);
     };
 
-    $scope.highlightRequired = function (showError, value) {
-      if (showError && (isUndefined(value))) {
+    $scope.highlightRequired = function (showError, value, skipped) {
+      if (showError && isUndefined(value) && (skipped === false)) {
         return "required-error";
       }
       return null;

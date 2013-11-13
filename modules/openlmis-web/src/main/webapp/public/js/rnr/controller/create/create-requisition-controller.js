@@ -200,8 +200,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.getCellErrorClass = function (rnrLineItem) {
-    return (typeof(rnrLineItem.getErrorMessage) != "undefined" && rnrLineItem.getErrorMessage()) ?
-      'cell-error-highlight' : '';
+    return !!rnrLineItem.getErrorMessage() ? 'cell-error-highlight' : '';
   };
 
   $scope.lineItemErrorMessage = function (rnrLineItem) {

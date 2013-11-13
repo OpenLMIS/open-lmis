@@ -314,6 +314,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   getErrorMessage: function () {
+    if (this.skipped) return "";
     if (this.stockInHand < 0) return "error.stock.on.hand.negative";
     if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
     if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
