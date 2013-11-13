@@ -36,7 +36,6 @@ public class Report {
   private List<RnrLineItem> products;
 
   private String agentCode;
-  private String programCode;
 
 
   public void validate() {
