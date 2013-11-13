@@ -210,13 +210,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   private void setUpData(String program, String userSIC) throws SQLException, IOException {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
-    rightsList.add("VIEW_REQUISITION");
+   
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
