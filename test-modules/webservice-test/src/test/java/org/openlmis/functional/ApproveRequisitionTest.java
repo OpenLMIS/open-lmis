@@ -16,8 +16,10 @@ import org.openlmis.restapi.domain.Report;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
 import java.io.IOException;
 import java.sql.SQLException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
@@ -64,7 +66,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
-    assertTrue(response.contains("{\"R&R\":"));
+    assertTrue(response.contains("{\"requisitionId\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");

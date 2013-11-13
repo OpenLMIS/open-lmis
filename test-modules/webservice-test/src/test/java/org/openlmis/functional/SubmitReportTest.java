@@ -104,11 +104,11 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid program code\"}", responseEntity.getResponse());
   }
 
-  @Test(groups = {"webservice"})
-  public void testSubmitReportValidRnR() throws Exception {
-    //String response = submitRequisition(, );
-    //assertTrue(response.contains("{\"R&R\":"));
-  }
+//  @Test(groups = {"webservice"})
+//  public void testSubmitReportValidRnR() throws Exception {
+//    String response = submitRequisition(, );
+//    assertTrue(response.contains("{\"R&R\":"));
+//  }
 
   @Test
   public void shouldThrowErrorOnSubmittingDuplicateReport() throws Exception {
@@ -227,7 +227,7 @@ public class SubmitReportTest extends JsonUtility {
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(201, responseEntity.getStatus());
-    assertTrue(response.contains("{\"R&R\":"));
+    assertTrue(response.contains("{\"requisitionId\":"));
   }
 
   @Test(groups = {"webservice"})

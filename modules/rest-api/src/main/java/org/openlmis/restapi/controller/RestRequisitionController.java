@@ -35,7 +35,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class RestRequisitionController extends BaseController {
 
-  public static final String RNR = "R&R";
+  public static final String RNR = "requisitionId";
 
   @Autowired
   private RestRequisitionService restRequisitionService;

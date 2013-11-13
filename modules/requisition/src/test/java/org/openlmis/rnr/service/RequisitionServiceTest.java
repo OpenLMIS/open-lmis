@@ -67,7 +67,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.openlmis.rnr.service.RequisitionService.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -1438,7 +1438,7 @@ public class RequisitionServiceTest {
     when(processingScheduleService.getCurrentPeriod(eq(FACILITY.getId()), eq(PROGRAM.getId()), any(Date.class))).thenReturn(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.permission.denied");
+    expectedException.expectMessage("error.program.configuration.missing");
 
     requisitionService.findPeriod(FACILITY, PROGRAM, true);
   }

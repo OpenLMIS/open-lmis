@@ -280,7 +280,7 @@ public class RequisitionService {
         programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
-      throw new DataException("error.permission.denied");
+      throw new DataException("error.program.configuration.missing");
 
     return currentPeriod;
   }
