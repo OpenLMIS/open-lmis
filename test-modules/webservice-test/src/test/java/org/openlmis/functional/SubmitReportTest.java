@@ -50,9 +50,8 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(100L);
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.setAgentCode("Invalid");
+    reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions.json",
@@ -64,7 +63,7 @@ public class SubmitReportTest extends JsonUtility {
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
 
     assertEquals(400, responseEntity.getStatus());
-    assertEquals(response, "{\"error\":\"User does not have rights to save this R&R\"}");
+    assertEquals(response, "{\"error\":\"Invalid Facility code\"}");
   }
 
   @Test(groups = {"webservice"})
@@ -91,9 +90,8 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(500L);
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("InvalidProgram");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions.json",
@@ -103,7 +101,7 @@ public class SubmitReportTest extends JsonUtility {
 
     client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"User does not have rights to save this R&R\"}", responseEntity.getResponse());
+    assertEquals("{\"error\":\"Invalid program code\"}", responseEntity.getResponse());
   }
 
   @Test(groups = {"webservice"})
@@ -112,15 +110,14 @@ public class SubmitReportTest extends JsonUtility {
     //assertTrue(response.contains("{\"R&R\":"));
   }
 
-  @Test(groups = {"webservice"})
+  @Test
   public void shouldThrowErrorOnSubmittingDuplicateReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
 
     String jsonStringFor = getJsonStringFor(reportFromJson);
     client.SendJSON(jsonStringFor,
@@ -140,14 +137,13 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals("{\"error\":\"Please finish all R&R of previous period(s)\"}", responseEntity.getResponse());
   }
 
-  @Test(groups = {"webservice"})
+  @Test
   public void testBlankProductSubmitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
@@ -159,7 +155,7 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product code\"}", response);
   }
 
-  @Test(groups = {"webservice"})
+  @Test
   public void testInvalidProductSubmitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -184,7 +180,7 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product code\"}", response);
   }
 
-  @Test(groups = {"webservice"})
+  @Test
   public void testBlankBeginningBalanceSubmitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -211,16 +207,13 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testMinimumSubmitReportValidRnR() throws Exception {
+  public void testInitiateRnr() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity =
       client.SendJSON(
@@ -238,41 +231,13 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testSubmitReportInvalidUser() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack100");
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json", POST,
-        "commTrack",
-        "Admin123");
-
-    String response = responseEntity.getResponse();
-
-    client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"Please provide a valid username\"}", response);
-  }
-
-  @Test(groups = {"webservice"})
   public void shouldReturn401StatusWhenSubmittingReportWithInvalidAPIUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity =
       client.SendJSON(

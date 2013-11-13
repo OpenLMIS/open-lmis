@@ -1,9 +1,6 @@
 {
-    "facilityId": "",
-    "programId": "",
-    "periodId": "",
-    "userName": "commTrack",
-    "emergency" : "false",
+    "agentCode": "",
+    "programCode": "",
     "products": [
         {
             "productCode": "P10",
