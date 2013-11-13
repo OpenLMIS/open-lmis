@@ -97,6 +97,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updatePacksToShip("1");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
