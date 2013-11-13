@@ -11,7 +11,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestBase;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
@@ -156,9 +155,12 @@ public class E2EUpload extends TestCaseHelper {
 
     dbWrapper.insertVirtualFacility(virtualFacilityCode,parentFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
+    testWebDriver.sleep(2000);
     assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid",parentFacilityCode),dbWrapper.getGeographicZoneId("IND"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode);
+
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
+    testWebDriver.sleep(2000);
     assertEquals(dbWrapper.getFacilityFieldBYCode("typeid",parentFacilityCode),dbWrapper.getFacilityTypeId("warehouse"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode);
 
@@ -169,6 +171,7 @@ public class E2EUpload extends TestCaseHelper {
     //assertNotEquals(dbWrapper.getFacilityFieldBYCode("typeid",virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
 
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
+    testWebDriver.sleep(2000);
     List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
     listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
     assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
