@@ -121,6 +121,9 @@ public class RequisitionServiceTest {
   @Mock
   private ProgramProductService programProductService;
 
+  @Mock
+  private MessageService messageService;
+
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -600,7 +603,7 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(submittedRnr.getId())).thenReturn(savedRnr);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_ALREADY_APPROVED);
+    expectedException.expectMessage(APPROVAL_NOT_ALLOWED);
 
     requisitionService.approve(submittedRnr);
   }
@@ -1020,11 +1023,22 @@ public class RequisitionServiceTest {
     when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, APPROVE_REQUISITION)).thenReturn(false);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(RNR_ALREADY_APPROVED);
+    expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
 
     requisitionService.approve(authorizedRnr);
   }
 
+  @Test
+  public void shouldThrowErrorIfRnrNotApprovable() throws Exception {
+    Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
+
+    when(requisitionPermissionService.hasPermission(USER_ID, savedRnr, APPROVE_REQUISITION)).thenReturn(true);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(APPROVAL_NOT_ALLOWED);
+
+    requisitionService.approve(authorizedRnr);
+  }
   @Test
   public void shouldGetCategoryCount() {
     Rnr requisition = new Rnr();
@@ -1166,7 +1180,6 @@ public class RequisitionServiceTest {
     verify(requisitionEventService).notifyForStatusChange(requisition);
   }
 
-
   @Test
   public void shouldSaveRnrWithOnlyThoseFieldsWhichAreCreatorEditableBasedOnRnrStatus() throws Exception {
     Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
@@ -1193,6 +1206,7 @@ public class RequisitionServiceTest {
 
     when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
     doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
+    doReturn(new ArrayList<>()).when(savedRequisition).getProductCodeDifference(authorizedRnr);
 
     requisitionService.save(authorizedRnr);
 
@@ -1207,6 +1221,7 @@ public class RequisitionServiceTest {
 
     when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
     doNothing().when(savedRequisition).copyApproverEditableFields(inApprovalRnr, template);
+    doReturn(new ArrayList<>()).when(savedRequisition).getProductCodeDifference(inApprovalRnr);
     requisitionService.save(inApprovalRnr);
 
     verify(savedRequisition).copyApproverEditableFields(inApprovalRnr, template);
@@ -1290,7 +1305,7 @@ public class RequisitionServiceTest {
     String sortDirection = "asc";
     String sortBy = "program";
     requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l,
-        Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
@@ -1450,7 +1465,7 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldThrowAnExceptionIfNumberOfLineItemsMismatchBetweenAuthorizedAndToBeApprovedRnr() throws Exception {
+  public void shouldThrowAnExceptionIfLineItemsCountMismatchBetweenAuthorizedAndToBeApprovedRnr() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.number.of.lineitems.mismatch");
     Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr, with(modifiedBy, USER_ID)));
@@ -1462,6 +1477,22 @@ public class RequisitionServiceTest {
     doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
 
     requisitionService.save(rnrForApproval);
+  }
+
+  @Test
+  public void shouldThrowAnExceptionIfInvalidProductCode() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("invalid product code");
+
+    Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
+    doReturn(asList("P10")).when(savedRequisition).getProductCodeDifference(authorizedRnr);
+    when(messageService.message("invalid.product.codes", "[P10]")).thenReturn("invalid product code");
+
+    when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
+    doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
+
+    requisitionService.save(authorizedRnr);
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

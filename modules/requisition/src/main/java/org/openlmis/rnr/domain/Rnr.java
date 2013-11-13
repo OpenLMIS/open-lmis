@@ -350,5 +350,15 @@ public class Rnr extends BaseModel {
   public boolean isInApproval() {
     return status == IN_APPROVAL;
   }
+
+  public List<String> getProductCodeDifference(Rnr rnr) {
+    List<String> invalidProductCodes = new ArrayList<>();
+    for (final RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
+      if (this.findCorrespondingLineItem(lineItem) == null) {
+        invalidProductCodes.add(lineItem.getProductCode());
+      }
+    }
+    return invalidProductCodes;
+  }
 }
 

@@ -13,7 +13,6 @@ package org.openlmis.restapi.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.Arrays.asList;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
@@ -60,13 +58,12 @@ public class RestRequisitionService {
   }
 
   @Transactional
-  public Rnr approve(Report report) {
-    User user = getValidatedUser(report);
+  public Rnr approve(Report report, Long userId) {
     Rnr requisition = report.getRequisition();
-    requisition.setModifiedBy(user.getId());
+    requisition.setModifiedBy(userId);
 
     Long facilityId = requisitionService.getFacilityId(requisition.getId());
-    if(facilityId == null){
+    if (facilityId == null) {
       throw new DataException("error.invalid.requisition.id");
     }
     Facility facility = facilityService.getById(facilityId);
@@ -76,14 +73,6 @@ public class RestRequisitionService {
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
     return requisition;
-  }
-
-  private User getValidatedUser(Report report) {
-    User user = userService.getByUserName(report.getUserName());
-    if (user == null) {
-      throw new DataException("user.username.incorrect");
-    }
-    return user;
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {

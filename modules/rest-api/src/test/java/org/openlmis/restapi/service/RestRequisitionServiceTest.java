@@ -19,10 +19,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.*;
 import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
@@ -42,9 +41,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -101,7 +98,7 @@ public class RestRequisitionServiceTest {
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUserName(user.getUserName())).thenReturn(user);
     when(requisitionService.initiate(new Facility(report.getFacilityId()), new Program(report.getProgramId()), user.getId(), report.getEmergency()))
-        .thenReturn(requisition);
+      .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
   }
@@ -161,7 +158,7 @@ public class RestRequisitionServiceTest {
     when(userService.getByUserName("1")).thenReturn(user);
     Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(null);
 
-    service.approve(spyReport);
+    service.approve(spyReport, 2L);
 
     verify(requisitionService).getFacilityId(requisitionFromReport.getId());
   }
@@ -182,7 +179,7 @@ public class RestRequisitionServiceTest {
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, false)));
     Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
 
-    service.approve(spyReport);
+    service.approve(spyReport, 2L);
 
     verify(requisitionService).getFacilityId(requisitionFromReport.getId());
     verify(facilityService).getById(facilityId);
@@ -200,27 +197,13 @@ public class RestRequisitionServiceTest {
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
     Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
 
-    service.approve(spyReport);
+    service.approve(spyReport, 2L);
 
-    assertThat(requisitionFromReport.getModifiedBy(), is(user.getId()));
     verify(spyReport).getRequisition();
     verify(requisitionService).save(requisitionFromReport);
     verify(requisitionService).approve(requisitionFromReport);
   }
 
-  @Test
-  public void shouldValidateUserAndThrowErrorIfUsernameDoesNotMatchVendorWhileApproving() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
-    report.setProducts(products);
-    whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUserName(user.getUserName())).thenReturn(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("user.username.incorrect");
-
-    service.approve(report);
-  }
 
   @Test
   public void shouldGetReplenishmentDTOByRequisitionId() throws Exception {

@@ -44,7 +44,7 @@ public class RequisitionService {
   public static final String RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR = "msg.rnr.approved.without.supervisor";
   public static final String NO_SUPERVISORY_NODE_CONTACT_ADMIN = "msg.rnr.submitted.without.supervisor";
   public static final String RNR_APPROVED_SUCCESSFULLY = "msg.rnr.approved.success";
-  public static final String RNR_ALREADY_APPROVED = "rnr.already.approved";
+  public static final String APPROVAL_NOT_ALLOWED = "rnr.approval.not.allowed";
 
   public static final String SEARCH_ALL = "all";
   public static final String SEARCH_PROGRAM_NAME = "programName";
@@ -87,6 +87,8 @@ public class RequisitionService {
   private ProgramProductService programProductService;
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
+  @Autowired
+  private MessageService messageService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -139,6 +141,12 @@ public class RequisitionService {
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       if (savedRnr.getFullSupplyLineItems().size() != rnr.getFullSupplyLineItems().size())
         throw new DataException("error.number.of.lineitems.mismatch");
+
+      List<String> invalidProductCodes = savedRnr.getProductCodeDifference(rnr);
+      if (invalidProductCodes.size() != 0) {
+        throw new DataException(messageService.message("invalid.product.codes", invalidProductCodes.toString()));
+      }
+
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
@@ -191,8 +199,11 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     savedRnr.validateForApproval();
 
-    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION) || !savedRnr.isApprovable())
-      throw new DataException(RNR_ALREADY_APPROVED);
+    if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION)) {
+      throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    }
+    if (!savedRnr.isApprovable())
+      throw new DataException(APPROVAL_NOT_ALLOWED);
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
@@ -334,7 +345,7 @@ public class RequisitionService {
 
   private Rnr getPreviousRequisition(Rnr requisition) {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-        requisition.getPeriod());
+      requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),

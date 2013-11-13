@@ -58,6 +58,8 @@ public class Report {
     for (RnrLineItem rnrLineItem : products) {
       if (rnrLineItem.getProductCode() == null || rnrLineItem.getQuantityApproved() == null)
         throw new DataException("error.restapi.mandatory.missing");
+      if (rnrLineItem.getQuantityApproved() < 0 )
+        throw new DataException("error.restapi.quantity.approved.negative");
     }
   }
 }

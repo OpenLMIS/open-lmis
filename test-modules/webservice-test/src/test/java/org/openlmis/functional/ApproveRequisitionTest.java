@@ -75,30 +75,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertTrue(responseEntity1.getResponse().contains(",\"endDate\":"));
     }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
-  public void testApproveRequisitionInValidUser() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
-
-    submitRequisition("commTrack1","HIV");
-    Long id = (long)dbWrapper.getMaxRnrID();
-    dbWrapper.updateRequisitionStatus("AUTHORIZED","commTrack","HIV");
-
-    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("ABCD");
-    reportFromJson.setRequisitionId(id);
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-    reportFromJson.getProducts().get(0).setQuantityApproved(65);
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
-      "commTrack", "Admin123");
-    String response = responseEntity.getResponse();
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"Please provide a valid username\"}", response);
-  }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
   public void testApproveRequisitionUnauthorizedAccess() throws Exception {
@@ -149,7 +125,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"Invalid product code\"}", response);
+    assertEquals("{\"error\":\"Invalid product codes [P1000]\"}", response);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})

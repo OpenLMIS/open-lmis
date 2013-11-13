@@ -114,4 +114,16 @@ public class ReportTest {
 
     report.validateForApproval();
   }
+
+  @Test
+  public void shouldThrowExceptionIfQuantityApprovedIsNegative() throws Exception {
+    Report report = make(a(ReportBuilder.defaultReport));
+    Integer quantityApproved = -1;
+    report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.quantityApproved, quantityApproved)))));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.restapi.quantity.approved.negative");
+
+    report.validateForApproval();
+  }
 }

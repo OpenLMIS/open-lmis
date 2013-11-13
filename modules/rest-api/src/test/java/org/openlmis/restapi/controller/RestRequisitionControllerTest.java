@@ -104,18 +104,19 @@ public class RestRequisitionControllerTest {
   public void shouldApproveReport() throws Exception {
 
     Long id = 1L;
+    Long userId = 1L;
     Rnr expectedRnr = new Rnr();
     expectedRnr.setId(1L);
 
-    when(service.approve(report)).thenReturn(expectedRnr);
+    when(service.approve(report, userId)).thenReturn(expectedRnr);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), OK);
     when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
     doNothing().when(report).validateForApproval();
 
-    ResponseEntity<RestResponse> response = controller.approve(id, report);
+    ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
-    verify(service).approve(report);
+    verify(service).approve(report, userId);
     verify(report).setRequisitionId(expectedRnr.getId());
   }
 
@@ -126,11 +127,11 @@ public class RestRequisitionControllerTest {
 
     doNothing().when(report).validateForApproval();
     DataException dataException = new DataException(errorMessage);
-    doThrow(dataException).when(service).approve(report);
+    doThrow(dataException).when(service).approve(report,1L);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report);
+    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report,principal);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }

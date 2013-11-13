@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -538,6 +539,17 @@ public class RnrTest {
 
     verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
+  }
+
+  @Test
+  public void shouldGetProductCodeDifferenceGivenARnr() throws Exception {
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    savedRnr.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")))));
+
+    Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr));
+    rnrForApproval.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P10")))));
+
+    assertThat(savedRnr.getProductCodeDifference(rnrForApproval), is(asList("P10")));
   }
 
   @Test
