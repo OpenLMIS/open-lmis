@@ -216,7 +216,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
-   
+
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");

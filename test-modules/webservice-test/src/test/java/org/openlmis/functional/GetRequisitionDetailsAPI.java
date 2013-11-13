@@ -10,11 +10,9 @@
 
 package org.openlmis.functional;
 
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pod.domain.POD;
-import org.openlmis.restapi.domain.Report;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -175,26 +173,11 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   public void testGetRequisitionDetailsWithNullRemarks() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper = new DBWrapper();
+    submitRequisition("commTrack1","HIV");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
 
-    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-    reportFromJson.getProducts().get(0).setRemarks(null);
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      "POST",
-      "commTrack",
-      "Admin123");
-
-    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-    String response = responseEntity.getResponse();
-
-    Long id = getRequisitionIdFromResponse(response);
-
-    responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
+    ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("remarks:"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
