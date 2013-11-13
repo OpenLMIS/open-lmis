@@ -25,8 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
 
-import static org.openlmis.restapi.response.RestResponse.error;
-import static org.openlmis.restapi.response.RestResponse.response;
+import static org.openlmis.restapi.response.RestResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -57,8 +56,8 @@ public class RestRequisitionController extends BaseController {
     report.validateForApproval();
     report.setRequisitionId(id);
     try {
-      Rnr approveRnr = restRequisitionService.approve(report, loggedInUserId(principal));
-      return response(RNR, approveRnr.getId());
+      restRequisitionService.approve(report, loggedInUserId(principal));
+      return success("msg.rnr.approve.success");
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

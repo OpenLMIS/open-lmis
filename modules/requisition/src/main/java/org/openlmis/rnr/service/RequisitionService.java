@@ -140,7 +140,7 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       if (savedRnr.getFullSupplyLineItems().size() != rnr.getFullSupplyLineItems().size())
-        throw new DataException("error.number.of.lineitems.mismatch");
+        throw new DataException("error.number.of.line.items.mismatch");
 
       List<String> invalidProductCodes = savedRnr.getProductCodeDifference(rnr);
       if (invalidProductCodes.size() != 0) {
@@ -199,11 +199,12 @@ public class RequisitionService {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     savedRnr.validateForApproval();
 
+    if (!savedRnr.isApprovable())
+      throw new DataException(APPROVAL_NOT_ALLOWED);
+
     if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
-    if (!savedRnr.isApprovable())
-      throw new DataException(APPROVAL_NOT_ALLOWED);
 
     savedRnr.calculateForApproval();
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());

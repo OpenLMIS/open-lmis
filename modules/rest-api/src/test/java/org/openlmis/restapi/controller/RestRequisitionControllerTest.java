@@ -38,6 +38,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.controller.RestRequisitionController.RNR;
 import static org.openlmis.restapi.controller.RestRequisitionController.UNEXPECTED_EXCEPTION;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
+import static org.openlmis.restapi.response.RestResponse.SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -108,14 +109,14 @@ public class RestRequisitionControllerTest {
     Rnr expectedRnr = new Rnr();
     expectedRnr.setId(1L);
 
-    when(service.approve(report, userId)).thenReturn(expectedRnr);
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), OK);
-    when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
+    doNothing().when(service).approve(report, userId);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(SUCCESS, "success"), OK);
+    when(RestResponse.success("msg.rnr.approve.success")).thenReturn(expectResponse);
     doNothing().when(report).validateForApproval();
 
     ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
 
-    assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
+    assertThat(response.getBody().getSuccess(), is("success"));
     verify(service).approve(report, userId);
     verify(report).setRequisitionId(expectedRnr.getId());
   }

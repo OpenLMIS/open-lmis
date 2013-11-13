@@ -1467,7 +1467,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldThrowAnExceptionIfLineItemsCountMismatchBetweenAuthorizedAndToBeApprovedRnr() throws Exception {
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.number.of.lineitems.mismatch");
+    expectedException.expectMessage("error.number.of.line.items.mismatch");
     Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr, with(modifiedBy, USER_ID)));
     rnrForApproval.add(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode,"P10"))), true);
     Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);

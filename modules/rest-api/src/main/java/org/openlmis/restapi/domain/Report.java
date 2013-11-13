@@ -12,7 +12,6 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
@@ -56,9 +55,9 @@ public class Report {
       throw new DataException("error.restapi.mandatory.missing");
     }
     for (RnrLineItem rnrLineItem : products) {
-      if (rnrLineItem.getProductCode() == null || rnrLineItem.getQuantityApproved() == null)
+      if (isEmpty(rnrLineItem.getProductCode()) || rnrLineItem.getQuantityApproved() == null)
         throw new DataException("error.restapi.mandatory.missing");
-      if (rnrLineItem.getQuantityApproved() < 0 )
+      if (rnrLineItem.getQuantityApproved() < 0)
         throw new DataException("error.restapi.quantity.approved.negative");
     }
   }

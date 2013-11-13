@@ -58,7 +58,7 @@ public class RestRequisitionService {
   }
 
   @Transactional
-  public Rnr approve(Report report, Long userId) {
+  public void approve(Report report, Long userId) {
     Rnr requisition = report.getRequisition();
     requisition.setModifiedBy(userId);
 
@@ -72,7 +72,6 @@ public class RestRequisitionService {
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
-    return requisition;
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {

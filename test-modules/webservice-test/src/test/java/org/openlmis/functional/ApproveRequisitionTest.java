@@ -36,7 +36,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
   @AfterMethod(groups = {"webservice"})
   public void tearDown() throws IOException, SQLException {
-    dbWrapper.deleteData();
+    //dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
@@ -66,7 +66,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
-    assertTrue(response.contains("{\"requisitionId\":"));
+    assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
 
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
