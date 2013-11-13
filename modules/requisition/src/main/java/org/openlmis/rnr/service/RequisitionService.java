@@ -285,8 +285,8 @@ public class RequisitionService {
 
   ProcessingPeriod findPeriod(Facility facility, Program program, Boolean emergency) {
     if (!(emergency || facility.getVirtualFacility())) {
-      List<ProcessingPeriod> validPeriods = getAllPeriodsForInitiatingRequisition(facility.getId(), program.getId());
-      return validPeriods.get(0);
+      ProcessingPeriod periodForInitiating = getPeriodForInitiating(facility, program);
+      return periodForInitiating;
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
@@ -296,6 +296,23 @@ public class RequisitionService {
       throw new DataException("error.program.configuration.missing");
 
     return currentPeriod;
+  }
+
+  ProcessingPeriod getPeriodForInitiating(Facility facility, Program program) {
+    Rnr lastRegularRequisition = requisitionRepository.getLastRegularRequisition(facility, program);
+    if(lastRegularRequisition.preSubmit()) {
+      throw new DataException("error.rnr.previous.not.filled");
+    }
+
+    Date programStartDate = programService.getProgramStartDate(facility.getId(), program.getId());
+    ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(), programStartDate);
+
+    if(lastRegularRequisition.getPeriod().getId().equals(currentPeriod.getId())) {
+      throw new DataException("error.rnr.already.initiated");
+    }
+
+    List<ProcessingPeriod> periodsForInitiating = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, lastRegularRequisition.getPeriod().getId());
+    return periodsForInitiating.get(0);
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
@@ -314,7 +331,7 @@ public class RequisitionService {
     }
 
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
-        periodIdOfLastRequisitionToEnterPostSubmitFlow);
+      periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
@@ -369,17 +386,6 @@ public class RequisitionService {
     requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
   }
 
-  private void fillFacilityPeriodProgramWithAuditFields(List<Rnr> requisitions) {
-    for (Rnr requisition : requisitions) {
-      Facility facility = facilityService.getById(requisition.getFacility().getId());
-      ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
-      Program program = programService.getById(requisition.getProgram().getId());
-
-      requisition.fillBasicInformation(facility, program, period);
-      requisition.setSubmittedDate(getOperationDateFor(requisition.getId(), SUBMITTED.toString()));
-    }
-  }
-
 
   private Rnr getLastPeriodsRnr(Rnr requisition) {
     if (requisition == null) return null;
@@ -388,7 +394,7 @@ public class RequisitionService {
     if (lastPeriod == null) return null;
 
     return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-        lastPeriod);
+      lastPeriod);
   }
 
   public List<Rnr> listForApproval(Long userId) {
@@ -498,6 +504,17 @@ public class RequisitionService {
 
   public Long getFacilityId(Long id) {
     return requisitionRepository.getFacilityId(id);
+  }
+
+  private void fillFacilityPeriodProgramWithAuditFields(List<Rnr> requisitions) {
+    for (Rnr requisition : requisitions) {
+      Facility facility = facilityService.getById(requisition.getFacility().getId());
+      ProcessingPeriod period = processingScheduleService.getPeriodById(requisition.getPeriod().getId());
+      Program program = programService.getById(requisition.getProgram().getId());
+
+      requisition.fillBasicInformation(facility, program, period);
+      requisition.setSubmittedDate(getOperationDateFor(requisition.getId(), SUBMITTED.toString()));
+    }
   }
 }
 

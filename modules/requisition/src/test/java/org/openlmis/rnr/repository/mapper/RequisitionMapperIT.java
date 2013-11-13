@@ -321,6 +321,17 @@ public class RequisitionMapperIT {
   }
 
   @Test
+  public void shouldGetLastRegularRequisitionForFacilityAndProgram() throws Exception {
+    insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    Rnr expectedRnr = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+
+    Rnr lastRequisition = mapper.getLastRegularRequisition(facility, program);
+
+    assertThat(lastRequisition.getStatus(), is(expectedRnr.getStatus()));
+    assertThat(lastRequisition.getPeriod().getId(), is(processingPeriod1.getId()));
+  }
+
+  @Test
   public void shouldGetApprovedRequisitionsForCriteriaAndPageNumberWhenSearchingByFacilityCode() throws SQLException {
     Long userId = insertUser();
     insertRoleForApprovedRequisitions(facility.getId(), userId);

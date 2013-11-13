@@ -176,6 +176,15 @@ public interface RequisitionMapper {
   @Select({"SELECT facilityid FROM requisitions WHERE id = #{id}"})
   Long getFacilityId(Long id);
 
+  @Select({"SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId = #{program.id} AND emergency = false",
+    "ORDER BY createdDate DESC LIMIT 1"})
+  @Results(value = {
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "period.id", column = "periodId")
+  })
+  Rnr getLastRegularRequisition(@Param("facility") Facility facility, @Param("program") Program program);
+
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")

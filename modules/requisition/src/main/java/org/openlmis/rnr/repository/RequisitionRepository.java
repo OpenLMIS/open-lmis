@@ -203,5 +203,9 @@ public class RequisitionRepository {
   public Long getFacilityId(Long id) {
     return requisitionMapper.getFacilityId(id);
   }
+
+  public Rnr getLastRegularRequisition(Facility facility, Program program) {
+    return requisitionMapper.getLastRegularRequisition(facility, program);
+  }
 }
 
