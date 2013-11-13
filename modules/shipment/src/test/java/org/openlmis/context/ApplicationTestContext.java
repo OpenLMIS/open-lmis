@@ -60,8 +60,8 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
 
   protected ProcessingPeriod insertPeriod(String name, ProcessingSchedule processingSchedule, Date periodStartDate, Date periodEndDate) {
     ProcessingPeriod processingPeriod = make(MakeItEasy.a(defaultProcessingPeriod,
-      MakeItEasy.with(scheduleId, processingSchedule.getId()), MakeItEasy.with(startDate, periodStartDate), MakeItEasy.with(endDate, periodEndDate),
-      MakeItEasy.with(ProcessingPeriodBuilder.name, name)));
+        MakeItEasy.with(scheduleId, processingSchedule.getId()), MakeItEasy.with(startDate, periodStartDate), MakeItEasy.with(endDate, periodEndDate),
+        MakeItEasy.with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 
@@ -69,7 +69,7 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
   }
 
   protected Rnr insertRequisition(ProcessingPeriod period, Program program, RnrStatus status, Boolean emergency, Facility facility, SupervisoryNode supervisoryNode, Date modifiedDate) {
-    Rnr rnr = new Rnr(facility.getId(), program.getId(), period.getId(), emergency, MODIFIED_BY, 1L);
+    Rnr rnr = new Rnr(facility, program, period, emergency, MODIFIED_BY, 1L);
     rnr.setStatus(status);
     rnr.setEmergency(emergency);
     rnr.setModifiedDate(modifiedDate);
@@ -112,7 +112,7 @@ public class ApplicationTestContext extends AbstractTransactionalJUnit4SpringCon
 
   protected SupplyLine insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
     SupplyLine supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+        with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);
     return supplyLine;
   }

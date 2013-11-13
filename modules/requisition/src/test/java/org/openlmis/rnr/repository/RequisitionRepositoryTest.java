@@ -44,6 +44,7 @@ import static org.openlmis.rnr.builder.RegimenLineItemBuilder.defaultRegimenLine
 import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
+import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -89,6 +90,7 @@ public class RequisitionRepositoryTest {
   @Before
   public void setUp() throws Exception {
     rnr = new Rnr();
+    rnr.setId(1L);
     rnrLineItem1 = new RnrLineItem();
     rnrLineItem1.setId(1L);
     rnrLineItem1.setBeginningBalance(10);
@@ -394,6 +396,12 @@ public class RequisitionRepositoryTest {
 
     assertThat(result, is(requisitionCount));
     verify(requisitionMapper).getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l, Right.CONVERT_TO_ORDER);
+  }
+
+  @Test
+  public void shouldGetFacilityIdFromRnrId() throws Exception {
+    when(requisitionMapper.getFacilityId(1L)).thenReturn(FACILITY_ID);
+    assertThat(requisitionRepository.getFacilityId(rnr.getId()), is(FACILITY_ID));
   }
 
   @Test

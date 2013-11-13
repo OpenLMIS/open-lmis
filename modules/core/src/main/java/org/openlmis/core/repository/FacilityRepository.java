@@ -27,7 +27,7 @@ import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 @Component
 @NoArgsConstructor
-public class FacilityRepository {
+public class  FacilityRepository {
 
   @Autowired
   private FacilityMapper mapper;

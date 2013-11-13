@@ -41,34 +41,32 @@ public class RestAgentService {
   RequisitionGroupMemberService requisitionGroupMemberService;
 
   @Transactional
-  public void create(Agent agent, String userName) {
+  public void create(Agent agent, Long userId) {
     agent.validate();
     if (getExistingFacilityForCode(agent.getAgentCode()) != null) {
       throw new DataException("error.agent.already.registered");
     }
     Facility facility = createFacilityFrom(agent);
-    User user = userService.getByUserName(userName);
-    facility.setCreatedBy(user.getId());
-    facility.setModifiedBy(facility.getCreatedBy());
+    facility.setCreatedBy(userId);
+    facility.setModifiedBy(userId);
     facilityService.save(facility);
     programSupportedService.updateSupportedPrograms(facility);
-    saveRequisitionGroupMembers(facility, user);
+    saveRequisitionGroupMembers(facility, userId);
   }
 
-  private void saveRequisitionGroupMembers(Facility facility, User user) {
+  private void saveRequisitionGroupMembers(Facility facility, Long userId) {
     List<RequisitionGroupMember> requisitionGroupMembers =
         requisitionGroupMemberService.getAllRequisitionGroupMembersByFacility(facility.getParentFacilityId());
     for (RequisitionGroupMember requisitionGroupMember : requisitionGroupMembers) {
       RequisitionGroupMember member = new RequisitionGroupMember(requisitionGroupMember.getRequisitionGroup(), facility);
-      member.setCreatedBy(user.getId());
-      member.setModifiedBy(user.getId());
+      member.setCreatedBy(userId);
+      member.setModifiedBy(userId);
       member.setModifiedDate(new Date());
       requisitionGroupMemberService.save(member);
     }
   }
 
-  public void update(Agent agent, String userName) {
-    User user = userService.getByUserName(userName);
+  public void update(Agent agent, Long userId) {
     if (agent.getActive() == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
@@ -84,10 +82,10 @@ public class RestAgentService {
     fillBaseFacility(agent, chwFacility);
     if(!previousParent.equals(chwFacility.getParentFacilityId())) {
       requisitionGroupMemberService.deleteMembersFor(chwFacility);
-      saveRequisitionGroupMembers(chwFacility, user);
+      saveRequisitionGroupMembers(chwFacility, userId);
     }
     chwFacility.setModifiedDate(new Date());
-    chwFacility.setModifiedBy(user.getId());
+    chwFacility.setModifiedBy(userId);
     facilityService.update(chwFacility);
   }
 

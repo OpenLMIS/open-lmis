@@ -25,8 +25,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
@@ -126,6 +130,71 @@ public class E2EUpload extends TestCaseHelper {
     verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
     verifyValidDeliveryZonesWarehousesUpload(uploadPage);
 
+
+    verifyValidVirtualFacilityUpload(uploadPage);
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void verifyVirtualFacilityWhenParentUpdatedByUpload(String[] credentials) throws IOException, SQLException {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    RolesPage rolesPage = homePage.navigateRoleAssignments();
+    List<String> userRoleList = new ArrayList<String>();
+    userRoleList.add("Create Requisition");
+
+    String parentFacilityCode="F10";
+    String virtualFacilityCode="V10";
+
+    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, "Requisition");
+
+    UploadPage uploadPage = homePage.navigateUploads();
+    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data.csv");
+    uploadPage.uploadFacilities("QA_facilities.csv");
+
+    dbWrapper.insertVirtualFacility(virtualFacilityCode,parentFacilityCode);
+    uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
+    testWebDriver.sleep(2000);
+    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid",parentFacilityCode),dbWrapper.getGeographicZoneId("IND"));
+    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode);
+
+    uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
+    testWebDriver.sleep(2000);
+    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid",parentFacilityCode),dbWrapper.getFacilityTypeId("warehouse"));
+    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode);
+
+    dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
+    uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
+    assertEquals("Dispensary",dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+    assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+    //assertNotEquals(dbWrapper.getFacilityFieldBYCode("typeid",virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
+
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
+    testWebDriver.sleep(2000);
+    List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
+    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
+    assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
+    List<Integer> listOfProgramsSupportedByVirtualFacility = new ArrayList();
+    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(virtualFacilityCode);
+    Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
+    setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
+    Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
+    setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
+    assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
+    assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
+    for(Integer programId : listOfProgramsSupportedByParentFacility){
+      assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, parentFacilityCode, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, virtualFacilityCode, "active"));
+      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, parentFacilityCode), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, virtualFacilityCode));
+    }
+
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes.csv");
+    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups.csv");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Parent_Requisition_Program_Schedule.csv");
+    uploadPage.uploadRequisitionGroupMembers("QA_Parent_Facility_New_Requisition_Group.csv");
+    assertEquals(dbWrapper.getRequisitionIdForGroup("RG2"),dbWrapper.getRequisitionGroupId(parentFacilityCode));
+    assertEquals(dbWrapper.getRequisitionGroupId(parentFacilityCode), dbWrapper.getRequisitionGroupId(virtualFacilityCode));
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -608,6 +677,21 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records created:0\", \"Number of records updated: 1\".");
 
+  }
+
+  private void verifyValidVirtualFacilityUpload(UploadPage uploadPage) throws IOException, SQLException {
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records created:0\", \"Number of records updated: 1\".");
+
+  }
+
+  public void verifyGeographicZoneAndFacilityTypeForVirtualFacility(String virtualFacilityCode, String parentFacilityCode) throws IOException, SQLException {
+    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
   }
 
   @AfterMethod(groups = {"admin"})

@@ -36,6 +36,7 @@ public class FacilityService {
 
   public static final String FACILITY_CATEGORY = "facilities";
   public static final String FACILITY_TITLE = "Facility";
+  public static final String ERROR_FACILITY_CODE_INVALID = "error.facility.code.invalid";
 
   @Autowired
   private FacilityRepository facilityRepository;
@@ -123,8 +124,8 @@ public class FacilityService {
 
   private boolean canUpdateVirtualFacilities(Facility newFacility, Facility oldFacility) {
     return (oldFacility == null ||
-      !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
-      !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
+        !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
+        !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
     );
   }
 
@@ -193,7 +194,7 @@ public class FacilityService {
   public Facility getFacilityByCode(String facilityCode) {
     Long facilityId;
     if ((facilityId = facilityRepository.getIdForCode(facilityCode)) == null) {
-      throw new DataException("error.facility.code.invalid");
+      throw new DataException(ERROR_FACILITY_CODE_INVALID);
     }
     Facility facility = facilityRepository.getById(facilityId);
     facility.setSupportedPrograms(programSupportedService.getActiveByFacilityId(facility.getId()));
@@ -211,6 +212,27 @@ public class FacilityService {
   public List<Facility> getAllByModifiedDate(Date modifiedDate) {
     return facilityRepository.getAllByModifiedDate(modifiedDate);
   }
+
+  public Facility getVirtualFacilityByCode(String facilityCode) {
+    Facility facility = facilityRepository.getByCode(facilityCode);
+
+    if (facility == null) {
+      throw new DataException(ERROR_FACILITY_CODE_INVALID);
+    }
+
+    Facility parentFacility = null;
+
+    if (facility.getVirtualFacility()) {
+      parentFacility = facilityRepository.getById(facility.getParentFacilityId());
+    }
+
+    if (!facility.isValid(parentFacility)) {
+      throw new DataException("error.facility.inoperative");
+    }
+
+    return facility;
+  }
+
 
   public List<Facility> getAllFacilitiesDetail(){
       return facilityRepository.getAllFacilitiesDetail();

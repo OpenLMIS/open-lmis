@@ -11,10 +11,12 @@
 package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
-import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
@@ -24,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.Arrays.asList;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
@@ -40,50 +41,37 @@ public class RestRequisitionService {
   @Autowired
   private OrderService orderService;
 
+  @Autowired
+  private FacilityService facilityService;
+
+  @Autowired
+  private ProgramService programService;
+
   @Transactional
-  public Rnr submitReport(Report report) {
+  public Rnr submitReport(Report report, Long userId) {
     report.validate();
 
-    User user = getValidatedUser(report);
+    Facility reportingFacility = facilityService.getVirtualFacilityByCode(report.getAgentCode());
+    Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
-    Rnr requisition = requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency());
-
-    Rnr reportedRequisition = createReportedRequisition(report, requisition);
-
-    requisitionService.save(reportedRequisition);
-
-    requisitionService.submit(reportedRequisition);
-
-    requisitionService.authorize(requisition);
-
-    return requisition;
+    return requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
   }
 
   @Transactional
-  public Rnr approve(Report report) {
-    User user = getValidatedUser(report);
+  public void approve(Report report, Long userId) {
     Rnr requisition = report.getRequisition();
-    requisition.setModifiedBy(user.getId());
+    requisition.setModifiedBy(userId);
+
+    Long facilityId = requisitionService.getFacilityId(requisition.getId());
+    if (facilityId == null) {
+      throw new DataException("error.invalid.requisition.id");
+    }
+    Facility facility = facilityService.getById(facilityId);
+    if (!facility.getVirtualFacility())
+      throw new DataException("error.approval.not.allowed");
+
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
-    orderService.convertToOrder(asList(requisition), user.getId());
-    return requisition;
-  }
-
-  private Rnr createReportedRequisition(Report report, Rnr requisition) {
-    Rnr reportedRequisition = new Rnr(requisition.getId());
-    reportedRequisition.setModifiedBy(requisition.getModifiedBy());
-    reportedRequisition.setFullSupplyLineItems(report.getProducts());
-    reportedRequisition.setStatus(requisition.getStatus());
-    return reportedRequisition;
-  }
-
-  private User getValidatedUser(Report report) {
-    User user = userService.getByUserName(report.getUserId());
-    if (user == null) {
-      throw new DataException("user.username.incorrect");
-    }
-    return user;
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {

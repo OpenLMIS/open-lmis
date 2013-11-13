@@ -70,13 +70,24 @@ public class ManageReport extends TestCaseHelper {
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
     reportPage.verifyErrorMessageDivReportName();
+  }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void uploadWrongReport(String[] credentials) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    ReportPage reportPage = homePage.navigateReportScreen();
+    reportPage.clickAddNewButton();
+    reportPage.verifyItemsOnReportUploadScreen();
 
     testWebDriver.sleep(1000);
+    fileName = "invalidActivefacility.jrxml";
     reportPage.enterReportName(reportName);
     reportPage.uploadFile(fileName);
     reportPage.clickSaveButton();
-    //testWebDriver.sleep(1000);
-    //reportPage.verifyErrorMessageInvalidFile(); 'Flaky
+    testWebDriver.sleep(1000);
+    reportPage.verifyErrorMessageInvalidFile();
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive", dependsOnMethods = "invalidScenariosReports")

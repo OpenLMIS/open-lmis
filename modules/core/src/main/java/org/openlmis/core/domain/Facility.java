@@ -150,7 +150,7 @@ public class Facility extends BaseModel implements Importable {
   public boolean equals(Object o) {
 
     return reflectionEquals(this, o, false, Facility.class, "supportedPrograms", "geographicZone") &&
-      reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
+        reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
   }
 
   @Override
@@ -174,5 +174,12 @@ public class Facility extends BaseModel implements Importable {
     for (ProgramSupported programSupported : supportedPrograms) {
       programSupported.isValid();
     }
+  }
+
+  public boolean isValid(Facility parentFacility) {
+    if (parentFacility == null)
+      return active && enabled;
+
+    return active && enabled && parentFacility.active && parentFacility.enabled;
   }
 }

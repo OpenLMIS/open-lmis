@@ -258,7 +258,7 @@ public class DistributionPage extends Page {
 
   public void verifyDeleteConfirmMessageAndHeader() {
     assertEquals("Are you sure you want to delete this distribution? " +
-      "Any data that has not been synced with the server will be lost.", deleteConfirmDialogMessage.getText());
+      "Any data that has not been synchronized with the server will be lost.", deleteConfirmDialogMessage.getText());
 
     assertEquals("Delete distribution", deleteConfirmDialogHeader.getText());
   }

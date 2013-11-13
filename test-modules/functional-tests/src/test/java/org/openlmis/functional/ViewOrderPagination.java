@@ -41,12 +41,14 @@ public class ViewOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true);
+    dbWrapper.insertRequisitions(1, "TB", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updatePacksToShip("1");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC,"store in-charge","F10");
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     dbWrapper.insertOrders("RELEASED", userSIC, "TB");
@@ -69,13 +71,12 @@ public class ViewOrderPagination extends TestCaseHelper {
 
 
   private void setUpData(String program, String userSIC) throws SQLException, IOException {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
-//    rightsList.add("VIEW_REQUISITION");
 
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");

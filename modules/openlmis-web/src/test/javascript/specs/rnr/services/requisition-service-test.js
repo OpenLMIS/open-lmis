@@ -17,7 +17,7 @@ describe("requisitionService", function () {
 
   var scope, requisitionService, location, routeParams, messageService;
   var columns = [
-    {"id": 0, "name": "skip", "position": 1, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product Code", "formula": "", "indicator": "O", "used": true, "visible": true, "mandatory": true, "description": "Unique identifier for each commodity", "formulaValidationRequired": true},
+    {"id": 0, "name": "skipped", "position": 1, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product Code", "formula": "", "indicator": "O", "used": true, "visible": true, "mandatory": true, "description": "Unique identifier for each commodity", "formulaValidationRequired": true},
     {"id": 1, "name": "productCode", "position": 1, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product Code", "formula": "", "indicator": "O", "used": true, "visible": true, "mandatory": true, "description": "Unique identifier for each commodity", "formulaValidationRequired": true},
     {"id": 2, "name": "product", "position": 2, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product", "formula": "", "indicator": "R", "used": true, "visible": true, "mandatory": true, "description": "Primary name of the product", "formulaValidationRequired": true},
     {"id": 3, "name": "dispensingUnit", "position": 3, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Unit/Unit of Issue", "formula": "", "indicator": "U", "used": true, "visible": true, "mandatory": false, "description": "Dispensing unit for this product", "formulaValidationRequired": true},
@@ -105,21 +105,21 @@ describe("requisitionService", function () {
   });
 
   it('should return column map for full supply visible columns', function () {
-    var mappedColumns = requisitionService.getMappedVisibleColumns(columns, ['skip', 'productCode', 'product']);
+    var mappedColumns = requisitionService.getMappedVisibleColumns(columns, ['skipped', 'productCode', 'product']);
 
     expect(mappedColumns.fullSupply.scrollable).toEqual(visibleFullScrollableColumns);
     expect(mappedColumns.fullSupply.fixed).toEqual(visibleFullFixedColumns);
   });
 
   it('should return column map for non full supply visible columns', function () {
-    var mappedColumns = requisitionService.getMappedVisibleColumns(columns, ['skip', 'productCode', 'product']);
+    var mappedColumns = requisitionService.getMappedVisibleColumns(columns, ['skipped', 'productCode', 'product']);
 
     expect(mappedColumns.nonFullSupply.scrollable).toEqual(visibleNonFullScrollableColumns);
     expect(mappedColumns.nonFullSupply.fixed).toEqual(visibleNonFullFixedColumns);
   });
 
   it('should skip column from map', function () {
-    var mappedColumns = requisitionService.getMappedVisibleColumns(columns, ['skip', 'productCode', 'product'], ['beginningBalance']);
+    var mappedColumns = requisitionService.getMappedVisibleColumns(columns, ['skipped', 'productCode', 'product'], ['beginningBalance']);
 
     expect(mappedColumns.fullSupply.scrollable.length).toEqual(1);
   });

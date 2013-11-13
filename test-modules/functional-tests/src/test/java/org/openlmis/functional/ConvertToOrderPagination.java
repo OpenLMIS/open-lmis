@@ -56,9 +56,11 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws IOException, SQLException {
     String userSIC = "storeIncharge";
     setUpData("HIV", userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(Integer.parseInt(requisitions), "MALARIA", true);
+    dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updatePacksToShip("1");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "store in-charge", "F10");
   }
 
@@ -89,12 +91,14 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true);
+    dbWrapper.insertRequisitions(1, "TB", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
+    dbWrapper.insertApprovedQuantity(10);
+    dbWrapper.updatePacksToShip("1");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -130,7 +134,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(49, "MALARIA", true);
+    dbWrapper.insertRequisitions(49, "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
@@ -138,7 +142,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(2, "HIV", true);
+    dbWrapper.insertRequisitions(2, "HIV", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
@@ -150,7 +154,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
@@ -159,7 +163,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "HIV", true);
+    dbWrapper.insertRequisitions(1, "HIV", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
@@ -171,8 +175,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearch(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", true);
+    dbWrapper.insertRequisitions(55, "MALARIA", true);
+    dbWrapper.insertRequisitions(40, "TB", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
@@ -194,8 +198,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(55, "MALARIA", true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(40, "TB", false);
+    dbWrapper.insertRequisitions(55, "MALARIA", true);
+    dbWrapper.insertRequisitions(40, "TB", false);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
@@ -210,13 +214,13 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   private void setUpData(String program, String userSIC) throws SQLException, IOException {
-    dbWrapper.setupMultipleProducts(program, "Lvl3 Hospital", 11, false);
+    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
-    rightsList.add("VIEW_REQUISITION");
+
     setupTestUserRoleRightsData("200", userSIC, rightsList);
     dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
     dbWrapper.insertRoleAssignment("200", "store in-charge");
@@ -286,8 +290,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(50, "MALARIA", true);
-    dbWrapper.insertRequisitionsToBeConvertedToOrder(1, "TB", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true);
+    dbWrapper.insertRequisitions(1, "TB", true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");

@@ -10,8 +10,12 @@
 
 package org.openlmis.core.domain;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,12 +26,15 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItems;
-import static org.openlmis.core.builder.FacilityBuilder.code;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.supportedProgram;
 
+@Category(UnitTests.class)
 public class FacilityTest {
+
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
   public void shouldReturnTrueIfTwoFacilityAreEqualIgnoringProgramsSupported() {
@@ -69,7 +76,7 @@ public class FacilityTest {
   }
 
   @Test
-  public void shouldCreateSetWithDifferentFacilities(){
+  public void shouldCreateSetWithDifferentFacilities() {
     Facility facilityWithParentZone = make(a(defaultFacility)), facilityWithoutParentZone = make(a(defaultFacility));
     facilityWithoutParentZone.getGeographicZone().setName("Different name");
     facilityWithoutParentZone.getGeographicZone().setParent(null);
@@ -81,4 +88,74 @@ public class FacilityTest {
     assertThat(facilitiesSet.size(), is(2));
     assertThat(facilitiesSet, hasItems(facilityWithoutParentZone, facilityWithParentZone));
   }
+
+  @Test
+  public void shouldReturnFalseIfVirtualFacilityInactive() throws Exception {
+    Facility inactiveFacility = new Facility(3L);
+    inactiveFacility.setActive(false);
+    inactiveFacility.setEnabled(true);
+
+    Facility parentFacility = make(a(FacilityBuilder.defaultFacility));
+
+    assertFalse(inactiveFacility.isValid(parentFacility));
+  }
+
+  @Test
+  public void shouldReturnFalseIfVirtualFacilityDisabled() throws Exception {
+    Facility disabledFacility = new Facility(3L);
+    disabledFacility.setEnabled(false);
+    disabledFacility.setActive(true);
+
+    Facility parentFacility = make(a(FacilityBuilder.defaultFacility));
+
+    assertFalse(disabledFacility.isValid(parentFacility));
+  }
+
+  @Test
+  public void shouldReturnFalseIfParentFacilityInactive() throws Exception {
+    Facility inactiveParentFacility = new Facility(3L);
+    inactiveParentFacility.setEnabled(false);
+    inactiveParentFacility.setActive(true);
+
+    Facility virtualFacility = make(a(FacilityBuilder.defaultFacility));
+
+    assertFalse(virtualFacility.isValid(inactiveParentFacility));
+  }
+
+  @Test
+  public void shouldReturnFalseIfParentFacilityDisabled() throws Exception {
+    Facility disabledParentFacility = new Facility(3L);
+    disabledParentFacility.setEnabled(false);
+    disabledParentFacility.setActive(true);
+
+    Facility virtualFacility = make(a(FacilityBuilder.defaultFacility));
+
+    assertFalse(virtualFacility.isValid(disabledParentFacility));
+  }
+
+  @Test
+  public void shouldReturnTrueIfVirtualFacilityActiveAndParentFacilityActive() throws Exception {
+    Facility disabledParentFacility = new Facility(3L);
+    disabledParentFacility.setEnabled(true);
+    disabledParentFacility.setActive(true);
+
+    Facility virtualFacility = make(a(FacilityBuilder.defaultFacility));
+
+    assertTrue(virtualFacility.isValid(disabledParentFacility));
+  }
+
+  @Test
+  public void shouldValidateOnlyFacilityIfParentNull() throws Exception {
+    Facility facility = make(a(defaultFacility, with(active, true)));
+
+    assertTrue(facility.isValid(null));
+  }
+
+  @Test
+  public void shouldValidateOnlyFacilityAndThrowErrorBasedOnThatIfParentNull() throws Exception {
+    Facility facility = make(a(defaultFacility, with(active, false)));
+
+    assertFalse(facility.isValid(null));
+  }
+
 }

@@ -103,4 +103,12 @@ public class ProgramService {
       }
     }
   }
+
+  public Program getValidatedProgramByCode(String programCode) {
+    Program program = programRepository.getByCode(programCode);
+    if (program == null) {
+      throw new DataException("program.code.invalid");
+    }
+    return program;
+  }
 }

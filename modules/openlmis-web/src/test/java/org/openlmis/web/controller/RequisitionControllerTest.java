@@ -113,9 +113,9 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldInitiateRnr() throws Exception {
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, 3L, false, request);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, false, request);
 
-    verify(requisitionService).initiate(1L, 2L, 3L, USER_ID, false);
+    verify(requisitionService).initiate(new Facility(1L), new Program(2L), USER_ID, false);
     assertThat(response.getStatusCode(), is(equalTo(HttpStatus.OK)));
   }
 
@@ -144,8 +144,8 @@ public class RequisitionControllerTest {
   @Test
   public void shouldGiveErrorIfInitiatingFails() throws Exception {
     String errorMessage = "error-message";
-    doThrow(new DataException(errorMessage)).when(requisitionService).initiate(1L, 2L, null, USER_ID, false);
-    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, null, false, request);
+    doThrow(new DataException(errorMessage)).when(requisitionService).initiate(new Facility(1L), new Program(2L), USER_ID, false);
+    ResponseEntity<OpenLmisResponse> response = controller.initiateRnr(1L, 2L, false, request);
     assertThat(response.getBody().getErrorMsg(), is(equalTo(errorMessage)));
   }
 
@@ -191,7 +191,7 @@ public class RequisitionControllerTest {
     when(requisitionService.authorize(rnr)).thenReturn(authorizedRnr);
     OpenLmisMessage openLmisMessage = new OpenLmisMessage(code);
     when(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),
-      authorizedRnr.getProgram())).thenReturn(openLmisMessage);
+        authorizedRnr.getProgram())).thenReturn(openLmisMessage);
     when(messageService.message(openLmisMessage)).thenReturn(message);
 
     ResponseEntity<OpenLmisResponse> response = controller.authorize(rnr.getId(), request);
@@ -283,10 +283,10 @@ public class RequisitionControllerTest {
     Rnr rnr = new Rnr();
 
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
-      with(facilityIdProperty, 1L),
-      with(programIdProperty, 2L),
-      with(periodIdProperty, 6L),
-      with(withoutLineItemFlag, true)));
+        with(facilityIdProperty, 1L),
+        with(programIdProperty, 2L),
+        with(periodIdProperty, 6L),
+        with(withoutLineItemFlag, true)));
 
     when(requisitionService.getProcessingPeriods(criteria)).thenReturn(periodList);
     when(requisitionService.getRequisitionsFor(criteria, periodList)).thenReturn(asList(rnr));
@@ -306,7 +306,7 @@ public class RequisitionControllerTest {
     doThrow(new DataException(errorMessage)).when(requisitionService).getProcessingPeriods(criteria);
 
     ResponseEntity<OpenLmisResponse> response =
-      controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
+        controller.getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(criteria, request);
 
     assertThat(response.getBody().getErrorMsg(), is(errorMessage));
   }
@@ -323,16 +323,16 @@ public class RequisitionControllerTest {
     Integer pageNumber = 1;
 
     when(requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, USER_ID,
-      Right.CONVERT_TO_ORDER)).thenReturn(1);
+        Right.CONVERT_TO_ORDER)).thenReturn(1);
     when(requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      1, USER_ID, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expectedRequisitions);
+        1, USER_ID, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expectedRequisitions);
     List<RnrDTO> expectedRnrList = new ArrayList<>();
     when(RnrDTO.prepareForListApproval(expectedRequisitions)).thenReturn(expectedRnrList);
 
     ResponseEntity<OpenLmisResponse> responseEntity = controller.listForConvertToOrder(searchType, searchVal, pageNumber, sortBy, sortDirection, request);
 
     verify(requisitionService).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      1, USER_ID, Right.CONVERT_TO_ORDER,sortBy ,sortDirection);
+        1, USER_ID, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat((List<RnrDTO>) responseEntity.getBody().getData().get(RNR_LIST), is(expectedRnrList));
   }
@@ -340,10 +340,10 @@ public class RequisitionControllerTest {
   @Test
   public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRangeAndSetUserIdInSearchCriteria() throws Exception {
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
-      with(facilityIdProperty, 1L),
-      with(programIdProperty, 1L),
-      with(startDate, new Date()),
-      with(endDate, new Date())));
+        with(facilityIdProperty, 1L),
+        with(programIdProperty, 1L),
+        with(startDate, new Date()),
+        with(endDate, new Date())));
 
     List<Rnr> requisitionsReturnedByService = new ArrayList<>();
     when(requisitionService.get(criteria)).thenReturn(requisitionsReturnedByService);
@@ -454,7 +454,7 @@ public class RequisitionControllerTest {
       public boolean matches(Object argument) {
         RequisitionSearchCriteria searchCriteria = (RequisitionSearchCriteria) argument;
         return searchCriteria.getFacilityId().equals(facilityId) && searchCriteria.getProgramId().equals(programId) && searchCriteria.getPeriodId().equals(
-          periodId);
+            periodId);
       }
     };
   }

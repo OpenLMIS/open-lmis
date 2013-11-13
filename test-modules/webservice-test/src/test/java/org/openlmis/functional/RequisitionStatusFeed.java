@@ -39,6 +39,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
+    dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -51,8 +52,10 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
@@ -64,6 +67,7 @@ public class RequisitionStatusFeed extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
 
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
@@ -78,7 +82,6 @@ public class RequisitionStatusFeed extends JsonUtility {
     checkOrderStatusOnFeed("READY_TO_PACK", feedJSONList.get(0), id);
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-    dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
@@ -100,8 +103,10 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrue() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -111,6 +116,7 @@ public class RequisitionStatusFeed extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
 
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
@@ -134,8 +140,10 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrueAndFtpDetailsValid() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    String response = submitReport();
-    Long id = getRequisitionIdFromResponse(response);
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
+    submitRequisition("commTrack1","HIV");
+    Long id = (long)dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -146,6 +154,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
     approveRequisition(id, 65);
+    convertToOrder("commTrack", "Admin123");
 
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());

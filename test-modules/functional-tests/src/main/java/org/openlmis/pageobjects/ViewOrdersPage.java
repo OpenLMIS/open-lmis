@@ -85,6 +85,7 @@ public class ViewOrdersPage extends RequisitionPage {
   }
 
   public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
+    testWebDriver.refresh();
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     SeleneseTestNgHelper.assertEquals(programOnViewOrderScreen.getText().trim(), program);
     SeleneseTestNgHelper.assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), orderNumber);

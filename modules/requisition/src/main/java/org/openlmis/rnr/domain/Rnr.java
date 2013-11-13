@@ -55,21 +55,18 @@ public class Rnr extends BaseModel {
   private Date submittedDate;
   private List<Comment> comments = new ArrayList<>();
 
-  public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, Long modifiedBy, Long createdBy) {
-    facility = new Facility();
-    facility.setId(facilityId);
-    program = new Program();
-    program.setId(programId);
-    period = new ProcessingPeriod();
-    period.setId(periodId);
+  public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
+    this.facility = facility;
+    this.program = program;
+    this.period = period;
     this.emergency = emergency;
     this.modifiedBy = modifiedBy;
     this.createdBy = createdBy;
   }
 
-  public Rnr(Long facilityId, Long programId, Long periodId, Boolean emergency, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
-             List<Regimen> regimens, Long modifiedBy, Long createdBy) {
-    this(facilityId, programId, periodId, emergency, modifiedBy, createdBy);
+  public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
+             List<Regimen> regimens, Long modifiedBy) {
+    this(facility, program, period, emergency, modifiedBy, modifiedBy);
     fillLineItems(facilityTypeApprovedProducts);
     fillActiveRegimenLineItems(regimens);
   }
@@ -352,6 +349,16 @@ public class Rnr extends BaseModel {
 
   public boolean isInApproval() {
     return status == IN_APPROVAL;
+  }
+
+  public List<String> getProductCodeDifference(Rnr rnr) {
+    List<String> invalidProductCodes = new ArrayList<>();
+    for (final RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
+      if (this.findCorrespondingLineItem(lineItem) == null) {
+        invalidProductCodes.add(lineItem.getProductCode());
+      }
+    }
+    return invalidProductCodes;
   }
 }
 

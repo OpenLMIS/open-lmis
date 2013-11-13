@@ -53,7 +53,7 @@ public class PODService {
   public void updatePOD(POD pod) {
 
     if (!fulfillmentPermissionService.hasPermission(pod.getCreatedBy(), getWarehouseForOrder(pod.getOrderId()), MANAGE_POD)) {
-      throw new DataException("error.pod.permission.denied");
+      throw new DataException("error.permission.denied");
     }
     podRepository.insertPOD(pod);
     if (pod.getPodLineItems() == null) return;

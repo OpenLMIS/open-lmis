@@ -46,10 +46,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.*;
 import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.doReturn;
+import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @Category(UnitTests.class)
@@ -127,7 +129,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
-      facilityFeedDTO.getSerializedContents(), "facilities")));
+        facilityFeedDTO.getSerializedContents(), "facilities")));
 
   }
 
@@ -138,7 +140,7 @@ public class FacilityServiceTest {
       public boolean matches(Object argument) {
         Event event = (Event) argument;
         return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+            event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
   }
@@ -439,5 +441,57 @@ public class FacilityServiceTest {
     List<Facility> childFacilities = facilityService.getChildFacilities(facility);
     verify(facilityRepository).getChildFacilities(facility);
     assertThat(childFacilities, is(expectedFacilities));
+  }
+
+  @Test
+  public void shouldGetVirtualFacility() throws Exception {
+    Facility expectedFacility = make(a(defaultFacility, with(parentFacilityId, 333L)));
+    Facility parentFacility = make(a(defaultFacility, with(facilityId, 333L)));
+    when(facilityRepository.getById(333L)).thenReturn(parentFacility);
+    when(facilityRepository.getByCode("code")).thenReturn(expectedFacility);
+
+    Facility actualFacility = facilityService.getVirtualFacilityByCode("code");
+
+    assertThat(actualFacility, is(expectedFacility));
+  }
+
+  @Test
+  public void shouldThrowErrorIfCodeInvalid() throws Exception {
+    when(facilityRepository.getByCode("code")).thenReturn(null);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.code.invalid");
+
+    facilityService.getVirtualFacilityByCode("code");
+  }
+
+  @Test
+  public void shouldThrowErrorIfFacilityInoperative() throws Exception {
+    Facility facility = spy(new Facility());
+    facility.setVirtualFacility(true);
+    Facility parent = new Facility(23L);
+    facility.setParentFacilityId(23L);
+    doReturn(false).when(facility).isValid(parent);
+
+    when(facilityRepository.getById(23L)).thenReturn(parent);
+    when(facilityRepository.getByCode("code")).thenReturn(facility);
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.facility.inoperative");
+
+    facilityService.getVirtualFacilityByCode("code");
+  }
+
+  @Test
+  public void shouldNotCheckForParentIfFacilityNotVirtual() throws Exception {
+    Facility facility = spy(new Facility());
+    facility.setVirtualFacility(false);
+    doReturn(true).when(facility).isValid(null);
+
+    when(facilityRepository.getByCode("code")).thenReturn(facility);
+
+    facilityService.getVirtualFacilityByCode("code");
+
+    verify(facilityRepository, never()).getById(anyLong());
   }
 }

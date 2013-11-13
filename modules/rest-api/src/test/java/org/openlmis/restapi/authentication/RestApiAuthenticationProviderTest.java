@@ -75,11 +75,11 @@ public class RestApiAuthenticationProviderTest {
     when(authentication.getPrincipal()).thenReturn(userName);
     when(authentication.getCredentials()).thenReturn(password);
 
-    when(userService.selectUserByUserNameAndPassword(userName, Encoder.hash(password))).thenReturn(new User());
+    when(userService.selectUserByUserNameAndPassword(userName, Encoder.hash(password))).thenReturn(new User(55L, "userName"));
 
     Authentication authenticated = restApiAuthenticationProvider.authenticate(authentication);
 
-    assertThat(authenticated.getPrincipal(), is(authentication.getPrincipal()));
+    assertThat((Long) authenticated.getPrincipal(), is(55L));
     verify(userService).selectUserByUserNameAndPassword(userName, Encoder.hash(password));
   }
 

@@ -34,8 +34,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -106,7 +105,7 @@ public class RnrLineItemMapperIT {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(processingPeriod);
 
-    rnr = new Rnr(facility.getId(), PROGRAM_ID, processingPeriod.getId(), false, MODIFIED_BY, 1L);
+    rnr = new Rnr(facility, new Program(PROGRAM_ID), processingPeriod, false, MODIFIED_BY, 1L);
     rnr.setStatus(INITIATED);
   }
 
@@ -200,7 +199,9 @@ public class RnrLineItemMapperIT {
     lineItem.setTotalLossesAndAdjustments(20);
     lineItem.setExpirationDate("12/2014");
     lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
+
     int updateCount = rnrLineItemMapper.update(lineItem);
+
     assertThat(updateCount, is(1));
     List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
 
@@ -209,9 +210,27 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     assertThat(rnrLineItems.get(0).getExpirationDate(), is("12/2014"));
     assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(),
-      is("Quantity Requested more in liu of coming rains"));
+        is("Quantity Requested more in liu of coming rains"));
   }
 
+  @Test
+  public void shouldUpdateSkipFlag() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    rnrLineItemMapper.insert(lineItem);
+
+    lineItem.setSkipped(true);
+
+    rnrLineItemMapper.update(lineItem);
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+    assertTrue(rnrLineItems.get(0).getSkipped());
+
+    lineItem.setSkipped(false);
+
+    rnrLineItemMapper.update(lineItem);
+    rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+    assertFalse(rnrLineItems.get(0).getSkipped());
+  }
 
   @Test
   public void shouldInsertNonFullSupplyLineItem() {
@@ -252,9 +271,9 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(),
-      is(lineItem2.getProductCode()));
+        is(lineItem2.getProductCode()));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(),
-      is(lineItem2.getProductCategory()));
+        is(lineItem2.getProductCategory()));
   }
 
 
@@ -270,7 +289,7 @@ public class RnrLineItemMapperIT {
       category.setDisplayOrder(1);
       categoryMapper.insert(category);
       Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode),
-        with(ProductBuilder.fullSupply, fullSupplyFlag)));
+          with(ProductBuilder.fullSupply, fullSupplyFlag)));
       product.setCategory(category);
       productMapper.insert(product);
 

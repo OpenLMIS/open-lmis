@@ -180,6 +180,19 @@ public class FacilityMapperIT {
   }
 
   @Test
+  public void shouldReturnNullIfHomeFacilityForAUserIsVirtual() throws Exception {
+    mapper.insert(make(a(defaultFacility, with(virtualFacility, true))));
+    Facility facility = mapper.getAll().get(0);
+
+    User user = make(a(defaultUser, with(facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    Facility userFacility = mapper.getHomeFacility(user.getId());
+    assertThat(userFacility, is(nullValue()));
+  }
+
+
+  @Test
   public void shouldGetFacilityById() throws Exception {
     Facility facility = make(a(defaultFacility));
     facility.setLatitude(123.45678);
@@ -314,21 +327,24 @@ public class FacilityMapperIT {
   }
 
   @Test
-  public void shouldGetAllFacilitiesForRequisitionGroupsWhichSupportGivenProgram() {
+  public void shouldGetAllNonVirtualFacilitiesForRequisitionGroupsWhichSupportGivenProgram() {
     RequisitionGroup rg1 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG1")));
     RequisitionGroup rg2 = make(a(defaultRequisitionGroup, with(RequisitionGroupBuilder.code, "RG2")));
     requisitionGroupMapper.insert(rg1);
     requisitionGroupMapper.insert(rg2);
 
     Facility facilitySupportingProgramInRG1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F1")));
+    Facility virtualFacilitySupportingProgramInRG1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "V1"), with(virtualFacility, true)));
     Facility facilityNotSupportingProgramInRG2 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F2")));
     Facility facilitySupportingProgramNotInAnyRG = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.code, "F3")));
     mapper.insert(facilitySupportingProgramInRG1);
+    mapper.insert(virtualFacilitySupportingProgramInRG1);
     mapper.insert(facilityNotSupportingProgramInRG2);
     mapper.insert(facilitySupportingProgramNotInAnyRG);
 
 
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg1, facilitySupportingProgramInRG1));
+    requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg1, virtualFacilitySupportingProgramInRG1));
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilitySupportingProgramInRG1));
     requisitionGroupMemberMapper.insert(new RequisitionGroupMember(rg2, facilityNotSupportingProgramInRG2));
 
@@ -337,6 +353,10 @@ public class FacilityMapperIT {
 
     programSupportedMapper.insert(make(a(defaultProgramSupported,
       with(supportedFacilityId, facilitySupportingProgramInRG1.getId()),
+      with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
+
+    programSupportedMapper.insert(make(a(defaultProgramSupported,
+      with(supportedFacilityId, virtualFacilitySupportingProgramInRG1.getId()),
       with(supportedProgram, make(a(defaultProgram, with(programCode, "Random")))))));
 
     programSupportedMapper.insert(make(a(defaultProgramSupported,

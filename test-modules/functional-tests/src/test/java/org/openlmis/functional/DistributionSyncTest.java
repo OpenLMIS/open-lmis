@@ -259,9 +259,9 @@ public class DistributionSyncTest extends TestCaseHelper {
         homePage.navigatePlanDistribution();
 
         distributionPage.syncDistribution();
-        assertEquals(distributionPage.getFacilityAlreadySyncMessage(),"Already synced facilities : \n" +
+        assertEquals(distributionPage.getFacilityAlreadySyncMessage(),"Already synchronized facilities : \n" +
                 "F10-Village Dispensary");
-        assertEquals(distributionPage.getSyncMessage(),"Synced facilities : \n" +
+        assertEquals(distributionPage.getSyncMessage(),"Synchronized facilities : \n" +
                 "F11-Central Hospital");
         distributionPage.syncDistributionMessageDone();
 

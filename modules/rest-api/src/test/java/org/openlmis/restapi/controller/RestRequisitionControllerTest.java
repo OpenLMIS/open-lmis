@@ -38,6 +38,7 @@ import static org.mockito.Mockito.*;
 import static org.openlmis.restapi.controller.RestRequisitionController.RNR;
 import static org.openlmis.restapi.controller.RestRequisitionController.UNEXPECTED_EXCEPTION;
 import static org.openlmis.restapi.response.RestResponse.ERROR;
+import static org.openlmis.restapi.response.RestResponse.SUCCESS;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -50,6 +51,8 @@ public class RestRequisitionControllerTest {
 
   @Mock
   RestRequisitionService service;
+  @Mock
+  Report report;
 
   @InjectMocks
   RestRequisitionController controller;
@@ -62,7 +65,7 @@ public class RestRequisitionControllerTest {
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
-    when(principal.getName()).thenReturn("vendor name");
+    when(principal.getName()).thenReturn("1");
     mockStatic(RestResponse.class);
   }
 
@@ -72,11 +75,11 @@ public class RestRequisitionControllerTest {
 
     Rnr requisition = new Rnr();
     requisition.setId(1L);
-    when(service.submitReport(report)).thenReturn(requisition);
+    when(service.submitReport(report, 1L)).thenReturn(requisition);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, requisition.getId()), OK);
     when(RestResponse.response(RNR, requisition.getId(), HttpStatus.CREATED)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
     assertThat((Long) response.getBody().getData().get(RNR), is(1L));
   }
@@ -89,44 +92,47 @@ public class RestRequisitionControllerTest {
     Rnr requisition = new Rnr();
     requisition.setId(1L);
     DataException dataException = new DataException(errorMessage);
-    doThrow(dataException).when(service).submitReport(report);
+    doThrow(dataException).when(service).submitReport(report, 1L);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.submitRequisition(report);
+    ResponseEntity<RestResponse> response = controller.submitRequisition(report, principal);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }
 
   @Test
   public void shouldApproveReport() throws Exception {
-    Report report = new Report();
+
     Long id = 1L;
+    Long userId = 1L;
     Rnr expectedRnr = new Rnr();
-    when(service.approve(report)).thenReturn(expectedRnr);
+    expectedRnr.setId(1L);
 
-    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(RNR, expectedRnr.getId()), OK);
-    when(RestResponse.response(RNR, expectedRnr.getId())).thenReturn(expectResponse);
+    doNothing().when(service).approve(report, userId);
+    ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(SUCCESS, "success"), OK);
+    when(RestResponse.success("msg.rnr.approve.success")).thenReturn(expectResponse);
+    doNothing().when(report).validateForApproval();
 
-    ResponseEntity<RestResponse> response = controller.approve(id, report);
+    ResponseEntity<RestResponse> response = controller.approve(id, report, principal);
 
-    assertThat((Long) response.getBody().getData().get(RNR), is(expectedRnr.getId()));
-    assertThat(report.getRequisitionId(), is(1L));
-    verify(service).approve(report);
+    assertThat(response.getBody().getSuccess(), is("success"));
+    verify(service).approve(report, userId);
+    verify(report).setRequisitionId(expectedRnr.getId());
   }
 
   @Test
   public void shouldGiveErrorMessageIfSomeErrorOccursWhileApproving() throws Exception {
     String errorMessage = "some error";
     Long requisitionId = 1L;
-    Report report = new Report();
 
+    doNothing().when(report).validateForApproval();
     DataException dataException = new DataException(errorMessage);
-    doThrow(dataException).when(service).approve(report);
+    doThrow(dataException).when(service).approve(report,1L);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), HttpStatus.BAD_REQUEST);
     when(RestResponse.error(dataException.getOpenLmisMessage(), HttpStatus.BAD_REQUEST)).thenReturn(expectResponse);
 
-    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report);
+    ResponseEntity<RestResponse> response = controller.approve(requisitionId, report,principal);
 
     assertThat((String) response.getBody().getData().get(ERROR), is(errorMessage));
   }

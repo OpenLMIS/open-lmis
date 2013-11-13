@@ -23,8 +23,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static org.openlmis.restapi.response.RestResponse.error;
-import static org.openlmis.restapi.response.RestResponse.response;
+import java.security.Principal;
+
+import static org.openlmis.restapi.response.RestResponse.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -33,16 +34,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 public class RestRequisitionController extends BaseController {
 
-  public static final String RNR = "R&R";
+  public static final String RNR = "requisitionId";
 
   @Autowired
   private RestRequisitionService restRequisitionService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity submitRequisition(@RequestBody Report report) {
+  public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
     Rnr requisition;
+
     try {
-      requisition = restRequisitionService.submitReport(report);
+      requisition = restRequisitionService.submitReport(report, loggedInUserId(principal));
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
@@ -50,11 +52,12 @@ public class RestRequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report) {
+  public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report, Principal principal) {
+    report.validateForApproval();
     report.setRequisitionId(id);
     try {
-      Rnr approveRnr = restRequisitionService.approve(report);
-      return response(RNR, approveRnr.getId());
+      restRequisitionService.approve(report, loggedInUserId(principal));
+      return success("msg.rnr.approve.success");
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

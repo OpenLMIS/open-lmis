@@ -19,6 +19,8 @@ import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,12 +31,16 @@ public class Report {
   private String programCode;
   private Long programId;
   private Long periodId;
-  private String userId;
+  private String userName;
   private Boolean emergency;
   private List<RnrLineItem> products;
 
+  private String agentCode;
+  private String programCode;
+
+
   public void validate() {
-    if (facilityId == null || programId == null || periodId == null || userId == null) {
+    if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
   }
@@ -44,5 +50,17 @@ public class Report {
     rnr.setId(requisitionId);
     rnr.setFullSupplyLineItems(products);
     return rnr;
+  }
+
+  public void validateForApproval() {
+    if (products == null) {
+      throw new DataException("error.restapi.mandatory.missing");
+    }
+    for (RnrLineItem rnrLineItem : products) {
+      if (isEmpty(rnrLineItem.getProductCode()) || rnrLineItem.getQuantityApproved() == null)
+        throw new DataException("error.restapi.mandatory.missing");
+      if (rnrLineItem.getQuantityApproved() < 0)
+        throw new DataException("error.restapi.quantity.approved.negative");
+    }
   }
 }

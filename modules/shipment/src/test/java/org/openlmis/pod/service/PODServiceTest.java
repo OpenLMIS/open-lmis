@@ -168,7 +168,7 @@ public class PODServiceTest {
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(false);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.pod.permission.denied");
+    expectedException.expectMessage("error.permission.denied");
 
     podService.updatePOD(pod);
   }

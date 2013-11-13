@@ -28,7 +28,7 @@ public class RestPODController extends BaseController {
   public ResponseEntity<RestResponse> createCHW(@RequestBody POD pod, @PathVariable Long orderId, Principal principal) {
     try {
       pod.setOrderId(orderId);
-      restPODService.updatePOD(pod, principal.getName());
+      restPODService.updatePOD(pod, loggedInUserId(principal));
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

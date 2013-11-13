@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.controller;
 
+import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.response.RestResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +18,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.security.Principal;
+
+import static java.lang.Long.valueOf;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.springframework.http.HttpStatus.*;
 
@@ -30,9 +34,13 @@ public class BaseController {
     if (ex instanceof AccessDeniedException) {
       return error(FORBIDDEN_EXCEPTION, FORBIDDEN);
     }
-    if (ex instanceof MissingServletRequestParameterException || ex instanceof HttpMessageNotReadableException) {
+    if (ex instanceof MissingServletRequestParameterException || ex instanceof HttpMessageNotReadableException || ex instanceof DataException) {
       return error(ex.getMessage(), BAD_REQUEST);
     }
     return error(UNEXPECTED_EXCEPTION, INTERNAL_SERVER_ERROR);
+  }
+
+  public Long loggedInUserId(Principal principal) {
+    return valueOf(principal.getName());
   }
 }

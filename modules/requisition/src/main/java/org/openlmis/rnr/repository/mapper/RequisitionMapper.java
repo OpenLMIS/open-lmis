@@ -173,6 +173,9 @@ public interface RequisitionMapper {
   Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
                                                     @Param("userId") Long userId, @Param("right") Right right);
 
+  @Select({"SELECT facilityid FROM requisitions WHERE id = #{id}"})
+  Long getFacilityId(Long id);
+
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")

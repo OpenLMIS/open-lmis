@@ -19,8 +19,13 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.User;
+import org.mockito.Mockito;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
@@ -36,15 +41,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.*;
-import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
+import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.FacilityBuilder.facilityId;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_ID;
+import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
+import static org.openlmis.restapi.builder.ReportBuilder.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -62,18 +70,25 @@ public class RestRequisitionServiceTest {
   UserService userService;
   @Mock
   private OrderService orderService;
+  @Mock
+  private FacilityService facilityService;
 
   @InjectMocks
   RestRequisitionService service;
   Rnr requisition;
   Report report;
   User user;
-  private String credentials;
+
   byte[] encodedCredentialsBytes;
+
+  @Mock
+  private ProgramService programService;
+
+  @Mock
+  private ProcessingScheduleService processingScheduleService;
 
   @Before
   public void setUp() throws Exception {
-    credentials = "1:correct token";
     report = make(a(defaultReport));
     String encodedCredentials = "1:correct token";
     requisition = new Rnr();
@@ -82,7 +97,7 @@ public class RestRequisitionServiceTest {
     user.setId(1L);
     whenNew(User.class).withNoArguments().thenReturn(user);
     when(userService.getByUserName(user.getUserName())).thenReturn(user);
-    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), report.getEmergency()))
+    when(requisitionService.initiate(new Facility(report.getFacilityId()), new Program(report.getProgramId()), user.getId(), report.getEmergency()))
       .thenReturn(requisition);
     mockStatic(Base64.class);
     encodedCredentialsBytes = encodedCredentials.getBytes();
@@ -93,18 +108,24 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = new ArrayList<>();
     products.add(new RnrLineItem());
     report.setProducts(products);
-    when(userService.getByUserName("1")).thenReturn(user);
-    when(requisitionService.initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false)).thenReturn(requisition);
+
+    Long facility_id = 5L;
+
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported))));
+
+    when(facilityService.getVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false)).thenReturn(requisition);
+
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
-    Rnr expectedRequisition = service.submitReport(report);
 
-    verify(requisitionService).initiate(report.getFacilityId(), report.getProgramId(), report.getPeriodId(), user.getId(), false);
-    verify(requisitionService).submit(reportedRequisition);
-    verify(requisitionService).authorize(expectedRequisition);
-    verify(reportedRequisition).setStatus(requisition.getStatus());
-    verify(reportedRequisition).setModifiedBy(requisition.getModifiedBy());
-    verify(reportedRequisition).setFullSupplyLineItems(products);
+    Rnr expectedRequisition = service.submitReport(report, 1L);
+
+    verify(facilityService).getVirtualFacilityByCode(DEFAULT_AGENT_CODE);
+    verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
+    verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false);
     assertThat(expectedRequisition, is(requisition));
   }
 
@@ -112,70 +133,77 @@ public class RestRequisitionServiceTest {
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
 
-    when(userService.getByUserName("1")).thenReturn(user);
+    ProgramSupported programSupported = make(a(defaultProgramSupported));
+    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported))));
+    when(facilityService.getVirtualFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    when(programService.getProgramStartDate(5L, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
+    when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(8L));
 
-    service.submitReport(spyReport);
+    service.submitReport(spyReport, 1L);
 
     verify(spyReport).validate();
   }
 
   @Test
-  public void shouldValidateUserThrowErrorIfInvalid() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
-    report.setProducts(products);
-    when(userService.getByUserName(user.getUserName())).thenReturn(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("user.username.incorrect");
-
-    service.submitReport(report);
-  }
-
-  @Test
-  public void shouldValidateUserAndThrowErrorIfUsernameDoesNotMatchVendor() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
-    report.setProducts(products);
-    whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUserName(user.getUserName())).thenReturn(null);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("user.username.incorrect");
-
-    service.submitReport(report);
-  }
-
-  @Test
-  public void shouldApproveAndOrderRequisition() throws Exception {
+  public void shouldThrowErrorIfInvalidRequisitionIdPassed() throws Exception {
     Rnr requisitionFromReport = new Rnr();
+    requisitionFromReport.setId(1L);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.requisition.id");
 
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
     when(userService.getByUserName("1")).thenReturn(user);
+    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(null);
 
-    service.approve(spyReport);
+    service.approve(spyReport, 2L);
 
-    assertThat(requisitionFromReport.getModifiedBy(), is(user.getId()));
-    verify(spyReport).getRequisition();
-    verify(requisitionService).save(requisitionFromReport);
-    verify(requisitionService).approve(requisitionFromReport);
-    verify(orderService).convertToOrder(asList(requisitionFromReport), user.getId());
+    verify(requisitionService).getFacilityId(requisitionFromReport.getId());
   }
 
   @Test
-  public void shouldValidateUserAndThrowErrorIfUsernameDoesNotMatchVendorWhileApproving() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
-    report.setProducts(products);
-    whenNew(User.class).withNoArguments().thenReturn(user);
-    when(userService.getByUserName(user.getUserName())).thenReturn(null);
+  public void shouldNotApproveRnrIfDoesNotBelongToVirtualFacility() throws Exception {
+    Rnr requisitionFromReport = new Rnr();
+    requisitionFromReport.setId(1L);
+    Long facilityId = 2L;
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("user.username.incorrect");
+    expectedException.expectMessage("error.approval.not.allowed");
 
-    service.approve(report);
+    Report spyReport = spy(report);
+    when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    when(userService.getByUserName("1")).thenReturn(user);
+    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(facilityId);
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, false)));
+    Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
+
+    service.approve(spyReport, 2L);
+
+    verify(requisitionService).getFacilityId(requisitionFromReport.getId());
+    verify(facilityService).getById(facilityId);
+
   }
+
+  @Test
+  public void shouldApproveIfRnrBelongsToVirtualFacility() throws Exception {
+    Rnr requisitionFromReport = new Rnr();
+    Long facilityId = 2L;
+    Report spyReport = spy(report);
+    when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
+    when(userService.getByUserName("1")).thenReturn(user);
+    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(facilityId);
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
+
+    service.approve(spyReport, 2L);
+
+    verify(spyReport).getRequisition();
+    verify(requisitionService).save(requisitionFromReport);
+    verify(requisitionService).approve(requisitionFromReport);
+  }
+
 
   @Test
   public void shouldGetReplenishmentDTOByRequisitionId() throws Exception {

@@ -43,28 +43,29 @@ public interface RnrLineItemMapper {
   })
   public List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
 
-  @Update("UPDATE requisition_line_items " +
-    "SET quantityReceived = #{quantityReceived}, " +
-    " quantityDispensed = #{quantityDispensed}, " +
-    " beginningBalance = #{beginningBalance}, " +
-    " stockInHand = #{stockInHand}, " +
-    " quantityRequested = #{quantityRequested}, " +
-    " reasonForRequestedQuantity = #{reasonForRequestedQuantity}, " +
-    " totalLossesAndAdjustments = #{totalLossesAndAdjustments}, " +
-    " calculatedOrderQuantity = #{calculatedOrderQuantity}, " +
-    " quantityApproved = #{quantityApproved}, " +
-    " newPatientCount = #{newPatientCount}, " +
-    " stockOutDays = #{stockOutDays}, " +
-    " normalizedConsumption = #{normalizedConsumption}, " +
-    " amc = #{amc}, " +
-    " maxStockQuantity = #{maxStockQuantity}, " +
-    " packsToShip = #{packsToShip}, " +
-    " remarks = #{remarks}, " +
-    " expirationDate = #{expirationDate}, " +
-    " modifiedBy = #{modifiedBy}, " +
-    " modifiedDate = CURRENT_TIMESTAMP " +
+  @Update({"UPDATE requisition_line_items",
+    "SET quantityReceived = #{quantityReceived},",
+    "quantityDispensed = #{quantityDispensed},",
+    "beginningBalance = #{beginningBalance},",
+    "stockInHand = #{stockInHand},",
+    "quantityRequested = #{quantityRequested},",
+    "reasonForRequestedQuantity = #{reasonForRequestedQuantity},",
+    "totalLossesAndAdjustments = #{totalLossesAndAdjustments},",
+    "calculatedOrderQuantity = #{calculatedOrderQuantity},",
+    "quantityApproved = #{quantityApproved},",
+    "newPatientCount = #{newPatientCount},",
+    "stockOutDays = #{stockOutDays},",
+    "normalizedConsumption = #{normalizedConsumption},",
+    "amc = #{amc},",
+    "maxStockQuantity = #{maxStockQuantity},",
+    "packsToShip = #{packsToShip},",
+    "remarks = #{remarks},",
+    "expirationDate = #{expirationDate},",
+    "skipped = #{skipped},",
+    "modifiedBy = #{modifiedBy},",
+    "modifiedDate = CURRENT_TIMESTAMP",
     "WHERE id = #{id}"
-  )
+  })
   int update(RnrLineItem rnrLineItem);
 
   @Insert({"INSERT INTO requisition_line_items",

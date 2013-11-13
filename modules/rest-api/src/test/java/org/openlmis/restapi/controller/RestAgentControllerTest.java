@@ -48,7 +48,7 @@ public class RestAgentControllerTest {
   @Before
   public void setUp() throws Exception {
     principal = mock(Principal.class);
-    when(principal.getName()).thenReturn("vendor name");
+    when(principal.getName()).thenReturn("1");
     mockStatic(RestResponse.class);
   }
 
@@ -60,7 +60,7 @@ public class RestAgentControllerTest {
 
     ResponseEntity<RestResponse> response = restAgentController.createCHW(agent, principal);
 
-    verify(restAgentService).create(agent, principal.getName());
+    verify(restAgentService).create(agent, 1L);
     assertThat(response, is(expectResponse));
   }
 
@@ -74,8 +74,7 @@ public class RestAgentControllerTest {
     ResponseEntity<RestResponse> response = restAgentController.updateCHW(agent, agentCode, principal);
     verify(agent).setAgentCode(agentCode);
 
-    verify(restAgentService).update(agent, principal.getName());
+    verify(restAgentService).update(agent, 1L);
     assertThat(response, is(expectResponse));
   }
-
 }

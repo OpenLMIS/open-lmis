@@ -44,11 +44,8 @@ public class CommTrackTemplateTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_COMMTRACK_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserId("commTrack");
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("F10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
-    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(reportFromJson),
@@ -59,7 +56,7 @@ public class CommTrackTemplateTest extends JsonUtility {
 
      client.SendJSON("", "http://localhost:9091/", "GET", "", "");
 
-    assertTrue(responseEntity.getResponse().contains("{\"R&R\":"));
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
   }
 }
 
