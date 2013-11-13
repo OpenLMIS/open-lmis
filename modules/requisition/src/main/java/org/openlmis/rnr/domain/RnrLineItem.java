@@ -87,7 +87,8 @@ public class RnrLineItem extends LineItem {
 
   private Integer total;
 
-  private Boolean skipped;
+  @SuppressWarnings("unused")
+  private Boolean skipped = false;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItem.class);
 

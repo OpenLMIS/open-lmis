@@ -34,8 +34,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -200,7 +199,9 @@ public class RnrLineItemMapperIT {
     lineItem.setTotalLossesAndAdjustments(20);
     lineItem.setExpirationDate("12/2014");
     lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
+
     int updateCount = rnrLineItemMapper.update(lineItem);
+
     assertThat(updateCount, is(1));
     List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
 
@@ -212,6 +213,24 @@ public class RnrLineItemMapperIT {
         is("Quantity Requested more in liu of coming rains"));
   }
 
+  @Test
+  public void shouldUpdateSkipFlag() throws Exception {
+    requisitionMapper.insert(rnr);
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    rnrLineItemMapper.insert(lineItem);
+
+    lineItem.setSkipped(true);
+
+    rnrLineItemMapper.update(lineItem);
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+    assertTrue(rnrLineItems.get(0).getSkipped());
+
+    lineItem.setSkipped(false);
+
+    rnrLineItemMapper.update(lineItem);
+    rnrLineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+    assertFalse(rnrLineItems.get(0).getSkipped());
+  }
 
   @Test
   public void shouldInsertNonFullSupplyLineItem() {
