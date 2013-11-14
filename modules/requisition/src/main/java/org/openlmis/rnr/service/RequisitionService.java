@@ -112,7 +112,7 @@ public class RequisitionService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-        facility.getId(), program.getId());
+      facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
 
@@ -168,7 +168,7 @@ public class RequisitionService {
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), SUBMITTED);
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
-        requisitionRepository.getLossesAndAdjustmentsTypes());
+      requisitionRepository.getLossesAndAdjustmentsTypes());
     return update(savedRnr);
   }
 
@@ -186,7 +186,7 @@ public class RequisitionService {
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
     savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
-        requisitionRepository.getLossesAndAdjustmentsTypes());
+      requisitionRepository.getLossesAndAdjustmentsTypes());
     savedRnr.calculateDefaultApprovedQuantity();
 
     return update(savedRnr);
@@ -213,7 +213,7 @@ public class RequisitionService {
     if (parent == null) {
       savedRnr.prepareForFinalApproval();
     } else {
-      if (savedRnr.isInApproval())
+      if (savedRnr.getStatus() == IN_APPROVAL)
         notifyStatusChange = false;
       savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
@@ -285,12 +285,11 @@ public class RequisitionService {
 
   ProcessingPeriod findPeriod(Facility facility, Program program, Boolean emergency) {
     if (!(emergency || facility.getVirtualFacility())) {
-      ProcessingPeriod periodForInitiating = getPeriodForInitiating(facility, program);
-      return periodForInitiating;
+      return getPeriodForInitiating(facility, program);
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
-        programService.getProgramStartDate(facility.getId(), program.getId()));
+      programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
       throw new DataException("error.program.configuration.missing");
@@ -299,29 +298,30 @@ public class RequisitionService {
   }
 
   ProcessingPeriod getPeriodForInitiating(Facility facility, Program program) {
-    Rnr lastRegularRequisition = requisitionRepository.getLastRegularRequisition(facility, program);
-    if(lastRegularRequisition.preSubmit()) {
-      throw new DataException("error.rnr.previous.not.filled");
-    }
-
     Date programStartDate = programService.getProgramStartDate(facility.getId(), program.getId());
-    ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(), programStartDate);
-
-    if(lastRegularRequisition.getPeriod().getId().equals(currentPeriod.getId())) {
-      throw new DataException("error.rnr.already.initiated");
+    Rnr lastRegularRequisition = requisitionRepository.getLastRegularRequisition(facility, program);
+    Long periodIdForLastRequisition = null;
+    if (lastRegularRequisition != null) {
+      if (lastRegularRequisition.preAuthorize()) {
+        throw new DataException("error.rnr.previous.not.filled");
+      }
+      periodIdForLastRequisition = lastRegularRequisition.getPeriod().getId();
     }
 
-    List<ProcessingPeriod> periodsForInitiating = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, lastRegularRequisition.getPeriod().getId());
-    return periodsForInitiating.get(0);
+    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
+
+    if (periods.size() == 0) {
+      throw new DataException("error.program.configuration.missing");
+    }
+    return periods.get(0);
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
 
-    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(
-        facilityId, programId);
-    Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
-        null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
+    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+
+    Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
     if (periodIdOfLastRequisitionToEnterPostSubmitFlow != null) {
       ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
@@ -330,8 +330,7 @@ public class RequisitionService {
       }
     }
 
-    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate,
-      periodIdOfLastRequisitionToEnterPostSubmitFlow);
+    return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
@@ -368,7 +367,7 @@ public class RequisitionService {
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-          requisition.getProgram(), immediatePreviousPeriod);
+        requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -468,7 +467,7 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, pageSize, userId, right, sortBy, sortDirection);
+      pageNumber, pageSize, userId, right, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));

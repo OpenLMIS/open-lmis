@@ -1012,6 +1012,7 @@ public class RequisitionServiceTest {
 
     requisitionService.approve(authorizedRnr);
   }
+
   @Test
   public void shouldGetCategoryCount() {
     Rnr requisition = new Rnr();
@@ -1448,6 +1449,31 @@ public class RequisitionServiceTest {
     ProcessingPeriod period = service.getPeriodForInitiating(FACILITY, PROGRAM);
 
     assertThat(period, is(PERIOD));
+  }
+
+  @Test
+  public void shouldAllowCreatingRnrIfPreviousRequisitionsDoNotExist() throws Exception {
+    Date programStartDate = new Date();
+    when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(null);
+    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+    when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate, null)).thenReturn(asList(PERIOD, new ProcessingPeriod()));
+
+    ProcessingPeriod period = requisitionService.getPeriodForInitiating(FACILITY, PROGRAM);
+
+    assertThat(period, is(PERIOD));
+  }
+
+  @Test
+  public void shouldThrowErrorIfNoPeriodExistsForInitiating() throws Exception {
+    Date programStartDate = new Date();
+    when(requisitionRepository.getLastRegularRequisition(FACILITY, PROGRAM)).thenReturn(null);
+    when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(programStartDate);
+    when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), programStartDate, null)).thenReturn(new ArrayList<ProcessingPeriod>());
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.program.configuration.missing");
+
+    requisitionService.getPeriodForInitiating(FACILITY, PROGRAM);
   }
 
   @Test
