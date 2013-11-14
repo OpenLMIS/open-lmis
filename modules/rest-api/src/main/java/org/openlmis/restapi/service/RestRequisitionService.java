@@ -20,6 +20,7 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,20 @@ public class RestRequisitionService {
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
+    validate(reportingFacility, reportingProgram);
+
     return requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
+  }
+
+  private void validate(Facility reportingFacility, Program reportingProgram) {
+    if (reportingFacility.getVirtualFacility()) return;
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+    if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram))) {
+      throw new DataException("error.rnr.previous.not.filled");
+    }
   }
 
   @Transactional

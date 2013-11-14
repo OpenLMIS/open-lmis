@@ -297,7 +297,7 @@ public class RequisitionService {
     return currentPeriod;
   }
 
-  ProcessingPeriod getPeriodForInitiating(Facility facility, Program program) {
+  public ProcessingPeriod getPeriodForInitiating(Facility facility, Program program) {
     Date programStartDate = programService.getProgramStartDate(facility.getId(), program.getId());
     Rnr lastRegularRequisition = requisitionRepository.getLastRegularRequisition(facility, program);
     Long periodIdForLastRequisition = null;

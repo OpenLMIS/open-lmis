@@ -34,6 +34,7 @@ import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -112,7 +113,7 @@ public class RestRequisitionServiceTest {
     Long facility_id = 5L;
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
-    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported))));
+    Facility facility = make(a(defaultFacility, with(facilityId, facility_id), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
 
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
@@ -130,11 +131,31 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
+  public void shouldThrowErrorIfCurrentPeriodIsNotTheInitiatingPeriodForNonVirtualFacility() throws Exception {
+    Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
+    Program program = new Program(3l);
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
+    ProcessingPeriod periodValidForInitiation = new ProcessingPeriod(5l);
+    when(requisitionService.getPeriodForInitiating(facility, program)).thenReturn(periodValidForInitiation);
+    RequisitionSearchCriteria requisitionSearchCriteria = new RequisitionSearchCriteria();
+    requisitionSearchCriteria.setFacilityId(facility.getId());
+    requisitionSearchCriteria.setProgramId(program.getId());
+
+    when(requisitionService.getCurrentPeriod(requisitionSearchCriteria)).thenReturn(new ProcessingPeriod(16l));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.rnr.previous.not.filled");
+
+    service.submitReport(report, 1l);
+  }
+
+  @Test
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
     Report spyReport = spy(report);
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
-    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported))));
+    Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
     when(programService.getProgramStartDate(5L, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
