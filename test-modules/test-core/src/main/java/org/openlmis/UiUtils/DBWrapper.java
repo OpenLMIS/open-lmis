@@ -1403,4 +1403,21 @@ public class DBWrapper {
     return rgId;
   }
 
+  public void deleteCurrentPeriod() throws SQLException {
+    update("delete from processing_periods where endDate>=NOW()") ;
+  }
+
+  public void updateProgramsSupportedByField(String field, String newValue, String facilityCode) throws SQLException {
+    update("Update programs_supported set "+field+"='"+newValue+"' where facilityId=(Select id from facilities where code ='"
+      +facilityCode+"');");
+  }
+
+  public void deleteSupervisoryRoleFromRoleAssignment() throws SQLException {
+    update("delete from role_assignments where supervisorynodeid is not null;");
+  }
+
+  public void deleteRnrTemplate() throws SQLException {
+    update("delete from program_rnr_columns");
+  }
+
 }
