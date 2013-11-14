@@ -350,7 +350,7 @@ public class ApproveRequisitionTest extends JsonUtility {
       String response = responseEntity.getResponse();
 
       assertEquals(400, responseEntity.getStatus());
-      assertTrue(response.contains("{\"error\":\"User does not have permission\"}"));
+      assertTrue(response.contains("{\"error\":\"Approval not allowed\"}"));
     }
 
   @Test(groups = {"webservice"})
