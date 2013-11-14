@@ -239,10 +239,10 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveErrorMsgDiv']")
   private static WebElement errorMessageDiv=null;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='skip']/span[1]/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='skipped']/span[1]/input")
   private static WebElement skipCheckBox=null;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='skip']/span[3]/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='skipped']/span[3]/input")
   private static WebElement skipTextBox=null;
 
   private static String USER_INPUT = "User Input";
