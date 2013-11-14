@@ -64,7 +64,7 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
+  @FindBy(how = How.XPATH, using = "//ul[@id='userList']/li/div[@class='user-actions']/a[2]")
   private static WebElement selectFirstResetPassword = null;
 
 
