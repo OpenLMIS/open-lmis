@@ -44,6 +44,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     });
   };
 
+  $scope.toggleSkipFlag = function(){
+    _.each($scope.page.fullSupply, function(rnrLineItem){
+      rnrLineItem.skipped = $scope.rnr.skipAll;
+    });
+  };
 
   $scope.formDisabled = function () {
     var status = $scope.rnr.status;
@@ -59,6 +64,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   $scope.$watch("currentPage", function () {
     $location.search("page", $scope.currentPage);
+    $scope.rnr.skipAll = false;
   });
 
   $scope.saveRnr = function (preventMessage) {

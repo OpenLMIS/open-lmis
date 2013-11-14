@@ -49,6 +49,11 @@ describe('R&R test', function () {
     expect(_.pick).toHaveBeenCalledWith(rnr, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
   });
 
+  it("should set skipAll to false on rnr creation", function(){
+    var rnr = new Rnr({}, []);
+    expect(rnr.skipAll).toBeFalsy();
+  });
+
   it('should prepare line item objects inside rnr', function () {
     var lineItemSpy = spyOn(window, 'RegularRnrLineItem');
     var lineItem1 = {"lineItem": "lineItem1"};

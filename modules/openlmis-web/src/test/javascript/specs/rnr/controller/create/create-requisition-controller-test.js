@@ -107,6 +107,25 @@ describe('CreateRequisitionController', function () {
 
   }));
 
+  it("should toggle skip flag for all rnrLineItems", function(){
+    var lineItem1 = {skipped: true};
+    var lineItem2 = {skipped: true};
+    scope.page = {fullSupply:[lineItem1,lineItem2]};
+    scope.rnr = {skipAll:false};
+
+    scope.toggleSkipFlag();
+
+    expect(lineItem1.skipped).toBeFalsy();
+    expect(lineItem2.skipped).toBeFalsy();
+
+    scope.rnr = {skipAll:true};
+
+    scope.toggleSkipFlag();
+
+    expect(lineItem1.skipped).toBeTruthy();
+    expect(lineItem2.skipped).toBeTruthy();
+  });
+
   it('should get list of Rnr Columns for program', function () {
     expect([
       {"testField": "test"}

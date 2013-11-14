@@ -11,6 +11,7 @@
 var Rnr = function (rnr, programRnrColumns) {
   $.extend(true, this, rnr);
   var thisRnr = this;
+  this.skipAll = false;
 
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];

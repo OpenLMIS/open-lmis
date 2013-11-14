@@ -30,7 +30,16 @@
   <table id="fullSupplyFrozenTable" class="table table-bordered scrollable" fixed-table-header>
     <thead>
     <tr>
-      <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed" ng-bind="column.label"></th>
+      <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+        <span class='skipped-checkbox' ng-if="column.name == 'skipped'">
+          <input ng-model="rnr.skipAll"
+                 ng-disabled="formDisabled"
+                 id="selectAll"
+                 type="checkbox"
+                 ng-change="toggleSkipFlag()"/>
+        </span>
+        <span ng-bind="column.label"></span>
+      </th>
     </tr>
     </thead>
     <tbody ng-show="visibleColumns.fullSupply && (rnr.fullSupplyLineItems.length > 0)"
@@ -45,8 +54,7 @@
           <span ng-switch-when="skipped">
             <input ng-model="rnrLineItem[column.name]"
                    ng-disabled="formDisabled"
-                   id="{{getId(column.name, $parent)}}" type="checkbox"
-                   name="skip{{rnrLineItem['id']}}"
+                   id="skip_{{$parent.$parent.$index}}" type="checkbox"
                    style="margin-left: 20px"
                    ng-change="rnr.calculateFullSupplyItemsSubmittedCost()"/>
           </span>
