@@ -224,9 +224,6 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     approveRequisition(id, 65);
     convertToOrder("commTrack", "Admin123");
 
-    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
-    checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
-
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
     checkOrderStatus("RELEASED", 65, "TRANSFER_FAILED", responseEntity);
   }
