@@ -47,7 +47,8 @@
                    ng-disabled="formDisabled"
                    id="{{getId(column.name, $parent)}}" type="checkbox"
                    name="skip{{rnrLineItem['id']}}"
-                   style="margin-left: 20px"/>
+                   style="margin-left: 20px"
+                   ng-change="rnr.calculateFullSupplyItemsSubmittedCost()"/>
           </span>
           <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{column.name}}_{{$parent.$parent.$index}}" class="cell-text">
           </span>

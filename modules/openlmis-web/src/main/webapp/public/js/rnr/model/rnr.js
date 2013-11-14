@@ -122,8 +122,9 @@ var Rnr = function (rnr, programRnrColumns) {
     var cost = 0;
     for (var lineItemIndex in rnrLineItems) {
       var lineItem = rnrLineItems[lineItemIndex];
-      if (!lineItem || lineItem.cost === null || !utils.isNumber(lineItem.cost)) continue;
-      cost += parseFloat(lineItem.cost);
+      if (utils.isNumber(lineItem.cost) && !lineItem.skipped) {
+        cost += parseFloat(lineItem.cost);
+      }
     }
     return cost.toFixed(2);
   };
