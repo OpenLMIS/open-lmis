@@ -45,8 +45,14 @@ public abstract class Page {
             robot.keyPress(KeyEvent.VK_S);
             robot.keyRelease(KeyEvent.VK_S);
             robot.keyRelease(KeyEvent.VK_ALT);
+
+            robot.keyPress(KeyEvent.VK_ALT);
+            robot.keyPress(KeyEvent.VK_O);
+            robot.keyRelease(KeyEvent.VK_O);
+            robot.keyRelease(KeyEvent.VK_ALT);
+
             Thread.sleep(2000);
-            } catch (AWTException e) {
+        } catch (AWTException e) {
 
             e.printStackTrace();
         } catch (InterruptedException e) {

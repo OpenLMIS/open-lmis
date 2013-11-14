@@ -183,6 +183,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","True");
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -211,6 +212,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+    dbWrapper.updateActiveStatusOfProgram("HIV",true);
   }
 
   @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -239,6 +241,8 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+
+    dbWrapper.updateActiveStatusOfProduct("P10","True");
   }
 
     @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
@@ -346,7 +350,7 @@ public class ApproveRequisitionTest extends JsonUtility {
       String response = responseEntity.getResponse();
 
       assertEquals(400, responseEntity.getStatus());
-      assertTrue(response.contains("{\"success\":"));
+      assertTrue(response.contains("{\"error\":\"User does not have permission\"}"));
     }
 
   @Test(groups = {"webservice"})
