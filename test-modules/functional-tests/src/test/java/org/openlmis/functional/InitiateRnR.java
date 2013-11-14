@@ -21,6 +21,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.By;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -861,6 +862,25 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.clickProceed();
     assertEquals(initiateRnRPage.getBeginningBalance(), "1");
   }
+
+
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+    public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add(CREATE_REQUISITION);
+        rightsList.add(VIEW_REQUISITION);
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+        dbWrapper.updateVirtualPropertyOfFacility("F10","True");
+        dbWrapper.insertRoleAssignmentForSupervisoryNode("200","store in-charge","N1");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        homePage.navigateAndInitiateRnrForSupervisedFacility(program);
+        String str=homePage.getFacilityDropDownList();
+        assertFalse(str.contains("F10"));
+
+    }
+
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
                                                       InitiateRnRPage initiateRnRPage) {

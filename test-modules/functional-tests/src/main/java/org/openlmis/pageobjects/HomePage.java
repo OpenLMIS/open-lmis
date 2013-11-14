@@ -13,6 +13,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -21,6 +22,8 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 
@@ -28,122 +31,190 @@ import static org.openqa.selenium.support.How.ID;
 public class HomePage extends Page {
 
   @FindBy(how = How.XPATH, using = "//strong[@class='ng-binding']")
-  private static WebElement usernameDisplay;
+  private static WebElement usernameDisplay=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Logout")
 
-  private static WebElement logoutLink;
+  private static WebElement logoutLink=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
-  private static WebElement loggedInUserLabel;
+  private static WebElement loggedInUserLabel=null;
 
   @FindBy(how = How.ID, using = "requisitions-menu")
-  private static WebElement requisitionMenuItem;
+  private static WebElement requisitionMenuItem=null;
 
   @FindBy(how = ID, using = "distributions-menu")
-  private static WebElement distributionsMenuItem;
+  private static WebElement distributionsMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Program Product ISA')]")
-  private static WebElement programProductISAMenuItem;
+  private static WebElement programProductISAMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
-  private static WebElement homeMenuItem;
+  private static WebElement homeMenuItem=null;
 
   @FindBy(how = How.ID, using = "reports-menu")
-  private static WebElement reportMenuItem;
+  private static WebElement reportMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
-  private static WebElement reportsTitle;
+  private static WebElement reportsTitle=null;
 
   @FindBy(how = How.ID, using = "orders-menu")
-  private static WebElement ordersMenuItem;
+  private static WebElement ordersMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
-  private static WebElement approveLink;
+  private static WebElement approveLink=null;
 
   @FindBy(how = How.ID, using = "administration-menu")
-  private static WebElement AdministrationMenuItem;
+  private static WebElement AdministrationMenuItem=null;
 
   @FindBy(how = How.ID, using = "manage-option")
-  private static WebElement manageFacilityMenuItem;
+  private static WebElement manageFacilityMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
-  private static WebElement facilityMenuItem;
+  private static WebElement facilityMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
-  private static WebElement manageRoleAssignmentLink;
+  private static WebElement manageRoleAssignmentLink=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
-  private static WebElement convertToOrderMenuItem;
+  private static WebElement convertToOrderMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
-  private static WebElement manageMenuItem;
+  private static WebElement manageMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
-  private static WebElement offlineDistributions;
+  private static WebElement offlineDistributions=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
-  private static WebElement viewOrdersMenuItem;
+  private static WebElement viewOrdersMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View')]")
-  private static WebElement viewRequisitonMenuItem;
+  private static WebElement viewRequisitonMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Requisitions')]")
-  private static WebElement viewRequisitonHeader;
+  private static WebElement viewRequisitonHeader=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
-  private static WebElement convertToOrderHeader;
+  private static WebElement convertToOrderHeader=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage a Distribution')]")
-  private static WebElement manageDistributionHeader;
+  private static WebElement manageDistributionHeader=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
-  private static WebElement viewOrdersHeader;
+  private static WebElement viewOrdersHeader=null;
 
   @FindBy(how = How.ID, using = "add-new-facility")
-  private static WebElement createFacility;
+  private static WebElement createFacility=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
-  private static WebElement facilityHeader;
+  private static WebElement facilityHeader=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Configure")
-  private static WebElement TemplateConfigTab;
+  private static WebElement TemplateConfigTab=null;
 
   @FindBy(how = How.LINK_TEXT, using = "R & R Template")
-  private static WebElement RnRTemplateConfigTab;
+  private static WebElement RnRTemplateConfigTab=null;
 
   @FindBy(how = How.LINK_TEXT, using = "EDI File")
-  private static WebElement ediFileTab;
+  private static WebElement ediFileTab=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
-  private static WebElement RegimenTemplateConfigTab;
+  private static WebElement RegimenTemplateConfigTab=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
-  private static WebElement RegimenTemplateHeader;
+  private static WebElement RegimenTemplateHeader=null;
 
   @FindBy(how = How.LINK_TEXT, using = "R & R")
-  private static WebElement ConfigureTemplateSelectProgramPage;
+  private static WebElement ConfigureTemplateSelectProgramPage=null;
 
   @FindBy(how = How.ID, using = "selectProgram")
-  private static WebElement ProgramDropDown;
+  private static WebElement ProgramDropDown=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Requisitions")
-  private static WebElement requisitionsLink;
+  private static WebElement requisitionsLink=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='submenu']")
-  private static WebElement SubMenuItem;
+  private static WebElement SubMenuItem=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Create / Authorize")
-  private static WebElement createLink;
+  private static WebElement createLink=null;
 
   @FindBy(how = How.XPATH, using = "//input[@id='myFacilityRnr']")
-  private static WebElement myFacilityRadioButton;
+  private static WebElement myFacilityRadioButton=null;
 
   @FindBy(how = How.LINK_TEXT, using = "My Facility")
-  private static WebElement myFacilityLink;
+  private static WebElement myFacilityLink=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
-  private static WebElement createRnRLink;
+  private static WebElement createRnRLink=null;
+
+  @FindBy(how = How.XPATH, using = "//option[@value='0']")
+  private static WebElement periodDropDown=null;
+
+  @FindBy(how = How.XPATH, using = "//select[1]")
+  private static WebElement programDropDownSelect=null;
+
+  @FindBy(how = How.XPATH, using = "//select[3]")
+  private static WebElement periodDropDownSelect=null;
+
+  @FindBy(how = How.XPATH, using = "//input[@value='Next']")
+  private static WebElement nextButton=null;
+
+  @FindBy(how = How.LINK_TEXT, using = "Manage")
+  private static WebElement manageLink=null;
+
+  @FindBy(how = How.LINK_TEXT, using = "Schedules")
+  private static WebElement schedulesLink=null;
+
+  @FindBy(how = How.LINK_TEXT, using = "Search")
+  private static WebElement searchLink=null;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
+  private static WebElement uploadLink=null;
+
+  @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr(row.entity)']")
+  private static WebElement proceedButton=null;
+
+  @FindBy(how = How.ID, using = "facility-tab")
+  private static WebElement facilitiesTab=null;
+
+  @FindBy(how = How.ID, using = "role-tab")
+  private static WebElement rolesTab=null;
+
+  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
+  private static WebElement rolesLink=null;
+
+  @FindBy(how = How.ID, using = "schedule-tab")
+  private static WebElement schedulesTab=null;
+
+
+  @FindBy(how = How.ID, using = "user-tab")
+  private static WebElement usersTab=null;
+
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
+  private static WebElement startDate=null;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
+  private static WebElement endDate=null;
+
+  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  private static WebElement errorMsg=null;
+
+  @FindBy(how = ID, using = "program")
+  private static WebElement selectProgramSelectBox=null;
+
+  @FindBy(how = ID, using = "rnrType")
+  private static WebElement rnrTypeSelectBox=null;
+
+  @FindBy(how = How.XPATH, using = "//div/div/div[1]/div[2]/div/span")
+  private static WebElement firstPeriodLabel=null;
+
+  @FindBy(how = How.XPATH, using = "//input[@id='supervisedFacilityRnr']")
+  private static WebElement supervisedFacilityRadioButton=null;
+
+  @FindBy(how = How.XPATH, using = "//select[@id='programListSupervisedFacility']")
+  private static WebElement ProgramDropDownSupervisedFacility=null;
 
   @FindBy(how = How.ID, using = "facilityList")
   private static WebElement facilityDropDown;
@@ -151,70 +222,7 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//select[@id='programListMyFacility']")
   private static WebElement programDropDown;
 
-  @FindBy(how = How.XPATH, using = "//option[@value='0']")
-  private static WebElement periodDropDown;
-
-
-  @FindBy(how = How.XPATH, using = "//select[1]")
-  private static WebElement programDropDownSelect;
-
-  @FindBy(how = How.XPATH, using = "//select[3]")
-  private static WebElement periodDropDownSelect;
-
-  @FindBy(how = How.XPATH, using = "//input[@value='Next']")
-  private static WebElement nextButton;
-
-  @FindBy(how = How.LINK_TEXT, using = "Manage")
-  private static WebElement manageLink;
-
-  @FindBy(how = How.LINK_TEXT, using = "Schedules")
-  private static WebElement schedulesLink;
-
-  @FindBy(how = How.LINK_TEXT, using = "Search")
-  private static WebElement searchLink;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
-  private static WebElement uploadLink;
-
-  @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr(row.entity)']")
-  private static WebElement proceedButton;
-
-  @FindBy(how = How.ID, using = "facility-tab")
-  private static WebElement facilitiesTab;
-
-  @FindBy(how = How.ID, using = "role-tab")
-  private static WebElement rolesTab;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
-  private static WebElement rolesLink;
-
-  @FindBy(how = How.ID, using = "schedule-tab")
-  private static WebElement schedulesTab;
-
-
-  @FindBy(how = How.ID, using = "user-tab")
-  private static WebElement usersTab;
-
-
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
-  private static WebElement startDate;
-
-  @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-  private static WebElement endDate;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement errorMsg;
-
-  @FindBy(how = ID, using = "program")
-  private static WebElement selectProgramSelectBox;
-
-  @FindBy(how = ID, using = "rnrType")
-  private static WebElement rnrTypeSelectBox;
-
-  @FindBy(how = How.XPATH, using = "//div/div/div[1]/div[2]/div/span")
-  private static WebElement firstPeriodLabel;
-
-  public HomePage(TestWebDriver driver) throws IOException {
+    public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -305,7 +313,7 @@ public class HomePage extends Page {
 
   public String navigateAndInitiateRnr(String program) throws IOException {
     navigateRnr();
-    String periodDetails = null;
+    String periodDetails;
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(programDropDown);
@@ -490,11 +498,6 @@ public class HomePage extends Page {
     return new ViewOrdersPage(testWebDriver);
   }
 
-  public void verifyErrorMessage() {
-    testWebDriver.waitForElementToAppear(errorMsg);
-    SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
-  }
-
   public String getErrorMessage() {
     testWebDriver.waitForElementToAppear(errorMsg);
     return errorMsg.getText().trim();
@@ -507,7 +510,6 @@ public class HomePage extends Page {
 
   public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
     navigateRnr();
-    String periodDetails = null;
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(programDropDown);
@@ -537,4 +539,23 @@ public class HomePage extends Page {
     public boolean isRequisitionsMenuTabDisplayed(){
         return requisitionMenuItem.isDisplayed();
     }
+
+    public void navigateAndInitiateRnrForSupervisedFacility(String program) throws IOException {
+        navigateRnr();
+        supervisedFacilityRadioButton.click();
+        testWebDriver.sleep(2000);
+        testWebDriver.waitForElementToAppear(ProgramDropDownSupervisedFacility);
+        testWebDriver.selectByVisibleText(ProgramDropDownSupervisedFacility, program);
+        testWebDriver.sleep(1000);
+
+   }
+
+    public String getFacilityDropDownList() {
+        return facilityDropDown.getText();
+    }
+
+    public String getFacilityDropDownListForViewRequisition() {
+        return testWebDriver.findElement(By.name("selectFacility")).getText() ;
+    }
 }
+
