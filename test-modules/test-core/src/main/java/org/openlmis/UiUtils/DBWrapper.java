@@ -1333,10 +1333,6 @@ public class DBWrapper {
       "((SELECT id FROM facilities WHERE code='" + facilityCode + "'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
   }
 
-  public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
-    update("update products set fullsupply=" + flag + " where code='" + productCode + "';");
-  }
-
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
      int rgId=0;
     ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
