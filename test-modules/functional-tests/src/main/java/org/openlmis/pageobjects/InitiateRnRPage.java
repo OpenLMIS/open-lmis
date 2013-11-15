@@ -166,9 +166,6 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//input[@value='Add']")
   private static WebElement addNonFullSupplyButtonScreen=null;
 
-  @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab=null;
-
   @FindBy(how = ID, using = "fullSupplyTab")
   private static WebElement fullSupplyTab=null;
 
@@ -196,9 +193,6 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']")
   private static WebElement categoryDropDownValue=null;
 
-  @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCode']")
-  private static WebElement productCodeDropDown=null;
-
   @FindBy(how = XPATH, using = "//input[@name='nonFullSupplyProductQuantityRequested0']")
   private static WebElement nonFullSupplyProductQuantityRequested=null;
 
@@ -219,9 +213,6 @@ public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "addLossesAndAdjustment")
   private static WebElement addLossesAndAdjustmentButton = null;
-
-  @FindBy(how = XPATH, using = "//input[@ng-click='addNonFullSupplyLineItem()']")
-  private static WebElement addButtonEnabled=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
   private static WebElement cancelButton=null;
@@ -247,8 +238,8 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "selectAll")
   private static WebElement selectAllCheckbox=null;
 
-  String successText = "R&R saved successfully!";
-  Float actualTotalCostFullSupply, actualTotalCostNonFullSupply=null;
+  Float actualTotalCostFullSupply=0.0f;
+  Float actualTotalCostNonFullSupply=0.0f;
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -435,7 +426,7 @@ public class InitiateRnRPage extends RequisitionPage {
                                                           Integer I, boolean emergency) {
     enterValuesCalculatedOrderQuantity(F, X);
     if (emergency)
-      VerifyCalculatedOrderQuantityForEmergencyRnR(N, P, H, I);
+      VerifyCalculatedOrderQuantityForEmergencyRnR();
     else
       VerifyCalculatedOrderQuantity(N, P, H, I);
 
@@ -465,7 +456,7 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-  public void VerifyCalculatedOrderQuantityForEmergencyRnR(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+  public void VerifyCalculatedOrderQuantityForEmergencyRnR() {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
     verifyFieldValue("", actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amc);
@@ -525,10 +516,21 @@ public class InitiateRnRPage extends RequisitionPage {
     fullSupplyTab.click();
     testWebDriver.sleep(500);
     actualTotalCostFullSupply = calculateTotalCost();
-    assertEquals(totalCostFooter.getText().trim().substring(1), new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+    assertEquals(totalCostFooter.getText().trim().substring(1),
+            new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
+                    BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
 
+  public String getTotalCostFooter(){
+     testWebDriver.waitForElementToAppear(totalCostFooter);
+     return totalCostFooter.getText().trim().substring(1);
+  }
+
+  public String getFullySupplyCostFooter(){
+     testWebDriver.waitForElementToAppear(totalCostFullSupplyFooter);
+     return totalCostFullSupplyFooter.getText().trim().substring(1);
+  }
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
                                         String productPrimaryName, String productCode, String category)
@@ -617,7 +619,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void verifyColumnsHeadingPresent(String xpathTillTrTag, String heading, int noOfColumns) {
     boolean flag = false;
-    String actualColumnHeading = null;
+    String actualColumnHeading;
     for (int i = 0; i < noOfColumns; i++) {
       try {
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
@@ -638,7 +640,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void verifyColumnHeadingNotPresent(String xpathTillTrTag, String heading, int noOfColumns) {
     boolean flag = false;
-    String actualColumnHeading = null;
+    String actualColumnHeading;
     for (int i = 0; i < noOfColumns; i++) {
       try {
         WebElement columnElement = testWebDriver.getElementByXpath(xpathTillTrTag + "/th[" + (i + 1) + "]");
@@ -734,7 +736,6 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyAuthorizeRnrSuccessMsg() {
-
     assertTrue("RnR authorize Success message not displayed", submitSuccessMessage.isDisplayed());
   }
 

@@ -896,22 +896,29 @@ public class InitiateRnR extends TestCaseHelper {
         dbWrapper.deletePeriod("Period1");
         dbWrapper.deletePeriod("Period2");
         dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-        dbWrapper.updateSourceOfAProgramTemplate("HIV", "Total Consumed Quantity", "C");
-        dbWrapper.updateSourceOfAProgramTemplate("HIV", "Stock on Hand", "U");
-
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(userSIC, password);
 
         homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
         InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+        initiateRnRPage.enterRequestedQuantity(100);
+        initiateRnRPage.calculateAndVerifyTotalCost();
+        initiateRnRPage.verifyCostOnFooter();
+
         initiateRnRPage.skipSingleProduct(1);
-        assertFalse(initiateRnRPage.enableBeginningBalance());
+        initiateRnRPage.verifyAllFieldsDisabled();
+        initiateRnRPage.calculateAndVerifyTotalCost();
+        assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
+        assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
 
         initiateRnRPage.skipSingleProduct(1);
         assertTrue(initiateRnRPage.enableBeginningBalance());
+        initiateRnRPage.calculateAndVerifyTotalCost();
 
         initiateRnRPage.skipAllProduct();
-        assertFalse(initiateRnRPage.enableBeginningBalance());
+        initiateRnRPage.verifyAllFieldsDisabled();
+        assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
+        assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
     }
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
