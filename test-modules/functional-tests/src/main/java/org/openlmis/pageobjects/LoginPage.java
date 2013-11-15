@@ -36,21 +36,16 @@ public class LoginPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[@openlmis-message='link.forgot.password']")
   private static WebElement forgotPasswordLink=null;
 
-  private String BASE_URL;
+  @FindBy(how = How.ID, using = "locale_en")
+  private static WebElement langEnglish=null;
 
-  private String baseUrl;
+  @FindBy(how=How.ID, using = "locale_pt")
+  private static WebElement langPortugues=null;
 
-    @FindBy(how = How.ID, using = "locale_en")
-    private static WebElement langEnglish=null;
-
-    @FindBy(how=How.ID, using = "locale_pt")
-    private static WebElement langPortugues=null;
-
-    public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
+  public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
     super(driver);
 
-    BASE_URL = baseUrl;
-    testWebDriver.setBaseURL(BASE_URL);
+    testWebDriver.setBaseURL(baseUrl);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
@@ -76,8 +71,7 @@ public class LoginPage extends Page {
     public String getEnglishColor()
     {
         testWebDriver.sleep(1500);
-        String color=langEnglish.getCssValue("color");
-        return color;
+        return langEnglish.getCssValue("color");
     }
 
     public String getPortuguesColor()
@@ -85,8 +79,7 @@ public class LoginPage extends Page {
     {
         testWebDriver.sleep(1500);
         testWebDriver.waitForElementToAppear(langPortugues);
-        String color=langPortugues.getCssValue("color");
-        return color;
+        return langPortugues.getCssValue("color");
     }
 
     public void setLangAsEnglish()

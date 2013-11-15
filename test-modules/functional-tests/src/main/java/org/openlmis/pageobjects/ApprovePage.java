@@ -112,9 +112,6 @@ public class ApprovePage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
   private static WebElement operatedByInitRnRScreen=null;
 
-  @FindBy(how = XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
-  private static WebElement approvedSuccessMessage=null;
-
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
   private static WebElement emergencyIcon=null;
 

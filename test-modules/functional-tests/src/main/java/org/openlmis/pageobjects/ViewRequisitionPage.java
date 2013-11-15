@@ -53,9 +53,6 @@ public class ViewRequisitionPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//select[@data-handler='selectYear']")
   private static WebElement yearChanger=null;
 
-  @FindBy(how = XPATH, using = "//span[contains(text(),'Prev')]")
-  private static WebElement prevCalender=null;
-
   @FindBy(how = XPATH, using = "//span[contains(text(),'Next')]")
   private static WebElement nextCalender=null;
 

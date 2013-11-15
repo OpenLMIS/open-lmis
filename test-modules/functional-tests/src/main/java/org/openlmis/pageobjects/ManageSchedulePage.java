@@ -138,11 +138,4 @@ public class ManageSchedulePage extends Page {
 
   }
 
-  public void verifyMessage(String message) {
-    String successMessage = saveSuccessMsgDiv.getText();
-    SeleneseTestNgHelper.assertEquals(successMessage, message);
-
-  }
-
-
 }

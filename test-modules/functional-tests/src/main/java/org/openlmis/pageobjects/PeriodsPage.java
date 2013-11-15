@@ -56,27 +56,20 @@ public class PeriodsPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'28')]")
   private static WebElement endDateThirdCalender=null;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-show='calculateDays(newPeriod.startDate, newPeriod.endDate)+1']")
-  private static WebElement totalDaysPeriods=null;
-
   @FindBy(how = How.XPATH, using = "//span[@ng-model='newPeriod.numberOfMonths']")
   private static WebElement numberOfMonthsPeriods=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
   private static WebElement addButton=null;
 
-
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
-
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton=null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[3]")
-  private static WebElement startDateList;
+  private static WebElement startDateList=null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[4]")
-  private static WebElement endDateList;
+  private static WebElement endDateList=null;
 
 
   public PeriodsPage(TestWebDriver driver) throws IOException {
@@ -185,16 +178,15 @@ public class PeriodsPage extends Page {
 
     } catch (java.text.ParseException e) {
       e.printStackTrace();
-    } finally {
-      return diffInDays;
     }
+      return diffInDays;
   }
 
   public int compareDateWithToday(String dateToCompare) {
 
-    Date todayDate = null;
+    Date todayDate;
     java.text.SimpleDateFormat sdf;
-    Date datePeriods = null;
+    Date datePeriods;
     int flag = 0;
     try {
 
@@ -211,13 +203,12 @@ public class PeriodsPage extends Page {
         flag = 2;
 
       } else if (datePeriods.compareTo(todayDate) == 0) {
-
+          flag = 3;
       }
 
     } catch (Exception ex) {
       ex.printStackTrace();
-    } finally {
-      return flag;
     }
+      return flag;
   }
 }

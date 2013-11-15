@@ -90,7 +90,7 @@ public class ViewOrdersPage extends RequisitionPage {
       SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
 
-  public void downloadCSV() throws IOException {
+  public void downloadCSV() throws IOException, InterruptedException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     downloadFileWhileSaveDialogOPen(downloadCSVLink);
   }
@@ -101,9 +101,7 @@ public class ViewOrdersPage extends RequisitionPage {
   }
 
   public int getNumberOfLineItems() throws IOException {
-    int number = 0;
-    number = testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
-    return number;
+    return testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
   }
 
   public void verifyProgram(int row, String program) {

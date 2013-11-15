@@ -137,7 +137,7 @@ public class UserPage extends Page {
   private static WebElement addSupervisoryRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Warehouse Roles')]")
-  private static WebElement warehouseRolesAccordion;
+  private static WebElement warehouseRolesAccordion=null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
   private static WebElement rolesInputFieldWarehouse = null;
@@ -152,7 +152,7 @@ public class UserPage extends Page {
   private static WebElement addWarehouseRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Delivery zones')]")
-  private static WebElement deliveryZonesAccordion;
+  private static WebElement deliveryZonesAccordion=null;
 
   @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
   private static WebElement zoneToDelivery = null;

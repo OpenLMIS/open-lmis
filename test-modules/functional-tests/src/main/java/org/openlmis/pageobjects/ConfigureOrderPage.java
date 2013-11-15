@@ -18,8 +18,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -93,9 +91,6 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
   private static WebElement periodSelectBoxTextField=null;
 
-  @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.periodDatePattern']")
-  private static WebElement periodSelectBox=null;
-
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement periodSelectBoxSelectableElement=null;
 
@@ -104,9 +99,6 @@ public class ConfigureOrderPage extends Page {
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
   private static WebElement orderDateSelectBoxTextField=null;
-
-  @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.datePattern']")
-  private static WebElement orderDateSelectBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement orderDateSelectBoxSelectableElement=null;

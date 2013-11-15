@@ -123,21 +123,6 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@id='myFacilityRnr']")
   private static WebElement myFacilityRadioButton=null;
 
-  @FindBy(how = How.LINK_TEXT, using = "My Facility")
-  private static WebElement myFacilityLink=null;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
-  private static WebElement createRnRLink=null;
-
-  @FindBy(how = How.XPATH, using = "//option[@value='0']")
-  private static WebElement periodDropDown=null;
-
-  @FindBy(how = How.XPATH, using = "//select[1]")
-  private static WebElement programDropDownSelect=null;
-
-  @FindBy(how = How.XPATH, using = "//select[3]")
-  private static WebElement periodDropDownSelect=null;
-
   @FindBy(how = How.LINK_TEXT, using = "Manage")
   private static WebElement manageLink=null;
 

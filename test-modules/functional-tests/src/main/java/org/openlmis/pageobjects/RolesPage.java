@@ -143,14 +143,6 @@ public class RolesPage extends Page {
     return createNewRoleButton;
   }
 
-  public WebElement getCancelButton() {
-    return cancelButton;
-  }
-
-  public WebElement getSaveSuccessMsgDiv() {
-    return saveSuccessMsgDiv;
-  }
-
   public WebElement getSaveErrorMsgDiv() {
     return saveErrorMsgDiv;
   }

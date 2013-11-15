@@ -81,9 +81,6 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "calculateButton")
   private static WebElement testCalculationButton=null;
 
-  @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv=null;
-
   @FindBy(how = ID, using = "saveFailMessage")
   private static WebElement saveFailMessage=null;
 
@@ -199,12 +196,6 @@ public class ProgramProductISAPage extends Page {
     return testWebDriver.getText(isaValueLabel);
   }
 
-
-  public void verifySuccessMessageDiv() {
-    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
-  }
-
   public void verifyISAFormula(String ISAFormula) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(ISAFormulaFromConfigureProgramISAModalWindow);
@@ -251,8 +242,7 @@ public class ProgramProductISAPage extends Page {
 
   public List<WebElement> getAllSelectOptionsFromProgramDropDown() {
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
-    List<WebElement> options = testWebDriver.getOptions(selectProgramSelectBox);
-    return options;
+    return testWebDriver.getOptions(selectProgramSelectBox);
   }
 
   public void saveISA() {

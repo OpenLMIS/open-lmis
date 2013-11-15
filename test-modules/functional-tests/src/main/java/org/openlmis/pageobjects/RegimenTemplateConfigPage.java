@@ -98,11 +98,6 @@ public class RegimenTemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[3]/span")
   private static WebElement remarksDataType=null;
 
-  @FindBy(how = How.XPATH, using = "//div[2][@class='ui-sortable ng-scope ng-pristine ng-valid']/div[1][@class='category-name']/div[@class='ng-binding']")
-  private static WebElement addedCategory=null;
-
-
-  private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";
   private static String baseRegimenDivXpath = "//div[@id='sortable']/div";
 
   public RegimenTemplateConfigPage(TestWebDriver driver) {
