@@ -17,12 +17,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -286,7 +287,9 @@ public class RnrLineItem extends LineItem {
           new BigDecimal(stockOutDays),
           new BigDecimal(quantityDispensed),
           new BigDecimal(newPatientCount),
-          new BigDecimal(dosesPerMonth), dosesPerDispensingUnit, reportingDays);
+          new BigDecimal(dosesPerMonth),
+          new BigDecimal(dosesPerDispensingUnit),
+              reportingDays);
     }
 
   }
