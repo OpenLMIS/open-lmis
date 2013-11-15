@@ -134,7 +134,7 @@ public class E2EUpload extends TestCaseHelper {
     verifyValidVirtualFacilityUpload(uploadPage);
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  //@Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyVirtualFacilityWhenParentUpdatedByUpload(String[] credentials) throws IOException, SQLException {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -152,6 +152,9 @@ public class E2EUpload extends TestCaseHelper {
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data.csv");
     uploadPage.uploadFacilities("QA_facilities.csv");
+    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes.csv");
+    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups_Subsequent.csv");
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members.csv");
 
     dbWrapper.insertVirtualFacility(virtualFacilityCode,parentFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
