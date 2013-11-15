@@ -15,16 +15,22 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
@@ -44,6 +50,12 @@ public class RestRequisitionService {
   @Autowired
   private ProgramService programService;
 
+  @Autowired
+  private ProductService productService;
+
+  @Autowired
+  private MessageService messageService;
+
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
     report.validate();
@@ -55,10 +67,13 @@ public class RestRequisitionService {
 
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
 
+    validateProducts(report, rnr);
+
     report.getRnrWithSkippedProducts(rnr);
 
     return requisitionService.save(rnr);
   }
+
 
   private void validate(Facility reportingFacility, Program reportingProgram) {
     if (reportingFacility.getVirtualFacility()) return;
@@ -85,8 +100,26 @@ public class RestRequisitionService {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
+    validateProducts(report, savedRequisition);
+
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
+  }
+
+  private void validateProducts(Report report, Rnr savedRequisition) {
+    if (report.getProducts() == null) {
+      return;
+    }
+
+    List<String> invalidProductCodes = new ArrayList<>();
+    for (final RnrLineItem lineItem : report.getProducts()) {
+      if (savedRequisition.findCorrespondingLineItem(lineItem) == null) {
+        invalidProductCodes.add(lineItem.getProductCode());
+      }
+    }
+    if (invalidProductCodes.size() != 0) {
+      throw new DataException(messageService.message("invalid.product.codes", invalidProductCodes.toString()));
+    }
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {

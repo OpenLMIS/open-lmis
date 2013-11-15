@@ -13,7 +13,7 @@ package org.openlmis.restapi.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -25,7 +25,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
   private Long requisitionId;
   private Long facilityId;
@@ -45,6 +44,7 @@ public class Report {
     }
   }
 
+  @JsonIgnore
   public Rnr getRequisition() {
     Rnr rnr = new Rnr();
     rnr.setId(requisitionId);

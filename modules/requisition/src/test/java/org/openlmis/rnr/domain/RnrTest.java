@@ -30,6 +30,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
@@ -232,18 +233,18 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShip() throws Exception {
     RnrLineItem fullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-        with(roundToZero, true),
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10),
-        with(roundToZero, false))));
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false))));
 
     RnrLineItem nonFullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-        with(roundToZero, true),
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10),
-        with(roundToZero, false))));
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -262,18 +263,18 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShipInCaseOfEmergencyRequisition() throws Exception {
     RnrLineItem fullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-        with(roundToZero, true),
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10),
-        with(roundToZero, false))));
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false))));
 
     RnrLineItem nonFullSupply = spy(make(a(RnrLineItemBuilder.defaultRnrLineItem,
-        with(roundToZero, true),
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10),
-        with(roundToZero, false))));
+      with(roundToZero, true),
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10),
+      with(roundToZero, false))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -548,6 +549,31 @@ public class RnrTest {
     Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr));
     rnrForApproval.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P10")))));
 
-    assertThat(savedRnr.getProductCodeDifference(rnrForApproval), is(asList("P10")));
+    List<String> invalidProductCodes = new ArrayList<>();
+    for (final RnrLineItem lineItem : rnrForApproval.getFullSupplyLineItems()) {
+      if (savedRnr.findCorrespondingLineItem(lineItem) == null) {
+        invalidProductCodes.add(lineItem.getProductCode());
+      }
+    }
+    assertThat(invalidProductCodes, is(asList("P10")));
+  }
+
+  @Test
+  public void shouldFindCorrepondingLineItemInRnrAndReturnIfFound() {
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")));
+    savedRnr.setFullSupplyLineItems(asList(rnrLineItem));
+
+    RnrLineItem foundLineItem = savedRnr.findCorrespondingLineItem(rnrLineItem);
+
+    assertThat(foundLineItem, is(rnrLineItem));
+  }
+
+  @Test
+  public void shouldFindCorrepondingLineItemInRnrAndReturnNullIfNotFound() {
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")));
+
+    assertThat(savedRnr.findCorrespondingLineItem(rnrLineItem), is(nullValue()));
   }
 }

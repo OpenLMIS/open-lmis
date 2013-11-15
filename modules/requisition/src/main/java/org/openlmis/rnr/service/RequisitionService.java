@@ -130,20 +130,15 @@ public class RequisitionService {
   @Transactional
   public Rnr save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
-    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
-    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId());
 
     if (!requisitionPermissionService.hasPermissionToSave(rnr.getModifiedBy(), savedRnr)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
 
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId());
+
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
-
-      List<String> invalidProductCodes = savedRnr.getProductCodeDifference(rnr);
-      if (invalidProductCodes.size() != 0) {
-        throw new DataException(messageService.message("invalid.product.codes", invalidProductCodes.toString()));
-      }
-
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());

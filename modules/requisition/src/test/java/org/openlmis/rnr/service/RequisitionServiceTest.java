@@ -1183,7 +1183,6 @@ public class RequisitionServiceTest {
 
     when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
     doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
-    doReturn(new ArrayList<>()).when(savedRequisition).getProductCodeDifference(authorizedRnr);
 
     requisitionService.save(authorizedRnr);
 
@@ -1198,7 +1197,6 @@ public class RequisitionServiceTest {
 
     when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
     doNothing().when(savedRequisition).copyApproverEditableFields(inApprovalRnr, template);
-    doReturn(new ArrayList<>()).when(savedRequisition).getProductCodeDifference(inApprovalRnr);
     requisitionService.save(inApprovalRnr);
 
     verify(savedRequisition).copyApproverEditableFields(inApprovalRnr, template);
@@ -1484,22 +1482,6 @@ public class RequisitionServiceTest {
   private void setupForInitRnr() {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
-  }
-
-  @Test
-  public void shouldThrowAnExceptionIfInvalidProductCode() throws Exception {
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("invalid product code");
-
-    Rnr savedRequisition = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
-    ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
-    doReturn(asList("P10")).when(savedRequisition).getProductCodeDifference(authorizedRnr);
-    when(messageService.message("invalid.product.codes", "[P10]")).thenReturn("invalid product code");
-
-    when(rnrTemplateService.fetchProgramTemplate(savedRequisition.getProgram().getId())).thenReturn(template);
-    doNothing().when(savedRequisition).copyApproverEditableFields(authorizedRnr, template);
-
-    requisitionService.save(authorizedRnr);
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {

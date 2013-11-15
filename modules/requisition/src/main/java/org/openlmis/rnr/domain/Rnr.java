@@ -211,7 +211,7 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
+  public RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
     return (RnrLineItem) find(this.getAllLineItems(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -351,14 +351,5 @@ public class Rnr extends BaseModel {
     return status == INITIATED || status == SUBMITTED;
   }
 
-  public List<String> getProductCodeDifference(Rnr rnr) {
-    List<String> invalidProductCodes = new ArrayList<>();
-    for (final RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
-      if (this.findCorrespondingLineItem(lineItem) == null) {
-        invalidProductCodes.add(lineItem.getProductCode());
-      }
-    }
-    return invalidProductCodes;
-  }
 }
 

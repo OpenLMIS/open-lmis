@@ -19,14 +19,10 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.ProcessingScheduleService;
-import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
@@ -49,6 +45,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.openlmis.core.builder.FacilityBuilder.*;
@@ -92,8 +89,20 @@ public class RestRequisitionServiceTest {
   @Mock
   private ProcessingScheduleService processingScheduleService;
 
+  @Mock
+  private ProductService productService;
+
+  @Mock
+  private MessageService messageService;
+
+  String validProductCode;
+  RnrLineItem rnrLineItem;
+
   @Before
   public void setUp() throws Exception {
+    validProductCode = "validProductCode";
+    rnrLineItem = new RnrLineItem();
+    rnrLineItem.setProductCode(validProductCode);
     report = make(a(defaultReport));
     String encodedCredentials = "1:correct token";
     requisition = new Rnr();
@@ -110,8 +119,9 @@ public class RestRequisitionServiceTest {
 
   @Test
   public void shouldCreateAndSubmitARequisition() throws Exception {
-    List<RnrLineItem> products = new ArrayList<>();
-    products.add(new RnrLineItem());
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
+    List<RnrLineItem> products = asList(rnrLineItem);
+    requisition.setFullSupplyLineItems(products);
     report.setProducts(products);
 
     Long facility_id = 5L;
@@ -123,9 +133,10 @@ public class RestRequisitionServiceTest {
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
     when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false)).thenReturn(requisition);
     when(requisitionService.save(requisition)).thenReturn(requisition);
-
+    when(productService.getByCode(validProductCode)).thenReturn(new Product());
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
+
 
     Rnr expectedRequisition = service.submitReport(report, 1L);
 
@@ -139,10 +150,12 @@ public class RestRequisitionServiceTest {
   public void shouldThrowErrorIfCurrentPeriodIsNotTheInitiatingPeriodForNonVirtualFacility() throws Exception {
     Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
     Program program = new Program(3l);
+    report.setProducts(asList(rnrLineItem));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
     ProcessingPeriod periodValidForInitiation = new ProcessingPeriod(5l);
     when(requisitionService.getPeriodForInitiating(facility, program)).thenReturn(periodValidForInitiation);
+    when(productService.getByCode(validProductCode)).thenReturn(new Product());
     RequisitionSearchCriteria requisitionSearchCriteria = new RequisitionSearchCriteria();
     requisitionSearchCriteria.setFacilityId(facility.getId());
     requisitionSearchCriteria.setProgramId(program.getId());
@@ -157,15 +170,20 @@ public class RestRequisitionServiceTest {
 
   @Test
   public void shouldValidateThatTheReportContainsAllMandatoryFields() throws Exception {
+    List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
+    report.setProducts(rnrLineItems);
     Report spyReport = spy(report);
+    requisition.setFullSupplyLineItems(rnrLineItems);
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
     Facility facility = make(a(defaultFacility, with(facilityId, 5L), with(programSupportedList, asList(programSupported)), with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
-    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
+    Program program = new Program(PROGRAM_ID);
+    when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(program);
     when(programService.getProgramStartDate(5L, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
     when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(8L));
-
+    when(productService.getByCode(validProductCode)).thenReturn(new Product());
+    when(requisitionService.initiate(facility, program, 1l, false)).thenReturn(requisition);
     doReturn(new Rnr()).when(spyReport).getRnrWithSkippedProducts(any(Rnr.class));
     service.submitReport(spyReport, 1L);
 
@@ -177,14 +195,13 @@ public class RestRequisitionServiceTest {
     Rnr requisitionFromReport = new Rnr();
     requisitionFromReport.setId(1L);
 
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.invalid.requisition.id");
 
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
-    when(userService.getByUserName("1")).thenReturn(user);
-    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(null);
+    doThrow(new DataException("rnr not found")).when(requisitionService).getFullRequisitionById(requisitionFromReport.getId());
 
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("rnr not found");
     service.approve(spyReport, 2L);
 
     verify(requisitionService).getFacilityId(requisitionFromReport.getId());
@@ -229,6 +246,7 @@ public class RestRequisitionServiceTest {
   @Test
   public void shouldSaveReportAsRequisition() throws Exception {
     Program program = new Program();
+    report.setProducts(new ArrayList<RnrLineItem>());
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
 
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
@@ -277,4 +295,29 @@ public class RestRequisitionServiceTest {
     assertThat(replenishmentDTO, is(expectedReplenishmentDTO));
     verify(requisitionService).getFullRequisitionById(rnrId);
   }
+
+  @Test
+  public void shouldThrowErrorIfProductCodeIsInvalidWhileSubmit() {
+    String invalidProductCode = "Random";
+    Long userId = 3l;
+    List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, invalidProductCode))));
+    Report report = make(a(defaultReport, with(products, productList)));
+
+    Program program = new Program();
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
+    rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
+    when(messageService.message("invalid.product.codes", asList(invalidProductCode).toString())).thenReturn("invalid product codes");
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+    when(requisitionService.initiate(facility, program, userId, false)).thenReturn(rnr);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("invalid product codes");
+    service.submitReport(report, userId);
+  }
+
+/*  @Test
+  public void shouldThrowErrorIfProductCodeIsInvalidWhileApprove(){
+
+  }*/
 }
