@@ -53,7 +53,11 @@ public class RestRequisitionService {
 
     validate(reportingFacility, reportingProgram);
 
-    return requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
+
+    report.getRnrWithSkippedProducts(rnr);
+
+    return requisitionService.save(rnr);
   }
 
   private void validate(Facility reportingFacility, Program reportingProgram) {
@@ -72,13 +76,14 @@ public class RestRequisitionService {
     Rnr requisition = report.getRequisition();
     requisition.setModifiedBy(userId);
 
-    Long facilityId = requisitionService.getFacilityId(requisition.getId());
-    if (facilityId == null) {
-      throw new DataException("error.invalid.requisition.id");
-    }
-    Facility facility = facilityService.getById(facilityId);
-    if (!facility.getVirtualFacility())
+    Rnr savedRequisition = requisitionService.getFullRequisitionById(requisition.getId());
+
+    if (!savedRequisition.getFacility().getVirtualFacility())
       throw new DataException("error.approval.not.allowed");
+
+    if (savedRequisition.getFullSupplyLineItems().size() != report.getProducts().size()) {
+      throw new DataException("error.number.of.line.items.mismatch");
+    }
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition);

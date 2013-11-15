@@ -128,7 +128,7 @@ public class RequisitionService {
   }
 
   @Transactional
-  public void save(Rnr rnr) {
+  public Rnr save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId());
@@ -138,8 +138,6 @@ public class RequisitionService {
     }
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
-      if (savedRnr.getFullSupplyLineItems().size() != rnr.getFullSupplyLineItems().size())
-        throw new DataException("error.number.of.line.items.mismatch");
 
       List<String> invalidProductCodes = savedRnr.getProductCodeDifference(rnr);
       if (invalidProductCodes.size() != 0) {
@@ -153,6 +151,8 @@ public class RequisitionService {
     }
 
     requisitionRepository.update(savedRnr);
+
+    return savedRnr;
   }
 
   @Transactional

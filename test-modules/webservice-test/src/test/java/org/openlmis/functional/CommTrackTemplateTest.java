@@ -15,7 +15,6 @@ import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.restapi.domain.Report;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,7 +41,8 @@ public class CommTrackTemplateTest extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+
+  //@Test(groups = {"webservice"})
   public void testCommTrackSubmitReportValidRnR() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();

@@ -32,6 +32,7 @@ import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -46,14 +47,17 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.FacilityBuilder.facilityId;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.restapi.builder.ReportBuilder.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.productCode;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -118,6 +122,7 @@ public class RestRequisitionServiceTest {
     when(facilityService.getOperativeFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
     when(programService.getValidatedProgramByCode(DEFAULT_PROGRAM_CODE)).thenReturn(new Program(PROGRAM_ID));
     when(requisitionService.initiate(facility, new Program(PROGRAM_ID), user.getId(), false)).thenReturn(requisition);
+    when(requisitionService.save(requisition)).thenReturn(requisition);
 
     Rnr reportedRequisition = mock(Rnr.class);
     whenNew(Rnr.class).withArguments(requisition.getId()).thenReturn(reportedRequisition);
@@ -161,6 +166,7 @@ public class RestRequisitionServiceTest {
     when(programService.getProgramStartDate(5L, PROGRAM_ID)).thenReturn(programSupported.getStartDate());
     when(processingScheduleService.getCurrentPeriod(facility.getId(), PROGRAM_ID, programSupported.getStartDate())).thenReturn(new ProcessingPeriod(8L));
 
+    doReturn(new Rnr()).when(spyReport).getRnrWithSkippedProducts(any(Rnr.class));
     service.submitReport(spyReport, 1L);
 
     verify(spyReport).validate();
@@ -188,35 +194,30 @@ public class RestRequisitionServiceTest {
   public void shouldNotApproveRnrIfDoesNotBelongToVirtualFacility() throws Exception {
     Rnr requisitionFromReport = new Rnr();
     requisitionFromReport.setId(1L);
-    Long facilityId = 2L;
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, false)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.approval.not.allowed");
 
     Report spyReport = spy(report);
-    when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
-    when(userService.getByUserName("1")).thenReturn(user);
-    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(facilityId);
-    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, false)));
-    Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
+    doReturn(requisitionFromReport).when(spyReport).getRequisition();
+
+    when(requisitionService.getFullRequisitionById(requisitionFromReport.getId())).thenReturn(rnr);
 
     service.approve(spyReport, 2L);
 
-    verify(requisitionService).getFacilityId(requisitionFromReport.getId());
-    verify(facilityService).getById(facilityId);
-
+    verify(requisitionService).getFullRequisitionById(requisitionFromReport.getId());
   }
 
   @Test
   public void shouldApproveIfRnrBelongsToVirtualFacility() throws Exception {
     Rnr requisitionFromReport = new Rnr();
-    Long facilityId = 2L;
     Report spyReport = spy(report);
     when(spyReport.getRequisition()).thenReturn(requisitionFromReport);
-    when(userService.getByUserName("1")).thenReturn(user);
-    Mockito.when(requisitionService.getFacilityId(requisitionFromReport.getId())).thenReturn(facilityId);
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
-    Mockito.when(facilityService.getById(facilityId)).thenReturn(facility);
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
+    when(requisitionService.getFullRequisitionById(requisitionFromReport.getId())).thenReturn(rnr);
 
     service.approve(spyReport, 2L);
 
@@ -225,6 +226,39 @@ public class RestRequisitionServiceTest {
     verify(requisitionService).approve(requisitionFromReport);
   }
 
+  @Test
+  public void shouldSaveReportAsRequisition() throws Exception {
+    Program program = new Program();
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+
+    Rnr rnr = new Rnr();
+    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(rnr);
+
+    service.submitReport(report, 3l);
+
+    verify(requisitionService).save(rnr);
+
+  }
+
+  @Test
+  public void shouldThrowAnExceptionIfLineItemsCountMismatchBetweenReportAndSavedRequisition() throws Exception {
+    List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, "P10"))));
+    Report report = make(a(defaultReport, with(products, productList)));
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
+    rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
+
+    when(requisitionService.getFullRequisitionById(report.getRequisitionId())).thenReturn(rnr);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.number.of.line.items.mismatch");
+
+    service.approve(report, 3l);
+  }
 
   @Test
   public void shouldGetReplenishmentDTOByRequisitionId() throws Exception {

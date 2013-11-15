@@ -17,13 +17,22 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
+
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
+import static org.openlmis.restapi.builder.ReportBuilder.products;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.productCode;
 
 @Category(UnitTests.class)
 public class ReportTest {
@@ -83,7 +92,8 @@ public class ReportTest {
 
   @Test
   public void shouldThrowExceptionIfProductsAreMissing() throws Exception {
-    Report report = make(a(ReportBuilder.defaultReport));
+    List<RnrLineItem> rnrLineItems = null;
+    Report report = make(a(ReportBuilder.defaultReport, with(products, rnrLineItems)));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.restapi.mandatory.missing");
@@ -125,5 +135,19 @@ public class ReportTest {
     expectedEx.expectMessage("error.restapi.quantity.approved.negative");
 
     report.validateForApproval();
+  }
+
+
+  @Test
+  public void shouldMarkProductNotPresentInReportAsSkipped() throws Exception {
+    List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, "P10"))));
+    Report report = make(a(defaultReport, with(products, productList)));
+
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
+    rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
+
+    Rnr rnrWithSkippedProducts = report.getRnrWithSkippedProducts(rnr);
+
+    assertTrue(rnrWithSkippedProducts.getFullSupplyLineItems().get(1).getSkipped());
   }
 }

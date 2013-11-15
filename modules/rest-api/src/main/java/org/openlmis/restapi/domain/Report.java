@@ -12,6 +12,7 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
@@ -19,6 +20,7 @@ import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.exists;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
@@ -61,4 +63,18 @@ public class Report {
         throw new DataException("error.restapi.quantity.approved.negative");
     }
   }
+
+  public Rnr getRnrWithSkippedProducts(Rnr rnr) {
+    for (final RnrLineItem fullSupplyLineItem : rnr.getFullSupplyLineItems()) {
+      boolean productLineItemExists = exists(getProducts(), new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          return ((RnrLineItem) o).getProductCode().equals(fullSupplyLineItem.getProductCode());
+        }
+      });
+      if (!productLineItemExists) fullSupplyLineItem.setSkipped(true);
+    }
+    return rnr;
+  }
+
 }
