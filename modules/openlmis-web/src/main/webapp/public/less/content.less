@@ -1450,7 +1450,7 @@ table td.delete-button {
 }
 
 .row-specific-error {
-  width: 108%;
+  width: 109%;
   max-width: 160px;
   padding: 6px;
   margin-left: -82px;
@@ -2528,8 +2528,19 @@ input[rnr-validator="positiveInteger"] {
     min-width: 250px;
   }
   th.col-skipped, td.col-skipped {
-    min-width: 40px;
-    width: 40px;
+    min-width: 55px;
+    width: 55px;
+  }
+  th.col-skipped{
+    span.skipped-checkbox{
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+  td.col-skipped{
+    input[type="checkbox"][id^="skip_"]{
+      margin-left: 6px;
+    }
   }
 }
 
