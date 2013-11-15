@@ -300,6 +300,10 @@ public class DBWrapper {
                 " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 2, '11/11/12', true, 1)," +
                 " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 5, '11/11/12', true, 1)");
 
+    update("insert into requisition_group_members (requisitionGroupId, facilityId, createdDate, modifiedDate) values " +
+      "((select requisitionGroupId from requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code = '" + parentFacilityCode + "'))," +
+      "(SELECT id FROM facilities WHERE code = '" + facilityCode + "'),NOW(),NOW())");
+
   }
 
   public void deletePeriod(String periodName) throws IOException, SQLException {
