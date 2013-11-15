@@ -43,7 +43,7 @@ public interface FacilityMapper {
   List<Facility> getAll();
 
   @Select("SELECT * FROM users U, facilities F " +
-    "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true AND f.virtualFacility = false")
+      "WHERE U.facilityId = F.id AND U.id = #{userId} AND f.active = true AND f.virtualFacility = false")
   @Results(value = {@Result(property = "id", column = "facilityId")})
   Facility getHomeFacility(Long userId);
 
@@ -66,7 +66,6 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facility_operators where LOWER(code) = LOWER(#{code})")
   Long getOperatedByIdForCode(String code);
 
-
   @Select("SELECT * FROM facilities WHERE id = #{id}")
   @Results(value = {
       @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
@@ -75,6 +74,19 @@ public interface FacilityMapper {
       @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
   Facility getById(Long id);
+
+  @Select("SELECT * from facilities WHERE LOWER(code)=LOWER(#{code})")
+  @Results(value =
+      {
+          @Result(property = "id", column = "id"),
+          @Result(property = "geographicZone", column = "geographicZoneId", javaType = Long.class,
+              one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
+          @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+          @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById")),
+          @Result(property = "supportedPrograms", column = "id", javaType = List.class,
+              many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
+      })
+  Facility getByCode(String code);
 
   @Update("UPDATE facilities SET code = #{code}, name = #{name}, description = #{description}, gln = #{gln}," +
       "mainPhone = #{mainPhone}, fax = #{fax}, address1 = #{address1}," +
@@ -101,15 +113,15 @@ public interface FacilityMapper {
   Long getIdForCode(String code);
 
   @Select("SELECT DISTINCT f.* FROM facilities f " +
-    "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
-    "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
-    "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programid = ps.programid AND rgps.requisitiongroupid=rgm.requisitiongroupid)" +
-    "WHERE ps.programId = #{programId} " +
-    "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
-    "AND rgps.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
-    "AND f.active = true " +
-    "AND ps.active = true " +
-    "AND f.virtualFacility = false ")
+      "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
+      "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
+      "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programid = ps.programid AND rgps.requisitiongroupid=rgm.requisitiongroupid)" +
+      "WHERE ps.programId = #{programId} " +
+      "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+      "AND rgps.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+      "AND f.active = true " +
+      "AND ps.active = true " +
+      "AND f.virtualFacility = false ")
   @Results(value = {
       @Result(property = "geographicZone.id", column = "geographicZoneId"),
       @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
@@ -150,15 +162,6 @@ public interface FacilityMapper {
       @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
   List<Facility> getAllInRequisitionGroups(@Param("requisitionGroupIds") String requisitionGroupIds);
-
-  @Select("SELECT * from facilities WHERE LOWER(code)=LOWER(#{code})")
-  @Results(value =
-      {
-          @Result(property = "id", column = "id"),
-          @Result(property = "supportedPrograms", column = "id", javaType = List.class,
-              many = @Many(select = "org.openlmis.core.repository.mapper.ProgramSupportedMapper.getAllByFacilityId"))
-      })
-  Facility getByCode(String code);
 
   @Select({"SELECT F.geographicZoneId, F.name, F.code, F.id, F.catchmentPopulation FROM facilities F INNER JOIN delivery_zone_members DZM ON F.id = DZM.facilityId",
       "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
