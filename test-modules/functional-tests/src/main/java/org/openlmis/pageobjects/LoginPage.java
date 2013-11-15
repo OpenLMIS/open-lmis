@@ -25,36 +25,26 @@ import java.io.IOException;
 public class LoginPage extends Page {
 
   @FindBy(how= How.XPATH, using = "//div[@class='login-page']/ng-include/div/div[2]/h2")
-  private static WebElement pageIdentifierOnLoginPage;
+  private static WebElement pageIdentifierOnLoginPage=null;
 
   @FindBy(how = How.ID, using = "username")
-  private static WebElement userNameField;
+  private static WebElement userNameField=null;
 
   @FindBy(how = How.ID, using = "password")
-  private static WebElement passwordField;
-
-  @FindBy(how = How.XPATH, using="//input[@class='btn btn-primary']")
-  private static WebElement signInButton;
-
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
-  private static WebElement forgotPasswordHeader;
+  private static WebElement passwordField=null;
 
   @FindBy(how = How.XPATH, using = "//a[@openlmis-message='link.forgot.password']")
-  private static WebElement forgotPasswordLink;
+  private static WebElement forgotPasswordLink=null;
 
   private String BASE_URL;
 
   private String baseUrl;
 
     @FindBy(how = How.ID, using = "locale_en")
-    private static WebElement langEnglish;
+    private static WebElement langEnglish=null;
 
     @FindBy(how=How.ID, using = "locale_pt")
-    private static WebElement langPortugues;
-
-    @FindBy(how=How.ID, using = "locale_es")
-    private static WebElement langEspanol;
-
+    private static WebElement langPortugues=null;
 
     public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
     super(driver);

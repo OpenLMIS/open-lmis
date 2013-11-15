@@ -27,64 +27,64 @@ import static org.openqa.selenium.support.How.*;
 public class ViewRequisitionPage extends RequisitionPage {
 
   @FindBy(how = NAME, using = "selectFacility")
-  private static WebElement selectFacilityDropDown;
+  private static WebElement selectFacilityDropDown=null;
 
   @FindBy(how = NAME, using = "selectProgram")
-  private static WebElement selectProgramDropDown;
+  private static WebElement selectProgramDropDown=null;
 
   @FindBy(how = ID, using = "startDate")
-  private static WebElement startDate;
+  private static WebElement startDate=null;
 
   @FindBy(how = ID, using = "endDate")
-  private static WebElement endDate;
+  private static WebElement endDate=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Search']")
-  private static WebElement searchButton;
+  private static WebElement searchButton=null;
 
   @FindBy(how = XPATH, using = "//div[contains(text(),'No Requisitions found')]")
-  private static WebElement noRequisitionFoundDiv;
+  private static WebElement noRequisitionFoundDiv=null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col7 colt7']/span")
-  private static WebElement status;
+  private static WebElement status=null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon;
+  private static WebElement emergencyIcon=null;
 
   @FindBy(how = XPATH, using = "//select[@data-handler='selectYear']")
-  private static WebElement yearChanger;
+  private static WebElement yearChanger=null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Prev')]")
-  private static WebElement prevCalender;
+  private static WebElement prevCalender=null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Next')]")
-  private static WebElement nextCalender;
+  private static WebElement nextCalender=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
-  private static WebElement startDateCalender;
+  private static WebElement startDateCalender=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'26')]")
-  private static WebElement endDateCalender;
+  private static WebElement endDateCalender=null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[1]")
-  private static WebElement viewRnRList;
+  private static WebElement viewRnRList=null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCostPreApproval;
+  private static WebElement totalCostPreApproval=null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCostPostApproval;
+  private static WebElement totalCostPostApproval=null;
 
   @FindBy(how = ID, using = "newPatientCount_0")
-  private static WebElement newPatient;
+  private static WebElement newPatient=null;
 
   @FindBy(how = ID, using = "quantityApproved_0")
-  private static WebElement approveQuantity;
+  private static WebElement approveQuantity=null;
 
   @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab;
+  private static WebElement nonFullSupplyTab=null;
 
   @FindBy(how = ID, using = "fullSupplyTab")
-  private static WebElement fullSupplyTab;
+  private static WebElement fullSupplyTab=null;
 
   public ViewRequisitionPage(TestWebDriver driver) throws IOException {
     super(driver);

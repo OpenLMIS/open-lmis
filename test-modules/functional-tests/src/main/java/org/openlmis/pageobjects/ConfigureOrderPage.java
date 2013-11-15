@@ -31,91 +31,91 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ConfigureOrderPage extends Page {
 
   @FindBy(how = ID, using = "orderFilePrefix")
-  private static WebElement orderFilePrefix;
+  private static WebElement orderFilePrefix=null;
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeOrderHeaders;
+  private static WebElement includeOrderHeaders=null;
 
   @FindBy(how = ID, using = "includeCheckbox0")
-  private static WebElement orderNumberCheckBox;
+  private static WebElement orderNumberCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox1")
-  private static WebElement facilityCodeCheckBox;
+  private static WebElement facilityCodeCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox3")
-  private static WebElement approvedQuantityCheckBox;
+  private static WebElement approvedQuantityCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox2")
-  private static WebElement productCodeCheckBox;
+  private static WebElement productCodeCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox5")
-  private static WebElement orderDateCheckBox;
+  private static WebElement orderDateCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox4")
-  private static WebElement periodCheckBox;
+  private static WebElement periodCheckBox=null;
 
   @FindBy(how = ID, using = "columnHeaderField0")
-  private static WebElement orderNumberTextField;
+  private static WebElement orderNumberTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField1")
-  private static WebElement facilityCodeTextField;
+  private static WebElement facilityCodeTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField3")
-  private static WebElement approvedQuantityTextField;
+  private static WebElement approvedQuantityTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField2")
-  private static WebElement productCodeTextField;
+  private static WebElement productCodeTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField5")
-  private static WebElement orderDateTextField;
+  private static WebElement orderDateTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField4")
-  private static WebElement periodTextField;
+  private static WebElement periodTextField=null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv;
+  private static WebElement successMessageDiv=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton;
+  private static WebElement saveButton=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton=null;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Order file')]")
-  private static WebElement configureOrderFileHeader;
+  private static WebElement configureOrderFileHeader=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
-  private static WebElement addNewButton;
+  private static WebElement addNewButton=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
-  private static WebElement periodSelectBoxClickableLink;
+  private static WebElement periodSelectBoxClickableLink=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement periodSelectBoxTextField;
+  private static WebElement periodSelectBoxTextField=null;
 
   @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.periodDatePattern']")
-  private static WebElement periodSelectBox;
+  private static WebElement periodSelectBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement periodSelectBoxSelectableElement;
+  private static WebElement periodSelectBoxSelectableElement=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
-  private static WebElement orderDateSelectBoxClickableLink;
+  private static WebElement orderDateSelectBoxClickableLink=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement orderDateSelectBoxTextField;
+  private static WebElement orderDateSelectBoxTextField=null;
 
   @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.datePattern']")
-  private static WebElement orderDateSelectBox;
+  private static WebElement orderDateSelectBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement orderDateSelectBoxSelectableElement;
+  private static WebElement orderDateSelectBoxSelectableElement=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span")
-  private static WebElement periodSelectBoxDefaultSelected;
+  private static WebElement periodSelectBoxDefaultSelected=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span")
-  private static WebElement orderDateSelectBoxDefaultSelected;
+  private static WebElement orderDateSelectBoxDefaultSelected=null;
 
 
 

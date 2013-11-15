@@ -24,34 +24,34 @@ public class ForgotPasswordPage extends Page {
 
 
   @FindBy(how = How.ID, using = "email")
-  private static WebElement emailTextField;
+  private static WebElement emailTextField=null;
 
   @FindBy(how = How.ID, using = "username")
-  private static WebElement usernameTextField;
+  private static WebElement usernameTextField=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Submit']")
-  private static WebElement submitButton;
+  private static WebElement submitButton=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Cancel']")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
-  private static WebElement forgotPasswordHeader;
+  private static WebElement forgotPasswordHeader=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Forgot password?')]")
-  private static WebElement forgotPasswordLink;
+  private static WebElement forgotPasswordLink=null;
 
   @FindBy(how = How.ID, using = "saveFailMessage")
-  private static WebElement saveFailMessage;
+  private static WebElement saveFailMessage=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Email Sent!')]")
-  private static WebElement emailSendSuccessMessage;
+  private static WebElement emailSendSuccessMessage=null;
 
   @FindBy(how = How.XPATH, using = "//div[contains(text(),'Please check your email and click on reset password link.')]")
-  private static WebElement pleaseCheckMailDiv;
+  private static WebElement pleaseCheckMailDiv=null;
 
   @FindBy(how= How.XPATH, using = "//body/div/div/div[2][@class='forgot-password-form']//input[1][@class='btn btn-primary']")
-  public static WebElement pageIdentifierOnForgotPasswordPage;
+  public static WebElement pageIdentifierOnForgotPasswordPage=null;
 
   public WebElement getEmailTextField() {
     return emailTextField;

@@ -25,49 +25,49 @@ import java.io.IOException;
 public class ManageSchedulePage extends Page {
 
   @FindBy(how = How.ID, using = "schedule-add-new")
-  private static WebElement addScheduleButton;
+  private static WebElement addScheduleButton=null;
 
   @FindBy(how = How.ID, using = "code")
-  private static WebElement codeTextField;
+  private static WebElement codeTextField=null;
 
   @FindBy(how = How.ID, using = "code_0")
-  private static WebElement codeEditTextField;
+  private static WebElement codeEditTextField=null;
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement nameTextField;
+  private static WebElement nameTextField=null;
 
   @FindBy(how = How.ID, using = "name_0")
-  private static WebElement nameEditTextField;
+  private static WebElement nameEditTextField=null;
 
   @FindBy(how = How.ID, using = "desc_0")
-  private static WebElement descriptionEditTextField;
+  private static WebElement descriptionEditTextField=null;
 
   @FindBy(how = How.ID, using = "description")
-  private static WebElement descriptionTextField;
+  private static WebElement descriptionTextField=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Create']")
-  private static WebElement createButton;
+  private static WebElement createButton=null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv;
+  private static WebElement saveSuccessMsgDiv=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
-  private static WebElement editFirstButton;
+  private static WebElement editFirstButton=null;
 
   @FindBy(how = How.XPATH, using = "(//input[@value='Edit'])[2]")
-  private static WebElement editSecondButton;
+  private static WebElement editSecondButton=null;
 
   @FindBy(how = How.XPATH, using = "(//span[@class='ng-binding' and @ng-bind='schedule.code'])[1] ")
-  private static WebElement codeFirstNonEditableField;
+  private static WebElement codeFirstNonEditableField=null;
 
   @FindBy(how = How.XPATH, using = " //input[@type='submit' and @value='Save']")
-  private static WebElement saveButton;
+  private static WebElement saveButton=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add Period']")
-  private static WebElement addPeriodButton;
+  private static WebElement addPeriodButton=null;
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement namePeriod;
+  private static WebElement namePeriod=null;
 
 
   public ManageSchedulePage(TestWebDriver driver) throws IOException {

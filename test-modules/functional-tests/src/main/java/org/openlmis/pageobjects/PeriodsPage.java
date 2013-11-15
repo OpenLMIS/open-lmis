@@ -27,56 +27,52 @@ import java.util.Date;
 public class PeriodsPage extends Page {
 
   @FindBy(how = How.ID, using = "name")
-  private static WebElement namePeriod;
+  private static WebElement namePeriod=null;
 
   @FindBy(how = How.ID, using = "description")
-  private static WebElement descriptionPeriod;
+  private static WebElement descriptionPeriod=null;
 
   @FindBy(how = How.ID, using = "startDate")
-  private static WebElement startDatePeriod;
+  private static WebElement startDatePeriod=null;
 
   @FindBy(how = How.ID, using = "endDate")
-  private static WebElement endDatePeriod;
+  private static WebElement endDatePeriod=null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'Prev')]")
-  private static WebElement prevCalender;
+  private static WebElement prevCalender=null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'Next')]")
-  private static WebElement nextCalender;
+  private static WebElement nextCalender=null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'1')]")
-  private static WebElement startDateCalender;
+  private static WebElement startDateCalender=null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'2')]")
-  private static WebElement endDateCalender;
+  private static WebElement endDateCalender=null;
 
   @FindBy(how = How.XPATH, using = "//a[@class='ui-state-default' and contains(text(),'26')]")
-  private static WebElement endDateSecondCalender;
+  private static WebElement endDateSecondCalender=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'28')]")
-  private static WebElement endDateThirdCalender;
+  private static WebElement endDateThirdCalender=null;
 
   @FindBy(how = How.XPATH, using = "//span[@ng-show='calculateDays(newPeriod.startDate, newPeriod.endDate)+1']")
-  private static WebElement totalDaysPeriods;
+  private static WebElement totalDaysPeriods=null;
 
   @FindBy(how = How.XPATH, using = "//span[@ng-model='newPeriod.numberOfMonths']")
-  private static WebElement numberOfMonthsPeriods;
+  private static WebElement numberOfMonthsPeriods=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
-  private static WebElement addButton;
-
-
-  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv;
+  private static WebElement addButton=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")
-  private static WebElement deleteButton;
+  private static WebElement deleteButton=null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[3]")
-  private static WebElement startDateList;
+  private static WebElement startDateList=null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[4]")
-  private static WebElement endDateList;
+  private static WebElement endDateList=null;
 
 
   public PeriodsPage(TestWebDriver driver) throws IOException {

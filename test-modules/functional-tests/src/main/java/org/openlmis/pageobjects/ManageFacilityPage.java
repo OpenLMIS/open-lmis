@@ -154,7 +154,6 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "go-down-date")
   private static WebElement goDownDate=null;
 
-
   @FindBy(how = ID, using = "comments")
   private static WebElement comments=null;
 

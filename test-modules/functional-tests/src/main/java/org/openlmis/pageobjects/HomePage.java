@@ -21,20 +21,13 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 
 
 public class HomePage extends Page {
 
-  @FindBy(how = How.XPATH, using = "//strong[@class='ng-binding']")
-  private static WebElement usernameDisplay=null;
-
   @FindBy(how = How.LINK_TEXT, using = "Logout")
-
   private static WebElement logoutLink=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
@@ -69,12 +62,6 @@ public class HomePage extends Page {
 
   @FindBy(how = How.ID, using = "manage-option")
   private static WebElement manageFacilityMenuItem=null;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
-  private static WebElement facilityMenuItem=null;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
-  private static WebElement manageRoleAssignmentLink=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
   private static WebElement convertToOrderMenuItem=null;
@@ -124,12 +111,6 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
   private static WebElement RegimenTemplateHeader=null;
 
-  @FindBy(how = How.LINK_TEXT, using = "R & R")
-  private static WebElement ConfigureTemplateSelectProgramPage=null;
-
-  @FindBy(how = How.ID, using = "selectProgram")
-  private static WebElement ProgramDropDown=null;
-
   @FindBy(how = How.LINK_TEXT, using = "Requisitions")
   private static WebElement requisitionsLink=null;
 
@@ -157,17 +138,8 @@ public class HomePage extends Page {
   @FindBy(how = How.XPATH, using = "//select[3]")
   private static WebElement periodDropDownSelect=null;
 
-  @FindBy(how = How.XPATH, using = "//input[@value='Next']")
-  private static WebElement nextButton=null;
-
   @FindBy(how = How.LINK_TEXT, using = "Manage")
   private static WebElement manageLink=null;
-
-  @FindBy(how = How.LINK_TEXT, using = "Schedules")
-  private static WebElement schedulesLink=null;
-
-  @FindBy(how = How.LINK_TEXT, using = "Search")
-  private static WebElement searchLink=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
   private static WebElement uploadLink=null;
@@ -181,16 +153,11 @@ public class HomePage extends Page {
   @FindBy(how = How.ID, using = "role-tab")
   private static WebElement rolesTab=null;
 
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
-  private static WebElement rolesLink=null;
-
   @FindBy(how = How.ID, using = "schedule-tab")
   private static WebElement schedulesTab=null;
 
-
   @FindBy(how = How.ID, using = "user-tab")
   private static WebElement usersTab=null;
-
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
   private static WebElement startDate=null;
@@ -217,10 +184,10 @@ public class HomePage extends Page {
   private static WebElement ProgramDropDownSupervisedFacility=null;
 
   @FindBy(how = How.ID, using = "facilityList")
-  private static WebElement facilityDropDown;
+  private static WebElement facilityDropDown=null;
 
   @FindBy(how = How.XPATH, using = "//select[@id='programListMyFacility']")
-  private static WebElement programDropDown;
+  private static WebElement programDropDown=null;
 
     public HomePage(TestWebDriver driver) throws IOException {
     super(driver);

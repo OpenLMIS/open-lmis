@@ -28,10 +28,6 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class TemplateConfigPage extends Page {
 
-
-  @FindBy(how = How.LINK_TEXT, using = "Logout")
-  private static WebElement logoutLink=null;
-
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
   private static WebElement SaveButton=null;
 

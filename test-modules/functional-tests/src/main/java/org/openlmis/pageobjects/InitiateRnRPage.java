@@ -34,116 +34,113 @@ import static org.openqa.selenium.support.How.*;
 public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
-  private static WebElement requisitionHeader;
+  private static WebElement requisitionHeader=null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[1]/div[1]/span")
-  private static WebElement facilityLabel;
+  private static WebElement facilityLabel=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton;
+  private static WebElement saveButton=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Submit']")
-  private static WebElement submitButton;
+  private static WebElement submitButton=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Authorize']")
-  private static WebElement authorizeButton;
+  private static WebElement authorizeButton=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Approve']")
-  private static WebElement approveButton;
-
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv' and @openlmis-message='message']")
-  private static WebElement successMessage;
+  private static WebElement approveButton=null;
 
   @FindBy(how = XPATH, using = "//div[@id='submitSuccessMsgDiv' and @openlmis-message='submitMessage']")
-  private static WebElement submitSuccessMessage;
+  private static WebElement submitSuccessMessage=null;
 
   @FindBy(how = XPATH, using = "//div[@id='submitFailMessage' and @openlmis-message='submitError']")
-  private static WebElement submitErrorMessage;
+  private static WebElement submitErrorMessage=null;
 
   @FindBy(how = ID, using = "beginningBalance_0")
-  private static WebElement beginningBalance;
+  private static WebElement beginningBalance=null;
 
   @FindBy(how = ID, using = "quantityReceived_0")
-  private static WebElement quantityReceived;
+  private static WebElement quantityReceived=null;
 
   @FindBy(how = ID, using = "quantityDispensed_0")
-  private static WebElement quantityDispensed;
+  private static WebElement quantityDispensed=null;
 
   @FindBy(how = ID, using = "stockInHand_0")
-  private static WebElement stockInHand;
+  private static WebElement stockInHand=null;
 
   @FindBy(how = ID, using = "newPatientCount_0")
-  private static WebElement newPatient;
+  private static WebElement newPatient=null;
 
   @FindBy(how = ID, using = "maxStockQuantity_0")
-  private static WebElement maximumStockQuantity;
+  private static WebElement maximumStockQuantity=null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
-  private static WebElement caculatedOrderQuantity;
+  private static WebElement caculatedOrderQuantity=null;
 
   @FindBy(how = ID, using = "quantityRequested_0")
-  private static WebElement requestedQuantity;
+  private static WebElement requestedQuantity=null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
-  private static WebElement adjustedTotalConsumption;
+  private static WebElement adjustedTotalConsumption=null;
 
   @FindBy(how = ID, using = "amc_0")
-  private static WebElement amc;
+  private static WebElement amc=null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement totalCost;
+  private static WebElement totalCost=null;
 
   @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPack;
+  private static WebElement pricePerPack=null;
 
   @FindBy(how = ID, using = "packsToShip_0")
-  private static WebElement packsToShip;
+  private static WebElement packsToShip=null;
 
   @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPackNonFullSupply;
+  private static WebElement pricePerPackNonFullSupply=null;
 
   @FindBy(how = XPATH, using = "//span[@id='fullSupplyItemsCost']")
-  private static WebElement totalCostFullSupplyFooter;
+  private static WebElement totalCostFullSupplyFooter=null;
 
   @FindBy(how = XPATH, using = "//span[@id='nonFullSupplyItemsCost']")
-  private static WebElement totalCostNonFullSupplyFooter;
+  private static WebElement totalCostNonFullSupplyFooter=null;
 
   @FindBy(how = XPATH, using = "//span[@id='totalCost']")
-  private static WebElement totalCostFooter;
+  private static WebElement totalCostFooter=null;
 
   @FindBy(how = ID, using = "reasonForRequestedQuantity_0")
-  private static WebElement requestedQuantityExplanation;
+  private static WebElement requestedQuantityExplanation=null;
 
   @FindBy(how = ID, using = "expirationDate_0")
-  private static WebElement expirationDate;
+  private static WebElement expirationDate=null;
 
   @FindBy(how = ID, using = "remarks_0")
-  private static WebElement remarks;
+  private static WebElement remarks=null;
 
   @FindBy(how = ID, using = "stockOutDays_0")
-  private static WebElement totalStockOutDays;
+  private static WebElement totalStockOutDays=null;
 
   @FindBy(how = XPATH, using = "//a[@class='rnr-adjustment']")
-  private static WebElement addDescription;
+  private static WebElement addDescription=null;
 
   @FindBy(how = XPATH, using = "//div[@class='adjustment-field']/div[@class='row-fluid']/div[@class='span5']/select")
-  private static WebElement lossesAndAdjustmentSelect;
+  private static WebElement lossesAndAdjustmentSelect=null;
 
 
   @FindBy(how = XPATH, using = "//input[@ng-model='lossAndAdjustment.quantity']")
-  private static WebElement quantityAdj;
+  private static WebElement quantityAdj=null;
 
   @FindBy(how = ID, using = "addNonFullSupply")
-  private static WebElement addButtonNonFullSupply;
+  private static WebElement addButtonNonFullSupply=null;
 
   @FindBy(how = XPATH, using = "//table[@id='nonFullSupplyFrozenTable']/tbody/tr/td[2]/span")
-  private static WebElement productDescriptionNonFullSupply;
+  private static WebElement productDescriptionNonFullSupply=null;
 
   @FindBy(how = XPATH, using = "//table[@id='nonFullSupplyFrozenTable']/tbody/tr/td[1]/span")
-  private static WebElement productCodeNonFullSupply;
+  private static WebElement productCodeNonFullSupply=null;
 
   @FindBy(how = XPATH, using = "//div[@class='adjustment-list']/ul/li/span[@class='tpl-adjustment-type ng-binding']")
-  private static WebElement adjList;
+  private static WebElement adjList=null;
 
   @FindBy(how = ID, using = "lossesAndAdjustmentsDone")
   private static WebElement lossesAndAdjustmentsDone = null;
@@ -152,70 +149,70 @@ public class InitiateRnRPage extends RequisitionPage {
   private static WebElement requestedQtyWarningMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
-  private static WebElement reportingPeriodInitRnRScreen;
+  private static WebElement reportingPeriodInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
-  private static WebElement geoZoneInitRnRScreen;
+  private static WebElement geoZoneInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
-  private static WebElement parentGeoZoneInitRnRScreen;
+  private static WebElement parentGeoZoneInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
-  private static WebElement operatedByInitRnRScreen;
+  private static WebElement operatedByInitRnRScreen=null;
 
   @FindBy(how = ID, using = "addNonFullSupply")
   private static WebElement addNonFullSupplyItemButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Add']")
-  private static WebElement addNonFullSupplyButtonScreen;
+  private static WebElement addNonFullSupplyButtonScreen=null;
 
   @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab;
+  private static WebElement nonFullSupplyTab=null;
 
   @FindBy(how = ID, using = "fullSupplyTab")
-  private static WebElement fullSupplyTab;
+  private static WebElement fullSupplyTab=null;
 
   @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCategory']")
-  private static WebElement categoryDropDown;
+  private static WebElement categoryDropDown=null;
 
   @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCodeAndName']")
-  private static WebElement productDropDown;
+  private static WebElement productDropDown=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCategory']/a/span")
-  private static WebElement categoryDropDownLink;
+  private static WebElement categoryDropDownLink=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement productDropDownTextField;
+  private static WebElement productDropDownTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']")
-  private static WebElement productDropDownValue;
+  private static WebElement productDropDownValue=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_nonFullSupplyProductsCodeAndName']/a/span")
-  private static WebElement productDropDownLink;
+  private static WebElement productDropDownLink=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement categoryDropDownTextField;
+  private static WebElement categoryDropDownTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@class='select2-result-label']")
-  private static WebElement categoryDropDownValue;
+  private static WebElement categoryDropDownValue=null;
 
   @FindBy(how = XPATH, using = "//select[@id='nonFullSupplyProductsCode']")
-  private static WebElement productCodeDropDown;
+  private static WebElement productCodeDropDown=null;
 
   @FindBy(how = XPATH, using = "//input[@name='nonFullSupplyProductQuantityRequested0']")
-  private static WebElement nonFullSupplyProductQuantityRequested;
+  private static WebElement nonFullSupplyProductQuantityRequested=null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductCodeAndName']/label")
-  private static WebElement nonFullSupplyProductCodeAndName;
+  private static WebElement nonFullSupplyProductCodeAndName=null;
 
   @FindBy(how = XPATH, using = "//div[@id='nonFullSupplyProductReasonForRequestedQuantity']/input")
-  private static WebElement nonFullSupplyProductReasonForRequestedQuantity;
+  private static WebElement nonFullSupplyProductReasonForRequestedQuantity=null;
 
   @FindBy(how = NAME, using = "newNonFullSupply.quantityRequested")
-  private static WebElement requestedQuantityField;
+  private static WebElement requestedQuantityField=null;
 
   @FindBy(how = ID, using = "reasonForRequestedQuantity")
-  private static WebElement requestedQuantityExplanationField;
+  private static WebElement requestedQuantityExplanationField=null;
 
   @FindBy(how = ID, using = "showNonFullSupplyModal")
   private static WebElement addButtonOnNonFullSupplyTab = null;
@@ -224,31 +221,31 @@ public class InitiateRnRPage extends RequisitionPage {
   private static WebElement addLossesAndAdjustmentButton = null;
 
   @FindBy(how = XPATH, using = "//input[@ng-click='addNonFullSupplyLineItem()']")
-  private static WebElement addButtonEnabled;
+  private static WebElement addButtonEnabled=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton=null;
 
   @FindBy(how = XPATH, using = "//input[@id='doneNonFullSupply']")
-  private static WebElement doneButtonNonFullSupply;
+  private static WebElement doneButtonNonFullSupply=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Home')]")
-  private static WebElement homeMenuItem;
+  private static WebElement homeMenuItem=null;
 
   @FindBy(how = XPATH, using = "//div[@openlmis-message='error']")
-  private static WebElement configureTemplateErrorDiv;
+  private static WebElement configureTemplateErrorDiv=null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Emergency']/span")
-  private static WebElement rnrEmergrncyLabel;
+  private static WebElement rnrEmergrncyLabel=null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[1]/div[@class='Regular']/span")
-  private static WebElement rnrRegularLabel;
+  private static WebElement rnrRegularLabel=null;
 
   @FindBy(how = ID, using = "beginningBalance_0")
-  private static WebElement beginningBalanceLabel;
+  private static WebElement beginningBalanceLabel=null;
 
   String successText = "R&R saved successfully!";
-  Float actualTotalCostFullSupply, actualTotalCostNonFullSupply;
+  Float actualTotalCostFullSupply, actualTotalCostNonFullSupply=null;
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
     super(driver);

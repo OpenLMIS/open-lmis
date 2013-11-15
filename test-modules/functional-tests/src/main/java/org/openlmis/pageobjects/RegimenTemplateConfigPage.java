@@ -23,103 +23,83 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 public class RegimenTemplateConfigPage extends Page {
 
-
-  @FindBy(how = How.LINK_TEXT, using = "Logout")
-  private static WebElement logoutLink;
-
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
-  private static WebElement SaveButton;
+  private static WebElement SaveButton=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement CancelButton;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'(Change)')]")
-  private static WebElement changeLink;
+  private static WebElement CancelButton=null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv;
+  private static WebElement saveSuccessMsgDiv=null;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsgDiv;
+  private static WebElement saveErrorMsgDiv=null;
 
   @FindBy(how = How.ID, using = "newRegimenCategory")
-  private static WebElement newRegimenCategoryDropDown;
+  private static WebElement newRegimenCategoryDropDown=null;
 
   @FindBy(how = How.ID, using = "newRegimenCode")
-  private static WebElement newRegimenCodeTextBox;
+  private static WebElement newRegimenCodeTextBox=null;
 
   @FindBy(how = How.ID, using = "newRegimenName")
-  private static WebElement newRegimenNameTextBox;
+  private static WebElement newRegimenNameTextBox=null;
 
   @FindBy(how = How.ID, using = "newRegimenActive")
-  private static WebElement newRegimenActiveCheckBox;
+  private static WebElement newRegimenActiveCheckBox=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
-  private static WebElement addButton;
+  private static WebElement addButton=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Edit']")
-  private static WebElement editButton;
+  private static WebElement editButton=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Done']")
-  private static WebElement doneButton;
+  private static WebElement doneButton=null;
 
   @FindBy(how = How.ID, using = "doneFailMessage")
-  private static WebElement doneFailMessage;
-
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
-  private static WebElement regimenTemplateHeader;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Regimen(s)')]")
-  private static WebElement regimenTab;
+  private static WebElement doneFailMessage=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='wrap']/div/div/div/div[2]/ul/li[1]/a")
-  private static WebElement reportingFieldsTab;
+  private static WebElement reportingFieldsTab=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[1]/div/div[1]/span/input")
-  private static WebElement noOfPatientsOnTreatmentCheckBox;
+  private static WebElement noOfPatientsOnTreatmentCheckBox=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[2]/div/div[1]/span/input")
-  private static WebElement noOfPatientsToInitiateTreatmentCheckBox;
+  private static WebElement noOfPatientsToInitiateTreatmentCheckBox=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[3]/div/div[1]/span/input")
-  private static WebElement noOfPatientsStoppedTreatmentCheckBox;
+  private static WebElement noOfPatientsStoppedTreatmentCheckBox=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[1]/span/input")
-  private static WebElement remarksCheckBox;
+  private static WebElement remarksCheckBox=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[1]/div/div[2]/input")
-  private static WebElement noOfPatientsOnTreatmentTextField;
+  private static WebElement noOfPatientsOnTreatmentTextField=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[2]/div/div[2]/input")
-  private static WebElement noOfPatientsToInitiateTreatmentTextField;
+  private static WebElement noOfPatientsToInitiateTreatmentTextField=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[3]/div/div[2]/input")
-  private static WebElement noOfPatientsStoppedTreatmentTextField;
+  private static WebElement noOfPatientsStoppedTreatmentTextField=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[2]/input")
-  private static WebElement remarksTextField;
+  private static WebElement remarksTextField=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[1]/div/div[3]/span")
-  private static WebElement noOfPatientsOnTreatmentDataType;
+  private static WebElement noOfPatientsOnTreatmentDataType=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[2]/div/div[3]/span")
-  private static WebElement noOfPatientsToInitiateTreatmentDataType;
+  private static WebElement noOfPatientsToInitiateTreatmentDataType=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[3]/div/div[3]/span")
-  private static WebElement noOfPatientsStoppedTreatmentDataType;
+  private static WebElement noOfPatientsStoppedTreatmentDataType=null;
 
   @FindBy(how = How.XPATH, using = ".//*[@id='reportingFields']/div[2]/div[4]/div/div[3]/span")
-  private static WebElement remarksDataType;
-
-
-  @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[2][@class='span2']/div/span[@class='ng-binding']")
-  private static WebElement addedCode;
-
-  @FindBy(how = How.XPATH, using = "//div[1][@class='row-fluid rnr-template-columns ng-scope']/div[3][@class='span4']/div/span[@class='ng-binding']")
-  private static WebElement addedName;
+  private static WebElement remarksDataType=null;
 
   @FindBy(how = How.XPATH, using = "//div[2][@class='ui-sortable ng-scope ng-pristine ng-valid']/div[1][@class='category-name']/div[@class='ng-binding']")
-  private static WebElement addedCategory;
+  private static WebElement addedCategory=null;
 
 
   private static String TEMPLATE_SUCCESS_MESSAGE = "Template saved successfully!";

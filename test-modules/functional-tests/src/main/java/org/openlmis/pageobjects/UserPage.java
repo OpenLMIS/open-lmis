@@ -67,7 +67,6 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//ul[@id='userList']/li/div[@class='user-actions']/a[2]")
   private static WebElement selectFirstResetPassword = null;
 
-
   @FindBy(how = How.ID, using = "password1")
   private static WebElement newPasswordField = null;
 
@@ -80,7 +79,6 @@ public class UserPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okButton = null;
 
-
   @FindBy(how = How.ID, using = "user0")
   private static WebElement firstUserLink = null;
 
@@ -89,7 +87,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
   private static WebElement editUserHeader = null;
-
 
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility = null;
@@ -100,13 +97,11 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
   private static WebElement verifiedLabel = null;
 
-
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[1]")
   private static WebElement expandAllOption = null;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[2]")
   private static WebElement collapseAllOption = null;
-
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home Facility Roles')]")
   private static WebElement homeFacilityRolesAccordion = null;
@@ -175,7 +170,7 @@ public class UserPage extends Page {
   private static WebElement addDeliveryZoneRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Admin and General Operations Roles')]")
-  private static WebElement adminAndGeneralOperationsRolesAccordion;
+  private static WebElement adminAndGeneralOperationsRolesAccordion=null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField = null;
@@ -189,7 +184,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement successMessage = null;
-
 
   @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
   private static WebElement removeButton = null;
