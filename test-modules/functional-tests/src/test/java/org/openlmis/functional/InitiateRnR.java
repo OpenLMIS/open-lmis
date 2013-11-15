@@ -906,6 +906,12 @@ public class InitiateRnR extends TestCaseHelper {
         InitiateRnRPage initiateRnRPage = homePage.clickProceed();
         initiateRnRPage.skipSingleProduct(1);
         assertFalse(initiateRnRPage.enableBeginningBalance());
+
+        initiateRnRPage.skipSingleProduct(1);
+        assertTrue(initiateRnRPage.enableBeginningBalance());
+
+        initiateRnRPage.skipAllProduct();
+        assertFalse(initiateRnRPage.enableBeginningBalance());
     }
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,

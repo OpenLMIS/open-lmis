@@ -277,7 +277,7 @@ public class InitiateRnRPage extends RequisitionPage {
     skipCheckBox.click();
   }
 
-  public void skipAllProduct(int rowNumber){
+  public void skipAllProduct(){
     testWebDriver.waitForElementToAppear(selectAllCheckbox);
     selectAllCheckbox.click();
   }
