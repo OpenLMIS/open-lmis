@@ -31,6 +31,7 @@
     <thead>
     <tr>
       <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+        <span ng-bind="column.label"></span>
         <span class='skipped-checkbox' ng-if="column.name == 'skipped'">
           <input ng-model="rnr.skipAll"
                  ng-disabled="formDisabled"
@@ -38,7 +39,6 @@
                  type="checkbox"
                  ng-change="toggleSkipFlag()"/>
         </span>
-        <span ng-bind="column.label"></span>
       </th>
     </tr>
     </thead>
@@ -139,7 +139,7 @@
                            showError="inputClass"
                            rnr-validator="date"/>
                     <span class="alert alert-warning warning-alert" id="expirationDate{{rnrLineItem['id']}}"
-                          style="display:none;" openlmis-message="error.invalid.date.format">
+                          style="display:none;" openlmis-message="error.invalid.date.format" ng-hide="rnrLineItem.expirationDate && rnrLineItem.skipped">
                     </span>
                   </span>
 
@@ -240,7 +240,7 @@
                            ng-class="highlightWarningBasedOnField(rnrLineItem[column.name],rnrLineItem.quantityRequested)"
                            maxlength="250"/>
                     <span id='{{getId(column.name, $parent)}}_warning' class="alert alert-warning warning-alert"
-                          ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity"
+                          ng-show="rnrLineItem.quantityRequested && !rnrLineItem.reasonForRequestedQuantity && !rnrLineItem.skipped"
                           openlmis-message="error.reason.required">
                     </span>
                   </span>

@@ -48,6 +48,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     _.each($scope.page.fullSupply, function(rnrLineItem){
       rnrLineItem.skipped = $scope.rnr.skipAll;
     });
+    $scope.rnr.calculateFullSupplyItemsSubmittedCost();
   };
 
   $scope.formDisabled = function () {

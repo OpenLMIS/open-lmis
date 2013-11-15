@@ -109,21 +109,27 @@ describe('CreateRequisitionController', function () {
 
   it("should toggle skip flag for all rnrLineItems", function(){
     var lineItem1 = {skipped: true};
+    lineItem1.cost = 100;
     var lineItem2 = {skipped: true};
+    lineItem2.cost = 200;
+
     scope.page = {fullSupply:[lineItem1,lineItem2]};
-    scope.rnr = {skipAll:false};
+    scope.rnr = new Rnr({"id": "rnrId", skipAll:false});
+    spyOn(scope.rnr, 'calculateFullSupplyItemsSubmittedCost');
 
     scope.toggleSkipFlag();
 
     expect(lineItem1.skipped).toBeFalsy();
     expect(lineItem2.skipped).toBeFalsy();
+    expect(scope.rnr.calculateFullSupplyItemsSubmittedCost).toHaveBeenCalled();
 
-    scope.rnr = {skipAll:true};
+    scope.rnr.skipAll = true;
 
     scope.toggleSkipFlag();
 
     expect(lineItem1.skipped).toBeTruthy();
     expect(lineItem2.skipped).toBeTruthy();
+    expect(scope.rnr.calculateFullSupplyItemsSubmittedCost).toHaveBeenCalled();
   });
 
   it('should get list of Rnr Columns for program', function () {
