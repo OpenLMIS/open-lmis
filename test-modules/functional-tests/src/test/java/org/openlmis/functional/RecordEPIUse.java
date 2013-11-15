@@ -40,8 +40,6 @@ import java.util.Map;
 public class RecordEPIUse extends TestCaseHelper {
 
   public String userSIC, password;
-  public static final String periodDisplayedByDefault = "Period14";
-  public static final String periodNotToBeDisplayedInDropDown = "Period1";
 
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {

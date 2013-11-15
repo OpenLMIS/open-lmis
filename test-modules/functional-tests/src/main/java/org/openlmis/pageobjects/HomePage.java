@@ -482,7 +482,6 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
-    //testWebDriver.waitForElementToAppear(startDate);
   }
 
   public String getFirstPeriod() {

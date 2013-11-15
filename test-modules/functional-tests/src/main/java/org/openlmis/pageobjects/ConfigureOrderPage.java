@@ -172,29 +172,6 @@ public class ConfigureOrderPage extends Page {
     orderDateSelectBoxSelectableElement.click();
   }
 
-  public List<String> getAllSelectOptionsOfPeriodDropDown()
-  {
-    testWebDriver.waitForElementToAppear(periodSelectBox);
-    List<WebElement> elements=testWebDriver.getAllSelectedOptions(periodSelectBox);
-    List<String> elementsValues=new ArrayList<String>();
-    for(WebElement element:elements)
-      elementsValues.add(element.getText());
-
-    return elementsValues;
-  }
-
-  public List<String> getAllSelectOptionsOfOrderDateDropDown()
-  {
-    testWebDriver.waitForElementToAppear(orderDateSelectBox);
-    List<WebElement> elements=testWebDriver.getAllSelectedOptions(orderDateSelectBox);
-    List<String> elementsValues=new ArrayList<String>();
-    for(WebElement element:elements)
-      elementsValues.add(element.getText());
-
-    return elementsValues;
-  }
-
-
   public void clickRemoveIcon(int rowNumber)
   {
     testWebDriver.getElementByXpath("//a[@id='remove"+(rowNumber)+"']").click();
@@ -231,33 +208,10 @@ public class ConfigureOrderPage extends Page {
       includeOrderHeaders.click();
   }
 
-
-  public boolean getOrderNumberCheckBox() {
-    testWebDriver.waitForElementToAppear(orderNumberCheckBox);
-    return orderNumberCheckBox.isSelected();
-  }
-
-  public void checkOrderNumberCheckBox() {
-    testWebDriver.waitForElementToAppear(orderNumberCheckBox);
-    if (!orderNumberCheckBox.isSelected())
-      orderNumberCheckBox.click();
-  }
-
   public void unCheckOrderNumberCheckBox() {
     testWebDriver.waitForElementToAppear(orderNumberCheckBox);
     if (orderNumberCheckBox.isSelected())
       orderNumberCheckBox.click();
-  }
-
-  public boolean getFacilityCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
-    return facilityCodeCheckBox.isSelected();
-  }
-
-  public void checkFacilityCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
-    if (!facilityCodeCheckBox.isSelected())
-      facilityCodeCheckBox.click();
   }
 
   public void unCheckFacilityCodeCheckBox() {
@@ -266,32 +220,10 @@ public class ConfigureOrderPage extends Page {
       facilityCodeCheckBox.click();
   }
 
-  public boolean getProductCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(productCodeCheckBox);
-    return productCodeCheckBox.isSelected();
-  }
-
-  public void checkProductCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(productCodeCheckBox);
-    if (!productCodeCheckBox.isSelected())
-      productCodeCheckBox.click();
-  }
-
   public void unCheckProductCodeCheckBox() {
     testWebDriver.waitForElementToAppear(productCodeCheckBox);
     if (productCodeCheckBox.isSelected())
       productCodeCheckBox.click();
-  }
-
-  public boolean getApprovedQuantityCheckBox() {
-    testWebDriver.waitForElementToAppear(approvedQuantityCheckBox);
-    return approvedQuantityCheckBox.isSelected();
-  }
-
-  public void checkApprovedQuantityCheckBox() {
-    testWebDriver.waitForElementToAppear(approvedQuantityCheckBox);
-    if (!approvedQuantityCheckBox.isSelected())
-      approvedQuantityCheckBox.click();
   }
 
   public void unCheckApprovedQuantityCheckBox() {
@@ -300,33 +232,10 @@ public class ConfigureOrderPage extends Page {
       approvedQuantityCheckBox.click();
   }
 
-
-  public boolean getPeriodCheckBox() {
-    testWebDriver.waitForElementToAppear(periodCheckBox);
-    return periodCheckBox.isSelected();
-  }
-
-  public void checkPeriodCheckBox() {
-    testWebDriver.waitForElementToAppear(periodCheckBox);
-    if (!periodCheckBox.isSelected())
-      periodCheckBox.click();
-  }
-
   public void unCheckPeriodCheckBox() {
     testWebDriver.waitForElementToAppear(periodCheckBox);
     if (periodCheckBox.isSelected())
       periodCheckBox.click();
-  }
-
-  public boolean getOrderDateCheckBox() {
-    testWebDriver.waitForElementToAppear(orderDateCheckBox);
-    return orderDateCheckBox.isSelected();
-  }
-
-  public void checkOrderDateCheckBox() {
-    testWebDriver.waitForElementToAppear(orderDateCheckBox);
-    if (!orderDateCheckBox.isSelected())
-      orderDateCheckBox.click();
   }
 
   public void unCheckOrderDateCheckBox() {

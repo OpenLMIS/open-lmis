@@ -729,10 +729,6 @@ public class InitiateRnRPage extends RequisitionPage {
     assertFalse("saveButton should be disabled", saveButton.isEnabled());
   }
 
-  public void verifySubmitButtonDisabled() {
-    assertFalse("submitButton should be disabled", submitButton.isEnabled());
-  }
-
   public void verifySubmitRnrSuccessMsg() {
     assertTrue("RnR Submit Success message not displayed", submitSuccessMessage.isDisplayed());
   }
@@ -745,11 +741,6 @@ public class InitiateRnRPage extends RequisitionPage {
   public void verifySubmitRnrErrorMsg() {
     testWebDriver.sleep(1000);
     assertTrue("RnR Fail message not displayed", submitErrorMessage.isDisplayed());
-  }
-
-  public void clearNewPatientField() {
-    newPatient.sendKeys("\u0008");
-    testWebDriver.sleep(500);
   }
 
   public void verifyAuthorizeButtonNotPresent() {

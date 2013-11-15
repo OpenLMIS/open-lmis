@@ -77,8 +77,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     String tableXpathTillTr = "//table[@id='fullSupplyTable']/thead/tr";
     String tableFrozenXpathTillTr = "//table[@id='fullSupplyFrozenTable']/thead/tr";
-//    int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
-//    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
+
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Expiration Date", columns);
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);

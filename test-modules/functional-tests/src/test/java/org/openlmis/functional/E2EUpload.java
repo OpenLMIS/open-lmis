@@ -157,7 +157,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
     testWebDriver.sleep(2000);
     assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid",parentFacilityCode),dbWrapper.getGeographicZoneId("IND"));
-    //verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode); ---Flaky
+   // verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode); ---Flaky
 
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
     testWebDriver.sleep(2000);
@@ -168,8 +168,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
     assertEquals("Dispensary",dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
     assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-    //assertNotEquals(dbWrapper.getFacilityFieldBYCode("typeid",virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
-
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
     testWebDriver.sleep(2000);
     List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();

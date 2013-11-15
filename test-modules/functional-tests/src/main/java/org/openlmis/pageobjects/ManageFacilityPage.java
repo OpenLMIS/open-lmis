@@ -413,7 +413,6 @@ public class ManageFacilityPage extends Page {
   public void searchFacility(String facilityCodeValue) {
     testWebDriver.waitForElementToAppear(searchFacilityTextField);
     sendKeys(searchFacilityTextField, facilityCodeValue);
-    //testWebDriver.sleep(2000);
   }
 
   public void clickFacilityList(String facility){

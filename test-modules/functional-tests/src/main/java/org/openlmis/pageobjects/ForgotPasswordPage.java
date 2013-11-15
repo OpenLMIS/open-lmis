@@ -95,10 +95,6 @@ public class ForgotPasswordPage extends Page {
     return forgotPasswordLink;
   }
 
-  public  WebElement getSaveFailMessage() {
-    return saveFailMessage;
-  }
-
   public  WebElement getEmailSendSuccessMessage() {
     return emailSendSuccessMessage;
   }

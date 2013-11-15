@@ -85,7 +85,6 @@ public class ConfigureBudgetPage extends Page {
   private static WebElement periodStartDateSelectBoxDefaultSelected=null;
 
 
-
   public ConfigureBudgetPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -127,28 +126,6 @@ public class ConfigureBudgetPage extends Page {
         includeHeaders.click();
   }
 
-
-  public boolean getFacilityCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
-    return facilityCodeCheckBox.isSelected();
-  }
-
-  public boolean getAllocatedBudgetCheckBox() {
-    testWebDriver.waitForElementToAppear(allocatedBudgetCheckBox);
-    return allocatedBudgetCheckBox.isSelected();
-  }
-
-
-  public boolean getProgramCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(programCodeCheckBox);
-    return programCodeCheckBox.isSelected();
-  }
-
-  public boolean getNotesCheckBox() {
-    testWebDriver.waitForElementToAppear(notesCheckBox);
-    return notesCheckBox.isSelected();
-  }
-
   public void checkNotesCheckBox() {
     testWebDriver.waitForElementToAppear(notesCheckBox);
     if (!notesCheckBox.isSelected())
@@ -159,12 +136,6 @@ public class ConfigureBudgetPage extends Page {
     testWebDriver.waitForElementToAppear(notesCheckBox);
     if (notesCheckBox.isSelected())
         notesCheckBox.click();
-  }
-
-
-  public boolean getPeriodStartDateCheckBox() {
-    testWebDriver.waitForElementToAppear(periodStartDateCheckBox);
-    return periodStartDateCheckBox.isSelected();
   }
 
   public void checkPeriodStartDateCheckBox() {
@@ -178,7 +149,6 @@ public class ConfigureBudgetPage extends Page {
     if (periodStartDateCheckBox.isSelected())
         periodStartDateCheckBox.click();
   }
-
 
   public String getAllocatedBudget() {
     testWebDriver.waitForElementToAppear(allocatedBudgetTextField);

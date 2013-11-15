@@ -207,8 +207,6 @@ public class ManageRefrigerator extends TestCaseHelper {
   public void verifyRefrigeratorDetails(String temperature, String low, String high, String notes) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
-//    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(),low);
-//    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(),high);
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
   }
 

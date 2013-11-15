@@ -143,58 +143,6 @@ public class RolesPage extends Page {
     return createNewRoleButton;
   }
 
-  public WebElement getRoleNameField() {
-    return roleNameField;
-  }
-
-  public WebElement getRoleDescription() {
-    return roleDescription;
-  }
-
-  public WebElement getRightConfigureTemplate() {
-    return rightConfigureTemplate;
-  }
-
-  public WebElement getRightManageFacilities() {
-    return rightManageFacilities;
-  }
-
-  public WebElement getRightManageRoles() {
-    return rightManageRoles;
-  }
-
-  public WebElement getRightManageSchedules() {
-    return rightManageSchedules;
-  }
-
-  public WebElement getRightUploads() {
-    return rightUploads;
-  }
-
-  public WebElement getRightCreateRequisition() {
-    return rightCreateRequisition;
-  }
-
-  public WebElement getRightAuthorizeRequisition() {
-    return rightAuthorizeRequisition;
-  }
-
-  public WebElement getRightApproveRequisition() {
-    return rightApproveRequisition;
-  }
-
-  public WebElement getRightConvertToOrderRequisition() {
-    return rightConvertToOrderRequisition;
-  }
-
-  public WebElement getRightViewOrders() {
-    return rightViewOrders;
-  }
-
-  public WebElement getSaveButton() {
-    return saveButton;
-  }
-
   public WebElement getCancelButton() {
     return cancelButton;
   }
@@ -205,26 +153,6 @@ public class RolesPage extends Page {
 
   public WebElement getSaveErrorMsgDiv() {
     return saveErrorMsgDiv;
-  }
-
-  public WebElement getContinueButton() {
-    return continueButton;
-  }
-
-  public WebElement getEditRoleHeader() {
-    return editRoleHeader;
-  }
-
-  public WebElement getRolesHeader() {
-    return rolesHeader;
-  }
-
-  public WebElement getRequisitionRoleType() {
-    return requisitionRoleType;
-  }
-
-  public WebElement getAdminRoleType() {
-    return adminRoleType;
   }
 
   public WebElement getAllocationRoleType() {
@@ -318,11 +246,6 @@ public class RolesPage extends Page {
     testWebDriver.waitForElementToAppear(adminRoleType);
     adminRoleType.click();
     testWebDriver.sleep(100);
-  }
-
-  public void verifyProgramRoleRadioNonEditable() {
-    testWebDriver.waitForElementToAppear(requisitionRoleType);
-    assertTrue(testWebDriver.getAttribute(requisitionRoleType, "disabled"), true);
   }
 
   public void verifyAdminRoleRadioNonEditable() {

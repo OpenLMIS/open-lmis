@@ -258,22 +258,6 @@ public class RegimenTemplateConfigPage extends Page {
     return saveErrorMsgDiv.getText().trim();
   }
 
-  public String getNewRegimenCodeTextBoxValue() {
-    return newRegimenCodeTextBox.getText();
-  }
-
-  public String getNewRegimenNameTextBoxValue() {
-    return newRegimenNameTextBox.getText();
-  }
-
-  public boolean IsNewRegimenActiveCheckBoxSelected() {
-    return newRegimenActiveCheckBox.isSelected();
-  }
-
-  public String getAddedCategoryValue() {
-    return addedCategory.getAttribute("value");
-  }
-
   public String getNonEditableAddedCode(int indexOfCodeAdded) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span"));
     return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/div/span").getText().trim();
@@ -302,11 +286,6 @@ public class RegimenTemplateConfigPage extends Page {
   public boolean getEditableAddedActiveCheckBox(int indexOfCodeAdded) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[2]/input"));
     return testWebDriver.getElementByXpath(baseRegimenDivXpath + "[" + indexOfCodeAdded + "]/div[4]/input").isSelected();
-  }
-
-
-  public String getTEMPLATE_SUCCESS_MESSAGE() {
-    return TEMPLATE_SUCCESS_MESSAGE;
   }
 
   public void configureProgram(String program) throws InterruptedException {

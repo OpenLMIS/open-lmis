@@ -70,14 +70,12 @@ public class LoginPage extends Page {
   public ForgotPasswordPage clickForgotPasswordLink() throws IOException {
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
-//    testWebDriver.waitForElementToAppear(forgotPasswordHeader);
     return new ForgotPasswordPage(testWebDriver);
   }
 
     public String getEnglishColor()
     {
         testWebDriver.sleep(1500);
-//        testWebDriver.waitForElementToAppear(langEnglish);
         String color=langEnglish.getCssValue("color");
         return color;
     }

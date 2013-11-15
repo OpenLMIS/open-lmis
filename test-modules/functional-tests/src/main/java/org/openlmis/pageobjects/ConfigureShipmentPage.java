@@ -167,28 +167,6 @@ public class ConfigureShipmentPage extends Page {
         includeHeaders.click();
   }
 
-
-  public boolean getOrderNumberCheckBox() {
-    testWebDriver.waitForElementToAppear(orderNumberCheckBox);
-    return orderNumberCheckBox.isSelected();
-  }
-
-  public boolean getQuantityShippedCheckBox() {
-    testWebDriver.waitForElementToAppear(quantityShippedCheckBox);
-    return quantityShippedCheckBox.isSelected();
-  }
-
-
-  public boolean getProductCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(productCodeCheckBox);
-    return productCodeCheckBox.isSelected();
-  }
-
-  public boolean getCostCheckBox() {
-    testWebDriver.waitForElementToAppear(costCheckBox);
-    return costCheckBox.isSelected();
-  }
-
   public void checkCostCheckBox() {
     testWebDriver.waitForElementToAppear(costCheckBox);
     if (!costCheckBox.isSelected())
@@ -201,12 +179,6 @@ public class ConfigureShipmentPage extends Page {
         costCheckBox.click();
   }
 
-
-  public boolean getPackedDateCheckBox() {
-    testWebDriver.waitForElementToAppear(packedDateCheckBox);
-    return packedDateCheckBox.isSelected();
-  }
-
   public void checkPackedDateCheckBox() {
     testWebDriver.waitForElementToAppear(packedDateCheckBox);
     if (!packedDateCheckBox.isSelected())
@@ -217,11 +189,6 @@ public class ConfigureShipmentPage extends Page {
     testWebDriver.waitForElementToAppear(packedDateCheckBox);
     if (packedDateCheckBox.isSelected())
         packedDateCheckBox.click();
-  }
-
-  public boolean getShippedDateCheckBox() {
-    testWebDriver.waitForElementToAppear(shippedDateCheckBox);
-    return shippedDateCheckBox.isSelected();
   }
 
   public void checkShippedDateCheckBox() {

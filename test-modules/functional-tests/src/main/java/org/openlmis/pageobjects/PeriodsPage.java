@@ -65,14 +65,18 @@ public class PeriodsPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
   private static WebElement addButton=null;
 
+
+  @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
+  private static WebElement saveSuccessMsgDiv=null;
+
   @FindBy(how = How.XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton=null;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[3]")
-  private static WebElement startDateList=null;
+  private static WebElement startDateList;
 
   @FindBy(how = How.XPATH, using = ".//table[@id='periodTable']/tbody/tr/td[4]")
-  private static WebElement endDateList=null;
+  private static WebElement endDateList;
 
 
   public PeriodsPage(TestWebDriver driver) throws IOException {
