@@ -21,7 +21,6 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.By;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -881,6 +880,33 @@ public class InitiateRnR extends TestCaseHelper {
 
     }
 
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+    public void testSkipProductRnRField(String program,
+                                                               String userSIC,
+                                                               String categoryCode,
+                                                               String password,
+                                                               String regimenCode,
+                                                               String regimenName,
+                                                               String regimenCode2,
+                                                               String regimenName2) throws Exception {
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add(CREATE_REQUISITION);
+        rightsList.add(VIEW_REQUISITION);
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+        dbWrapper.deletePeriod("Period1");
+        dbWrapper.deletePeriod("Period2");
+        dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+        dbWrapper.updateSourceOfAProgramTemplate("HIV", "Total Consumed Quantity", "C");
+        dbWrapper.updateSourceOfAProgramTemplate("HIV", "Stock on Hand", "U");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+
+        homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+        initiateRnRPage.skipSingleProduct(1);
+        assertFalse(initiateRnRPage.enableBeginningBalance());
+    }
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
                                                       InitiateRnRPage initiateRnRPage) {

@@ -244,6 +244,9 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "beginningBalance_0")
   private static WebElement beginningBalanceLabel=null;
 
+  @FindBy(how = ID, using = "selectAll")
+  private static WebElement selectAllCheckbox=null;
+
   String successText = "R&R saved successfully!";
   Float actualTotalCostFullSupply, actualTotalCostNonFullSupply=null;
 
@@ -266,8 +269,17 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
     assertEquals(parentgeoZone, parentGeoZoneInitRnRScreen.getText().trim());
     assertEquals(operatedBy, operatedByInitRnRScreen.getText().trim());
+  }
 
+  public void skipSingleProduct(int rowNumber){
+    WebElement skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber-1));
+    testWebDriver.waitForElementToAppear(skipCheckBox);
+    skipCheckBox.click();
+  }
 
+  public void skipAllProduct(int rowNumber){
+    testWebDriver.waitForElementToAppear(selectAllCheckbox);
+    selectAllCheckbox.click();
   }
 
   public HomePage clickHome() throws IOException {
@@ -292,6 +304,11 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(beginningBalance);
     beginningBalance.sendKeys(A);
     return testWebDriver.getAttribute(beginningBalance, "value");
+  }
+
+  public boolean enableBeginningBalance() {
+    testWebDriver.waitForElementToAppear(beginningBalance);
+    return beginningBalance.isEnabled();
   }
 
   public String submitStockOnHand(String E) {

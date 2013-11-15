@@ -62,10 +62,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
-      templateConfigPage.unClickExpirationDate();
-      templateConfigPage.unClickTotal();
-      templateConfigPage.checkSkip();
-      templateConfigPage.setSkipTextBox("Product Skip");
+    templateConfigPage.unClickExpirationDate();
+    templateConfigPage.unClickTotal();
+    templateConfigPage.checkSkip();
+    templateConfigPage.setSkipTextBox("Product Skip");
     templateConfigPage.alterBeginningBalanceLabel(newColumnHeading);
 
 
