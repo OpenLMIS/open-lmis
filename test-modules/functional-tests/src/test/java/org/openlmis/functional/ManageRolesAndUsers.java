@@ -69,8 +69,9 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
-      userPage.enterAndVerifyUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
-        map.get("FirstName").toString(), map.get("LastName").toString());
+      userPage.enterUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
+              map.get("FirstName").toString(), map.get("LastName").toString());
+      userPage.clickViewHere();
   }
 
   @When("^I disable user \"([^\"]*)\"$")
@@ -180,7 +181,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createFacilityBasedRoleWithSuccessMessageExpected("Facility Based Role Name", "Facility Based Role Description");
+    rolesPage.createFacilityBasedRole("Facility Based Role Name", "Facility Based Role Description");
+    rolesPage.verifyCreatedRoleMessage("Facility Based Role Name");
   }
 
     public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
@@ -202,6 +204,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    homePage.clickCreateFacilityButton();
     String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     String facility_code = facilityCodePrefix + date_time;
@@ -297,7 +300,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = homePage.navigateToUser();
     String email = "Jasmine_Doe@openlmis.com";
-    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+    userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+    userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, email);
 
     userPage.enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(deliveryZoneNameFirst, programFirst, FIELD_COORDINATOR);
@@ -320,7 +324,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     UserPage userPage = homePage.navigateToUser();
 
     String email = "Jasmine_Doe@openlmis.com";
-    userPage.enterAndVerifyUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+    userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+    userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, email);
 
     homePage.navigateToUser();
@@ -356,25 +361,29 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.verifyLoggedInUser(LAB_IN_CHARGE);
   }
 
-  private String createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
-                                          String userFirstName, String userLastName, String userUserName,
-                                          String facility, String program, String supervisoryNode, String role,
-                                          String roleType) throws IOException, SQLException {
+  private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
+                                        String userFirstName, String userLastName, String userUserName,
+                                        String facility, String program, String supervisoryNode, String role,
+                                        String roleType) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    String userID = userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName);
+    userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
+    userPage.verifyUserCreated(userFirstName, userLastName);
+    userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, userEmail);
 
+    userPage.ExpandAll();
     userPage.verifyExpandAll();
+    userPage.collapseAll();
     userPage.verifyCollapseAll();
 
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program, supervisoryNode, role, roleType);
-    return userID;
   }
 
 
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
   private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {

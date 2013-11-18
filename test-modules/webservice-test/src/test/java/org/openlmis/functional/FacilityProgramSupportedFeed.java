@@ -84,6 +84,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    homePage.clickCreateFacilityButton();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";

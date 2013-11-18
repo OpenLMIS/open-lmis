@@ -33,10 +33,7 @@ public interface RequisitionGroupMemberMapper {
     "WHERE rgm.facilityId = #{facilityId}"})
   List<Long> getRequisitionGroupProgramIdsForFacilityId(Long facilityId);
 
-  @Select({"SELECT *",
-    "FROM requisition_group_members",
-    "WHERE requisitionGroupId = #{requisitionGroup.id}",
-    "AND facilityId = #{facility.id}"})
+  @Select({"SELECT * FROM requisition_group_members WHERE requisitionGroupId = #{requisitionGroup.id} AND facilityId = #{facility.id}"})
   RequisitionGroupMember getMappingByRequisitionGroupIdAndFacilityId(
     @Param(value = "requisitionGroup") RequisitionGroup requisitionGroup,
     @Param(value = "facility") Facility facility);

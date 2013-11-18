@@ -72,6 +72,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void nevigateManageFacilityPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateCreateFacility();
+    homePage.clickCreateFacilityButton();
   }
 
   @When("^I create \"([^\"]*)\" program supported facility$")
@@ -144,8 +145,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void periodScheduleAndRequisitionGroupDataSetup() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
-    manageSchedulePage.createAndVerifySchedule();
-    manageSchedulePage.editAndVerifySchedule();
+    manageSchedulePage.createSchedule();
+    manageSchedulePage.verifyScheduleCode();
+    manageSchedulePage.editSchedule();
+    manageSchedulePage.verifyScheduleCode();
     PeriodsPage periodsPage = manageSchedulePage.navigatePeriods();
     periodsPage.createAndVerifyPeriods();
     periodsPage.deleteAndVerifyPeriods();
@@ -418,7 +421,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
                                         String facility, String program, String supervisoryNode, String role,
                                         String roleType, String warehouse, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName);
+    userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
+    userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, userEmail);
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program,
       supervisoryNode, role, roleType);
@@ -437,7 +441,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String roleType) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, roleType);
+    rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
+    rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws Exception {

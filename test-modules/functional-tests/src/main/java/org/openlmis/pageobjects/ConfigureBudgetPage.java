@@ -28,62 +28,61 @@ public class ConfigureBudgetPage extends Page {
 
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeHeaders;
+  private static WebElement includeHeaders=null;
 
   @FindBy(how = ID, using = "includeCheckbox0")
-  private static WebElement facilityCodeCheckBox;
+  private static WebElement facilityCodeCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox1")
-  private static WebElement programCodeCheckBox;
+  private static WebElement programCodeCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox2")
-  private static WebElement periodStartDateCheckBox;
+  private static WebElement periodStartDateCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox3")
-  private static WebElement allocatedBudgetCheckBox;
+  private static WebElement allocatedBudgetCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox4")
-  private static WebElement notesCheckBox;
+  private static WebElement notesCheckBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[1]/div[4]/input")
-  private static WebElement facilityCodeTextField;
+  private static WebElement facilityCodeTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[2]/div[4]/input")
-  private static WebElement programCodeTextField;
+  private static WebElement programCodeTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[3]/div[4]/input")
-  private static WebElement periodStartDateTextField;
+  private static WebElement periodStartDateTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[4]/div[4]/input")
-  private static WebElement allocatedBudgetTextField;
+  private static WebElement allocatedBudgetTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[5]/div[4]/input")
-  private static WebElement notesTextField;
+  private static WebElement notesTextField=null;
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMessageDiv;
+  private static WebElement saveErrorMessageDiv=null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv;
+  private static WebElement successMessageDiv=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton;
+  private static WebElement saveButton=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement periodStartDateSelectBoxTextField;
+  private static WebElement periodStartDateSelectBoxTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement periodStartDateSelectBoxSelectableElement;
+  private static WebElement periodStartDateSelectBoxSelectableElement=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/div/b")
-  private static WebElement periodStartDateSelectBoxClickableLink;
+  private static WebElement periodStartDateSelectBoxClickableLink=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/span")
-  private static WebElement periodStartDateSelectBoxDefaultSelected;
-
+  private static WebElement periodStartDateSelectBoxDefaultSelected=null;
 
 
   public ConfigureBudgetPage(TestWebDriver driver) throws IOException {
@@ -127,28 +126,6 @@ public class ConfigureBudgetPage extends Page {
         includeHeaders.click();
   }
 
-
-  public boolean getFacilityCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
-    return facilityCodeCheckBox.isSelected();
-  }
-
-  public boolean getAllocatedBudgetCheckBox() {
-    testWebDriver.waitForElementToAppear(allocatedBudgetCheckBox);
-    return allocatedBudgetCheckBox.isSelected();
-  }
-
-
-  public boolean getProgramCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(programCodeCheckBox);
-    return programCodeCheckBox.isSelected();
-  }
-
-  public boolean getNotesCheckBox() {
-    testWebDriver.waitForElementToAppear(notesCheckBox);
-    return notesCheckBox.isSelected();
-  }
-
   public void checkNotesCheckBox() {
     testWebDriver.waitForElementToAppear(notesCheckBox);
     if (!notesCheckBox.isSelected())
@@ -159,12 +136,6 @@ public class ConfigureBudgetPage extends Page {
     testWebDriver.waitForElementToAppear(notesCheckBox);
     if (notesCheckBox.isSelected())
         notesCheckBox.click();
-  }
-
-
-  public boolean getPeriodStartDateCheckBox() {
-    testWebDriver.waitForElementToAppear(periodStartDateCheckBox);
-    return periodStartDateCheckBox.isSelected();
   }
 
   public void checkPeriodStartDateCheckBox() {
@@ -178,7 +149,6 @@ public class ConfigureBudgetPage extends Page {
     if (periodStartDateCheckBox.isSelected())
         periodStartDateCheckBox.click();
   }
-
 
   public String getAllocatedBudget() {
     testWebDriver.waitForElementToAppear(allocatedBudgetTextField);

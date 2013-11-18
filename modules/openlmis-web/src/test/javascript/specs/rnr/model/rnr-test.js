@@ -49,6 +49,11 @@ describe('R&R test', function () {
     expect(_.pick).toHaveBeenCalledWith(rnr, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
   });
 
+  it("should set skipAll to false on rnr creation", function(){
+    var rnr = new Rnr({}, []);
+    expect(rnr.skipAll).toBeFalsy();
+  });
+
   it('should prepare line item objects inside rnr', function () {
     var lineItemSpy = spyOn(window, 'RegularRnrLineItem');
     var lineItem1 = {"lineItem": "lineItem1"};
@@ -91,6 +96,21 @@ describe('R&R test', function () {
     expect(rnr.fullSupplyLineItems[0].validateRequiredFieldsForFullSupply.calls.length).toEqual(1);
     expect(rnr.fullSupplyLineItems[1].validateRequiredFieldsForFullSupply.calls.length).toEqual(0);
     expect(errorMessage).toEqual('error.rnr.validation');
+  });
+
+  it("should not validate R&R full supply line items if line item is skipped", function(){
+    var lineItem1 = {"lineItem": "lineItem1", skipped: true};
+    var rnr = {period: {numberOfMonths: 3}, status: 'INITIATED', 'fullSupplyLineItems': [lineItem1]};
+
+    var programRnrColumnList = [
+      {"name": "beginningBalance"},
+      {"name": "noOfPatients"}
+    ];
+    rnr = createRegularRnr(rnr, programRnrColumnList);
+    spyOn(rnr.fullSupplyLineItems[0], 'validateRequiredFieldsForFullSupply').andReturn(false);
+
+    var errorMessage = rnr.validateFullSupply();
+    expect(errorMessage).toEqual('');
   });
 
   it('should validate R&R full supply line items and return true if required field is not missing', function () {
@@ -250,10 +270,21 @@ describe('R&R test', function () {
       var rnrLineItem3 = new RegularRnrLineItem({"productCode": "p3"}, 2, null, 'INITIATED');
       rnrLineItem3.cost = 160;
 
-      rnr.fullSupplyLineItems = new Array(rnrLineItem1, rnrLineItem2, rnrLineItem3);
+      rnr.fullSupplyLineItems = [rnrLineItem1, rnrLineItem2, rnrLineItem3];
       rnr.calculateFullSupplyItemsSubmittedCost();
 
       expect(rnr.fullSupplyItemsSubmittedCost).toEqual('320.00');
+    });
+
+    it("should not include skipped line items in total cost caluculations", function(){
+      var rnr = createRegularRnr();
+
+      var rnrLineItem1 = new RegularRnrLineItem({productCode: "p1",skipped: true}, 2, null, 'INITIATED');
+      rnrLineItem1.cost = 100;
+      rnr.fullSupplyLineItems = [rnrLineItem1];
+      rnr.calculateFullSupplyItemsSubmittedCost();
+
+      expect(rnr.fullSupplyItemsSubmittedCost).toEqual('0.00');
     });
 
     it('should calculate nonFullSupplyItemsSubmittedCost', function () {
@@ -266,7 +297,7 @@ describe('R&R test', function () {
       var rnrLineItem3 = new RegularRnrLineItem({"productCode": "p3"}, 2, null, 'INITIATED');
       rnrLineItem3.cost = 160;
 
-      rnr.nonFullSupplyLineItems = new Array(rnrLineItem1, rnrLineItem2, rnrLineItem3);
+      rnr.nonFullSupplyLineItems = [rnrLineItem1, rnrLineItem2, rnrLineItem3];
 
       rnr.calculateNonFullSupplyItemsSubmittedCost();
 

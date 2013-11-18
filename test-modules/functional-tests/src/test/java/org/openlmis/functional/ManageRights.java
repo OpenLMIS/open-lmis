@@ -47,8 +47,9 @@ public class ManageRights extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     String[] expectedMenuItem = {"Create / Authorize", "View"};
+    homePage.clickRequisitionSubMenuItem();
     homePage.verifySubMenuItems(expectedMenuItem);
-    String periodDetails = homePage.navigateAndInitiateRnr(program);
+    homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
     initiateRnRPage.enterBeginningBalance("10");
@@ -56,6 +57,10 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.enterQuantityReceived("10");
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
+
+    initiateRnRPage.verifyBeginningBalance("10");
+    initiateRnRPage.verifyQuantityReceived("10");
+    initiateRnRPage.verifyQuantityDispensed("10");
   }
 
 

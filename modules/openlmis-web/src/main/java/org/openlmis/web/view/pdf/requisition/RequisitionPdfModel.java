@@ -21,6 +21,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.model.PrintRnrLineItem;
 
@@ -40,7 +41,6 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
   private List<RequisitionStatusChange> statusChanges;
-  private Map<String, Object> model;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
   public static final Font H1_FONT = FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD, BaseColor.BLACK);
@@ -54,7 +54,6 @@ public class RequisitionPdfModel {
   private MessageService messageService;
 
   public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
-    this.model = model;
     this.statusChanges = (List<RequisitionStatusChange>) model.get(STATUS_CHANGES);
     this.rnrColumnList = (List<RnrColumn>) model.get(RNR_TEMPLATE);
     this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
@@ -98,8 +97,8 @@ public class RequisitionPdfModel {
       }
 
       if (lineItem.isRnrLineItem()) {
-        PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem)lineItem);
-        RnrCalcStrategy calcStrategy = (requisition.isEmergency()) ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy();
+        PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem) lineItem);
+        RnrCalculationStrategy calcStrategy = requisition.getRnrCalcStrategy();
         printRnrLineItem.calculate(calcStrategy, requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
@@ -169,8 +168,8 @@ public class RequisitionPdfModel {
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format(messageService.message("label.requisition") + ": %s (%s)",
-      this.requisition.getProgram().getName(),
-      this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
+        this.requisition.getProgram().getName(),
+        this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(4);
@@ -190,12 +189,12 @@ public class RequisitionPdfModel {
     insertCell(table, text, 1);
   }
 
-  private void insertCell(PdfPTable table, String text, int colspan) {
+  private void insertCell(PdfPTable table, String text, int colSpan) {
     Chunk chunk;
     chunk = new Chunk(text);
     PdfPCell cell = table.getDefaultCell();
     cell.setPhrase(new Phrase(chunk));
-    cell.setColspan(colspan);
+    cell.setColspan(colSpan);
     table.addCell(cell);
   }
 
@@ -209,8 +208,10 @@ public class RequisitionPdfModel {
     builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
-    builder.append(messageService.message("label.facility.reportingPeriod") + ": ").append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ").
-      append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+    builder.append(messageService.message("label.facility.reportingPeriod")).append(": ")
+        .append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ")
+        .append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+
     insertCell(table, builder.toString(), 1);
 
     String label = emergency ? "requisition.type.emergency" : "requisition.type.regular";
@@ -270,11 +271,11 @@ public class RequisitionPdfModel {
 
     String submittedDate = submittedStatusChange != null ? DATE_FORMAT.format(submittedStatusChange.getCreatedDate()) : "";
     String submittedBy = submittedStatusChange != null ?
-      submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
+        submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
 
     String authorizedDate = authorizedStatusChange != null ? DATE_FORMAT.format(authorizedStatusChange.getCreatedDate()) : "";
     String authorizedBy = authorizedStatusChange != null ?
-      authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
+        authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
 
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": " + submittedBy)));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));

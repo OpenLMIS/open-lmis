@@ -11,6 +11,7 @@
 package org.openlmis.rnr.search.strategy;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -27,6 +28,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class FacilityProgramDateRangeSearch extends RequisitionSearchStrategy {
 
   private RequisitionSearchCriteria criteria;

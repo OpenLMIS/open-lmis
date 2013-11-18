@@ -32,94 +32,88 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ApprovePage extends RequisitionPage {
 
   @FindBy(how = ID, using = "NoRequisitionsPendingMessage")
-  private static WebElement NoRequisitionsPendingMessage;
+  private static WebElement NoRequisitionsPendingMessage=null;
 
   @FindBy(how = XPATH, using = "//div[@class='form-group']/h3")
-  private static WebElement requisitionListHeader;
+  private static WebElement requisitionListHeader=null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']")
-  private static WebElement firstRow;
+  private static WebElement firstRow=null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
-  private static WebElement periodStartDate;
+  private static WebElement periodStartDate=null;
 
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
-  private static WebElement periodEndDate;
+  private static WebElement periodEndDate=null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/h2")
-  private static WebElement requisitionHeader;
+  private static WebElement requisitionHeader=null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-head-block']/div[1]/span")
-  private static WebElement facilityLabel;
+  private static WebElement facilityLabel=null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
-  private static WebElement calculateOrderQuantity;
+  private static WebElement calculateOrderQuantity=null;
 
   @FindBy(how = ID, using = "quantityRequested_0")
-  private static WebElement requestedOrderQuantity;
+  private static WebElement requestedOrderQuantity=null;
 
   @FindBy(how = ID, using = "packsToShip_0")
-  private static WebElement packsToShip;
+  private static WebElement packsToShip=null;
 
   @FindBy(how = ID, using = "price_0")
-  private static WebElement pricePerPack;
+  private static WebElement pricePerPack=null;
 
   @FindBy(how = ID, using = "cost_0")
-  private static WebElement lineItemCost;
+  private static WebElement lineItemCost=null;
 
   @FindBy(how = ID, using = "totalCost")
-  private static WebElement totalRnrCost;
+  private static WebElement totalRnrCost=null;
 
   @FindBy(how = ID, using = "quantityApproved_0")
   private static WebElement quantityApproved = null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
-  private static WebElement adjustedTotalConsumption;
+  private static WebElement adjustedTotalConsumption=null;
 
   @FindBy(how = ID, using = "amc_0")
-  private static WebElement amc;
+  private static WebElement amc=null;
 
   @FindBy(how = ID, using = "maxStockQuantity_0")
-  private static WebElement maxStockQuantity;
+  private static WebElement maxStockQuantity=null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
-  private static WebElement calculatedOrderQuantity;
+  private static WebElement calculatedOrderQuantity=null;
 
   @FindBy(how = ID, using = "nonFullSupplyTab")
-  private static WebElement nonFullSupplyTab;
+  private static WebElement nonFullSupplyTab=null;
 
   @FindBy(how = ID, using = "fullSupplyTab")
-  private static WebElement fullSupplyTab;
+  private static WebElement fullSupplyTab=null;
 
   @FindBy(how = ID, using = "remarks_0")
-  private static WebElement remarks;
+  private static WebElement remarks=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Approve']")
-  private static WebElement approveButton;
+  private static WebElement approveButton=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton;
-
-  @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv;
+  private static WebElement saveButton=null;
 
   @FindBy(how = XPATH, using = "//div[@id='requisition-header']/div/div[2]/div[2]/div[3]/span")
-  private static WebElement reportingPeriodInitRnRScreen;
+  private static WebElement reportingPeriodInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.name']")
-  private static WebElement geoZoneInitRnRScreen;
+  private static WebElement geoZoneInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.geographicZone.parent.name']")
-  private static WebElement parentGeoZoneInitRnRScreen;
+  private static WebElement parentGeoZoneInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//span[@ng-bind='rnr.facility.operatedBy.text']")
-  private static WebElement operatedByInitRnRScreen;
-
-  @FindBy(how = XPATH, using = "//div[contains(text(),'R&R approved successfully!')]")
-  private static WebElement approvedSuccessMessage;
+  private static WebElement operatedByInitRnRScreen=null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon;
+  private static WebElement emergencyIcon=null;
 
 
   public ApprovePage(TestWebDriver driver) throws IOException {
@@ -159,6 +153,7 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }

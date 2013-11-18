@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
 
 import java.util.Collections;
 
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertThat;
 @Category(UnitTests.class)
 public class EmergencyRnrCalcStrategyTest {
 
-  private RnrCalcStrategy emergencyCalcStrategy;
+  private EmergencyRnrCalcStrategy emergencyCalcStrategy;
 
   @Before
   public void setUp() throws Exception {
@@ -33,7 +34,7 @@ public class EmergencyRnrCalcStrategyTest {
 
   @Test
   public void shouldReturnNormalizedConsumptionAsNull() throws Exception {
-    Integer normalizedConsumption = emergencyCalcStrategy.calculateNormalizedConsumption(3, 4, 5, 6, 7);
+    Integer normalizedConsumption = emergencyCalcStrategy.calculateNormalizedConsumption(3, 4, 5, 6, 7, null);
 
     assertThat(normalizedConsumption, is(nullValue()));
   }

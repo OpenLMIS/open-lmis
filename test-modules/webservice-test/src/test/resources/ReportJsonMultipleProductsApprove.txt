@@ -1,0 +1,17 @@
+{
+    "requisitionId": "",
+    "emergency" : "false",
+    "userName": "",
+    "products": [
+        {
+            "productCode": "",
+            "quantityApproved": "",
+            "remarks": "1"
+        },
+        {
+             "productCode": "",
+             "quantityApproved": "",
+             "remarks": "1"
+        }
+    ]
+}

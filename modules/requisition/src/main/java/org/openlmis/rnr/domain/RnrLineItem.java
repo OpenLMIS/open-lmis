@@ -1,11 +1,9 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ *  *
+ *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
  */
 
 package org.openlmis.rnr.domain;
@@ -13,12 +11,11 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,18 +125,14 @@ public class RnrLineItem extends LineItem {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
 
-  public void calculateDefaultApprovedQuantity(RnrCalcStrategy calcStrategy) {
+  public void calculateDefaultApprovedQuantity(RnrCalculationStrategy calcStrategy) {
     quantityApproved = calcStrategy.calculateDefaultApprovedQuantity(fullSupply, calculatedOrderQuantity, quantityRequested);
-  }
-
-  public void setDefaultApprovedQuantity(boolean emergency) {
-    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
@@ -207,29 +200,41 @@ public class RnrLineItem extends LineItem {
     if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void calculateForFullSupply(RnrCalcStrategy calcStrategy, ProcessingPeriod period, ProgramRnrTemplate template, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculateForFullSupply(RnrCalculationStrategy calcStrategy,
+                                     ProcessingPeriod period,
+                                     ProgramRnrTemplate template,
+                                     RnrStatus rnrStatus,
+                                     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     calculateTotalLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(calcStrategy);
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed(calcStrategy);
-    calculateNormalizedConsumption(calcStrategy, template);
+
+    if (template.columnsCalculated(STOCK_IN_HAND)) {
+      calculateStockInHand(calcStrategy);
+    }
+
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) {
+      calculateQuantityDispensed(calcStrategy);
+    }
+
+    calculateNormalizedConsumption(calcStrategy,template);
+
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(calcStrategy, period);
-      calculateMaxStockQuantity(calcStrategy,template);
+      calculateMaxStockQuantity(calcStrategy, template);
       calculateOrderQuantity(calcStrategy);
     }
 
     calculatePacksToShip(calcStrategy);
   }
 
-  public void calculateAmc(RnrCalcStrategy calcStrategy, ProcessingPeriod period) {
+  public void calculateAmc(RnrCalculationStrategy calcStrategy, ProcessingPeriod period) {
     amc = calcStrategy.calculateAmc(period, normalizedConsumption, previousNormalizedConsumptions);
   }
 
-  public void calculatePacksToShip(RnrCalcStrategy calcStrategy) {
+  public void calculatePacksToShip(RnrCalculationStrategy calcStrategy) {
     packsToShip = calcStrategy.calculatePacksToShip(getOrderQuantity(), packSize, packRoundingThreshold, roundToZero);
   }
 
-  public void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
+  public void calculateMaxStockQuantity(RnrCalculationStrategy calcStrategy, ProgramRnrTemplate template) {
     RnrColumn column = template.getRnrColumnsMap().get("maxStockQuantity");
     String columnOption = "DEFAULT";
     if(column != null){
@@ -245,11 +250,11 @@ public class RnrLineItem extends LineItem {
     }
   }
 
-  public void calculateOrderQuantity(RnrCalcStrategy calcStrategy) {
+  public void calculateOrderQuantity(RnrCalculationStrategy calcStrategy) {
     calculatedOrderQuantity = calcStrategy.calculateOrderQuantity(maxStockQuantity, stockInHand);
   }
 
-  public void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
+  public void calculateNormalizedConsumption(RnrCalculationStrategy calcStrategy, ProgramRnrTemplate template) {
     RnrColumn column = template.getRnrColumnsMap().get("normalizedConsumption");
     String columnOption = "DEFAULT";
     if(column != null){
@@ -273,20 +278,20 @@ public class RnrLineItem extends LineItem {
         }
     }
     else{
-      normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit);
+      normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit,null);
     }
 
   }
 
-  public void calculateTotalLossesAndAdjustments(RnrCalcStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculateTotalLossesAndAdjustments(RnrCalculationStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     totalLossesAndAdjustments = calcStrategy.calculateTotalLossesAndAdjustments(lossesAndAdjustments, lossesAndAdjustmentsTypes);
   }
 
-  public void calculateQuantityDispensed(RnrCalcStrategy calcStrategy) {
+  public void calculateQuantityDispensed(RnrCalculationStrategy calcStrategy) {
     quantityDispensed = calcStrategy.calculateQuantityDispensed(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand);
   }
 
-  public void calculateStockInHand(RnrCalcStrategy calcStrategy) {
+  public void calculateStockInHand(RnrCalculationStrategy calcStrategy) {
     stockInHand = calcStrategy.calculateStockInHand(beginningBalance, quantityReceived, totalLossesAndAdjustments, quantityDispensed);
   }
 
@@ -349,18 +354,10 @@ public class RnrLineItem extends LineItem {
     this.lossesAndAdjustments.add(lossesAndAdjustments);
   }
 
-  private BigDecimal sumOfPreviousNormalizedConsumptions() {
-    Integer total = 0;
-    for (Integer consumption : previousNormalizedConsumptions) {
-      total += consumption;
-    }
-    return new BigDecimal(total);
-  }
-
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
     if (template.columnsVisible(QUANTITY_REQUESTED)
-      && quantityRequested != null
-      && reasonForRequestedQuantity == null) {
+        && quantityRequested != null
+        && reasonForRequestedQuantity == null) {
       throw new DataException(RNR_VALIDATION_ERROR);
     }
   }
@@ -387,48 +384,14 @@ public class RnrLineItem extends LineItem {
     else return calculatedOrderQuantity;
   }
 
-  private Integer round(Double packsToShip, Integer orderQuantity) {
-    Integer remainderQuantity = orderQuantity % packSize;
-    if (remainderQuantity >= packRoundingThreshold) {
-      packsToShip += 1;
-    }
-
-    if (packsToShip == 0 && !roundToZero) {
-      packsToShip = 1d;
-    }
-    return packsToShip.intValue();
-  }
-
-  private boolean getAdditive(final LossesAndAdjustments lossAndAdjustment, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    Predicate predicate = new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        return lossAndAdjustment.getType().getName().equals(((LossesAndAdjustmentsType) o).getName());
-      }
-    };
-
-    LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
-      lossesAndAdjustmentsTypes, predicate);
-
-    return lossAndAdjustmentTypeFromList.getAdditive();
-  }
-
   public void addPreviousNormalizedConsumptionFrom(RnrLineItem rnrLineItem) {
     if (rnrLineItem != null)
       this.previousNormalizedConsumptions.add(rnrLineItem.normalizedConsumption);
   }
 
-  private boolean isAnyNull(Integer... fields) {
-    for (Integer field : fields) {
-      if (field == null) return true;
-    }
-    return false;
-  }
-
   @Override
   public boolean compareCategory(LineItem lineItem) {
-    if (this.getProductCategory().equals(((RnrLineItem) lineItem).getProductCategory())) return true;
-    return false;
+    return this.getProductCategory().equals(((RnrLineItem) lineItem).getProductCategory());
   }
 
   @Override
@@ -455,12 +418,13 @@ public class RnrLineItem extends LineItem {
     Field field = RnrLineItem.class.getDeclaredField(columnName);
     field.setAccessible(true);
     Object fieldValue = field.get(this);
-    String value = (fieldValue == null) ? "" : fieldValue.toString();
-    return value;
+
+    return (fieldValue == null) ? "" : fieldValue.toString();
   }
 
   @Override
   public boolean isRnrLineItem() {
     return true;
   }
+
 }

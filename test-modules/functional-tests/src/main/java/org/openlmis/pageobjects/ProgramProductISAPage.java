@@ -31,79 +31,73 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ProgramProductISAPage extends Page {
 
   @FindBy(how = ID, using = "program")
-  private static WebElement selectProgramSelectBox;
+  private static WebElement selectProgramSelectBox=null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Product name')]")
-  private static WebElement productNameColumn;
+  private static WebElement productNameColumn=null;
 
   @FindBy(how = ID, using = "searchProduct")
-  private static WebElement searchProductTextBox;
+  private static WebElement searchProductTextBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='wrap']/div[@class='content']/div/div[@class='ng-scope']/div[2]/div[4][@class='list-container']/div[1][@class='row-fluid list-row ng-scope']/div[3][@class='span2 offset2']/input[@class='btn btn-small btn-primary']")
-  private static WebElement editFormulaButton;
+  private static WebElement editFormulaButton=null;
 
   @FindBy(how = ID, using = "who-ratio")
-  private static WebElement ratioTextBox;
+  private static WebElement ratioTextBox=null;
 
   @FindBy(how = ID, using = "doses-per-year")
-  private static WebElement dosesPerYearTextBox;
+  private static WebElement dosesPerYearTextBox=null;
 
   @FindBy(how = ID, using = "wastage-factor")
-  private static WebElement wastageRateTextBox;
+  private static WebElement wastageRateTextBox=null;
 
   @FindBy(how = ID, using = "buffer-percentage")
-  private static WebElement bufferPercentageTextBox;
+  private static WebElement bufferPercentageTextBox=null;
 
   @FindBy(how = ID, using = "adjustment-value")
-  private static WebElement adjustmentValueTextBox;
+  private static WebElement adjustmentValueTextBox=null;
 
   @FindBy(how = ID, using = "minimum-value")
-  private static WebElement minimumValueTextBox;
+  private static WebElement minimumValueTextBox=null;
 
   @FindBy(how = ID, using = "maximum-value")
-  private static WebElement maximumValueTextBox;
+  private static WebElement maximumValueTextBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']/input")
-  private static WebElement ISAPopulationTextField;
+  private static WebElement ISAPopulationTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population']/span[@ng-bind='isaValue']")
-  private static WebElement isaValueLabel;
+  private static WebElement isaValueLabel=null;
 
   @FindBy(how = XPATH, using = "//div[@id='ISA-population' and @class='calculatedAmount']/input[@class='ng-pristine ng-valid']")
-  private static WebElement populationTextBox;
+  private static WebElement populationTextBox=null;
 
   @FindBy(how = XPATH, using = "//div[@id='programProductISA' and @class='modal in']/div[3][@class='modal-footer']/input[1][@class='btn btn-primary save-button']")
-  private static WebElement programProductISASaveButton;
+  private static WebElement programProductISASaveButton=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
-  private static WebElement programProductISACancelButton;
+  private static WebElement programProductISACancelButton=null;
 
   @FindBy(how = ID, using = "calculateButton")
-  private static WebElement testCalculationButton;
-
-  @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv;
+  private static WebElement testCalculationButton=null;
 
   @FindBy(how = ID, using = "saveFailMessage")
-  private static WebElement saveFailMessage;
+  private static WebElement saveFailMessage=null;
 
   @FindBy(how = ID, using = "searchProduct")
-  private static WebElement searchProduct;
+  private static WebElement searchProduct=null;
 
   @FindBy(how = XPATH, using = "(//div[@id='programProductFormula'])[1]")
-  private static WebElement ISAFormulaFromConfigureProgramISAModalWindow;
+  private static WebElement ISAFormulaFromConfigureProgramISAModalWindow=null;
 
   @FindBy(how = XPATH, using = "//div[@id='monthlyRestockAmount']/span[@class='ng-binding']")
-  private static WebElement ISAFormulaFromISAFormulaModal;
+  private static WebElement ISAFormulaFromISAFormulaModal=null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Monthly restock amount')]")
-  private static WebElement monthlyRestockAmountLabel;
-
-  @FindBy(how = XPATH, using = "//div[contains(text(),'Please enter numeric value')]")
-  private static WebElement pleaseEnterNumericValueError;
+  private static WebElement monthlyRestockAmountLabel=null;
 
   @FindBy(how = ID, using = "productPrimaryName")
-  private static WebElement productPrimaryName;
+  private static WebElement productPrimaryName=null;
 
 
 
@@ -202,12 +196,6 @@ public class ProgramProductISAPage extends Page {
     return testWebDriver.getText(isaValueLabel);
   }
 
-
-  public void verifySuccessMessageDiv() {
-    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
-  }
-
   public void verifyISAFormula(String ISAFormula) {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(ISAFormulaFromConfigureProgramISAModalWindow);
@@ -254,8 +242,7 @@ public class ProgramProductISAPage extends Page {
 
   public List<WebElement> getAllSelectOptionsFromProgramDropDown() {
     testWebDriver.waitForElementToAppear(selectProgramSelectBox);
-    List<WebElement> options = testWebDriver.getOptions(selectProgramSelectBox);
-    return options;
+    return testWebDriver.getOptions(selectProgramSelectBox);
   }
 
   public void saveISA() {

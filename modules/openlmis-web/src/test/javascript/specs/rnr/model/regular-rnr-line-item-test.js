@@ -14,7 +14,7 @@ describe('RegularRnrLineItem', function () {
   describe('Create RegularRnrLineItem', function () {
     it('Should set previousNormalizedConsumptions to [] if it is null in json data', function () {
       var programRnrColumnList = [
-        {"column1":"column 1"}
+        {"column1": "column 1"}
       ];
 
       var regularRnrLineItem = new RegularRnrLineItem({}, 5, programRnrColumnList, "INITIATED");
@@ -24,7 +24,7 @@ describe('RegularRnrLineItem', function () {
 
     it('should initialize losses and adjustments, if not present in R&R', function () {
 
-      var regularRnrLineItem = new RegularRnrLineItem({'id':123, 'product':'Commodity Name' }, null, null);
+      var regularRnrLineItem = new RegularRnrLineItem({'id': 123, 'product': 'Commodity Name' }, null, null);
       expect(regularRnrLineItem.lossesAndAdjustments).toEqual([]);
     });
 
@@ -36,13 +36,13 @@ describe('RegularRnrLineItem', function () {
 
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}}
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "CALCULATED"}}
       ];
       rnr = {};
     });
 
     it('should calculate consumption', function () {
-      var lineItem = {"beginningBalance":5, "quantityReceived":20, "quantityDispensed":null, "stockInHand":10};
+      var lineItem = {"beginningBalance": 5, "quantityReceived": 20, "quantityDispensed": null, "stockInHand": 10};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
       regularRnrLineItem.totalLossesAndAdjustments = 5;
 
@@ -52,7 +52,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate consumption when one of the dependant columns is not set', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":2, "quantityDispensed":null, "totalLossesAndAdjustments":3, "stockInHand":null};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 2, "quantityDispensed": null, "totalLossesAndAdjustments": 3, "stockInHand": null};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
       regularRnrLineItem.calculateConsumption();
@@ -62,7 +62,7 @@ describe('RegularRnrLineItem', function () {
 
     it('should not calculate consumption when it is not a calculated field', function () {
       programRnrColumnList = [
-        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"USER_INPUT"}}
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "USER_INPUT"}}
       ];
       var regularRnrLineItem = new RegularRnrLineItem(null, rnr, programRnrColumnList);
 
@@ -77,13 +77,13 @@ describe('RegularRnrLineItem', function () {
     var rnr;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}}
+        {"indicator": "E", "name": "stockInHand", "source": {"name": "CALCULATED"}}
       ];
       rnr = {};
     });
 
     it('should calculate stock in hand when all values are 0 - NaN check', function () {
-      var lineItem = {"beginningBalance":0, "quantityReceived":0, "quantityDispensed":0, "totalLossesAndAdjustments":0, "stockInHand":null};
+      var lineItem = {"beginningBalance": 0, "quantityReceived": 0, "quantityDispensed": 0, "totalLossesAndAdjustments": 0, "stockInHand": null};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
       regularRnrLineItem.calculateStockInHand();
@@ -92,7 +92,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should calculate stock in hand', function () {
-      var lineItem = {"beginningBalance":10, "quantityReceived":10, "quantityDispensed":10, "stockInHand":null};
+      var lineItem = {"beginningBalance": 10, "quantityReceived": 10, "quantityDispensed": 10, "stockInHand": null};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
       regularRnrLineItem.totalLossesAndAdjustments = 1;
 
@@ -102,7 +102,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate stock in hand when one of the dependant columns is not set', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":2, "quantityDispensed":null, "totalLossesAndAdjustments":null, "stockInHand":null};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 2, "quantityDispensed": null, "totalLossesAndAdjustments": null, "stockInHand": null};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
       regularRnrLineItem.calculateStockInHand();
@@ -112,7 +112,7 @@ describe('RegularRnrLineItem', function () {
 
     it('should not calculate stock in hand when it is not a calculated field', function () {
       programRnrColumnList = [
-        {"indicator":"E", "name":"stockInHand", "source":{"name":"USER_INPUT"}}
+        {"indicator": "E", "name": "stockInHand", "source": {"name": "USER_INPUT"}}
       ];
       var regularRnrLineItem = new RegularRnrLineItem(null, rnr, programRnrColumnList);
 
@@ -129,20 +129,20 @@ describe('RegularRnrLineItem', function () {
     var rnr;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
-        {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-        {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-        {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
-        {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
-        {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}},
+        {"indicator": "B", "name": "quantityReceived", "source": {"name": "USER_INPUT"}},
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "CALCULATED"}},
+        {"indicator": "D", "name": "lossesAndAdjustments", "source": {"name": "USER_INPUT"}},
+        {"indicator": "E", "name": "stockInHand", "source": {"name": "CALCULATED"}},
+        {"indicator": "F", "name": "newPatientCount", "source": {"name": "USER_INPUT"}},
+        {"indicator": "X", "name": "stockOutDays", "source": {"name": "USER_INPUT"}}
       ]
       rnr = {};
     });
 
     it('should calculate normalized consumption', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":10, "quantityDispensed":5,
-        "stockOutDays":5, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 5,
+        "stockOutDays": 5, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
       regularRnrLineItem.totalLossesAndAdjustments = -4;
@@ -153,7 +153,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate normalized consumption when newPatientCount is displayed but not set', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":10, "quantityDispensed":4, "totalLossesAndAdjustments":4, "stockOutDays":5, "newPatientCount":null};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 4, "totalLossesAndAdjustments": 4, "stockOutDays": 5, "newPatientCount": null};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
       regularRnrLineItem.calculateNormalizedConsumption();
@@ -162,7 +162,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate normalized consumption when consumption is empty', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":2, "quantityDispensed":null, "totalLossesAndAdjustments":3};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 2, "quantityDispensed": null, "totalLossesAndAdjustments": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -172,7 +172,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate normalized consumption when stockOutDays is not set', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":10, "quantityDispensed":13, "totalLossesAndAdjustments":4, "stockOutDays":null, "newPatientCount":10};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13, "totalLossesAndAdjustments": 4, "stockOutDays": null, "newPatientCount": 10};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
 
@@ -181,26 +181,27 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.normalizedConsumption).toEqual(null);
     });
 
-    it('should calculate normalized consumption when facility is stocked out for the entire reporting period', function () {
-      var lineItem = {"beginningBalance":1, "quantityReceived":10, "quantityDispensed":13, "totalLossesAndAdjustments":4, "stockOutDays":90, "newPatientCount":10, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
-      var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
-      jQuery.extend(regularRnrLineItem, lineItem);
+    it('should calculate normalized consumption when facility is stocked out for the entire reporting period',
+      function () {
+        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13, "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28};
+        var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
+        jQuery.extend(regularRnrLineItem, lineItem);
 
-      regularRnrLineItem.calculateNormalizedConsumption();
+        regularRnrLineItem.calculateNormalizedConsumption();
 
-      expect(regularRnrLineItem.normalizedConsumption).toEqual(73);
-    });
+        expect(regularRnrLineItem.normalizedConsumption).toEqual(73);
+      });
 
     it('should calculate normalized consumption when newPatientCount is not in the template', function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
-        {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-        {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-        {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
-        {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}},
+        {"indicator": "B", "name": "quantityReceived", "source": {"name": "USER_INPUT"}},
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "CALCULATED"}},
+        {"indicator": "D", "name": "lossesAndAdjustments", "source": {"name": "USER_INPUT"}},
+        {"indicator": "E", "name": "stockInHand", "source": {"name": "CALCULATED"}},
+        {"indicator": "X", "name": "stockOutDays", "source": {"name": "USER_INPUT"}}
       ];
-      var lineItem = {"beginningBalance":1, "quantityReceived":10, "quantityDispensed":5, "totalLossesAndAdjustments":-4, "stockOutDays":5, "newPatientCount":null, "dosesPerMonth":30, "dosesPerDispensingUnit":28};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 5, "totalLossesAndAdjustments": -4, "stockOutDays": 5, "newPatientCount": null, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -231,15 +232,16 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.amc).toEqual(6);
     });
 
-    it('should calculate AMC when number of months in a period is 2 but previous normalized consumption is not available', function () {
-      var regularRnrLineItem = new RegularRnrLineItem({}, 2, null, 'INITIATED');
-      regularRnrLineItem.normalizedConsumption = 10;
-      regularRnrLineItem.previousNormalizedConsumptions = [];
+    it('should calculate AMC when number of months in a period is 2 but previous normalized consumption is not available',
+      function () {
+        var regularRnrLineItem = new RegularRnrLineItem({}, 2, null, 'INITIATED');
+        regularRnrLineItem.normalizedConsumption = 10;
+        regularRnrLineItem.previousNormalizedConsumptions = [];
 
-      regularRnrLineItem.calculateAMC();
+        regularRnrLineItem.calculateAMC();
 
-      expect(regularRnrLineItem.amc).toEqual(5);
-    });
+        expect(regularRnrLineItem.amc).toEqual(5);
+      });
 
     it('should calculate AMC when number of months in a period is 1', function () {
       var regularRnrLineItem = new RegularRnrLineItem({}, 1, null, 'INITIATED');
@@ -251,19 +253,20 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.amc).toEqual(12);
     });
 
-    it('should calculate AMC when number of months in a period is 1 and only one of the two previous normalized consumption is available', function () {
-      var regularRnrLineItem = new RegularRnrLineItem({}, 1, null, 'INITIATED');
-      regularRnrLineItem.normalizedConsumption = 10;
-      regularRnrLineItem.previousNormalizedConsumptions = [14];
+    it('should calculate AMC when number of months in a period is 1 and only one of the two previous normalized consumption is available',
+      function () {
+        var regularRnrLineItem = new RegularRnrLineItem({}, 1, null, 'INITIATED');
+        regularRnrLineItem.normalizedConsumption = 10;
+        regularRnrLineItem.previousNormalizedConsumptions = [14];
 
-      regularRnrLineItem.calculateAMC();
+        regularRnrLineItem.calculateAMC();
 
-      expect(regularRnrLineItem.amc).toEqual(12);
-    });
+        expect(regularRnrLineItem.amc).toEqual(12);
+      });
 
     it('should reset AMC to null when normalized consumption is not present', function () {
-      var lineItem = {"normalizedConsumption":null};
-      var regularRnrLineItem = new RegularRnrLineItem({amc:5}, null, null);
+      var lineItem = {"normalizedConsumption": null};
+      var regularRnrLineItem = new RegularRnrLineItem({amc: 5}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
       regularRnrLineItem.calculateAMC();
@@ -276,18 +279,18 @@ describe('RegularRnrLineItem', function () {
     var programRnrColumnList;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
-        {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"CALCULATED"}},
-        {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-        {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
-        {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
-        {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}},
+        {"indicator": "B", "name": "quantityReceived", "source": {"name": "USER_INPUT"}},
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "CALCULATED"}},
+        {"indicator": "D", "name": "lossesAndAdjustments", "source": {"name": "USER_INPUT"}},
+        {"indicator": "E", "name": "stockInHand", "source": {"name": "CALCULATED"}},
+        {"indicator": "F", "name": "newPatientCount", "source": {"name": "USER_INPUT"}},
+        {"indicator": "X", "name": "stockOutDays", "source": {"name": "USER_INPUT"}}
       ];
     });
 
     it('should calculate maxStockQuantity', function () {
-      var lineItem = {"amc":15, "maxMonthsOfStock":3};
+      var lineItem = {"amc": 15, "maxMonthsOfStock": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -297,7 +300,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate maxStockQuantity if amc is not available', function () {
-      var lineItem = {"maxMonthsOfStock":3};
+      var lineItem = {"maxMonthsOfStock": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -309,7 +312,7 @@ describe('RegularRnrLineItem', function () {
 
   describe('Calculate Calculated Order Quantity', function () {
     it('should calculate calculatedOrderQuantity', function () {
-      var lineItem = {"stockInHand":7, "maxStockQuantity":10};
+      var lineItem = {"stockInHand": 7, "maxStockQuantity": 10};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -319,7 +322,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate calculatedOrderQuantity when stock in hand is not present', function () {
-      var lineItem = {"stockInHand":null, "maxStockQuantity":3};
+      var lineItem = {"stockInHand": null, "maxStockQuantity": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -329,7 +332,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate calculatedOrderQuantity when maxStockQuantity is not present', function () {
-      var lineItem = {"stockInHand":7, "maxStockQuantity":null};
+      var lineItem = {"stockInHand": 7, "maxStockQuantity": null};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -339,7 +342,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should calculate calculatedOrderQuantity to be 0 when value goes negative', function () {
-      var lineItem = {"stockInHand":10, "maxStockQuantity":3};
+      var lineItem = {"stockInHand": 10, "maxStockQuantity": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -353,28 +356,29 @@ describe('RegularRnrLineItem', function () {
     var programRnrColumnList;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}},
-        {"indicator":"B", "name":"quantityReceived", "source":{"name":"USER_INPUT"}},
-        {"indicator":"C", "name":"quantityDispensed", "source":{"name":"USER_INPUT"}},
-        {"indicator":"D", "name":"lossesAndAdjustments", "source":{"name":"USER_INPUT"}},
-        {"indicator":"E", "name":"stockInHand", "source":{"name":"CALCULATED"}},
-        {"indicator":"F", "name":"newPatientCount", "source":{"name":"USER_INPUT"}},
-        {"indicator":"X", "name":"stockOutDays", "source":{"name":"USER_INPUT"}}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}},
+        {"indicator": "B", "name": "quantityReceived", "source": {"name": "USER_INPUT"}},
+        {"indicator": "C", "name": "quantityDispensed", "source": {"name": "USER_INPUT"}},
+        {"indicator": "D", "name": "lossesAndAdjustments", "source": {"name": "USER_INPUT"}},
+        {"indicator": "E", "name": "stockInHand", "source": {"name": "CALCULATED"}},
+        {"indicator": "F", "name": "newPatientCount", "source": {"name": "USER_INPUT"}},
+        {"indicator": "X", "name": "stockOutDays", "source": {"name": "USER_INPUT"}}
       ];
     });
 
-    it('should calculate packsToShip when calculated quantity is available and requested quantity is null', function () {
-      var regularRnrLineItem = new RegularRnrLineItem(null, null, null, 'INITIATED');
-      regularRnrLineItem.calculatedOrderQuantity = 8;
+    it('should calculate packsToShip when calculated quantity is available and requested quantity is null',
+      function () {
+        var regularRnrLineItem = new RegularRnrLineItem(null, null, null, 'INITIATED');
+        regularRnrLineItem.calculatedOrderQuantity = 8;
 
-      spyOn(regularRnrLineItem, 'calculatePacksToShip');
+        spyOn(regularRnrLineItem, 'calculatePacksToShip');
 
-      regularRnrLineItem.fillPacksToShip();
-      expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
-    });
+        regularRnrLineItem.fillPacksToShip();
+        expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(8);
+      });
 
     it('should calculate packsToShip for the given quantity', function () {
-      var lineItem = {"packSize":12};
+      var lineItem = {"packSize": 12};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
       spyOn(regularRnrLineItem, 'applyRoundingRulesToPacksToShip');
@@ -388,7 +392,7 @@ describe('RegularRnrLineItem', function () {
 
   describe('Apply rounding rules to packs to ship', function () {
     it('should set packsToShip to one when packsToShip is zero and roundToZero is false', function () {
-      var lineItem = {"packsToShip":0, "roundToZero":false, "packSize":12, "packRoundingThreshold":7};
+      var lineItem = {"packsToShip": 0, "roundToZero": false, "packSize": 12, "packRoundingThreshold": 7};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -398,7 +402,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should set packsToShip to zero when packsToShip is zero and roundToZero is true', function () {
-      var lineItem = {"packsToShip":0, "roundToZero":true, "packSize":12, "packRoundingThreshold":7};
+      var lineItem = {"packsToShip": 0, "roundToZero": true, "packSize": 12, "packRoundingThreshold": 7};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -407,30 +411,32 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.packsToShip).toEqual(0);
     });
 
-    it('should increment packsToShip by one when number of remaining items is greater than packRoundingThreshold ', function () {
-      var lineItem = {"packsToShip":2, "packSize":12, "packRoundingThreshold":7};
-      var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
-      jQuery.extend(regularRnrLineItem, lineItem);
+    it('should increment packsToShip by one when number of remaining items is greater than packRoundingThreshold ',
+      function () {
+        var lineItem = {"packsToShip": 2, "packSize": 12, "packRoundingThreshold": 7};
+        var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
+        jQuery.extend(regularRnrLineItem, lineItem);
 
-      regularRnrLineItem.applyRoundingRulesToPacksToShip(8);
+        regularRnrLineItem.applyRoundingRulesToPacksToShip(8);
 
-      expect(regularRnrLineItem.packsToShip).toEqual(3);
-    });
+        expect(regularRnrLineItem.packsToShip).toEqual(3);
+      });
 
-    it('should not increment packsToShip when number of remaining items is greater than packRoundingThreshold ', function () {
-      var lineItem = {"packsToShip":2, "packSize":12, "packRoundingThreshold":7};
-      var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
-      jQuery.extend(regularRnrLineItem, lineItem);
+    it('should not increment packsToShip when number of remaining items is greater than packRoundingThreshold ',
+      function () {
+        var lineItem = {"packsToShip": 2, "packSize": 12, "packRoundingThreshold": 7};
+        var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
+        jQuery.extend(regularRnrLineItem, lineItem);
 
-      regularRnrLineItem.applyRoundingRulesToPacksToShip(6);
+        regularRnrLineItem.applyRoundingRulesToPacksToShip(6);
 
-      expect(regularRnrLineItem.packsToShip).toEqual(2);
-    });
+        expect(regularRnrLineItem.packsToShip).toEqual(2);
+      });
   });
 
   describe('Calculate Cost', function () {
     it('should set cost when pricePerPack and packsToShip are available', function () {
-      var lineItem = {"packsToShip":11, "price":200};
+      var lineItem = {"packsToShip": 11, "price": 200};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -440,7 +446,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should set cost to zero when packsToShip is not available', function () {
-      var lineItem = {"price":200};
+      var lineItem = {"price": 200};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -452,7 +458,7 @@ describe('RegularRnrLineItem', function () {
 
   describe('Calculate Total', function () {
     it('should set total when beginningBalance and quantityReceived are available', function () {
-      var lineItem = {"beginningBalance":11, "quantityReceived":200};
+      var lineItem = {"beginningBalance": 11, "quantityReceived": 200};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -462,7 +468,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate total when beginningBalance is not available', function () {
-      var lineItem = {"quantityReceived":200};
+      var lineItem = {"quantityReceived": 200};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -472,7 +478,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should not calculate total when quantityReceived is not available', function () {
-      var lineItem = {"beginningBalance":200};
+      var lineItem = {"beginningBalance": 200};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, null);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -483,25 +489,26 @@ describe('RegularRnrLineItem', function () {
   });
 
   describe('Losses and adjustment for line item', function () {
-    it('should create losses and adjustment object out of losses and adjustment json data when RegularRnrLineItem Is Created', function () {
-      var lossAndAdjustment1 = {"type":{"name":"Loss1", "additive":true}, "quantity":45};
-      var lossAndAdjustment2 = {"type":{"name":"Adjust1", "additive":false}, "quantity":55};
-      var lineItem = {"id":1, "lossesAndAdjustments":[lossAndAdjustment1, lossAndAdjustment2]};
+    it('should create losses and adjustment object out of losses and adjustment json data when RegularRnrLineItem Is Created',
+      function () {
+        var lossAndAdjustment1 = {"type": {"name": "Loss1", "additive": true}, "quantity": 45};
+        var lossAndAdjustment2 = {"type": {"name": "Adjust1", "additive": false}, "quantity": 55};
+        var lineItem = {"id": 1, "lossesAndAdjustments": [lossAndAdjustment1, lossAndAdjustment2]};
 
-      var regularRnrLineItem = new RegularRnrLineItem(lineItem);
+        var regularRnrLineItem = new RegularRnrLineItem(lineItem);
 
-      expect(regularRnrLineItem.lossesAndAdjustments.length).toEqual(2);
+        expect(regularRnrLineItem.lossesAndAdjustments.length).toEqual(2);
 
-      expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[0]).toBeTruthy();
-      expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[1]).toBeTruthy();
-    });
+        expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[0]).toBeTruthy();
+        expect("isQuantityValid" in regularRnrLineItem.lossesAndAdjustments[1]).toBeTruthy();
+      });
 
     it("should re evaluate total losses and adjustments for line item", function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
 
-      var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
-      var lineItem = {"id":"1", "totalLossesAndAdjustments":40, lossesAndAdjustments:[lossAndAdjustment]};
+      var lossAndAdjustment = {"type": {"name": "CLINIC_RETURN", "additive": true}, "quantity": 45};
+      var lineItem = {"id": "1", "totalLossesAndAdjustments": 40, lossesAndAdjustments: [lossAndAdjustment]};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -515,8 +522,8 @@ describe('RegularRnrLineItem', function () {
     it("should remove losses and adjustments for line item and update total losses and adjustments", function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
-      var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
-      var lineItem = {"id":"1", "totalLossesAndAdjustments":45, lossesAndAdjustments:[new LossAndAdjustment(lossAndAdjustment)]};
+      var lossAndAdjustment = {"type": {"name": "CLINIC_RETURN", "additive": true}, "quantity": 45};
+      var lineItem = {"id": "1", "totalLossesAndAdjustments": 45, lossesAndAdjustments: [new LossAndAdjustment(lossAndAdjustment)]};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -531,9 +538,9 @@ describe('RegularRnrLineItem', function () {
     it("should add losses and adjustments for line item and update total losses and adjustments", function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
-      var lossAndAdjustment = {"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45};
-      var expectedLossAndAdjustment = new LossAndAdjustment({"type":{"name":"CLINIC_RETURN", "additive":true}, "quantity":45});
-      var lineItem = {"id":"1", "totalLossesAndAdjustments":0, lossesAndAdjustments:[]};
+      var lossAndAdjustment = {"type": {"name": "CLINIC_RETURN", "additive": true}, "quantity": 45};
+      var expectedLossAndAdjustment = new LossAndAdjustment({"type": {"name": "CLINIC_RETURN", "additive": true}, "quantity": 45});
+      var lineItem = {"id": "1", "totalLossesAndAdjustments": 0, lossesAndAdjustments: []};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -546,10 +553,10 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should update total losses and adjustments and add additive lossAndAdjustment', function () {
-      var rnr = {"id":1};
+      var rnr = {"id": 1};
       var programRnrColumnList = [];
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
-      jQuery.extend(regularRnrLineItem, {"totalLossesAndAdjustments":20});
+      jQuery.extend(regularRnrLineItem, {"totalLossesAndAdjustments": 20});
 
       spyOn(regularRnrLineItem, "fillConsumptionOrStockInHand");
 
@@ -560,10 +567,10 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should update total losses and adjustments and subtract non-additive lossAndAdjustment', function () {
-      var rnr = {"id":1};
+      var rnr = {"id": 1};
       var programRnrColumnList = [];
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
-      jQuery.extend(regularRnrLineItem, {"totalLossesAndAdjustments":40});
+      jQuery.extend(regularRnrLineItem, {"totalLossesAndAdjustments": 40});
 
       spyOn(regularRnrLineItem, "fillConsumptionOrStockInHand");
 
@@ -573,21 +580,22 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.totalLossesAndAdjustments).toEqual(25);
     });
 
-    it('should return true on validate losses and adjustments if no losses and adjustments present in the regularRnrLineItem', function () {
-      var rnr = new Object();
-      var programRnrColumnList = new Object();
-      var regularRnrLineItem = new RegularRnrLineItem({"id":"1"}, rnr, programRnrColumnList);
+    it('should return true on validate losses and adjustments if no losses and adjustments present in the regularRnrLineItem',
+      function () {
+        var rnr = new Object();
+        var programRnrColumnList = new Object();
+        var regularRnrLineItem = new RegularRnrLineItem({"id": "1"}, rnr, programRnrColumnList);
 
-      expect(regularRnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
-    });
+        expect(regularRnrLineItem.validateLossesAndAdjustments()).toBeTruthy();
+      });
 
     it('should return false if any loss and adjustment is not valid', function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
-      var lossAndAdjustment1 = {"type":{"name":"LOSS1", "additive":true}, "quantity":45};
-      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":89};
+      var lossAndAdjustment1 = {"type": {"name": "LOSS1", "additive": true}, "quantity": 45};
+      var lossAndAdjustment2 = {"type": {"name": "LOSS2", "additive": true}, "quantity": 89};
 
-      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2]};
+      var lineItem = {"id": "1", lossesAndAdjustments: [lossAndAdjustment1, lossAndAdjustment2]};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
       spyOn(regularRnrLineItem.lossesAndAdjustments[0], "isQuantityValid").andReturn(true);
@@ -599,10 +607,10 @@ describe('RegularRnrLineItem', function () {
     it('should return true if all losses and adjustments are valid', function () {
       var rnr = new Object();
       var programRnrColumnList = new Object();
-      var lossAndAdjustment1 = {"type":{"name":"LOSS1", "additive":true}, "quantity":45};
-      var lossAndAdjustment2 = {"type":{"name":"LOSS2", "additive":true}, "quantity":89};
+      var lossAndAdjustment1 = {"type": {"name": "LOSS1", "additive": true}, "quantity": 45};
+      var lossAndAdjustment2 = {"type": {"name": "LOSS2", "additive": true}, "quantity": 89};
 
-      var lineItem = {"id":"1", lossesAndAdjustments:[lossAndAdjustment1, lossAndAdjustment2]};
+      var lineItem = {"id": "1", lossesAndAdjustments: [lossAndAdjustment1, lossAndAdjustment2]};
       var regularRnrLineItem = new RegularRnrLineItem(lineItem, rnr, programRnrColumnList);
 
       spyOn(regularRnrLineItem.lossesAndAdjustments[0], "isQuantityValid").andReturn(true);
@@ -617,12 +625,12 @@ describe('RegularRnrLineItem', function () {
     var programRnrColumnList;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}, "formulaValidationRequired": true}
       ];
     });
 
     it("should do arithmetic validations if on ", function () {
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "totalLossesAndAdjustments":-3, "stockInHand":3};
+      var lineItem = {"id": "1", "beginningBalance": 3, "quantityReceived": 3, "quantityDispensed": 3, "totalLossesAndAdjustments": -3, "stockInHand": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
       var arithmeticallyInvalid = regularRnrLineItem.arithmeticallyInvalid();
@@ -648,13 +656,38 @@ describe('RegularRnrLineItem', function () {
     var programRnrColumnList;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}, "formulaValidationRequired": true}
       ];
     });
 
+    it("should not give error if line item is skipped", function () {
+      var regularRnrLineItem = new RegularRnrLineItem(
+        {"id": "1",
+          "beginningBalance": 3,
+          "quantityReceived": 3,
+          "quantityDispensed": 3,
+          "stockInHand": 3,
+          "skipped": true}
+        , null, programRnrColumnList);
+
+      spyOn(regularRnrLineItem, 'arithmeticallyInvalid').andReturn("error");
+      var errorMsg = regularRnrLineItem.getErrorMessage();
+      expect(errorMsg).toEqual('');
+
+    });
+
+    it("should give error message for negative stock in hand", function () {
+      var regularRnrLineItem = new RegularRnrLineItem(
+        {"id": "1", "stockInHand": -3},
+        null, programRnrColumnList);
+
+      var errorMsg = regularRnrLineItem.getErrorMessage();
+
+      expect(errorMsg).toEqual("error.stock.on.hand.negative");
+    });
 
     it("should give error message for arithmetic validation error ", function () {
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":3, "stockInHand":3};
+      var lineItem = {"id": "1", "beginningBalance": 3, "quantityReceived": 3, "quantityDispensed": 3, "stockInHand": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -663,19 +696,9 @@ describe('RegularRnrLineItem', function () {
       expect(errorMsg).toEqual("error.arithmetically.invalid");
     });
 
-    it("should give error message for negative stock in hand", function () {
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":33, "stockInHand":-3};
-      var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
-      jQuery.extend(regularRnrLineItem, lineItem);
-
-      var errorMsg = regularRnrLineItem.getErrorMessage();
-
-      expect(errorMsg).toEqual("error.stock.on.hand.negative");
-    });
-
     it("should give error message for negative quantity dispensed ", function () {
       programRnrColumnList[0].formulaValidationRequired = false;
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":3, "quantityDispensed":-3, "stockInHand":3};
+      var lineItem = {"id": "1", "beginningBalance": 3, "quantityReceived": 3, "quantityDispensed": -3, "stockInHand": 3};
       var regularRnrLineItem = new RegularRnrLineItem({}, null, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
@@ -690,12 +713,12 @@ describe('RegularRnrLineItem', function () {
     var programRnrColumnList;
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}, "formulaValidationRequired": true}
       ];
     });
 
     it('should get rnr column source name for the provided indicator', function () {
-      var lineItem = new RegularRnrLineItem({"id":15}, null, programRnrColumnList);
+      var lineItem = new RegularRnrLineItem({"id": 15}, null, programRnrColumnList);
       expect(lineItem.getSource("beginningBalance")).toEqual("USER_INPUT");
     });
   });
@@ -707,10 +730,10 @@ describe('RegularRnrLineItem', function () {
 
     beforeEach(function () {
       programRnrColumnList = [
-        {"indicator":"A", "name":"beginningBalance", "source":{"name":"USER_INPUT"}, "formulaValidationRequired":true}
+        {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}, "formulaValidationRequired": true}
       ];
-      rnr = {"id":1};
-      var lineItem = {"id":"1", "beginningBalance":3, "quantityReceived":4, "quantityDispensed":-3, "stockInHand":9};
+      rnr = {"id": 1};
+      var lineItem = {"id": "1", "beginningBalance": 3, "quantityReceived": 4, "quantityDispensed": -3, "stockInHand": 9};
       regularRnrLineItem = new RegularRnrLineItem(lineItem, 1, programRnrColumnList, 'INITIATED');
       regularRnrLineItem.totalLossesAndAdjustments = 34;
     });
@@ -734,17 +757,18 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.fillNormalizedConsumption).toHaveBeenCalled();
     });
 
-    it('should test execution flow when packs to ship gets filled and order quantity is quantity requested', function () {
-      regularRnrLineItem.quantityRequested = 31;
+    it('should test execution flow when packs to ship gets filled and order quantity is quantity requested',
+      function () {
+        regularRnrLineItem.quantityRequested = 31;
 
-      spyOn(regularRnrLineItem, "calculatePacksToShip");
-      spyOn(regularRnrLineItem, "calculateCost");
+        spyOn(regularRnrLineItem, "calculatePacksToShip");
+        spyOn(regularRnrLineItem, "calculateCost");
 
-      regularRnrLineItem.fillPacksToShip();
+        regularRnrLineItem.fillPacksToShip();
 
-      expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
-      expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
-    });
+        expect(regularRnrLineItem.calculatePacksToShip).toHaveBeenCalledWith(31);
+        expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
+      });
 
     it('should test execution flow when packs to ship gets filled and order quantity is not present', function () {
       regularRnrLineItem.quantityRequested = null;
@@ -779,17 +803,18 @@ describe('RegularRnrLineItem', function () {
       expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
     });
 
-    xit('should test execution flow when rnr line item cost gets filled when it is of non-full supply type', function () {
-      regularRnrLineItem.fullSupply = false;
+    xit('should test execution flow when rnr line item cost gets filled when it is of non-full supply type',
+      function () {
+        regularRnrLineItem.fullSupply = false;
 
-      spyOn(regularRnrLineItem, "calculateCost");
-      spyOn(regularRnrLineItem, "calculateNonFullSupplyItemsSubmittedCost");
+        spyOn(regularRnrLineItem, "calculateCost");
+        spyOn(regularRnrLineItem, "calculateNonFullSupplyItemsSubmittedCost");
 
-      regularRnrLineItem.fillCost();
+        regularRnrLineItem.fillCost();
 
-      expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
-      expect(regularRnrLineItem.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
-    });
+        expect(regularRnrLineItem.calculateCost).toHaveBeenCalled();
+        expect(regularRnrLineItem.calculateNonFullSupplyItemsSubmittedCost).toHaveBeenCalled();
+      });
 
     it('should test execution flow when amc gets filled', function () {
       spyOn(regularRnrLineItem, "calculateAMC");
@@ -867,14 +892,14 @@ describe('RegularRnrLineItem', function () {
 
     it('should return true if visible user input fields are filled', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
-        {"source":{"name":"USER_INPUT"}, "visible":false, "name":"stockOutDays"}
+        {"source": {"name": "USER_INPUT"}, "name": "beginningBalance", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityReceived", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityDispensed", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "newPatientCount"},
+        {"source": {"name": "USER_INPUT"}, "visible": false, "name": "stockOutDays"}
       ];
-      var regularRnrLineItem = {'beginningBalance':'45', 'quantityDispensed':'23', 'quantityReceived':3, 'newPatientCount':45,
-        'stockOutDays':''};
+      var regularRnrLineItem = {'beginningBalance': '45', 'quantityDispensed': '23', 'quantityReceived': 3, 'newPatientCount': 45,
+        'stockOutDays': ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeTruthy();
@@ -882,14 +907,14 @@ describe('RegularRnrLineItem', function () {
 
     it('should return false if visible user input field missing', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"}
+        {"source": {"name": "USER_INPUT"}, "name": "beginningBalance", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityReceived", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityDispensed", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "newPatientCount"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "stockOutDays"}
       ];
-      var regularRnrLineItem = {'beginningBalance':'', 'quantityDispensed':'23', 'quantityReceived':3, 'newPatientCount':45,
-        'stockOutDays':''};
+      var regularRnrLineItem = {'beginningBalance': '', 'quantityDispensed': '23', 'quantityReceived': 3, 'newPatientCount': 45,
+        'stockOutDays': ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeFalsy();
@@ -897,16 +922,16 @@ describe('RegularRnrLineItem', function () {
 
     it('should return false if requested quantity is filled and reason is not filled', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"}
+        {"source": {"name": "USER_INPUT"}, "name": "beginningBalance", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityReceived", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityDispensed", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "newPatientCount"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "stockOutDays"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityRequested"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "reasonForRequestedQuantity"}
       ];
-      var regularRnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
-        'quantityRequested':'7', 'reasonForRequestedQuantity':''};
+      var regularRnrLineItem = {'beginningBalance': '45', 'stockOutDays': '23', 'quantityDispensed': '23', 'quantityReceived': '89', 'newPatientCount': 45,
+        'quantityRequested': '7', 'reasonForRequestedQuantity': ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeFalsy();
@@ -914,19 +939,19 @@ describe('RegularRnrLineItem', function () {
 
     it('should return true if requested quantity is filled and reason is also filled', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+        {"source": {"name": "USER_INPUT"}, "name": "beginningBalance", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityReceived", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityDispensed", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "newPatientCount"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "stockOutDays"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityRequested"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "reasonForRequestedQuantity"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "remarks"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "lossesAndAdjustments"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityApproved"}
       ];
-      var regularRnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
-        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', quantityApproved:''};
+      var regularRnrLineItem = {'beginningBalance': '45', 'stockOutDays': '23', 'quantityDispensed': '23', 'quantityReceived': '89', 'newPatientCount': 45,
+        'quantityRequested': '7', 'reasonForRequestedQuantity': 'reason', remarks: '', lossesAndAdjustments: '', quantityApproved: ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeTruthy();
@@ -934,20 +959,20 @@ describe('RegularRnrLineItem', function () {
 
     it('should return true if expiration date is valid', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"expirationDate"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+        {"source": {"name": "USER_INPUT"}, "name": "beginningBalance", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityReceived", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityDispensed", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "newPatientCount"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "stockOutDays"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityRequested"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "reasonForRequestedQuantity"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "remarks"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "lossesAndAdjustments"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "expirationDate"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityApproved"}
       ];
-      var regularRnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
-        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', expirationDate:'11/2012', quantityApproved:''};
+      var regularRnrLineItem = {'beginningBalance': '45', 'stockOutDays': '23', 'quantityDispensed': '23', 'quantityReceived': '89', 'newPatientCount': 45,
+        'quantityRequested': '7', 'reasonForRequestedQuantity': 'reason', remarks: '', lossesAndAdjustments: '', expirationDate: '11/2012', quantityApproved: ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeTruthy();
@@ -955,20 +980,20 @@ describe('RegularRnrLineItem', function () {
 
     it('should return false if expiration date is invalid', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "name":"beginningBalance", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityReceived", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "name":"quantityDispensed", "visible":true},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"newPatientCount"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"stockOutDays"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"lossesAndAdjustments"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"expirationDate"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityApproved"}
+        {"source": {"name": "USER_INPUT"}, "name": "beginningBalance", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityReceived", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "name": "quantityDispensed", "visible": true},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "newPatientCount"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "stockOutDays"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityRequested"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "reasonForRequestedQuantity"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "remarks"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "lossesAndAdjustments"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "expirationDate"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityApproved"}
       ];
-      var regularRnrLineItem = {'beginningBalance':'45', 'stockOutDays':'23', 'quantityDispensed':'23', 'quantityReceived':'89', 'newPatientCount':45,
-        'quantityRequested':'7', 'reasonForRequestedQuantity':'reason', remarks:'', lossesAndAdjustments:'', expirationDate:'11/212', quantityApproved:''};
+      var regularRnrLineItem = {'beginningBalance': '45', 'stockOutDays': '23', 'quantityDispensed': '23', 'quantityReceived': '89', 'newPatientCount': 45,
+        'quantityRequested': '7', 'reasonForRequestedQuantity': 'reason', remarks: '', lossesAndAdjustments: '', expirationDate: '11/212', quantityApproved: ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForFullSupply();
       expect(isValid).toBeFalsy();
@@ -976,11 +1001,11 @@ describe('RegularRnrLineItem', function () {
 
     it('should return true if required fields for non full supply are not filled', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"}
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityRequested"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "reasonForRequestedQuantity"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "remarks"}
       ];
-      var regularRnrLineItem = {'quantityRequested':'', 'reasonForRequestedQuantity':'reason', remarks:''};
+      var regularRnrLineItem = {'quantityRequested': '', 'reasonForRequestedQuantity': 'reason', remarks: ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForNonFullSupply();
       expect(isValid).toBeFalsy();
@@ -988,46 +1013,46 @@ describe('RegularRnrLineItem', function () {
 
     it('should return true if required fields for non full supply are filled', function () {
       programRnrColumnList = [
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"quantityRequested"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"reasonForRequestedQuantity"},
-        {"source":{"name":"USER_INPUT"}, "visible":true, "name":"remarks"}
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "quantityRequested"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "reasonForRequestedQuantity"},
+        {"source": {"name": "USER_INPUT"}, "visible": true, "name": "remarks"}
       ];
-      var regularRnrLineItem = {'quantityRequested':'45', 'reasonForRequestedQuantity':'reason', remarks:''};
+      var regularRnrLineItem = {'quantityRequested': '45', 'reasonForRequestedQuantity': 'reason', remarks: ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.validateRequiredFieldsForNonFullSupply();
       expect(isValid).toBeTruthy();
     });
 
     it('should validate stock in hand formula and return true if stock in hand positive', function () {
-      var regularRnrLineItem = {'stockInHand':90, 'quantityDispensed':90};
+      var regularRnrLineItem = {'stockInHand': 90, 'quantityDispensed': 90};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.formulaValid();
       expect(isValid).toBeTruthy();
     });
 
     it('should validate stock in hand formula and return false if stock in hand negative', function () {
-      var regularRnrLineItem = {'stockInHand':-90, 'quantityDispensed':90};
+      var regularRnrLineItem = {'stockInHand': -90, 'quantityDispensed': 90};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.formulaValid();
       expect(isValid).toBeFalsy();
     });
 
     it('should validate stock in hand formula and return true if quantity dispensed positive', function () {
-      var regularRnrLineItem = {'quantityDispensed':90, 'stockInHand':90};
+      var regularRnrLineItem = {'quantityDispensed': 90, 'stockInHand': 90};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.formulaValid();
       expect(isValid).toBeTruthy();
     });
 
     it('should validate stock in hand formula and return false if quantity dispensed negative', function () {
-      var regularRnrLineItem = {'quantityDispensed':-90, 'stockInHand':90};
+      var regularRnrLineItem = {'quantityDispensed': -90, 'stockInHand': 90};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
       var isValid = regularRnrLineItem.formulaValid();
       expect(isValid).toBeFalsy();
     });
 
     it('should validate stock in hand formula and and return false if arithmetically invalid', function () {
-      var regularRnrLineItem = {'quantityDispensed':90, 'stockInHand':90};
+      var regularRnrLineItem = {'quantityDispensed': 90, 'stockInHand': 90};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'arithmeticallyInvalid').andReturn(true);
@@ -1038,7 +1063,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate stock in hand formula and and return false if arithmetically valid', function () {
-      var regularRnrLineItem = {'quantityDispensed':90, 'stockInHand':90};
+      var regularRnrLineItem = {'quantityDispensed': 90, 'stockInHand': 90};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'arithmeticallyInvalid').andReturn(false);
@@ -1049,7 +1074,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate line item and and return true if valid', function () {
-      var regularRnrLineItem = {fullSupply:true};
+      var regularRnrLineItem = {fullSupply: true};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'formulaValid').andReturn(true);
@@ -1061,7 +1086,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate line item and and return false if invalid', function () {
-      var regularRnrLineItem = {fullSupply:true};
+      var regularRnrLineItem = {fullSupply: true};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'formulaValid').andReturn(false);
@@ -1072,8 +1097,22 @@ describe('RegularRnrLineItem', function () {
       expect(isValid).toBeFalsy();
     });
 
+    it('should avoid all validations in case line item skipped', function () {
+      var rnrStatus = 'INITIATED';
+      var lineItem = new RegularRnrLineItem({skipped: true}, null, programRnrColumnList, rnrStatus);
+
+      spyOn(lineItem, 'validateRequiredFieldsForFullSupply').andCallThrough();
+      spyOn(lineItem, 'formulaValid').andCallThrough();
+
+      var isValid = lineItem.valid();
+
+
+      expect(isValid).toBeTruthy();
+
+    });
+
     it('should validate line item and and return false if arithmetically invalid', function () {
-      var regularRnrLineItem = {fullSupply:true};
+      var regularRnrLineItem = {fullSupply: true};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'formulaValid').andReturn(true);
@@ -1085,7 +1124,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate line item and and return false if invalid', function () {
-      var regularRnrLineItem = {fullSupply:false};
+      var regularRnrLineItem = {fullSupply: false};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'validateRequiredFieldsForNonFullSupply').andReturn(false);
@@ -1096,7 +1135,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate non full supply line item and and return true if valid', function () {
-      var regularRnrLineItem = {fullSupply:false};
+      var regularRnrLineItem = {fullSupply: false};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList);
 
       spyOn(regularRnrLineItem, 'validateRequiredFieldsForNonFullSupply').andReturn(true);
@@ -1107,7 +1146,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate non full supply line item in approved rnr and and return true if valid', function () {
-      var regularRnrLineItem = {fullSupply:false};
+      var regularRnrLineItem = {fullSupply: false};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList, 'IN_APPROVAL');
 
       spyOn(regularRnrLineItem, 'validateForApproval').andReturn(true);
@@ -1118,7 +1157,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should validate non full supply line item in rnr for authorization and and return true if valid', function () {
-      var regularRnrLineItem = {fullSupply:false};
+      var regularRnrLineItem = {fullSupply: false};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, null, programRnrColumnList, 'AUTHORIZED');
 
       spyOn(regularRnrLineItem, 'validateForApproval').andReturn(true);
@@ -1129,7 +1168,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should return true if quantity approved filled', function () {
-      var regularRnrLineItem = {fullSupply:false, quantityApproved:56};
+      var regularRnrLineItem = {fullSupply: false, quantityApproved: 56};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, 5, [], 'IN_APPROVAL');
       var valid = regularRnrLineItem.validateForApproval();
 
@@ -1137,7 +1176,7 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should return false if quantity approved filled', function () {
-      var regularRnrLineItem = {fullSupply:false, quantityApproved:''};
+      var regularRnrLineItem = {fullSupply: false, quantityApproved: ''};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, 5, [], 'IN_APPROVAL');
       var valid = regularRnrLineItem.validateForApproval();
 
@@ -1145,11 +1184,11 @@ describe('RegularRnrLineItem', function () {
     });
 
     it('should reduce rnr line item to have only productCode, approvedQuantity and remarks', function () {
-      var regularRnrLineItem = {id:1, beginningBalance:10, quantityDispensed:5, quantityReceived:2, fullSupply:true, quantityApproved:3, remarks:'some remarks', productCode: 'P10'};
+      var regularRnrLineItem = {id: 1, beginningBalance: 10, quantityDispensed: 5, quantityReceived: 2, fullSupply: true, quantityApproved: 3, remarks: 'some remarks', productCode: 'P10'};
       regularRnrLineItem = new RegularRnrLineItem(regularRnrLineItem, 5, [], 'IN_APPROVAL');
       var reducedRnrLineItem = regularRnrLineItem.reduceForApproval();
 
-      expect(reducedRnrLineItem).toEqual( {id:1, productCode: 'P10', quantityApproved:3, remarks:'some remarks'});
+      expect(reducedRnrLineItem).toEqual({id: 1, productCode: 'P10', quantityApproved: 3, remarks: 'some remarks'});
     });
 
   });

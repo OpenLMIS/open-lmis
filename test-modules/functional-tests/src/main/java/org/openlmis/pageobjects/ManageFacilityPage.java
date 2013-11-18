@@ -154,7 +154,6 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = ID, using = "go-down-date")
   private static WebElement goDownDate=null;
 
-
   @FindBy(how = ID, using = "comments")
   private static WebElement comments=null;
 
@@ -414,7 +413,6 @@ public class ManageFacilityPage extends Page {
   public void searchFacility(String facilityCodeValue) {
     testWebDriver.waitForElementToAppear(searchFacilityTextField);
     sendKeys(searchFacilityTextField, facilityCodeValue);
-    //testWebDriver.sleep(2000);
   }
 
   public void clickFacilityList(String facility){

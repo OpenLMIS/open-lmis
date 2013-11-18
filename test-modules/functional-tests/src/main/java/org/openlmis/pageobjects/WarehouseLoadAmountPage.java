@@ -47,13 +47,6 @@ public class WarehouseLoadAmountPage extends Page {
     return population.getText();
   }
 
-  public String getGeoZoneName(int tableNumber) {
-    WebElement geoZoneName = testWebDriver.getElementByXpath("(//h3/span)[" + tableNumber + "]");
-    testWebDriver.waitForElementToAppear(geoZoneName);
-    return geoZoneName.getText();
-  }
-
-
   public String getProduct1Isa(int rowNumber, int tableNumber) {
     WebElement Product1 = testWebDriver.getElementByXpath("(//table[@class='table table-bordered table-striped']/tbody/tr[" + rowNumber + "]/td[3]/span[1])[" + tableNumber + "]");
     testWebDriver.waitForElementToAppear(Product1);

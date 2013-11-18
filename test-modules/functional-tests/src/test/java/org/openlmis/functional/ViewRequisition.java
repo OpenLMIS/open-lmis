@@ -18,6 +18,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.By;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
 @TransactionConfiguration(defaultRollback = true)
@@ -245,6 +248,23 @@ public class ViewRequisition extends TestCaseHelper {
     assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+    public void testViewVirtualFacilityFromRnRViewScreen(String program, String userSIC, String password) throws Exception {
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add("CREATE_REQUISITION");
+        rightsList.add("VIEW_REQUISITION");
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+        dbWrapper.updateVirtualPropertyOfFacility("F10","True");
+        dbWrapper.insertRoleAssignmentForSupervisoryNode("200","store in-charge","N1");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        ViewRequisitionPage view= homePage.navigateViewRequisition();
+
+        String str1 =homePage.getFacilityDropDownListForViewRequisition();
+        assertTrue(str1.contains("F10"));;
+    }
+
   @AfterMethod(groups = "requisition")
   @After
   public void tearDown() throws Exception {
@@ -258,6 +278,12 @@ public class ViewRequisition extends TestCaseHelper {
 
   }
 
+    @DataProvider(name = "Data-Provider-Function-RnR")
+    public Object[][] parameterIntTestProviderRnR() {
+        return new Object[][]{
+                {"HIV", "storeIncharge", "Admin123"}
+        };
+    }
 
   @DataProvider(name = "Data-Provider-Function-Including-Regimen")
   public Object[][] parameterIntTest() {

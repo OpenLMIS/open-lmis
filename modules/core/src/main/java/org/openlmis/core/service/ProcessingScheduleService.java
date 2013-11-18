@@ -75,10 +75,10 @@ public class ProcessingScheduleService {
     periodRepository.delete(processingPeriodId);
   }
 
-  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriod) {
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
-      startingPeriod, programStartDate, new Date());
+      startingPeriodId, programStartDate, new Date());
   }
 
   private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {

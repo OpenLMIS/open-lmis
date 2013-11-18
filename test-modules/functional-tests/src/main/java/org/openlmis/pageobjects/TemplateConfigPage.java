@@ -28,24 +28,14 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class TemplateConfigPage extends Page {
 
-
-  @FindBy(how = How.LINK_TEXT, using = "Logout")
-  private static WebElement logoutLink=null;
-
   @FindBy(how = How.XPATH, using = "//input[@value='Save']")
   private static WebElement SaveButton=null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='message']")
   private static WebElement saveSuccessMsg=null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv' and @ng-show='error']")
-  private static WebElement saveErrorMsgDiv=null;
-
   @FindBy(how = How.XPATH, using = "//li[@id='stockInHand']/span[@class='tpl-source']/span/select")
   private static WebElement stockInHandDropDown=null;
-
-  @FindBy(how = How.XPATH, using = "//li[@id='beginningBalance']/span/span/span/span/input[@type='checkbox']")
-  private static WebElement checkboxBeginningBalance=null;
 
   @FindBy(how = How.XPATH, using = "//li[@id='quantityDispensed']/span[@class='tpl-source']/span/select")
   private static WebElement dropDownTotalConsumedQuantity=null;
@@ -125,14 +115,8 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//li[@id='total']/span[@class='tpl-source']/span[2]")
   private static WebElement totalSource=null;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='productCode']/span/input")
-  private static WebElement productCodeCheckBox=null;
-
   @FindBy(how = How.XPATH, using = "//li[@id='product']/span/input")
   private static WebElement productNameCheckBox=null;
-
-  @FindBy(how = How.XPATH, using = "//li[@id='remarks']/span[@class='tpl-visible']/input")
-  private static WebElement remarksCheckBox=null;
 
   @FindBy(how = How.XPATH, using = "//li[@id='lossesAndAdjustments']/span[@class='tpl-label']/input")
   private static WebElement lossesAndAdj=null;
@@ -166,12 +150,6 @@ public class TemplateConfigPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//li[@id='normalizedConsumption']/span[@class='tpl-source']/span[2]")
   private static WebElement adjustedTotalConsumptionSource=null;
-
-  @FindBy(how = How.XPATH, using = "//li[@id='amc']/span[@class='tpl-label']/input")
-  private static WebElement AMC=null;
-
-  @FindBy(how = How.XPATH, using = "//li[@id='amc']/span[@class='tpl-source']/span[2]")
-  private static WebElement AMCSource=null;
 
   @FindBy(how = How.XPATH, using = "//li[@id='maxStockQuantity']/span[@class='tpl-label']/input")
   private static WebElement maxStockQuantity=null;
@@ -239,15 +217,15 @@ public class TemplateConfigPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@id='saveErrorMsgDiv']")
   private static WebElement errorMessageDiv=null;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='skip']/span[1]/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='skipped']/span[1]/input")
   private static WebElement skipCheckBox=null;
 
-  @FindBy(how = How.XPATH, using = "//li[@id='skip']/span[3]/input")
+  @FindBy(how = How.XPATH, using = "//li[@id='skipped']/span[3]/input")
   private static WebElement skipTextBox=null;
 
   private static String USER_INPUT = "User Input";
   private static String CALCULATED = "Calculated";
-  private static String REFERENCE_DATA = "Reference Data";
+
 
   public TemplateConfigPage(TestWebDriver driver) {
     super(driver);
@@ -525,7 +503,7 @@ public class TemplateConfigPage extends Page {
   }
 
   public void verifyColumnSource() {
-
+    String REFERENCE_DATA = "Reference Data";
     testWebDriver.waitForElementToAppear(SaveButton);
     assertEquals(productCodeSource.getText().trim(), REFERENCE_DATA);
     assertEquals(productNameSource.getText().trim(), REFERENCE_DATA);
