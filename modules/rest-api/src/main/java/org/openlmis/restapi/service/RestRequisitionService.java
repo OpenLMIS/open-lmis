@@ -81,7 +81,7 @@ public class RestRequisitionService {
     RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
     searchCriteria.setProgramId(reportingProgram.getId());
     searchCriteria.setFacilityId(reportingFacility.getId());
-    if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram))) {
+    if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
       throw new DataException("error.rnr.previous.not.filled");
     }
   }

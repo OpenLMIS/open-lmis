@@ -31,8 +31,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.openlmis.restapi.builder.ReportBuilder.products;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.productCode;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 
 @Category(UnitTests.class)
 public class ReportTest {
@@ -150,4 +149,19 @@ public class ReportTest {
 
     assertTrue(rnrWithSkippedProducts.getFullSupplyLineItems().get(1).getSkipped());
   }
+
+  @Test
+  public void shouldCopyReportLineItemToRnrIfProductIsNotSkipped() throws Exception {
+    List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, 100))));
+    Report report = make(a(defaultReport, with(products, productList)));
+
+    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
+    rnr.setFullSupplyLineItems(asList(rnrLineItem));
+
+    report.getRnrWithSkippedProducts(rnr);
+
+    assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(100));
+  }
 }
+
