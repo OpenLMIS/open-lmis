@@ -119,7 +119,8 @@ var RegularRnrLineItem = base2.Base.extend({
     this.totalLossesAndAdjustments = 0;
     var rnrLineItem = this;
     $(this.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
-      rnrLineItem.updateTotalLossesAndAdjustment(lossAndAdjustmentObject.quantity, lossAndAdjustmentObject.type.additive);
+      rnrLineItem.updateTotalLossesAndAdjustment(lossAndAdjustmentObject.quantity,
+        lossAndAdjustmentObject.type.additive);
     });
   },
 
@@ -332,6 +333,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   valid: function () {
+    if (this.skipped) return true;
     if (this.rnrStatus == 'IN_APPROVAL' || this.rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
     return this.validateRequiredFieldsForNonFullSupply();
