@@ -16,7 +16,6 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
@@ -49,9 +48,6 @@ public class RestRequisitionService {
 
   @Autowired
   private ProgramService programService;
-
-  @Autowired
-  private ProductService productService;
 
   @Autowired
   private MessageService messageService;
