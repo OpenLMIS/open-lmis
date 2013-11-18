@@ -49,7 +49,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
 
-  //@Test(groups = {"webservice"})
+  // @Test(groups = {"webservice"}) invalid product codes
   public void testInitiateRnr() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -355,7 +355,7 @@ public class SubmitReportTest extends JsonUtility {
   }
 
 
-  // @Test(groups = {"webservice"})
+  //@Test(groups = {"webservice"}) get response as invalid product codes
   public void testBlankProductSubmitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -391,7 +391,7 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Program configuration missing\"}");
   }
 
-  // @Test(groups = {"webservice"})
+  // @Test(groups = {"webservice"}) invalid product code
   public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndInCurrentPeriod() throws Exception {
     dbWrapper.updateProgramsSupportedByField("startDate", "2015-01-01", "V10");
     HttpClient client = new HttpClient();
