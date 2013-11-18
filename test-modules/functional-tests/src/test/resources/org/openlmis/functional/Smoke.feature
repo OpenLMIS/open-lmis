@@ -233,6 +233,9 @@ Feature: Smoke Tests
     And I enter quantity received "100"
     And I click submit
     And I click ok
+    Then I validate beginning balance "100"
+    And I validate quantity dispensed "100"
+    And I validate quantity received "100"
     And I access home page
     And I access initiate requisition page
     And I access initiate emergency requisition page

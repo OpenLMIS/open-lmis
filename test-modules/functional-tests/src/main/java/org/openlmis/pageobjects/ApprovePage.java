@@ -153,6 +153,7 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void verifyEmergencyStatus() throws IOException {
+    testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(emergencyIcon);
     assertTrue("Emergency icon should show up", emergencyIcon.isDisplayed());
   }

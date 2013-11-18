@@ -281,32 +281,29 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterBeginningBalance(String A) {
-    String beginningBalanceValue = submitBeginningBalance(A);
-    verifyFieldValue(A, beginningBalanceValue);
-  }
-
-  public void enterStockOnHand(String E) {
-    String stockOnHand = submitStockOnHand(E);
-    verifyFieldValue(E, stockOnHand);
-  }
-
-  public String submitBeginningBalance(String A) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalance);
     beginningBalance.sendKeys(A);
-    return testWebDriver.getAttribute(beginningBalance, "value");
   }
 
-  public boolean enableBeginningBalance() {
-    testWebDriver.waitForElementToAppear(beginningBalance);
-    return beginningBalance.isEnabled();
+  public void verifyBeginningBalance(String beginningBalanceValue) {
+    verifyFieldValue(testWebDriver.getAttribute(beginningBalance, "value"), beginningBalanceValue);
   }
 
-  public String submitStockOnHand(String E) {
+  public void enterStockOnHand(String stockOnHandValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(stockInHand);
-    stockInHand.sendKeys(E);
-    return testWebDriver.getAttribute(stockInHand, "value");
+    stockInHand.sendKeys(stockOnHandValue);
+  }
+
+  public void verifyStockOnHand(String stockOnHandValue) {
+    testWebDriver.sleep(1000);
+    verifyFieldValue(stockOnHandValue, testWebDriver.getAttribute(stockInHand, "value"));
+  }
+
+  public boolean isEnableBeginningBalance() {
+    testWebDriver.waitForElementToAppear(beginningBalance);
+    return beginningBalance.isEnabled();
   }
 
   public void verifyFieldValue(String Expected, String Actual) {
@@ -320,26 +317,22 @@ public class InitiateRnRPage extends RequisitionPage {
 
   }
 
-  public void enterQuantityReceived(String B) {
-    String quantityReceivedValue = submitQuantityReceived(B);
-    verifyFieldValue(B, quantityReceivedValue);
+  public void enterQuantityReceived(String quantityReceivedValue) {
+      testWebDriver.waitForElementToAppear(quantityReceived);
+      quantityReceived.sendKeys(quantityReceivedValue);
   }
 
-  public String submitQuantityReceived(String B) {
-    testWebDriver.waitForElementToAppear(quantityReceived);
-    quantityReceived.sendKeys(B);
-    return testWebDriver.getAttribute(quantityReceived, "value");
+  public void verifyQuantityReceived(String quantityReceivedValue) {
+    verifyFieldValue(testWebDriver.getAttribute(quantityReceived, "value"), quantityReceivedValue);
   }
 
-  public void enterQuantityDispensed(String C) {
-    String quantityDispensedValue = submitQuantityDispensed(C);
-    verifyFieldValue(C, quantityDispensedValue);
+  public void enterQuantityDispensed(String quantityDispensedValue) {
+      testWebDriver.waitForElementToAppear(quantityDispensed);
+      quantityDispensed.sendKeys(quantityDispensedValue);
   }
 
-  public String submitQuantityDispensed(String C) {
-    testWebDriver.waitForElementToAppear(quantityDispensed);
-    quantityDispensed.sendKeys(C);
-    return testWebDriver.getAttribute(quantityDispensed, "value");
+  public void verifyQuantityDispensed(String quantityDispensedValue) {
+    verifyFieldValue(testWebDriver.getAttribute(quantityDispensed, "value"), quantityDispensedValue);
   }
 
   public void enterLossesAndAdjustments(String adj) {
@@ -406,7 +399,7 @@ public class InitiateRnRPage extends RequisitionPage {
     String warningMessage = enterRequestedQuantity(A);
     String expectedWarningMessage = "Please enter a reason";
     verifyFieldValue(warningMessage.trim(), expectedWarningMessage);
-    enterExplanation();
+    enterExplanationReason();
   }
 
   public String enterRequestedQuantity(Integer A) {
@@ -417,7 +410,7 @@ public class InitiateRnRPage extends RequisitionPage {
     return testWebDriver.getText(requestedQtyWarningMessage);
   }
 
-  public void enterExplanation() {
+  public void enterExplanationReason() {
     requestedQuantityExplanation.sendKeys("Due to bad climate");
     testWebDriver.sleep(1000);
   }

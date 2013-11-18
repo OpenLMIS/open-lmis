@@ -145,6 +145,24 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterQuantityDispensed(quantityDispensed);
   }
 
+  @Then("^I validate beginning balance \"([^\"]*)\"$")
+  public void validateBeginningBalance(String beginningBalance) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyBeginningBalance(beginningBalance);
+  }
+
+  @Then("^I validate quantity received \"([^\"]*)\"$")
+  public void validateQuantityReceived(String quantityReceived) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyQuantityReceived(quantityReceived);
+  }
+
+  @Then("^I validate quantity dispensed \"([^\"]*)\"$")
+  public void validateQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyQuantityDispensed(quantityDispensed);
+  }
+
   @Then("^I should see regimen fields$")
   public void shouldSeeRegimenFields() {
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
@@ -507,6 +525,10 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
 
+    initiateRnRPage1.verifyBeginningBalance("100");
+    initiateRnRPage1.verifyQuantityReceived("100");
+    initiateRnRPage1.verifyQuantityDispensed("100");
+
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "3");
@@ -597,7 +619,9 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage1.enterQuantityDispensed("100");
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
-
+    initiateRnRPage1.verifyBeginningBalance("100");
+    initiateRnRPage1.verifyQuantityReceived("100");
+    initiateRnRPage1.verifyQuantityDispensed("100");
     homePage.logout(baseUrlGlobal);
 
 
@@ -704,7 +728,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterQuantityReceived("0");
     initiateRnRPage.enterStockOnHand("1000");
     verifyTotalQuantityConsumedErrorMessage();
-
+    initiateRnRPage.verifyStockOnHand("1000");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -912,7 +936,7 @@ public class InitiateRnR extends TestCaseHelper {
         assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
 
         initiateRnRPage.skipSingleProduct(1);
-        assertTrue(initiateRnRPage.enableBeginningBalance());
+        assertTrue(initiateRnRPage.isEnableBeginningBalance());
         initiateRnRPage.calculateAndVerifyTotalCost();
 
         initiateRnRPage.skipAllProduct();

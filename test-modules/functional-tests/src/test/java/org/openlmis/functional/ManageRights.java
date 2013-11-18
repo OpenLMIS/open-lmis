@@ -57,6 +57,10 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.enterQuantityReceived("10");
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
+
+    initiateRnRPage.verifyBeginningBalance("10");
+    initiateRnRPage.verifyQuantityReceived("10");
+    initiateRnRPage.verifyQuantityDispensed("10");
   }
 
 
