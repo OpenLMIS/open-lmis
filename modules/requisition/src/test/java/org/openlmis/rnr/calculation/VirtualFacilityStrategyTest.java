@@ -83,4 +83,21 @@ public class VirtualFacilityStrategyTest {
 
     assertThat(normalizedConsumption, is(9));
   }
+
+  @Test
+  public void shouldUseDosesPerDispensingUnitAsOneIfZero() throws Exception {
+    VirtualFacilityStrategy strategy = new VirtualFacilityStrategy();
+    Integer stockOutDays = 3;
+    Integer quantityDispensed = 4;
+    Integer newPatientCount = 5;
+    Integer dosesPerMonth = 6;
+    Integer dosesPerDispensingUnit = 0;
+    Integer daysSinceLastRnr = 8;
+
+    Integer normalizedConsumption = strategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed,
+        newPatientCount, dosesPerMonth, dosesPerDispensingUnit, daysSinceLastRnr);
+
+    assertThat(normalizedConsumption, is(54));
+
+  }
 }

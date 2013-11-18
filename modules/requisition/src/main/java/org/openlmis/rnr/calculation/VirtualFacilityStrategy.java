@@ -33,6 +33,9 @@ public class VirtualFacilityStrategy extends RnrCalculationStrategy {
                                                 Integer newPatientCount,
                                                 Integer dosesPerMonth,
                                                 Integer dosesPerDispensingUnit, Integer daysSinceLastRnr) {
+
+    dosesPerDispensingUnit = Math.max(1, dosesPerDispensingUnit);
+
     return calculateNormalizedConsumption(new BigDecimal(stockOutDays),
         new BigDecimal(quantityDispensed),
         new BigDecimal(newPatientCount),
