@@ -90,6 +90,11 @@ public class ManageFacility extends TestCaseHelper {
 
         setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertFacilities("F10", "F11");
+        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+        dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+        dbWrapper.insertSchedule("M", "Monthly", "Month");
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+
         dbWrapper.insertVirtualFacility("V10", "F10");
         dbWrapper.insertGeographicZone("District 1","District 1","Dodoma");
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -114,6 +119,10 @@ public class ManageFacility extends TestCaseHelper {
     public void testProgramSupportedPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
         setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
         dbWrapper.insertFacilities("F10", "F11");
+        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+        dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+        dbWrapper.insertSchedule("M", "Monthly", "Month");
+        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
         dbWrapper.insertVirtualFacility("V10","F10");
         dbWrapper.insertGeographicZone("District 1","District 1","Dodoma");
         LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
