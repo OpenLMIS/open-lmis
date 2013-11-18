@@ -1,11 +1,3 @@
-/*
- *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- */
-
 package org.openlmis.rnr.service;
 
 import org.openlmis.core.domain.*;
@@ -28,7 +20,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
@@ -88,8 +79,6 @@ public class RequisitionService {
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
   @Autowired
-  private MessageService messageService;
-  @Autowired
   private CalculationService calculateService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
@@ -109,8 +98,6 @@ public class RequisitionService {
     if (rnrTemplate.getColumns().size() == 0)
       throw new DataException("error.rnr.template.not.defined");
 
-    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
-
     ProcessingPeriod period = findPeriod(facility, program, emergency);
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
@@ -121,7 +108,9 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
 
-    fillFieldsForInitiatedRequisitionAccordingToTemplate(requisition, rnrTemplate, regimenTemplate);
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
+
+    fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
 
@@ -334,9 +323,11 @@ public class RequisitionService {
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
   }
 
-  private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
-    requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);
+  private void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+    //TODO fill D
+    Rnr previousRequisition = getPreviousRequisition(requisition);
+
+    requisition.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {

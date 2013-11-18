@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.rnr.domain;
@@ -32,6 +34,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.mock;
@@ -50,12 +53,18 @@ public class RnrTest {
   @Rule
   public ExpectedException exception = ExpectedException.none();
   private Rnr rnr;
+  ProgramRnrTemplate rnrTemplate;
+  RegimenTemplate regimenTemplate;
   List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   @Before
   public void setUp() throws Exception {
+
     initMocks(this);
     rnr = make(a(defaultRnr));
+    rnrTemplate = mock(ProgramRnrTemplate.class);
+    regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
+
     lossesAndAdjustmentsTypes = mock(ArrayList.class);
   }
 
@@ -117,41 +126,56 @@ public class RnrTest {
 
   @Test
   public void shouldFindLineItemInPreviousRequisitionAndSetBeginningBalance() throws Exception {
+
     Rnr rnr = make(a(defaultRnr));
     Rnr previousRequisition = new Rnr();
+    previousRequisition.setStatus(AUTHORIZED);
+
     RnrLineItem correspondingLineItemInPreviousRequisition = make(a(defaultRnrLineItem, with(stockInHand, 76)));
     previousRequisition.setFullSupplyLineItems(asList(correspondingLineItemInPreviousRequisition));
 
-    rnr.setBeginningBalances(previousRequisition, true);
+    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
 
-    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(correspondingLineItemInPreviousRequisition.getStockInHand()));
-    assertThat(rnr.getFullSupplyLineItems().get(0).getPreviousStockInHandAvailable(), is(Boolean.TRUE));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(76));
+    assertTrue(rnr.getFullSupplyLineItems().get(0).getPreviousStockInHandAvailable());
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfLineItemDoesNotExistInPreviousRequisition() throws Exception {
     Rnr rnr = make(a(defaultRnr));
 
-    rnr.setBeginningBalances(new Rnr(), true);
+    Rnr previousRequisition = new Rnr();
+
+    previousRequisition.setStatus(AUTHORIZED);
+
+    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionDoesNotExist() throws Exception {
-    rnr.setBeginningBalances(null, false);
+    Rnr previousRequisition = null;
+
+    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInInitiatedState() throws Exception {
-    rnr.setBeginningBalances(make(a(defaultRnr, with(status, INITIATED))), false);
+    Rnr previousRequisition = make(a(defaultRnr, with(status, INITIATED)));
+
+    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInSubmittedState() throws Exception {
-    rnr.setBeginningBalances(make(a(defaultRnr, with(status, SUBMITTED))), false);
+    Rnr previousRequisition = make(a(defaultRnr, with(status, SUBMITTED)));
+
+    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }

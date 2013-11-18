@@ -36,6 +36,7 @@ import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -56,7 +57,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.numberOfMonths;
-import static org.openlmis.core.builder.ProductBuilder.code;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 import static org.openlmis.core.domain.Right.*;
@@ -172,9 +172,8 @@ public class RequisitionServiceTest {
 
     Rnr spyRequisition = spy(requisition);
 
-    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
+    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(Rnr.class), any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
-
 
     when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
 
@@ -224,7 +223,8 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
-    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
+    RegimenTemplate regimenTemplate = new RegimenTemplate(requisition.getProgram().getId(), new ArrayList<RegimenColumn>());
+    Mockito.when(regimenColumnService.getRegimenTemplateByProgramId(initiatedRnr.getProgram().getId())).thenReturn(regimenTemplate);
 
     spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false);
 
@@ -251,7 +251,7 @@ public class RequisitionServiceTest {
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
 
     whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(requisition);
-    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
+    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(Rnr.class), any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false);
 
@@ -491,9 +491,7 @@ public class RequisitionServiceTest {
     OpenLmisMessage message = requisitionService.getApproveMessageBasedOnParentNode(rnr);
 
     assertThat(message.getCode(), is(RNR_APPROVED_SUCCESSFULLY_WITHOUT_SUPERVISOR));
-
   }
-
 
   @Test
   public void shouldSaveRnrIfUserHasAppropriatePermission() {
@@ -595,7 +593,6 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldApproveAnRnrAndChangeStatusToApprovedIfThereIsNoFurtherApprovalNeeded() throws Exception {
-
     Long supervisoryNodeId = 1L;
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
     savedRnr.setSupervisoryNodeId(supervisoryNodeId);
@@ -729,105 +726,35 @@ public class RequisitionServiceTest {
   }
 
   @Test
-  public void shouldFillBeginningBalanceOfLineItemsFromPreviousRequisitionIfAvailableDuringInitialize() throws Exception {
-    ProcessingPeriod period = new ProcessingPeriod(10L);
-    Rnr someRequisition = createRequisition(period.getId(), null);
-    Rnr previousRnr = make(a(defaultRnr));
-    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, period.getId() - 1)));
-    setupForInitRnr();
+  public void shouldSetFieldsInRequisitionOnInitiate() throws Exception {
+    List<FacilityTypeApprovedProduct> facilityApprovedProducts = mock(List.class);
+    RegimenTemplate regimenTemplate = mock(RegimenTemplate.class);
+    List<Regimen> regimens = mock(List.class);
 
-    Rnr spyRequisition = spy(someRequisition);
-    RequisitionService service = spy(requisitionService);
+    Rnr previousRnr = new Rnr();
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(3L);
 
-    doReturn(PERIOD).when(service).findPeriod(FACILITY, PROGRAM, false);
+    RequisitionService spyRequisitionService = spy(requisitionService);
 
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
-    ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
-    facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct, 30));
-    ProgramProduct programProduct2 = new ProgramProduct(null, make(a(defaultProduct, with(code, "testCode"))), 10, true);
-    facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct2, 30));
-
-
-    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
-    when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
-    when(requisitionRepository.getRegularRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
-    List<Regimen> regimens = new ArrayList<>();
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
+    PowerMockito.doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
     when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
+    when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(regimenTemplate);
+    ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(getRnrColumns());
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(rnrTemplate);
 
-    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
-    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
-
-    service.initiate(FACILITY, PROGRAM, USER_ID, false);
-
-    verify(spyRequisition).setBeginningBalances(previousRnr, true);
-  }
-
-  @Test
-  public void shouldNotFillBeginningBalanceIfPreviousRnrNotDefinedDuringInitiate() throws Exception {
-    Rnr someRequisition = createRequisition(PERIOD.getId(), null);
-    setupForInitRnr();
-
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
-    ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
-    facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct, 30));
-    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
-
-    Rnr spyRequisition = spy(someRequisition);
-    RequisitionService service = spy(requisitionService);
-
-    doReturn(PERIOD).when(service).findPeriod(FACILITY, PROGRAM, false);
-
-    List<Regimen> regimens = new ArrayList<>();
-    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
-
-    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
-    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
-
-    Long previousPeriodId = PERIOD.getId() - 1L;
-    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, previousPeriodId)));
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
     when(processingScheduleService.getImmediatePreviousPeriod(PERIOD)).thenReturn(previousPeriod);
-    when(requisitionRepository.getRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(null);
-    when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
+    when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(previousRnr);
 
-    service.initiate(FACILITY, PROGRAM, USER_ID, false);
+    Rnr requisition = mock(Rnr.class);
+    when(requisition.getPeriod()).thenReturn(PERIOD);
+    when(requisition.getFacility()).thenReturn(FACILITY);
+    when(requisition.getProgram()).thenReturn(PROGRAM);
+    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
-    verify(spyRequisition).setBeginningBalances(null, true);
-  }
-
-  @Test
-  public void shouldFillBeginningBalanceFromPreviousRequisitionEvenIfStockInHandIsNotDisplayed() throws Exception {
-    ProcessingPeriod period = new ProcessingPeriod(10L);
-    Rnr someRequisition = createRequisition(period.getId(), null);
-    Rnr previousRnr = make(a(defaultRnr));
-    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, period.getId() - 1)));
-    setupForInitRnr();
-
-    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
-
-    Rnr spyRequisition = spy(someRequisition);
-
-    RequisitionService service = spy(requisitionService);
-    doReturn(PERIOD).when(service).findPeriod(FACILITY, PROGRAM, false);
-
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
-    ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
-    facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct, 30));
-    ProgramProduct programProduct2 = new ProgramProduct(null, make(a(defaultProduct, with(code, "testCode"))), 10, true);
-    facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct2, 30));
-
-    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityTypeApprovedProducts);
-    when(processingScheduleService.getImmediatePreviousPeriod(spyRequisition.getPeriod())).thenReturn(previousPeriod);
-    when(requisitionRepository.getRegularRequisitionWithLineItems(spyRequisition.getFacility(), spyRequisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
-    List<Regimen> regimens = new ArrayList<>();
-    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
-
-    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens, USER_ID).thenReturn(spyRequisition);
-    Mockito.doNothing().when(spyRequisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
-
-    service.initiate(FACILITY, PROGRAM, USER_ID, false);
-
-    verify(spyRequisition).setBeginningBalances(previousRnr, true);
+    spyRequisitionService.initiate(FACILITY, PROGRAM, USER_ID, false);
+    verify(requisition).setFieldsAccordingToTemplate(previousRnr, rnrTemplate, regimenTemplate);
   }
 
   @Test
@@ -1032,7 +959,7 @@ public class RequisitionServiceTest {
     doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
 
     whenNew(Rnr.class).withAnyArguments().thenReturn(requisition);
-    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
+    Mockito.doNothing().when(requisition).setFieldsAccordingToTemplate(any(Rnr.class), any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
 
     when(requisitionRepository.getById(requisition.getId())).thenReturn(requisition);
     when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
@@ -1489,6 +1416,5 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(rnr.getId())).thenReturn(savedRnr);
     return savedRnr;
   }
-
 }
 

@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.rnr.domain;
@@ -29,6 +31,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
@@ -136,11 +139,17 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
-    if (previousRequisition == null || previousRequisition.status == INITIATED || previousRequisition.status == SUBMITTED) {
-      if (!beginningBalanceVisible) resetBeginningBalances();
+  private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
+    if (previousRequisition == null ||
+        previousRequisition.status == INITIATED ||
+        previousRequisition.status == SUBMITTED) {
+
+      if (!beginningBalanceVisible) {
+        resetBeginningBalances();
+      }
       return;
     }
+
     for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
       currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
@@ -210,7 +219,9 @@ public class Rnr extends BaseModel {
     });
   }
 
-  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+  public void setFieldsAccordingToTemplate(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+    this.setBeginningBalances(previousRequisition, template.columnsVisible(BEGINNING_BALANCE));
+
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
