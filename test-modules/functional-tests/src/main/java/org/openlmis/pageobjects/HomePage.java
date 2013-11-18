@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -21,7 +20,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
 
@@ -192,31 +193,27 @@ public class HomePage extends Page {
   }
 
   public ManageFacilityPage navigateCreateFacility() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     testWebDriver.keyPress(manageFacilityMenuItem);
-    verifyTabs();
-    clickCreateFacilityButton();
-    verifyHeader("Add new facility");
     return new ManageFacilityPage(testWebDriver);
   }
 
-  private void clickCreateFacilityButton() {
+  public void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     testWebDriver.keyPress(createFacility);
   }
 
-  private void verifyHeader(String headingToVerify) {
+  public void verifyHeader(String headingToVerify) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
+    assertEquals(facilityHeader.getText().trim(), headingToVerify);
   }
 
 
-  private void verifyTabs() {
+  public void verifyAdminTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     assertTrue(facilitiesTab.isDisplayed());
     assertTrue(rolesTab.isDisplayed());
@@ -226,7 +223,6 @@ public class HomePage extends Page {
 
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -240,7 +236,6 @@ public class HomePage extends Page {
   }
 
   public ConfigureEDIPage navigateEdiScreen() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -287,13 +282,15 @@ public class HomePage extends Page {
     testWebDriver.sleep(500);
   }
 
-  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+  public void clickRequisitionSubMenuItem() throws IOException {
     testWebDriver.waitForElementToAppear(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
-    String[] subMenuItem = SubMenuItem.getText().split("\n");
-    SeleneseTestNgHelper.assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
+  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+    String[] subMenuItem = SubMenuItem.getText().split("\n");
+    assertEquals(subMenuItem, expectedSubMenuItem);
+  }
 
   public InitiateRnRPage clickProceed() throws IOException {
     testWebDriver.waitForElementToAppear(proceedButton);
@@ -305,7 +302,6 @@ public class HomePage extends Page {
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
     testWebDriver.sleep(1000);
-    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(viewRequisitonMenuItem);
@@ -315,7 +311,6 @@ public class HomePage extends Page {
   }
 
   public ReportPage navigateReportScreen() throws IOException {
-    assertTrue(reportMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
@@ -323,7 +318,6 @@ public class HomePage extends Page {
   }
 
   public ManageFacilityPage navigateSearchFacility() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -335,7 +329,6 @@ public class HomePage extends Page {
 
 
   public RolesPage navigateRoleAssignments() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -346,7 +339,6 @@ public class HomePage extends Page {
   }
 
   public UploadPage navigateUploads() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(uploadLink);
@@ -355,7 +347,6 @@ public class HomePage extends Page {
   }
 
   public ManageSchedulePage navigateToSchedule() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -367,7 +358,6 @@ public class HomePage extends Page {
   }
 
   public UserPage navigateToUser() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -381,7 +371,6 @@ public class HomePage extends Page {
   public ApprovePage navigateToApprove() throws IOException {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
-    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
@@ -392,7 +381,6 @@ public class HomePage extends Page {
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
-    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
@@ -402,7 +390,6 @@ public class HomePage extends Page {
   }
 
   public DistributionPage navigatePlanDistribution() throws IOException {
-    assertTrue(distributionsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(distributionsMenuItem);
     testWebDriver.keyPress(distributionsMenuItem);
     testWebDriver.waitForElementToAppear(manageMenuItem);
@@ -412,7 +399,6 @@ public class HomePage extends Page {
   }
 
   public DistributionPage navigateOfflineDistribution() throws IOException {
-    assertTrue(offlineDistributions.isDisplayed());
     testWebDriver.waitForElementToAppear(offlineDistributions);
     testWebDriver.keyPress(offlineDistributions);
     testWebDriver.waitForElementToAppear(manageMenuItem);
@@ -432,7 +418,6 @@ public class HomePage extends Page {
   }
 
   public HomePage navigateHomePage() throws IOException {
-    assertTrue(homeMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     testWebDriver.sleep(500);
@@ -440,7 +425,6 @@ public class HomePage extends Page {
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
-    assertTrue(ordersMenuItem.isDisplayed());
     testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
@@ -457,7 +441,7 @@ public class HomePage extends Page {
 
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);
-    SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+    assertEquals(loggedInUserLabel.getText(), Username);
   }
 
   public void navigateAndInitiateEmergencyRnr(String program) throws IOException {

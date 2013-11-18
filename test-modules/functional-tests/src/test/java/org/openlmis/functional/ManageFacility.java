@@ -49,6 +49,10 @@ public class ManageFacility extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
     ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    homePage.verifyAdminTabs();
+    homePage.clickCreateFacilityButton();
+    homePage.verifyHeader("Add new facility");
+
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
     String operatedBy = "MoH";

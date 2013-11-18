@@ -72,6 +72,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void nevigateManageFacilityPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateCreateFacility();
+    homePage.clickCreateFacilityButton();
   }
 
   @When("^I create \"([^\"]*)\" program supported facility$")
