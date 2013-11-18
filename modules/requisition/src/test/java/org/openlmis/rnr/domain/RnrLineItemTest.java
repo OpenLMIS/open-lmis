@@ -40,8 +40,7 @@ import static org.openlmis.rnr.domain.ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
 import static org.openlmis.rnr.domain.RnrLineItem.RNR_VALIDATION_ERROR;
-import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 
@@ -571,5 +570,35 @@ public class RnrLineItemTest {
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     lineItem.validateForApproval();
 
+  }
+
+  @Test
+  public void shouldAvoidCalculationIfLineItemSkipped() throws Exception {
+    Integer nullInt = null;
+    RnrLineItem lineItem = spy(make(a(defaultRnrLineItem, with(beginningBalance, nullInt), with(skipped, true))));
+    template.getRnrColumnsMap().put("skipped", make(a(defaultRnrColumn, with(columnName, "skipped"), with(visible, true))));
+
+    lineItem.calculate(new RnrCalcStrategy(), template, lossesAndAdjustmentsList, period, INITIATED);
+
+    verify(lineItem, never()).validateMandatoryFields(template);
+    verify(lineItem, never()).calculateForFullSupply(any(RnrCalcStrategy.class), eq(period), eq(template), eq(INITIATED), eq(lossesAndAdjustmentsList));
+    verify(lineItem, never()).validateCalculatedFields(template);
+  }
+
+  @Test
+  public void shouldNotAvoidCalculationIfSkippedColumnNotVisibleEvenIfLineItemSkipped() throws Exception {
+    Integer nullInt = null;
+    RnrLineItem lineItem = spy(make(a(defaultRnrLineItem, with(beginningBalance, nullInt), with(skipped, true))));
+    template.getRnrColumnsMap().put("skipped", make(a(defaultRnrColumn, with(columnName, "skipped"), with(visible, false))));
+
+    doNothing().when(lineItem).validateCalculatedFields(template);
+    doNothing().when(lineItem).validateMandatoryFields(template);
+    doNothing().when(lineItem).calculateForFullSupply(any(RnrCalcStrategy.class), eq(period), eq(template), eq(INITIATED), eq(lossesAndAdjustmentsList));
+
+    lineItem.calculate(new RnrCalcStrategy(), template, lossesAndAdjustmentsList, period, INITIATED);
+
+    verify(lineItem).validateMandatoryFields(template);
+    verify(lineItem).calculateForFullSupply(any(RnrCalcStrategy.class), eq(period), eq(template), eq(INITIATED), eq(lossesAndAdjustmentsList));
+    verify(lineItem).validateCalculatedFields(template);
   }
 }

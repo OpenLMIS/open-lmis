@@ -367,4 +367,13 @@ public class RnrLineItem extends LineItem {
   public boolean isRnrLineItem() {
     return true;
   }
+
+  void calculate(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, ProcessingPeriod period, RnrStatus status) {
+    if (skipped && template.columnsVisible(SKIPPED)) {
+      return;
+    }
+    validateMandatoryFields(template);
+    calculateForFullSupply(calcStrategy, period, template, status, lossesAndAdjustmentsTypes);
+    validateCalculatedFields(template);
+  }
 }

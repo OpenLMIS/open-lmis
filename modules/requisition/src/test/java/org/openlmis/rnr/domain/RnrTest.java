@@ -60,7 +60,7 @@ public class RnrTest {
   }
 
   @Test
-  public void shouldCallValidateOnEachLineItem() throws Exception {
+  public void shouldCallCalculateOnEachLineItem() throws Exception {
     final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
     final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
 
@@ -72,11 +72,12 @@ public class RnrTest {
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
     ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
+
     rnr.calculate(template, lossesAndAdjustmentsTypes);
 
-    verify(rnrLineItem1).validateMandatoryFields(template);
-    verify(rnrLineItem1).validateCalculatedFields(template);
+    ArgumentCaptor<RnrCalcStrategy> captor = forClass(RnrCalcStrategy.class);
 
+    verify(rnrLineItem1).calculate(captor.capture(), eq(template), eq(lossesAndAdjustmentsTypes), eq(rnr.getPeriod()), eq(rnr.getStatus()));
     verify(rnrLineItem2).validateNonFullSupply();
   }
 
@@ -177,7 +178,7 @@ public class RnrTest {
 
     ArgumentCaptor<RnrCalcStrategy> capture = forClass(RnrCalcStrategy.class);
 
-    verify(firstLineItem).calculateForFullSupply(capture.capture(), eq(period), eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
+    verify(firstLineItem).calculate(capture.capture(), eq(template), eq(lossesAndAdjustmentsTypes), eq(period), eq(SUBMITTED));
     assertThat(capture.getValue().getClass(), is(RnrCalcStrategy.class.getClass()));
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
@@ -203,7 +204,7 @@ public class RnrTest {
     rnr.calculate(template, lossesAndAdjustmentsTypes);
 
     ArgumentCaptor<RnrCalcStrategy> captor = forClass(RnrCalcStrategy.class);
-    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(rnr.getPeriod()), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
+    verify(rnrLineItem1).calculate(captor.capture(), eq(template), eq(lossesAndAdjustmentsTypes), eq(rnr.getPeriod()), eq(rnr.getStatus()));
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
 
     verify(rnrLineItem2).calculatePacksToShip(captor.capture());

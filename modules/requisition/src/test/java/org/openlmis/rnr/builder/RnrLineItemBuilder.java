@@ -43,6 +43,7 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> packsToShip = newProperty();
   public static final Property<RnrLineItem, Integer> productCategoryDisplayOrder = newProperty();
   public static final Property<RnrLineItem, Integer> productDisplayOrder = newProperty();
+  public static final Property<RnrLineItem, Boolean> skipped = newProperty();
 
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
   private static Property<RnrLineItem, String> productCategory = newProperty();
@@ -64,6 +65,7 @@ public class RnrLineItemBuilder {
   public static final String PRODUCT_CODE = "P999";
   public static final Integer PRODUCT_DISPLAY_ORDER = null;
   public static final String PRODUCT_CATEGORY = "C1";
+  public static final Boolean SKIPPED = false;
 
   public static final LossesAndAdjustments ONE_LOSS = new LossesAndAdjustments() {{
     setQuantity(1);
@@ -115,6 +117,7 @@ public class RnrLineItemBuilder {
       rnrLineItem.setRemarks(lookup.valueOf(remarks, REMARKS));
       rnrLineItem.setProductCategoryDisplayOrder(lookup.valueOf(productCategoryDisplayOrder, PRODUCT_CATEGORY_DISPLAY_ORDER));
       rnrLineItem.setProductDisplayOrder(lookup.valueOf(productDisplayOrder, PRODUCT_DISPLAY_ORDER));
+      rnrLineItem.setSkipped(lookup.valueOf(skipped, SKIPPED));
       return rnrLineItem;
     }
   };
