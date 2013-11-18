@@ -8,7 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService, requisitionService) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes,
+                                     facilityApprovedProducts, requisitionRights, regimenTemplate, $location,
+                                     Requisitions, $routeParams, $dialog, messageService, requisitionService) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -21,7 +23,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
   $scope.facilityApprovedProducts = facilityApprovedProducts;
 
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['quantityApproved']);
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
+    ['quantityApproved']);
 
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
@@ -44,8 +47,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     });
   };
 
-  $scope.toggleSkipFlag = function(){
-    _.each($scope.page.fullSupply, function(rnrLineItem){
+  $scope.toggleSkipFlag = function () {
+    _.each($scope.page.fullSupply, function (rnrLineItem) {
       rnrLineItem.skipped = $scope.rnr.skipAll;
     });
     $scope.rnr.calculateFullSupplyItemsSubmittedCost();
@@ -192,13 +195,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return null;
   };
 
-  $scope.highlightWarningBasedOnField = function (value, field) {
-    if ($scope.inputClass && (isUndefined(value) || value === false) && field) {
-      return "warning-error";
-    }
-    return null;
-  };
-
   $scope.highlightWarning = function (value) {
     if ($scope.inputClass && (isUndefined(value) || value === false)) {
       return "warning-error";
@@ -306,9 +302,10 @@ CreateRequisitionController.resolve = {
   facilityApprovedProducts: function ($q, $timeout, $route, FacilityApprovedProducts) {
     var deferred = $q.defer();
     $timeout(function () {
-      FacilityApprovedProducts.get({facilityId: $route.current.params.facility, programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.nonFullSupplyProducts);
-      }, {});
+      FacilityApprovedProducts.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
+        function (data) {
+          deferred.resolve(data.nonFullSupplyProducts);
+        }, {});
     }, 100);
     return deferred.promise;
   },
@@ -316,9 +313,10 @@ CreateRequisitionController.resolve = {
   requisitionRights: function ($q, $timeout, $route, FacilityProgramRights) {
     var deferred = $q.defer();
     $timeout(function () {
-      FacilityProgramRights.get({facilityId: $route.current.params.facility, programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.rights);
-      }, {});
+      FacilityProgramRights.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
+        function (data) {
+          deferred.resolve(data.rights);
+        }, {});
     }, 100);
     return deferred.promise;
   },

@@ -40,6 +40,14 @@ services.factory('requisitionService', function (messageService) {
       }
       return null;
     };
+
+    $scope.highlightWarningBasedOnField = function (value, field, skipped) {
+      if ($scope.inputClass && (isUndefined(value) || value === false) && field && skipped == false) {
+        return "warning-error";
+      }
+      return null;
+    };
+
   };
 
 
@@ -72,9 +80,11 @@ services.factory('requisitionService', function (messageService) {
       $scope.numberOfPages = 1;
     }
 
-    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
+    $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page,
+      10) : 1;
 
-    $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
+    $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1),
+      $scope.pageSize * $scope.currentPage);
 
   };
 
