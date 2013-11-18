@@ -87,7 +87,7 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
   private static WebElement addNewButton;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span/b")
   private static WebElement periodSelectBoxClickableLink;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
@@ -99,7 +99,7 @@ public class ConfigureOrderPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement periodSelectBoxSelectableElement;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span/b")
   private static WebElement orderDateSelectBoxClickableLink;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")

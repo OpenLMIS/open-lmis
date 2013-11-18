@@ -95,16 +95,16 @@ public class ConfigureShipmentPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
   private static WebElement shippedDateSelectBoxSelectableElement;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen45']/a/div/b")
   private static WebElement packedDateSelectBoxClickableLink;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/div/b")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen51']/a/div/b")
   private static WebElement shippedDateSelectBoxClickableLink;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/span")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen45']/a/span")
   private static WebElement packedDateSelectBoxDefaultSelected;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/span")
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen51']/a/span")
   private static WebElement shippedDateSelectBoxDefaultSelected;
 
 
