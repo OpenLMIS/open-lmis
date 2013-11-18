@@ -1,7 +1,6 @@
 Feature: Smoke Tests
 
   @smokeRequisition
-
   Scenario: User should be able to save and submit regimen data
     Given I have the following data for regimen:
       | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -25,8 +24,6 @@ Feature: Smoke Tests
     Then I should see submit successfully
 
   @smokeRequisition
-
-
   Scenario: User should view requisition and regimen after authorization
     Given I have the following data for regimen:
       | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -55,8 +52,6 @@ Feature: Smoke Tests
 
 
   @smokeRequisition
-
-
   Scenario: Verifying Forgot Password functionality
     Given I am on forgot password screen
     When I type email "John_Doe@openlmis.com"
@@ -66,8 +61,6 @@ Feature: Smoke Tests
     And I am logged in as Admin
 
   @smokeRequisition
-
-
   Scenario: Verify New Regimen Created
     Given I have data available for programs configured
     And I am logged in as Admin
@@ -81,8 +74,6 @@ Feature: Smoke Tests
     Then I should see regimen created message
 
   @smokeRequisition
-
-
   Scenario: Verify New Regimen Reporting Field Configuration
     Given I have data available for programs configured
     And I am logged in as Admin
@@ -108,16 +99,12 @@ Feature: Smoke Tests
     Then I should see regimen created message
 
   @smokeRequisition
-
-
   Scenario: Admin user should not access requisition page
     Given I am logged in as Admin
     When I access initiate requisition page through URL
     Then I should see unauthorized access message
 
   @smokeRequisition
-
-
   Scenario: Requisition user should not access admin Page
     Given I have "storeIncharge" user with "CREATE_REQUISITION,VIEW_REQUISITION" rights
     And I am logged in as "storeIncharge"
@@ -125,8 +112,6 @@ Feature: Smoke Tests
     Then I should see unauthorized access message
 
   @smokeRequisition
-
-
   Scenario: Admin can create, disable & restore user
     Given I am logged in as Admin
     When I create a user:
@@ -141,8 +126,6 @@ Feature: Smoke Tests
     Then I should see user "Dummy User" verified
 
   @smokeRequisition
-
-
   Scenario: User should be able to configure order file format
     Given I configure order file:
       | File Prefix | Header In File |
@@ -157,8 +140,6 @@ Feature: Smoke Tests
     Then I should see "Order file configuration saved successfully!"
 
   @smokeRequisition
-
-
   Scenario: User should be able to configure shipment file format using default format
     When I am logged in as Admin
     And I access configure shipment page
@@ -169,8 +150,6 @@ Feature: Smoke Tests
     Then I should see successful message "Shipment file configuration saved successfully!"
 
   @smokeRequisition
-
-
   Scenario: User should be able to configure budget file format using default format
     When I am logged in as Admin
     And I access configure budget page
@@ -231,8 +210,6 @@ Feature: Smoke Tests
     And I verify order id in line "2"
 
   @smokeRequisition
-
-
   Scenario: User should be able to initiate and submit emergency RnR
     Given I have the following data for regimen:
       | HIV | storeIncharge | ADULTS | RegimenCode1 | RegimenName1 | RegimenCode2 | RegimenName2 |
@@ -264,7 +241,6 @@ Feature: Smoke Tests
     And I should verify "currentPeriod" with status "Not yet started" in row "1"
 
   @smokeRequisition
-
   Scenario: Selected requisitions across pages should not convert to order
     Given I have "51" requisitions for convert to order
     And I am logged in as "storeIncharge"
@@ -278,8 +254,6 @@ Feature: Smoke Tests
 # DISTRIBUTION SMOKE TESTS
 
   @smokeDistribution
-
-
   Scenario: User should able to configure program product ISA
     Given I have data available for program product ISA
     And I am logged in as Admin
@@ -290,8 +264,6 @@ Feature: Smoke Tests
     And I access home page
 
   @smokeDistribution
-
-
   Scenario: User should able to initiate & delete distribution
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -316,8 +288,6 @@ Feature: Smoke Tests
     Then I see no distribution in cache
 
   @smokeDistribution
-
-
   Scenario: User should able to fetch program period on manage distribution screen
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -336,8 +306,6 @@ Feature: Smoke Tests
     And I click view load amount
 
   @smokeDistribution
-
-
   Scenario: User should able to override ISA
     Given I have the following data for override ISA:
       | user     | program  | product | productName | category | whoRatio | dosesPerYear | wastageFactor | bufferPercentage | minimumValue | maximumValue | adjustmentValue |
@@ -354,8 +322,6 @@ Feature: Smoke Tests
     Then I should see overridden ISA "24"
 
   @smokeDistribution
-
-
   Scenario: Distribution user should view ISA, Override ISA and NoRecords for different delivery zone, program & period combination
     Given I have data available for distribution load amount
     And I have data available for "Multiple" facilities attached to delivery zones
@@ -381,8 +347,6 @@ Feature: Smoke Tests
     Then I should see message "No records found"
 
   @smokeDistribution
-
-
   Scenario: Distribution user should view aggregate ISA for delivery zone
     Given I have data available for distribution load amount
     And I have data available for "Single" facility attached to delivery zones
@@ -402,8 +366,6 @@ Feature: Smoke Tests
     Then I should see aggregate ISA values as per multiple facilities in one delivery zone
 
   @smokeDistribution
-
-
   Scenario: User should see facility list/ selection page
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -428,8 +390,6 @@ Feature: Smoke Tests
 
 
   @smokeDistribution
-
-
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -480,8 +440,6 @@ Feature: Smoke Tests
     Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
   @smokeDistribution
-
-
   Scenario: User should fill general observation data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -511,8 +469,6 @@ Feature: Smoke Tests
       | some observation | samuel          | fc               | mai ka         | lal             |
 
   @smokeDistribution
-
-
   Scenario: User should fill EPI use data
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |

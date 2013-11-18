@@ -17,6 +17,10 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.calculation.DefaultStrategy;
+import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
+import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -101,7 +105,7 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateForApproval() {
-    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
+    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip(calcStrategy);
     }
@@ -112,38 +116,15 @@ public class Rnr extends BaseModel {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  private RnrCalcStrategy getRnrCalcStrategy() {
-    return emergency ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy();
-  }
-
-  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
-
-    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
-    calculateForFullSupply(calcStrategy, template, lossesAndAdjustmentsTypes);
-    calculateForNonFullSupply(calcStrategy);
-  }
-
-  private void calculateForNonFullSupply(RnrCalcStrategy calcStrategy) {
-    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.validateNonFullSupply();
-      lineItem.calculatePacksToShip(calcStrategy);
-      this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
-    }
-  }
-
-  private void calculateForFullSupply(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculate(calcStrategy, template, lossesAndAdjustmentsTypes, this.period, this.status);
-      this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
-    }
+  @JsonIgnore
+  public RnrCalculationStrategy getRnrCalcStrategy() {
+    return facility.getVirtualFacility() ? new VirtualFacilityStrategy() : (emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy());
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      Money costPerItem = lineItem.calculateCost();
-      totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
+      totalFullSupplyCost = totalFullSupplyCost.add(lineItem.calculateCost());
     }
     return totalFullSupplyCost;
   }
@@ -178,7 +159,7 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateDefaultApprovedQuantity() {
-    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
+    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
       item.calculateDefaultApprovedQuantity(calcStrategy);
     }
@@ -273,9 +254,10 @@ public class Rnr extends BaseModel {
   private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
     for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
       RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
-      if (savedRegimenLineItem != null)
+      if (savedRegimenLineItem != null) {
         savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
-      savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+        savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+      }
     }
   }
 
@@ -347,6 +329,15 @@ public class Rnr extends BaseModel {
 
   public boolean preAuthorize() {
     return status == INITIATED || status == SUBMITTED;
+  }
+
+
+  public void addToNonFullSupplyCost(Money cost) {
+    this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(cost);
+  }
+
+  public void addToFullSupplyCost(Money cost) {
+    this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(cost);
   }
 
 }

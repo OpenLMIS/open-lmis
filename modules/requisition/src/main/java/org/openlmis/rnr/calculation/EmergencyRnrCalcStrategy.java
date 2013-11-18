@@ -8,37 +8,32 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.rnr.domain;
+package org.openlmis.rnr.calculation;
 
 import org.openlmis.core.domain.ProcessingPeriod;
 
 import java.util.List;
 
-public final class EmergencyRnrCalcStrategy extends RnrCalcStrategy {
+public final class EmergencyRnrCalcStrategy extends RnrCalculationStrategy {
 
-  @Override
   public Integer calculateNormalizedConsumption(Integer stockOutDays, Integer quantityDispensed,
                                                 Integer newPatientCount, Integer dosesPerMonth,
-                                                Integer dosesPerDispensingUnit) {
+                                                Integer dosesPerDispensingUnit, Integer D) {
     return null;
   }
 
-  @Override
   public Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption, List<Integer> previousNormalizedConsumptions) {
     return null;
   }
 
-  @Override
   public Integer calculateMaxStockQuantity(Integer maxMonthsOfStock, Integer amc) {
     return null;
   }
 
-  @Override
   public Integer calculateOrderQuantity(Integer maxStockQuantity, Integer stockInHand) {
     return null;
   }
 
-  @Override
   public Integer calculateDefaultApprovedQuantity(boolean fullSupply, Integer calculatedOrderQuantity, Integer quantityRequested) {
     return 0;
   }

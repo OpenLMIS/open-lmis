@@ -15,6 +15,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,18 +122,14 @@ public class RnrLineItem extends LineItem {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
 
-  public void calculateDefaultApprovedQuantity(RnrCalcStrategy calcStrategy) {
+  public void calculateDefaultApprovedQuantity(RnrCalculationStrategy calcStrategy) {
     quantityApproved = calcStrategy.calculateDefaultApprovedQuantity(fullSupply, calculatedOrderQuantity, quantityRequested);
-  }
-
-  public void setDefaultApprovedQuantity(boolean emergency) {
-    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem lineItem) {
@@ -189,11 +186,23 @@ public class RnrLineItem extends LineItem {
     if (!valid) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
-  public void calculateForFullSupply(RnrCalcStrategy calcStrategy, ProcessingPeriod period, ProgramRnrTemplate template, RnrStatus rnrStatus, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculateForFullSupply(RnrCalculationStrategy calcStrategy,
+                                     ProcessingPeriod period,
+                                     ProgramRnrTemplate template,
+                                     RnrStatus rnrStatus,
+                                     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     calculateTotalLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(calcStrategy);
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) calculateQuantityDispensed(calcStrategy);
+
+    if (template.columnsCalculated(STOCK_IN_HAND)) {
+      calculateStockInHand(calcStrategy);
+    }
+
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) {
+      calculateQuantityDispensed(calcStrategy);
+    }
+
     calculateNormalizedConsumption(calcStrategy);
+
     if (rnrStatus == AUTHORIZED) {
       calculateAmc(calcStrategy, period);
       calculateMaxStockQuantity(calcStrategy);
@@ -203,35 +212,35 @@ public class RnrLineItem extends LineItem {
     calculatePacksToShip(calcStrategy);
   }
 
-  public void calculateAmc(RnrCalcStrategy calcStrategy, ProcessingPeriod period) {
+  public void calculateAmc(RnrCalculationStrategy calcStrategy, ProcessingPeriod period) {
     amc = calcStrategy.calculateAmc(period, normalizedConsumption, previousNormalizedConsumptions);
   }
 
-  public void calculatePacksToShip(RnrCalcStrategy calcStrategy) {
+  public void calculatePacksToShip(RnrCalculationStrategy calcStrategy) {
     packsToShip = calcStrategy.calculatePacksToShip(getOrderQuantity(), packSize, packRoundingThreshold, roundToZero);
   }
 
-  public void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy) {
+  public void calculateMaxStockQuantity(RnrCalculationStrategy calcStrategy) {
     maxStockQuantity = calcStrategy.calculateMaxStockQuantity(maxMonthsOfStock, amc);
   }
 
-  public void calculateOrderQuantity(RnrCalcStrategy calcStrategy) {
+  public void calculateOrderQuantity(RnrCalculationStrategy calcStrategy) {
     calculatedOrderQuantity = calcStrategy.calculateOrderQuantity(maxStockQuantity, stockInHand);
   }
 
-  public void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy) {
-    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit);
+  public void calculateNormalizedConsumption(RnrCalculationStrategy calcStrategy) {
+    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit, null);
   }
 
-  public void calculateTotalLossesAndAdjustments(RnrCalcStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculateTotalLossesAndAdjustments(RnrCalculationStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     totalLossesAndAdjustments = calcStrategy.calculateTotalLossesAndAdjustments(lossesAndAdjustments, lossesAndAdjustmentsTypes);
   }
 
-  public void calculateQuantityDispensed(RnrCalcStrategy calcStrategy) {
+  public void calculateQuantityDispensed(RnrCalculationStrategy calcStrategy) {
     quantityDispensed = calcStrategy.calculateQuantityDispensed(beginningBalance, quantityReceived, totalLossesAndAdjustments, stockInHand);
   }
 
-  public void calculateStockInHand(RnrCalcStrategy calcStrategy) {
+  public void calculateStockInHand(RnrCalculationStrategy calcStrategy) {
     stockInHand = calcStrategy.calculateStockInHand(beginningBalance, quantityReceived, totalLossesAndAdjustments, quantityDispensed);
   }
 
@@ -296,8 +305,8 @@ public class RnrLineItem extends LineItem {
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
     if (template.columnsVisible(QUANTITY_REQUESTED)
-      && quantityRequested != null
-      && reasonForRequestedQuantity == null) {
+        && quantityRequested != null
+        && reasonForRequestedQuantity == null) {
       throw new DataException(RNR_VALIDATION_ERROR);
     }
   }
@@ -331,8 +340,7 @@ public class RnrLineItem extends LineItem {
 
   @Override
   public boolean compareCategory(LineItem lineItem) {
-    if (this.getProductCategory().equals(((RnrLineItem) lineItem).getProductCategory())) return true;
-    return false;
+    return this.getProductCategory().equals(((RnrLineItem) lineItem).getProductCategory());
   }
 
   @Override
@@ -359,8 +367,8 @@ public class RnrLineItem extends LineItem {
     Field field = RnrLineItem.class.getDeclaredField(columnName);
     field.setAccessible(true);
     Object fieldValue = field.get(this);
-    String value = (fieldValue == null) ? "" : fieldValue.toString();
-    return value;
+
+    return (fieldValue == null) ? "" : fieldValue.toString();
   }
 
   @Override
@@ -368,12 +376,4 @@ public class RnrLineItem extends LineItem {
     return true;
   }
 
-  void calculate(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes, ProcessingPeriod period, RnrStatus status) {
-    if (skipped && template.columnsVisible(SKIPPED)) {
-      return;
-    }
-    validateMandatoryFields(template);
-    calculateForFullSupply(calcStrategy, period, template, status, lossesAndAdjustmentsTypes);
-    validateCalculatedFields(template);
-  }
 }

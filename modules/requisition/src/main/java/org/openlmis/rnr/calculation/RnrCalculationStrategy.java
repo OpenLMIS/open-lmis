@@ -1,29 +1,40 @@
 /*
- * Copyright © 2013 VillageReach.  All Rights Reserved.  This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.rnr.domain;
+package org.openlmis.rnr.calculation;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.rnr.domain.LossesAndAdjustments;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.repository.RequisitionRepository;
 
-import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 
 import static java.lang.Math.floor;
-import static java.math.MathContext.DECIMAL64;
 import static java.math.RoundingMode.HALF_UP;
-import static org.openlmis.rnr.domain.RnrLineItem.MULTIPLIER;
-import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
-
-public class RnrCalcStrategy {
+@AllArgsConstructor
+@NoArgsConstructor
+public abstract class RnrCalculationStrategy {
 
   public static final MathContext MATH_CONTEXT = new MathContext(12, HALF_UP);
+
+  ProcessingScheduleService processingScheduleService;
+
+  RequisitionRepository requisitionRepository;
 
   public Integer calculatePacksToShip(Integer orderQuantity, Integer packSize, Integer packRoundingThreshold, Boolean roundToZero) {
     Integer packsToShip = null;
@@ -31,14 +42,6 @@ public class RnrCalcStrategy {
       packsToShip = ((orderQuantity == 0) ? 0 : round(packSize, packRoundingThreshold, roundToZero, orderQuantity));
     }
     return packsToShip;
-  }
-
-  public Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption,
-                              List<Integer> previousNormalizedConsumptions) {
-    int denominator = period.getNumberOfMonths() * (1 + previousNormalizedConsumptions.size());
-    return (new BigDecimal(normalizedConsumption).add(sumOfPreviousNormalizedConsumptions(previousNormalizedConsumptions))).
-      divide(new BigDecimal(denominator), DECIMAL64).setScale(0, HALF_UP).intValue();
-
   }
 
   public Integer calculateMaxStockQuantity(Integer maxMonthsOfStock, Integer amc) {
@@ -53,21 +56,8 @@ public class RnrCalcStrategy {
     return calculatedOrderQuantity;
   }
 
-  public Integer calculateNormalizedConsumption(Integer stockOutDays, Integer quantityDispensed, Integer newPatientCount, Integer dosesPerMonth, Integer dosesPerDispensingUnit) {
-    BigDecimal stockOut = new BigDecimal(stockOutDays);
-    BigDecimal dispensedQuantity = new BigDecimal(quantityDispensed);
-    BigDecimal consumptionAdjustedWithStockOutDays =
-      (RnrLineItem.MULTIPLIER.multiply(NUMBER_OF_DAYS)).subtract(stockOut).equals(new BigDecimal(0)) ?
-        dispensedQuantity :
-        (dispensedQuantity.multiply((MULTIPLIER.multiply(NUMBER_OF_DAYS)).divide(((MULTIPLIER
-          .multiply(NUMBER_OF_DAYS)).subtract(stockOut)), DECIMAL64))
-          .setScale(0, HALF_UP));
-
-    BigDecimal adjustmentForNewPatients =
-      (new BigDecimal(newPatientCount).multiply(new BigDecimal(dosesPerMonth)
-        .divide(new BigDecimal(dosesPerDispensingUnit), MATH_CONTEXT))).multiply(MULTIPLIER);
-
-    return (consumptionAdjustedWithStockOutDays.add(adjustmentForNewPatients)).intValue();
+  public Integer calculateDefaultApprovedQuantity(boolean fullSupply, Integer calculatedOrderQuantity, Integer quantityRequested) {
+    return fullSupply ? calculatedOrderQuantity : quantityRequested;
   }
 
   public Integer calculateQuantityDispensed(Integer beginningBalance, Integer quantityReceived, Integer totalLossesAndAdjustments, Integer stockInHand) {
@@ -93,6 +83,15 @@ public class RnrCalcStrategy {
     }
     return totalLossesAndAdjustments;
   }
+
+  public abstract Integer calculateNormalizedConsumption(Integer stockOutDays, Integer quantityDispensed,
+                                                         Integer newPatientCount, Integer dosesPerMonth,
+                                                         Integer dosesPerDispensingUnit, Integer D);
+
+
+  public abstract Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption,
+                                       List<Integer> previousNormalizedConsumptions);
+
 
   private boolean isAnyNull(Integer... fields) {
     for (Integer field : fields) {
@@ -123,20 +122,9 @@ public class RnrCalcStrategy {
     };
 
     LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
-      lossesAndAdjustmentsTypes, predicate);
+        lossesAndAdjustmentsTypes, predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
   }
 
-  private BigDecimal sumOfPreviousNormalizedConsumptions(List<Integer> previousNormalizedConsumptions) {
-    Integer total = 0;
-    for (Integer consumption : previousNormalizedConsumptions) {
-      total += consumption;
-    }
-    return new BigDecimal(total);
-  }
-
-  public Integer calculateDefaultApprovedQuantity(boolean fullSupply, Integer calculatedOrderQuantity, Integer quantityRequested) {
-    return fullSupply ? calculatedOrderQuantity : quantityRequested;
-  }
 }

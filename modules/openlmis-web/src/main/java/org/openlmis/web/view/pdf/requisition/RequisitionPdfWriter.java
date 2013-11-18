@@ -45,8 +45,8 @@ public class RequisitionPdfWriter extends PdfWriter {
   }
 
   public void buildWith(Map<String, Object> model)
-    throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model,messageService);
+      throws DocumentException, NoSuchFieldException, IllegalAccessException {
+    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model, messageService);
     document.open();
     document.add(requisitionPdfModel.getRequisitionHeader());
 

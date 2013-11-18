@@ -89,8 +89,11 @@ public class RequisitionService {
   private StaticReferenceDataService staticReferenceDataService;
   @Autowired
   private MessageService messageService;
+  @Autowired
+  private CalculationService calculateService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
+
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
@@ -112,7 +115,7 @@ public class RequisitionService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-      facility.getId(), program.getId());
+        facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
 
@@ -162,8 +165,10 @@ public class RequisitionService {
 
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), SUBMITTED);
 
-    savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
-      requisitionRepository.getLossesAndAdjustmentsTypes());
+    ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+
+    calculateService.perform(savedRnr, template);
+
     return update(savedRnr);
   }
 
@@ -180,8 +185,9 @@ public class RequisitionService {
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), AUTHORIZED);
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
-    savedRnr.calculate(rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId()),
-      requisitionRepository.getLossesAndAdjustmentsTypes());
+    ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
+
+    calculateService.perform(savedRnr, template);
     savedRnr.calculateDefaultApprovedQuantity();
 
     return update(savedRnr);
@@ -284,7 +290,7 @@ public class RequisitionService {
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
-      programService.getProgramStartDate(facility.getId(), program.getId()));
+        programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
       throw new DataException("error.program.configuration.missing");
@@ -358,11 +364,11 @@ public class RequisitionService {
 
   private Rnr getPreviousRequisition(Rnr requisition) {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-      requisition.getPeriod());
+        requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
+          requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -388,7 +394,7 @@ public class RequisitionService {
     if (lastPeriod == null) return null;
 
     return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-      lastPeriod);
+        lastPeriod);
   }
 
   public List<Rnr> listForApproval(Long userId) {
@@ -462,7 +468,7 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, pageSize, userId, right, sortBy, sortDirection);
+        pageNumber, pageSize, userId, right, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
