@@ -180,7 +180,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createFacilityBasedRoleWithSuccessMessageExpected("Facility Based Role Name", "Facility Based Role Description");
+    rolesPage.createFacilityBasedRole("Facility Based Role Name", "Facility Based Role Description");
+    rolesPage.verifyCreatedRoleMessage("Facility Based Role Name");
   }
 
     public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
@@ -375,7 +376,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String programDependent) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.createRole(roleName, roleDescription, userRoleList, programDependent);
+    rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
   private void verifyPUSHProgramNotAvailableForHomeFacilityRolesAndSupervisoryRoles(UserPage userPage) throws IOException, SQLException {

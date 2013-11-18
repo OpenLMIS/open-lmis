@@ -152,7 +152,7 @@ public class RolesPage extends Page {
   }
 
 
-  public void createRoleWithSuccessMessageExpected(String roleName, String roleDesc, List<String> rights, String roleType) {
+  public void createRole(String roleName, String roleDesc, List<String> rights, String roleType) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
       if (roleType.equals("Requisition"))
@@ -177,10 +177,14 @@ public class RolesPage extends Page {
     roleDescription.sendKeys(roleDesc);
     saveButton.click();
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+  }
+
+  public void verifyCreatedRoleMessage(String roleName) {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
     assertEquals(saveSuccessMsgDiv.getText().trim(), "\"" + roleName + "\" created successfully");
   }
 
-  public void createFacilityBasedRoleWithSuccessMessageExpected(String roleName, String roleDesc) {
+  public void createFacilityBasedRole(String roleName, String roleDesc) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);
     createNewRoleButton.click();
 
@@ -195,8 +199,7 @@ public class RolesPage extends Page {
     saveButton.click();
 
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-    assertEquals(saveSuccessMsgDiv.getText().trim(), "\"" + roleName + "\" created successfully");
-  }
+   }
 
   public void createRole(String roleName, String roleDesc, List<String> rights, boolean programDependant) {
     testWebDriver.waitForElementToAppear(createNewRoleButton);

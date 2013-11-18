@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -20,6 +19,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
 public class ManageSchedulePage extends Page {
@@ -57,9 +59,6 @@ public class ManageSchedulePage extends Page {
   @FindBy(how = How.XPATH, using = "(//input[@value='Edit'])[2]")
   private static WebElement editSecondButton=null;
 
-  @FindBy(how = How.XPATH, using = "(//span[@class='ng-binding' and @ng-bind='schedule.code'])[1] ")
-  private static WebElement codeFirstNonEditableField=null;
-
   @FindBy(how = How.XPATH, using = " //input[@type='submit' and @value='Save']")
   private static WebElement saveButton=null;
 
@@ -81,11 +80,11 @@ public class ManageSchedulePage extends Page {
   public void createAndVerifySchedule() {
     testWebDriver.waitForElementToAppear(addScheduleButton);
     enterCreateScheduleDetails("Q1stM", "QuarterMonthly", "QuarterMonth");
-    SeleneseTestNgHelper.assertTrue("'QuarterMonthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
+    assertTrue("'QuarterMonthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
     enterCreateScheduleDetails("M", "Monthly", "Month");
-    SeleneseTestNgHelper.assertTrue("'Monthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
-    SeleneseTestNgHelper.assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
+    assertTrue("'Monthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
+    assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
+    assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
   }
 
   public void enterCreateScheduleDetails(String code, String name, String desc) {
@@ -101,20 +100,18 @@ public class ManageSchedulePage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
-  public void editAndVerifySchedule() {
+  public void editSchedule() {
     testWebDriver.waitForElementToAppear(editFirstButton);
     enterEditScheduleDetails("M1", "Monthly1", "Month");
-    //SeleneseTestNgHelper.assertTrue("'Monthly1' updated successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-    testWebDriver.sleep(500);
-    SeleneseTestNgHelper.assertEquals(codeFirstNonEditableField.getText().trim(), "M1");
-
     testWebDriver.sleep(500);
     enterEditScheduleDetails("M", "Monthly", "Month");
-    //SeleneseTestNgHelper.assertTrue("'Monthly' updated successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
+  }
+
+  public void verifyScheduleCode() {
     testWebDriver.sleep(500);
-    SeleneseTestNgHelper.assertEquals(codeFirstNonEditableField.getText().trim(), "M");
-
-
+    assertEquals(testWebDriver.getElementByXpath(
+            "//form[@id='editScheduleForm_1']/div/div[1]/div[2]/span[1]").getText().trim(), "M1");
+    assertEquals(testWebDriver.getElementByXpath("//form[@id='editScheduleForm_0']/div/div[1]/div[2]/span[1]").getText().trim(), "M");
   }
 
   public PeriodsPage navigatePeriods() throws IOException {

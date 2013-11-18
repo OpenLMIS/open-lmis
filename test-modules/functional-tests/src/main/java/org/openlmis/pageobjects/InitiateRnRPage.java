@@ -248,7 +248,6 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
-
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);

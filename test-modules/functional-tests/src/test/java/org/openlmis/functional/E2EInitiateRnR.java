@@ -146,7 +146,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
     manageSchedulePage.createAndVerifySchedule();
-    manageSchedulePage.editAndVerifySchedule();
+    manageSchedulePage.editSchedule();
+    manageSchedulePage.verifyScheduleCode();
     PeriodsPage periodsPage = manageSchedulePage.navigatePeriods();
     periodsPage.createAndVerifyPeriods();
     periodsPage.deleteAndVerifyPeriods();
@@ -438,7 +439,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void createRoleAndAssignRights(HomePage homePage, List<String> userRoleList, String roleName, String roleDescription, String roleType) throws IOException {
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    rolesPage.createRoleWithSuccessMessageExpected(roleName, roleDescription, userRoleList, roleType);
+    rolesPage.createRole(roleName, roleDescription, userRoleList, roleType);
+    rolesPage.verifyCreatedRoleMessage(roleName);
   }
 
   private void verifyOrderedList(boolean downloadFlag) throws Exception {
