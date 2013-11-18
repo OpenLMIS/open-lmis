@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order-fill-rate-report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -9,8 +9,20 @@
 			<style forecolor="#FF0000" backcolor="#FF0000"/>
 		</conditionalStyle>
 	</style>
+	<style name="err_received" fontName="DejaVu Sans" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{err_qty_received} == 1]]></conditionExpression>
+			<style mode="Transparent" forecolor="#000000" backcolor="#FFFFFF" fill="Solid" markup="none" pattern="#,##0" fontName="DejaVu Sans" fontSize="10" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica-BoldOblique" pdfEncoding="Cp1252"/>
+		</conditionalStyle>
+	</style>
+	<style name="item_fill_rate_style">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[Boolean.valueOf($F{item_fill_rate} < 50)]]></conditionExpression>
+			<style forecolor="#FF0000" backcolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\Users\\Issa\\JSI_Projects\\bitbucket\\open-lmis\\modules\\report\\src\\main\\template\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="REPORT_NAME" class="java.lang.String"/>
 	<parameter name="REPORT_TITLE" class="java.lang.String"/>
@@ -24,25 +36,33 @@
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="ORDER_FILL_RATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA["N"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT distinct supplyingfacility as supplyingFacility ,facility,productcode,facilitytype as facilityType ,receipts,approved , product,item_fill_rate
-        FROM vw_order_fill_rate]]>
+		<![CDATA[]]>
 	</queryString>
-	<field name="supplyingFacility" class="java.lang.String"/>
 	<field name="facility" class="java.lang.String"/>
-	<field name="product" class="java.lang.String"/>
-	<field name="productcode" class="java.lang.String"/>
-	<field name="item_fill_rate" class="java.lang.Integer"/>
 	<field name="facilityType" class="java.lang.String"/>
+	<field name="productcode" class="java.lang.String"/>
+	<field name="product" class="java.lang.String"/>
 	<field name="receipts" class="java.lang.Integer"/>
-	<field name="approved" class="java.lang.String"/>
+	<field name="supplyingFacility" class="java.lang.String"/>
+	<field name="approved" class="java.lang.Integer"/>
+	<field name="item_fill_rate" class="java.lang.Integer"/>
+	<field name="err_qty_received" class="java.lang.Integer"/>
+	<field name="ORDER_FILL_RATE" class="java.lang.Integer"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
-	<group name="GroupByFacility">
+	<variable name="ORDER_FILL_RATE_R" class="java.lang.Long" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{ORDER_FILL_RATE}]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{ORDER_FILL_RATE}]]></initialValueExpression>
+	</variable>
+	<group name="GroupByFacilityReport" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{facility}+$F{facilityType}]]></groupExpression>
 		<groupHeader>
-			<band height="88">
+			<band height="94">
 				<textField pattern="" isBlankWhenNull="false">
 					<reportElement uuid="19d0a24a-c61d-4139-8a3e-1239a9486dfb" mode="Transparent" x="93" y="20" width="192" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -91,24 +111,8 @@
 					</textElement>
 					<text><![CDATA[Facility:]]></text>
 				</staticText>
-				<textField pattern="#,###.#" isBlankWhenNull="false">
-					<reportElement uuid="226bb1e2-dd45-4d64-93ba-268b1a5af64d" style="ColorField" mode="Transparent" x="754" y="0" width="48" height="20"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="5"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{item_fill_rate}+"%"]]></textFieldExpression>
-				</textField>
 				<staticText>
-					<reportElement uuid="79a80b3c-4591-4072-9284-30d89c86735c" mode="Transparent" x="585" y="0" width="169" height="20" forecolor="#000000" backcolor="#333333"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="2"/>
-					</textElement>
-					<text><![CDATA[Order Fill Rate]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="027748a1-2b55-42d0-a38f-f472bd7efe21" mode="Opaque" x="0" y="68" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement uuid="027748a1-2b55-42d0-a38f-f472bd7efe21" mode="Opaque" x="0" y="73" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -122,7 +126,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="3170bc9e-63ea-4ba0-a1e7-bb060f28892c" mode="Transparent" x="40" y="68" width="114" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="3170bc9e-63ea-4ba0-a1e7-bb060f28892c" mode="Transparent" x="40" y="73" width="119" height="20" forecolor="#000000" backcolor="#333333">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -133,7 +137,7 @@
 					<text><![CDATA[Product Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="d4994213-6d03-498f-9e98-bf142415a4d5" mode="Transparent" x="154" y="68" width="223" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="d4994213-6d03-498f-9e98-bf142415a4d5" mode="Transparent" x="159" y="73" width="193" height="20" forecolor="#000000" backcolor="#333333">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
@@ -144,37 +148,45 @@
 					<text><![CDATA[Product Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="71b4a771-ae3e-4742-9369-4055101fede5" mode="Transparent" x="516" y="68" width="143" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement uuid="71b4a771-ae3e-4742-9369-4055101fede5" mode="Transparent" x="352" y="73" width="148" height="20" forecolor="#000000" backcolor="#333333">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
+					</textElement>
+					<text><![CDATA[Quantity Ordered]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="497a70e0-d4a8-41ca-b1b6-82b8932fffc7" mode="Transparent" x="500" y="73" width="156" height="20" forecolor="#000000" backcolor="#333333"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
 					</textElement>
 					<text><![CDATA[Quantity Received]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="497a70e0-d4a8-41ca-b1b6-82b8932fffc7" mode="Transparent" x="659" y="68" width="143" height="20" forecolor="#000000" backcolor="#333333"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<reportElement uuid="87102de2-1988-41e7-a306-809a0fd6e0bd" mode="Transparent" x="656" y="73" width="146" height="20" forecolor="#000000" backcolor="#333333">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
 					</textElement>
-					<text><![CDATA[Item Fill Rate (%)]]></text>
+					<text><![CDATA[Item Fill Rate ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="69b0ba41-9aa6-472a-ac59-9dc4093acfb0" mode="Transparent" x="377" y="68" width="139" height="20" forecolor="#000000" backcolor="#333333"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<reportElement uuid="9c01d838-0023-49e0-8ef1-ba13b2f92e38" mode="Transparent" x="0" y="73" width="40" height="20" forecolor="#000000" backcolor="#333333">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="10" isBold="false"/>
-						<paragraph leftIndent="3" rightIndent="2"/>
-					</textElement>
-					<text><![CDATA[Quantity Ordered]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="caec1f19-62fa-4126-b72a-019fbdb062e1" mode="Transparent" x="0" y="68" width="40" height="20" forecolor="#000000" backcolor="#333333"/>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="2"/>
+						<paragraph leftIndent="3"/>
 					</textElement>
 					<text><![CDATA[Line#]]></text>
 				</staticText>
@@ -251,52 +263,65 @@
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="f832e7d8-65b1-404a-9349-a14bad5d30c6" x="659" y="0" width="143" height="20">
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="d8596805-00b4-4490-9ede-7ac22f213601" x="352" y="0" width="148" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="f832e7d8-65b1-404a-9349-a14bad5d30c6" style="err_received" x="500" y="0" width="156" height="20">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{item_fill_rate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{receipts}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="7fa33077-7077-4fe4-8f1c-3c3e864ed87b" style="item_fill_rate_style" x="656" y="0" width="146" height="20">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{item_fill_rate}+" %"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="59787138-53b0-463e-9f84-2e9ce5a14990" x="40" y="0" width="114" height="20"/>
+				<reportElement uuid="59787138-53b0-463e-9f84-2e9ce5a14990" x="40" y="0" width="119" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{productcode}=="NULL"?" ":$F{productcode})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a286a183-289b-4fc8-a14c-e600a5023660" x="154" y="0" width="223" height="20"/>
+				<reportElement uuid="a286a183-289b-4fc8-a14c-e600a5023660" x="159" y="0" width="193" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="c87fcb6d-74dc-4094-ab32-a6a3fd48f730" mode="Transparent" x="516" y="0" width="143" height="20" forecolor="#000000" backcolor="#FFFFFF">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="5" rightIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{receipts}]]></textFieldExpression>
-			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="99e933b2-929e-4337-a071-488b683dd9b0" mode="Transparent" x="377" y="0" width="139" height="20" forecolor="#000000" backcolor="#FFFFFF">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="5" rightIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="31">
+			<staticText>
+				<reportElement uuid="935aa7be-69b6-443c-a264-015ae64e5958" x="656" y="8" width="83" height="21"/>
+				<textElement/>
+				<text><![CDATA[Order Fill Rate]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="4ed5dd0d-9984-4ddc-bb7d-c995f12f1539" style="ColorField" x="739" y="8" width="60" height="21"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{ORDER_FILL_RATE_R} +"%"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>

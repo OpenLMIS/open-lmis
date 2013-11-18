@@ -16,12 +16,13 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.OrderFillRateReportFilter;
+import org.openlmis.report.model.report.MasterReport;
 import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 
 @Service
@@ -40,6 +41,8 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     @Override
     protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET,RowBounds.NO_ROW_LIMIT);
+
+
         return reportMapper.getReport(getReportFilterData(filterCriteria), filterCriteria, rowBounds);
     }
 
@@ -59,13 +62,16 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         OrderFillRateReportFilter orderFillRateReportFilter = null;
 
         if(filterCriteria != null){
+
+
             orderFillRateReportFilter = new OrderFillRateReportFilter();
 
             orderFillRateReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-            orderFillRateReportFilter.setFacilityType( (filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facilities" : filterCriteria.get("facilityType")[0]);
+            orderFillRateReportFilter.setFacilityType((filterCriteria.get("facilityType") == null || filterCriteria.get("facilityType")[0].equals("")) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
             orderFillRateReportFilter.setFacility(filterCriteria.get("facility") == null ? "" : filterCriteria.get("facility")[0]);
 
             orderFillRateReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
+            orderFillRateReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0]));
 
 
             orderFillRateReportFilter.setProductCategoryId(filterCriteria.get("productCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
@@ -95,9 +101,29 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         }
         return orderFillRateReportFilter;
     }
+    @Override
+    public String getFilterSummary(Map<String, String[]> params){
+        return getReportFilterData(params).toString();
+    }
 
-  @Override
-  public String getFilterSummary(Map<String, String[]> params){
-    return getReportFilterData(params).toString();
-  }
+   /* @Override
+   public HashMap<String, String> getAdditionalReportData(Map params){
+
+        HashMap<String, String> result = new HashMap<String, String>() ;
+
+        // spit out the summary section on the report.
+
+        String totalQuantityReceived = reportMapper.getTotalQuantityReceived(params).get(0).toString();
+        String totalQuantityApproved = reportMapper.getTotalQuantityApproved(params).get(0).toString();
+        result.put("total",totalQuantityApproved);
+        // Assume by default that the 100% of facilities didn't report
+        Long percent = Long.parseLong("100");
+        if(totalQuantityApproved != "0"){
+            percent = Math.round((Double.parseDouble(totalQuantityReceived)) /  (Double.parseDouble(totalQuantityApproved)) * 100);
+        }
+
+        result.put("ORDER_FILL_RATE",percent.toString());
+        return result;
+    }
+      */
 }
