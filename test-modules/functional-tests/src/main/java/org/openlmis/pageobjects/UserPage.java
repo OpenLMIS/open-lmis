@@ -204,7 +204,6 @@ public class UserPage extends Page {
   public void searchUser(String user) {
     testWebDriver.waitForElementToAppear(searchUserTextField);
     sendKeys(searchUserTextField, user);
-    testWebDriver.sleep(2000);
   }
 
   public void clickUserList() {
@@ -262,7 +261,7 @@ public class UserPage extends Page {
     lastNameField.sendKeys(lastName);
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(viewHereLink);
 
     testWebDriver.waitForElementToAppear(successMessage);
@@ -290,7 +289,6 @@ public class UserPage extends Page {
       searchFacility.sendKeys(Keys.DELETE);
     }
     searchFacility.sendKeys(facilityCode);
-    testWebDriver.sleep(1000);
   }
 
   public void verifyNoMatchedFoundMessage() {
@@ -331,16 +329,13 @@ public class UserPage extends Page {
       testWebDriver.waitForElementToAppear(rolesSelectFieldHomeFacility);
       rolesSelectFieldHomeFacility.click();
       addHomeFacilityRolesButton.click();
-      testWebDriver.sleep(1000);
-
-
+      testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
       supervisoryRolesAccordion.click();
       testWebDriver.sleep(500);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.sleep(1000);
       testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
       testWebDriver.sleep(1000);
-
       testWebDriver.handleScroll();
       testWebDriver.sleep(500);
       rolesInputFieldSupervisoryRole.click();
@@ -354,7 +349,6 @@ public class UserPage extends Page {
 
 
       addSupervisoryRoleButton.click();
-      testWebDriver.sleep(1000);
 
     } else {
       testWebDriver.handleScroll();
@@ -371,7 +365,6 @@ public class UserPage extends Page {
 
   public void saveUser() {
     saveButton.click();
-    testWebDriver.sleep(1000);
   }
 
   public void verifyUserUpdated(String firstName, String lastName) {
@@ -385,7 +378,7 @@ public class UserPage extends Page {
     warehouseRolesAccordion.click();
     testWebDriver.sleep(500);
     testWebDriver.selectByVisibleText(warehouseToSelect, warehouse);
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(rolesInputFieldWarehouse);
     rolesInputFieldWarehouse.click();
     rolesInputFieldWarehouse.clear();
     rolesInputFieldWarehouse.sendKeys(role);
@@ -397,8 +390,6 @@ public class UserPage extends Page {
     testWebDriver.sleep(1000);
     verifyWarehouseSelectedNotAvailable(warehouse);
     warehouseRolesAccordion.click();
-    testWebDriver.sleep(1000);
-
   }
 
   public void verifyMessage(String message) {
@@ -420,7 +411,6 @@ public class UserPage extends Page {
     rolesInputFieldMDeliveryZone.sendKeys(role);
     rolesInputFieldMDeliveryZone.sendKeys(Keys.RETURN);
     addDeliveryZoneRoleButton.click();
-    testWebDriver.sleep(1000);
   }
 
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
@@ -437,7 +427,6 @@ public class UserPage extends Page {
     rolesInputFieldDeliveryZone.sendKeys(role);
     rolesInputFieldDeliveryZone.sendKeys(Keys.RETURN);
     addDeliveryZoneRoleButton.click();
-    testWebDriver.sleep(1000);
   }
 
 
@@ -455,32 +444,14 @@ public class UserPage extends Page {
     }
   }
 
-
-  public void verifyRoleNotPresent(String roleName) {
-    boolean rolePresent;
-    try {
-      testWebDriver.sleep(1000);
-      WebElement element = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
-      element.click();
-      rolePresent = true;
-    } catch (ElementNotVisibleException e) {
-      rolePresent = false;
-    } catch (NoSuchElementException e) {
-      rolePresent = false;
-    }
-    assertFalse(rolePresent);
-  }
-
   public void clickCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
-    testWebDriver.sleep(100);
   }
 
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.sleep(100);
   }
 
   public void clickDisableButton() {
@@ -499,6 +470,20 @@ public class UserPage extends Page {
     testWebDriver.sleep(500);
     WebElement roleElement = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
     assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
+  }
+
+  public void verifyRoleNotPresent(String roleName) {
+    boolean rolePresent;
+    try {
+          testWebDriver.sleep(500);
+          WebElement element = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
+          rolePresent = element.isDisplayed();
+    } catch (ElementNotVisibleException e) {
+            rolePresent = false;
+    } catch (NoSuchElementException e) {
+            rolePresent = false;
+    }
+    assertFalse(rolePresent);
   }
 
   public String getAllProgramsToSupervise() {
@@ -523,14 +508,13 @@ public class UserPage extends Page {
   public void clickOk() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
-    testWebDriver.sleep(100);
   }
 
   public void verifyRemoveNotPresent() {
     boolean removePresent;
     try {
-      testWebDriver.sleep(1000);
-      removeButton.click();
+      testWebDriver.sleep(500);
+      removeButton.isDisplayed();
       removePresent = true;
     } catch (ElementNotVisibleException e) {
       removePresent = false;
@@ -544,8 +528,6 @@ public class UserPage extends Page {
     testWebDriver.sleep(500);
     testWebDriver.getElementByXpath("(//input[@value='Remove'])[" + removeButtonNumber + "]").click();
     clickOk();
-    testWebDriver.sleep(100);
-
   }
 
   public String getAddedDeliveryZoneLabel() {
