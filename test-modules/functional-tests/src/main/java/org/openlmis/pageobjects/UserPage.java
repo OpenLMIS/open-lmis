@@ -12,7 +12,6 @@ package org.openlmis.pageobjects;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
@@ -229,7 +228,7 @@ public class UserPage extends Page {
 
   public void verifyUserOnList(String userString) {
     testWebDriver.waitForElementToAppear(firstUserLink);
-    SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString));
+    assertTrue("User not available in list.", firstUserLink.getText().contains(userString));
   }
 
   public void verifyDisabledResetPassword() {
@@ -248,7 +247,7 @@ public class UserPage extends Page {
     resetPasswordDone.click();
   }
 
-  public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName)
+  public void enterUserDetails(String userName, String email, String firstName, String lastName)
     throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
@@ -268,16 +267,18 @@ public class UserPage extends Page {
 
     testWebDriver.waitForElementToAppear(successMessage);
 
-
     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
       " password link has been sent on registered Email address. View Here", firstName, lastName);
-    SeleneseTestNgHelper.assertEquals(expectedMessage, successMessage.getText());
-    viewHereLink.click();
+    assertEquals(expectedMessage, successMessage.getText());
+  }
 
-    DBWrapper dbWrapper = new DBWrapper();
+  public void verifyUserCreated(String firstName, String lastName)
+            throws IOException, SQLException {
+     testWebDriver.waitForElementToAppear(successMessage);
 
-    return dbWrapper.getUserID(userName);
-
+     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
+                " password link has been sent on registered Email address. View Here", firstName, lastName);
+     assertEquals(expectedMessage, successMessage.getText());
   }
 
   public void enterUserHomeFacility(String facilityCode) {
@@ -296,17 +297,23 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
   }
 
-  public void verifyExpandAll() {
+  public void ExpandAll() {
     expandAllOption.click();
-    SeleneseTestNgHelper.assertTrue(programsToSupervise.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(programToDeliver.isDisplayed());
+  }
+
+  public void collapseAll() {
+    collapseAllOption.click();
+  }
+
+  public void verifyExpandAll() {
+    assertTrue(programsToSupervise.isDisplayed());
+    assertTrue(programToDeliver.isDisplayed());
   }
 
   public void verifyCollapseAll() {
-    collapseAllOption.click();
-    SeleneseTestNgHelper.assertFalse(programsToSupervise.isDisplayed());
-    SeleneseTestNgHelper.assertFalse(programToDeliver.isDisplayed());
-    SeleneseTestNgHelper.assertFalse(warehouseToSelect.isDisplayed());
+    assertFalse(programsToSupervise.isDisplayed());
+    assertFalse(programToDeliver.isDisplayed());
+    assertFalse(warehouseToSelect.isDisplayed());
   }
 
   public void enterMyFacilityAndMySupervisedFacilityData(String facilityCode, String program1,
@@ -491,7 +498,7 @@ public class UserPage extends Page {
   public void verifyRolePresent(String roleName) {
     testWebDriver.sleep(500);
     WebElement roleElement = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
-    SeleneseTestNgHelper.assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
+    assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
   }
 
   public String getAllProgramsToSupervise() {

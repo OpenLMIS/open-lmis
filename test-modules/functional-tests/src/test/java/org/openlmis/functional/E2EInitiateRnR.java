@@ -145,7 +145,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void periodScheduleAndRequisitionGroupDataSetup() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
-    manageSchedulePage.createAndVerifySchedule();
+    manageSchedulePage.createSchedule();
+    manageSchedulePage.verifyScheduleCode();
     manageSchedulePage.editSchedule();
     manageSchedulePage.verifyScheduleCode();
     PeriodsPage periodsPage = manageSchedulePage.navigatePeriods();
@@ -420,7 +421,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
                                         String facility, String program, String supervisoryNode, String role,
                                         String roleType, String warehouse, String warehouseRole) throws IOException, SQLException {
     UserPage userPage = homePage.navigateToUser();
-    userPage.enterAndVerifyUserDetails(userUserName, userEmail, userFirstName, userLastName);
+    userPage.enterUserDetails(userUserName, userEmail, userFirstName, userLastName);
+    userPage.clickViewHere();
     dbWrapper.updateUser(passwordUsers, userEmail);
     userPage.enterMyFacilityAndMySupervisedFacilityData(facility, program,
       supervisoryNode, role, roleType);

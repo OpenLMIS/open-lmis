@@ -77,14 +77,10 @@ public class ManageSchedulePage extends Page {
   }
 
 
-  public void createAndVerifySchedule() {
+  public void createSchedule() {
     testWebDriver.waitForElementToAppear(addScheduleButton);
     enterCreateScheduleDetails("Q1stM", "QuarterMonthly", "QuarterMonth");
-    assertTrue("'QuarterMonthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
     enterCreateScheduleDetails("M", "Monthly", "Month");
-    assertTrue("'Monthly' created successfully message not showing up", saveSuccessMsgDiv.isDisplayed());
-    assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
-    assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
   }
 
   public void enterCreateScheduleDetails(String code, String name, String desc) {
@@ -112,6 +108,8 @@ public class ManageSchedulePage extends Page {
     assertEquals(testWebDriver.getElementByXpath(
             "//form[@id='editScheduleForm_1']/div/div[1]/div[2]/span[1]").getText().trim(), "M1");
     assertEquals(testWebDriver.getElementByXpath("//form[@id='editScheduleForm_0']/div/div[1]/div[2]/span[1]").getText().trim(), "M");
+    assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
+    assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
   }
 
   public PeriodsPage navigatePeriods() throws IOException {
