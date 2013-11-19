@@ -237,7 +237,7 @@ describe("Facility Controller", function () {
         ]);
       });
 
-      it('should delete a facility', function () {
+      it('should disable a facility', function () {
         httpBackend.expect('DELETE', '/facilities/1.json').respond(200, {"success": "Deleted successfully", "facility": scope.facility});
 
         scope.disableFacilityCallBack(true);
@@ -250,7 +250,7 @@ describe("Facility Controller", function () {
         expect(scope.originalFacilityName).toEqual(scope.facility.name);
       });
 
-      it('should not delete a facility if error occurs', function () {
+      it('should not disable a facility if error occurs', function () {
         httpBackend.expect('DELETE', '/facilities/1.json').respond(404, {"error": "something went wrong", "facility": scope.facility});
 
         scope.disableFacilityCallBack(true);
@@ -262,5 +262,21 @@ describe("Facility Controller", function () {
         expect(scope.originalFacilityCode).toEqual(scope.facility.code);
         expect(scope.originalFacilityName).toEqual(scope.facility.name);
       });
+
+
+      it('should enable the facility', function () {
+        httpBackend.expect('PUT', '/facilities/1/restore.json?active=false').respond(200, {"success": "Enabled successfully", "facility": scope.facility});
+
+        scope.enableFacilityCallBack(true);
+        httpBackend.flush();
+
+        expect(scope.message).toEqual("Enabled successfully");
+        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
+        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
+        expect(scope.originalFacilityCode).toEqual(scope.facility.code);
+        expect(scope.originalFacilityName).toEqual(scope.facility.name);
+      });
+
+
     });
   });
