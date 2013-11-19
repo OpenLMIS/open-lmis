@@ -282,9 +282,7 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.sleep(250);
   }
 
-  public void editApproveQuantityAndVerifyTotalCostViewRequisition(String approvedQuantity) {
-    editFullSupplyApproveQuantity(approvedQuantity);
-    remarks.click();
+  public void VerifyTotalCostViewRequisition(String approvedQuantity) {
     assertEquals(parseInt(approvedQuantity) / 10, packsToShip.getText().trim());
 
     BigDecimal cost = new BigDecimal((parseFloat(packsToShip.getText().trim()) * parseFloat(pricePerPack.getText().substring(1)))).setScale(2, ROUND_HALF_UP);
