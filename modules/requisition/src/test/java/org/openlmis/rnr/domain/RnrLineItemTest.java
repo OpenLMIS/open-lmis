@@ -193,6 +193,7 @@ public class RnrLineItemTest {
   public void shouldSetFieldValuesToNullIfSkipped() {
     lineItem.setCalculatedOrderQuantity(null);
     lineItem.setSkipped(true);
+    lineItem.setExpirationDate("some date");
     when(calcStrategy.calculateDefaultApprovedQuantity(lineItem.getFullSupply(), null, null)).thenReturn(null);
 
 
@@ -211,6 +212,7 @@ public class RnrLineItemTest {
     assertThat(lineItem.getNormalizedConsumption(), is(nullValue()));
     assertThat(lineItem.getPacksToShip(), is(nullValue()));
     assertThat(lineItem.getRemarks(), is(nullValue()));
+    assertThat(lineItem.getExpirationDate(), is(nullValue()));
   }
 
   @Test

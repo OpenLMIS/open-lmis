@@ -138,6 +138,7 @@ public class RnrLineItem extends LineItem {
       this.normalizedConsumption = null;
       this.packsToShip = null;
       this.remarks = null;
+      this.expirationDate = null;
     }
     quantityApproved = calcStrategy.calculateDefaultApprovedQuantity(fullSupply, calculatedOrderQuantity, quantityRequested);
   }
