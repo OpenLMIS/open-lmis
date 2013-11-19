@@ -183,14 +183,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShip() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -210,14 +210,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShipInCaseOfEmergencyRequisition() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -453,14 +453,14 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(rnrLineItem1));
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
-    rnr.calculateDefaultApprovedQuantity();
+    rnr.setFieldsForApproval();
 
     ArgumentCaptor<DefaultStrategy> captor = ArgumentCaptor.forClass(DefaultStrategy.class);
 
-    verify(rnrLineItem1).calculateDefaultApprovedQuantity(captor.capture());
+    verify(rnrLineItem1).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
 
-    verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
+    verify(rnrLineItem2).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
   }
 
@@ -472,15 +472,15 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(rnrLineItem1));
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
-    rnr.calculateDefaultApprovedQuantity();
+    rnr.setFieldsForApproval();
     rnr.setEmergency(true);
 
     ArgumentCaptor<DefaultStrategy> captor = ArgumentCaptor.forClass(DefaultStrategy.class);
 
-    verify(rnrLineItem1).calculateDefaultApprovedQuantity(captor.capture());
+    verify(rnrLineItem1).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
 
-    verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
+    verify(rnrLineItem2).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
   }
 

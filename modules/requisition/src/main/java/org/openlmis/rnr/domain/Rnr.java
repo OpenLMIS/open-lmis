@@ -141,8 +141,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-        previousRequisition.status == INITIATED ||
-        previousRequisition.status == SUBMITTED) {
+      previousRequisition.status == INITIATED ||
+      previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -167,13 +167,13 @@ public class Rnr extends BaseModel {
     addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
-  public void calculateDefaultApprovedQuantity() {
+  public void setFieldsForApproval() {
     RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
-      item.calculateDefaultApprovedQuantity(calcStrategy);
+      item.setFieldsForApproval(calcStrategy);
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.calculateDefaultApprovedQuantity(calcStrategy);
+      item.setFieldsForApproval(calcStrategy);
     }
   }
 

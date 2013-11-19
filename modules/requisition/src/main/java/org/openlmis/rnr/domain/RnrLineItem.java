@@ -62,7 +62,6 @@ public class RnrLineItem extends LineItem {
   private Integer beginningBalance;
   private List<LossesAndAdjustments> lossesAndAdjustments = new ArrayList<>();
   private Integer totalLossesAndAdjustments = 0;
-  private String reasonForLossesAndAdjustments;
   private Integer stockInHand;
   private Integer stockOutDays;
   private Integer newPatientCount;
@@ -122,13 +121,27 @@ public class RnrLineItem extends LineItem {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
 
   }
 
-  public void calculateDefaultApprovedQuantity(RnrCalculationStrategy calcStrategy) {
+  public void setFieldsForApproval(RnrCalculationStrategy calcStrategy) {
+    if (this.skipped) {
+      this.quantityReceived = null;
+      this.quantityDispensed = null;
+      this.beginningBalance = null;
+      this.lossesAndAdjustments = new ArrayList<>();
+      this.totalLossesAndAdjustments = 0;
+      this.stockInHand = null;
+      this.stockOutDays = null;
+      this.newPatientCount = null;
+      this.quantityRequested = null;
+      this.reasonForRequestedQuantity = null;
+      this.normalizedConsumption = null;
+      this.packsToShip = null;
+    }
     quantityApproved = calcStrategy.calculateDefaultApprovedQuantity(fullSupply, calculatedOrderQuantity, quantityRequested);
   }
 
@@ -305,8 +318,8 @@ public class RnrLineItem extends LineItem {
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
     if (template.columnsVisible(QUANTITY_REQUESTED)
-        && quantityRequested != null
-        && reasonForRequestedQuantity == null) {
+      && quantityRequested != null
+      && reasonForRequestedQuantity == null) {
       throw new DataException(RNR_VALIDATION_ERROR);
     }
   }
@@ -321,7 +334,6 @@ public class RnrLineItem extends LineItem {
     }
     return value;
   }
-
 
   private boolean isPresent(Object value) {
     return value != null;
