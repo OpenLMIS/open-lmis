@@ -282,13 +282,7 @@ public class RnrLineItem extends LineItem {
       this.totalLossesAndAdjustments = item.totalLossesAndAdjustments;
   }
 
-  private void copyBeginningBalance(RnrLineItem item, ProgramRnrTemplate template) {
-    if (!this.previousStockInHandAvailable && template.columnsVisible(BEGINNING_BALANCE))
-      this.beginningBalance = item.beginningBalance;
-  }
-
   public void copyCreatorEditableFieldsForFullSupply(RnrLineItem lineItem, ProgramRnrTemplate template) {
-    copyBeginningBalance(lineItem, template);
     copyTotalLossesAndAdjustments(lineItem, template);
     for (Column column : template.getColumns()) {
       String fieldName = column.getName();
