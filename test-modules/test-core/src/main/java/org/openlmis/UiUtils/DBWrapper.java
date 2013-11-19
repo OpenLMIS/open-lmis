@@ -554,7 +554,7 @@ public class DBWrapper {
 
     update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true),\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 0, true);");
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true);");
   }
 
   public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException, IOException {
@@ -1419,5 +1419,18 @@ public class DBWrapper {
   public void deleteRnrTemplate() throws SQLException {
     update("delete from program_rnr_columns");
   }
+
+  public void UpdateProductFullSupplyStatus(String productCode,boolean fullSupply) throws SQLException {
+    update("UPDATE products SET fullSupply=" + fullSupply +  " WHERE code='" + productCode + "';");
+  }
+
+  public float getRequisitionFullSupplyItemsSubmittedCost(int requisitionId) throws SQLException {
+    float fullSupplyItemsSubmittedCost=0f;
+        ResultSet rs = query("SELECT fullSupplyItemsSubmittedCost FROM requisitions WHERE id =" + requisitionId + ";");
+        if (rs.next()) {
+            fullSupplyItemsSubmittedCost = rs.getFloat(1) ;
+        }
+        return fullSupplyItemsSubmittedCost;
+    }
 
 }
