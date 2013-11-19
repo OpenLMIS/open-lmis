@@ -262,31 +262,5 @@ describe("Facility Controller", function () {
         expect(scope.originalFacilityCode).toEqual(scope.facility.code);
         expect(scope.originalFacilityName).toEqual(scope.facility.name);
       });
-
-      it('should restore a facility', function () {
-        httpBackend.expect('PUT', '/facilities/1/restore.json?active=true').respond(200, {"success": "Restored Successfully", "facility": scope.facility});
-
-        scope.enableFacility(true);
-        httpBackend.flush();
-
-        expect(scope.message).toEqual("Restored Successfully");
-        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
-        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
-        expect(scope.originalFacilityCode).toEqual(scope.facility.code);
-        expect(scope.originalFacilityName).toEqual(scope.facility.name);
-      });
-
-      it('should not restore a facility if error occurs', function () {
-        httpBackend.expect('PUT', '/facilities/1/restore.json?active=true').respond(400, {"error": "something went wrong", "facility": scope.facility});
-
-        scope.enableFacility(true);
-        httpBackend.flush();
-
-        expect(scope.error).toEqual("something went wrong");
-        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
-        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
-        expect(scope.originalFacilityCode).toEqual(scope.facility.code);
-        expect(scope.originalFacilityName).toEqual(scope.facility.name);
-      });
     });
   });

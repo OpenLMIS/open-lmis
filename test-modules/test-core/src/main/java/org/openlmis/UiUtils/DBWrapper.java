@@ -1394,15 +1394,6 @@ public class DBWrapper {
     return res;
   }
 
-  public int getRequisitionIdForGroup(String requisitionGroup) throws SQLException {
-    int rgId=0;
-    ResultSet rs = query("SELECT id FROM requisition_groups WHERE code ='"+requisitionGroup+"';");
-    if (rs.next()) {
-      rgId = rs.getInt(1);
-    }
-    return rgId;
-  }
-
   public void deleteCurrentPeriod() throws SQLException {
     update("delete from processing_periods where endDate>=NOW()") ;
   }
