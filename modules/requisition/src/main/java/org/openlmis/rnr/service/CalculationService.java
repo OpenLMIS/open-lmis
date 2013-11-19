@@ -86,9 +86,14 @@ public class CalculationService {
     }
 
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      Date createdDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
-      Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - createdDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
-      lineItem.setDaysSinceLastLineItem(daysDifference);
+
+      if (!lineItem.getSkipped()) {
+        Date authorizedDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
+        if (authorizedDateForPreviousLineItem != null) {
+          Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - authorizedDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
+          lineItem.setDaysSinceLastLineItem(daysDifference);
+        }
+      }
     }
   }
 }

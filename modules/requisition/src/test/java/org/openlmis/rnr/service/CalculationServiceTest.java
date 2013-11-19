@@ -32,6 +32,7 @@ import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertNull;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentCaptor.forClass;
@@ -285,6 +286,47 @@ public class CalculationServiceTest {
     verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
     verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
     verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate());
+  }
+
+  @Test
+  public void shouldNotCalculateDaysDifferenceIfPreviousAuthorizedLineItemIsNotPresent() throws Exception {
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+
+    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 2)));
+    ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
+    secondPreviousPeriod.setStartDate(new Date());
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(secondPreviousPeriod);
+    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate())).thenReturn(null);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertNull(lineItem.getDaysSinceLastLineItem());
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
+    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate());
+  }
+
+  @Test
+  public void shouldNotCalculateDaysDifferenceIfCurrentLineItemIsSkipped() throws Exception {
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+    lineItem.setSkipped(true);
+    rnr.setFullSupplyLineItems(asList(lineItem));
+
+    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 2)));
+    ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
+    secondPreviousPeriod.setStartDate(new Date());
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(secondPreviousPeriod);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertNull(lineItem.getDaysSinceLastLineItem());
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
+    verify(requisitionRepository, never()).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate());
   }
 
   private Date setLineItemDatesAndReturnDate() {
