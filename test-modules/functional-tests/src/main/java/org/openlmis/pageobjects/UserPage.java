@@ -319,6 +319,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
+      testWebDriver.sleep(500);
       selectFacility.click();
       homeFacilityRolesAccordion.click();
       testWebDriver.sleep(500);
@@ -368,8 +369,8 @@ public class UserPage extends Page {
   }
 
   public void verifyUserUpdated(String firstName, String lastName) {
-    SeleneseTestNgHelper.assertTrue(
-      "User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed",
+    testWebDriver.sleep(1000);
+    assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed",
       successMessage.isDisplayed());
 
   }

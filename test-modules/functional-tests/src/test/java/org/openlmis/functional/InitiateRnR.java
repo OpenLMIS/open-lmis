@@ -290,7 +290,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.ClickRequisitionPresentForApproval();
     approvePageLowerSNUser.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, "100", "200", "300", "testing");
     approvePageLowerSNUser.clickSaveButton();
@@ -324,10 +324,10 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
-    approvePageLowerSNUser.editApproveQuantity("");
+    approvePageLowerSNUser.ClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.editFullSupplyApproveQuantity("");
     approvePageLowerSNUser.clickApproveButton();
-    approvePageLowerSNUser.editApproveQuantity("100");
+    approvePageLowerSNUser.editFullSupplyApproveQuantity("100");
     approvePageLowerSNUser.clickApproveButton();
     approvePageLowerSNUser.clickOk();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
@@ -637,16 +637,16 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage2 = loginPage.loginAs("lmu", password);
     ApprovePage approvePage = homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
-    approvePage.verifyAndClickRequisitionPresentForApproval();
+    approvePage.ClickRequisitionPresentForApproval();
     assertEquals("0", approvePage.getApprovedQuantity());
     assertEquals("", approvePage.getAdjustedTotalConsumption());
     assertEquals("", approvePage.getAMC());
     assertEquals("", approvePage.getMaxStockQuantity());
     assertEquals("", approvePage.getCalculatedOrderQuantity());
-    approvePage.editApproveQuantity("");
+    approvePage.editFullSupplyApproveQuantity("");
     approvePage.approveRequisition();
     approvePage.verifyApproveErrorDiv();
-    approvePage.editApproveQuantity("0");
+    approvePage.editFullSupplyApproveQuantity("0");
     approvePage.approveRequisition();
     approvePage.clickOk();
     approvePage.verifyNoRequisitionPendingMessage();
