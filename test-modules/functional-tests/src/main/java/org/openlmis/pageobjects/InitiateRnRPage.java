@@ -804,7 +804,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public String getBeginningBalance() {
     testWebDriver.waitForElementToAppear(beginningBalanceLabel);
-    return beginningBalanceLabel.getText();
+    return beginningBalanceLabel.getAttribute("value");
   }
 
 
