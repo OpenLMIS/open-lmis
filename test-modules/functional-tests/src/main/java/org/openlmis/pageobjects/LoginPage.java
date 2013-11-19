@@ -41,6 +41,9 @@ public class LoginPage extends Page {
   @FindBy(how=How.ID, using = "locale_pt")
   private static WebElement langPortugues=null;
 
+  @FindBy(how = How.XPATH, using = "//input[@type='submit']")
+  private static WebElement submitButton;
+
   public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
     super(driver);
 
@@ -56,7 +59,7 @@ public class LoginPage extends Page {
     testWebDriver.waitForElementToAppear(passwordField);
     userNameField.sendKeys(username);
     passwordField.sendKeys(password);
-    userNameField.submit();
+    submitButton.click();
     return new HomePage(testWebDriver);
   }
 
