@@ -48,15 +48,14 @@ public class SubmitReportTest extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-
-  // @Test(groups = {"webservice"}) invalid product codes
+  @Test(groups = {"webservice"})
   public void testInitiateRnr() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-//TODO set product code
     Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
       client.SendJSON(
@@ -134,9 +133,8 @@ public class SubmitReportTest extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(100L);
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(reportFromJson),
       "http://localhost:9091/rest-api/requisitions.json",
@@ -336,6 +334,7 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
 
     String jsonStringFor = getJsonStringFor(reportFromJson);
     client.SendJSON(jsonStringFor,
@@ -355,22 +354,21 @@ public class SubmitReportTest extends JsonUtility {
   }
 
 
-  //@Test(groups = {"webservice"}) get response as invalid product codes
+  @Test(groups = {"webservice"})
   public void testBlankProductSubmitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-//    TODO set product cod ein the json
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
       "Admin123");
 
-    String response = responseEntity.getResponse();
-    assertEquals(201, responseEntity.getStatus());
-    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product codes [null]\"}", responseEntity.getResponse());
   }
 
   @Test(groups = {"webservice"})
@@ -381,6 +379,7 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
@@ -404,7 +403,6 @@ public class SubmitReportTest extends JsonUtility {
       "commTrack",
       "Admin123");
 
-    String response = responseEntity.getResponse();
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
   }
@@ -418,25 +416,24 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
       "Admin123");
 
-    String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Program configuration missing\"}");
   }
 
-
+  @Test(groups = {"webservice"})
   public void testInvalidProductSubmitReport() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("V10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
     reportFromJson.getProducts().get(0).setProductCode("P10000");
 
     ResponseEntity responseEntity =
@@ -446,11 +443,171 @@ public class SubmitReportTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-    String response = responseEntity.getResponse();
-
-    client.SendJSON("", "http://localhost:9091/", GET, "", "");
     assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"Invalid product code\"}", response);
+    assertEquals("{\"error\":\"Invalid product codes [P10000]\"}", responseEntity.getResponse());
+  }
+
+  @Test(groups = {"webservice"})
+  public void testGloballyInactiveProductSubmitReport() throws Exception {
+    dbWrapper.updateActiveStatusOfProduct("P10","False");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
+    dbWrapper.updateActiveStatusOfProduct("P10","True");
+  }
+
+  @Test(groups = {"webservice"})
+  public void testProductNotActiveAtProgramSubmitReport() throws Exception {
+    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","false");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
+    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","true");
+  }
+
+  @Test(groups = {"webservice"})
+  public void testProductNotAvailableAtFacilitySubmitReport() throws Exception {
+    dbWrapper.deleteProductAvailableAtFacility("P10", "HIV", "V10");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
+  }
+
+  //@Test(groups = {"webservice"})
+  public void testSubmitReportWithUnrecognizedField() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile("ReportWrongJson.txt", Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+  }
+
+  @Test(groups = {"webservice"})
+  public void testPreviousPeriodSubmitReportForParentFacility() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Please finish all R&R of previous period(s)\"}", responseEntity.getResponse());
+  }
+
+  @Test(groups = {"webservice"})
+  public void testCurrentPeriodSubmitReportForParentFacility() throws Exception {
+    dbWrapper.updateProgramsSupportedByField("startdate","NOW()","F10");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testMultipleSubmitReportForParentFacility() throws Exception {
+    dbWrapper.updateProgramsSupportedByField("startdate","NOW()","F10");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+
+    responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Please finish all R&R of previous period(s)\"}", responseEntity.getResponse());
+
   }
 
   public void testSubmitReportValidRnR() throws Exception {
@@ -460,6 +617,8 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10000");
+
 
     String jsonStringFor = getJsonStringFor(reportFromJson);
     ResponseEntity responseEntity = client.SendJSON(jsonStringFor,

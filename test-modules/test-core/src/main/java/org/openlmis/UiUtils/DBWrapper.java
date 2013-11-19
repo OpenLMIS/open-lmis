@@ -1333,6 +1333,10 @@ public class DBWrapper {
       "((SELECT id FROM facilities WHERE code='" + facilityCode + "'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
   }
 
+  public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
+    update("update products set fullsupply=" + flag + " where code='" + productCode + "';");
+  }
+
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
      int rgId=0;
     ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
@@ -1409,6 +1413,12 @@ public class DBWrapper {
 
   public void deleteRnrTemplate() throws SQLException {
     update("delete from program_rnr_columns");
+  }
+
+  public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {
+    update("delete from facility_approved_products where facilitytypeid=(select typeid from facilities where code='"+ facilityCode+ "') " +
+      "and programproductid=(select id from program_products where programid=(select id from programs where code='"+programCode+"')" +
+      "and productid=(select id from products where code='"+productCode+"'));");
   }
 
   public void UpdateProductFullSupplyStatus(String productCode,boolean fullSupply) throws SQLException {
