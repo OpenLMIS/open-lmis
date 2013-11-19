@@ -209,6 +209,7 @@ public class RnrLineItemTest {
     assertThat(lineItem.getQuantityApproved(), is(nullValue()));
     assertThat(lineItem.getNormalizedConsumption(), is(nullValue()));
     assertThat(lineItem.getPacksToShip(), is(nullValue()));
+    assertThat(lineItem.getRemarks(), is(nullValue()));
   }
 
   @Test

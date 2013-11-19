@@ -124,7 +124,6 @@ public class RnrLineItem extends LineItem {
       (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
       (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
       (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
-
   }
 
   public void setFieldsForApproval(RnrCalculationStrategy calcStrategy) {
@@ -141,6 +140,7 @@ public class RnrLineItem extends LineItem {
       this.reasonForRequestedQuantity = null;
       this.normalizedConsumption = null;
       this.packsToShip = null;
+      this.remarks = null;
     }
     quantityApproved = calcStrategy.calculateDefaultApprovedQuantity(fullSupply, calculatedOrderQuantity, quantityRequested);
   }
