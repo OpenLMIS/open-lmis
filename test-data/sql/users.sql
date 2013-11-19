@@ -215,7 +215,11 @@ INSERT INTO role_assignments
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'Admin'), null, null),
 ((SELECT ID FROM USERS WHERE username = 'superuser'), (SELECT id FROM roles WHERE name = 'View-Report'), null, null),
 ((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
-((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null);
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Medical-Officer'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1'));
 
 INSERT INTO fulfillment_role_assignments
 (userId, roleId, facilityId) VALUES
