@@ -515,18 +515,23 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
   }
 
-  //@Test(groups = {"webservice"})
+  @Test(groups = {"webservice"})
   public void testSubmitReportWithUnrecognizedField() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    Report reportFromJson = JsonUtility.readObjectFromFile("ReportWrongJson.txt", Report.class);
-    reportFromJson.setAgentCode("V10");
-    reportFromJson.setProgramCode("HIV");
-    reportFromJson.getProducts().get(0).setProductCode("P10");
+    String wrongJson="{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"blah\" : \"blah\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "        }" +
+      "    ]" +
+      "}";
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
+      client.SendJSON(wrongJson,
         "http://localhost:9091/rest-api/requisitions.json",
         POST,
         "commTrack",
