@@ -43,6 +43,7 @@ CREATE TABLE requisition_line_items (
   packRoundingThreshold       INTEGER,
   fullSupply                  BOOLEAN     NOT NULL,
   skipped                     BOOLEAN     NOT NULL DEFAULT FALSE,
+  daysSinceLastLineItem       INTEGER,
   createdBy                   INTEGER,
   createdDate                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   modifiedBy                  INTEGER,

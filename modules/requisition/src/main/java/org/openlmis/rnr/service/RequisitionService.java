@@ -146,6 +146,7 @@ public class RequisitionService {
   public Rnr submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
+
     if (savedRnr.getStatus() != INITIATED)
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
 
@@ -156,6 +157,7 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
+    calculateService.calculateDaysDifference(savedRnr);
     calculateService.perform(savedRnr, template);
 
     return update(savedRnr);

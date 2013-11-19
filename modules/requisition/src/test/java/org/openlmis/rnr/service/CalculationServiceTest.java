@@ -16,8 +16,10 @@ import org.junit.experimental.categories.Category;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.ProcessingPeriodBuilder;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
@@ -26,12 +28,9 @@ import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -52,6 +51,8 @@ public class CalculationServiceTest {
 
   @Mock
   RequisitionRepository requisitionRepository;
+  @Mock
+  ProcessingScheduleService processingScheduleService;
 
   @InjectMocks
   CalculationService calculationService;
@@ -184,4 +185,117 @@ public class CalculationServiceTest {
     verify(nonSkippedLineItem).calculateCost();
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("20")));
   }
+
+  @Test
+  public void shouldCalculateDaysDifferenceUsingCurrentPeriodIfPreviousPeriodNotPresent() throws Exception {
+    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(null);
+    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate());
+  }
+
+  @Test
+  public void shouldCalculateDaysDifferenceUsingPreviousPeriodIfPreviousPeriodPresentButSecondPreviousPeriodIsNotPresent() throws Exception {
+    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(null);
+    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
+    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
+  }
+
+  @Test
+  public void shouldCalculateDaysDifferenceUsingSecondPreviousPeriodIfPreviousPeriodAndSecondPreviousPeriodPresent() throws Exception {
+    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+
+    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new Date())));
+    ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
+    secondPreviousPeriod.setStartDate(new Date());
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(secondPreviousPeriod);
+    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
+    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate());
+  }
+
+
+  @Test
+  public void shouldCalculateDaysDifferenceUsingPreviousPeriodIfPreviousPeriodPresentAndNumberOfMonthsIsGreaterThanOrEqualToThree() throws Exception {
+    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 4)));
+    ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
+    secondPreviousPeriod.setStartDate(new Date());
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(secondPreviousPeriod);
+    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
+    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
+  }
+
+  @Test
+  public void shouldCalculateDaysDifferenceUsingSecondPreviousPeriodIfMIsSmallerThanThree() throws Exception {
+    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+
+    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 2)));
+    ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
+    secondPreviousPeriod.setStartDate(new Date());
+
+    when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
+    when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(secondPreviousPeriod);
+    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+
+    calculationService.calculateDaysDifference(rnr);
+
+    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
+    verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
+    verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
+    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate());
+  }
+
+  private Date setLineItemDatesAndReturnDate() {
+    Calendar currentDate = Calendar.getInstance();
+    Calendar previousDate = (Calendar) currentDate.clone();
+    previousDate.add(Calendar.DATE, -5);
+
+    Date createdDateOfPreviousLineItem = new Date(previousDate.getTimeInMillis());
+    Date createdDateOfCurrentLineItem = new Date(currentDate.getTimeInMillis());
+    rnr.setCreatedDate(createdDateOfCurrentLineItem);
+    return createdDateOfPreviousLineItem;
+  }
+
 }

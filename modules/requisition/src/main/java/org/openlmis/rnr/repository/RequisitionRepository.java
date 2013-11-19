@@ -193,7 +193,7 @@ public class RequisitionRepository {
                                                                    Integer pageSize, Long userId, Right right, String sortBy,
                                                                    String sortDirection) {
     return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-      userId, right, sortBy, sortDirection);
+        userId, right, sortBy, sortDirection);
   }
 
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, Right right) {
@@ -206,6 +206,10 @@ public class RequisitionRepository {
 
   public Rnr getLastRegularRequisition(Facility facility, Program program) {
     return requisitionMapper.getLastRegularRequisition(facility, program);
+  }
+
+  public Date getCreatedDateForPreviousLineItem(Rnr rnr, String productCode, Date periodStartDate) {
+    return rnrLineItemMapper.getCreatedDateForPreviousLineItem(rnr, productCode, periodStartDate);
   }
 }
 

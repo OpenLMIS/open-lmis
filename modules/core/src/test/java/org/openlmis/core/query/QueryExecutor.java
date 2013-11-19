@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.List;
 
 @Repository
 @NoArgsConstructor
@@ -36,7 +35,7 @@ public class QueryExecutor {
     return preparedStatement.executeQuery();
   }
 
-  public ResultSet execute(String query, Object ... params)throws SQLException{
+  public ResultSet execute(String query, Object... params) throws SQLException {
     Connection connection = DataSourceUtils.getConnection(dataSource);
     PreparedStatement preparedStatement = connection.prepareStatement(query);
     for (int index = 0; index < params.length; index++) {
@@ -44,6 +43,7 @@ public class QueryExecutor {
     }
     return preparedStatement.executeQuery();
   }
+
   public long executeUpdate(String query, Object... params) throws SQLException {
     Connection connection = DataSourceUtils.getConnection(dataSource);
     try (PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {

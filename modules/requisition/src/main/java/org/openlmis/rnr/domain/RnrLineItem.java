@@ -84,6 +84,8 @@ public class RnrLineItem extends LineItem {
 
   private Integer total;
 
+  private Integer daysSinceLastLineItem;
+
   @SuppressWarnings("unused")
   private Boolean skipped = false;
 
@@ -239,7 +241,7 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateNormalizedConsumption(RnrCalculationStrategy calcStrategy) {
-    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit, null);
+    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit, daysSinceLastLineItem);
   }
 
   public void calculateTotalLossesAndAdjustments(RnrCalculationStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {

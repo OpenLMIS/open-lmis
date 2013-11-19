@@ -10,11 +10,13 @@
 
 DROP TABLE IF EXISTS requisition_status_changes;
 CREATE TABLE requisition_status_changes (
-  id                              SERIAL PRIMARY KEY,
-  rnrId                           INTEGER     NOT NULL REFERENCES requisitions (id),
-  status                          VARCHAR(20) NOT NULL,
-  createdBy                       INTEGER NOT NULL REFERENCES users(id),
-  createdDate                     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy                      INTEGER NOT NULL REFERENCES users(id),
-  modifiedDate                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id           SERIAL PRIMARY KEY,
+  rnrId        INTEGER     NOT NULL REFERENCES requisitions (id),
+  status       VARCHAR(20) NOT NULL,
+  createdBy    INTEGER     NOT NULL REFERENCES users (id),
+  createdDate  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy   INTEGER     NOT NULL REFERENCES users (id),
+  modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX u_status_rnr ON requisition_status_changes (rnrId, status);
