@@ -92,8 +92,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   $scope.dialogCloseCallback = function (result) {
     if (result) {
-      angular.element('.toggleFullScreen').show();
-      $scope.fullScreen = false;
       approveValidatedRnr();
     }
   };

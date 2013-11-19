@@ -8,26 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function InitiateRnrController($scope, $location, Requisitions,
-                               PeriodsForFacilityAndProgram, UserFacilityList,
-                               CreateRequisitionProgramList,
-                               UserSupervisedFacilitiesForProgram,
-                               FacilityProgramRights, navigateBackService,
-                               messageService) {
-  $scope.fullScreen = false;
-  $scope.$watch('fullScreen', function () {
-    angular.element(window).scrollTop(0);
-    if (!$.browser.msie) {
-      $scope.fullScreen ? angular.element('.toggleFullScreen').slideUp('slow', function () {
-      }) : angular.element('.toggleFullScreen').slideDown('slow', function () {
-      });
-    }
-    else {
-      $scope.fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
-    }
-    $scope.fullScreen ? angular.element('.print-button').css('opacity', '1.0') : angular.element('.print-button').css('opacity', '0');
-  });
-
+function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService) {
   var isNavigatedBack;
 
   $scope.selectedRnrType = {"name": "Regular", "emergency": false};

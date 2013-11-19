@@ -22,6 +22,11 @@ app.directive('fullScreen', function () {
         $('.rnr-body').trigger('scroll');
       };
 
+      scope.$on('$routeChangeStart', function () {
+        if (fullScreen === true)
+          element.trigger('click');
+      });
+
       element.click(function () {
         fullScreen = !fullScreen;
         element.find('i').toggleClass('icon-resize-full icon-resize-small');
