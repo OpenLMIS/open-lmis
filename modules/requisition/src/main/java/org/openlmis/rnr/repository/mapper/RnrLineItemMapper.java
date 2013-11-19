@@ -22,17 +22,17 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
-    "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
-    "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-    "newPatientCount, stockOutDays,",
-    "modifiedBy,createdBy)",
-    "VALUES (",
-    "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
-    "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
-    "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
-    "#{newPatientCount}, #{stockOutDays},",
-    "#{modifiedBy}, #{createdBy})"})
+      "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
+      "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
+      "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
+      "newPatientCount, stockOutDays,",
+      "modifiedBy,createdBy)",
+      "VALUES (",
+      "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
+      "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
+      "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
+      "#{newPatientCount}, #{stockOutDays},",
+      "#{modifiedBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public Integer insert(RnrLineItem rnrLineItem);
 
@@ -61,6 +61,7 @@ public interface RnrLineItemMapper {
       "maxStockQuantity = #{maxStockQuantity},",
       "packsToShip = #{packsToShip},",
       "remarks = #{remarks},",
+      "daysSinceLastLineItem = #{daysSinceLastLineItem},",
       "expirationDate = #{expirationDate},",
       "skipped = #{skipped},",
       "modifiedBy = #{modifiedBy},",

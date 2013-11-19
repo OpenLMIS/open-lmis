@@ -201,6 +201,7 @@ public class RnrLineItemMapperIT {
     lineItem.setTotalLossesAndAdjustments(20);
     lineItem.setExpirationDate("12/2014");
     lineItem.setReasonForRequestedQuantity("Quantity Requested more in liu of coming rains");
+    lineItem.setDaysSinceLastLineItem(5);
 
     int updateCount = rnrLineItemMapper.update(lineItem);
 
@@ -211,8 +212,9 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getTotalLossesAndAdjustments(), is(20));
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     assertThat(rnrLineItems.get(0).getExpirationDate(), is("12/2014"));
+    assertThat(rnrLineItems.get(0).getDaysSinceLastLineItem(), is(5));
     assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(),
-      is("Quantity Requested more in liu of coming rains"));
+        is("Quantity Requested more in liu of coming rains"));
   }
 
   @Test
@@ -273,9 +275,9 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(),
-      is(lineItem2.getProductCode()));
+        is(lineItem2.getProductCode()));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(),
-      is(lineItem2.getProductCategory()));
+        is(lineItem2.getProductCategory()));
   }
 
 
@@ -291,7 +293,7 @@ public class RnrLineItemMapperIT {
       category.setDisplayOrder(1);
       categoryMapper.insert(category);
       Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode),
-        with(ProductBuilder.fullSupply, fullSupplyFlag)));
+          with(ProductBuilder.fullSupply, fullSupplyFlag)));
       product.setCategory(category);
       productMapper.insert(product);
 
