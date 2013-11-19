@@ -364,14 +364,25 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldSetFieldToZeroIfItsNullAndVisibleAndUserInputInTemplate() throws Exception {
+  public void shouldSetFieldToDefaultsIfItsNullAndVisibleAndUserInputInTemplate() throws Exception {
     Program rnrProgram = new Program(PROGRAM_ID);
-    RnrColumn stockInHandColumn = createRnrColumn("stockInHand", true, RnRColumnSource.USER_INPUT);
-    ProgramRnrTemplate template = new ProgramRnrTemplate(asList(stockInHandColumn));
+    RnrColumn rnrColumn1 = createRnrColumn("stockInHand", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn2 = createRnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn3 = createRnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn4 = createRnrColumn("quantityDispensed", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn5 = createRnrColumn("totalLossesAndAdjustments", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn6 = createRnrColumn("newPatientCount", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn7 = createRnrColumn("stockInHand", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn8 = createRnrColumn("stockOutDays", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn9 = createRnrColumn("quantityRequested", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn10 = createRnrColumn("reasonForRequestedQuantity", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn11 = createRnrColumn("remarks", true, RnRColumnSource.USER_INPUT);
+
+    ProgramRnrTemplate template = new ProgramRnrTemplate(asList(rnrColumn1, rnrColumn2, rnrColumn3, rnrColumn4, rnrColumn5, rnrColumn6, rnrColumn7, rnrColumn8, rnrColumn9, rnrColumn10,rnrColumn11));
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM_ID)).thenReturn(template);
 
-    Integer nullInteger = null;
-    RnrLineItem reportedLineItem = make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, nullInteger)));
+    RnrLineItem reportedLineItem = new RnrLineItem();
+    reportedLineItem.setProductCode("P10");
     RnrLineItem initiatedLineItem = make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, 0)));
 
     report.setProducts(asList(reportedLineItem));
@@ -388,7 +399,17 @@ public class RestRequisitionServiceTest {
 
     service.submitReport(report, 3l);
 
-    assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(0));
+    RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
+    assertThat(rnrLineItem.getStockInHand(), is(0));
+    assertThat(rnrLineItem.getBeginningBalance(), is(0));
+    assertThat(rnrLineItem.getQuantityReceived(), is(0));
+    assertThat(rnrLineItem.getQuantityDispensed(), is(0));
+    assertThat(rnrLineItem.getTotalLossesAndAdjustments(), is(0));
+    assertThat(rnrLineItem.getNewPatientCount(), is(0));
+    assertThat(rnrLineItem.getStockOutDays(), is(0));
+    assertThat(rnrLineItem.getQuantityRequested(), is(0));
+    assertThat(rnrLineItem.getReasonForRequestedQuantity(), is("none"));
+    assertThat(rnrLineItem.getRemarks(), is("none"));
 
   }
 
