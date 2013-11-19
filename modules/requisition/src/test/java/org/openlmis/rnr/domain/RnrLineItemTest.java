@@ -39,6 +39,7 @@ import static org.openlmis.core.builder.ProductBuilder.productCategoryDisplayOrd
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.LOSSES_AND_ADJUSTMENTS;
 import static org.openlmis.rnr.domain.RnRColumnSource.CALCULATED;
 import static org.openlmis.rnr.domain.RnRColumnSource.USER_INPUT;
@@ -573,14 +574,13 @@ public class RnrLineItemTest {
   }
 
   @Test
-  public void shouldNotCopyBeginningBalanceWhenPreviousStockInHandIsAvailable() throws Exception {
+  public void shouldCopyBeginningBalanceIfItIsVisible() throws Exception {
     RnrLineItem editedLineItem = make(a(defaultRnrLineItem));
     editedLineItem.setBeginningBalance(44);
-    lineItem.setPreviousStockInHandAvailable(true);
+    template.getRnrColumnsMap().get(BEGINNING_BALANCE).setVisible(true);
+    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, template);
 
-    lineItem.copyCreatorEditableFieldsForFullSupply(editedLineItem, new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
-
-    assertThat(lineItem.getBeginningBalance(), is(RnrLineItemBuilder.BEGINNING_BALANCE));
+    assertThat(lineItem.getBeginningBalance(), is(editedLineItem.getBeginningBalance()));
   }
 
   @Test

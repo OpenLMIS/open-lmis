@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Boolean.TRUE;
 import static java.math.BigDecimal.valueOf;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
@@ -80,8 +79,6 @@ public class RnrLineItem extends LineItem {
   private String remarks;
 
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
-
-  private Boolean previousStockInHandAvailable = false;
 
   private Money price;
 
@@ -151,7 +148,6 @@ public class RnrLineItem extends LineItem {
       return;
     }
     this.beginningBalance = lineItem.getStockInHand();
-    this.previousStockInHandAvailable = TRUE;
   }
 
   void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {

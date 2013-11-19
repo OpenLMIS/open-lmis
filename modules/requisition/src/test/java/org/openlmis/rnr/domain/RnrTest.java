@@ -34,7 +34,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.mock;
@@ -137,7 +136,6 @@ public class RnrTest {
     rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(76));
-    assertTrue(rnr.getFullSupplyLineItems().get(0).getPreviousStockInHandAvailable());
   }
 
   @Test

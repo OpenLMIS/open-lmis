@@ -114,7 +114,6 @@ public class RnrLineItemMapperIT {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
     lineItem.setPacksToShip(20);
-    lineItem.setPreviousStockInHandAvailable(true);
     lineItem.setBeginningBalance(5);
     lineItem.setFullSupply(true);
     rnrLineItemMapper.insert(lineItem);
@@ -150,7 +149,6 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItem.getRoundToZero(), is(true));
     assertThat(rnrLineItem.getPackSize(), is(10));
     assertThat(rnrLineItem.getPrice().compareTo(new Money("12.5")), is(0));
-    assertThat(rnrLineItem.getPreviousStockInHandAvailable(), is(true));
     assertThat(rnrLineItem.getBeginningBalance(), is(5));
     assertThat(rnrLineItem.getProductCategory(), is("Category 1"));
   }
@@ -210,7 +208,7 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.get(0).getProduct(), is("Primary Name Tablet strength mg"));
     assertThat(rnrLineItems.get(0).getExpirationDate(), is("12/2014"));
     assertThat(rnrLineItems.get(0).getReasonForRequestedQuantity(),
-        is("Quantity Requested more in liu of coming rains"));
+      is("Quantity Requested more in liu of coming rains"));
   }
 
   @Test
@@ -271,9 +269,9 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).size(), is(1));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCode(),
-        is(lineItem2.getProductCode()));
+      is(lineItem2.getProductCode()));
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(),
-        is(lineItem2.getProductCategory()));
+      is(lineItem2.getProductCategory()));
   }
 
 
@@ -289,7 +287,7 @@ public class RnrLineItemMapperIT {
       category.setDisplayOrder(1);
       categoryMapper.insert(category);
       Product product = make(a(ProductBuilder.defaultProduct, with(ProductBuilder.code, productCode),
-          with(ProductBuilder.fullSupply, fullSupplyFlag)));
+        with(ProductBuilder.fullSupply, fullSupplyFlag)));
       product.setCategory(category);
       productMapper.insert(product);
 
