@@ -17,7 +17,6 @@ import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
-import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -28,10 +27,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.openlmis.restapi.builder.ReportBuilder.defaultReport;
 import static org.openlmis.restapi.builder.ReportBuilder.products;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 
 @Category(UnitTests.class)
 public class ReportTest {
@@ -134,34 +130,6 @@ public class ReportTest {
     expectedEx.expectMessage("error.restapi.quantity.approved.negative");
 
     report.validateForApproval();
-  }
-
-
-  @Test
-  public void shouldMarkProductNotPresentInReportAsSkipped() throws Exception {
-    List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, "P10"))));
-    Report report = make(a(defaultReport, with(products, productList)));
-
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
-    rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
-
-    Rnr rnrWithSkippedProducts = report.getRnrWithSkippedProducts(rnr);
-
-    assertTrue(rnrWithSkippedProducts.getFullSupplyLineItems().get(1).getSkipped());
-  }
-
-  @Test
-  public void shouldCopyReportLineItemToRnrIfProductIsNotSkipped() throws Exception {
-    List<RnrLineItem> productList = asList(make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, 100))));
-    Report report = make(a(defaultReport, with(products, productList)));
-
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr));
-    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, "P10")));
-    rnr.setFullSupplyLineItems(asList(rnrLineItem));
-
-    report.getRnrWithSkippedProducts(rnr);
-
-    assertThat(rnr.getFullSupplyLineItems().get(0).getStockInHand(), is(100));
   }
 }
 
