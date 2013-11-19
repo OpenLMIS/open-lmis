@@ -26,11 +26,11 @@ import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.RequisitionValidator;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -74,6 +74,9 @@ public class RestRequisitionServiceTest {
   @Mock
   private RnrTemplateService rnrTemplateService;
 
+  @Mock
+  private RequisitionValidator requisitionValidator;
+
   @InjectMocks
   RestRequisitionService service;
   Rnr requisition;
@@ -90,9 +93,6 @@ public class RestRequisitionServiceTest {
 
   @Mock
   private ProductService productService;
-
-  @Mock
-  private MessageService messageService;
 
   String validProductCode;
   RnrLineItem rnrLineItem;
@@ -151,25 +151,30 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldThrowErrorIfCurrentPeriodIsNotTheInitiatingPeriodForNonVirtualFacility() throws Exception {
-    Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
-    Program program = new Program(3l);
-    report.setProducts(asList(rnrLineItem));
-    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
-    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
-    ProcessingPeriod periodValidForInitiation = new ProcessingPeriod(5l);
-    when(requisitionService.getPeriodForInitiating(facility, program)).thenReturn(periodValidForInitiation);
-    when(productService.getByCode(validProductCode)).thenReturn(new Product());
-    RequisitionSearchCriteria requisitionSearchCriteria = new RequisitionSearchCriteria();
-    requisitionSearchCriteria.setFacilityId(facility.getId());
-    requisitionSearchCriteria.setProgramId(program.getId());
-
-    when(requisitionService.getCurrentPeriod(requisitionSearchCriteria)).thenReturn(new ProcessingPeriod(16l));
-
+  public void shouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.rnr.previous.not.filled");
+    expectedException.expectMessage("rnr.error");
+
+    doThrow(new DataException("rnr.error")).when(requisitionValidator).validatePeriod(any(Facility.class), any(Program.class));
 
     service.submitReport(report, 1l);
+
+    verify(requisitionService, never()).initiate(any(Facility.class), any(Program.class), any(Long.class), any(Boolean.class));
+    verify(requisitionService, never()).save(any(Rnr.class));
+    verify(requisitionService, never()).submit(any(Rnr.class));
+  }
+
+  @Test
+  public void shouldThrowErrorIfProductValidationFails() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("rnr.error");
+
+    doThrow(new DataException("rnr.error")).when(requisitionValidator).validateProducts(any(Report.class), any(Rnr.class));
+
+    service.submitReport(report, 1L);
+
+    verify(requisitionService, never()).save(any(Rnr.class));
+    verify(requisitionService, never()).submit(any(Rnr.class));
   }
 
   @Test
@@ -290,12 +295,14 @@ public class RestRequisitionServiceTest {
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
     Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
     rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
-    when(messageService.message("invalid.product.codes", asList(invalidProductCode).toString())).thenReturn("invalid product codes");
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
     when(requisitionService.initiate(facility, program, userId, false)).thenReturn(rnr);
+    doThrow(new DataException("invalid product codes")).when(requisitionValidator).validateProducts(report, rnr);
+
     expectedException.expect(DataException.class);
     expectedException.expectMessage("invalid product codes");
+
     service.submitReport(report, userId);
   }
 

@@ -10,5 +10,59 @@
 
 package org.openlmis.restapi;
 
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.restapi.domain.Report;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.service.RequisitionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Component
 public class RequisitionValidator {
+
+  @Autowired
+  private RequisitionService requisitionService;
+
+  @Autowired
+  private MessageService messageService;
+
+  public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
+
+    if (!reportingFacility.getVirtualFacility()) {
+
+      RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+      searchCriteria.setProgramId(reportingProgram.getId());
+      searchCriteria.setFacilityId(reportingFacility.getId());
+
+      if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
+          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+        throw new DataException("error.rnr.previous.not.filled");
+      }
+    }
+  }
+
+  public void validateProducts(Report report, Rnr savedRequisition) {
+    if (report.getProducts() == null) {
+      return;
+    }
+
+    List<String> invalidProductCodes = new ArrayList<>();
+    for (final RnrLineItem product : report.getProducts()) {
+      if (savedRequisition.findCorrespondingLineItem(product) == null) {
+        invalidProductCodes.add(product.getProductCode());
+      }
+    }
+    if (invalidProductCodes.size() != 0) {
+      throw new DataException(messageService.message("invalid.product.codes", invalidProductCodes.toString()));
+    }
+  }
+
 }
