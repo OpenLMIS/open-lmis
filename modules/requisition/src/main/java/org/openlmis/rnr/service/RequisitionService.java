@@ -329,9 +329,22 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    Rnr previousRequisition = getPreviousRequisition(requisition);
+    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5);
+    if (fivePreviousPeriods.size() == 0) {
+      requisition.setFieldsAccordingToTemplate(null, rnrTemplate, regimenTemplate);
+      return;
+    }
 
+    ProcessingPeriod immediatePreviousPeriod = fivePreviousPeriods.get(0);
+    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
+        requisition.getProgram(), immediatePreviousPeriod);
     requisition.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+
+    ProcessingPeriod oldestPeriod = fivePreviousPeriods.get(fivePreviousPeriods.size() - 1);
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+      List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(), requisition, 2, oldestPeriod.getStartDate());
+      lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
+    }
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {
@@ -358,27 +371,7 @@ public class RequisitionService {
     }
   }
 
-  private Rnr getPreviousRequisition(Rnr requisition) {
-    ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-        requisition.getPeriod());
-    Rnr previousRequisition = null;
-    if (immediatePreviousPeriod != null)
-      previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-          requisition.getProgram(), immediatePreviousPeriod);
-    return previousRequisition;
-  }
-
-  void fillPreviousRequisitionsForAmc(Rnr requisition) {
-    if (requisition.forVirtualFacility()) {
-      List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5);
-      for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-        ProcessingPeriod oldestPeriod = nPreviousPeriods.get(nPreviousPeriods.size() - 1);
-        List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(), requisition, 2, oldestPeriod.getStartDate());
-        lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
-      }
-      return;
-    }
-
+  private void fillPreviousRequisitionsForAmc(Rnr requisition) {
     Rnr lastPeriodsRnr = null;
     Rnr secondLastPeriodsRnr = null;
 

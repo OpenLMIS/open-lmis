@@ -48,6 +48,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -187,6 +188,7 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getById(requisition.getId())).thenReturn(spyRequisition);
     when(facilityService.getById(FACILITY.getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(PERIOD.getId())).thenReturn(PERIOD);
+    when(processingScheduleService.getNPreviousPeriods(PERIOD, 5)).thenReturn(EMPTY_LIST);
     doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
@@ -747,7 +749,7 @@ public class RequisitionServiceTest {
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(getRnrColumns());
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(rnrTemplate);
 
-    when(processingScheduleService.getImmediatePreviousPeriod(PERIOD)).thenReturn(previousPeriod);
+    when(processingScheduleService.getNPreviousPeriods(PERIOD, 5)).thenReturn(asList(previousPeriod));
     when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(previousRnr);
 
     Rnr requisition = mock(Rnr.class);
@@ -1405,13 +1407,19 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldGetNormalizedConsumptionsForPreviousTwoRequisitions() throws Exception {
-    Rnr rnr = make(a(defaultRequisition, with(period, PERIOD), with(facility, make(a(FacilityBuilder.defaultFacility, with(virtualFacility, true))))));
+    setupForInitRnr();
+    RequisitionService service = spy(requisitionService);
+    Rnr rnr = spy(make(a(defaultRequisition, with(period, PERIOD), with(facility, make(a(FacilityBuilder.defaultFacility, with(virtualFacility, true)))))));
     rnr.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem))));
+    doNothing().when(rnr).setFieldsAccordingToTemplate(any(Rnr.class), any(ProgramRnrTemplate.class), any(RegimenTemplate.class));
+
+    doReturn(PERIOD).when(service).findPeriod(FACILITY, PROGRAM, false);
+    whenNew(Rnr.class).withAnyArguments().thenReturn(rnr);
     when(processingScheduleService.getNPreviousPeriods(PERIOD, 5)).thenReturn(asList(PERIOD));
     when(requisitionRepository.getNNormalizedConsumptions(rnr.getFullSupplyLineItems().get(0).getProductCode(), rnr, 2, PERIOD.getStartDate()))
         .thenReturn(asList(3, 4));
 
-    requisitionService.fillPreviousRequisitionsForAmc(rnr);
+    service.initiate(FACILITY, PROGRAM, USER_ID, false);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), hasItems(3, 4));
   }
@@ -1419,6 +1427,7 @@ public class RequisitionServiceTest {
   private void setupForInitRnr() {
     when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(new ProgramRnrTemplate(getRnrColumns()));
+    when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, Right right) {
