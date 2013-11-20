@@ -152,16 +152,22 @@ public class RestRequisitionService {
 
     for (Column column : rnrTemplate.getColumns()) {
 
-      if (column.getVisible() && rnrTemplate.columnsUserInput(column.getName())) {
+      //TODO refactor this nested if logic simpler
+      if (column.getVisible()) {
         try {
           Field field = RnrLineItem.class.getDeclaredField(column.getName());
           field.setAccessible(true);
 
           Object reportedValue = field.get(productLineItem);
-          Object toBeSavedValue = (reportedValue != null) ? reportedValue : defaultValues.get(field.getName());
-
-          field.set(fullSupplyLineItem, toBeSavedValue);
-
+          Object toBeSavedValue = null;
+          if (rnrTemplate.columnsUserInput(column.getName())) {
+            if ((column.getName().equals("stockInHand") || column.getName().equals("quantityDispensed"))) {
+              toBeSavedValue = reportedValue;
+            } else {
+              toBeSavedValue = (reportedValue != null ? reportedValue : defaultValues.get(field.getName()));
+            }
+            field.set(fullSupplyLineItem, toBeSavedValue);
+          }
         } catch (Exception e) {
           logger.error("could not copy field: " + column.getName());
         }

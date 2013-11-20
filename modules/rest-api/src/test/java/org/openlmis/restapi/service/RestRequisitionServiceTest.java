@@ -42,6 +42,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.FacilityBuilder.*;
@@ -364,7 +365,7 @@ public class RestRequisitionServiceTest {
   }
 
   @Test
-  public void shouldSetFieldToDefaultsIfItsNullAndVisibleAndUserInputInTemplate() throws Exception {
+  public void shouldSetFieldsToDefaultsIfItsNotPassedButColumnIsUserInputAndVisibleInTemplate() throws Exception {
     Program rnrProgram = new Program(PROGRAM_ID);
     RnrColumn rnrColumn1 = createRnrColumn("stockInHand", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn2 = createRnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT);
@@ -372,17 +373,71 @@ public class RestRequisitionServiceTest {
     RnrColumn rnrColumn4 = createRnrColumn("quantityDispensed", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn5 = createRnrColumn("totalLossesAndAdjustments", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn6 = createRnrColumn("newPatientCount", true, RnRColumnSource.USER_INPUT);
-    RnrColumn rnrColumn7 = createRnrColumn("stockInHand", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn7 = createRnrColumn("stockOutDays", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn8 = createRnrColumn("quantityRequested", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn9 = createRnrColumn("reasonForRequestedQuantity", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn10 = createRnrColumn("remarks", true, RnRColumnSource.USER_INPUT);
+
+    ProgramRnrTemplate template = new ProgramRnrTemplate(asList(rnrColumn1, rnrColumn2, rnrColumn3, rnrColumn4, rnrColumn5, rnrColumn6, rnrColumn7, rnrColumn8, rnrColumn9, rnrColumn10));
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM_ID)).thenReturn(template);
+
+    RnrLineItem reportedLineItem = new RnrLineItem();
+    reportedLineItem.setProductCode("P10");
+    reportedLineItem.setStockInHand(1);
+    reportedLineItem.setQuantityDispensed(1);
+    RnrLineItem initiatedLineItem = make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, 0)));
+
+    report.setProducts(asList(reportedLineItem));
+
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(rnrProgram);
+
+    Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
+
+    Rnr rnr = make(a(defaultRnr, with(facility, reportFacility), with(program, rnrProgram)));
+    rnr.setFullSupplyLineItems(asList(initiatedLineItem));
+
+    when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false)).thenReturn(rnr);
+
+    service.submitReport(report, 3l);
+
+    RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
+    assertThat(rnrLineItem.getStockInHand(), is(1));
+    assertThat(rnrLineItem.getBeginningBalance(), is(0));
+    assertThat(rnrLineItem.getQuantityReceived(), is(0));
+    assertThat(rnrLineItem.getQuantityDispensed(), is(1));
+    assertThat(rnrLineItem.getTotalLossesAndAdjustments(), is(0));
+    assertThat(rnrLineItem.getNewPatientCount(), is(0));
+    assertThat(rnrLineItem.getStockOutDays(), is(0));
+    assertThat(rnrLineItem.getQuantityRequested(), is(0));
+    assertThat(rnrLineItem.getReasonForRequestedQuantity(), is("none"));
+    assertThat(rnrLineItem.getRemarks(), is("none"));
+    assertThat(rnrLineItem.getSkipped(), is(false));
+
+  }
+
+  @Test
+  public void shouldNotNotSetDefaultValueForCalculatedColumns() throws Exception {
+    Program rnrProgram = new Program(PROGRAM_ID);
+    RnrColumn rnrColumn1 = createRnrColumn("stockInHand", true, RnRColumnSource.CALCULATED);
+    RnrColumn rnrColumn2 = createRnrColumn("beginningBalance", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn3 = createRnrColumn("quantityReceived", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn4 = createRnrColumn("quantityDispensed", true, RnRColumnSource.CALCULATED);
+    RnrColumn rnrColumn5 = createRnrColumn("totalLossesAndAdjustments", true, RnRColumnSource.USER_INPUT);
+    RnrColumn rnrColumn6 = createRnrColumn("newPatientCount", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn8 = createRnrColumn("stockOutDays", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn9 = createRnrColumn("quantityRequested", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn10 = createRnrColumn("reasonForRequestedQuantity", true, RnRColumnSource.USER_INPUT);
     RnrColumn rnrColumn11 = createRnrColumn("remarks", true, RnRColumnSource.USER_INPUT);
 
-    ProgramRnrTemplate template = new ProgramRnrTemplate(asList(rnrColumn1, rnrColumn2, rnrColumn3, rnrColumn4, rnrColumn5, rnrColumn6, rnrColumn7, rnrColumn8, rnrColumn9, rnrColumn10,rnrColumn11));
+    ProgramRnrTemplate template = new ProgramRnrTemplate(asList(rnrColumn1, rnrColumn2, rnrColumn3, rnrColumn4, rnrColumn5, rnrColumn6, rnrColumn8, rnrColumn9, rnrColumn10,rnrColumn11));
+
+
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM_ID)).thenReturn(template);
 
     RnrLineItem reportedLineItem = new RnrLineItem();
     reportedLineItem.setProductCode("P10");
+    reportedLineItem.setBeginningBalance(100);
     RnrLineItem initiatedLineItem = make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, 0)));
 
     report.setProducts(asList(reportedLineItem));
@@ -401,15 +456,7 @@ public class RestRequisitionServiceTest {
 
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
     assertThat(rnrLineItem.getStockInHand(), is(0));
-    assertThat(rnrLineItem.getBeginningBalance(), is(0));
-    assertThat(rnrLineItem.getQuantityReceived(), is(0));
-    assertThat(rnrLineItem.getQuantityDispensed(), is(0));
-    assertThat(rnrLineItem.getTotalLossesAndAdjustments(), is(0));
-    assertThat(rnrLineItem.getNewPatientCount(), is(0));
-    assertThat(rnrLineItem.getStockOutDays(), is(0));
-    assertThat(rnrLineItem.getQuantityRequested(), is(0));
-    assertThat(rnrLineItem.getReasonForRequestedQuantity(), is("none"));
-    assertThat(rnrLineItem.getRemarks(), is("none"));
+    assertThat(rnrLineItem.getBeginningBalance(), is(100));
 
   }
 
