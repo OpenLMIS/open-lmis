@@ -209,7 +209,7 @@ public class RequisitionRepository {
   }
 
   public Date getCreatedDateForPreviousLineItem(Rnr rnr, String productCode, Date periodStartDate) {
-    return rnrLineItemMapper.getCreatedDateForPreviousLineItem(rnr, productCode, periodStartDate);
+    return rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(rnr, productCode, periodStartDate);
   }
 }
 

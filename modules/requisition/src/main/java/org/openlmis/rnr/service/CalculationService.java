@@ -73,6 +73,20 @@ public class CalculationService {
   }
 
   public void calculateDaysDifference(Rnr requisition) {
+    Date startDate = findDateToStartTracking(requisition);
+
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+      if (lineItem.getSkipped()) continue;
+
+      Date authorizedDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
+      if (authorizedDateForPreviousLineItem != null) {
+        Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - authorizedDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
+        lineItem.setDaysSinceLastLineItem(daysDifference);
+      }
+    }
+  }
+
+  private Date findDateToStartTracking(Rnr requisition) {
     Date startDate;
 
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
@@ -84,16 +98,6 @@ public class CalculationService {
     } else {
       startDate = requisition.getPeriod().getStartDate();
     }
-
-    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-
-      if (!lineItem.getSkipped()) {
-        Date authorizedDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
-        if (authorizedDateForPreviousLineItem != null) {
-          Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - authorizedDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
-          lineItem.setDaysSinceLastLineItem(daysDifference);
-        }
-      }
-    }
+    return startDate;
   }
 }

@@ -360,7 +360,7 @@ public class RnrLineItemMapperIT {
     currentRnrLineItem.setRnrId(currentRnr.getId());
     rnrLineItemMapper.insert(currentRnrLineItem);
 
-    Date createdDateForPreviousLineItem = rnrLineItemMapper.getCreatedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-4));
+    Date createdDateForPreviousLineItem = rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-4));
 
     assertThat(createdDateForPreviousLineItem, is(changeList.get(0).getCreatedDate()));
   }
@@ -394,7 +394,7 @@ public class RnrLineItemMapperIT {
     currentRnrLineItem.setRnrId(currentRnr.getId());
     rnrLineItemMapper.insert(currentRnrLineItem);
 
-    Date createdDateForPreviousLineItem = rnrLineItemMapper.getCreatedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-2));
+    Date createdDateForPreviousLineItem = rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-2));
 
     assertNull(createdDateForPreviousLineItem);
   }

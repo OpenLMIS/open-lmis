@@ -111,17 +111,16 @@ public interface RnrLineItemMapper {
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND productCode = #{productCode} AND fullSupply = false")
   RnrLineItem getExistingNonFullSupplyItemByRnrIdAndProductCode(@Param(value = "rnrId") Long rnrId, @Param(value = "productCode") String productCode);
 
-  @Select({"SELECT RSC.createdDate AS authorizedDate, RLI.productCode",
-      "FROM requisition_status_changes RSC INNER JOIN requisitions R ON RSC.rnrId = R.id",
+  @Select({"SELECT RSC.createdDate FROM requisition_status_changes RSC INNER JOIN requisitions",
+      "R ON RSC.rnrId = R.id AND RSC.status = 'AUTHORIZED'",
+      "AND R.facilityId = #{rnr.facility.id}",
+      "AND R.programId = #{rnr.program.id}",
+      "AND RSC.createdDate >= #{periodStartDate}",
       "INNER JOIN requisition_line_items RLI ON R.id = RLI.rnrId",
-      "WHERE RSC.status = 'AUTHORIZED' AND",
-      "RLI.skipped = false AND",
-      "R.facilityId = #{rnr.facility.id} AND",
-      "R.programId = #{rnr.program.id} AND",
-      "RSC.createdDate >= #{periodStartDate} AND",
-      "RLI.productCode = #{productCode}",
-      "ORDER BY RSC.createdDate DESC LIMIT 1"
-  })
-  Date getCreatedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
+      "AND RLI.skipped = false",
+      "AND RLI.productCode = #{productCode}",
+      "ORDER BY RSC.createdDate DESC LIMIT 1"})
+  Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
+
 
 }

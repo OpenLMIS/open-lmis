@@ -329,16 +329,16 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    //TODO fill D
     Rnr previousRequisition = getPreviousRequisition(requisition);
 
     requisition.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
   }
 
-  private Rnr fillSupportingInfo(Rnr requisition) {
+  Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
 
     fillFacilityPeriodProgramWithAuditFields(asList(requisition));
+
     if (!requisition.isEmergency())
       fillPreviousRequisitionsForAmc(requisition);
     return requisition;
