@@ -41,8 +41,8 @@ public class LoginPage extends Page {
   @FindBy(how=How.ID, using = "locale_pt")
   private static WebElement langPortugues=null;
 
-  @FindBy(how = How.XPATH, using = "//input[@type='submit']")
-  private static WebElement submitButton;
+  @FindBy(how = How.XPATH, using = "//div[3][@class='alert alert-error ng-binding']")
+  private static WebElement loginErrorLabel=null;
 
   public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
     super(driver);
@@ -57,9 +57,11 @@ public class LoginPage extends Page {
   public HomePage loginAs(String username, String password) throws IOException {
     testWebDriver.waitForElementToAppear(userNameField);
     testWebDriver.waitForElementToAppear(passwordField);
+    userNameField.clear();
     userNameField.sendKeys(username);
     passwordField.sendKeys(password);
-    submitButton.click();
+    testWebDriver.sleep(500);
+    userNameField.submit();
     return new HomePage(testWebDriver);
   }
 
@@ -101,6 +103,10 @@ public class LoginPage extends Page {
     {
         testWebDriver.waitForElementToAppear(pageIdentifierOnLoginPage);
         return pageIdentifierOnLoginPage.getText();
+    }
+
+    public String getLoginErrorMessage(){
+        return loginErrorLabel.getText();
     }
 
 }

@@ -205,6 +205,9 @@ public class DBWrapper {
     update("update users set password = '%s', active = TRUE, verified = TRUE  where email = '%s'", password, email);
   }
 
+  public void updateRestrictLogin(String userName, boolean status) throws SQLException, IOException {
+    update("update users set restrictLogin = '%s' where userName = '%s'", status, userName);
+  }
 
   public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;

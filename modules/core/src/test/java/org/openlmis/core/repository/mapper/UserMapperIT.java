@@ -88,7 +88,7 @@ public class UserMapperIT {
     assertThat(user, is(notNullValue()));
     assertThat(user.getUserName(), is(defaultUserName));
     assertThat(user.getId(), is(someUser.getId()));
-    assertThat(user.getRestrictLogin(), is(true));
+    assertThat(user.getRestrictLogin(), is(false));
     User user1 = userMapper.selectUserByUserNameAndPassword(defaultUserName, "wrongPassword");
     assertThat(user1, is(nullValue()));
     User user2 = userMapper.selectUserByUserNameAndPassword("wrongUserName", defaultPassword);
@@ -118,7 +118,7 @@ public class UserMapperIT {
 
     User fetchedUser = userMapper.getByUserName(someUser.getUserName());
 
-    assertThat(fetchedUser.getRestrictLogin(), is(true));
+    assertThat(fetchedUser.getRestrictLogin(), is(false));
   }
 
   @Test

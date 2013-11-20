@@ -124,8 +124,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     dbWrapper.updateUser("abc123", email);
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyRightsUponOK(String user, String program, String[] credentials) throws Exception {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testVerifyRightsUponOK(String[] credentials) throws Exception {
     String UPLOADS = "Uploads";
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -148,8 +148,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertTrue(rolesPage.getWebElementMap().get(MANAGE_DISTRIBUTION).isEnabled());
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyRightsUponCancel(String user, String program, String[] credentials) throws Exception {
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testVerifyRightsUponCancel(String[] credentials) throws Exception {
     String UPLOADS = "Uploads";
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
@@ -313,8 +313,23 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testCreateSearchResetPasswordUser(String user, String program, String[] credentials) throws Exception {
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+    public void testRestrictLogin(String[] credentials) throws Exception {
+        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+
+        dbWrapper.insertUser("900","test1",passwordUsers,"F10","test@test.com");
+        dbWrapper.updateRestrictLogin("test1",true);
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        loginPage.loginAs("test1", credentials[1]);
+        assertEquals(loginPage.getLoginErrorMessage(),"The username or password you entered is incorrect. Please try again.");
+        dbWrapper.updateRestrictLogin("test1",false);
+
+        HomePage homePage = loginPage.loginAs("test1", credentials[1]);
+        homePage.verifyLoggedInUser("test1");
+    }
+
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testCreateSearchResetPasswordUser(String[] credentials) throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
