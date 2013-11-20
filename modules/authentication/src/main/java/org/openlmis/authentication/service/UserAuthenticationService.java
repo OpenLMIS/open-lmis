@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 public class UserAuthenticationService {
 
-  private static final boolean AUTHORIZATION_SUCCESSFUL = true;
-  private static final boolean AUTHORIZATION_FAILED = false;
+  private static final boolean AUTHENTICATION_SUCCESSFUL = true;
+  private static final boolean AUTHENTICATION_FAILED = false;
 
   private UserService userService;
 
@@ -31,11 +31,12 @@ public class UserAuthenticationService {
     this.userService = userService;
   }
 
-  public UserToken authorizeUser(User user) {
+  public UserToken authenticateUser(User user) {
     User fetchedUser = userService.selectUserByUserNameAndPassword(user.getUserName(),
       user.getPassword());
-    if (fetchedUser == null) return new UserToken(user.getUserName(), null, AUTHORIZATION_FAILED);
+    if (fetchedUser == null || fetchedUser.getRestrictLogin())
+      return new UserToken(user.getUserName(), null, AUTHENTICATION_FAILED);
 
-    return new UserToken(fetchedUser.getUserName(), fetchedUser.getId(), AUTHORIZATION_SUCCESSFUL);
+    return new UserToken(fetchedUser.getUserName(), fetchedUser.getId(), AUTHENTICATION_SUCCESSFUL);
   }
 }

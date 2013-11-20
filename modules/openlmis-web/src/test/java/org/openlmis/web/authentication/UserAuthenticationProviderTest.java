@@ -47,14 +47,14 @@ public class UserAuthenticationProviderTest {
     User user = new User();
     user.setUserName(validUser);
     user.setPassword(password);
-    when(userService.authorizeUser(user)).thenReturn(new UserToken(validUser, 1L, true));
+    when(userService.authenticateUser(user)).thenReturn(new UserToken(validUser, 1L, true));
     Authentication authentication = new TestingAuthenticationToken(validUser, password);
 
     Authentication authenticate = userAuthenticationProvider.authenticate(authentication);
 
 
     assertThat(authenticate, instanceOf(UsernamePasswordAuthenticationToken.class));
-    assertThat((Long)authenticate.getPrincipal(), is(equalTo(1L)));
+    assertThat((Long) authenticate.getPrincipal(), is(equalTo(1L)));
     assertThat(authenticate.getCredentials(), is(equalTo(null)));
     assertThat(authenticate.isAuthenticated(), is(true));
   }
@@ -67,7 +67,7 @@ public class UserAuthenticationProviderTest {
     User user = new User();
     user.setUserName(invalidUser);
     user.setPassword(password);
-    when(userService.authorizeUser(user)).thenReturn(new UserToken(invalidUser, null, false));
+    when(userService.authenticateUser(user)).thenReturn(new UserToken(invalidUser, null, false));
     Authentication authentication = new TestingAuthenticationToken(invalidUser, password);
 
     Authentication authenticate = userAuthenticationProvider.authenticate(authentication);

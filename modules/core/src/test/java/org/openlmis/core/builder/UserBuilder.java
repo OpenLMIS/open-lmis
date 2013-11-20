@@ -35,6 +35,7 @@ public class UserBuilder {
   public static final Property<User, String> supervisorUserName = newProperty();
   public static final Property<User, Boolean> verified = newProperty();
   public static final Property<User, Boolean> active = newProperty();
+  public static final Property<User, Boolean> restrictLogin = newProperty();
 
   public static final String defaultUserName = "User123";
   public static final String defaultPassword = "not-in-use";
@@ -50,6 +51,7 @@ public class UserBuilder {
   public static final String defaultSupervisorUserName = "supervisorUserName";
   public static final Boolean defaultVerified = false;
   public static final Boolean defaultActive = true;
+  public static final Boolean defaultRestrictLogin = false;
 
 
   public static final Instantiator<User> defaultUser = new Instantiator<User>() {
@@ -69,6 +71,7 @@ public class UserBuilder {
       user.setEmail(lookup.valueOf(email, defaultEmail));
       user.setVerified(lookup.valueOf(verified, defaultVerified));
       user.setActive(lookup.valueOf(active, defaultActive));
+      user.setRestrictLogin(lookup.valueOf(restrictLogin, defaultRestrictLogin));
       User supervisor = new User();
       supervisor.setId(lookup.valueOf(supervisorId, defaultSupervisorId));
       supervisor.setUserName(lookup.valueOf(supervisorUserName, defaultSupervisorUserName));
