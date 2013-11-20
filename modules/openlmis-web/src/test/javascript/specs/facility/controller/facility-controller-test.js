@@ -265,7 +265,7 @@ describe("Facility Controller", function () {
 
 
       it('should enable the facility', function () {
-        httpBackend.expect('PUT', '/facilities/1/restore.json?active=false').respond(200, {"success": "Enabled successfully", "facility": scope.facility});
+        httpBackend.expect('PUT', '/facilities/1/restore.json').respond(200, {"success": "Enabled successfully", "facility": scope.facility});
 
         scope.enableFacilityCallBack(true);
         httpBackend.flush();

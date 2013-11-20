@@ -147,9 +147,9 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities/{id}/restore", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId, @RequestParam boolean active) {
+  public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId) {
     ResponseEntity<OpenLmisResponse> response;
-    Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request), active);
+    Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request));
 
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
 

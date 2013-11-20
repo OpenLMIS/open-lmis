@@ -215,10 +215,9 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     OpenLmisDialog.newDialog(dialogOpts, $scope.enableFacilityCallBack, $dialog, messageService);
   };
 
-  //TODO: remove active flag, not needed
   $scope.enableFacilityCallBack = function (result) {
     if (!result) return;
-    Facility.restore({id: $scope.facility.id, active: false}, successFunc, errorFunc);
+    Facility.restore({id: $scope.facility.id}, successFunc, errorFunc);
   };
 
   function updateProgramsToDisplay() {
