@@ -71,7 +71,10 @@ public class ApprovePage extends RequisitionPage {
   private static WebElement totalRnrCost=null;
 
   @FindBy(how = ID, using = "quantityApproved_0")
-  private static WebElement quantityApproved = null;
+  private static WebElement quantityApproved1 = null;
+
+  @FindBy(how = ID, using = "quantityApproved_1")
+  private static WebElement quantityApproved2 = null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
   private static WebElement adjustedTotalConsumption=null;
@@ -163,10 +166,10 @@ public class ApprovePage extends RequisitionPage {
   public void verifyFullSupplyApprovedQuantity() {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     testWebDriver.waitForElementToAppear(nonFullSupplyTab);
-    testWebDriver.waitForElementToAppear(quantityApproved);
+    testWebDriver.waitForElementToAppear(quantityApproved1);
     testWebDriver.waitForElementToAppear(calculateOrderQuantity);
     String actualCalculatedOrderQuantity = calculateOrderQuantity.getText();
-    String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
+    String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved1, "value");
     assertEquals(actualApproveQuantity, actualCalculatedOrderQuantity);
   }
 
@@ -175,16 +178,16 @@ public class ApprovePage extends RequisitionPage {
   }
 
   public void verifyNonFullSupplyApprovedQuantity() {
-    testWebDriver.waitForElementToAppear(quantityApproved);
+    testWebDriver.waitForElementToAppear(quantityApproved1);
     String actualRequestedOrderQuantity = requestedOrderQuantity.getText();
-    String actualApproveQuantityNonFullSupply = testWebDriver.getAttribute(quantityApproved, "value");
+    String actualApproveQuantityNonFullSupply = testWebDriver.getAttribute(quantityApproved1, "value");
     assertEquals(actualApproveQuantityNonFullSupply, actualRequestedOrderQuantity);
 
   }
 
   public void verifyApprovedQuantityApprovedFromLowerHierarchy(String approvedQuantity) {
-    testWebDriver.waitForElementToAppear(quantityApproved);
-    String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved, "value");
+    testWebDriver.waitForElementToAppear(quantityApproved1);
+    String actualApproveQuantity = testWebDriver.getAttribute(quantityApproved1, "value");
     assertEquals(approvedQuantity, actualApproveQuantity);
   }
 
@@ -216,11 +219,11 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     fullSupplyTab.click();
 
-    testWebDriver.waitForElementToAppear(quantityApproved);
-    int length = testWebDriver.getAttribute(quantityApproved, "value").length();
+    testWebDriver.waitForElementToAppear(quantityApproved1);
+    int length = testWebDriver.getAttribute(quantityApproved1, "value").length();
     for (int i = 0; i < length; i++)
-      quantityApproved.sendKeys("\u0008");
-    quantityApproved.sendKeys(approvedQuantity);
+      quantityApproved1.sendKeys("\u0008");
+    quantityApproved1.sendKeys(approvedQuantity);
     remarks.click();
 
   }
@@ -229,18 +232,18 @@ public class ApprovePage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(fullSupplyTab);
     nonFullSupplyTab.click();
 
-    testWebDriver.waitForElementToAppear(quantityApproved);
-    int length = testWebDriver.getAttribute(quantityApproved, "value").length();
+    testWebDriver.waitForElementToAppear(quantityApproved1);
+    int length = testWebDriver.getAttribute(quantityApproved1, "value").length();
     for (int i = 0; i < length; i++)
-        quantityApproved.sendKeys("\u0008");
-    quantityApproved.sendKeys(approvedQuantity);
+        quantityApproved1.sendKeys("\u0008");
+    quantityApproved1.sendKeys(approvedQuantity);
     remarks.click();
 
   }
 
   public String getApprovedQuantity() {
-    testWebDriver.waitForElementToAppear(quantityApproved);
-    return testWebDriver.getAttribute(quantityApproved, "value");
+    testWebDriver.waitForElementToAppear(quantityApproved1);
+    return testWebDriver.getAttribute(quantityApproved1, "value");
   }
 
   public String getAdjustedTotalConsumption() {
@@ -295,6 +298,17 @@ public class ApprovePage extends RequisitionPage {
     assertEquals(String.valueOf(totalOverAllCost), totalRnrCost.getText().substring(1).trim());
 
 
+  }
+
+  public boolean approveQuantityVisible(int row) {
+    testWebDriver.waitForElementToAppear(fullSupplyTab);
+    fullSupplyTab.click();
+
+    testWebDriver.waitForElementToAppear(quantityApproved1);
+    if (row==1)
+      return(quantityApproved1.isEnabled());
+    else
+      return (quantityApproved2.isEnabled());
   }
 
 
