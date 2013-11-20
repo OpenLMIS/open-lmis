@@ -32,7 +32,7 @@ public abstract class Page {
         locator.sendKeys(value);
     }
 
-    public void downloadFileWhileSaveDialogOPen(WebElement element) throws IOException, NullPointerException{
+    public void downloadFileWhileSaveDialogOPen(WebElement element) throws IOException, NullPointerException, InterruptedException {
         try {
             Robot robot = new Robot();
             //get the focus on the element..don't use click since it stalls the driver
@@ -46,10 +46,14 @@ public abstract class Page {
             robot.keyRelease(KeyEvent.VK_S);
             robot.keyRelease(KeyEvent.VK_ALT);
             Thread.sleep(2000);
-            } catch (AWTException e) {
+            robot.keyPress(KeyEvent.VK_ALT);
+            robot.keyPress(KeyEvent.VK_O);
+            robot.keyRelease(KeyEvent.VK_O);
+            robot.keyRelease(KeyEvent.VK_ALT);
 
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+            Thread.sleep(2000);
+        } catch (AWTException e) {
+
             e.printStackTrace();
         }
     }

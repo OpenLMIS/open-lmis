@@ -25,14 +25,14 @@ public class RestPODController extends BaseController {
   private RestPODService restPODService;
 
   @RequestMapping(value = "/rest-api/orders/{orderId}/pod", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> createCHW(@RequestBody POD pod, @PathVariable Long orderId, Principal principal) {
+  public ResponseEntity<RestResponse> savePOD(@RequestBody POD pod, @PathVariable Long orderId, Principal principal) {
     try {
       pod.setOrderId(orderId);
       restPODService.updatePOD(pod, loggedInUserId(principal));
+      return RestResponse.success("message.success.pod.updated");
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
-    return RestResponse.success("message.success.pod.updated");
   }
 
 }

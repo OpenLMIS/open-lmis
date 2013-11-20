@@ -39,7 +39,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = TRUE",
     "AND p.active = TRUE",
     "AND pp.active = TRUE",
-    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+    "ORDER BY pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -86,7 +86,7 @@ public interface FacilityApprovedProductMapper {
     "AND p.fullSupply = FALSE",
     "AND p.active = TRUE",
     "AND pp.active = TRUE",
-    "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+    "ORDER BY pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
     @Result(property = "programProduct.id", column = "programProductId"),
     @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -108,7 +108,7 @@ public interface FacilityApprovedProductMapper {
     @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
     @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
     @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
-    @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+    @Result(property = "programProduct.displayOrder", column = "displayOrder"),
     @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
     @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
@@ -146,7 +146,7 @@ public interface FacilityApprovedProductMapper {
             "AND f.id = #{facilityId}",
             "AND p.active = TRUE",
             "AND pp.active = TRUE",
-            "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+            "ORDER BY pp.displayOrder NULLS LAST, p.code"})
     @Results(value = {
             @Result(property = "programProduct.id", column = "programProductId"),
             @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -168,7 +168,7 @@ public interface FacilityApprovedProductMapper {
             @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
             @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
             @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
-            @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+            @Result(property = "programProduct.displayOrder", column = "displayOrder"),
             @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
             @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
@@ -188,7 +188,7 @@ public interface FacilityApprovedProductMapper {
             "pp.programId = #{programId} ",
             "AND p.active = TRUE ",
             "AND pp.active = TRUE ",
-            "ORDER BY pc.displayOrder, pc.name, p.displayOrder NULLS LAST, p.code"})
+            "ORDER BY pp.displayOrder NULLS LAST, p.code"})
     @Results(value = {
             @Result(property = "programProduct.id", column = "programProductId"),
             @Result(property = "programProduct.dosesPerMonth", column = "dosesPerMonth"),
@@ -204,7 +204,7 @@ public interface FacilityApprovedProductMapper {
             @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
             @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
             @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
-            @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+            @Result(property = "programProduct.displayOrder", column = "displayOrder"),
             @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
             @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,
@@ -218,7 +218,7 @@ public interface FacilityApprovedProductMapper {
 
     @Select({"SELECT fap.*, pp.productId as productId FROM facility_approved_products fap, program_products pp,products p WHERE fap.facilityTypeId = #{facilityTypeId} ",
             "AND pp.programId=#{programId} AND fap.programProductId = pp.id AND pp.productId = p.id ORDER BY ",
-            "p.displayOrder NULLS LAST, p.code"})
+            "pp.displayOrder NULLS LAST, p.code"})
     @Results(value = {
             @Result(property = "programProduct.product.id", column = "productId"),
             @Result(property = "programProduct.product.isSelected", column="isSelected")
@@ -251,7 +251,7 @@ public interface FacilityApprovedProductMapper {
             @Result(property = "programProduct.product.packRoundingThreshold", column = "packRoundingThreshold"),
             @Result(property = "programProduct.product.dispensingUnit", column = "dispensingUnit"),
             @Result(property = "programProduct.product.fullSupply", column = "fullSupply"),
-            @Result(property = "programProduct.product.displayOrder", column = "displayOrder"),
+            @Result(property = "programProduct.displayOrder", column = "displayOrder"),
             @Result(property = "programProduct.product.form", column = "formId", javaType = ProductForm.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
             @Result(property = "programProduct.product.category", column = "categoryId", javaType = ProductCategory.class,

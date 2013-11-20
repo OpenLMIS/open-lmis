@@ -12,7 +12,6 @@ package org.openlmis.pageobjects;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.Keys;
@@ -64,9 +63,8 @@ public class UserPage extends Page {
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
-  @FindBy(how = How.XPATH, using = "//ul[@class='user-list']/li/div[@class='user-actions']/a[2]")
+  @FindBy(how = How.XPATH, using = "//ul[@id='userList']/li/div[@class='user-actions']/a[2]")
   private static WebElement selectFirstResetPassword = null;
-
 
   @FindBy(how = How.ID, using = "password1")
   private static WebElement newPasswordField = null;
@@ -80,7 +78,6 @@ public class UserPage extends Page {
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okButton = null;
 
-
   @FindBy(how = How.ID, using = "user0")
   private static WebElement firstUserLink = null;
 
@@ -89,7 +86,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Edit User')]")
   private static WebElement editUserHeader = null;
-
 
   @FindBy(how = How.ID, using = "searchFacility")
   private static WebElement searchFacility = null;
@@ -100,13 +96,11 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//form[@id='create-user']/div/div[1]/div[7]/div/ng-switch/span")
   private static WebElement verifiedLabel = null;
 
-
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[1]")
   private static WebElement expandAllOption = null;
 
   @FindBy(how = How.XPATH, using = "//div[1][@class='pull-right control-accordion']/a[2]")
   private static WebElement collapseAllOption = null;
-
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home Facility Roles')]")
   private static WebElement homeFacilityRolesAccordion = null;
@@ -142,7 +136,7 @@ public class UserPage extends Page {
   private static WebElement addSupervisoryRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Warehouse Roles')]")
-  private static WebElement warehouseRolesAccordion;
+  private static WebElement warehouseRolesAccordion=null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
   private static WebElement rolesInputFieldWarehouse = null;
@@ -157,7 +151,7 @@ public class UserPage extends Page {
   private static WebElement addWarehouseRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Delivery zones')]")
-  private static WebElement deliveryZonesAccordion;
+  private static WebElement deliveryZonesAccordion=null;
 
   @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
   private static WebElement zoneToDelivery = null;
@@ -175,7 +169,7 @@ public class UserPage extends Page {
   private static WebElement addDeliveryZoneRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Admin and General Operations Roles')]")
-  private static WebElement adminAndGeneralOperationsRolesAccordion;
+  private static WebElement adminAndGeneralOperationsRolesAccordion=null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField = null;
@@ -189,7 +183,6 @@ public class UserPage extends Page {
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
   private static WebElement successMessage = null;
-
 
   @FindBy(how = How.XPATH, using = "//input[contains(text(),'Remove')]")
   private static WebElement removeButton = null;
@@ -235,7 +228,7 @@ public class UserPage extends Page {
 
   public void verifyUserOnList(String userString) {
     testWebDriver.waitForElementToAppear(firstUserLink);
-    SeleneseTestNgHelper.assertTrue("User not available in list.", firstUserLink.getText().contains(userString));
+    assertTrue("User not available in list.", firstUserLink.getText().contains(userString));
   }
 
   public void verifyDisabledResetPassword() {
@@ -254,7 +247,7 @@ public class UserPage extends Page {
     resetPasswordDone.click();
   }
 
-  public String enterAndVerifyUserDetails(String userName, String email, String firstName, String lastName)
+  public void enterUserDetails(String userName, String email, String firstName, String lastName)
     throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(addNewButton);
     addNewButton.click();
@@ -274,16 +267,18 @@ public class UserPage extends Page {
 
     testWebDriver.waitForElementToAppear(successMessage);
 
-
     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
       " password link has been sent on registered Email address. View Here", firstName, lastName);
-    SeleneseTestNgHelper.assertEquals(expectedMessage, successMessage.getText());
-    viewHereLink.click();
+    assertEquals(expectedMessage, successMessage.getText());
+  }
 
-    DBWrapper dbWrapper = new DBWrapper();
+  public void verifyUserCreated(String firstName, String lastName)
+            throws IOException, SQLException {
+     testWebDriver.waitForElementToAppear(successMessage);
 
-    return dbWrapper.getUserID(userName);
-
+     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
+                " password link has been sent on registered Email address. View Here", firstName, lastName);
+     assertEquals(expectedMessage, successMessage.getText());
   }
 
   public void enterUserHomeFacility(String facilityCode) {
@@ -302,17 +297,23 @@ public class UserPage extends Page {
     SeleneseTestNgHelper.assertTrue("No match found link should show up", noMatchFoundLink.isDisplayed());
   }
 
-  public void verifyExpandAll() {
+  public void ExpandAll() {
     expandAllOption.click();
-    SeleneseTestNgHelper.assertTrue(programsToSupervise.isDisplayed());
-    SeleneseTestNgHelper.assertTrue(programToDeliver.isDisplayed());
+  }
+
+  public void collapseAll() {
+    collapseAllOption.click();
+  }
+
+  public void verifyExpandAll() {
+    assertTrue(programsToSupervise.isDisplayed());
+    assertTrue(programToDeliver.isDisplayed());
   }
 
   public void verifyCollapseAll() {
-    collapseAllOption.click();
-    SeleneseTestNgHelper.assertFalse(programsToSupervise.isDisplayed());
-    SeleneseTestNgHelper.assertFalse(programToDeliver.isDisplayed());
-    SeleneseTestNgHelper.assertFalse(warehouseToSelect.isDisplayed());
+    assertFalse(programsToSupervise.isDisplayed());
+    assertFalse(programToDeliver.isDisplayed());
+    assertFalse(warehouseToSelect.isDisplayed());
   }
 
   public void enterMyFacilityAndMySupervisedFacilityData(String facilityCode, String program1,
@@ -497,7 +498,7 @@ public class UserPage extends Page {
   public void verifyRolePresent(String roleName) {
     testWebDriver.sleep(500);
     WebElement roleElement = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
-    SeleneseTestNgHelper.assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
+    assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
   }
 
   public String getAllProgramsToSupervise() {

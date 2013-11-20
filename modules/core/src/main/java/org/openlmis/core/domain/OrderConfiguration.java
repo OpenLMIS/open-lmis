@@ -12,8 +12,10 @@ package org.openlmis.core.domain;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=true)
 public class OrderConfiguration extends EDIConfiguration {
 
   private String filePrefix;

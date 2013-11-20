@@ -300,6 +300,10 @@ public class DBWrapper {
                 " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 2, '11/11/12', true, 1)," +
                 " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 5, '11/11/12', true, 1)");
 
+    update("insert into requisition_group_members (requisitionGroupId, facilityId, createdDate, modifiedDate) values " +
+      "((select requisitionGroupId from requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code = '" + parentFacilityCode + "'))," +
+      "(SELECT id FROM facilities WHERE code = '" + facilityCode + "'),NOW(),NOW())");
+
   }
 
   public void deletePeriod(String periodName) throws IOException, SQLException {
@@ -1340,10 +1344,6 @@ public class DBWrapper {
       "((SELECT id FROM facilities WHERE code='" + facilityCode + "'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
   }
 
-  public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
-    update("update products set fullsupply=" + flag + " where code='" + productCode + "';");
-  }
-
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
      int rgId=0;
     ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
@@ -1412,6 +1412,23 @@ public class DBWrapper {
       rgId = rs.getInt(1);
     }
     return rgId;
+  }
+
+  public void deleteCurrentPeriod() throws SQLException {
+    update("delete from processing_periods where endDate>=NOW()") ;
+  }
+
+  public void updateProgramsSupportedByField(String field, String newValue, String facilityCode) throws SQLException {
+    update("Update programs_supported set "+field+"='"+newValue+"' where facilityId=(Select id from facilities where code ='"
+      +facilityCode+"');");
+  }
+
+  public void deleteSupervisoryRoleFromRoleAssignment() throws SQLException {
+    update("delete from role_assignments where supervisorynodeid is not null;");
+  }
+
+  public void deleteRnrTemplate() throws SQLException {
+    update("delete from program_rnr_columns");
   }
 
 }

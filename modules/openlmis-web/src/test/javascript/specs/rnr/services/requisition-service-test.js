@@ -72,6 +72,14 @@ describe("requisitionService", function () {
     expect(scope.highlightRequired).toBeDefined();
   });
 
+  it("should return null for highlightRequired if skipped is true", function () {
+    scope.rnr = {emergency: false };
+    routeParams.supplyType = "fullSupply";
+    requisitionService.populateScope(scope, location, routeParams);
+
+    expect(scope.highlightRequired("some-random-string", undefined, true)).toEqual(null);
+  });
+
   it('refresh grid and not save rnr for view', function () {
     scope.saveRnr = function () {
     };

@@ -67,7 +67,8 @@ public class CreateUpdateCHW extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UserPage userPage = homePage.navigateToUser();
-    userPage.enterAndVerifyUserDetails("storeIncharge", userEmail, "Fatim", "Doe");
+    userPage.enterUserDetails("storeIncharge", userEmail, "Fatim", "Doe");
+    userPage.clickViewHere();
     userPage.enterUserHomeFacility(DEFAULT_PARENT_FACILITY_CODE);
     userPage.verifyNoMatchedFoundMessage();
     homePage.logout(baseUrlGlobal);

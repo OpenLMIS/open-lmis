@@ -20,9 +20,9 @@ import org.openlmis.core.domain.BaseModel;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 public class RefrigeratorReading extends BaseModel {
 
   Float temperature;

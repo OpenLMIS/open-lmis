@@ -130,13 +130,14 @@ public class Facility extends BaseModel implements Importable {
     this.id = id;
   }
 
-  public Facility(Long id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType) {
+  public Facility(Long id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType, boolean virtualFacility) {
     this.id = id;
     this.code = code;
     this.name = name;
     this.operatedBy = operatedBy;
     this.geographicZone = geographicZone;
     this.facilityType = facilityType;
+    this.virtualFacility = virtualFacility;
   }
 
   public Facility(Long id, boolean enabled, boolean active, Long modifiedBy) {
@@ -150,7 +151,7 @@ public class Facility extends BaseModel implements Importable {
   public boolean equals(Object o) {
 
     return reflectionEquals(this, o, false, Facility.class, "supportedPrograms", "geographicZone") &&
-        reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
+      reflectionEquals(this.geographicZone, ((Facility) o).geographicZone, false, GeographicZone.class, "parent", "level");
   }
 
   @Override
@@ -159,7 +160,7 @@ public class Facility extends BaseModel implements Importable {
   }
 
   public Facility basicInformation() {
-    return new Facility(id, code, name, operatedBy, geographicZone, facilityType);
+    return new Facility(id, code, name, operatedBy, geographicZone, facilityType, virtualFacility);
   }
 
   public static Facility createFacilityToBeDeleted(Long facilityId, Long modifiedBy) {

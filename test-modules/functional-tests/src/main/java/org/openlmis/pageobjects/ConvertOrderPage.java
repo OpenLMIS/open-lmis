@@ -28,53 +28,47 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ConvertOrderPage extends RequisitionPage {
 
-  @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
-  private static WebElement noRequisitionsPendingMessage;
-
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
-  private static WebElement programOnOrderScreen;
+  private static WebElement programOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-  private static WebElement facilityCodeOnOrderScreen;
+  private static WebElement facilityCodeOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col3 colt3']/span")
-  private static WebElement facilityNameOnOrderScreen;
+  private static WebElement facilityNameOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col4 colt4']/span")
-  private static WebElement periodStartDateOnOrderScreen;
+  private static WebElement periodStartDateOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col5 colt5']/span")
-  private static WebElement periodEndDateOnOrderScreen;
+  private static WebElement periodEndDateOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col8 colt8']/span")
-  private static WebElement supplyDepotOnOrderScreen;
+  private static WebElement supplyDepotOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//input[@class='ngSelectionCheckbox']")
-  private static WebElement checkboxOnOrderScreen;
+  private static WebElement checkboxOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Convert To Order']")
-  private static WebElement convertToOrderButton;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement successMessageDiv;
+  private static WebElement convertToOrderButton=null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='noRequisitionSelectedMsgDiv']")
-  private static WebElement noRequisitonSelectedDiv;
+  private static WebElement noRequisitonSelectedDiv=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/input")
-  private static WebElement searchTextBox;
+  private static WebElement searchTextBox=null;
 
   @FindBy(how = How.XPATH, using = "//button[@ng-click='updateSearchParams()']")
-  private static WebElement searchButton;
+  private static WebElement searchButton=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='input-append input-prepend']/div/button")
-  private static WebElement searchOptionButton;
+  private static WebElement searchOptionButton=null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon;
+  private static WebElement emergencyIcon=null;
 
   @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.requisitions.for.conversion']")
-  private static WebElement noRequisitionPending;
+  private static WebElement noRequisitionPending=null;
 
 
   public ConvertOrderPage(TestWebDriver driver) throws IOException {

@@ -37,12 +37,14 @@ public class JsonUtility extends TestCaseHelper {
   public static String getJsonStringFor(Object object) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     StringWriter writer = new StringWriter();
+//    objectMapper
     objectMapper.writeValue(writer, object);
     return writer.toString();
   }
+
   public static void submitRequisition(String userName, String program) throws Exception {
-      dbWrapper.insertRequisitions(1, program, true);
-      dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
+    dbWrapper.insertRequisitions(1, program, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
   }
 
 
@@ -51,13 +53,13 @@ public class JsonUtility extends TestCaseHelper {
   }
 
   public static void createOrder(String userName, String status, String program) throws Exception {
-      dbWrapper.insertRequisitions(1, program, true);
-      dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
-      dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
-      dbWrapper.insertApprovedQuantity(1);
-      dbWrapper.insertFulfilmentRoleAssignment(userName,"store in-charge","F10");
-      dbWrapper.insertOrders(status, userName, program);
-      dbWrapper.updatePacksToShip("1");
+    dbWrapper.insertRequisitions(1, program, true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
+    dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
+    dbWrapper.insertApprovedQuantity(1);
+    dbWrapper.insertFulfilmentRoleAssignment(userName, "store in-charge", "F10");
+    dbWrapper.insertOrders(status, userName, program);
+    dbWrapper.updatePacksToShip("1");
   }
 
   public static void approveRequisition(Long id, int quantityApproved) throws Exception {
@@ -78,7 +80,7 @@ public class JsonUtility extends TestCaseHelper {
       "Admin123");
   }
 
-  public static void convertToOrder(String userName,String password) throws Exception {
+  public static void convertToOrder(String userName, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();

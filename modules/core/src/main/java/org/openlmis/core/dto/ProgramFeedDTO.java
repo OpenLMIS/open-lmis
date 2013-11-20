@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.Program;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class ProgramFeedDTO extends BaseFeedDTO{
 
   private String programCode;

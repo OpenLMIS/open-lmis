@@ -10,8 +10,6 @@
 
 package org.openlmis.pageobjects;
 
-
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,7 +24,7 @@ public class AccessDeniedPage extends Page {
 
 
   @FindBy(how = How.XPATH, using = "//h3[@class='access-denied']")
-  private static WebElement accessDeniedHeader;
+  private static WebElement accessDeniedHeader=null;
 
 
   public AccessDeniedPage(TestWebDriver driver) throws IOException {

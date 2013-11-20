@@ -12,6 +12,7 @@ package org.openlmis.core.service;
 
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
@@ -29,6 +30,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static org.apache.commons.collections.CollectionUtils.select;
 
 @Service
 @NoArgsConstructor
@@ -124,8 +126,8 @@ public class FacilityService {
 
   private boolean canUpdateVirtualFacilities(Facility newFacility, Facility oldFacility) {
     return (oldFacility == null ||
-        !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
-        !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
+      !(newFacility.getGeographicZone().getCode().equals(oldFacility.getGeographicZone().getCode())) ||
+      !(newFacility.getFacilityType().getCode().equals(oldFacility.getFacilityType().getCode()))
     );
   }
 
@@ -192,12 +194,18 @@ public class FacilityService {
   }
 
   public Facility getFacilityByCode(String facilityCode) {
-    Long facilityId;
-    if ((facilityId = facilityRepository.getIdForCode(facilityCode)) == null) {
+    Facility facility;
+    if ((facility = facilityRepository.getByCode(facilityCode)) == null) {
       throw new DataException(ERROR_FACILITY_CODE_INVALID);
     }
-    Facility facility = facilityRepository.getById(facilityId);
-    facility.setSupportedPrograms(programSupportedService.getActiveByFacilityId(facility.getId()));
+
+    facility.setSupportedPrograms((List<ProgramSupported>) select(facility.getSupportedPrograms(), new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((ProgramSupported) o).getActive();
+      }
+    }));
+
     return facility;
   }
 
@@ -213,15 +221,10 @@ public class FacilityService {
     return facilityRepository.getAllByModifiedDate(modifiedDate);
   }
 
-  public Facility getVirtualFacilityByCode(String facilityCode) {
-    Facility facility = facilityRepository.getByCode(facilityCode);
-
-    if (facility == null) {
-      throw new DataException(ERROR_FACILITY_CODE_INVALID);
-    }
+  public Facility getOperativeFacilityByCode(String facilityCode) {
+    Facility facility = getFacilityByCode(facilityCode);
 
     Facility parentFacility = null;
-
     if (facility.getVirtualFacility()) {
       parentFacility = facilityRepository.getById(facility.getParentFacilityId());
     }

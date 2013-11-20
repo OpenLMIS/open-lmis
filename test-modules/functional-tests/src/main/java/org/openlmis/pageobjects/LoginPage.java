@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,46 +24,30 @@ import java.io.IOException;
 public class LoginPage extends Page {
 
   @FindBy(how= How.XPATH, using = "//div[@class='login-page']/ng-include/div/div[2]/h2")
-  private static WebElement pageIdentifierOnLoginPage;
+  private static WebElement pageIdentifierOnLoginPage=null;
 
   @FindBy(how = How.ID, using = "username")
-  private static WebElement userNameField;
+  private static WebElement userNameField=null;
 
   @FindBy(how = How.ID, using = "password")
-  private static WebElement passwordField;
-
-  @FindBy(how = How.XPATH, using="//input[@class='btn btn-primary']")
-  private static WebElement signInButton;
-
-  @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Forgot Password')]")
-  private static WebElement forgotPasswordHeader;
+  private static WebElement passwordField=null;
 
   @FindBy(how = How.XPATH, using = "//a[@openlmis-message='link.forgot.password']")
-  private static WebElement forgotPasswordLink;
+  private static WebElement forgotPasswordLink=null;
 
-  private String BASE_URL;
+  @FindBy(how = How.ID, using = "locale_en")
+  private static WebElement langEnglish=null;
 
-  private String baseUrl;
+  @FindBy(how=How.ID, using = "locale_pt")
+  private static WebElement langPortugues=null;
 
-    @FindBy(how = How.ID, using = "locale_en")
-    private static WebElement langEnglish;
-
-    @FindBy(how=How.ID, using = "locale_pt")
-    private static WebElement langPortugues;
-
-    @FindBy(how=How.ID, using = "locale_es")
-    private static WebElement langEspanol;
-
-
-    public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
+  public LoginPage(TestWebDriver driver, String baseUrl) throws IOException {
     super(driver);
 
-    BASE_URL = baseUrl;
-    testWebDriver.setBaseURL(BASE_URL);
+    testWebDriver.setBaseURL(baseUrl);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(userNameField);
-    SeleneseTestNgHelper.assertTrue(userNameField.isDisplayed());
   }
 
 
@@ -80,16 +63,13 @@ public class LoginPage extends Page {
   public ForgotPasswordPage clickForgotPasswordLink() throws IOException {
     testWebDriver.waitForElementToAppear(forgotPasswordLink);
     forgotPasswordLink.click();
-//    testWebDriver.waitForElementToAppear(forgotPasswordHeader);
     return new ForgotPasswordPage(testWebDriver);
   }
 
     public String getEnglishColor()
     {
         testWebDriver.sleep(1500);
-//        testWebDriver.waitForElementToAppear(langEnglish);
-        String color=langEnglish.getCssValue("color");
-        return color;
+        return langEnglish.getCssValue("color");
     }
 
     public String getPortuguesColor()
@@ -97,8 +77,7 @@ public class LoginPage extends Page {
     {
         testWebDriver.sleep(1500);
         testWebDriver.waitForElementToAppear(langPortugues);
-        String color=langPortugues.getCssValue("color");
-        return color;
+        return langPortugues.getCssValue("color");
     }
 
     public void setLangAsEnglish()

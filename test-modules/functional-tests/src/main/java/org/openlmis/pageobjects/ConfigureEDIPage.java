@@ -24,13 +24,13 @@ import static org.openqa.selenium.support.How.ID;
 public class ConfigureEDIPage extends Page {
 
   @FindBy(how = ID, using = "configureOrder")
-  private static WebElement configureOrderButton;
+  private static WebElement configureOrderButton=null;
 
   @FindBy(how = ID, using = "configureShipment")
-  private static WebElement configureShipmentButton;
+  private static WebElement configureShipmentButton=null;
 
   @FindBy(how = ID, using = "configureBudget")
-  private static WebElement configureBudgetButton;
+  private static WebElement configureBudgetButton=null;
 
   public ConfigureEDIPage(TestWebDriver driver) throws IOException {
     super(driver);

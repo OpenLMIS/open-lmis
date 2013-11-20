@@ -12,18 +12,20 @@ package org.openlmis.restapi.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.find;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Report {
   private Long requisitionId;
   private String facilityCode;
@@ -44,6 +46,7 @@ public class Report {
     }
   }
 
+  @JsonIgnore
   public Rnr getRequisition() {
     Rnr rnr = new Rnr();
     rnr.setId(requisitionId);
@@ -61,5 +64,26 @@ public class Report {
       if (rnrLineItem.getQuantityApproved() < 0)
         throw new DataException("error.restapi.quantity.approved.negative");
     }
+  }
+
+  public Rnr getRnrWithSkippedProducts(Rnr rnr) {
+    List<RnrLineItem> rnrLineItemsFromReport = new ArrayList<>();
+    for (final RnrLineItem fullSupplyLineItem : rnr.getFullSupplyLineItems()) {
+      RnrLineItem productLineItem = (RnrLineItem) find(getProducts(), new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          return ((RnrLineItem) o).getProductCode().equals(fullSupplyLineItem.getProductCode());
+        }
+      });
+      if (productLineItem == null) {
+        fullSupplyLineItem.setSkipped(true);
+        rnrLineItemsFromReport.add(fullSupplyLineItem);
+      } else {
+        productLineItem.setId(fullSupplyLineItem.getId());
+        rnrLineItemsFromReport.add(productLineItem);
+      }
+    }
+    rnr.setFullSupplyLineItems(rnrLineItemsFromReport);
+    return rnr;
   }
 }

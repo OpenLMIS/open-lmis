@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.calculation.DefaultStrategy;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,31 +25,29 @@ import static org.junit.Assert.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
 public class RnrCalcStrategyTest {
-  private RnrCalcStrategy calcStrategy;
+  private DefaultStrategy calcStrategy;
   private ProcessingPeriod period;
-  private ProgramRnrTemplate template;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
 
   @Before
   public void setup() {
-    calcStrategy = new RnrCalcStrategy();
+    calcStrategy = new DefaultStrategy();
     period = new ProcessingPeriod() {{
       setNumberOfMonths(1);
     }};
-    template = new ProgramRnrTemplate();
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     LossesAndAdjustmentsType additive2 = new LossesAndAdjustmentsType("additive2", "Additive 2", true, 2);
     LossesAndAdjustmentsType subtractive1 = new LossesAndAdjustmentsType("subtractive1", "Subtractive 1", false, 3);
     LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
 
     lossesAndAdjustmentsList = asList(
-      new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
+        new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
 
   }
 
   @Test
   public void shouldRecalculateNormalizedConsumption() throws Exception {
-    assertThat(calcStrategy.calculateNormalizedConsumption(3, 10, 3, 30, 10), is(37));
+    assertThat(calcStrategy.calculateNormalizedConsumption(3, 10, 3, 30, 10, null), is(37));
   }
 
   @Test

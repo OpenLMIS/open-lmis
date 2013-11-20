@@ -14,14 +14,22 @@ import com.natpryce.makeiteasy.Instantiator;
 import com.natpryce.makeiteasy.Property;
 import com.natpryce.makeiteasy.PropertyLookup;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.util.List;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static com.natpryce.makeiteasy.Property.newProperty;
+import static java.util.Arrays.asList;
 
 public class ReportBuilder {
 
   public static final Property<Report, Long> facilityId = newProperty();
   public static final Property<Report, String> agentCode = newProperty();
   public static final Property<Report, String> programCode = newProperty();
+  public static final Property<Report, List<RnrLineItem>> products = newProperty();
 
   public static final Property<Report, Long> programId = newProperty();
   public static final Property<Report, Long> periodId = newProperty();
@@ -42,6 +50,7 @@ public class ReportBuilder {
       report.setUserName(lookup.valueOf(userId, "1"));
       report.setEmergency(false);
       report.setAgentCode(lookup.valueOf(agentCode, DEFAULT_AGENT_CODE));
+      report.setProducts(lookup.valueOf(products, asList(make(a(RnrLineItemBuilder.defaultRnrLineItem)))));
       report.setProgramCode(lookup.valueOf(programCode, DEFAULT_PROGRAM_CODE));
       return report;
     }

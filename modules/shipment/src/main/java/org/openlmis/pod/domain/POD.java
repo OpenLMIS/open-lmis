@@ -31,15 +31,13 @@ public class POD extends BaseModel {
   }
 
   public void validate() {
-    if (orderId == null || podLineItems == null) {
+    if (orderId == null || podLineItems == null || podLineItems.size() == 0) {
       throw new DataException("error.restapi.mandatory.missing");
     }
-    if (podLineItems == null || podLineItems.size() == 0) throw new DataException("error.restapi.mandatory.missing");
     for (PODLineItem lineItem : podLineItems) {
       lineItem.validate();
       lineItem.setCreatedBy(createdBy);
       lineItem.setModifiedBy(modifiedBy);
     }
-
   }
 }

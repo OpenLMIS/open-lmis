@@ -125,7 +125,8 @@ var RegularRnrLineItem = base2.Base.extend({
     this.totalLossesAndAdjustments = 0;
     var rnrLineItem = this;
     $(this.lossesAndAdjustments).each(function (index, lossAndAdjustmentObject) {
-      rnrLineItem.updateTotalLossesAndAdjustment(lossAndAdjustmentObject.quantity, lossAndAdjustmentObject.type.additive);
+      rnrLineItem.updateTotalLossesAndAdjustment(lossAndAdjustmentObject.quantity,
+        lossAndAdjustmentObject.type.additive);
     });
   },
 
@@ -360,6 +361,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   getErrorMessage: function () {
+    if (this.skipped) return "";
     if (this.stockInHand < 0) return "error.stock.on.hand.negative";
     if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
     if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
@@ -377,6 +379,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   valid: function () {
+    if (this.skipped) return true;
     if (this.rnrStatus == 'IN_APPROVAL' || this.rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
     return this.validateRequiredFieldsForNonFullSupply();

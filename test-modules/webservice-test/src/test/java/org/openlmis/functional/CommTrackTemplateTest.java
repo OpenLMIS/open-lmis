@@ -15,11 +15,11 @@ import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.restapi.domain.Report;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 
@@ -30,6 +30,9 @@ public class CommTrackTemplateTest extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
+    dbWrapper.insertVirtualFacility("V10","F10");
+    dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30","2016-01-30", 1, "M");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode("700","store in-charge","N1");
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -38,13 +41,14 @@ public class CommTrackTemplateTest extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+
+  //@Test(groups = {"webservice"})
   public void testCommTrackSubmitReportValidRnR() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_COMMTRACK_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setAgentCode("F10");
+    reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity =
@@ -54,8 +58,7 @@ public class CommTrackTemplateTest extends JsonUtility {
         "commTrack",
         "Admin123");
 
-     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
-
+    assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
   }
 }

@@ -33,4 +33,17 @@ public interface OrderFillRateReportMapper {
                                                @Param("SortCriteria") Map<String, String[]> SortCriteria,
                                                @Param("RowBounds") RowBounds rowBounds);
 
+   /* // Gets the count of the total Quantity Received under the selection criteria
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getTotalQuantityReceived")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<Integer> getTotalQuantityReceived(Map params);
+
+    // Gets the count of the total Quantity Approved under the selection criteria
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getTotalQuantityApproved")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<Integer> getTotalQuantityApproved(Map params); */
+
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getOrderFillRateQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<OrderFillRateReport> getReport(Map params);
 }

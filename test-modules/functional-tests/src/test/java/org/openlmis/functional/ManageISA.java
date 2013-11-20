@@ -133,8 +133,9 @@ public class ManageISA extends TestCaseHelper {
     setupProgramProductISA(program, "P1", "1", "2", "3", "100", "100", "1000", "5");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
-
-    ManageFacilityPage manageFacilityPage = new HomePage(testWebDriver).navigateCreateFacility();
+    HomePage homePage=new HomePage(testWebDriver);
+    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    homePage.clickCreateFacilityButton();
 
     String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
       program, geoZone, facilityType, operatedBy, valueOf(333), true);

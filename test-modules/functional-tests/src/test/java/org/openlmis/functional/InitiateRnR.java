@@ -145,6 +145,24 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterQuantityDispensed(quantityDispensed);
   }
 
+  @Then("^I validate beginning balance \"([^\"]*)\"$")
+  public void validateBeginningBalance(String beginningBalance) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyBeginningBalance(beginningBalance);
+  }
+
+  @Then("^I validate quantity received \"([^\"]*)\"$")
+  public void validateQuantityReceived(String quantityReceived) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyQuantityReceived(quantityReceived);
+  }
+
+  @Then("^I validate quantity dispensed \"([^\"]*)\"$")
+  public void validateQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyQuantityDispensed(quantityDispensed);
+  }
+
   @Then("^I should see regimen fields$")
   public void shouldSeeRegimenFields() {
     verifyRegimenFieldsPresentOnRegimenTab(regimenCode, regimenName, initiateRnRPage);
@@ -507,6 +525,10 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
 
+    initiateRnRPage1.verifyBeginningBalance("100");
+    initiateRnRPage1.verifyQuantityReceived("100");
+    initiateRnRPage1.verifyQuantityDispensed("100");
+
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "3");
@@ -597,7 +619,9 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage1.enterQuantityDispensed("100");
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
-
+    initiateRnRPage1.verifyBeginningBalance("100");
+    initiateRnRPage1.verifyQuantityReceived("100");
+    initiateRnRPage1.verifyQuantityDispensed("100");
     homePage.logout(baseUrlGlobal);
 
 
@@ -704,7 +728,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterQuantityReceived("0");
     initiateRnRPage.enterStockOnHand("1000");
     verifyTotalQuantityConsumedErrorMessage();
-
+    initiateRnRPage.verifyStockOnHand("1000");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
@@ -861,6 +885,65 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.clickProceed();
     assertEquals(initiateRnRPage.getBeginningBalance(), "1");
   }
+
+
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+    public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add(CREATE_REQUISITION);
+        rightsList.add(VIEW_REQUISITION);
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+        dbWrapper.updateVirtualPropertyOfFacility("F10","True");
+        dbWrapper.insertRoleAssignmentForSupervisoryNode("200","store in-charge","N1");
+
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+        homePage.navigateAndInitiateRnrForSupervisedFacility(program);
+        String str=homePage.getFacilityDropDownList();
+        assertFalse(str.contains("F10"));
+
+    }
+
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+    public void testSkipProductRnRField(String program,
+                                                               String userSIC,
+                                                               String categoryCode,
+                                                               String password,
+                                                               String regimenCode,
+                                                               String regimenName,
+                                                               String regimenCode2,
+                                                               String regimenName2) throws Exception {
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add(CREATE_REQUISITION);
+        rightsList.add(VIEW_REQUISITION);
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+        dbWrapper.deletePeriod("Period1");
+        dbWrapper.deletePeriod("Period2");
+        dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+
+        homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+        initiateRnRPage.enterRequestedQuantity(100);
+        initiateRnRPage.calculateAndVerifyTotalCost();
+        initiateRnRPage.verifyCostOnFooter();
+
+        initiateRnRPage.skipSingleProduct(1);
+        initiateRnRPage.verifyAllFieldsDisabled();
+        initiateRnRPage.calculateAndVerifyTotalCost();
+        assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
+        assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
+
+        initiateRnRPage.skipSingleProduct(1);
+        assertTrue(initiateRnRPage.isEnableBeginningBalance());
+        initiateRnRPage.calculateAndVerifyTotalCost();
+
+        initiateRnRPage.skipAllProduct();
+        initiateRnRPage.verifyAllFieldsDisabled();
+        assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
+        assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
+    }
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
                                                       InitiateRnRPage initiateRnRPage) {

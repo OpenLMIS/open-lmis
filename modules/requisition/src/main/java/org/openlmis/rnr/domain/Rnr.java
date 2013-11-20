@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.rnr.domain;
@@ -17,6 +19,10 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.calculation.DefaultStrategy;
+import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
+import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -25,6 +31,7 @@ import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
 @Data
@@ -101,7 +108,7 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateForApproval() {
-    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
+    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.calculatePacksToShip(calcStrategy);
     }
@@ -112,40 +119,15 @@ public class Rnr extends BaseModel {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  private RnrCalcStrategy getRnrCalcStrategy() {
-    return emergency ? new EmergencyRnrCalcStrategy() : new RnrCalcStrategy();
-  }
-
-  public void calculate(ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
-
-    this.fullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost = new Money("0");
-    calculateForFullSupply(calcStrategy, template, lossesAndAdjustmentsTypes);
-    calculateForNonFullSupply(calcStrategy);
-  }
-
-  private void calculateForNonFullSupply(RnrCalcStrategy calcStrategy) {
-    for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.validateNonFullSupply();
-      lineItem.calculatePacksToShip(calcStrategy);
-      this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
-    }
-  }
-
-  private void calculateForFullSupply(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
-    for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.validateMandatoryFields(template);
-      lineItem.calculateForFullSupply(calcStrategy, period, template, this.getStatus(), lossesAndAdjustmentsTypes);
-      lineItem.validateCalculatedFields(template);
-      this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(lineItem.calculateCost());
-    }
+  @JsonIgnore
+  public RnrCalculationStrategy getRnrCalcStrategy() {
+    return facility.getVirtualFacility() ? new VirtualFacilityStrategy() : (emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy());
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
-      Money costPerItem = lineItem.calculateCost();
-      totalFullSupplyCost = totalFullSupplyCost.add(costPerItem);
+      totalFullSupplyCost = totalFullSupplyCost.add(lineItem.calculateCost());
     }
     return totalFullSupplyCost;
   }
@@ -157,11 +139,17 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
-    if (previousRequisition == null || previousRequisition.status == INITIATED || previousRequisition.status == SUBMITTED) {
-      if (!beginningBalanceVisible) resetBeginningBalances();
+  private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
+    if (previousRequisition == null ||
+        previousRequisition.status == INITIATED ||
+        previousRequisition.status == SUBMITTED) {
+
+      if (!beginningBalanceVisible) {
+        resetBeginningBalances();
+      }
       return;
     }
+
     for (RnrLineItem currentLineItem : this.fullSupplyLineItems) {
       RnrLineItem previousLineItem = previousRequisition.findCorrespondingLineItem(currentLineItem);
       currentLineItem.setBeginningBalanceWhenPreviousStockInHandAvailable(previousLineItem);
@@ -180,7 +168,7 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateDefaultApprovedQuantity() {
-    RnrCalcStrategy calcStrategy = getRnrCalcStrategy();
+    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
       item.calculateDefaultApprovedQuantity(calcStrategy);
     }
@@ -211,7 +199,7 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
+  public RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {
     return (RnrLineItem) find(this.getAllLineItems(), new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -231,7 +219,9 @@ public class Rnr extends BaseModel {
     });
   }
 
-  public void setFieldsAccordingToTemplate(ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+  public void setFieldsAccordingToTemplate(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+    this.setBeginningBalances(previousRequisition, template.columnsVisible(BEGINNING_BALANCE));
+
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {
       lineItem.setLineItemFieldsAccordingToTemplate(template);
     }
@@ -275,9 +265,10 @@ public class Rnr extends BaseModel {
   private void copyCreatorEditableFieldsForRegimen(Rnr rnr, RegimenTemplate regimenTemplate) {
     for (RegimenLineItem regimenLineItem : rnr.regimenLineItems) {
       RegimenLineItem savedRegimenLineItem = this.findCorrespondingRegimenLineItem(regimenLineItem);
-      if (savedRegimenLineItem != null)
+      if (savedRegimenLineItem != null) {
         savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, regimenTemplate);
-      savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+        savedRegimenLineItem.setModifiedBy(rnr.getModifiedBy());
+      }
     }
   }
 
@@ -347,18 +338,18 @@ public class Rnr extends BaseModel {
     return status == AUTHORIZED || status == IN_APPROVAL;
   }
 
-  public boolean isInApproval() {
-    return status == IN_APPROVAL;
+  public boolean preAuthorize() {
+    return status == INITIATED || status == SUBMITTED;
   }
 
-  public List<String> getProductCodeDifference(Rnr rnr) {
-    List<String> invalidProductCodes = new ArrayList<>();
-    for (final RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
-      if (this.findCorrespondingLineItem(lineItem) == null) {
-        invalidProductCodes.add(lineItem.getProductCode());
-      }
-    }
-    return invalidProductCodes;
+
+  public void addToNonFullSupplyCost(Money cost) {
+    this.nonFullSupplyItemsSubmittedCost = this.nonFullSupplyItemsSubmittedCost.add(cost);
   }
+
+  public void addToFullSupplyCost(Money cost) {
+    this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(cost);
+  }
+
 }
 

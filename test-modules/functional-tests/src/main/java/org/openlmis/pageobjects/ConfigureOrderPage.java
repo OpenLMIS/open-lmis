@@ -18,8 +18,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -31,91 +29,85 @@ import static org.openqa.selenium.support.How.XPATH;
 public class ConfigureOrderPage extends Page {
 
   @FindBy(how = ID, using = "orderFilePrefix")
-  private static WebElement orderFilePrefix;
+  private static WebElement orderFilePrefix=null;
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeOrderHeaders;
+  private static WebElement includeOrderHeaders=null;
 
   @FindBy(how = ID, using = "includeCheckbox0")
-  private static WebElement orderNumberCheckBox;
+  private static WebElement orderNumberCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox1")
-  private static WebElement facilityCodeCheckBox;
+  private static WebElement facilityCodeCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox3")
-  private static WebElement approvedQuantityCheckBox;
+  private static WebElement approvedQuantityCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox2")
-  private static WebElement productCodeCheckBox;
+  private static WebElement productCodeCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox5")
-  private static WebElement orderDateCheckBox;
+  private static WebElement orderDateCheckBox=null;
 
   @FindBy(how = ID, using = "includeCheckbox4")
-  private static WebElement periodCheckBox;
+  private static WebElement periodCheckBox=null;
 
   @FindBy(how = ID, using = "columnHeaderField0")
-  private static WebElement orderNumberTextField;
+  private static WebElement orderNumberTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField1")
-  private static WebElement facilityCodeTextField;
+  private static WebElement facilityCodeTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField3")
-  private static WebElement approvedQuantityTextField;
+  private static WebElement approvedQuantityTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField2")
-  private static WebElement productCodeTextField;
+  private static WebElement productCodeTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField5")
-  private static WebElement orderDateTextField;
+  private static WebElement orderDateTextField=null;
 
   @FindBy(how = ID, using = "columnHeaderField4")
-  private static WebElement periodTextField;
+  private static WebElement periodTextField=null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv;
+  private static WebElement successMessageDiv=null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton;
+  private static WebElement saveButton=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton;
+  private static WebElement cancelButton=null;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Order file')]")
-  private static WebElement configureOrderFileHeader;
+  private static WebElement configureOrderFileHeader=null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'+ Add new row')]")
-  private static WebElement addNewButton;
+  private static WebElement addNewButton=null;
 
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span/b")
-  private static WebElement periodSelectBoxClickableLink;
-
-  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement periodSelectBoxTextField;
-
-  @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.periodDatePattern']")
-  private static WebElement periodSelectBox;
-
-  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement periodSelectBoxSelectableElement;
-
-  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span/b")
-  private static WebElement orderDateSelectBoxClickableLink;
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/div/b")
+  private static WebElement periodSelectBoxClickableLink=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement orderDateSelectBoxTextField;
-
-  @FindBy(how = XPATH, using = "//select[@ng-model='orderFileTemplate.orderConfiguration.datePattern']")
-  private static WebElement orderDateSelectBox;
+  private static WebElement periodSelectBoxTextField=null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement orderDateSelectBoxSelectableElement;
+  private static WebElement periodSelectBoxSelectableElement=null;
+
+  @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/div/b")
+  private static WebElement orderDateSelectBoxClickableLink=null;
+
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
+  private static WebElement orderDateSelectBoxTextField=null;
+
+  @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
+  private static WebElement orderDateSelectBoxSelectableElement=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen19']/a/span")
-  private static WebElement periodSelectBoxDefaultSelected;
+  private static WebElement periodSelectBoxDefaultSelected=null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen21']/a/span")
-  private static WebElement orderDateSelectBoxDefaultSelected;
+  private static WebElement orderDateSelectBoxDefaultSelected=null;
 
 
 
@@ -172,29 +164,6 @@ public class ConfigureOrderPage extends Page {
     orderDateSelectBoxSelectableElement.click();
   }
 
-  public List<String> getAllSelectOptionsOfPeriodDropDown()
-  {
-    testWebDriver.waitForElementToAppear(periodSelectBox);
-    List<WebElement> elements=testWebDriver.getAllSelectedOptions(periodSelectBox);
-    List<String> elementsValues=new ArrayList<String>();
-    for(WebElement element:elements)
-      elementsValues.add(element.getText());
-
-    return elementsValues;
-  }
-
-  public List<String> getAllSelectOptionsOfOrderDateDropDown()
-  {
-    testWebDriver.waitForElementToAppear(orderDateSelectBox);
-    List<WebElement> elements=testWebDriver.getAllSelectedOptions(orderDateSelectBox);
-    List<String> elementsValues=new ArrayList<String>();
-    for(WebElement element:elements)
-      elementsValues.add(element.getText());
-
-    return elementsValues;
-  }
-
-
   public void clickRemoveIcon(int rowNumber)
   {
     testWebDriver.getElementByXpath("//a[@id='remove"+(rowNumber)+"']").click();
@@ -231,33 +200,10 @@ public class ConfigureOrderPage extends Page {
       includeOrderHeaders.click();
   }
 
-
-  public boolean getOrderNumberCheckBox() {
-    testWebDriver.waitForElementToAppear(orderNumberCheckBox);
-    return orderNumberCheckBox.isSelected();
-  }
-
-  public void checkOrderNumberCheckBox() {
-    testWebDriver.waitForElementToAppear(orderNumberCheckBox);
-    if (!orderNumberCheckBox.isSelected())
-      orderNumberCheckBox.click();
-  }
-
   public void unCheckOrderNumberCheckBox() {
     testWebDriver.waitForElementToAppear(orderNumberCheckBox);
     if (orderNumberCheckBox.isSelected())
       orderNumberCheckBox.click();
-  }
-
-  public boolean getFacilityCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
-    return facilityCodeCheckBox.isSelected();
-  }
-
-  public void checkFacilityCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
-    if (!facilityCodeCheckBox.isSelected())
-      facilityCodeCheckBox.click();
   }
 
   public void unCheckFacilityCodeCheckBox() {
@@ -266,32 +212,10 @@ public class ConfigureOrderPage extends Page {
       facilityCodeCheckBox.click();
   }
 
-  public boolean getProductCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(productCodeCheckBox);
-    return productCodeCheckBox.isSelected();
-  }
-
-  public void checkProductCodeCheckBox() {
-    testWebDriver.waitForElementToAppear(productCodeCheckBox);
-    if (!productCodeCheckBox.isSelected())
-      productCodeCheckBox.click();
-  }
-
   public void unCheckProductCodeCheckBox() {
     testWebDriver.waitForElementToAppear(productCodeCheckBox);
     if (productCodeCheckBox.isSelected())
       productCodeCheckBox.click();
-  }
-
-  public boolean getApprovedQuantityCheckBox() {
-    testWebDriver.waitForElementToAppear(approvedQuantityCheckBox);
-    return approvedQuantityCheckBox.isSelected();
-  }
-
-  public void checkApprovedQuantityCheckBox() {
-    testWebDriver.waitForElementToAppear(approvedQuantityCheckBox);
-    if (!approvedQuantityCheckBox.isSelected())
-      approvedQuantityCheckBox.click();
   }
 
   public void unCheckApprovedQuantityCheckBox() {
@@ -300,33 +224,10 @@ public class ConfigureOrderPage extends Page {
       approvedQuantityCheckBox.click();
   }
 
-
-  public boolean getPeriodCheckBox() {
-    testWebDriver.waitForElementToAppear(periodCheckBox);
-    return periodCheckBox.isSelected();
-  }
-
-  public void checkPeriodCheckBox() {
-    testWebDriver.waitForElementToAppear(periodCheckBox);
-    if (!periodCheckBox.isSelected())
-      periodCheckBox.click();
-  }
-
   public void unCheckPeriodCheckBox() {
     testWebDriver.waitForElementToAppear(periodCheckBox);
     if (periodCheckBox.isSelected())
       periodCheckBox.click();
-  }
-
-  public boolean getOrderDateCheckBox() {
-    testWebDriver.waitForElementToAppear(orderDateCheckBox);
-    return orderDateCheckBox.isSelected();
-  }
-
-  public void checkOrderDateCheckBox() {
-    testWebDriver.waitForElementToAppear(orderDateCheckBox);
-    if (!orderDateCheckBox.isSelected())
-      orderDateCheckBox.click();
   }
 
   public void unCheckOrderDateCheckBox() {

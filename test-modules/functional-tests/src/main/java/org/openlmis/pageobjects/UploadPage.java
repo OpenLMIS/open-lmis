@@ -28,19 +28,19 @@ public class UploadPage extends Page {
   String uploadFilePath = null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Upload']")
-  private static WebElement uploadButton;
+  private static WebElement uploadButton=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Choose CSV File to upload']")
-  private static WebElement setCsvPath;
+  private static WebElement setCsvPath=null;
 
   @FindBy(how = How.XPATH, using = "//select[@id='model']")
-  private static WebElement uploadDropDown;
+  private static WebElement uploadDropDown=null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMsgDiv;
+  private static WebElement saveSuccessMsgDiv=null;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsgDiv;
+  private static WebElement saveErrorMsgDiv=null;
 
 
   private int implicitWait = 2000;

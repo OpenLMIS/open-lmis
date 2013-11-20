@@ -55,7 +55,7 @@ public class E2EUpload extends TestCaseHelper {
     List<String> userRoleList = new ArrayList<String>();
     userRoleList.add("Create Requisition");
 
-    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, "Requisition");
+    rolesPage.createRole("User", "User", userRoleList, "Requisition");
 
     UploadPage uploadPage = homePage.navigateUploads();
     verifyValidUserUpload(uploadPage);
@@ -132,69 +132,48 @@ public class E2EUpload extends TestCaseHelper {
 
 
     verifyValidVirtualFacilityUpload(uploadPage);
-  }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-  public void verifyVirtualFacilityWhenParentUpdatedByUpload(String[] credentials) throws IOException, SQLException {
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+      String parentFacilityCode="F10";
+      String virtualFacilityCode="V10";
 
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    RolesPage rolesPage = homePage.navigateRoleAssignments();
-    List<String> userRoleList = new ArrayList<String>();
-    userRoleList.add("Create Requisition");
+      homePage.navigateUploads();
 
-    String parentFacilityCode="F10";
-    String virtualFacilityCode="V10";
+      dbWrapper.insertVirtualFacility(virtualFacilityCode,parentFacilityCode);
+      uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
+      testWebDriver.sleep(2000);
+      assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid",parentFacilityCode),dbWrapper.getGeographicZoneId("IND"));
+      verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode); //---Flaky
 
-    rolesPage.createRoleWithSuccessMessageExpected("User", "User", userRoleList, "Requisition");
+      uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
+      testWebDriver.sleep(2000);
+      assertEquals(dbWrapper.getFacilityFieldBYCode("typeid",parentFacilityCode),dbWrapper.getFacilityTypeId("warehouse"));
+      verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode); //---Flaky
 
-    UploadPage uploadPage = homePage.navigateUploads();
-    uploadPage.uploadAndVerifyGeographicZone("QA_Geographic_Data.csv");
-    uploadPage.uploadFacilities("QA_facilities.csv");
+      dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
+      uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
+      assertEquals("Dispensary",dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+      assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+      uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
+      testWebDriver.sleep(2000);
+      List<Integer> listOfProgramsSupportedByParentFacility;
+      listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
+      assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
+      List<Integer> listOfProgramsSupportedByVirtualFacility;
+      listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(virtualFacilityCode);
+      Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
+      setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
+      Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
+      setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
+      assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
+      assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
+      for(Integer programId : listOfProgramsSupportedByParentFacility){
+          assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, parentFacilityCode, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, virtualFacilityCode, "active"));
+          assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, parentFacilityCode), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, virtualFacilityCode));
+      }
 
-    dbWrapper.insertVirtualFacility(virtualFacilityCode,parentFacilityCode);
-    uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
-    testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid",parentFacilityCode),dbWrapper.getGeographicZoneId("IND"));
-    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode);
-
-    uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
-    testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid",parentFacilityCode),dbWrapper.getFacilityTypeId("warehouse"));
-    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode);
-
-    dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
-    uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
-    assertEquals("Dispensary",dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-    assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-    //assertNotEquals(dbWrapper.getFacilityFieldBYCode("typeid",virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
-
-    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
-    testWebDriver.sleep(2000);
-    List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
-    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
-    assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
-    List<Integer> listOfProgramsSupportedByVirtualFacility = new ArrayList();
-    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(virtualFacilityCode);
-    Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
-    setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
-    Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
-    setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
-    assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
-    assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
-    for(Integer programId : listOfProgramsSupportedByParentFacility){
-      assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, parentFacilityCode, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, virtualFacilityCode, "active"));
-      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, parentFacilityCode), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, virtualFacilityCode));
-    }
-
-    uploadPage.uploadSupervisoryNodes("QA_Supervisory_Nodes.csv");
-    uploadPage.uploadRequisitionGroup("QA_Requisition_Groups.csv");
-    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Parent_Requisition_Program_Schedule.csv");
-    uploadPage.uploadRequisitionGroupMembers("QA_Parent_Facility_New_Requisition_Group.csv");
-    assertEquals(dbWrapper.getRequisitionIdForGroup("RG2"),dbWrapper.getRequisitionGroupId(parentFacilityCode));
-    assertEquals(dbWrapper.getRequisitionGroupId(parentFacilityCode), dbWrapper.getRequisitionGroupId(virtualFacilityCode));
+      uploadPage.uploadRequisitionGroupProgramSchedule("QA_Parent_Requisition_Program_Schedule.csv");
+      assertEquals(dbWrapper.getRequisitionGroupId(parentFacilityCode), dbWrapper.getRequisitionGroupId(virtualFacilityCode));
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {

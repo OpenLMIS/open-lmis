@@ -11,6 +11,7 @@
 var Rnr = function (rnr, programRnrColumns) {
   $.extend(true, this, rnr);
   var thisRnr = this;
+  this.skipAll = false;
 
   var getInvalidLineItemIndexes = function (lineItems) {
     var errorLineItems = [];
@@ -71,6 +72,7 @@ var Rnr = function (rnr, programRnrColumns) {
     }
 
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
+      if (lineItem.skipped) return;
       if (!validateRequiredFields(lineItem)) return false;
       if (!validateFormula(lineItem)) return false;
     });
@@ -121,8 +123,9 @@ var Rnr = function (rnr, programRnrColumns) {
     var cost = 0;
     for (var lineItemIndex in rnrLineItems) {
       var lineItem = rnrLineItems[lineItemIndex];
-      if (!lineItem || lineItem.cost === null || !utils.isNumber(lineItem.cost)) continue;
-      cost += parseFloat(lineItem.cost);
+      if (utils.isNumber(lineItem.cost) && !lineItem.skipped) {
+        cost += parseFloat(lineItem.cost);
+      }
     }
     return cost.toFixed(2);
   };

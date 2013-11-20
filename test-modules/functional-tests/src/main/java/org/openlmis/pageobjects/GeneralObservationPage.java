@@ -34,25 +34,25 @@ public class GeneralObservationPage extends DistributionTab {
   public static final String VALUE = "value";
 
   @FindBy(how = How.XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[6]/a")
-  private static WebElement generalObservationTab;
+  private static WebElement generalObservationTab=null;
 
   @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[6]/a/span[1][@class='status-icon']")
-  public static WebElement generalObservationsIndicator;
+  public static WebElement generalObservationsIndicator=null;
 
   @FindBy(how = ID, using = OBSERVATIONS)
-  public static WebElement observationsField;
+  public static WebElement observationsField=null;
 
   @FindBy(how = ID, using = VERIFIED_BY_NAME)
-  public static WebElement verifiedByNameField;
+  public static WebElement verifiedByNameField=null;
 
   @FindBy(how = ID, using = VERIFIED_BY_TITLE)
-  public static WebElement verifiedByTitleField;
+  public static WebElement verifiedByTitleField=null;
 
   @FindBy(how = ID, using = CONFIRMED_BY_NAME)
-  public static WebElement confirmedByNameField;
+  public static WebElement confirmedByNameField=null;
 
   @FindBy(how = ID, using = CONFIRMED_BY_TITLE)
-  public static WebElement confirmedByTitleField;
+  public static WebElement confirmedByTitleField=null;
 
   public Map<String, WebElement> fieldMap = new HashMap<String, WebElement>() {{
     put(OBSERVATIONS, observationsField);

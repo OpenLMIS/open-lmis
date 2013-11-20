@@ -13,12 +13,6 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.IndicatorProductsDescription = data.settings.value;
     });
 
-
-    AllReportPeriods.get(function (data) {
-        $scope.periods = data.periods;
-        $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
-    });
-
     $scope.section = function (id) {
         section = id;
     };
@@ -42,11 +36,35 @@ function OrderFillRateController($scope, $filter, ngTableParams,
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
         $scope.programs.unshift({'name':'-- All Programs --','id':'0'});
+
+        $scope.products = [];
+        $scope.products.push({name:"-- Select a product --"});
     });
+
+    $scope.ProgramChanged = function(){
+        ReportProductsByProgram.get({programId: $scope.filterObject.programId}, function(data){
+            $scope.products = data.productList;
+            $scope.products.unshift({id: '',name: '-- Select Product --'});
+        });
+    };
+
+    $scope.ChangeProductList = function () {
+        ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
+            $scope.products = data.productList;
+            $scope.products.unshift({'name': '-- All Products --','id':'All'});
+
+        });
+    };
 
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
+
+        $scope.allFacilities = [];
+        $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
+
+
+
     });
 
     RequisitionGroups.get(function (data) {
@@ -57,7 +75,6 @@ function OrderFillRateController($scope, $filter, ngTableParams,
     ReportFacilityTypes.get(function (data) {
         $scope.facilityTypes = data.facilityTypes;
         $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
-
     });
 
 
@@ -65,9 +82,10 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.productCategories = data.productCategoryList;
         $scope.productCategories.unshift({'name':'-- All Product Categories --','id':'0'});
     });
-
     $scope.ChangeSchedule = function(scheduleBy){
+
         if(scheduleBy == 'byYear'){
+
             ReportPeriodsByScheduleAndYear.get({scheduleId: $scope.filterObject.scheduleId, year: $scope.filterObject.year}, function(data){
                 $scope.periods = data.periods;
                 $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
@@ -81,29 +99,39 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
             });
 
+
         }
 
         RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
             $scope.requisitionGroups = data.requisitionGroupList;
             $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
         });
-
-
+        $scope.loadFacilities();
     };
 
 
-    $scope.ProgramChanged = function(data){
-        if($scope.filterObject.schedule !== ''){
-            $scope.ChangeSchedule();
+    $scope.loadFacilities = function(){
+
+        if(isUndefined($scope.filterObject.programId) || isUndefined($scope.filterObject.scheduleId)){
+            return;
         }
 
-        ReportProductsByProgram.get({programId: $scope.filterObject.program}, function(data){
-            $scope.products = data.productList;
-            $scope.products.unshift({id: '',name: '-- Select Product --'});
-        });
+        // load facilities
+        FacilitiesByProgramParams.get({
+                program: $scope.filterObject.programId ,
+                schedule: $scope.filterObject.scheduleId,
+                type: $scope.filterObject.facilityTypeId
+            }, function(data){
+                $scope.allFacilities = data.facilities;
+                $scope.allFacilities.unshift({code:'-- Select a Facility --',id:''});
+
+            }
+        );
     };
 
-    $scope.$watch('orderFillRate.facilityTypeId', function (selection) {
+
+
+    $scope.$watch('filterObject.facilityTypeId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.facilityTypeId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -117,13 +145,14 @@ function OrderFillRateController($scope, $filter, ngTableParams,
             $scope.filterObject.facilityTypeId = 0;
             $scope.filterObject.facilityType="";
         }
-        $scope.ChangeFacility();
+
         $scope.filterGrid();
     });
 
-    $scope.$watch('orderFillRate.facilityId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.facilityId = -1;
+
+    $scope.$watch('filterObject.facilityId', function (selection) {
+        if (selection === "All") {
+            $scope.filterObject.facilityId = 0;
         } else if (selection !== undefined || selection === "") {
             $scope.filterObject.facilityId = selection;
             $.each($scope.allFacilities, function (item, idx) {
@@ -133,22 +162,15 @@ function OrderFillRateController($scope, $filter, ngTableParams,
             });
 
         } else {
-            $scope.filterObject.facilityId = 0;
-            $scope.filterObject.facility = "";
+            $scope.filterObject.facilityId = -1;
+            $scope.filterObject.facility="";
+
         }
         $scope.filterGrid();
 
     });
-    $scope.ChangeFacility = function(){
 
-        GetFacilityByFacilityType.get({ facilityTypeId : $scope.filterObject.facilityTypeId },function(data) {
-
-            $scope.allFacilities =  data.facilities;
-           $scope.allFacilities.push({code:'-- Select a Facility --',id:''});
-        });
-    };
-
-    $scope.$watch('orderFillRate.productCategoryId', function (selection) {
+    $scope.$watch('filterObject.productCategoryId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.productCategoryId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -162,21 +184,12 @@ function OrderFillRateController($scope, $filter, ngTableParams,
             $scope.filterObject.productCategoryId = 0;
         }
         $scope.ChangeProductList();
+
         $scope.filterGrid();
     });
 
+    $scope.$watch('filterObject.productId', function (selection) {
 
-    $scope.ChangeProductList = function () {
-        ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
-            $scope.products = data.productList;
-            $scope.products.unshift({'name': '-- All Products --','id':'All'});
-            var ind_prod = $scope.IndicatorProductsDescription;
-            $scope.products.unshift({'name': '-- '.concat(ind_prod).concat(' --'), 'id':'-1'});
-        });
-    };
-
-
-    $scope.$watch('orderFillRate.productId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.productId = 0;
         } else if (selection !== undefined || selection === "") {
@@ -193,7 +206,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.filterGrid();
     });
 
-    $scope.$watch('orderFillRate.rgroupId', function (selection) {
+    $scope.$watch('filterObject.rgroupId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.rgroupId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -209,7 +222,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.filterGrid();
     });
 
-    $scope.$watch('orderFillRate.programId', function (selection) {
+    $scope.$watch('filterObject.programId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.programId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -226,7 +239,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.filterGrid();
     });
 
-    $scope.$watch('orderFillRate.periodId', function (selection) {
+    $scope.$watch('filterObject.periodId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.periodId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -244,7 +257,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.filterGrid();
     });
 
-    $scope.$watch('orderFillRate.scheduleId', function (selection) {
+    $scope.$watch('filterObject.scheduleId', function (selection) {
         if (selection == "All") {
             $scope.filterObject.scheduleId = -1;
         } else if (selection !== undefined || selection === "") {
@@ -262,7 +275,21 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
     });
 
-    $scope.$watch('orderFillRate.year', function (selection) {
+
+    $scope.$watch('year', function (selection) {
+        if (selection == "-- All Years --") {
+            $scope.filterObject.year = -1;
+        } else if (selection !== undefined || selection === "") {
+            $scope.filterObject.year = selection;
+        } else {
+            $scope.filterObject.year = 0;
+        }
+        $scope.filterGrid();
+
+    });
+
+
+    $scope.$watch('filterObject.year', function (selection) {
 
         if (selection == "-- All Years --") {
             $scope.filterObject.year = -1;

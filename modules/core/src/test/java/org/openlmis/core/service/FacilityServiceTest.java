@@ -43,6 +43,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
@@ -129,7 +130,7 @@ public class FacilityServiceTest {
     verify(facilityRepository).updateEnabledAndActiveFor(facility);
     verify(facilityRepository).getById(facility.getParentFacilityId());
     verify(eventService).notify(argThat(eventMatcher(uuid, "Facility", dateTime, "",
-        facilityFeedDTO.getSerializedContents(), "facilities")));
+      facilityFeedDTO.getSerializedContents(), "facilities")));
 
   }
 
@@ -140,7 +141,7 @@ public class FacilityServiceTest {
       public boolean matches(Object argument) {
         Event event = (Event) argument;
         return event.getUuid().equals(uuid.toString()) && event.getTitle().equals(title) && event.getTimeStamp().equals(timestamp) &&
-            event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
+          event.getUri().toString().equals(uri) && event.getContents().equals(content) && event.getCategory().equals(category);
       }
     };
   }
@@ -404,21 +405,18 @@ public class FacilityServiceTest {
   public void shouldGetFacilityByCode() throws Exception {
 
     String facilityCode = "F11";
-    List<ProgramSupported> programSupported = asList(new ProgramSupported());
+    List<ProgramSupported> programSupported = asList(new ProgramSupported(2l, false, new Date()), new ProgramSupported(3l, true, new Date()));
     Facility expectedFacility = new Facility();
     Long facilityId = 1L;
     expectedFacility.setId(facilityId);
-    when(facilityRepository.getIdForCode(facilityCode)).thenReturn(facilityId);
-    when(facilityRepository.getById(facilityId)).thenReturn(expectedFacility);
-    when(programSupportedService.getActiveByFacilityId(facilityId)).thenReturn(programSupported);
+    expectedFacility.setSupportedPrograms(programSupported);
+    when(facilityRepository.getByCode(facilityCode)).thenReturn(expectedFacility);
 
     Facility facility = facilityService.getFacilityByCode(facilityCode);
 
     assertThat(facility, is(expectedFacility));
-    verify(facilityRepository).getIdForCode(facilityCode);
-    verify(facilityRepository).getById(facilityId);
-    verify(programSupportedService).getActiveByFacilityId(facilityId);
-    assertThat(facility.getSupportedPrograms(), is(programSupported));
+    verify(facilityRepository).getByCode(facilityCode);
+    assertThat(facility.getSupportedPrograms(), hasItem(programSupported.get(1)));
   }
 
   @Test
@@ -450,7 +448,7 @@ public class FacilityServiceTest {
     when(facilityRepository.getById(333L)).thenReturn(parentFacility);
     when(facilityRepository.getByCode("code")).thenReturn(expectedFacility);
 
-    Facility actualFacility = facilityService.getVirtualFacilityByCode("code");
+    Facility actualFacility = facilityService.getOperativeFacilityByCode("code");
 
     assertThat(actualFacility, is(expectedFacility));
   }
@@ -462,7 +460,7 @@ public class FacilityServiceTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.facility.code.invalid");
 
-    facilityService.getVirtualFacilityByCode("code");
+    facilityService.getOperativeFacilityByCode("code");
   }
 
   @Test
@@ -479,7 +477,7 @@ public class FacilityServiceTest {
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.facility.inoperative");
 
-    facilityService.getVirtualFacilityByCode("code");
+    facilityService.getOperativeFacilityByCode("code");
   }
 
   @Test
@@ -490,7 +488,7 @@ public class FacilityServiceTest {
 
     when(facilityRepository.getByCode("code")).thenReturn(facility);
 
-    facilityService.getVirtualFacilityByCode("code");
+    facilityService.getOperativeFacilityByCode("code");
 
     verify(facilityRepository, never()).getById(anyLong());
   }

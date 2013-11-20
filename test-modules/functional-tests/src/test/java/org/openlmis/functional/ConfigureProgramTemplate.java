@@ -62,10 +62,10 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     String newColumnHeading = "Altered";
-      templateConfigPage.unClickExpirationDate();
-      templateConfigPage.unClickTotal();
-      templateConfigPage.checkSkip();
-      templateConfigPage.setSkipTextBox("Product Skip");
+    templateConfigPage.unClickExpirationDate();
+    templateConfigPage.unClickTotal();
+    templateConfigPage.checkSkip();
+    templateConfigPage.setSkipTextBox("Product Skip");
     templateConfigPage.alterBeginningBalanceLabel(newColumnHeading);
 
 
@@ -77,8 +77,7 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     String tableXpathTillTr = "//table[@id='fullSupplyTable']/thead/tr";
     String tableFrozenXpathTillTr = "//table[@id='fullSupplyFrozenTable']/thead/tr";
-//    int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
-//    initiateRnRPage.verifyColumnsHeadingPresent(tableXpathTillTr, newColumnHeading, columns);
+
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Expiration Date", columns);
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);

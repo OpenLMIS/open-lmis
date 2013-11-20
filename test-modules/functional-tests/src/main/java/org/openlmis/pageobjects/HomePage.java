@@ -11,12 +11,8 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.extension.pageobjects.ManageGeographicZonesPage;
-import org.openlmis.extension.pageobjects.ManageRequisitionGroupsPage;
-import org.openlmis.extension.pageobjects.ManageSupervisoryNodesPage;
-import org.openlmis.extension.pageobjects.ManageSupplylinePage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -26,227 +22,160 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 
 
 public class HomePage extends Page {
 
-  @FindBy(how = How.XPATH, using = "//strong[@class='ng-binding']")
-  private static WebElement usernameDisplay;
-
   @FindBy(how = How.LINK_TEXT, using = "Logout")
-
-  private static WebElement logoutLink;
+  private static WebElement logoutLink=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='user-info ng-scope']/strong")
-  private static WebElement loggedInUserLabel;
+  private static WebElement loggedInUserLabel=null;
 
   @FindBy(how = How.ID, using = "requisitions-menu")
-  private static WebElement requisitionMenuItem;
+  private static WebElement requisitionMenuItem=null;
 
   @FindBy(how = ID, using = "distributions-menu")
-  private static WebElement distributionsMenuItem;
+  private static WebElement distributionsMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Program Product ISA')]")
-  private static WebElement programProductISAMenuItem;
+  private static WebElement programProductISAMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Home')]")
-  private static WebElement homeMenuItem;
+  private static WebElement homeMenuItem=null;
 
   @FindBy(how = How.ID, using = "reports-menu")
-  private static WebElement reportMenuItem;
-
-  @FindBy(how = How.ID, using ="other-reports-menu")
-  private static WebElement otherReportItem;
+  private static WebElement reportMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//h2/span[contains(text(),'Reports')]")
-  private static WebElement reportsTitle;
+  private static WebElement reportsTitle=null;
 
   @FindBy(how = How.ID, using = "orders-menu")
-  private static WebElement ordersMenuItem;
+  private static WebElement ordersMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Approve')]")
-  private static WebElement approveLink;
+  private static WebElement approveLink=null;
 
   @FindBy(how = How.ID, using = "administration-menu")
-  private static WebElement AdministrationMenuItem;
+  private static WebElement AdministrationMenuItem=null;
 
   @FindBy(how = How.ID, using = "manage-option")
-  private static WebElement manageFacilityMenuItem;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Facilities')]")
-  private static WebElement facilityMenuItem;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
-  private static WebElement manageRoleAssignmentLink;
+  private static WebElement manageFacilityMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Convert to Order')]")
-  private static WebElement convertToOrderMenuItem;
+  private static WebElement convertToOrderMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Manage')]")
-  private static WebElement manageMenuItem;
+  private static WebElement manageMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Distributions')]")
-  private static WebElement offlineDistributions;
+  private static WebElement offlineDistributions=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View Orders')]")
-  private static WebElement viewOrdersMenuItem;
+  private static WebElement viewOrdersMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'View')]")
-  private static WebElement viewRequisitonMenuItem;
+  private static WebElement viewRequisitonMenuItem=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Requisitions')]")
-  private static WebElement viewRequisitonHeader;
+  private static WebElement viewRequisitonHeader=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Convert Requisitions to Order')]")
-  private static WebElement convertToOrderHeader;
+  private static WebElement convertToOrderHeader=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Manage a Distribution')]")
-  private static WebElement manageDistributionHeader;
+  private static WebElement manageDistributionHeader=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'View Orders')]")
-  private static WebElement viewOrdersHeader;
+  private static WebElement viewOrdersHeader=null;
 
   @FindBy(how = How.ID, using = "add-new-facility")
-  private static WebElement createFacility;
-
-  @FindBy(how = How.ID, using = "add-new-supplyline")
-  private static WebElement createSupplyline;
+  private static WebElement createFacility=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
-  private static WebElement facilityHeader;
+  private static WebElement facilityHeader=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Configure")
-  private static WebElement TemplateConfigTab;
+  private static WebElement TemplateConfigTab=null;
 
   @FindBy(how = How.LINK_TEXT, using = "R & R Template")
-  private static WebElement RnRTemplateConfigTab;
+  private static WebElement RnRTemplateConfigTab=null;
 
   @FindBy(how = How.LINK_TEXT, using = "EDI File")
-  private static WebElement ediFileTab;
+  private static WebElement ediFileTab=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Regimen Template")
-  private static WebElement RegimenTemplateConfigTab;
+  private static WebElement RegimenTemplateConfigTab=null;
 
   @FindBy(how = How.XPATH, using = "//h2[contains(text(),'Regimen Template')]")
-  private static WebElement RegimenTemplateHeader;
-
-  @FindBy(how = How.LINK_TEXT, using = "R & R")
-  private static WebElement ConfigureTemplateSelectProgramPage;
-
-  @FindBy(how = How.ID, using = "selectProgram")
-  private static WebElement ProgramDropDown;
+  private static WebElement RegimenTemplateHeader=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Requisitions")
-  private static WebElement requisitionsLink;
+  private static WebElement requisitionsLink=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='submenu']")
-  private static WebElement SubMenuItem;
+  private static WebElement SubMenuItem=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Create / Authorize")
-  private static WebElement createLink;
+  private static WebElement createLink=null;
 
   @FindBy(how = How.XPATH, using = "//input[@id='myFacilityRnr']")
-  private static WebElement myFacilityRadioButton;
-
-  @FindBy(how = How.LINK_TEXT, using = "My Facility")
-  private static WebElement myFacilityLink;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(@href,'/public/pages/logistics/rnr/create.html')]")
-  private static WebElement createRnRLink;
-
-  @FindBy(how = How.ID, using = "facilityList")
-  private static WebElement facilityDropDown;
-
-  @FindBy(how = How.XPATH, using = "//select[@id='programListMyFacility']")
-  private static WebElement programDropDown;
-
-  @FindBy(how = How.XPATH, using = "//option[@value='0']")
-  private static WebElement periodDropDown;
-
-
-  @FindBy(how = How.XPATH, using = "//select[1]")
-  private static WebElement programDropDownSelect;
-
-  @FindBy(how = How.XPATH, using = "//select[3]")
-  private static WebElement periodDropDownSelect;
-
-  @FindBy(how = How.XPATH, using = "//input[@value='Next']")
-  private static WebElement nextButton;
+  private static WebElement myFacilityRadioButton=null;
 
   @FindBy(how = How.LINK_TEXT, using = "Manage")
-  private static WebElement manageLink;
-
-  @FindBy(how = How.LINK_TEXT, using = "Schedules")
-  private static WebElement schedulesLink;
-
-  @FindBy(how = How.LINK_TEXT, using = "Search")
-  private static WebElement searchLink;
-
-  @FindBy(how = How.LINK_TEXT, using = "Geographic Zones")
-  private static WebElement geographicZonesLink;
-
-  @FindBy(how=How.LINK_TEXT, using = "Requisition Groups")
-  private static WebElement requisitionGroupsLink;
+  private static WebElement manageLink=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Upload')]")
-  private static WebElement uploadLink;
+  private static WebElement uploadLink=null;
 
   @FindBy(how = How.XPATH, using = "//input[@ng-click='initRnr(row.entity)']")
-  private static WebElement proceedButton;
+  private static WebElement proceedButton=null;
 
   @FindBy(how = How.ID, using = "facility-tab")
-  private static WebElement facilitiesTab;
+  private static WebElement facilitiesTab=null;
 
   @FindBy(how = How.ID, using = "role-tab")
-  private static WebElement rolesTab;
-
-  @FindBy(how = How.XPATH, using = "//a[contains(text(),'Roles')]")
-  private static WebElement rolesLink;
+  private static WebElement rolesTab=null;
 
   @FindBy(how = How.ID, using = "schedule-tab")
-  private static WebElement schedulesTab;
-
+  private static WebElement schedulesTab=null;
 
   @FindBy(how = How.ID, using = "user-tab")
-  private static WebElement usersTab;
-
-  @FindBy(how=How.ID, using="geographic-zones-tab")
-  private static WebElement geographicZonesTab;
-
-  @FindBy(how=How.ID,using="requisition-group-tab")
-  private static WebElement requisitionGroupsTab;
-
-  @FindBy(how=How.ID,using="supervisory-node-tab")
-  private static WebElement supervisoryNodesTab;
-
-  @FindBy(how = How.LINK_TEXT, using = "Supply Lines")
-  private static WebElement supplylinesLink;
-
-  @FindBy(how = How.ID, using = "supplyline-tab")
-  private static WebElement supplylinesTab;
-
+  private static WebElement usersTab=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col1 colt1']/span")
-  private static WebElement startDate;
+  private static WebElement startDate=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-  private static WebElement endDate;
+  private static WebElement endDate=null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement errorMsg;
+  private static WebElement errorMsg=null;
 
   @FindBy(how = ID, using = "program")
-  private static WebElement selectProgramSelectBox;
-
+  private static WebElement selectProgramSelectBox=null;
 
   @FindBy(how = ID, using = "rnrType")
-  private static WebElement rnrTypeSelectBox;
+  private static WebElement rnrTypeSelectBox=null;
 
   @FindBy(how = How.XPATH, using = "//div/div/div[1]/div[2]/div/span")
-  private static WebElement firstPeriodLabel;
+  private static WebElement firstPeriodLabel=null;
 
-  public HomePage(TestWebDriver driver) throws IOException {
+  @FindBy(how = How.XPATH, using = "//input[@id='supervisedFacilityRnr']")
+  private static WebElement supervisedFacilityRadioButton=null;
+
+  @FindBy(how = How.XPATH, using = "//select[@id='programListSupervisedFacility']")
+  private static WebElement ProgramDropDownSupervisedFacility=null;
+
+  @FindBy(how = How.ID, using = "facilityList")
+  private static WebElement facilityDropDown=null;
+
+  @FindBy(how = How.XPATH, using = "//select[@id='programListMyFacility']")
+  private static WebElement programDropDown=null;
+
+    public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -264,37 +193,27 @@ public class HomePage extends Page {
   }
 
   public ManageFacilityPage navigateCreateFacility() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);
     testWebDriver.keyPress(manageFacilityMenuItem);
-    verifyTabs();
-    clickCreateFacilityButton();
-    verifyHeader("Add new facility");
     return new ManageFacilityPage(testWebDriver);
   }
 
-  private void clickCreateFacilityButton() {
+  public void clickCreateFacilityButton() {
     testWebDriver.waitForElementToAppear(createFacility);
     testWebDriver.sleep(1000);
     testWebDriver.keyPress(createFacility);
   }
 
-    private void clickCreateSupplylineButton() {
-        testWebDriver.waitForElementToAppear(createSupplyline);
-        testWebDriver.sleep(1000);
-        testWebDriver.keyPress(createSupplyline);
-    }
-
-  private void verifyHeader(String headingToVerify) {
+  public void verifyHeader(String headingToVerify) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(facilityHeader);
-    SeleneseTestNgHelper.assertEquals(facilityHeader.getText().trim(), headingToVerify);
+    assertEquals(facilityHeader.getText().trim(), headingToVerify);
   }
 
 
-  private void verifyTabs() {
+  public void verifyAdminTabs() {
     testWebDriver.waitForElementToAppear(facilitiesTab);
     assertTrue(facilitiesTab.isDisplayed());
     assertTrue(rolesTab.isDisplayed());
@@ -304,7 +223,6 @@ public class HomePage extends Page {
 
 
   public TemplateConfigPage selectProgramToConfigTemplate(String programme) {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -318,7 +236,6 @@ public class HomePage extends Page {
   }
 
   public ConfigureEDIPage navigateEdiScreen() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(TemplateConfigTab);
@@ -343,7 +260,7 @@ public class HomePage extends Page {
 
   public String navigateAndInitiateRnr(String program) throws IOException {
     navigateRnr();
-    String periodDetails = null;
+    String periodDetails;
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(programDropDown);
@@ -365,13 +282,15 @@ public class HomePage extends Page {
     testWebDriver.sleep(500);
   }
 
-  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+  public void clickRequisitionSubMenuItem() throws IOException {
     testWebDriver.waitForElementToAppear(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
-    String[] subMenuItem = SubMenuItem.getText().split("\n");
-    SeleneseTestNgHelper.assertEquals(subMenuItem, expectedSubMenuItem);
   }
 
+  public void verifySubMenuItems(String[] expectedSubMenuItem) throws IOException {
+    String[] subMenuItem = SubMenuItem.getText().split("\n");
+    assertEquals(subMenuItem, expectedSubMenuItem);
+  }
 
   public InitiateRnRPage clickProceed() throws IOException {
     testWebDriver.waitForElementToAppear(proceedButton);
@@ -383,7 +302,6 @@ public class HomePage extends Page {
 
   public ViewRequisitionPage navigateViewRequisition() throws IOException {
     testWebDriver.sleep(1000);
-    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(viewRequisitonMenuItem);
@@ -393,18 +311,13 @@ public class HomePage extends Page {
   }
 
   public ReportPage navigateReportScreen() throws IOException {
-    assertTrue(reportMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(reportMenuItem);
     testWebDriver.keyPress(reportMenuItem);
-    testWebDriver.waitForElementToAppear(otherReportItem);
-    assertTrue(otherReportItem.isDisplayed());
-    testWebDriver.keyPress(otherReportItem);
     testWebDriver.waitForElementToAppear(reportsTitle);
     return new ReportPage(testWebDriver);
   }
 
   public ManageFacilityPage navigateSearchFacility() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -416,7 +329,6 @@ public class HomePage extends Page {
 
 
   public RolesPage navigateRoleAssignments() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -427,7 +339,6 @@ public class HomePage extends Page {
   }
 
   public UploadPage navigateUploads() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(uploadLink);
@@ -436,7 +347,6 @@ public class HomePage extends Page {
   }
 
   public ManageSchedulePage navigateToSchedule() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -447,21 +357,7 @@ public class HomePage extends Page {
 
   }
 
-    public ManageSupplylinePage navigateToSupplyline() throws IOException {
-        SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
-        testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-        testWebDriver.keyPress(AdministrationMenuItem);
-        testWebDriver.waitForElementToAppear(manageLink);
-        testWebDriver.keyPress(manageLink);
-        testWebDriver.waitForElementToAppear(supplylinesTab);
-        //supplylinesTab.click();
-        verifyTabs();
-        clickCreateSupplylineButton();
-        return new ManageSupplylinePage(testWebDriver);
-   }
-
   public UserPage navigateToUser() throws IOException {
-    assertTrue(AdministrationMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageLink);
@@ -472,43 +368,9 @@ public class HomePage extends Page {
 
   }
 
-  public ManageGeographicZonesPage navigateToGeographicZone() throws IOException {
-      SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
-      testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-      testWebDriver.keyPress(AdministrationMenuItem);
-      testWebDriver.waitForElementToAppear(manageLink);
-      testWebDriver.keyPress(manageLink);
-      testWebDriver.waitForElementToAppear(geographicZonesTab);
-      geographicZonesTab.click();
-      return new ManageGeographicZonesPage(testWebDriver);
-  }
-
-  public ManageRequisitionGroupsPage navigateToRequisitionGroup() throws IOException {
-      SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
-      testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-      testWebDriver.keyPress(AdministrationMenuItem);
-      testWebDriver.waitForElementToAppear(manageLink);
-      testWebDriver.keyPress(manageLink);
-      testWebDriver.waitForElementToAppear(requisitionGroupsTab);
-      requisitionGroupsTab.click();
-      return new ManageRequisitionGroupsPage(testWebDriver);
-  }
-
-  public ManageSupervisoryNodesPage navigateToSupervisoryNode() throws IOException {
-      SeleneseTestNgHelper.assertTrue(AdministrationMenuItem.isDisplayed());
-      testWebDriver.waitForElementToAppear(AdministrationMenuItem);
-      testWebDriver.keyPress(AdministrationMenuItem);
-      testWebDriver.waitForElementToAppear(manageLink);
-      testWebDriver.keyPress(manageLink);
-      testWebDriver.waitForElementToAppear(supervisoryNodesTab);
-      supervisoryNodesTab.click();
-      return new ManageSupervisoryNodesPage(testWebDriver);
-  }
-
   public ApprovePage navigateToApprove() throws IOException {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
-    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(approveLink);
     testWebDriver.keyPress(approveLink);
@@ -519,7 +381,6 @@ public class HomePage extends Page {
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
-    assertTrue(requisitionMenuItem.isDisplayed());
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
@@ -529,7 +390,6 @@ public class HomePage extends Page {
   }
 
   public DistributionPage navigatePlanDistribution() throws IOException {
-    assertTrue(distributionsMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(distributionsMenuItem);
     testWebDriver.keyPress(distributionsMenuItem);
     testWebDriver.waitForElementToAppear(manageMenuItem);
@@ -539,7 +399,6 @@ public class HomePage extends Page {
   }
 
   public DistributionPage navigateOfflineDistribution() throws IOException {
-    assertTrue(offlineDistributions.isDisplayed());
     testWebDriver.waitForElementToAppear(offlineDistributions);
     testWebDriver.keyPress(offlineDistributions);
     testWebDriver.waitForElementToAppear(manageMenuItem);
@@ -559,7 +418,6 @@ public class HomePage extends Page {
   }
 
   public HomePage navigateHomePage() throws IOException {
-    assertTrue(homeMenuItem.isDisplayed());
     testWebDriver.waitForElementToAppear(homeMenuItem);
     testWebDriver.keyPress(homeMenuItem);
     testWebDriver.sleep(500);
@@ -567,7 +425,6 @@ public class HomePage extends Page {
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
-    assertTrue(ordersMenuItem.isDisplayed());
     testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
@@ -577,11 +434,6 @@ public class HomePage extends Page {
     return new ViewOrdersPage(testWebDriver);
   }
 
-  public void verifyErrorMessage() {
-    testWebDriver.waitForElementToAppear(errorMsg);
-    SeleneseTestNgHelper.assertEquals(errorMsg.getText().trim(), "Requisition not initiated yet");
-  }
-
   public String getErrorMessage() {
     testWebDriver.waitForElementToAppear(errorMsg);
     return errorMsg.getText().trim();
@@ -589,27 +441,18 @@ public class HomePage extends Page {
 
   public void verifyLoggedInUser(String Username) {
     testWebDriver.waitForElementToAppear(loggedInUserLabel);
-    SeleneseTestNgHelper.assertEquals(loggedInUserLabel.getText(), Username);
+    assertEquals(loggedInUserLabel.getText(), Username);
   }
 
   public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
     navigateRnr();
-    String periodDetails = null;
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
-    //testWebDriver.waitForElementToAppear(startDate);
   }
 
-
-    public boolean reportMenuIsDisplayed(){
-          return true;
-    }
-    public boolean adminReportMenuItemIsDisplayed(){
-        return AdministrationMenuItem.isDisplayed();
-    }
   public String getFirstPeriod() {
     return firstPeriodLabel.getText().trim();
   }
@@ -631,4 +474,23 @@ public class HomePage extends Page {
     public boolean isRequisitionsMenuTabDisplayed(){
         return requisitionMenuItem.isDisplayed();
     }
+
+    public void navigateAndInitiateRnrForSupervisedFacility(String program) throws IOException {
+        navigateRnr();
+        supervisedFacilityRadioButton.click();
+        testWebDriver.sleep(2000);
+        testWebDriver.waitForElementToAppear(ProgramDropDownSupervisedFacility);
+        testWebDriver.selectByVisibleText(ProgramDropDownSupervisedFacility, program);
+        testWebDriver.sleep(1000);
+
+   }
+
+    public String getFacilityDropDownList() {
+        return facilityDropDown.getText();
+    }
+
+    public String getFacilityDropDownListForViewRequisition() {
+        return testWebDriver.findElement(By.name("selectFacility")).getText() ;
+    }
 }
+

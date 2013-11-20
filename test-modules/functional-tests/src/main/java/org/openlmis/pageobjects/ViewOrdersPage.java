@@ -27,44 +27,35 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ViewOrdersPage extends RequisitionPage {
 
-  @FindBy(how = How.ID, using = "NoRequisitionsPendingMessage")
-  private static WebElement NoRequisitionsPendingMessage;
-
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col0 colt0']/span")
-  private static WebElement orderNumberOnViewOrdersScreen;
+  private static WebElement orderNumberOnViewOrdersScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
-  private static WebElement programOnViewOrderScreen;
+  private static WebElement programOnViewOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[2]/div[2]/div/span")
-  private static WebElement facilityCodeNameOnOrderScreen;
+  private static WebElement facilityCodeNameOnOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[4]/div[2]/div/span")
-  private static WebElement periodDetailsOnViewOrderScreen;
+  private static WebElement periodDetailsOnViewOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//div[@class='ng-scope ngRow even']/div[5]/div[2]/div/span")
-  private static WebElement supplyDepotOnViewOrderScreen;
+  private static WebElement supplyDepotOnViewOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "(//div[@id='orderStatus'])[1]")
-  private static WebElement orderStatusOnViewOrderScreen;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='saveSuccessMsgDiv']")
-  private static WebElement successMessageDiv;
-
-  @FindBy(how = How.XPATH, using = "//div[@id='NoRequisitionsPendingMessage']")
-  private static WebElement noRequisitionPendingMessage;
+  private static WebElement orderStatusOnViewOrderScreen=null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Download CSV')]")
-  private static WebElement downloadCSVLink;
+  private static WebElement downloadCSVLink=null;
 
   @FindBy(how = How.XPATH, using = "//span[contains(text(),'No products in this order')]")
-  private static WebElement noOrderMessage;
+  private static WebElement noOrderMessage=null;
 
   @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
-  private static WebElement emergencyIcon;
+  private static WebElement emergencyIcon=null;
 
   @FindBy(how = XPATH, using = "//span[@openlmis-message='message.no.order']")
-  private static WebElement noRequisitionReleasedAsOrderYet;
+  private static WebElement noRequisitionReleasedAsOrderYet=null;
 
   public ViewOrdersPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -99,7 +90,7 @@ public class ViewOrdersPage extends RequisitionPage {
       SeleneseTestNgHelper.assertTrue("'No products in this order' message should show up", noOrderMessage.isDisplayed());
   }
 
-  public void downloadCSV() throws IOException {
+  public void downloadCSV() throws IOException, InterruptedException {
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     downloadFileWhileSaveDialogOPen(downloadCSVLink);
   }
@@ -110,9 +101,7 @@ public class ViewOrdersPage extends RequisitionPage {
   }
 
   public int getNumberOfLineItems() throws IOException {
-    int number = 0;
-    number = testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
-    return number;
+    return testWebDriver.getElementsSizeByXpath("html/body/div[1]/div/div/div/div[3]/div/div[2]/div/div");
   }
 
   public void verifyProgram(int row, String program) {

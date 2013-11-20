@@ -1,9 +1,11 @@
 /*
+ * This program is part of the OpenLMIS logistics management information system platform software.
+ * Copyright © 2013 VillageReach
  *
- *  * Copyright © 2013 VillageReach. All Rights Reserved. This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- *  *
- *  * If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *  
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
 package org.openlmis.web.model;
@@ -11,7 +13,11 @@ package org.openlmis.web.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
+import org.openlmis.rnr.domain.Column;
+import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
+import org.openlmis.rnr.domain.RnrLineItem;
 
 import java.util.List;
 
@@ -24,7 +30,9 @@ public class PrintRnrLineItem {
 
   private RnrLineItem rnrLineItem;
 
-  public void calculate(RnrCalcStrategy calcStrategy, ProcessingPeriod period, List<? extends Column> rnrColumns, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  public void calculate(RnrCalculationStrategy calcStrategy, ProcessingPeriod period,
+                        List<? extends Column> rnrColumns,
+                        List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
     if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(calcStrategy);
     if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed(calcStrategy);
@@ -37,7 +45,7 @@ public class PrintRnrLineItem {
     rnrLineItem.calculatePacksToShip(calcStrategy);
   }
 
-  private void calculateStockInHand(RnrCalcStrategy calcStrategy) {
+  private void calculateStockInHand(RnrCalculationStrategy calcStrategy) {
     try {
       rnrLineItem.calculateStockInHand(calcStrategy);
     } catch (NullPointerException e) {
@@ -45,7 +53,7 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateMaxStockQuantity(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
+  private void calculateMaxStockQuantity(RnrCalculationStrategy calcStrategy, ProgramRnrTemplate template) {
     try {
       rnrLineItem.calculateMaxStockQuantity(calcStrategy, template);
     } catch (NullPointerException e) {
@@ -53,7 +61,7 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateAmc(RnrCalcStrategy calcStrategy, ProcessingPeriod period) {
+  private void calculateAmc(RnrCalculationStrategy calcStrategy, ProcessingPeriod period) {
     try {
       rnrLineItem.calculateAmc(calcStrategy, period);
     } catch (NullPointerException e) {
@@ -61,7 +69,7 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateNormalizedConsumption(RnrCalcStrategy calcStrategy, ProgramRnrTemplate template) {
+  private void calculateNormalizedConsumption(RnrCalculationStrategy calcStrategy, ProgramRnrTemplate template) {
     try {
       rnrLineItem.calculateNormalizedConsumption(calcStrategy,template);
     } catch (NullPointerException e) {
@@ -69,7 +77,7 @@ public class PrintRnrLineItem {
     }
   }
 
-  private void calculateLossesAndAdjustments(RnrCalcStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  private void calculateLossesAndAdjustments(RnrCalculationStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     try {
       rnrLineItem.calculateTotalLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
     } catch (NullPointerException e) {
