@@ -169,7 +169,7 @@ public class RnrLineItem extends LineItem {
 
   public void validateMandatoryFields(ProgramRnrTemplate template) {
 
-    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
+    String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, STOCK_IN_HAND, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
     for (String fieldName : nonNullableFields) {
       if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
         if (getValueFor(fieldName) == null) {

@@ -300,7 +300,10 @@ var RegularRnrLineItem = base2.Base.extend({
     $(visibleColumns).each(function (i, column) {
         var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped"];
         if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
-        if (column.name === 'quantityRequested') {
+        if (column.name === 'stockInHand') {
+          valid = true;
+        }
+        else if (column.name === 'quantityRequested') {
           valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
         } else if (column.name == 'expirationDate') {
           valid = !rnrLineItem.expirationDateInvalid();

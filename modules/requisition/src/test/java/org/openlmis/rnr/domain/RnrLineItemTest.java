@@ -84,41 +84,21 @@ public class RnrLineItemTest {
   }
 
   private void addVisibleColumns(List<RnrColumn> templateColumns) {
-    RnrColumn beginningBalanceColumn = new RnrColumn();
-    beginningBalanceColumn.setName(ProgramRnrTemplate.BEGINNING_BALANCE);
-    beginningBalanceColumn.setVisible(true);
-    beginningBalanceColumn.setFormulaValidationRequired(true);
-    templateColumns.add(beginningBalanceColumn);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.BEGINNING_BALANCE, true, true);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.QUANTITY_DISPENSED, true, null);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.QUANTITY_RECEIVED, true, null);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.NEW_PATIENT_COUNT, true, null);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.STOCK_OUT_DAYS, true, null);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.QUANTITY_REQUESTED, true, null);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY, true, null);
+  }
 
-    RnrColumn quantityReceivedColumn = new RnrColumn();
-    quantityReceivedColumn.setName(ProgramRnrTemplate.QUANTITY_RECEIVED);
-    quantityReceivedColumn.setVisible(true);
-    templateColumns.add(quantityReceivedColumn);
-
-    RnrColumn quantityDispensedColumn = new RnrColumn();
-    quantityDispensedColumn.setName(ProgramRnrTemplate.QUANTITY_DISPENSED);
-    quantityDispensedColumn.setVisible(true);
-    templateColumns.add(quantityDispensedColumn);
-
-    RnrColumn newPatientCountColumn = new RnrColumn();
-    newPatientCountColumn.setName(ProgramRnrTemplate.NEW_PATIENT_COUNT);
-    newPatientCountColumn.setVisible(true);
-    templateColumns.add(newPatientCountColumn);
-
-    RnrColumn stockOutOfDaysColumn = new RnrColumn();
-    stockOutOfDaysColumn.setName(ProgramRnrTemplate.STOCK_OUT_DAYS);
-    stockOutOfDaysColumn.setVisible(true);
-    templateColumns.add(stockOutOfDaysColumn);
-
-    RnrColumn quantityRequestedColumn = new RnrColumn();
-    quantityRequestedColumn.setName(ProgramRnrTemplate.QUANTITY_REQUESTED);
-    quantityRequestedColumn.setVisible(true);
-    templateColumns.add(quantityRequestedColumn);
-
-    RnrColumn reasonForRequestedQuantityColumn = new RnrColumn();
-    reasonForRequestedQuantityColumn.setName(ProgramRnrTemplate.REASON_FOR_REQUESTED_QUANTITY);
-    reasonForRequestedQuantityColumn.setVisible(true);
-    templateColumns.add(reasonForRequestedQuantityColumn);
+  private void addColumnToTemplate(List<RnrColumn> templateColumns, String columnName, Boolean visible, Boolean formulaValidation) {
+    RnrColumn rnrColumn = new RnrColumn();
+    rnrColumn.setName(columnName);
+    rnrColumn.setVisible(visible);
+    if (formulaValidation != null) rnrColumn.setFormulaValidationRequired(formulaValidation);
+    templateColumns.add(rnrColumn);
   }
 
   @Test
@@ -277,6 +257,16 @@ public class RnrLineItemTest {
   @Test
   public void shouldThrowErrorIfStockOutDaysNotPresent() throws Exception {
     lineItem.setStockOutDays(null);
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+    lineItem.validateMandatoryFields(template);
+  }
+
+  @Test
+  public void shouldThrowErrorIfStockInHandNotPresentAndIsUserInput() throws Exception {
+    lineItem.setStockInHand(null);
+    addColumnToTemplate(templateColumns, ProgramRnrTemplate.STOCK_IN_HAND, true, false);
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_VALIDATION_ERROR);
     ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
