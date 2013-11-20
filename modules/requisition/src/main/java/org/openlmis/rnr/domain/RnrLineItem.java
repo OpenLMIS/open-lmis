@@ -164,7 +164,7 @@ public class RnrLineItem extends LineItem {
 
 
   public void validateForApproval() {
-    if (quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
+    if (!skipped && quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
   public void validateMandatoryFields(ProgramRnrTemplate template) {
