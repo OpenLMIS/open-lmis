@@ -21,14 +21,14 @@ import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.builder.RequisitionBuilder.period;
 
 @Category(UnitTests.class)
 public class RequisitionStatusFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
     long startDate = rnr.getPeriod().getStartDate().getTime();
     long endDate = rnr.getPeriod().getEndDate().getTime();
 
@@ -40,13 +40,13 @@ public class RequisitionStatusFeedDTOTest {
     assertThat(feed.getStartDate(), is(startDate));
     assertThat(feed.getEndDate(), is(endDate));
     String serializedContent = format("{\"requisitionId\":%d,\"requisitionStatus\":\"%s\",\"emergency\":%s,\"startDate\":%d,\"endDate\":%d}",
-      rnr.getId(), rnr.getStatus(), rnr.isEmergency(), startDate, endDate);
+        rnr.getId(), rnr.getStatus(), rnr.isEmergency(), startDate, endDate);
     assertThat(feed.getSerializedContents(), is(serializedContent));
   }
 
   @Test
   public void shouldNotSetStartDateAndEndDateIfPeriodIsNull() throws Exception {
-    Rnr rnr = make(a(defaultRnr, with(period, (ProcessingPeriod) null)));
+    Rnr rnr = make(a(defaultRequisition, with(period, (ProcessingPeriod) null)));
 
     RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 

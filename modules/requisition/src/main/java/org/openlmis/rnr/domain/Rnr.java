@@ -141,8 +141,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-      previousRequisition.status == INITIATED ||
-      previousRequisition.status == SUBMITTED) {
+        previousRequisition.status == INITIATED ||
+        previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -351,5 +351,8 @@ public class Rnr extends BaseModel {
     this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(cost);
   }
 
+  public boolean forVirtualFacility() {
+    return this.facility.getVirtualFacility();
+  }
 }
 

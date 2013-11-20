@@ -60,7 +60,7 @@ public class RnrTest {
   public void setUp() throws Exception {
 
     initMocks(this);
-    rnr = make(a(defaultRnr));
+    rnr = make(a(defaultRequisition));
     rnrTemplate = mock(ProgramRnrTemplate.class);
     regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -70,10 +70,10 @@ public class RnrTest {
   @Test
   public void shouldFillNormalizedConsumptionsFromPreviousTwoPeriodsRnr() throws Exception {
 
-    final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     lastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(1);
 
-    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
@@ -89,7 +89,7 @@ public class RnrTest {
 
     final Rnr lastPeriodsRnr = null;
 
-    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
@@ -126,7 +126,7 @@ public class RnrTest {
   @Test
   public void shouldFindLineItemInPreviousRequisitionAndSetBeginningBalance() throws Exception {
 
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
     Rnr previousRequisition = new Rnr();
     previousRequisition.setStatus(AUTHORIZED);
 
@@ -140,7 +140,7 @@ public class RnrTest {
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfLineItemDoesNotExistInPreviousRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
 
     Rnr previousRequisition = new Rnr();
 
@@ -162,7 +162,7 @@ public class RnrTest {
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInInitiatedState() throws Exception {
-    Rnr previousRequisition = make(a(defaultRnr, with(status, INITIATED)));
+    Rnr previousRequisition = make(a(defaultRequisition, with(status, INITIATED)));
 
     rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
 
@@ -171,7 +171,7 @@ public class RnrTest {
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInSubmittedState() throws Exception {
-    Rnr previousRequisition = make(a(defaultRnr, with(status, SUBMITTED)));
+    Rnr previousRequisition = make(a(defaultRequisition, with(status, SUBMITTED)));
 
     rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
 
@@ -181,14 +181,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShip() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10))));
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10))));
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -208,14 +208,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShipInCaseOfEmergencyRequisition() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10))));
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-      with(packRoundingThreshold, 6),
-      with(quantityApproved, 66),
-      with(packSize, 10))));
+        with(packRoundingThreshold, 6),
+        with(quantityApproved, 66),
+        with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -262,7 +262,7 @@ public class RnrTest {
   @Test
   public void shouldCopyCreatorEditableFields() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -301,7 +301,7 @@ public class RnrTest {
   @Test
   public void shouldAddNewNonFullSupplyLineItemsOnlyIfProductBelongsToTheProgram() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -327,7 +327,7 @@ public class RnrTest {
   @Test
   public void shouldCopyRegimenLineItems() throws Exception {
 
-    Rnr newRnr = make(a(defaultRnr));
+    Rnr newRnr = make(a(defaultRequisition));
     List<RegimenColumn> regimenColumns = new ArrayList<>();
     RegimenLineItem regimenLineItem = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
     regimenLineItem.setCode("R02");
@@ -363,7 +363,7 @@ public class RnrTest {
   @Test
   public void shouldNotCopyFieldsForExtraFullSupplyLineItemsAndThrowError() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -384,7 +384,7 @@ public class RnrTest {
   @Test
   public void shouldNotCopyExtraLineItemForApprovalRnr() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
 
 
@@ -406,7 +406,7 @@ public class RnrTest {
   @Test
   public void shouldCopyApproverEditableFields() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
 
     RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(RnrLineItemBuilder.productCode, "P1")));
@@ -484,10 +484,10 @@ public class RnrTest {
 
   @Test
   public void shouldGetProductCodeDifferenceGivenARnr() throws Exception {
-    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRequisition));
     savedRnr.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")))));
 
-    Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr));
+    Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRequisition));
     rnrForApproval.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P10")))));
 
     List<String> invalidProductCodes = new ArrayList<>();
@@ -501,7 +501,7 @@ public class RnrTest {
 
   @Test
   public void shouldFindCorrespondingLineItemInRnrAndReturnIfFound() {
-    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRequisition));
     RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")));
     savedRnr.setFullSupplyLineItems(asList(rnrLineItem));
 
@@ -512,7 +512,7 @@ public class RnrTest {
 
   @Test
   public void shouldFindCorrespondingLineItemInRnrAndReturnNullIfNotFound() {
-    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRequisition));
     RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")));
 
     assertThat(savedRnr.findCorrespondingLineItem(rnrLineItem), is(nullValue()));

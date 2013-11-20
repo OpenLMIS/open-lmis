@@ -24,14 +24,14 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 public class ReplenishmentDTOTest {
   @Test
   public void shouldPopulateRnrDTOFromRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
     rnr.add(new RnrLineItem(), false);
     RnrLineItemDTO expectedLineItemDTO = new RnrLineItemDTO(new RnrLineItem());
     whenNew(RnrLineItemDTO.class).withAnyArguments().thenReturn(expectedLineItemDTO);

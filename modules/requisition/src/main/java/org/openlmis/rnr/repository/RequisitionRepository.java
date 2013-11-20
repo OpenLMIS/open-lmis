@@ -211,5 +211,9 @@ public class RequisitionRepository {
   public Date getCreatedDateForPreviousLineItem(Rnr rnr, String productCode, Date periodStartDate) {
     return rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(rnr, productCode, periodStartDate);
   }
+
+  public List<Integer> getNNormalizedConsumptions(String productCode, Rnr rnr, Integer n, Date startDate) {
+    return rnrLineItemMapper.getNNormalizedConsumptions(productCode, rnr, n, startDate);
+  }
 }
 

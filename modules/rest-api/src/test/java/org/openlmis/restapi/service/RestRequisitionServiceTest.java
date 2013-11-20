@@ -196,7 +196,7 @@ public class RestRequisitionServiceTest {
     long modifiedBy = 233L;
 
     Facility facility = make(a(defaultFacility, with(virtualFacility, false)));
-    Rnr rnr = make(a(defaultRnr, with(RequisitionBuilder.facility, facility)));
+    Rnr rnr = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility)));
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.approval.not.allowed");
@@ -218,7 +218,7 @@ public class RestRequisitionServiceTest {
 
     when(spyReport.getRequisition(requisitionId, modifiedBy)).thenReturn(requisitionFromReport);
     Facility facility = make(a(defaultFacility, with(virtualFacility, true)));
-    Rnr rnr = make(a(defaultRnr, with(RequisitionBuilder.facility, facility)));
+    Rnr rnr = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility)));
     when(requisitionService.getFullRequisitionById(requisitionFromReport.getId())).thenReturn(rnr);
 
     service.approve(spyReport, requisitionId, modifiedBy);
@@ -254,7 +254,7 @@ public class RestRequisitionServiceTest {
     Report report = make(a(defaultReport, with(products, productList)));
 
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility)));
     rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
 
     when(requisitionService.getFullRequisitionById(requisitionId)).thenReturn(rnr);
@@ -292,7 +292,7 @@ public class RestRequisitionServiceTest {
 
     Program program = new Program();
     Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility)));
     rnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P10"))), make(a(defaultRnrLineItem, with(productCode, "P11")))));
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
@@ -321,7 +321,7 @@ public class RestRequisitionServiceTest {
     Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
 
-    Rnr rnr = make(a(defaultRnr, with(facility, reportFacility)));
+    Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility)));
     rnr.setFullSupplyLineItems(asList(rnrLineItem1, rnrLineItem2));
 
     when(requisitionService.initiate(reportFacility, program, 3l, false)).thenReturn(rnr);
@@ -351,7 +351,7 @@ public class RestRequisitionServiceTest {
     Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
 
-    Rnr rnr = make(a(defaultRnr, with(facility, reportFacility), with(program, rnrProgram)));
+    Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility), with(program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
     when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false)).thenReturn(rnr);
@@ -387,7 +387,7 @@ public class RestRequisitionServiceTest {
     Facility reportFacility = make(a(defaultFacility, with(virtualFacility, true)));
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(reportFacility);
 
-    Rnr rnr = make(a(defaultRnr, with(facility, reportFacility), with(program, rnrProgram)));
+    Rnr rnr = make(a(defaultRequisition, with(facility, reportFacility), with(program, rnrProgram)));
     rnr.setFullSupplyLineItems(asList(initiatedLineItem));
 
     when(requisitionService.initiate(reportFacility, rnrProgram, 3l, false)).thenReturn(rnr);

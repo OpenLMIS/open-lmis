@@ -334,7 +334,7 @@ public class RequisitionService {
     requisition.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
   }
 
-  Rnr fillSupportingInfo(Rnr requisition) {
+  private Rnr fillSupportingInfo(Rnr requisition) {
     if (requisition == null) return null;
 
     fillFacilityPeriodProgramWithAuditFields(asList(requisition));
@@ -368,8 +368,16 @@ public class RequisitionService {
     return previousRequisition;
   }
 
-  private void fillPreviousRequisitionsForAmc(Rnr requisition) {
-    if (requisition == null) return;
+  void fillPreviousRequisitionsForAmc(Rnr requisition) {
+    if (requisition.forVirtualFacility()) {
+      List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5);
+      for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+        ProcessingPeriod oldestPeriod = nPreviousPeriods.get(nPreviousPeriods.size() - 1);
+        List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(), requisition, 2, oldestPeriod.getStartDate());
+        lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
+      }
+      return;
+    }
 
     Rnr lastPeriodsRnr = null;
     Rnr secondLastPeriodsRnr = null;

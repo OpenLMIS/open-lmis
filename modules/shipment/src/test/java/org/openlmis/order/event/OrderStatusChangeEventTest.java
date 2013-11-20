@@ -28,7 +28,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
@@ -40,7 +40,7 @@ public class OrderStatusChangeEventTest {
   public void shouldCreateEventFromOrder() throws Exception {
     mockStatic(DateTime.class);
 
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
     Order order = new Order(rnr);
     order.setStatus(READY_TO_PACK);
 

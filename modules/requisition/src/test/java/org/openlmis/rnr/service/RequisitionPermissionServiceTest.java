@@ -144,7 +144,7 @@ public class RequisitionPermissionServiceTest {
   @Test
   public void shouldReturnTrueIfRnrStatusIsSubmittedAndUserHasAuthorizeRight() {
     RequisitionPermissionService requisitionPermissionServiceSpy = spy(requisitionPermissionService);
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, SUBMITTED)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(status, SUBMITTED)));
     doReturn(true).when(requisitionPermissionServiceSpy).hasPermission(userId, rnr, AUTHORIZE_REQUISITION);
     assertThat(requisitionPermissionServiceSpy.hasPermissionToSave(userId, rnr), is(true));
   }
@@ -157,7 +157,7 @@ public class RequisitionPermissionServiceTest {
       add(approverRoleAssignment);
     }});
 
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(status, AUTHORIZED)));
     rnr.setSupervisoryNodeId(5l);
 
     assertThat(requisitionPermissionServiceSpy.hasPermissionToSave(userId, rnr), is(true));
@@ -171,7 +171,7 @@ public class RequisitionPermissionServiceTest {
       add(approverRoleAssignment);
     }});
 
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(status, AUTHORIZED)));
     rnr.setSupervisoryNodeId(5l);
 
     assertFalse(requisitionPermissionServiceSpy.hasPermissionToSave(userId, rnr));
@@ -180,7 +180,7 @@ public class RequisitionPermissionServiceTest {
   @Test
   public void shouldReturnTrueIfRnrStatusIsInitiatedAndUserHasCreateRight() {
     RequisitionPermissionService requisitionPermissionServiceSpy = spy(requisitionPermissionService);
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, INITIATED)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(status, INITIATED)));
     doReturn(true).when(requisitionPermissionServiceSpy).hasPermission(userId, rnr, CREATE_REQUISITION);
     assertThat(requisitionPermissionServiceSpy.hasPermissionToSave(userId, rnr), is(true));
   }
@@ -188,7 +188,7 @@ public class RequisitionPermissionServiceTest {
   @Test
   public void shouldReturnTrueIfUserCanApproveARnr() throws Exception {
     Long supervisoryNodeId = 1L;
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED)));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(status, AUTHORIZED)));
     rnr.setSupervisoryNodeId(supervisoryNodeId);
     final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId, 3l);
     List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{
@@ -205,7 +205,7 @@ public class RequisitionPermissionServiceTest {
     Long supervisoryNodeId = 1L;
     Long supportedProgramId = 3l;
     Long rnrProgramId = 2l;
-    Rnr rnr = make(a(RequisitionBuilder.defaultRnr, with(status, AUTHORIZED), with(program, new Program(rnrProgramId))));
+    Rnr rnr = make(a(RequisitionBuilder.defaultRequisition, with(status, AUTHORIZED), with(program, new Program(rnrProgramId))));
     rnr.setSupervisoryNodeId(supervisoryNodeId);
     final RoleAssignment assignment = roleAssignmentWithSupervisoryNodeId(supervisoryNodeId, supportedProgramId);
     List<RoleAssignment> roleAssignments = new ArrayList<RoleAssignment>() {{

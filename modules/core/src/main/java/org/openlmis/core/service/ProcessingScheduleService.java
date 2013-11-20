@@ -78,7 +78,7 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
-      startingPeriodId, programStartDate, new Date());
+        startingPeriodId, programStartDate, new Date());
   }
 
   private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
@@ -113,5 +113,9 @@ public class ProcessingScheduleService {
   public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date programStartDate) {
     RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
+  }
+
+  public List<ProcessingPeriod> getNPreviousPeriods(ProcessingPeriod currentPeriod, Integer n) {
+    return periodRepository.getNPreviousPeriods(currentPeriod, n);
   }
 }

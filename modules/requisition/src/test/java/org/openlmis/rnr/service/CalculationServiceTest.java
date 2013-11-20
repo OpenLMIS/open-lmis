@@ -39,7 +39,7 @@ import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Category(UnitTests.class)
@@ -61,7 +61,7 @@ public class CalculationServiceTest {
   @Before
   public void setUp() throws Exception {
     initMocks(this);
-    rnr = make(a(defaultRnr));
+    rnr = make(a(defaultRequisition));
     when(requisitionRepository.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentsTypes);
   }
 

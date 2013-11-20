@@ -15,7 +15,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
 import org.openlmis.core.service.SupplyLineService;
@@ -26,7 +25,6 @@ import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
-import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -34,7 +32,10 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
@@ -175,11 +176,11 @@ public class OrderServiceTest {
   @Test
   public void shouldGetOrdersFilledWithRequisition() throws Exception {
     orderService.setPageSize("3");
-    Rnr rnr1 = make(a(defaultRnr, with(id, 78L)));
+    Rnr rnr1 = make(a(defaultRequisition, with(id, 78L)));
     final Order order1 = new Order();
     order1.setRnr(rnr1);
 
-    Rnr rnr2 = make(a(defaultRnr, with(periodId, 2L), with(id, 72L)));
+    Rnr rnr2 = make(a(defaultRequisition, with(periodId, 2L), with(id, 72L)));
 
     final Order order2 = new Order();
     order2.setRnr(rnr2);
@@ -189,22 +190,22 @@ public class OrderServiceTest {
       add(order2);
     }};
 
-    when(orderRepository.getOrdersForPage(2, 3,  1l, Right.VIEW_ORDER)).thenReturn(expectedOrders);
+    when(orderRepository.getOrdersForPage(2, 3, 1l, Right.VIEW_ORDER)).thenReturn(expectedOrders);
     when(requisitionService.getFullRequisitionById(rnr1.getId())).thenReturn(rnr1);
     when(requisitionService.getFullRequisitionById(rnr2.getId())).thenReturn(rnr2);
 
     List<Order> orders = orderService.getOrdersForPage(2, 1l, Right.VIEW_ORDER);
 
     assertThat(orders, is(expectedOrders));
-    verify(orderRepository).getOrdersForPage(2, 3,  1l, Right.VIEW_ORDER);
+    verify(orderRepository).getOrdersForPage(2, 3, 1l, Right.VIEW_ORDER);
     verify(requisitionService).getFullRequisitionById(rnr1.getId());
     verify(requisitionService).getFullRequisitionById(rnr2.getId());
   }
 
   @Test
   public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
-    Order order1 = new Order(make(a(defaultRnr, with(id, 123L))));
-    Order order2 = new Order(make(a(defaultRnr, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
+    Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
+    Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
 
     Set<Long> orderIds = new LinkedHashSet<>();
     orderIds.add(order1.getId());
@@ -234,8 +235,8 @@ public class OrderServiceTest {
 
   @Test
   public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
-    Order order1 = new Order(make(a(defaultRnr, with(id, 123L))));
-    Order order2 = new Order(make(a(defaultRnr, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
+    Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
+    Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
 
     Set<Long> orderIds = new LinkedHashSet<>();
     orderIds.add(order1.getId());
@@ -313,8 +314,8 @@ public class OrderServiceTest {
   public void shouldGetAllDateFormats() throws Exception {
     List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
     List<DateFormat> expectedDateFormats = asList(DATE_1, DATE_2, DATE_3, DATE_4, DATE_5, DATE_6, DATE_7, DATE_8, DATE_9, DATE_10,
-      DATE_11, DATE_12, DATE_13, DATE_14, DATE_15, DATE_16, DATE_17, DATE_18, DATE_19, DATE_20,
-      DATE_21, DATE_22, DATE_23, DATE_24, DATE_25, DATE_26, DATE_27, DATE_28, DATE_29, DATE_30
+        DATE_11, DATE_12, DATE_13, DATE_14, DATE_15, DATE_16, DATE_17, DATE_18, DATE_19, DATE_20,
+        DATE_21, DATE_22, DATE_23, DATE_24, DATE_25, DATE_26, DATE_27, DATE_28, DATE_29, DATE_30
     );
 
     assertThat(dateFormats, is(expectedDateFormats));
@@ -322,7 +323,7 @@ public class OrderServiceTest {
 
   @Test
   public void shouldUpdateOrderStatusAndFtpComment() throws Exception {
-    Order order = new Order(make(a(defaultRnr, with(id, 123L))));
+    Order order = new Order(make(a(defaultRequisition, with(id, 123L))));
     when(requisitionService.getFullRequisitionById(order.getRnr().getId())).thenReturn(order.getRnr());
 
     orderService.updateOrderStatus(order);
@@ -354,10 +355,10 @@ public class OrderServiceTest {
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
     long orderId = 123L;
     when(orderRepository.getStatus(orderId))
-      .thenReturn(IN_ROUTE)
-      .thenReturn(PACKED)
-      .thenReturn(TRANSFER_FAILED)
-      .thenReturn(READY_TO_PACK);
+        .thenReturn(IN_ROUTE)
+        .thenReturn(PACKED)
+        .thenReturn(TRANSFER_FAILED)
+        .thenReturn(READY_TO_PACK);
 
     assertThat(orderService.isShippable(orderId), is(false));
     assertThat(orderService.isShippable(orderId), is(false));

@@ -28,7 +28,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
@@ -44,7 +44,7 @@ public class OrderEventServiceTest {
 
   @Test
   public void shouldTriggerNotifyOnEventService() throws Exception {
-    Rnr requisition = make(a(defaultRnr));
+    Rnr requisition = make(a(defaultRequisition));
     Order order = new Order(requisition);
     order.setStatus(READY_TO_PACK);
 

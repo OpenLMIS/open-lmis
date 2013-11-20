@@ -47,7 +47,7 @@ public class RequisitionBuilder {
   public static final Date SUBMITTED_DATE = new DateTime().withDate(2013, 3, 19).toDate();
   public static final Program PROGRAM = make(a(ProgramBuilder.defaultProgram, with(ProgramBuilder.programId, 3L)));
   public static final Long ID = 1L;
-  public static final Instantiator<Rnr> defaultRnr = new Instantiator<Rnr>() {
+  public static final Instantiator<Rnr> defaultRequisition = new Instantiator<Rnr>() {
     @Override
     public Rnr instantiate(PropertyLookup<Rnr> lookup) {
       Rnr rnr = getDefaultRnr(lookup);
@@ -64,7 +64,7 @@ public class RequisitionBuilder {
     rnr.setProgram(lookup.valueOf(program, PROGRAM));
     Long processingPeriodId = lookup.valueOf(periodId, 3L);
     ProcessingPeriod period =
-            make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, processingPeriodId)));
+        make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.id, processingPeriodId)));
     rnr.setPeriod(lookup.valueOf(RequisitionBuilder.period, period));
     rnr.setStatus(lookup.valueOf(status, RnrStatus.INITIATED));
     rnr.setSubmittedDate(lookup.valueOf(submittedDate, SUBMITTED_DATE));

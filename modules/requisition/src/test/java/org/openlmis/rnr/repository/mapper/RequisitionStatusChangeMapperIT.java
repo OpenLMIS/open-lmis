@@ -96,9 +96,9 @@ public class RequisitionStatusChangeMapperIT {
     user = make(a(defaultUser, with(UserBuilder.facilityId, facility.getId())));
     userMapper.insert(user);
 
-    requisition = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.periodId, processingPeriod.getId()),
-      with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.program, program),
-      with(RequisitionBuilder.modifiedBy, user.getId())));
+    requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.periodId, processingPeriod.getId()),
+        with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.program, program),
+        with(RequisitionBuilder.modifiedBy, user.getId())));
     requisitionMapper.insert(requisition);
 
     String name = "some random name";
@@ -149,8 +149,8 @@ public class RequisitionStatusChangeMapperIT {
 
   private ProcessingPeriod insertPeriod(String name) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-      with(scheduleId, processingSchedule.getId()),
-      with(ProcessingPeriodBuilder.name, name)));
+        with(scheduleId, processingSchedule.getId()),
+        with(ProcessingPeriodBuilder.name, name)));
 
     processingPeriodMapper.insert(processingPeriod);
 

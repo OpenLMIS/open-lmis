@@ -123,4 +123,15 @@ public interface RnrLineItemMapper {
   Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
 
 
+  @Select({"SELECT RLI.normalizedConsumption FROM requisition_line_items RLI",
+      "INNER JOIN requisitions R ON R.id = RLI.rnrId",
+      "AND R.facilityId = #{rnr.facility.id}",
+      "AND R.programId = #{rnr.program.id}",
+      "AND RLI.productCode = #{productCode}",
+      "INNER JOIN requisition_status_changes",
+      "RSC ON RSC.rnrId = R.id",
+      "AND RSC.status = 'AUTHORIZED'",
+      "AND RSC.createdDate >= #{startDate}",
+      "ORDER BY RSC.createdDate DESC LIMIT #{n}"})
+  List<Integer> getNNormalizedConsumptions(@Param("productCode") String productCode, @Param("rnr") Rnr rnr, @Param("n") Integer n, @Param("startDate") Date startDate);
 }
