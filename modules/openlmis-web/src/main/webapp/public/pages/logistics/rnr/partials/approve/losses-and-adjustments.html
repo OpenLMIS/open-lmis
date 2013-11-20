@@ -12,7 +12,7 @@
     <div class="modal-header"><h3 openlmis-message="label.losses.adjustments"></h3></div>
     <div class="modal-body">
 
-        <hr ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0"/>
+      <div class="alert alert-info" ng-show="currentRnrLineItem.lossesAndAdjustments.length === 0" openlmis-message="label.no.losses.adjustment"></div>
         <div class="adjustment-list" ng-show="currentRnrLineItem.lossesAndAdjustments.length > 0">
             <ul>
                 <li ng-repeat="adjustment in currentRnrLineItem.lossesAndAdjustments" class="clearfix">
