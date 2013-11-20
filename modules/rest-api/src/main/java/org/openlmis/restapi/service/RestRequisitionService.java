@@ -67,10 +67,8 @@ public class RestRequisitionService {
   private Map<String, Object> defaultValues = new HashMap<String, Object>() {{
     put("beginningBalance", 0);
     put("quantityReceived", 0);
-    put("quantityDispensed", 0);
     put("totalLossesAndAdjustments", 0);
     put("newPatientCount", 0);
-    put("stockInHand", 0);
     put("stockOutDays", 0);
     put("quantityRequested", 0);
     put("reasonForRequestedQuantity", "none");
@@ -152,22 +150,16 @@ public class RestRequisitionService {
 
     for (Column column : rnrTemplate.getColumns()) {
 
-      //TODO refactor this nested if logic simpler
-      if (column.getVisible()) {
+      if (column.getVisible() && rnrTemplate.columnsUserInput(column.getName())) {
         try {
           Field field = RnrLineItem.class.getDeclaredField(column.getName());
           field.setAccessible(true);
 
           Object reportedValue = field.get(productLineItem);
-          Object toBeSavedValue = null;
-          if (rnrTemplate.columnsUserInput(column.getName())) {
-            if ((column.getName().equals("stockInHand") || column.getName().equals("quantityDispensed"))) {
-              toBeSavedValue = reportedValue;
-            } else {
-              toBeSavedValue = (reportedValue != null ? reportedValue : defaultValues.get(field.getName()));
-            }
-            field.set(fullSupplyLineItem, toBeSavedValue);
-          }
+          Object toBeSavedValue = (reportedValue != null) ? reportedValue : defaultValues.get(field.getName());
+
+          field.set(fullSupplyLineItem, toBeSavedValue);
+
         } catch (Exception e) {
           logger.error("could not copy field: " + column.getName());
         }
