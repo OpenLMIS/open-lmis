@@ -618,31 +618,31 @@ public class DBWrapper {
 
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
-      "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
-      "(1, (select id from programs where code = '" + program + "'),  true, 'U', 1,  'Skip'),\n" +
-      "(2, (select id from programs where code = '" + program + "'),  true, 'R', 2,  'Product Code'),\n" +
-      "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Product'),\n" +
-      "(4, (select id from programs where code = '" + program + "'),  true, 'R', 4,  'Unit/Unit of Issue'),\n" +
-      "(5, (select id from programs where code = '" + program + "'),  true, 'U', 5,  'Beginning Balance'),\n" +
-      "(6, (select id from programs where code = '" + program + "'),  true, 'U', 6,  'Total Received Quantity'),\n" +
-      "(7, (select id from programs where code = '" + program + "'),  true, 'C', 7,  'Total'),\n" +
-      "(8, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Consumed Quantity'),\n" +
-      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9,  'Total Losses / Adjustments'),\n" +
-      "(10, (select id from programs where code = '" + program + "'),  true, 'C', 10,  'Stock on Hand'),\n" +
-      "(11, (select id from programs where code = '" + program + "'),  true, 'U', 11, 'New Patients'),\n" +
-      "(12, (select id from programs where code = '" + program + "'), true, 'U', 12, 'Total Stockout days'),\n" +
-      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Adjusted Total Consumption'),\n" +
-      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Average Monthly Consumption(AMC)'),\n" +
-      "(15, (select id from programs where code = '" + program + "'), true, 'C', 15, 'Maximum Stock Quantity'),\n" +
-      "(16, (select id from programs where code = '" + program + "'), true, 'C', 16, 'Calculated Order Quantity'),\n" +
-      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Requested quantity'),\n" +
-      "(18, (select id from programs where code = '" + program + "'), true, 'U', 18, 'Requested quantity explanation'),\n" +
-      "(19, (select id from programs where code = '" + program + "'), true, 'U', 19, 'Approved Quantity'),\n" +
-      "(20, (select id from programs where code = '" + program + "'), true, 'C', 20, 'Packs to Ship'),\n" +
-      "(21, (select id from programs where code = '" + program + "'), true, 'R', 21, 'Price per pack'),\n" +
-      "(22, (select id from programs where code = '" + program + "'), true, 'C', 22, 'Total cost'),\n" +
-      "(23, (select id from programs where code = '" + program + "'), true, 'U', 23, 'Expiration Date'),\n" +
-      "(24, (select id from programs where code = '" + program + "'), true, 'U', 24, 'Remarks');");
+      "(masterColumnId, programId, visible, source, formulavalidationrequired, position, label) VALUES\n" +
+      "(1, (select id from programs where code = '" + program + "'),  true, 'U', false,1,  'Skip'),\n" +
+      "(2, (select id from programs where code = '" + program + "'),  true, 'R', false,2,  'Product Code'),\n" +
+      "(3, (select id from programs where code = '" + program + "'),  true, 'R', false,3,  'Product'),\n" +
+      "(4, (select id from programs where code = '" + program + "'),  true, 'R', false,4,  'Unit/Unit of Issue'),\n" +
+      "(5, (select id from programs where code = '" + program + "'),  true, 'U', false,5,  'Beginning Balance'),\n" +
+      "(6, (select id from programs where code = '" + program + "'),  true, 'U', false,6,  'Total Received Quantity'),\n" +
+      "(7, (select id from programs where code = '" + program + "'),  true, 'C', false,7,  'Total'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'U', false,8,  'Total Consumed Quantity'),\n" +
+      "(9, (select id from programs where code = '" + program + "'),  true, 'U', false,9,  'Total Losses / Adjustments'),\n" +
+      "(10, (select id from programs where code = '" + program + "'),  true, 'C', true,10,  'Stock on Hand'),\n" +
+      "(11, (select id from programs where code = '" + program + "'),  true, 'U', false,11, 'New Patients'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'U', false,12, 'Total Stockout days'),\n" +
+      "(13, (select id from programs where code = '" + program + "'), true, 'C', false,13, 'Adjusted Total Consumption'),\n" +
+      "(14, (select id from programs where code = '" + program + "'), true, 'C', false,14, 'Average Monthly Consumption(AMC)'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'C', false,15, 'Maximum Stock Quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'C', false,16, 'Calculated Order Quantity'),\n" +
+      "(17, (select id from programs where code = '" + program + "'), true, 'U', false,17, 'Requested quantity'),\n" +
+      "(18, (select id from programs where code = '" + program + "'), true, 'U', false,18, 'Requested quantity explanation'),\n" +
+      "(19, (select id from programs where code = '" + program + "'), true, 'U', false,19, 'Approved Quantity'),\n" +
+      "(20, (select id from programs where code = '" + program + "'), true, 'C', false,20, 'Packs to Ship'),\n" +
+      "(21, (select id from programs where code = '" + program + "'), true, 'R', false,21, 'Price per pack'),\n" +
+      "(22, (select id from programs where code = '" + program + "'), true, 'C', false,22, 'Total cost'),\n" +
+      "(23, (select id from programs where code = '" + program + "'), true, 'U', false,23, 'Expiration Date'),\n" +
+      "(24, (select id from programs where code = '" + program + "'), true, 'U', false,24, 'Remarks');");
   }
 
   public void configureTemplateForCommTrack(String program) throws SQLException, IOException {
@@ -654,7 +654,7 @@ public class DBWrapper {
       "(5, (select id from programs where code = '" + program + "'),  false, 'C', 4,  'Beginning Balance'),\n" +
       "(6, (select id from programs where code = '" + program + "'),  false, 'C', 5,  'Total Received Quantity'),\n" +
       "(7, (select id from programs where code = '" + program + "'),  true, 'C', 6,  'Total'),\n" +
-      "(8, (select id from programs where code = '" + program + "'),  false, 'C', 7,  'Total Consumed Quantity'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'C', 7,  'Total Consumed Quantity'),\n" +
       "(9, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Losses / Adjustments'),\n" +
       "(10, (select id from programs where code = '" + program + "'),  true, 'U', 9,  'Stock on Hand'),\n" +
       "(11, (select id from programs where code = '" + program + "'),  true, 'U', 10, 'New Patients'),\n" +
@@ -1437,4 +1437,26 @@ public class DBWrapper {
         return fullSupplyItemsSubmittedCost;
     }
 
+   public String getStockInHand(String requisitionId) throws IOException, SQLException {
+        String stockInHand = null;
+        ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
+
+        if (rs.next()) {
+            stockInHand = rs.getString("stockinhand");
+        }
+        return stockInHand;
+
+    }
+
+    public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
+        update("UPDATE program_rnr_columns set formulavalidationrequired ='"+flag+"' WHERE programid=" +
+        "(SELECT id from programs where code='" + programCode + "');");
+    }
+
+    public void updateConfigureTemplate(String programCode, String fieldName,String fieldValue,String flag ) throws SQLException {
+        update("UPDATE program_rnr_columns SET visible ='"+flag+"', "+fieldName+"='"+fieldValue+"' WHERE programid=" +
+                "(SELECT id from programs where code='" + programCode + "')" +
+                "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = 'stockInHand') ;");
+
+    }
 }

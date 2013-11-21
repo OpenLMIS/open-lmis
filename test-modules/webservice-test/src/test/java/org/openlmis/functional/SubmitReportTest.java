@@ -32,6 +32,7 @@ public class SubmitReportTest extends JsonUtility {
   public static final String MINIMUM_JSON_TXT_FILE_NAME = "ReportMinimumJson.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String PRODUCT_JSON_TXT_FILE_NAME = "ReportWithProductJson.txt";
+  public static final String MASTER_TEMPLATE_VALIDATION_JSON_TXT_FILE_NAME = "ReportMasterTemplateValidationJson.txt";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -677,6 +678,110 @@ public class SubmitReportTest extends JsonUtility {
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
+
+    @Test(groups = {"webservice"})
+    public void testMasterTemplateValidationInvalidRnR() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+
+        Report reportFromJson = JsonUtility.readObjectFromFile(MASTER_TEMPLATE_VALIDATION_JSON_TXT_FILE_NAME,Report.class);
+        reportFromJson.setAgentCode("V10");
+        reportFromJson.setProgramCode("HIV");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setBeginningBalance(1);
+        reportFromJson.getProducts().get(0).setQuantityReceived(4);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+    }
+
+    @Test(groups = {"webservice"})
+    public void testMasterTemplateValidationViolateArithmeticValidation() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true");
+        dbWrapper.updateConfigureTemplateValidationFlag("HIV","true" );
+
+        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+        reportFromJson.setAgentCode("V10");
+        reportFromJson.setProgramCode("HIV");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setBeginningBalance(1);
+        reportFromJson.getProducts().get(0).setQuantityReceived(4);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+        reportFromJson.getProducts().get(0).setStockInHand(10);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+    }
+
+
+
+    @Test(groups = {"webservice"})
+    public void testMasterTemplateValidationOverrideWithCalculatedValue() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+
+        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+        reportFromJson.setAgentCode("V10");
+        reportFromJson.setProgramCode("HIV");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setBeginningBalance(1);
+        reportFromJson.getProducts().get(0).setQuantityReceived(4);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+        reportFromJson.getProducts().get(0).setStockInHand(10);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
+
+        assertEquals(201, responseEntity.getStatus());
+        assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+        String latestReqId= dbWrapper.getLatestRequisitionId() ;
+        String str=dbWrapper.getStockInHand(latestReqId);
+        assertEquals("4",str);
+    }
+
+
+    @Test(groups = {"webservice"})
+    public void testMasterTemplateValidationIgnoreReportedValue() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        dbWrapper.updateConfigureTemplate("HIV","source","C","false" );
+        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+        reportFromJson.setAgentCode("V10");
+        reportFromJson.setProgramCode("HIV");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setBeginningBalance(1);
+        reportFromJson.getProducts().get(0).setQuantityReceived(4);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+        reportFromJson.getProducts().get(0).setStockInHand(10);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
+        assertEquals(201, responseEntity.getStatus());
+        assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+    }
 
 }
 
