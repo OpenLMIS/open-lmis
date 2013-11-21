@@ -10,6 +10,7 @@
 
 package org.openlmis.rnr.service;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -21,6 +22,7 @@ import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
@@ -39,7 +41,11 @@ import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.numberOfMonths;
 import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
+import static org.openlmis.rnr.builder.RequisitionBuilder.period;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 @Category(UnitTests.class)
@@ -208,7 +214,7 @@ public class CalculationServiceTest {
     Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
 
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
-    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod));
 
     when(processingScheduleService.getImmediatePreviousPeriod(rnr.getPeriod())).thenReturn(previousPeriod);
     when(processingScheduleService.getImmediatePreviousPeriod(previousPeriod)).thenReturn(null);
@@ -228,7 +234,7 @@ public class CalculationServiceTest {
 
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
-    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new Date())));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, new Date())));
     ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
     secondPreviousPeriod.setStartDate(new Date());
 
@@ -250,7 +256,7 @@ public class CalculationServiceTest {
     Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
 
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
-    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 4)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 4)));
     ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
     secondPreviousPeriod.setStartDate(new Date());
 
@@ -272,7 +278,7 @@ public class CalculationServiceTest {
 
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
-    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 2)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 2)));
     ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
     secondPreviousPeriod.setStartDate(new Date());
 
@@ -292,7 +298,7 @@ public class CalculationServiceTest {
   public void shouldNotCalculateDaysDifferenceIfPreviousAuthorizedLineItemIsNotPresent() throws Exception {
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
-    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 2)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 2)));
     ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
     secondPreviousPeriod.setStartDate(new Date());
 
@@ -314,7 +320,7 @@ public class CalculationServiceTest {
     lineItem.setSkipped(true);
     rnr.setFullSupplyLineItems(asList(lineItem));
 
-    ProcessingPeriod previousPeriod = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod, with(ProcessingPeriodBuilder.numberOfMonths, 2)));
+    ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 2)));
     ProcessingPeriod secondPreviousPeriod = new ProcessingPeriod();
     secondPreviousPeriod.setStartDate(new Date());
 
@@ -327,6 +333,132 @@ public class CalculationServiceTest {
     verify(processingScheduleService).getImmediatePreviousPeriod(rnr.getPeriod());
     verify(processingScheduleService).getImmediatePreviousPeriod(previousPeriod);
     verify(requisitionRepository, never()).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondPreviousPeriod.getStartDate());
+  }
+
+  @Test
+  public void shouldNotTrackPreviousRequisitionsIfNoPreviousPeriodExists() throws Exception {
+    Rnr requisition = spy(rnr);
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    verify(requisitionRepository, never()).getNNormalizedConsumptions(anyString(), eq(requisition), eq(1), any(Date.class));
+    assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(Collections.EMPTY_LIST));
+  }
+
+  @Test
+  public void shouldGetPreviousOneNormalizedConsumptionFor3MonthsInPreviousPeriod() throws Exception {
+    Rnr requisition = spy(rnr);
+    String productCode = "Code1";
+    requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    Date trackingStartDate = new Date();
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, trackingStartDate, new Date(), 3, "previousPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
+    when(requisitionRepository.getNNormalizedConsumptions(productCode, requisition, 1, previousPeriod.getStartDate())).thenReturn(asList(4));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(requisition).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    verify(requisitionRepository).getNNormalizedConsumptions(productCode, requisition, 1, previousPeriod.getStartDate());
+    assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
+  }
+
+  @Test
+  public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInPreviousPeriod() throws Exception {
+    Rnr requisition = spy(rnr);
+    String productCode = "Code1";
+    requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    Date trackingStartDate = DateTime.now().minusMonths(2).toDate();
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 2, "previousPeriod");
+    ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, trackingStartDate, new Date(), 2, "secondLastPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    when(requisitionRepository.getNNormalizedConsumptions(productCode, requisition, 1, trackingStartDate)).thenReturn(asList(4));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(requisition).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    verify(requisitionRepository).getNNormalizedConsumptions(productCode, requisition, 1, trackingStartDate);
+    assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
+  }
+
+  @Test
+  public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInPreviousPeriodAndShouldTrackFromLast2Periods() throws Exception {
+    Rnr requisition = spy(rnr);
+    String productCode = "Code1";
+    requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    Date trackingStartDate = DateTime.now().minusMonths(2).toDate();
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 2, "previousPeriod");
+    ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, trackingStartDate, new Date(), 2, "secondLastPeriod");
+    ProcessingPeriod thirdLastPeriod = new ProcessingPeriod(4l, new Date(), new Date(), 1, "thirdLastPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod, thirdLastPeriod));
+    when(requisitionRepository.getNNormalizedConsumptions(productCode, requisition, 1, trackingStartDate)).thenReturn(asList(4));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(requisition).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    verify(requisitionRepository).getNNormalizedConsumptions(productCode, requisition, 1, trackingStartDate);
+    assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
+  }
+
+  @Test
+  public void shouldGetPreviousTwoNormalizedConsumptionsFor1MonthInPreviousPeriodAndShouldTrackFromLast5Periods() throws Exception {
+    Rnr requisition = spy(rnr);
+    String productCode = "Code1";
+    requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    Date trackingStartDate = DateTime.now().minusMonths(2).toDate();
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 1, "previousPeriod");
+    ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 1, "secondLastPeriod");
+    ProcessingPeriod thirdLastPeriod = new ProcessingPeriod(4l, new Date(), new Date(), 1, "thirdLastPeriod");
+    ProcessingPeriod fourthLastPeriod = new ProcessingPeriod(5l, new Date(), new Date(), 1, "fourthLastPeriod");
+    ProcessingPeriod fifthLastPeriod = new ProcessingPeriod(6l, trackingStartDate, new Date(), 1, "fifthLastPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod, thirdLastPeriod, fourthLastPeriod, fifthLastPeriod));
+    when(requisitionRepository.getNNormalizedConsumptions(productCode, requisition, 2, trackingStartDate)).thenReturn(asList(4, 5));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(requisition).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    verify(requisitionRepository).getNNormalizedConsumptions(productCode, requisition, 2, trackingStartDate);
+    assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4, 5)));
   }
 
   private Date setLineItemDatesAndReturnDate() {

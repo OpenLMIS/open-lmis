@@ -110,7 +110,7 @@ public class RequisitionService {
 
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
-    fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
+    calculateService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
 
@@ -326,25 +326,6 @@ public class RequisitionService {
     }
 
     return processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
-  }
-
-  private void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5);
-    if (fivePreviousPeriods.size() == 0) {
-      requisition.setFieldsAccordingToTemplate(null, rnrTemplate, regimenTemplate);
-      return;
-    }
-
-    ProcessingPeriod immediatePreviousPeriod = fivePreviousPeriods.get(0);
-    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
-    requisition.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
-
-    ProcessingPeriod oldestPeriod = fivePreviousPeriods.get(fivePreviousPeriods.size() - 1);
-    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(), requisition, 2, oldestPeriod.getStartDate());
-      lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
-    }
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {

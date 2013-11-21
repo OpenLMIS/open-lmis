@@ -14,10 +14,7 @@ import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,5 +96,41 @@ public class CalculationService {
       startDate = requisition.getPeriod().getStartDate();
     }
     return startDate;
+  }
+
+  public void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    if (fivePreviousPeriods.size() == 0) {
+      requisition.setFieldsAccordingToTemplateFrom(null, rnrTemplate, regimenTemplate);
+      return;
+    }
+
+    ProcessingPeriod immediatePreviousPeriod = fivePreviousPeriods.get(0);
+    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
+        requisition.getProgram(), immediatePreviousPeriod);
+
+    requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
+
+    Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
+    Date trackingDate;
+    Integer numberOfPreviousNCToTrack;
+
+    if (M == 1) {
+      numberOfPreviousNCToTrack = 2;
+      trackingDate = getDateForNthPreviousPeriod(fivePreviousPeriods, 4);
+    } else {
+      numberOfPreviousNCToTrack = 1;
+      trackingDate = (M == 2) ? getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
+    }
+
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+      List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(), requisition, numberOfPreviousNCToTrack, trackingDate);
+      lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
+    }
+  }
+
+  private Date getDateForNthPreviousPeriod(List<ProcessingPeriod> fivePreviousPeriods, int n) {
+    ProcessingPeriod desiredPeriod = fivePreviousPeriods.get(n);
+    return desiredPeriod == null ? fivePreviousPeriods.get(fivePreviousPeriods.size() - 1).getStartDate() : desiredPeriod.getStartDate();
   }
 }

@@ -219,7 +219,7 @@ public class Rnr extends BaseModel {
     });
   }
 
-  public void setFieldsAccordingToTemplate(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+  public void setFieldsAccordingToTemplateFrom(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
     this.setBeginningBalances(previousRequisition, template.columnsVisible(BEGINNING_BALANCE));
 
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {

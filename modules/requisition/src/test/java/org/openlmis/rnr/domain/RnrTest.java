@@ -133,7 +133,7 @@ public class RnrTest {
     RnrLineItem correspondingLineItemInPreviousRequisition = make(a(defaultRnrLineItem, with(stockInHand, 76)));
     previousRequisition.setFullSupplyLineItems(asList(correspondingLineItemInPreviousRequisition));
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(76));
   }
@@ -146,7 +146,7 @@ public class RnrTest {
 
     previousRequisition.setStatus(AUTHORIZED);
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
@@ -155,7 +155,7 @@ public class RnrTest {
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionDoesNotExist() throws Exception {
     Rnr previousRequisition = null;
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
@@ -164,7 +164,7 @@ public class RnrTest {
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInInitiatedState() throws Exception {
     Rnr previousRequisition = make(a(defaultRequisition, with(status, INITIATED)));
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
@@ -173,7 +173,7 @@ public class RnrTest {
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInSubmittedState() throws Exception {
     Rnr previousRequisition = make(a(defaultRequisition, with(status, SUBMITTED)));
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
