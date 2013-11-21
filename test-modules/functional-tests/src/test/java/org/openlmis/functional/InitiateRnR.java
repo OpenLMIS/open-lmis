@@ -918,7 +918,7 @@ public class InitiateRnR extends TestCaseHelper {
     }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testSkipProductRnRAuthorizeApprove(String program, String userSIC, String password) throws Exception {
+  public void testSkipProductRnRAuthorizeApproveForRegularRnR(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -933,6 +933,57 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("10");
+    initiateRnRPage.enterQuantityReceived("0");
+    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.enterExplanationReason();
+    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
+    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
+    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
+    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitRnrSuccessMsg();
+    initiateRnRPage.skipAllProduct();
+    initiateRnRPage.verifyAllFieldsDisabled();
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
+    assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
+    initiateRnRPage.skipAllProduct();
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+    ApprovePage approvePage= homePage.navigateToApprove();
+    approvePage.ClickRequisitionPresentForApproval();
+    assertTrue(approvePage.approveQuantityVisible(1));
+    approvePage.editFullSupplyApproveQuantity("5");
+    assertFalse(approvePage.approveQuantityVisible(2));
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+    approvePage.verifyNoRequisitionPendingMessage();
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testSkipProductRnRAuthorizeApproveForEmergencyRnR(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(APPROVE_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.UpdateProductFullSupplyStatus("P11",true);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterBeginningBalance("10");
     initiateRnRPage.enterQuantityReceived("0");
