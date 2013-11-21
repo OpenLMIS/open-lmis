@@ -33,9 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
@@ -63,17 +61,6 @@ public class RestRequisitionService {
   private RequisitionValidator requisitionValidator;
 
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
-
-  private Map<String, Object> defaultValues = new HashMap<String, Object>() {{
-    put("beginningBalance", 0);
-    put("quantityReceived", 0);
-    put("totalLossesAndAdjustments", 0);
-    put("newPatientCount", 0);
-    put("stockOutDays", 0);
-    put("quantityRequested", 0);
-    put("reasonForRequestedQuantity", "none");
-    put("remarks", "none");
-  }};
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -156,8 +143,7 @@ public class RestRequisitionService {
           field.setAccessible(true);
 
           Object reportedValue = field.get(productLineItem);
-          Object toBeSavedValue = (reportedValue != null) ? reportedValue : defaultValues.get(field.getName());
-
+          Object toBeSavedValue = (reportedValue != null ? reportedValue : field.get(fullSupplyLineItem));
           field.set(fullSupplyLineItem, toBeSavedValue);
 
         } catch (Exception e) {
