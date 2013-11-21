@@ -59,7 +59,6 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
   private static WebElement enableButton = null;
 
-
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
@@ -193,6 +192,11 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
   private static WebElement noMatchFoundLink = null;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[1]")
+  private static WebElement restrictLoginYesOption = null;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[2]")
+  private static WebElement restrictLoginNoOption = null;
 
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -259,16 +263,11 @@ public class UserPage extends Page {
     firstNameField.sendKeys(firstName);
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
+    clickRestrictLoginNo();
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(viewHereLink);
-
-    testWebDriver.waitForElementToAppear(successMessage);
-
-    String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
-      " password link has been sent on registered Email address. View Here", firstName, lastName);
-    assertEquals(expectedMessage, successMessage.getText());
   }
 
   public void verifyUserCreated(String firstName, String lastName)
@@ -301,6 +300,14 @@ public class UserPage extends Page {
 
   public void collapseAll() {
     collapseAllOption.click();
+  }
+
+  public void clickRestrictLoginYes() {
+    restrictLoginYesOption.click();
+  }
+
+  public void clickRestrictLoginNo() {
+    restrictLoginNoOption.click();
   }
 
   public void verifyExpandAll() {

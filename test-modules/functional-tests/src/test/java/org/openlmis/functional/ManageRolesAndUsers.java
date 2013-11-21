@@ -313,20 +313,34 @@ public class ManageRolesAndUsers extends TestCaseHelper {
 
   }
 
-    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
-    public void testRestrictLogin(String[] credentials) throws Exception {
-        String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
+  public void testRestrictLogin(String[] credentials) throws Exception {
+    String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
-        dbWrapper.insertUser("900","test1",passwordUsers,"F10","test@test.com");
-        dbWrapper.updateRestrictLogin("test1",true);
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        loginPage.loginAs("test1", credentials[1]);
-        assertEquals(loginPage.getLoginErrorMessage(),"The username or password you entered is incorrect. Please try again.");
-        dbWrapper.updateRestrictLogin("test1",false);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    UserPage userPage = homePage.navigateToUser();
+    String email = "Jasmine_Doe@openlmis.com";
+    userPage.enterUserDetails(LAB_IN_CHARGE, email, "Jasmine", "Doe");
+    dbWrapper.updateUser(passwordUsers, email);
+    userPage.clickViewHere();
+    userPage.clickRestrictLoginYes();
+    userPage.saveUser();
+    homePage.logout(baseUrlGlobal);
+    loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
+    assertEquals(loginPage.getLoginErrorMessage(),
+            "The username or password you entered is incorrect. Please try again.");
 
-        HomePage homePage = loginPage.loginAs("test1", credentials[1]);
-        homePage.verifyLoggedInUser("test1");
-    }
+    loginPage.loginAs(credentials[0], credentials[1]);
+    homePage.navigateToUser();
+    userPage.searchUser(LAB_IN_CHARGE);
+    userPage.clickUserList();
+    userPage.clickRestrictLoginNo();
+    userPage.saveUser();
+    homePage.logout(baseUrlGlobal);
+    loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
+    homePage.verifyLoggedInUser(LAB_IN_CHARGE);
+  }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Role-Function")
   public void testCreateSearchResetPasswordUser(String[] credentials) throws Exception {

@@ -33,6 +33,7 @@ public class CommTrackTemplateTest extends JsonUtility {
     dbWrapper.insertVirtualFacility("V10","F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30","2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNode("700","store in-charge","N1");
+    dbWrapper.updateRestrictLogin("commTrack",true);
   }
 
   @AfterMethod(groups = {"webservice"})
