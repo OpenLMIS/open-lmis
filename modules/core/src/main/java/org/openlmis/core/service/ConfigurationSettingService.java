@@ -37,20 +37,29 @@ public class ConfigurationSettingService {
   }
 
   public int getConfigurationIntValue(String key){
-
     ConfigurationSetting configuration = getByKey(key);
-
-      if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
-          return 0;
-
-      return Integer.parseInt(configuration.getValue());
+    if(configuration == null || configuration.getValue() == null || configuration.getValue().isEmpty())
+        return 0;
+    return Integer.parseInt(configuration.getValue());
   }
+
+
 
   public String getConfigurationStringValue(String key){
       ConfigurationSetting configurationSetting = getByKey(key);
       if (configurationSetting == null || configurationSetting.getValue() == null || configurationSetting.getValue().isEmpty())
           return "";
       return configurationSetting.getValue();
+  }
+
+  public Boolean getBoolValue(String key){
+    String value = getConfigurationStringValue(key);
+
+    // if the configuration was not set at all in the configurations table ... return null
+    if(value.isEmpty())
+         return null;
+
+    return Boolean.parseBoolean(value);
   }
 
   public List<Object> getConfigurationListValue(String key, String delimiter){

@@ -11,6 +11,7 @@
 package org.openlmis.web.view.pdf;
 
 import com.itextpdf.text.pdf.PdfDocument;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.web.view.pdf.requisition.RequisitionPdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class OpenLmisPdfView extends AbstractView {
   private MessageService messageService;
 
   @Autowired
+  private ConfigurationSettingService configService;
+
+  @Autowired
   public OpenLmisPdfView(MessageService messageService) {
     this.messageService = messageService;
     setContentType("application/pdf");
@@ -38,7 +42,7 @@ public class OpenLmisPdfView extends AbstractView {
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
     try (ByteArrayOutputStream stream = createTemporaryOutputStream()) {
 
-      RequisitionPdfWriter requisitionPdfWriter = new RequisitionPdfWriter(new PdfDocument(), stream, messageService);
+      RequisitionPdfWriter requisitionPdfWriter = new RequisitionPdfWriter(new PdfDocument(), stream, messageService, configService);
       requisitionPdfWriter.buildWith(model);
 
       writeToResponse(response, stream);

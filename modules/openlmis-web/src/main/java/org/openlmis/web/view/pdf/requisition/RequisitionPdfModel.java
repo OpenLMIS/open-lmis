@@ -20,6 +20,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
@@ -53,13 +54,16 @@ public class RequisitionPdfModel {
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
   private MessageService messageService;
 
-  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
+  private ConfigurationSettingService configService;
+
+  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService, ConfigurationSettingService configService) {
     this.statusChanges = (List<RequisitionStatusChange>) model.get(STATUS_CHANGES);
     this.rnrColumnList = (List<RnrColumn>) model.get(RNR_TEMPLATE);
     this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RNR);
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(LOSSES_AND_ADJUSTMENT_TYPES);
     this.messageService = messageService;
+    this.configService = configService;
   }
 
   public Paragraph getFullSupplyHeader() {
@@ -102,7 +106,13 @@ public class RequisitionPdfModel {
         printRnrLineItem.calculate(calcStrategy, requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
-      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
+      String currencySymbol = messageService.message(LABEL_CURRENCY_SYMBOL);
+
+      if(!configService.getBoolValue("RNR_PRINT_REPEAT_CURRENCY_SYMBOL")){
+        currencySymbol = "";
+      }
+
+      List<PdfPCell> cells = getCells(visibleColumns, lineItem, currencySymbol);
       odd = !odd;
 
       for (PdfPCell cell : cells) {

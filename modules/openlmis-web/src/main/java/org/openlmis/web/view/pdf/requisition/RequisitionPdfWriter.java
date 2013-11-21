@@ -15,6 +15,7 @@ import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.web.view.pdf.PdfPageEventHandler;
 
@@ -29,13 +30,15 @@ public class RequisitionPdfWriter extends PdfWriter {
   public static final float TOP_MARGIN = 10;
   public static final float BOTTOM_MARGIN = 30;
   private MessageService messageService;
+  private ConfigurationSettingService configService;
 
-  public RequisitionPdfWriter(PdfDocument document, OutputStream stream, MessageService messageService) throws DocumentException {
+  public RequisitionPdfWriter(PdfDocument document, OutputStream stream, MessageService messageService, ConfigurationSettingService configService) throws DocumentException {
     super(document, stream);
     document.addWriter(this);
     setDocumentAttributes(document);
     this.setViewerPreferences(getViewerPreferences());
     this.messageService = messageService;
+    this.configService = configService;
     this.setPageEvent(new PdfPageEventHandler(messageService));
   }
 
@@ -46,7 +49,7 @@ public class RequisitionPdfWriter extends PdfWriter {
 
   public void buildWith(Map<String, Object> model)
       throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model, messageService);
+    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model, messageService, configService);
     document.open();
     document.add(requisitionPdfModel.getRequisitionHeader());
 
