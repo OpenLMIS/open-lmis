@@ -641,8 +641,6 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setFacilityId(dbWrapper.getFacilityID("V10"));
-    reportFromJson.setPeriodId(dbWrapper.getPeriodID("Period2"));
     reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
     reportFromJson.getProducts().get(0).setProductCode("P10");
 

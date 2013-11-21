@@ -52,7 +52,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack1");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -89,7 +88,6 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setRequisitionId(id);
-    reportFromJson.setUserName("commTrack100");
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
@@ -112,7 +110,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P1000");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -140,7 +137,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P11");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -168,7 +164,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "False");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -197,7 +192,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     dbWrapper.updateActiveStatusOfProgram("HIV", false);
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -226,7 +220,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     dbWrapper.updateActiveStatusOfProduct("P10", "False");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -254,7 +247,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -283,7 +275,6 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setRequisitionId(id2);
-    reportFromJson.setUserName("commTrack");
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
 
@@ -308,7 +299,6 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.setRequisitionId(id);
-    reportFromJson.setUserName("commTrack1");
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
@@ -335,7 +325,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack1");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
@@ -364,7 +353,6 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_MULTIPLE_PRODUCTS_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack1");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);

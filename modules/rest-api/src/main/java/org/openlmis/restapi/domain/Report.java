@@ -31,12 +31,6 @@ public class Report {
   private String agentCode;
   private String programCode;
 
-  private Long facilityId;
-  private Long periodId;
-  private String userName;
-  private Boolean emergency;
-
-
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
       throw new DataException("error.restapi.mandatory.missing");

@@ -1,7 +1,5 @@
 {
     "agentCode": "",
-    "programCode": "",
-    "emergency" : "false",
     "products": [
         {
             "productCode": "",
