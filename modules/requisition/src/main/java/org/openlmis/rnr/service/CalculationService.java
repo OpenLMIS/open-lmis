@@ -31,7 +31,7 @@ public class CalculationService {
   RequisitionRepository requisitionRepository;
 
   @Autowired
-  private ProcessingScheduleService processingScheduleService;
+  ProcessingScheduleService processingScheduleService;
 
   public void perform(Rnr requisition, ProgramRnrTemplate template) {
     RnrCalculationStrategy calcStrategy = requisition.getRnrCalcStrategy();
@@ -43,6 +43,73 @@ public class CalculationService {
     calculateForNonFullSupply(requisition, calcStrategy);
   }
 
+  public void calculateDaysDifference(Rnr requisition) {
+    Date startDate = findDateToStartTracking(requisition);
+
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+      if (lineItem.getSkipped()) continue;
+
+      Date authorizedDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
+      if (authorizedDateForPreviousLineItem != null) {
+        Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - authorizedDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
+        lineItem.setDaysSinceLastLineItem(daysDifference);
+      }
+    }
+  }
+
+  public void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
+    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+
+    if (fivePreviousPeriods.size() == 0) {
+      requisition.setFieldsAccordingToTemplateFrom(null, rnrTemplate, regimenTemplate);
+      fillPreviousNCsInLineItems(requisition, requisition.getPeriod().getNumberOfMonths(), requisition.getPeriod().getStartDate());
+      return;
+    }
+
+    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
+        requisition.getProgram(), fivePreviousPeriods.get(0));
+    requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
+
+    Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
+    Date trackingDate = (M == 1) ? getDateForNthPreviousPeriod(fivePreviousPeriods, 4) : (M == 2) ?
+        getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
+
+    fillPreviousNCsInLineItems(requisition, M, trackingDate);
+  }
+
+  private void fillPreviousNCsInLineItems(Rnr requisition, Integer m, Date trackingDate) {
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+
+      List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(),
+          requisition, getNumberOfPreviousNCToTrack(m), trackingDate);
+      lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
+
+    }
+  }
+
+  private Integer getNumberOfPreviousNCToTrack(Integer m) {
+    return (m == 1) ? 2 : 1;
+  }
+
+  private Date findDateToStartTracking(Rnr requisition) {
+    Date startDate;
+    List<ProcessingPeriod> twoPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
+
+    if (twoPreviousPeriods.size() != 0) {
+      Integer M = twoPreviousPeriods.get(0).getNumberOfMonths();
+      startDate = (M < 3 && twoPreviousPeriods.size() != 1) ? twoPreviousPeriods.get(1).getStartDate() :
+          twoPreviousPeriods.get(0).getStartDate();
+    } else {
+      startDate = requisition.getPeriod().getStartDate();
+    }
+
+    return startDate;
+  }
+
+  private Date getDateForNthPreviousPeriod(List<ProcessingPeriod> fivePreviousPeriods, Integer n) {
+    ProcessingPeriod desiredPeriod = fivePreviousPeriods.get(n);
+    return desiredPeriod == null ? fivePreviousPeriods.get(fivePreviousPeriods.size() - 1).getStartDate() : desiredPeriod.getStartDate();
+  }
 
   private void calculateForNonFullSupply(Rnr requisition, RnrCalculationStrategy calcStrategy) {
     for (RnrLineItem lineItem : requisition.getNonFullSupplyLineItems()) {
@@ -67,70 +134,5 @@ public class CalculationService {
         requisition.addToFullSupplyCost(lineItem.calculateCost());
       }
     }
-  }
-
-  public void calculateDaysDifference(Rnr requisition) {
-    Date startDate = findDateToStartTracking(requisition);
-
-    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      if (lineItem.getSkipped()) continue;
-
-      Date authorizedDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
-      if (authorizedDateForPreviousLineItem != null) {
-        Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - authorizedDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
-        lineItem.setDaysSinceLastLineItem(daysDifference);
-      }
-    }
-  }
-
-  private Date findDateToStartTracking(Rnr requisition) {
-    Date startDate;
-
-    ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
-    if (immediatePreviousPeriod != null) {
-      Integer M = immediatePreviousPeriod.getNumberOfMonths();
-      ProcessingPeriod secondImmediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(immediatePreviousPeriod);
-      startDate = (M < 3 && secondImmediatePreviousPeriod != null) ? secondImmediatePreviousPeriod.getStartDate() :
-          immediatePreviousPeriod.getStartDate();
-    } else {
-      startDate = requisition.getPeriod().getStartDate();
-    }
-    return startDate;
-  }
-
-  public void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    if (fivePreviousPeriods.size() == 0) {
-      requisition.setFieldsAccordingToTemplateFrom(null, rnrTemplate, regimenTemplate);
-      return;
-    }
-
-    ProcessingPeriod immediatePreviousPeriod = fivePreviousPeriods.get(0);
-    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
-
-    requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
-
-    Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
-    Date trackingDate;
-    Integer numberOfPreviousNCToTrack;
-
-    if (M == 1) {
-      numberOfPreviousNCToTrack = 2;
-      trackingDate = getDateForNthPreviousPeriod(fivePreviousPeriods, 4);
-    } else {
-      numberOfPreviousNCToTrack = 1;
-      trackingDate = (M == 2) ? getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
-    }
-
-    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(), requisition, numberOfPreviousNCToTrack, trackingDate);
-      lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
-    }
-  }
-
-  private Date getDateForNthPreviousPeriod(List<ProcessingPeriod> fivePreviousPeriods, int n) {
-    ProcessingPeriod desiredPeriod = fivePreviousPeriods.get(n);
-    return desiredPeriod == null ? fivePreviousPeriods.get(fivePreviousPeriods.size() - 1).getStartDate() : desiredPeriod.getStartDate();
   }
 }
