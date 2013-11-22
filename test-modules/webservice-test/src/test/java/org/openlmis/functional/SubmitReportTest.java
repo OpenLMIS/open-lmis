@@ -32,7 +32,6 @@ public class SubmitReportTest extends JsonUtility {
   public static final String MINIMUM_JSON_TXT_FILE_NAME = "ReportMinimumJson.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String PRODUCT_JSON_TXT_FILE_NAME = "ReportWithProductJson.txt";
-  public static final String MASTER_TEMPLATE_VALIDATION_JSON_TXT_FILE_NAME = "ReportMasterTemplateValidationJson.txt";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -682,17 +681,19 @@ public class SubmitReportTest extends JsonUtility {
   }
 
     @Test(groups = {"webservice"})
-    public void testMasterTemplateValidationInvalidRnR() throws Exception {
+    public void testMasterTemplateValidationMissingBothMandatoryUserInputFields() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
-
-        Report reportFromJson = JsonUtility.readObjectFromFile(MASTER_TEMPLATE_VALIDATION_JSON_TXT_FILE_NAME,Report.class);
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
+        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME,Report.class);
         reportFromJson.setAgentCode("V10");
         reportFromJson.setProgramCode("HIV");
         reportFromJson.getProducts().get(0).setProductCode("P10");
         reportFromJson.getProducts().get(0).setBeginningBalance(1);
         reportFromJson.getProducts().get(0).setQuantityReceived(4);
-
+        reportFromJson.getProducts().get(0).setQuantityDispensed(null);
+        reportFromJson.getProducts().get(0).setStockInHand(null);
         ResponseEntity responseEntity =
                 client.SendJSON(getJsonStringFor(reportFromJson),
                         "http://localhost:9091/rest-api/requisitions.json",
@@ -705,12 +706,37 @@ public class SubmitReportTest extends JsonUtility {
     }
 
     @Test(groups = {"webservice"})
+    public void testMasterTemplateValidationMissingOneMandatoryUserInputFields() throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
+        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME,Report.class);
+        reportFromJson.setAgentCode("V10");
+        reportFromJson.setProgramCode("HIV");
+        reportFromJson.getProducts().get(0).setProductCode("P10");
+        reportFromJson.getProducts().get(0).setBeginningBalance(1);
+        reportFromJson.getProducts().get(0).setQuantityReceived(4);
+        reportFromJson.getProducts().get(0).setStockInHand(null);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
+
+        assertEquals(400, responseEntity.getStatus());
+        assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+    }
+    @Test(groups = {"webservice"})
     public void testMasterTemplateValidationViolateArithmeticValidation() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
-        dbWrapper.updateConfigureTemplate("HIV","source","U","true");
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
         dbWrapper.updateConfigureTemplateValidationFlag("HIV","true" );
-
+        dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
         Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
         reportFromJson.setAgentCode("V10");
         reportFromJson.setProgramCode("HIV");
@@ -765,7 +791,7 @@ public class SubmitReportTest extends JsonUtility {
     public void testMasterTemplateValidationIgnoreReportedValue() throws Exception {
         HttpClient client = new HttpClient();
         client.createContext();
-        dbWrapper.updateConfigureTemplate("HIV","source","C","false" );
+        dbWrapper.updateConfigureTemplate("HIV","source","C","false","stockInHand");
         Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
         reportFromJson.setAgentCode("V10");
         reportFromJson.setProgramCode("HIV");
