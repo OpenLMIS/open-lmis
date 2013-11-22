@@ -52,17 +52,17 @@ public class RequisitionCellFactory {
     return cell;
   }
 
-  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns, LineItem lineItem, String currency) throws NoSuchFieldException, IllegalAccessException {
+  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns, LineItem lineItem, String currency, String skippedText) throws NoSuchFieldException, IllegalAccessException {
     List<PdfPCell> result = new ArrayList<>();
     for (Column column : visibleColumns) {
       ColumnType columnType = column.getColumnType();
       String value = lineItem.getValue(column.getName());
-      createCell(result, columnType, value, currency);
+      createCell(result, columnType, value, currency, skippedText);
     }
     return result;
   }
 
-  private static void createCell(List<PdfPCell> result, ColumnType columnType, String value, String currency) {
+  private static void createCell(List<PdfPCell> result, ColumnType columnType, String value, String currency, String skippedText) {
     if (columnType.equals(ColumnType.TEXT)) {
       result.add(textCell(value));
     }
@@ -71,6 +71,11 @@ public class RequisitionCellFactory {
     }
     if (columnType.equals(ColumnType.CURRENCY)) {
       result.add(numberCell(currency + value));
+    }
+
+    if (columnType.equals(ColumnType.BOOLEAN)) {
+      value = value.equalsIgnoreCase("true") ? skippedText : "";
+      result.add(textCell(value));
     }
   }
 

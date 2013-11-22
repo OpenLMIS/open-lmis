@@ -40,6 +40,7 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 @NoArgsConstructor
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
+  public static final String SKIPPED_PRODUCTS_TEXT = "label.skipped.products";
   private List<RequisitionStatusChange> statusChanges;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
@@ -102,7 +103,7 @@ public class RequisitionPdfModel {
         printRnrLineItem.calculate(calcStrategy, requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
-      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
+      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL), messageService.message(SKIPPED_PRODUCTS_TEXT));
       odd = !odd;
 
       for (PdfPCell cell : cells) {
@@ -168,8 +169,8 @@ public class RequisitionPdfModel {
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format(messageService.message("label.requisition") + ": %s (%s)",
-        this.requisition.getProgram().getName(),
-        this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
+      this.requisition.getProgram().getName(),
+      this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(4);
@@ -209,8 +210,8 @@ public class RequisitionPdfModel {
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
     builder.append(messageService.message("label.facility.reportingPeriod")).append(": ")
-        .append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ")
-        .append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+      .append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ")
+      .append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
 
     insertCell(table, builder.toString(), 1);
 
@@ -271,11 +272,11 @@ public class RequisitionPdfModel {
 
     String submittedDate = submittedStatusChange != null ? DATE_FORMAT.format(submittedStatusChange.getCreatedDate()) : "";
     String submittedBy = submittedStatusChange != null ?
-        submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
+      submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
 
     String authorizedDate = authorizedStatusChange != null ? DATE_FORMAT.format(authorizedStatusChange.getCreatedDate()) : "";
     String authorizedBy = authorizedStatusChange != null ?
-        authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
+      authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
 
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": " + submittedBy)));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));

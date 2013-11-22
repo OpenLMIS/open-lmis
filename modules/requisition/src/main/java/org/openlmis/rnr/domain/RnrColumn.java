@@ -57,6 +57,9 @@ public class RnrColumn extends Column {
     if (this.getName().equals("product") || this.getName().equals("dispensingUnit") || this.getName().equals("productCode")) {
       return ColumnType.TEXT;
     }
+    if (this.getName().equals("skipped")) {
+      return ColumnType.BOOLEAN;
+    }
     return ColumnType.NUMERIC;
   }
 

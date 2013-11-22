@@ -14,17 +14,42 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 @Category(UnitTests.class)
 public class RnrColumnTest {
 
-    @Test
-    public void shouldSetAvailableDataSources() {
-//        RnrColumn rnrColumn = new RnrColumn();
-//        List<RnRColumnSource> availableColumnTypes = rnrColumn.getAvailableColumnTypes();
-//        assertEquals(2, availableColumnTypes.size());
-//        assertEquals(RnRColumnSource.USER_INPUT, availableColumnTypes.getRnrForApprovalById(0));
-//        assertEquals(RnRColumnSource.CALCULATED, availableColumnTypes.getRnrForApprovalById(1));
-    }
+  @Test
+  public void shouldGetColumnTypeAsCurrencyForPrice() {
+    RnrColumn rnrColumn = new RnrColumn();
+    rnrColumn.setName("price");
+
+    assertThat(rnrColumn.getColumnType(), is(ColumnType.CURRENCY));
+  }
+
+  @Test
+  public void shouldGetColumnTypeAsTextForProduct() {
+    RnrColumn rnrColumn = new RnrColumn();
+    rnrColumn.setName("product");
+
+    assertThat(rnrColumn.getColumnType(), is(ColumnType.TEXT));
+  }
+
+  @Test
+  public void shouldGetColumnTypeAsBooleanForSkipped() {
+    RnrColumn rnrColumn = new RnrColumn();
+    rnrColumn.setName("skipped");
+
+    assertThat(rnrColumn.getColumnType(), is(ColumnType.BOOLEAN));
+  }
 
 
+  @Test
+  public void shouldGetColumnWidthAs125ForProduct() {
+    RnrColumn rnrColumn = new RnrColumn();
+    rnrColumn.setName("product");
+
+    assertThat(rnrColumn.getColumnWidth(), is(125));
+  }
 }
