@@ -438,27 +438,27 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate email address in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate employee id in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Supervisor User Name not present in the system in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
   }
 
   private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws IOException, SQLException {
