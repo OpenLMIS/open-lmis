@@ -29,7 +29,7 @@ public class VirtualFacilityStrategy extends RnrCalculationStrategy {
       addAll(previousNormalizedConsumptions);
     }};
     Integer amc = getSum(normalizedConsumptions);
-    return amc / normalizedConsumptions.size();
+    return new BigDecimal(amc).divide(new BigDecimal(normalizedConsumptions.size()), 0, HALF_UP).intValue();
   }
 
   private Integer getSum(List<Integer> previousNormalizedConsumptions) {

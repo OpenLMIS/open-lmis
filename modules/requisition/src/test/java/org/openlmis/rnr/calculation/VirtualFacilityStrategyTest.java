@@ -134,4 +134,24 @@ public class VirtualFacilityStrategyTest {
 
     assertThat(amc, is(55));
   }
+
+  @Test
+  public void shouldCalculateAMCAndRoundHALFUPForOnePreviousConsumption() throws Exception {
+    Integer normalizedConsumption = 44;
+    List<Integer> previousNormalizedConsumption = asList(67);
+
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+
+    assertThat(amc, is(56));
+  }
+
+  @Test
+  public void shouldCalculateAMCAndRoundHALFDOWNForTwoPreviousConsumption() throws Exception {
+    Integer normalizedConsumption = 4;
+    List<Integer> previousNormalizedConsumption = asList(6, 3);
+
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+
+    assertThat(amc, is(4));
+  }
 }

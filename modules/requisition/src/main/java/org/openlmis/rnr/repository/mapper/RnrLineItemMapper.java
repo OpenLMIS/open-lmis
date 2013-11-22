@@ -130,6 +130,7 @@ public interface RnrLineItemMapper {
       "AND RLI.productCode = #{productCode}",
       "INNER JOIN requisition_status_changes",
       "RSC ON RSC.rnrId = R.id",
+      "AND RLI.skipped = false",
       "AND RSC.status = 'AUTHORIZED'",
       "AND RSC.createdDate >= #{startDate}",
       "ORDER BY RSC.createdDate DESC LIMIT #{n}"})
