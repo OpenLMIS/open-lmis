@@ -12,8 +12,12 @@ package org.openlmis.rnr.calculation;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -99,5 +103,35 @@ public class VirtualFacilityStrategyTest {
 
     assertThat(normalizedConsumption, is(54));
 
+  }
+
+  @Test
+  public void shouldCalculateAMCForTwoPreviousConsumptions() throws Exception {
+    Integer normalizedConsumption = 4;
+    List<Integer> previousNormalizedConsumption = asList(99, 8);
+
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+
+    assertThat(amc, is(37));
+  }
+
+  @Test
+  public void shouldCalculateAMCForNoPreviousConsumptions() throws Exception {
+    Integer normalizedConsumption = 4;
+    List<Integer> previousNormalizedConsumption = asList();
+
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+
+    assertThat(amc, is(4));
+  }
+
+  @Test
+  public void shouldCalculateAMCForOnePreviousConsumption() throws Exception {
+    Integer normalizedConsumption = 44;
+    List<Integer> previousNormalizedConsumption = asList(66);
+
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+
+    assertThat(amc, is(55));
   }
 }
