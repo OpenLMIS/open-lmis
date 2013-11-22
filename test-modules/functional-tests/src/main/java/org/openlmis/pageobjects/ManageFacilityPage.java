@@ -416,7 +416,7 @@ public class ManageFacilityPage extends Page {
   }
 
   public void clickFacilityList(String facility){
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]"));
     testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]").click();
     testWebDriver.waitForElementToAppear(facilityCode);
