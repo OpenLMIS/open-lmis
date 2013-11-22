@@ -99,7 +99,7 @@ public class RequisitionValidatorTest {
     Report report = new Report();
     Rnr savedRequisition = new Rnr();
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
   }
 
@@ -114,7 +114,7 @@ public class RequisitionValidatorTest {
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem1)).thenReturn(rnrLineItem1);
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem2)).thenReturn(rnrLineItem2);
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem1);
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem2);
@@ -135,7 +135,7 @@ public class RequisitionValidatorTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("invalid products [P12]");
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem1);
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem2);

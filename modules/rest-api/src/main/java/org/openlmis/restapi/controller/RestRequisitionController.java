@@ -51,12 +51,11 @@ public class RestRequisitionController extends BaseController {
     return response(RNR, requisition.getId(), CREATED);
   }
 
-  @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report, Principal principal) {
+  @RequestMapping(value = "/rest-api/requisitions/{requisitionId}/approve", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> approve(@PathVariable Long requisitionId, @RequestBody Report report, Principal principal) {
     try {
       report.validateForApproval();
-      report.setRequisitionId(id);
-      restRequisitionService.approve(report, loggedInUserId(principal));
+      restRequisitionService.approve(report, requisitionId, loggedInUserId(principal));
       return success("msg.rnr.approve.success");
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);

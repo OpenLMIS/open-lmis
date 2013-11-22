@@ -107,16 +107,15 @@ public class RestRequisitionControllerTest {
     expectedRnr.setId(1L);
     Report report = mock(Report.class);
 
-    doNothing().when(service).approve(report, userId);
+    doNothing().when(report).validateForApproval();
+    doNothing().when(service).approve(report, requisitionId, userId);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(SUCCESS, "success"), OK);
     when(RestResponse.success("msg.rnr.approve.success")).thenReturn(expectResponse);
-    doNothing().when(report).validateForApproval();
 
     ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
 
     assertThat(response.getBody().getSuccess(), is("success"));
-    verify(service).approve(report, userId);
-    verify(report).setRequisitionId(expectedRnr.getId());
+    verify(service).approve(report, requisitionId, userId);
   }
 
   @Test
@@ -144,7 +143,7 @@ public class RestRequisitionControllerTest {
 
     doNothing().when(report).validateForApproval();
     DataException dataException = new DataException(errorMessage);
-    doThrow(dataException).when(service).approve(report, 1L);
+    doThrow(dataException).when(service).approve(report, requisitionId, 1L);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(ERROR, errorMessage), BAD_REQUEST);
     when(error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(expectResponse);
 

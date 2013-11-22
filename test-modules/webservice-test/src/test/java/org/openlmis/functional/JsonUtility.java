@@ -42,7 +42,6 @@ public class JsonUtility extends TestCaseHelper {
   public static String getJsonStringFor(Object object) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     StringWriter writer = new StringWriter();
-//    objectMapper
     objectMapper.writeValue(writer, object);
     return writer.toString();
   }
@@ -69,15 +68,15 @@ public class JsonUtility extends TestCaseHelper {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setRequisitionId(id);
+
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
 
     client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-      "PUT",
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
   }
 
   public static void convertToOrder(String userName, String password) throws Exception {
@@ -97,12 +96,12 @@ public class JsonUtility extends TestCaseHelper {
     reportFromJson.getProducts().get(0).setProductCode(product);
 
     ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        user,
-        password);
+        client.SendJSON(
+            getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            user,
+            password);
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));

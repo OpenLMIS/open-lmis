@@ -14,7 +14,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -49,13 +48,13 @@ public class RequisitionValidator {
     }
   }
 
-  public void validateProducts(Report report, Rnr savedRequisition) {
-    if (report.getProducts() == null) {
+  public void validateProducts(List<RnrLineItem> products, Rnr savedRequisition) {
+    if (products == null) {
       return;
     }
 
     List<String> invalidProductCodes = new ArrayList<>();
-    for (final RnrLineItem product : report.getProducts()) {
+    for (final RnrLineItem product : products) {
       if (savedRequisition.findCorrespondingLineItem(product) == null) {
         invalidProductCodes.add(product.getProductCode());
       }

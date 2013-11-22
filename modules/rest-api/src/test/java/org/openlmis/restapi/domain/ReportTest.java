@@ -81,9 +81,14 @@ public class ReportTest {
   @Test
   public void shouldGetRequisitionFromReport() throws Exception {
     Report report = make(a(ReportBuilder.defaultReport));
-    Rnr requisition = report.getRequisition();
-    assertThat(requisition.getId(), is(report.getRequisitionId()));
+    Long requisitionId = 12345L;
+    Long userId = 212345L;
+
+    Rnr requisition = report.getRequisition(requisitionId, userId);
+
+    assertThat(requisition.getId(), is(requisitionId));
     assertThat(requisition.getFullSupplyLineItems(), is(report.getProducts()));
+    assertThat(requisition.getModifiedBy(), is(userId));
   }
 
   @Test
@@ -107,14 +112,6 @@ public class ReportTest {
     expectedEx.expectMessage("error.restapi.mandatory.missing");
 
     report.validateForApproval();
-  }
-
-  @Test
-  public void shouldSetApproverNameInReport() throws Exception {
-    Report report = make(a(ReportBuilder.defaultReport));
-    Rnr requisition = report.getRequisition();
-    assertThat(requisition.getId(), is(report.getRequisitionId()));
-    assertThat(requisition.getFullSupplyLineItems(), is(report.getProducts()));
   }
 
   @Test

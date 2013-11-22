@@ -41,7 +41,6 @@ public class ReportBuilder {
     @Override
     public Report instantiate(PropertyLookup<Report> lookup) {
       Report report = new Report();
-      report.setRequisitionId(lookup.valueOf(requisitionId, 1L));
       report.setAgentCode(lookup.valueOf(agentCode, DEFAULT_AGENT_CODE));
       report.setProducts(lookup.valueOf(products, asList(make(a(RnrLineItemBuilder.defaultRnrLineItem)))));
       report.setProgramCode(lookup.valueOf(programCode, DEFAULT_PROGRAM_CODE));

@@ -73,7 +73,7 @@ public class RestRequisitionService {
 
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
 
-    requisitionValidator.validateProducts(report, rnr);
+    requisitionValidator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
 
@@ -84,9 +84,8 @@ public class RestRequisitionService {
 
 
   @Transactional
-  public void approve(Report report, Long userId) {
-    Rnr requisition = report.getRequisition();
-    requisition.setModifiedBy(userId);
+  public void approve(Report report, Long requisitionId, Long userId) {
+    Rnr requisition = report.getRequisition(requisitionId, userId);
 
     Rnr savedRequisition = requisitionService.getFullRequisitionById(requisition.getId());
 
@@ -97,7 +96,7 @@ public class RestRequisitionService {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition, report.getApproverName());
