@@ -209,6 +209,15 @@ public class DBWrapper {
     update("update users set restrictLogin = '%s' where userName = '%s'", status, userName);
   }
 
+  public String getRestrictLogin(String userName) throws SQLException, IOException {
+    String status=null;
+    ResultSet rs = query("select restrictLogin from users where userName='%s'", userName);
+
+    if (rs.next()) {
+       status = rs.getString("restrictLogin");
+    }
+    return status;
+  }
   public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
@@ -736,17 +745,6 @@ public class DBWrapper {
   public Long getFacilityID(String facilityCode) throws IOException, SQLException {
     Long id = null;
     ResultSet rs = query("select id from facilities where code='" + facilityCode + "';");
-
-    if (rs.next()) {
-      id = rs.getLong("id");
-    }
-    return id;
-  }
-
-
-  public Long getPeriodID(String periodName) throws IOException, SQLException {
-    Long id = null;
-    ResultSet rs = query("select id from processing_periods where name='" + periodName + "';");
 
     if (rs.next()) {
       id = rs.getLong("id");
@@ -1334,10 +1332,6 @@ public class DBWrapper {
   public void enterValidDetailsInFacilityFtpDetailsTable(String facilityCode) throws SQLException {
     update("INSERT INTO facility_ftp_details(facilityid,serverhost,serverport,username,password,localfolderpath) VALUES" +
       "((SELECT id FROM facilities WHERE code='" + facilityCode + "'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
-  }
-
-  public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
-    update("update products set fullsupply=" + flag + " where code='" + productCode + "';");
   }
 
   public int getRequisitionGroupId(String facilityCode) throws SQLException {

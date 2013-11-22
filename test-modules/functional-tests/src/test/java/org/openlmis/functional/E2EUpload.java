@@ -424,6 +424,13 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRestrictLogin("User123"),"f");
+
+    uploadPage.uploadUsers("QA_Users_Others.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRestrictLogin("User1234"),"f");
+    assertEquals(dbWrapper.getRestrictLogin("User1235"),"t");
+    assertEquals(dbWrapper.getRestrictLogin("User1236"),"f");
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
