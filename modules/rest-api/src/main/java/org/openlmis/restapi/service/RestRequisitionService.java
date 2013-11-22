@@ -89,10 +89,11 @@ public class RestRequisitionService {
 
     Rnr savedRequisition = requisitionService.getFullRequisitionById(requisition.getId());
 
-    if (!savedRequisition.getFacility().getVirtualFacility())
+    if (!savedRequisition.getFacility().getVirtualFacility()) {
       throw new DataException("error.approval.not.allowed");
+    }
 
-    if (savedRequisition.getFullSupplyLineItems().size() != report.getProducts().size()) {
+    if (savedRequisition.getNonSkippedLineItems().size() != report.getProducts().size()) {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
@@ -104,8 +105,7 @@ public class RestRequisitionService {
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {
     Rnr requisition = requisitionService.getFullRequisitionById(id);
-    ReplenishmentDTO replenishmentDTO = prepareForREST(requisition, orderService.getOrder(id));
-    return replenishmentDTO;
+    return prepareForREST(requisition, orderService.getOrder(id));
   }
 
 

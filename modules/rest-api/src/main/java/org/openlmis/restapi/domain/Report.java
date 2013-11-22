@@ -47,7 +47,7 @@ public class Report {
   }
 
   public void validateForApproval() {
-    if (products == null || approverName == null) {
+    if (products == null || isEmpty(approverName)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
     for (RnrLineItem rnrLineItem : products) {

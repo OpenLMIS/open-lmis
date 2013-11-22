@@ -14,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.builder.ReportBuilder;
@@ -34,7 +35,7 @@ import static org.openlmis.restapi.builder.ReportBuilder.products;
 public class ReportTest {
 
   @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
+  public ExpectedException expectedException = ExpectedException.none();
 
   private String nullString = null;
 
@@ -42,8 +43,8 @@ public class ReportTest {
   public void shouldThrowExceptionIfReportDoesNotContainAgentCode() {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, nullString)));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validate();
   }
@@ -52,8 +53,8 @@ public class ReportTest {
   public void shouldThrowExceptionIfReportContainsBlankAgentCode() {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, "")));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validate();
   }
@@ -62,8 +63,8 @@ public class ReportTest {
   public void shouldThrowExceptionIfReportDoesNotContainProgramCode() {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programCode, nullString)));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validate();
   }
@@ -72,8 +73,8 @@ public class ReportTest {
   public void shouldThrowExceptionIfReportContainsBlankProgramCode() {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programCode, "")));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validate();
   }
@@ -96,8 +97,8 @@ public class ReportTest {
     List<RnrLineItem> rnrLineItems = null;
     Report report = make(a(ReportBuilder.defaultReport, with(products, rnrLineItems)));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validateForApproval();
   }
@@ -108,8 +109,8 @@ public class ReportTest {
     String productCode = null;
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validateForApproval();
   }
@@ -120,8 +121,8 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport, with(approverName, nullApproverName)));
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem))));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validateForApproval();
   }
@@ -132,8 +133,8 @@ public class ReportTest {
     Integer quantityApproved = null;
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.quantityApproved, quantityApproved)))));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validateForApproval();
   }
@@ -144,8 +145,20 @@ public class ReportTest {
     Integer quantityApproved = -1;
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.quantityApproved, quantityApproved)))));
 
-    expectedEx.expect(DataException.class);
-    expectedEx.expectMessage("error.restapi.quantity.approved.negative");
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.quantity.approved.negative");
+
+    report.validateForApproval();
+  }
+
+  @Test
+  public void shouldThrowErrorIfApproverNameEmpty() throws Exception {
+    Report report = new Report();
+    report.setApproverName("");
+    report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem))));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.restapi.mandatory.missing");
 
     report.validateForApproval();
   }

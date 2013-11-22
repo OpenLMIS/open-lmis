@@ -55,7 +55,8 @@ public class RequisitionValidator {
 
     List<String> invalidProductCodes = new ArrayList<>();
     for (final RnrLineItem product : products) {
-      if (savedRequisition.findCorrespondingLineItem(product) == null) {
+      RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
+      if (correspondingLineItem == null || correspondingLineItem.getSkipped()) {
         invalidProductCodes.add(product.getProductCode());
       }
     }

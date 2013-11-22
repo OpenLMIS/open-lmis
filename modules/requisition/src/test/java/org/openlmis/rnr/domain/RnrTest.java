@@ -517,4 +517,15 @@ public class RnrTest {
 
     assertThat(savedRnr.findCorrespondingLineItem(rnrLineItem), is(nullValue()));
   }
+
+  @Test
+  public void shouldReturnNonSkippedLineItemsForRnrWithoutAffectingFullSupplyLineItems() throws Exception {
+    Rnr savedRnr = make(a(defaultRequisition));
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11"), with(skipped, true)));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P12"), with(skipped, false)));
+    savedRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
+
+    assertThat(savedRnr.getNonSkippedLineItems(), is(asList(lineItem2)));
+    assertThat(savedRnr.getFullSupplyLineItems(), is(asList(lineItem1, lineItem2)));
+  }
 }
