@@ -8,17 +8,29 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-app.directive('rnrBody', function ($timeout) {
-  return{
-    restrict: 'C',
-    link: function (scope, element) {
-      $timeout(function () {
-        element.css('max-height', $(window).height() + 'px');
-      },0);
+describe('Rnr body', function () {
+  var elm , scope, compile, timeout;
+  var windowHeight = window.innerHeight;
 
-      $(window).on('resize', function () {
-        element.css('max-height', $(window).height() + 'px');
-      });
-    }
-  };
+  beforeEach(module('openlmis'));
+  beforeEach(inject(function ($compile, $rootScope, $timeout) {
+    elm = angular.element('<div class="rnr-body"></div>');
+    timeout = $timeout;
+    scope = $rootScope.$new();
+    compile = $compile;
+  }));
+
+  it('should set the maximum height of the rnr-body to the windows height', function () {
+    compile(elm)(scope);
+    timeout.flush();
+
+    expect(parseInt(elm.css('max-height'))).toEqual(windowHeight);
+  });
+
+  it('should set the maximum height of the rnr-body to the windows height on resize of window', function () {
+    compile(elm)(scope);
+    $(window).trigger('resize');
+
+    expect(parseInt(elm.css('max-height'))).toEqual(windowHeight);
+  });
 });
