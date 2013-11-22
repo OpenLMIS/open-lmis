@@ -399,8 +399,11 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
-     reportFromJson.getProducts().get(0).setProductCode("P10");
-
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    reportFromJson.getProducts().get(0).setStockInHand(4);
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",
       "Admin123");
