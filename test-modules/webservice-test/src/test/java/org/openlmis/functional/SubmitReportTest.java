@@ -392,7 +392,7 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Program configuration missing\"}");
   }
 
-  // @Test(groups = {"webservice"}) invalid product code
+   @Test(groups = {"webservice"})
   public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndInCurrentPeriod() throws Exception {
     dbWrapper.updateProgramsSupportedByField("startDate", "2015-01-01", "V10");
     HttpClient client = new HttpClient();
@@ -400,6 +400,7 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
       "commTrack",

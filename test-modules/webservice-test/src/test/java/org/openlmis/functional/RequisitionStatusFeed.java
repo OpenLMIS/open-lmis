@@ -39,6 +39,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
+    dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1");
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack",true);
   }
@@ -53,9 +55,8 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    submitRequisition("commTrack1","HIV");
+    submitRnrFromApi("commTrack", "Admin123", "HIV", "P10");
     Long id = (long)dbWrapper.getMaxRnrID();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
@@ -186,8 +187,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("feed json list : " + feedSting,
       feedSting.contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1358274600000"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1359570599000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
     assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":"));
     assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderID\""));
   }

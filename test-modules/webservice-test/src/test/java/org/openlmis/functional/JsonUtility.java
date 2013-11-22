@@ -12,6 +12,7 @@ package org.openlmis.functional;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.openlmis.UiUtils.HttpClient;
+import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
@@ -21,6 +22,10 @@ import org.openlmis.restapi.domain.Report;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openlmis.UiUtils.HttpClient.POST;
 
 
 public class JsonUtility extends TestCaseHelper {
@@ -82,5 +87,25 @@ public class JsonUtility extends TestCaseHelper {
     convertOrderPage.convertToOrder();
   }
 
+  public void submitRnrFromApi(String user, String password, String program, String product) throws Exception {
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    HttpClient client = new HttpClient();
+    client.createContext();
+    Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
+    reportFromJson.setAgentCode("F10");
+    reportFromJson.setProgramCode(program);
+    reportFromJson.getProducts().get(0).setProductCode(product);
+
+    ResponseEntity responseEntity =
+      client.SendJSON(
+        getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        user,
+        password);
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
 }
 
