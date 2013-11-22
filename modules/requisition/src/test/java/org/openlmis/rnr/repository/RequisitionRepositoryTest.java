@@ -118,7 +118,7 @@ public class RequisitionRepositoryTest {
     requisitionRepository.insert(rnr);
     assertThat(rnr.getStatus(), is(INITIATED));
     verify(requisitionMapper).insert(rnr);
-    verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class));
+    verify(rnrLineItemMapper, times(2)).insert(any(RnrLineItem.class), anyString());
     verify(lossesAndAdjustmentsMapper, never()).insert(any(RnrLineItem.class), any(LossesAndAdjustments.class));
     verify(regimenLineItemMapper, times(1)).insert(any(RegimenLineItem.class));
     RnrLineItem rnrLineItem = rnr.getFullSupplyLineItems().get(0);
@@ -373,14 +373,14 @@ public class RequisitionRepositoryTest {
     String sortBy = "program";
     Integer pageSize = 2;
     when(requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-      1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
+        1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(expected);
 
     List<Rnr> rnrList = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageNumber, pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(rnrList, is(expected));
     verify(requisitionMapper).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+        pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test

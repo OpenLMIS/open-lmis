@@ -62,7 +62,7 @@ public class RequisitionRepository {
     for (RnrLineItem lineItem : lineItems) {
       lineItem.setRnrId(requisition.getId());
       lineItem.setModifiedBy(requisition.getModifiedBy());
-      rnrLineItemMapper.insert(lineItem);
+      rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
     }
   }
 

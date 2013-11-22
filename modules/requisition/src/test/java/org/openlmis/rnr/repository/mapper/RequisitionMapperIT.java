@@ -152,8 +152,8 @@ public class RequisitionMapperIT {
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
     fullSupplyLineItem.setRnrId(requisition.getId());
     nonFullSupplyLineItem.setRnrId(requisition.getId());
-    lineItemMapper.insert(fullSupplyLineItem);
-    lineItemMapper.insert(nonFullSupplyLineItem);
+    lineItemMapper.insert(fullSupplyLineItem, null);
+    lineItemMapper.insert(nonFullSupplyLineItem, null);
 
     User author = new User();
     author.setId(1L);
@@ -780,7 +780,7 @@ public class RequisitionMapperIT {
 
   private RnrLineItem insertRnrLineItem(Rnr rnr, FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     RnrLineItem item = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, 1L, 1L);
-    lineItemMapper.insert(item);
+    lineItemMapper.insert(item, null);
     return item;
   }
 
@@ -834,8 +834,8 @@ public class RequisitionMapperIT {
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
     fullSupplyLineItem.setRnrId(requisition.getId());
     nonFullSupplyLineItem.setRnrId(requisition.getId());
-    lineItemMapper.insert(fullSupplyLineItem);
-    lineItemMapper.insert(nonFullSupplyLineItem);
+    lineItemMapper.insert(fullSupplyLineItem, null);
+    lineItemMapper.insert(nonFullSupplyLineItem, null);
 
     User author = new User();
     author.setId(1L);

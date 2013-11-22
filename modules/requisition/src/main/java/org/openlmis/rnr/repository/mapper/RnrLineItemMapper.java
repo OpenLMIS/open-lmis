@@ -25,20 +25,22 @@ public interface RnrLineItemMapper {
       "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
       "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
       "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-      "newPatientCount, stockOutDays,",
+      "newPatientCount, stockOutDays, previousNormalizedConsumptions,",
       "modifiedBy,createdBy)",
       "VALUES (",
-      "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
-      "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
-      "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
-      "#{newPatientCount}, #{stockOutDays},",
-      "#{modifiedBy}, #{createdBy})"})
-  @Options(useGeneratedKeys = true)
-  public Integer insert(RnrLineItem rnrLineItem);
+      "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
+      "#{lineItem.productCategoryDisplayOrder}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
+      "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
+      "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
+      "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
+      "#{previousNormalizedConsumptions}, #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
+  @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
+  public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true order by id")
   @Results(value = {
       @Result(property = "id", column = "id"),
+      @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
       @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
@@ -121,7 +123,6 @@ public interface RnrLineItemMapper {
       "AND RLI.productCode = #{productCode}",
       "ORDER BY RSC.createdDate DESC LIMIT 1"})
   Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
-
 
   @Select({"SELECT RLI.normalizedConsumption FROM requisition_line_items RLI",
       "INNER JOIN requisitions R ON R.id = RLI.rnrId",
