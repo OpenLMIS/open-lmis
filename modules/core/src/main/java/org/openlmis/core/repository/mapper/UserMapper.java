@@ -26,10 +26,10 @@ public interface UserMapper {
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
   @Insert({"INSERT INTO users",
-    "(userName, facilityId, firstName, lastName, employeeId, jobTitle,",
+    "(userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle,",
     "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified)",
     "VALUES",
-    "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, #{jobTitle},",
+    "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, COALESCE(#{restrictLogin}, FALSE), #{jobTitle},",
     "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, ",
     "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified})"})
   @Options(useGeneratedKeys = true)

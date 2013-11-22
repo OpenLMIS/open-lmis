@@ -12,7 +12,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
-  $scope.user = user || {homeFacilityRoles: []};
+  $scope.user = user || {homeFacilityRoles: [], restrictLogin: false};
   $scope.supervisoryNodes = supervisoryNodes;
   $scope.warehouses = enabledWarehouses;
   $scope.deliveryZones = deliveryZones;
@@ -58,9 +58,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
     var valid = true;
     $.each(user.supervisorRoles, function (index, roleAssignment) {
-      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id ||
-        !roleAssignment.roleIds || roleAssignment.roleIds.length === 0)
-      {
+      if (!roleAssignment.programId || !roleAssignment.supervisoryNode || !roleAssignment.supervisoryNode.id || !roleAssignment.roleIds || roleAssignment.roleIds.length === 0) {
         valid = false;
         return false;
       }
@@ -352,45 +350,45 @@ UserController.resolve = {
 
 };
 
-function expandCollapse(trigger){
+function expandCollapse(trigger) {
   var accordion = $('.accordion');
-	if(trigger == 'expand'){
-		accordion.find('.accordion-section').each(function() {
+  if (trigger == 'expand') {
+    accordion.find('.accordion-section').each(function () {
       $(this).find('.accordion-body').slideDown();
       $(this).find('b').text('-');
     });
     var offsetTop = accordion.offset().top;
     $('body, html').animate({
-        scrollTop: utils.parseIntWithBaseTen(offsetTop)+'px'
+      scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
     });
-	}else{
-		accordion.find('.accordion-section').each(function() {
+  } else {
+    accordion.find('.accordion-section').each(function () {
       $(this).find('.accordion-body').slideUp();
       $(this).find('b').text('+');
     });
-	}
+  }
 }
 
-function expandCollapseToggle(element){
-  $(element).parents('.accordion-section').siblings('.accordion-section').each(function(){
+function expandCollapseToggle(element) {
+  $(element).parents('.accordion-section').siblings('.accordion-section').each(function () {
     $(this).find('.accordion-body').slideUp();
     $(this).find('.accordion-heading b').text('+');
   });
-	$(element).siblings('.accordion-body').stop().slideToggle(function(){
-    if($(element).siblings('.accordion-body').is(':visible')){
+  $(element).siblings('.accordion-body').stop().slideToggle(function () {
+    if ($(element).siblings('.accordion-body').is(':visible')) {
       $(element).find('b').text('-');
-    }else{
+    } else {
       $(element).find('b').text('+');
     }
-	});
+  });
   var offsetTop = $(element).offset().top;
   $('body, html').animate({
-    scrollTop: utils.parseIntWithBaseTen(offsetTop)+'px'
+    scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
   });
 }
 
-function init(){
+function init() {
   expandCollapseToggle($('.accordion-section:first .heading'));
 }
 
-setTimeout(init,600);
+setTimeout(init, 600);
