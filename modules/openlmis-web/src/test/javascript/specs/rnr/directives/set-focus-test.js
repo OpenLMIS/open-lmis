@@ -9,7 +9,8 @@
  */
 
 describe('set focus', function () {
-  var element , scope, compile, timeout, inputVisibleEnable, inputInvisible, inputDisable;
+  var element , scope, compile, timeout, inputVisibleEnable, inputInvisible, inputDisable, jQuerySelector,
+    firstVisibleEnabledElement, spyFocus;
 
   beforeEach(module('rnr'));
   beforeEach(inject(function ($compile, $rootScope, $timeout) {
@@ -25,19 +26,36 @@ describe('set focus', function () {
     element.append(inputInvisible);
     element.append(inputVisibleEnable);
     compile(element)(scope);
-    angular.element(document.body).append(element);
+
+    jQuerySelector = spyOn(window, "$").andCallFake(function (selector) {
+      switch (selector) {
+        case "input[type='text']:visible:enabled":
+          return element;
+          break;
+      }
+    });
+    firstVisibleEnabledElement = spyOn(element, 'first').andReturn(inputVisibleEnable);
+    spyFocus = spyOn(inputVisibleEnable, 'focus').andCallFake(function () {
+    });
+
   }));
   afterEach(function () {
     element.remove()
   });
 
-  it('should focus on the first enabled input field', function () {
+  it('should focus on the first enabled input field on timeout', function () {
     timeout.flush();
-    expect($(inputVisibleEnable).is(':focus')).toBeTruthy();
+
+    expect(jQuerySelector).toHaveBeenCalledWith("input[type='text']:visible:enabled");
+    expect(firstVisibleEnabledElement).toHaveBeenCalled();
+    expect(spyFocus).toHaveBeenCalled()
   });
 
   it('should focus on the first enabled input field on click of an element', function () {
     element.trigger('click');
-    expect($(inputVisibleEnable).is(':focus')).toBeTruthy();
+
+    expect(jQuerySelector).toHaveBeenCalledWith("input[type='text']:visible:enabled");
+    expect(firstVisibleEnabledElement).toHaveBeenCalled();
+    expect(spyFocus).toHaveBeenCalled()
   });
 });
