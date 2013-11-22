@@ -105,15 +105,13 @@ public class RequisitionService {
         facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
+    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
-
-    RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
     calculateService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
-
     requisition = requisitionRepository.getById(requisition.getId());
 
     return fillSupportingInfo(requisition);
