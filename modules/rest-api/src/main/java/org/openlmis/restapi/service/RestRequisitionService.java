@@ -11,26 +11,31 @@
 package org.openlmis.restapi.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
+import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.restapi.RequisitionValidator;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.rnr.domain.Column;
+import org.openlmis.rnr.domain.ProgramRnrTemplate;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
-import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 
+import static org.apache.commons.collections.CollectionUtils.find;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 
 @Service
@@ -50,7 +55,12 @@ public class RestRequisitionService {
   private ProgramService programService;
 
   @Autowired
-  private MessageService messageService;
+  private RnrTemplateService rnrTemplateService;
+
+  @Autowired
+  private RequisitionValidator requisitionValidator;
+
+  private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
   @Transactional
   public Rnr submitReport(Report report, Long userId) {
@@ -59,28 +69,19 @@ public class RestRequisitionService {
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
-    validate(reportingFacility, reportingProgram);
+    requisitionValidator.validatePeriod(reportingFacility, reportingProgram);
 
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
 
-    validateProducts(report, rnr);
+    requisitionValidator.validateProducts(report, rnr);
 
-    report.getRnrWithSkippedProducts(rnr);
+    markSkippedLineItems(rnr, report);
 
-    return requisitionService.save(rnr);
+    requisitionService.save(rnr);
+
+    return requisitionService.submit(rnr);
   }
 
-
-  private void validate(Facility reportingFacility, Program reportingProgram) {
-    if (reportingFacility.getVirtualFacility()) return;
-
-    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
-    searchCriteria.setProgramId(reportingProgram.getId());
-    searchCriteria.setFacilityId(reportingFacility.getId());
-    if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
-      throw new DataException("error.rnr.previous.not.filled");
-    }
-  }
 
   @Transactional
   public void approve(Report report, Long userId) {
@@ -96,31 +97,59 @@ public class RestRequisitionService {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
-    validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report, savedRequisition);
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition);
-  }
-
-  private void validateProducts(Report report, Rnr savedRequisition) {
-    if (report.getProducts() == null) {
-      return;
-    }
-
-    List<String> invalidProductCodes = new ArrayList<>();
-    for (final RnrLineItem lineItem : report.getProducts()) {
-      if (savedRequisition.findCorrespondingLineItem(lineItem) == null) {
-        invalidProductCodes.add(lineItem.getProductCode());
-      }
-    }
-    if (invalidProductCodes.size() != 0) {
-      throw new DataException(messageService.message("invalid.product.codes", invalidProductCodes.toString()));
-    }
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {
     Rnr requisition = requisitionService.getFullRequisitionById(id);
     ReplenishmentDTO replenishmentDTO = prepareForREST(requisition, orderService.getOrder(id));
     return replenishmentDTO;
+  }
+
+
+  private void markSkippedLineItems(Rnr rnr, Report report) {
+
+    ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(rnr.getProgram().getId());
+
+    List<RnrLineItem> fullSupplyLineItems = rnr.getFullSupplyLineItems();
+    List<RnrLineItem> products = report.getProducts();
+
+    for (final RnrLineItem fullSupplyLineItem : fullSupplyLineItems) {
+      RnrLineItem productLineItem = (RnrLineItem) find(products, new Predicate() {
+        @Override
+        public boolean evaluate(Object product) {
+          return ((RnrLineItem) product).getProductCode().equals(fullSupplyLineItem.getProductCode());
+        }
+      });
+
+      copyInto(fullSupplyLineItem, productLineItem, rnrTemplate);
+    }
+  }
+
+  private void copyInto(RnrLineItem fullSupplyLineItem, RnrLineItem productLineItem, ProgramRnrTemplate rnrTemplate) {
+    if (productLineItem == null) {
+      fullSupplyLineItem.setSkipped(true);
+      return;
+    }
+
+    for (Column column : rnrTemplate.getColumns()) {
+
+      if (column.getVisible() && rnrTemplate.columnsUserInput(column.getName())) {
+        try {
+          Field field = RnrLineItem.class.getDeclaredField(column.getName());
+          field.setAccessible(true);
+
+          Object reportedValue = field.get(productLineItem);
+          Object toBeSavedValue = (reportedValue != null ? reportedValue : field.get(fullSupplyLineItem));
+          field.set(fullSupplyLineItem, toBeSavedValue);
+
+        } catch (Exception e) {
+          logger.error("could not copy field: " + column.getName());
+        }
+      }
+    }
   }
 }

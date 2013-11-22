@@ -1,7 +1,4 @@
 {
-    "requisitionId": "",
-    "emergency" : "false",
-    "userName": "",
     "products": [
         {
             "productCode": "",

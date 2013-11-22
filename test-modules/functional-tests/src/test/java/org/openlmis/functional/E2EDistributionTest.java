@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 
@@ -46,7 +47,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   public void testE2EManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                         String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                         String facilityCodeFirst, String facilityCodeSecond,
-                                        String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
+                                        String programFirst, String programSecond, String schedule) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
@@ -65,7 +66,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.deleteDeliveryZoneMembers("F11");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
+    testWebDriver.sleep(1000);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -182,8 +185,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     switchOnNetwork();
     testWebDriver.sleep(5000);
 
-    distributionPage.clickSyncDistribution();
-    assertEquals(distributionPage.getSyncMessage(), "F10 - Village Dispensary synced successfully");
+    distributionPage.syncDistribution();
+    assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
     distributionPage.clickRecordData();
@@ -213,7 +216,7 @@ public class E2EDistributionTest extends TestCaseHelper {
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
+        "F10", "F11", "VACCINES", "TB", "M"}
     };
 
   }

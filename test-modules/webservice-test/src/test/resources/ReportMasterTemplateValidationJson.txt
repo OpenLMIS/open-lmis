@@ -1,0 +1,12 @@
+{
+       "agentCode": "",
+       "programCode": "",
+       "products": [
+           {
+               "productCode": "",
+               "beginningBalance": "",
+               "quantityReceived": ""
+
+           }
+       ]
+   }

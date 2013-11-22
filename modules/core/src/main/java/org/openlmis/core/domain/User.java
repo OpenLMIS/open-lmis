@@ -62,11 +62,13 @@ public class User extends BaseModel implements Importable {
   @ImportField(name = "Supervisor User Name", nested = "userName")
   private User supervisor;
 
-  private Long facilityId;
+  private Boolean restrictLogin;
 
+  private Long facilityId;
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
   private List<RoleAssignment> allocationRoles;
+
   private List<FulfillmentRoleAssignment> fulfillmentRoles;
 
   private RoleAssignment reportRoles;

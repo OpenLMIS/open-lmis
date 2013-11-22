@@ -40,6 +40,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
+    dbWrapper.updateRestrictLogin("commTrack",true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -66,9 +67,11 @@ public class RequisitionStatusFeed extends JsonUtility {
     checkRequisitionStatusOnFeed("AUTHORIZED", feedJSONList.get(2), id);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
-    approveRequisition(id, 65);
-    convertToOrder("commTrack", "Admin123");
 
+    approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack",false);
+    convertToOrder("commTrack", "Admin123");
+    dbWrapper.updateRestrictLogin("commTrack",true);
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
 
@@ -116,8 +119,9 @@ public class RequisitionStatusFeed extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack",false);
     convertToOrder("commTrack", "Admin123");
-
+    dbWrapper.updateRestrictLogin("commTrack",true);
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -154,8 +158,9 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
     approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack",false);
     convertToOrder("commTrack", "Admin123");
-
+    dbWrapper.updateRestrictLogin("commTrack",true);
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");

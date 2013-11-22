@@ -18,7 +18,6 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
-import org.openqa.selenium.By;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
@@ -199,8 +197,9 @@ public class ViewRequisition extends TestCaseHelper {
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
     approvePageTopSNUser.verifyEmergencyStatus();
-    approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
-    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
+    approvePageTopSNUser.ClickRequisitionPresentForApproval();
+    approvePageTopSNUser.editFullSupplyApproveQuantity("20");
+    approvePageTopSNUser.VerifyTotalCostViewRequisition("20");
     approvePageTopSNUser.addComments("Dummy Comments");
     approvePageTopSNUser.verifyTotalFieldPostAuthorize();
     approvePageTopSNUser.clickRegimenTab();

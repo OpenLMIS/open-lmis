@@ -34,8 +34,10 @@ Feature: End to end requisition flow
     When I am logged in as "medicalofficer"
     And I access requisition on approval page
     Then I should see RnR Header
-    And I should see approved quantity
-    When I update approve quantity and verify total cost as "290"
+    And I should see full supply approved quantity
+    When I access non full supply tab
+    And I should see non full supply approved quantity
+    When I update full supply approve quantity as "290"
     And I add comments without save
     Then I should see blank comment section
     When I add "This is urgent" comment
@@ -48,7 +50,10 @@ Feature: End to end requisition flow
     And I access requisition on approval page
     Then I should see RnR Header
     And I should see approved quantity from lower hierarchy
-    When I update approve quantity and verify total cost as "100"
+    When I update full supply approve quantity as "100"
+    Then I verify full supply cost for approved quantity "100"
+    When I update non full supply approve quantity as "100"
+    Then I verify non full supply cost for approved quantity "100"
     Then I should see correct total after authorize
     When I approve requisition
     Then I should see no requisition pending message
@@ -71,12 +76,18 @@ Feature: End to end requisition flow
     And I authorize RnR
     When I am logged in as "medicalofficer"
     And I access requisition on approval page
-    When I update approve quantity and verify total cost as "290"
+    When I update full supply approve quantity as "290"
+    Then I verify full supply cost for approved quantity "290"
+    When I update non full supply approve quantity as "290"
+    Then I verify non full supply cost for approved quantity "290"
     When I approve requisition
     When I logout
     And I am logged in as "storeIncharge"
     And I access requisition on approval page
-    When I update approve quantity and verify total cost as "100"
+    When I update full supply approve quantity as "100"
+    Then I verify full supply cost for approved quantity "100"
+    When I update non full supply approve quantity as "100"
+    Then I verify non full supply cost for approved quantity "100"
     When I approve requisition
     When I logout
     And I am logged in as "lmu"

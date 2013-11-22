@@ -98,7 +98,7 @@ var Rnr = function (rnr, programRnrColumns) {
   Rnr.prototype.validateFullSupplyForApproval = function () {
     var error = '';
     $(this.fullSupplyLineItems).each(function (i, lineItem) {
-      if (isUndefined(lineItem.quantityApproved)) {
+      if (!lineItem.skipped && isUndefined(lineItem.quantityApproved)) {
         error = 'error.rnr.validation';
         return false;
       }

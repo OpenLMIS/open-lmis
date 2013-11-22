@@ -237,11 +237,11 @@ public class FacilityControllerTest {
     facility.setName("Test Facility");
     facility.setCode("Test Code");
     mockStatic(Facility.class);
-    when(Facility.createFacilityToBeRestored(1L, 1L, true)).thenReturn(facility);
+    when(Facility.createFacilityToBeRestored(1L, 1L)).thenReturn(facility);
     when(facilityService.getById(facility.getId())).thenReturn(facility);
     when(messageService.message("enable.facility.success", facility.getName(), facility.getCode())).thenReturn("\"Test Facility\" / \"Test Code\" restored successfully");
 
-    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L, true);
+    ResponseEntity<OpenLmisResponse> responseEntity = facilityController.restore(httpServletRequest, 1L);
 
     assertThat(responseEntity.getBody().getSuccessMsg(), is("\"Test Facility\" / \"Test Code\" restored successfully"));
     assertThat((Facility) responseEntity.getBody().getData().get("facility"), is(facility));

@@ -22,7 +22,7 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-  @Select(value = "SELECT userName, id FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND verified = TRUE and active = TRUE")
+  @Select(value = "SELECT userName, id, restrictLogin FROM users WHERE LOWER(userName)=LOWER(#{userName}) AND password=#{password} AND verified = TRUE and active = TRUE")
   User selectUserByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
 
   @Insert({"INSERT INTO users",
@@ -35,7 +35,7 @@ public interface UserMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
-  @Select(value = {"SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, ",
+  @Select(value = {"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, ",
     "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate",
     " FROM users where LOWER(userName) = LOWER(#{userName}) AND active = TRUE"})
   @Results(
@@ -47,7 +47,7 @@ public interface UserMapper {
   @Results(@Result(property = "supervisor.id", column = "supervisorId"))
   User getByEmail(String email);
 
-  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, jobTitle, primaryNotificationMethod, ",
+  @Select({"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, primaryNotificationMethod, ",
     "officePhone, cellPhone, email, supervisorId ,verified, active " +
       "FROM users U INNER JOIN role_assignments RA ON U.id = RA.userId INNER JOIN role_rights RR ON RA.roleId = RR.roleId ",
     "WHERE RA.programId = #{program.id} AND RA.supervisoryNodeId = #{supervisoryNode.id} AND RR.rightName = #{right}"})
@@ -60,13 +60,13 @@ public interface UserMapper {
   List<User> getUserWithSearchedName(String userSearchParam);
 
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
-    "employeeId = #{employeeId},facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
+    "employeeId = #{employeeId},restrictLogin = #{restrictLogin}, facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +
     "email = #{email}, active = #{active}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 
-  @Select("SELECT id, userName, firstName, lastName, employeeId, facilityId, jobTitle, officePhone, " +
+  @Select("SELECT id, userName, firstName, lastName, employeeId, restrictLogin, facilityId, jobTitle, officePhone, " +
     "primaryNotificationMethod, cellPhone, email, verified, active FROM users WHERE id=#{id}")
   User getById(Long id);
 

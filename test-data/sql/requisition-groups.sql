@@ -16,6 +16,7 @@ INSERT INTO requisition_groups ( code ,name,description,supervisoryNodeId )value
 
 INSERT INTO requisition_group_members ( requisitionGroupId ,facilityId )values
 ((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='F10')),
+((select id from  requisition_groups where code ='RG1'),(select id from  facilities where code ='V10')),
 ((select id from  requisition_groups where code ='RG2'),(select id from  facilities where code ='F11')),
 ((select id from  requisition_groups where code ='RG3'),(select id from  facilities where code ='F13')),
 ((select id from  requisition_groups where code ='RG4'),(select id from  facilities where code ='F100'));

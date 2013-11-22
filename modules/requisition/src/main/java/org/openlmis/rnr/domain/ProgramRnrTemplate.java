@@ -121,7 +121,7 @@ public class ProgramRnrTemplate extends Template {
     validateCalculatedColumnHasDependentChecked(STOCK_IN_HAND, QUANTITY_DISPENSED);
     validateCalculatedColumnHasDependentChecked(QUANTITY_DISPENSED, STOCK_IN_HAND);
     validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime();
-    quantityRequestedAndReasonForRequestedQuantityBothShouldBeVisibleTogether();
+    validateQuantityRequested();
     return errorMap;
   }
 
@@ -156,7 +156,7 @@ public class ProgramRnrTemplate extends Template {
     }
   }
 
-  private void quantityRequestedAndReasonForRequestedQuantityBothShouldBeVisibleTogether() {
+  private void validateQuantityRequested() {
 
     if (!areSelectedTogether(QUANTITY_REQUESTED, REASON_FOR_REQUESTED_QUANTITY)) {
 

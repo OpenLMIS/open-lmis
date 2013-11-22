@@ -289,10 +289,10 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(rnr2);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), processingPeriod2.getId())).
-        thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
+      thenReturn(Arrays.asList(processingPeriod3, processingPeriod4));
 
     List<ProcessingPeriod> periods =
-        requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
+      requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
     assertThat(periods.size(), is(2));
     assertThat(periods.get(0), is(processingPeriod3));
@@ -310,7 +310,7 @@ public class RequisitionServiceTest {
     when(programService.getProgramStartDate(FACILITY.getId(), PROGRAM.getId())).thenReturn(date1.toDate());
     when(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY.getId(), PROGRAM.getId())).thenReturn(null);
     when(processingScheduleService.getAllPeriodsAfterDateAndPeriod(FACILITY.getId(), PROGRAM.getId(), date1.toDate(), null)).
-        thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
+      thenReturn(Arrays.asList(processingPeriod1, processingPeriod2));
 
     List<ProcessingPeriod> periods = requisitionService.getAllPeriodsForInitiatingRequisition(FACILITY.getId(), PROGRAM.getId());
 
@@ -343,14 +343,14 @@ public class RequisitionServiceTest {
     Facility defaultFacility = make(a(FacilityBuilder.defaultFacility));
     defaultFacility.setId(1L);
     return make(a(RequisitionBuilder.defaultRnr,
-        with(RequisitionBuilder.facility, defaultFacility),
-        with(RequisitionBuilder.periodId, periodId),
-        with(RequisitionBuilder.status, status)));
+      with(RequisitionBuilder.facility, defaultFacility),
+      with(RequisitionBuilder.periodId, periodId),
+      with(RequisitionBuilder.status, status)));
   }
 
   private ProcessingPeriod createProcessingPeriod(Long id, DateTime startDate) {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate())));
     processingPeriod.setId(id);
     return processingPeriod;
   }
@@ -635,7 +635,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldKeepStatusInApprovalIfFurtherApprovalNeededAndNotNotifyStatusChange() {
     Rnr inApprovalRequisition =
-        getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(inApprovalRnr, APPROVE_REQUISITION);
+      getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(inApprovalRnr, APPROVE_REQUISITION);
 
     inApprovalRequisition.setSupervisoryNodeId(1L);
     SupervisoryNode parentNode = new SupervisoryNode() {{
@@ -643,7 +643,7 @@ public class RequisitionServiceTest {
     }};
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).
-        thenReturn(new User());
+      thenReturn(new User());
 
     inApprovalRequisition.setSupervisoryNodeId(1l);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
@@ -667,7 +667,7 @@ public class RequisitionServiceTest {
   @Test
   public void shouldApproveAnAuthorizedRequisitionAndNotifyStatusChange() throws Exception {
     Rnr approvedRequisition =
-        getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
+      getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
 
     approvedRequisition.setSupervisoryNodeId(1L);
     SupervisoryNode parentNode = new SupervisoryNode() {{
@@ -675,7 +675,7 @@ public class RequisitionServiceTest {
     }};
     when(supervisoryNodeService.getParent(1L)).thenReturn(parentNode);
     when(supervisoryNodeService.getApproverForGivenSupervisoryNodeAndProgram(parentNode, PROGRAM)).
-        thenReturn(new User());
+      thenReturn(new User());
 
     approvedRequisition.setSupervisoryNodeId(1l);
     SupervisoryNode supervisoryNode = new SupervisoryNode();
@@ -788,10 +788,10 @@ public class RequisitionServiceTest {
     Date dateRangeStart = DateTime.parse("2013-02-01").toDate();
     Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
-        with(facilityIdProperty, facility.getId()),
-        with(programIdProperty, program.getId()),
-        with(startDate, dateRangeStart),
-        with(endDate, dateRangeEnd)));
+      with(facilityIdProperty, facility.getId()),
+      with(programIdProperty, program.getId()),
+      with(startDate, dateRangeStart),
+      with(endDate, dateRangeEnd)));
 
     RequisitionSearchStrategy searchStrategy = mock(RequisitionSearchStrategy.class);
     RequisitionSearchStrategyFactory spyFactory = spy(requisitionSearchStrategyFactory);
@@ -997,11 +997,11 @@ public class RequisitionServiceTest {
     when(supervisoryNodeService.getApproverFor(FACILITY, PROGRAM)).thenReturn(new User());
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
-    doNothing().when(savedRnr).calculateDefaultApprovedQuantity();
+    doNothing().when(savedRnr).setFieldsForApproval();
 
     requisitionService.authorize(submittedRnr);
 
-    verify(savedRnr).calculateDefaultApprovedQuantity();
+    verify(savedRnr).setFieldsForApproval();
   }
 
   @Test
@@ -1162,8 +1162,8 @@ public class RequisitionServiceTest {
     Date programStartDate = new Date();
     when(programService.getProgramStartDate(1L, 2L)).thenReturn(programStartDate);
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
-        with(facilityIdProperty, 1L),
-        with(programIdProperty, 2L)));
+      with(facilityIdProperty, 1L),
+      with(programIdProperty, 2L)));
     requisitionService.getCurrentPeriod(criteria);
 
     verify(processingScheduleService).getCurrentPeriod(1L, 2L, programStartDate);
@@ -1185,14 +1185,14 @@ public class RequisitionServiceTest {
     List<Rnr> filteredRnrList = Arrays.asList(rnr);
 
     when(requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-        pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(filteredRnrList);
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection)).thenReturn(filteredRnrList);
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
     List<Rnr> rnrList = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, 6, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageNumber, 6, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     verify(requisitionRepository).getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber,
-        pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      pageSize, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
     assertThat(rnrList, is(filteredRnrList));
   }
 
@@ -1205,7 +1205,7 @@ public class RequisitionServiceTest {
     String sortDirection = "asc";
     String sortBy = "program";
     requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal", 4, 1, 1l,
-        Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      Right.CONVERT_TO_ORDER, sortBy, sortDirection);
   }
 
   @Test
@@ -1213,7 +1213,7 @@ public class RequisitionServiceTest {
     String sortDirection = "asc";
     String sortBy = "program";
     List<Rnr> requisitions = requisitionService.getApprovedRequisitionsForCriteriaAndPageNumber("searchType", "searchVal",
-        1, 0, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
+      1, 0, 1l, Right.CONVERT_TO_ORDER, sortBy, sortDirection);
 
     assertThat(requisitions.size(), is(0));
   }
@@ -1240,12 +1240,12 @@ public class RequisitionServiceTest {
     String searchType = "searchType";
     String searchVal = "search";
     when(requisitionRepository.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-        Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
+      Right.CONVERT_TO_ORDER)).thenReturn(numberOfApprovedRequisitions);
     Integer pageSize = 3;
     when(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE)).thenReturn(pageSize.toString());
 
     Integer count = requisitionService.getNumberOfPagesOfApprovedRequisitionsForCriteria(searchType, searchVal, 1l,
-        Right.CONVERT_TO_ORDER);
+      Right.CONVERT_TO_ORDER);
 
     assertThat(count, is(2));
   }

@@ -319,7 +319,7 @@ task offlineTest(type: Test) {
     useTestNG() {
         systemProperties['browser'] = 'chromeM'
         systemProperties['dbUrl'] = connectionString
-        systemProperties['baseurl'] = 'https://qa-openlmis.org/'
+        systemProperties['baseurl'] = 'https://qa-openlmis.twhosted.com'
 
         suites 'src/test/java/org/openlmis/functional/testng-offline.xml'
     }

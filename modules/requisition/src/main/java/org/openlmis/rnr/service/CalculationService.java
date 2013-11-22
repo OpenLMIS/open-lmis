@@ -11,6 +11,8 @@
 package org.openlmis.rnr.service;
 
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
@@ -20,13 +22,19 @@ import org.openlmis.rnr.repository.RequisitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class CalculationService {
 
+  public static final int MILLI_SECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
+
   @Autowired
   RequisitionRepository requisitionRepository;
+
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
 
   public void perform(Rnr requisition, ProgramRnrTemplate template) {
     RnrCalculationStrategy calcStrategy = requisition.getRnrCalcStrategy();
@@ -64,4 +72,28 @@ public class CalculationService {
     }
   }
 
+  public void calculateDaysDifference(Rnr requisition) {
+    Date startDate;
+
+    ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
+    if (immediatePreviousPeriod != null) {
+      Integer M = immediatePreviousPeriod.getNumberOfMonths();
+      ProcessingPeriod secondImmediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(immediatePreviousPeriod);
+      startDate = (M < 3 && secondImmediatePreviousPeriod != null) ? secondImmediatePreviousPeriod.getStartDate() :
+          immediatePreviousPeriod.getStartDate();
+    } else {
+      startDate = requisition.getPeriod().getStartDate();
+    }
+
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+
+      if (!lineItem.getSkipped()) {
+        Date authorizedDateForPreviousLineItem = requisitionRepository.getCreatedDateForPreviousLineItem(requisition, lineItem.getProductCode(), startDate);
+        if (authorizedDateForPreviousLineItem != null) {
+          Integer daysDifference = Math.round((requisition.getCreatedDate().getTime() - authorizedDateForPreviousLineItem.getTime()) / MILLI_SECONDS_IN_ONE_DAY);
+          lineItem.setDaysSinceLastLineItem(daysDifference);
+        }
+      }
+    }
+  }
 }

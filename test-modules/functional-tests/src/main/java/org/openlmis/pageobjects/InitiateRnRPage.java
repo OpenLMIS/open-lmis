@@ -60,11 +60,20 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "beginningBalance_0")
   private static WebElement beginningBalance=null;
 
+  @FindBy(how = ID, using = "beginningBalance_1")
+  private static WebElement beginningBalanceSecondProduct=null;
+
   @FindBy(how = ID, using = "quantityReceived_0")
   private static WebElement quantityReceived=null;
 
+  @FindBy(how = ID, using = "quantityReceived_1")
+  private static WebElement quantityReceivedSecondProduct=null;
+
   @FindBy(how = ID, using = "quantityDispensed_0")
   private static WebElement quantityDispensed=null;
+
+  @FindBy(how = ID, using = "quantityDispensed_1")
+  private static WebElement quantityDispensedSecondProduct=null;
 
   @FindBy(how = ID, using = "stockInHand_0")
   private static WebElement stockInHand=null;
@@ -80,6 +89,9 @@ public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "quantityRequested_0")
   private static WebElement requestedQuantity=null;
+
+  @FindBy(how = ID, using = "quantityRequested_1")
+  private static WebElement requestedQuantitySecondProduct=null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
   private static WebElement adjustedTotalConsumption=null;
@@ -279,10 +291,16 @@ public class InitiateRnRPage extends RequisitionPage {
     return new HomePage(testWebDriver);
   }
 
-  public void enterBeginningBalance(String A) {
+  public void enterBeginningBalance(String beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalance);
-    beginningBalance.sendKeys(A);
+    beginningBalance.sendKeys(beginningBalanceValue);
+  }
+
+  public void enterBeginningBalanceSecondProduct(String beginningBalanceValue) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(beginningBalanceSecondProduct);
+    beginningBalanceSecondProduct.sendKeys(beginningBalanceValue);
   }
 
   public void verifyBeginningBalance(String beginningBalanceValue) {
@@ -292,6 +310,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public void enterStockOnHand(String stockOnHandValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(stockInHand);
+    stockInHand.clear();
     stockInHand.sendKeys(stockOnHandValue);
   }
 
@@ -321,13 +340,23 @@ public class InitiateRnRPage extends RequisitionPage {
       quantityReceived.sendKeys(quantityReceivedValue);
   }
 
+  public void enterQuantityReceivedSecondProduct(String quantityReceivedValue) {
+    testWebDriver.waitForElementToAppear(quantityReceivedSecondProduct);
+    quantityReceivedSecondProduct.sendKeys(quantityReceivedValue);
+  }
+
   public void verifyQuantityReceived(String quantityReceivedValue) {
     verifyFieldValue(testWebDriver.getAttribute(quantityReceived, "value"), quantityReceivedValue);
   }
 
   public void enterQuantityDispensed(String quantityDispensedValue) {
-      testWebDriver.waitForElementToAppear(quantityDispensed);
-      quantityDispensed.sendKeys(quantityDispensedValue);
+    testWebDriver.waitForElementToAppear(quantityDispensed);
+    quantityDispensed.sendKeys(quantityDispensedValue);
+  }
+
+  public void enterQuantityDispensedSecondProduct(String quantityDispensedValue) {
+    testWebDriver.waitForElementToAppear(quantityDispensedSecondProduct);
+    quantityDispensedSecondProduct.sendKeys(quantityDispensedValue);
   }
 
   public void verifyQuantityDispensed(String quantityDispensedValue) {
@@ -394,19 +423,21 @@ public class InitiateRnRPage extends RequisitionPage {
     }
   }
 
-  public void enterAndVerifyRequestedQuantityExplanation(Integer A) {
-    String warningMessage = enterRequestedQuantity(A);
-    String expectedWarningMessage = "Please enter a reason";
-    verifyFieldValue(warningMessage.trim(), expectedWarningMessage);
-    enterExplanationReason();
+  public void verifyRequestedQuantityExplanation() {
+    testWebDriver.waitForElementToAppear(requestedQtyWarningMessage);
+    verifyFieldValue(testWebDriver.getText(requestedQtyWarningMessage).trim(), "Please enter a reason");
   }
 
-  public String enterRequestedQuantity(Integer A) {
+  public void enterRequestedQuantity(Integer requestedQuantityValue) {
     testWebDriver.waitForElementToAppear(requestedQuantity);
-    requestedQuantity.sendKeys(A.toString());
+    requestedQuantity.clear();
+    requestedQuantity.sendKeys(requestedQuantityValue.toString());
+  }
 
-    testWebDriver.waitForElementToAppear(requestedQtyWarningMessage);
-    return testWebDriver.getText(requestedQtyWarningMessage);
+  public void enterRequestedQuantitySecondProduct(Integer requestedQuantityValue) {
+    testWebDriver.waitForElementToAppear(requestedQuantitySecondProduct);
+    requestedQuantitySecondProduct.clear();
+    requestedQuantitySecondProduct.sendKeys(requestedQuantityValue.toString());
   }
 
   public void enterExplanationReason() {
@@ -773,7 +804,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public String getBeginningBalance() {
     testWebDriver.waitForElementToAppear(beginningBalanceLabel);
-    return beginningBalanceLabel.getText();
+    return beginningBalanceLabel.getAttribute("value");
   }
 
 

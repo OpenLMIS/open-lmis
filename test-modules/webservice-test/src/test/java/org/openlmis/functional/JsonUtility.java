@@ -48,10 +48,6 @@ public class JsonUtility extends TestCaseHelper {
   }
 
 
-  public static Long getRequisitionIdFromResponse(String response) {
-    return Long.parseLong(response.substring(response.lastIndexOf(":") + 1, response.lastIndexOf("}")));
-  }
-
   public static void createOrder(String userName, String status, String program) throws Exception {
     dbWrapper.insertRequisitions(1, program, true);
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
@@ -68,7 +64,6 @@ public class JsonUtility extends TestCaseHelper {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-    reportFromJson.setUserName("commTrack1");
     reportFromJson.setRequisitionId(id);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);

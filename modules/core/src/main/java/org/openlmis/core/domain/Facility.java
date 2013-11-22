@@ -167,8 +167,8 @@ public class Facility extends BaseModel implements Importable {
     return new Facility(facilityId, false, false, modifiedBy);
   }
 
-  public static Facility createFacilityToBeRestored(Long facilityId, Long modifiedBy, boolean active) {
-    return new Facility(facilityId, true, active, modifiedBy);
+  public static Facility createFacilityToBeRestored(Long facilityId, Long modifiedBy) {
+    return new Facility(facilityId, true, false, modifiedBy);
   }
 
   public void validate() {

@@ -26,14 +26,10 @@ import static java.util.Arrays.asList;
 
 public class ReportBuilder {
 
-  public static final Property<Report, Long> facilityId = newProperty();
   public static final Property<Report, String> agentCode = newProperty();
   public static final Property<Report, String> programCode = newProperty();
   public static final Property<Report, List<RnrLineItem>> products = newProperty();
 
-  public static final Property<Report, Long> programId = newProperty();
-  public static final Property<Report, Long> periodId = newProperty();
-  public static final Property<Report, String> userId = newProperty();
   public static final Property<Report, Long> requisitionId = newProperty();
 
   public static final String DEFAULT_AGENT_CODE = "Agent Smith";
@@ -44,11 +40,6 @@ public class ReportBuilder {
     public Report instantiate(PropertyLookup<Report> lookup) {
       Report report = new Report();
       report.setRequisitionId(lookup.valueOf(requisitionId, 1L));
-      report.setFacilityId(lookup.valueOf(facilityId, 1L));
-      report.setProgramId(lookup.valueOf(programId, 1L));
-      report.setPeriodId(lookup.valueOf(periodId, 1L));
-      report.setUserName(lookup.valueOf(userId, "1"));
-      report.setEmergency(false);
       report.setAgentCode(lookup.valueOf(agentCode, DEFAULT_AGENT_CODE));
       report.setProducts(lookup.valueOf(products, asList(make(a(RnrLineItemBuilder.defaultRnrLineItem)))));
       report.setProgramCode(lookup.valueOf(programCode, DEFAULT_PROGRAM_CODE));

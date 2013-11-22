@@ -468,14 +468,11 @@ public class ManageFacilityPage extends Page {
 
     testWebDriver.sleep(1000);
     String enableValue = enabledFlag.getText();
-    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "Yes");
-    SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
+    assertEquals(enableValue.trim(), "Yes");
     verifyEditFacilityHeader("Edit facility");
   }
 
   public HomePage enableFacility() throws IOException {
-    String expectedIsActiveMessageOnAlert = "Do you want to set facility as active?";
-
     testWebDriver.waitForElementToAppear(enableButton);
     testWebDriver.sleep(1000);
     enableButton.click();
@@ -485,13 +482,6 @@ public class ManageFacilityPage extends Page {
     testWebDriver.sleep(1000);
     okLink.click();
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(isActiveMessageOnAlert);
-    String isActiveMessageOnAlertValue = isActiveMessageOnAlert.getText();
-    SeleneseTestNgHelper.assertEquals(isActiveMessageOnAlertValue, expectedIsActiveMessageOnAlert);
-    testWebDriver.waitForElementToAppear(okLink);
-    testWebDriver.sleep(1000);
-    okLink.click();
-
     verifyEnabledFacility();
 
     return new HomePage(testWebDriver);

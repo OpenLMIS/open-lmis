@@ -14,7 +14,6 @@ describe("Message Directive", function () {
   var compile;
 
   beforeEach(module('openlmis'));
-  beforeEach(module(''));
   describe("Non Input", function () {
     beforeEach(inject(function ($compile, $rootScope, _messageService_) {
       messageService = _messageService_;
@@ -24,7 +23,7 @@ describe("Message Directive", function () {
       compile = $compile;
     }));
 
-    xit('should get message from message service if found in scope and message service', function () {
+    it('should get message from message service if found in scope and message service', function () {
       spyOn(messageService, 'get').andReturn("actual message");
       scope.error = messageKey;
 
@@ -35,7 +34,7 @@ describe("Message Directive", function () {
       expect(elm.attr("value")).toEqual("Original Text");
     });
 
-    xit('should use scope value as message if not found in message service', function () {
+    it('should use scope value as message if not found in message service', function () {
       spyOn(messageService, 'get').andReturn(null);
       scope.error = messageKey;
 
@@ -45,7 +44,7 @@ describe("Message Directive", function () {
       expect(elm.text()).toEqual("error.number.only");
     });
 
-    xit('should use message service if key is not in scope', function () {
+    it('should use message service if key is not in scope', function () {
       spyOn(messageService, 'get').andReturn("actual message");
       scope.error = null;
 
@@ -73,7 +72,6 @@ describe("Message Directive", function () {
 
       compile(elm)(scope);
       scope.$digest();
-
       expect(elm.attr("value")).toEqual("actual message");
     });
   });
@@ -91,7 +89,7 @@ describe("Message Directive", function () {
       compile = $compile;
     }));
 
-    xit("should get comments for a Rnr", function () {
+    it("should get comments for a Rnr", function () {
       routeParams.rnrId = 1;
       httpBackend.expect('GET', '/public/pages/template/comment-box.html').respond(200, "<div></div>");
       httpBackend.expect('GET', '/requisitions/comments.json').respond(200, {"comments": [

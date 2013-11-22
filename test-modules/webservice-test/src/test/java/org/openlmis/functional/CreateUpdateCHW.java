@@ -51,6 +51,7 @@ public class CreateUpdateCHW extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
+    dbWrapper.updateRestrictLogin("commTrack",true);
   }
 
   @AfterMethod(groups = {"webservice"})
