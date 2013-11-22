@@ -620,6 +620,33 @@ public class SubmitReportTest extends JsonUtility {
 
   }
 
+  //@Test(groups = {"webservice"})
+  public void testCommTrackSubmitReportValidRnR() throws Exception {
+    dbWrapper.deleteConfigureTemplate("HIV");
+    dbWrapper.configureTemplateForCommTrack("HIV");
+    dbWrapper.insertPastPeriodRequisitionAndLineItems("F10", "HIV", "Period1", "P10");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = readObjectFromFile("CommTrackReportJson.txt", Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(10);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(10);
+    reportFromJson.getProducts().get(0).setQuantityReceived(10);
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        "POST",
+        "commTrack",
+        "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
+
   public void testSubmitReportValidRnR() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();

@@ -1453,4 +1453,8 @@ public class DBWrapper {
                 "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '"+fieldName2+"') ;");
 
     }
+
+  public void deleteConfigureTemplate(String program) throws SQLException {
+    update("DELETE FROM program_rnr_columns where programid=(select id from programs where code = '" + program + "');");
+  }
 }
