@@ -9,4 +9,5 @@
 --
 
 ALTER TABLE requisition_line_items
-ADD COLUMN previousNormalizedConsumptions VARCHAR(25);
+ADD COLUMN previousNormalizedConsumptions VARCHAR(25)
+  DEFAULT '[]';
