@@ -78,12 +78,14 @@ public class CalculationService {
   }
 
   private void fillPreviousNCsInLineItems(Rnr requisition, Integer m, Date trackingDate) {
-    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+    //TODO: For now, don't fill in case of regular
+    if (!requisition.isForVirtualFacility())
+      return;
 
+    for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
       List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(),
           requisition, getNumberOfPreviousNCToTrack(m), trackingDate);
       lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
-
     }
   }
 

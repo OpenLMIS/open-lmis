@@ -45,7 +45,6 @@ public class RequisitionService {
   public static final String CONVERT_TO_ORDER_PAGE_SIZE = "order.page.size";
   public static final String NUMBER_OF_PAGES = "number_of_pages";
 
-
   @Autowired
   private RequisitionRepository requisitionRepository;
   @Autowired
@@ -82,7 +81,6 @@ public class RequisitionService {
   private CalculationService calculateService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
-
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
@@ -331,7 +329,7 @@ public class RequisitionService {
 
     fillFacilityPeriodProgramWithAuditFields(asList(requisition));
 
-    if (!requisition.isEmergency())
+    if (!requisition.isEmergency() && !requisition.isForVirtualFacility())
       fillPreviousRequisitionsForAmc(requisition);
     return requisition;
   }

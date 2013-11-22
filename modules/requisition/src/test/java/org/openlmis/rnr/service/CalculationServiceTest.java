@@ -319,7 +319,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousOneNormalizedConsumptionFor3MonthsInCurrentPeriodIfPreviousPeriodNotExists() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
     requisition.setPeriod(make(a(defaultProcessingPeriod, with(numberOfMonths, 3))));
@@ -340,7 +340,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInCurrentPeriodIfPreviousPeriodNotExists() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
     requisition.setPeriod(make(a(defaultProcessingPeriod, with(numberOfMonths, 2))));
@@ -361,7 +361,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousTwoNormalizedConsumptionFor1MonthInCurrentPeriodIfPreviousPeriodNotExists() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
     requisition.setPeriod(make(a(defaultProcessingPeriod, with(numberOfMonths, 1))));
@@ -382,7 +382,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousOneNormalizedConsumptionFor3MonthsInPreviousPeriod() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
 
@@ -408,7 +408,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInPreviousPeriod() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
 
@@ -435,7 +435,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInPreviousPeriodAndShouldTrackFromLast2Periods() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
 
@@ -463,7 +463,7 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldGetPreviousTwoNormalizedConsumptionsFor1MonthInPreviousPeriodAndShouldTrackFromLast5Periods() throws Exception {
-    Rnr requisition = spy(rnr);
+    Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
 
@@ -489,6 +489,13 @@ public class CalculationServiceTest {
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNNormalizedConsumptions(productCode, requisition, 2, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4, 5)));
+  }
+
+  private Rnr getVirtualFacilityRnr() {
+    //TODO: Inline method when calculating for regular
+    Rnr spy = spy(rnr);
+    spy.getFacility().setVirtualFacility(true);
+    return spy;
   }
 
   private Date setLineItemDatesAndReturnDate() {

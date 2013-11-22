@@ -351,7 +351,7 @@ public class Rnr extends BaseModel {
     this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(cost);
   }
 
-  public boolean forVirtualFacility() {
+  public boolean isForVirtualFacility() {
     return this.facility.getVirtualFacility();
   }
 }
