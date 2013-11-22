@@ -43,7 +43,13 @@
         </tr>
         <tr>
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
-            <span ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}" class="cell-text"></span>
+            <span ng-switch on="column.name">
+              <span ng-switch-when="skipped">
+                <div class="ngCellText checked"><i ng-class="{'icon-ok': rnrLineItem[column.name]}"></i></div>
+              </span>
+              <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
+                    class="cell-text"></span>
+            </span>
           </td>
         </tr>
         </tbody>
