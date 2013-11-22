@@ -96,8 +96,7 @@ public interface RnrLineItemMapper {
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   void deleteAllNonFullSupplyForRequisition(Long rnrId);
 
-  @Select(
-      "SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
+  @Select("SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
   public Integer getCategoryCount(@Param(value = "rnr") Rnr rnr, @Param(value = "isFullSupply") Boolean isFullSupply);
 
   @Update("UPDATE requisition_line_items " +
