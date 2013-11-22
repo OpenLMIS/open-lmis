@@ -44,7 +44,7 @@ public class AdjustmentSummaryReport extends ReportTestHelper {
     public static final Integer ADJUSTMENT_TYPE = 5;
     public static final Integer ADJUSTMENT = 6;
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private AdjustmentSummaryReportPage adjustmentSummaryReportPage;
 

@@ -38,7 +38,7 @@ public class ReportingRateReport extends ReportTestHelper {
 
 
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private SummaryReportPage summaryReportPage;
 

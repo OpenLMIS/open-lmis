@@ -37,11 +37,11 @@ public class E2EManageSupplyline extends TestCaseHelper {
     int c = 0;
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ManageSupplylinePage manageSupplylinePage = homePage.navigateToSupplyline();
-    manageSupplylinePage.createAndVerifySupplyline(1,"1", "1", "1","Test Description 01");
-    manageSupplylinePage.createAndVerifySupplyline(2,"2", "1", "1","Test Description 02");
-    manageSupplylinePage.editAndVerifySupplyline(1,"1", "1", "1","Test Description 01");
-    manageSupplylinePage.editAndVerifySupplyline(2,"2", "1", "1","Test Description 02");
+//    ManageSupplylinePage manageSupplylinePage = homePage.navigateToSupplyline();
+//    manageSupplylinePage.createAndVerifySupplyline(1,"1", "1", "1","Test Description 01");
+//    manageSupplylinePage.createAndVerifySupplyline(2,"2", "1", "1","Test Description 02");
+//    manageSupplylinePage.editAndVerifySupplyline(1,"1", "1", "1","Test Description 01");
+//    manageSupplylinePage.editAndVerifySupplyline(2,"2", "1", "1","Test Description 02");
   }
 
   @AfterMethod(groups = {"functional2"})

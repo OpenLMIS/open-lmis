@@ -13,7 +13,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
 
-public class ReportHomePage extends HomePage{
+public class ExtensionHomePage extends HomePage{
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Logistics Reports')]")
   private static WebElement LogisticsReportsMenuItem;
@@ -58,7 +58,7 @@ public class ReportHomePage extends HomePage{
   private static WebElement facilityListingReportPageHeader;
 
 
-  public ReportHomePage(TestWebDriver driver) throws IOException {
+  public ExtensionHomePage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);

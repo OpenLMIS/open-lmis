@@ -113,8 +113,8 @@ public class RnrCalcStrategyTest {
   }
 
   @Test
-  public void shouldSetCalculatedOrderQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
-    assertThat(calcStrategy.calculateDefaultApprovedQuantity(true, 1, 6), is(6));
+  public void shouldSetRequestedQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
+    assertThat(calcStrategy.calculateDefaultApprovedQuantity(true, 1, 6), is(1));
   }
 
   @Test

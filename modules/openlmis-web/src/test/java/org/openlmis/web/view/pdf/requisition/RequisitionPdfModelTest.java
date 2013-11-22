@@ -23,6 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
@@ -51,6 +52,10 @@ public class RequisitionPdfModelTest {
   private Rnr requisition;
   private RequisitionPdfModel requisitionPdfModel;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
+
+  @Mock
+  private ConfigurationSettingService configService;
+
   @Mock
   MessageService messageService;
   private Date currentDate;
@@ -81,7 +86,7 @@ public class RequisitionPdfModelTest {
     authorizedDate = new Date();
 
     model.put("statusChanges", getRequisitionStatusChanges());
-    requisitionPdfModel = new RequisitionPdfModel(model, messageService);
+    requisitionPdfModel = new RequisitionPdfModel(model, messageService, configService);
   }
 
   private List<RequisitionStatusChange> getRequisitionStatusChanges() {

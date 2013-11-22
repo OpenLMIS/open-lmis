@@ -136,7 +136,7 @@ public class FacilityMailingListReport extends ReportTestHelper {
 
     @AfterMethod(groups = {"report"})
     public void tearDown() throws Exception {
-        ReportHomePage homePage = new ReportHomePage(testWebDriver);
+        ExtensionHomePage homePage = new ExtensionHomePage(testWebDriver);
         homePage.logout(baseUrlGlobal);
         //dbWrapper.deleteData();
         dbWrapper.closeConnection();

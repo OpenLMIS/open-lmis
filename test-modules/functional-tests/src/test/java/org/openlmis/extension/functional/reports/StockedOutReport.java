@@ -46,7 +46,7 @@ public class StockedOutReport extends ReportTestHelper {
     public static final Integer LOCATION = 5;
     public static final Integer PRODUCT_STOCKED_OUT = 6;
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private StockedOutReportPage stockedOutReportPage;
 

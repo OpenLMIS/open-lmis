@@ -41,7 +41,7 @@ public class NonReportingFacilitiesReport extends ReportTestHelper {
     private static final Integer FACILITY_TYPE = 3;
     private static final Integer LOCATION = 4;
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private NonReportingFacilityReportPage nonReportingFacilityReportPage;
 

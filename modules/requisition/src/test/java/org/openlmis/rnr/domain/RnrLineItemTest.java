@@ -21,6 +21,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.calculation.DefaultStrategy;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -70,7 +71,7 @@ public class RnrLineItemTest {
   @Mock
   RnrColumn column;
 
-  private RnrCalcStrategy calcStrategy;
+  private RnrCalculationStrategy calcStrategy;
 
   @Before
   public void setUp() throws Exception {

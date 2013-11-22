@@ -56,7 +56,7 @@ public class E2EViewReport extends TestCaseHelper {
 
       ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
 
-      ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+      ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
       FacilityMailingListReportPage facilityMailingListReportPage = homePage.navigateViewFacilityMailingListReport();
       facilityMailingListReportPage.enterFilterValuesInFacilityMailingListReport(facilityNamePrefix + date_time, facilityCodePrefix + date_time, facilityType);
@@ -90,7 +90,7 @@ public class E2EViewReport extends TestCaseHelper {
 
        ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
 
-       ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+       ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
        FacilityListingReportPage facilityListingReportPage = homePage.navigateViewFacilityListingReport();
        facilityListingReportPage.enterFilterValuesInFacilityListingReport(geoZone, facilityType, status);
@@ -101,7 +101,7 @@ public class E2EViewReport extends TestCaseHelper {
   @Test(groups = {"report"}, dataProvider = "Data-Provider-Function-Positive" )
   public void verifySummaryReport(String[] credentials) throws Exception{
       ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
-      ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+      ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
       SummaryReportPage summaryReportPage = homePage.navigateViewSummaryReport();
       summaryReportPage.enterFilterValuesInSummaryReport("Period2");
       summaryReportPage.verifyHTMLReportOutputOnSummaryReportScreen();
@@ -114,7 +114,7 @@ public class E2EViewReport extends TestCaseHelper {
     public void verifyNonReportingFacilityReport(String[] credentials) throws Exception{
 
         ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
-        ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
         NonReportingFacilityReportPage nonReportingFacilityReportPage = homePage.navigateViewNonReportingFacilityReport();
         nonReportingFacilityReportPage.enterFilterValues("HIV","Monthly" , "Period2", "Requistion Group 2", "Lvl3 Hospital");
         nonReportingFacilityReportPage.verifyHTMLReportOutput();
@@ -127,7 +127,7 @@ public class E2EViewReport extends TestCaseHelper {
     public void verifyAverageConsumptionReport(String[] credentials) throws Exception{
 
         ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
-        ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
         AverageConsumptionReportPage averageConsumptionReportPage = homePage.navigateViewAverageConsumptionReport();
         averageConsumptionReportPage.enterFilterValues("Monthly", "2013","Jan","2013","May","Root","Antibiotics","Lvl3 Hospital","Requistion Group 2","TDF/FTC/EFV","HIV");
         averageConsumptionReportPage.verifyHTMLReportOutput();
@@ -140,7 +140,7 @@ public class E2EViewReport extends TestCaseHelper {
     public void verifyAdjustmentSummaryReport(String[] credentials) throws Exception{
 
         ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
-        ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
         AdjustmentSummaryReportPage adjustmentSummaryReportPage = homePage.navigateViewAdjustmentSummaryReport();
         adjustmentSummaryReportPage.enterFilterValues("Monthly", "2013","Jan","2013","May","Root","Antibiotics","Lvl3 Hospital","Requistion Group 2","TDF/FTC/EFV","HIV", "Damaged");
         adjustmentSummaryReportPage.verifyHTMLReportOutput();
@@ -153,7 +153,7 @@ public class E2EViewReport extends TestCaseHelper {
     public void verifyStockedOutReport(String[] credentials) throws Exception{
 
         ReportLoginPage loginPage = new ReportLoginPage(testWebDriver, baseUrlGlobal);
-        ReportHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+        ExtensionHomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
         StockedOutReportPage stockedOutReportPage = homePage.navigateViewStockedOutReport();
         stockedOutReportPage.enterFilterValues("HIV","TDF/FTC/EFV","Monthly","Requistion Group 2","Lvl3 Hospital");
         stockedOutReportPage.verifyHTMLReportOutput();
@@ -165,7 +165,7 @@ public class E2EViewReport extends TestCaseHelper {
 
   @AfterMethod(groups = {"report"})
   public void tearDown() throws Exception {
-    ReportHomePage homePage = new ReportHomePage(testWebDriver);
+    ExtensionHomePage homePage = new ExtensionHomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
     //dbWrapper.deleteData();
     dbWrapper.closeConnection();
