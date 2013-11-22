@@ -193,7 +193,7 @@ public class RequisitionServiceTest {
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
     verify(requisitionRepository).insert(any(Rnr.class));
-    verify(requisitionRepository).logStatusChange(any(Rnr.class));
+    verify(requisitionRepository).logStatusChange(any(Rnr.class), anyString());
     verify(regimenColumnService).getRegimenTemplateByProgramId(PROGRAM.getId());
 
     assertThat(rnr, is(spyRequisition));
@@ -390,7 +390,7 @@ public class RequisitionServiceTest {
     Rnr submittedRnr = requisitionService.submit(initiatedRnr);
 
     verify(requisitionRepository).update(savedRnr);
-    verify(requisitionRepository).logStatusChange(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr, null);
     assertThat(submittedRnr.getStatus(), is(SUBMITTED));
   }
 
@@ -408,7 +408,7 @@ public class RequisitionServiceTest {
 
     verify(rnrTemplateService).fetchProgramTemplate(PROGRAM.getId());
     verify(requisitionRepository).update(savedRnr);
-    verify(requisitionRepository).logStatusChange(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr, null);
     assertThat(authorizedRnr.getStatus(), is(AUTHORIZED));
     assertThat(authorizedRnr.getSupervisoryNodeId(), is(approverNode.getId()));
   }
@@ -588,7 +588,7 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(APPROVAL_NOT_ALLOWED);
 
-    requisitionService.approve(submittedRnr);
+    requisitionService.approve(submittedRnr, null);
   }
 
   @Test
@@ -603,10 +603,10 @@ public class RequisitionServiceTest {
     when(supplyLineService.getSupplyLineBy(supervisoryNode, PROGRAM)).thenReturn(supplyLine);
     Facility supplyingDepot = new Facility();
     when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
-    requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr, null);
 
     verify(requisitionRepository).approve(savedRnr);
-    verify(requisitionRepository).logStatusChange(savedRnr);
+    verify(requisitionRepository).logStatusChange(savedRnr, null);
     assertThat(savedRnr.getStatus(), is(APPROVED));
     assertThat(savedRnr.getSupervisoryNodeId(), is(supervisoryNodeId));
     assertThat(savedRnr.getModifiedBy(), is(USER_ID));
@@ -629,7 +629,7 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("some error");
 
-    requisitionService.approve(spyRnr);
+    requisitionService.approve(spyRnr, null);
   }
 
   @Test
@@ -654,10 +654,10 @@ public class RequisitionServiceTest {
     Facility supplyingDepot = new Facility();
     when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
 
-    requisitionService.approve(inApprovalRnr);
+    requisitionService.approve(inApprovalRnr, null);
 
     verify(requisitionRepository).approve(inApprovalRequisition);
-    verify(requisitionRepository).logStatusChange(inApprovalRequisition);
+    verify(requisitionRepository).logStatusChange(inApprovalRequisition, null);
     verify(requisitionEventService, never()).notifyForStatusChange(inApprovalRequisition);
     assertThat(inApprovalRequisition.getStatus(), is(IN_APPROVAL));
     assertThat(inApprovalRequisition.getSupervisoryNodeId(), is(2L));
@@ -686,10 +686,10 @@ public class RequisitionServiceTest {
     Facility supplyingDepot = new Facility();
     when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
 
-    requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr, null);
 
     verify(requisitionRepository).approve(approvedRequisition);
-    verify(requisitionRepository).logStatusChange(approvedRequisition);
+    verify(requisitionRepository).logStatusChange(approvedRequisition, null);
     verify(requisitionEventService).notifyForStatusChange(approvedRequisition);
     assertThat(approvedRequisition.getStatus(), is(IN_APPROVAL));
     assertThat(approvedRequisition.getSupervisoryNodeId(), is(2L));
@@ -717,7 +717,7 @@ public class RequisitionServiceTest {
     Facility supplyingDepot = new Facility();
     when(supplyLine.getSupplyingFacility()).thenReturn(supplyingDepot);
 
-    requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr, null);
 
     verify(requisitionRepository).approve(savedRnr);
     assertThat(savedRnr.getStatus(), is(IN_APPROVAL));
@@ -763,7 +763,7 @@ public class RequisitionServiceTest {
 
     doNothing().when(spyRnr).calculateForApproval();
 
-    requisitionService.approve(spyRnr);
+    requisitionService.approve(spyRnr, null);
 
     verify(spyRnr).calculateForApproval();
   }
@@ -919,7 +919,7 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(RNR_OPERATION_UNAUTHORIZED);
 
-    requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr, null);
   }
 
   @Test
@@ -931,7 +931,7 @@ public class RequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage(APPROVAL_NOT_ALLOWED);
 
-    requisitionService.approve(authorizedRnr);
+    requisitionService.approve(authorizedRnr, null);
   }
 
   @Test

@@ -100,7 +100,7 @@ public class RestRequisitionService {
     requisitionValidator.validateProducts(report, savedRequisition);
 
     requisitionService.save(requisition);
-    requisitionService.approve(requisition);
+    requisitionService.approve(requisition, report.getApproverName());
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {

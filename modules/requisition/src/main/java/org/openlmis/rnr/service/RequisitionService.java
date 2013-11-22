@@ -102,7 +102,7 @@ public class RequisitionService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-      facility.getId(), program.getId());
+        facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
 
@@ -186,7 +186,7 @@ public class RequisitionService {
 
 
   @Transactional
-  public Rnr approve(Rnr requisition) {
+  public Rnr approve(Rnr requisition, String name) {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     if (!savedRnr.isApprovable())
       throw new DataException(APPROVAL_NOT_ALLOWED);
@@ -205,14 +205,17 @@ public class RequisitionService {
     if (parent == null) {
       savedRnr.prepareForFinalApproval();
     } else {
-      if (savedRnr.getStatus() == IN_APPROVAL)
+      if (savedRnr.getStatus() == IN_APPROVAL) {
         notifyStatusChange = false;
+      }
       savedRnr.approveAndAssignToNextSupervisoryNode(parent);
     }
 
     savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
-    logStatusChangeAndNotify(savedRnr, notifyStatusChange);
+
+    logStatusChangeAndNotify(savedRnr, notifyStatusChange, name);
+
     return savedRnr;
   }
 
@@ -281,7 +284,7 @@ public class RequisitionService {
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
-      programService.getProgramStartDate(facility.getId(), program.getId()));
+        programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
       throw new DataException("error.program.configuration.missing");
@@ -357,11 +360,11 @@ public class RequisitionService {
 
   private Rnr getPreviousRequisition(Rnr requisition) {
     ProcessingPeriod immediatePreviousPeriod = processingScheduleService.getImmediatePreviousPeriod(
-      requisition.getPeriod());
+        requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
       previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), immediatePreviousPeriod);
+          requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }
 
@@ -387,7 +390,7 @@ public class RequisitionService {
     if (lastPeriod == null) return null;
 
     return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-      lastPeriod);
+        lastPeriod);
   }
 
   public List<Rnr> listForApproval(Long userId) {
@@ -404,19 +407,21 @@ public class RequisitionService {
 
   private Rnr update(Rnr requisition) {
     requisitionRepository.update(requisition);
-    logStatusChangeAndNotify(requisition, true);
+    logStatusChangeAndNotify(requisition, true, null);
     return requisition;
   }
 
-  private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange) {
-    requisitionRepository.logStatusChange(requisition);
-    if (notifyStatusChange)
+  private void logStatusChangeAndNotify(Rnr requisition, boolean notifyStatusChange, String name) {
+    requisitionRepository.logStatusChange(requisition, name);
+
+    if (notifyStatusChange) {
       requisitionEventService.notifyForStatusChange(requisition);
+    }
   }
 
   private void insert(Rnr requisition) {
     requisitionRepository.insert(requisition);
-    logStatusChangeAndNotify(requisition, true);
+    logStatusChangeAndNotify(requisition, true, null);
   }
 
   public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
@@ -461,7 +466,7 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, pageSize, userId, right, sortBy, sortDirection);
+        pageNumber, pageSize, userId, right, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));

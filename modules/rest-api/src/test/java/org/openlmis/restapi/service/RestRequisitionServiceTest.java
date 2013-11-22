@@ -224,7 +224,7 @@ public class RestRequisitionServiceTest {
 
     verify(spyReport).getRequisition();
     verify(requisitionService).save(requisitionFromReport);
-    verify(requisitionService).approve(requisitionFromReport);
+    verify(requisitionService).approve(requisitionFromReport, DEFAULT_APPROVER_NAME);
   }
 
   @Test

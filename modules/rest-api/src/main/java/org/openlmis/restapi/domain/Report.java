@@ -30,6 +30,8 @@ public class Report {
   private List<RnrLineItem> products;
   private String agentCode;
   private String programCode;
+  private String approverName;
+
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
@@ -46,7 +48,7 @@ public class Report {
   }
 
   public void validateForApproval() {
-    if (products == null) {
+    if (products == null || approverName == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
     for (RnrLineItem rnrLineItem : products) {

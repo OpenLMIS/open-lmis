@@ -40,7 +40,7 @@ public class SubmitReportTest extends JsonUtility {
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1");
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -120,10 +120,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
@@ -138,10 +138,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "",
-      "");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "",
+        "");
     assertEquals(401, responseEntity.getStatus());
   }
 
@@ -386,7 +386,6 @@ public class SubmitReportTest extends JsonUtility {
       "commTrack",
       "Admin123");
 
-    String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Program configuration missing\"}");
   }
@@ -454,7 +453,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testGloballyInactiveProductSubmitReport() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10","False");
+    dbWrapper.updateActiveStatusOfProduct("P10", "False");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -472,12 +471,12 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProduct("P10","True");
+    dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 
   @Test(groups = {"webservice"})
   public void testProductNotActiveAtProgramSubmitReport() throws Exception {
-    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","false");
+    dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "false");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -495,7 +494,7 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","true");
+    dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "true");
   }
 
   @Test(groups = {"webservice"})
@@ -568,7 +567,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCurrentPeriodSubmitReportForParentFacility() throws Exception {
-    dbWrapper.updateProgramsSupportedByField("startdate","NOW()","F10");
+    dbWrapper.updateProgramsSupportedByField("startDate","NOW()","F10");
     HttpClient client = new HttpClient();
     client.createContext();
 

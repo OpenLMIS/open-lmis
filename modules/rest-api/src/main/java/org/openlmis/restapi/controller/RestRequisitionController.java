@@ -40,7 +40,7 @@ public class RestRequisitionController extends BaseController {
   private RestRequisitionService restRequisitionService;
 
   @RequestMapping(value = "/rest-api/requisitions", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity submitRequisition(@RequestBody Report report, Principal principal) {
+  public ResponseEntity<RestResponse> submitRequisition(@RequestBody Report report, Principal principal) {
     Rnr requisition;
 
     try {
@@ -53,9 +53,9 @@ public class RestRequisitionController extends BaseController {
 
   @RequestMapping(value = "/rest-api/requisitions/{id}/approve", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> approve(@PathVariable Long id, @RequestBody Report report, Principal principal) {
-    report.validateForApproval();
-    report.setRequisitionId(id);
     try {
+      report.validateForApproval();
+      report.setRequisitionId(id);
       restRequisitionService.approve(report, loggedInUserId(principal));
       return success("msg.rnr.approve.success");
     } catch (DataException e) {

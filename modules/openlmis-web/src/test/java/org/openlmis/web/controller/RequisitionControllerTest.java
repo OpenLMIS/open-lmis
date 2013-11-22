@@ -253,13 +253,13 @@ public class RequisitionControllerTest {
   @Test
   public void shouldApproveRequisitionAndTagWithModifiedBy() throws Exception {
     Rnr approvedrnr = new Rnr();
-    when(requisitionService.approve(rnr)).thenReturn(approvedrnr);
+    when(requisitionService.approve(rnr, null)).thenReturn(approvedrnr);
     whenNew(Rnr.class).withArguments(rnr.getId()).thenReturn(rnr);
     OpenLmisMessage message = new OpenLmisMessage("message.key");
     when(messageService.message(message)).thenReturn("R&R saved successfully!");
     when(requisitionService.getApproveMessageBasedOnParentNode(approvedrnr)).thenReturn(message);
     final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
-    verify(requisitionService).approve(rnr);
+    verify(requisitionService).approve(rnr, null);
     assertThat(rnr.getModifiedBy(), CoreMatchers.is(USER_ID));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
@@ -267,11 +267,11 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGiveErrorMessageWhenServiceThrowsSomeExceptionWhileApprovingAnRnr() throws Exception {
-    doThrow(new DataException("some-error")).when(requisitionService).approve(rnr);
+    doThrow(new DataException("some-error")).when(requisitionService).approve(rnr, null);
 
     ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
 
-    verify(requisitionService).approve(rnr);
+    verify(requisitionService).approve(rnr, null);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some-error"));
   }

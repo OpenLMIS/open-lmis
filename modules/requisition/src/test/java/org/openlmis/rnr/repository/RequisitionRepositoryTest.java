@@ -45,7 +45,6 @@ import static org.openlmis.rnr.domain.RnrStatus.INITIATED;
 import static org.openlmis.rnr.domain.RnrStatus.IN_APPROVAL;
 import static org.openlmis.rnr.service.RequisitionService.SEARCH_ALL;
 import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -314,11 +313,11 @@ public class RequisitionRepositoryTest {
 
   @Test
   public void shouldLogRequisitionStatusChanges() throws Exception {
-    RequisitionStatusChange requisitionStatusChange = new RequisitionStatusChange();
-    requisitionStatusChange.setCreatedBy(new User());
     Rnr requisition = new Rnr();
-    whenNew(RequisitionStatusChange.class).withArguments(requisition).thenReturn(requisitionStatusChange);
-    requisitionRepository.logStatusChange(requisition);
+    String name = "some random name";
+    RequisitionStatusChange requisitionStatusChange = new RequisitionStatusChange(requisition, name);
+
+    requisitionRepository.logStatusChange(requisition, name);
     verify(requisitionStatusChangeMapper).insert(requisitionStatusChange);
   }
 

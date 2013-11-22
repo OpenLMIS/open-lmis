@@ -101,7 +101,8 @@ public class RequisitionStatusChangeMapperIT {
       with(RequisitionBuilder.modifiedBy, user.getId())));
     requisitionMapper.insert(requisition);
 
-    statusChange = new RequisitionStatusChange(requisition);
+    String name = "some random name";
+    statusChange = new RequisitionStatusChange(requisition, name);
   }
 
   @Test
@@ -129,6 +130,7 @@ public class RequisitionStatusChangeMapperIT {
     assertThat(statusChanges.size(), is(3));
     assertThat(statusChanges.get(0).getCreatedBy().getFirstName(), is(user.getFirstName()));
     assertThat(statusChanges.get(0).getCreatedBy().getLastName(), is(user.getLastName()));
+    assertThat(statusChanges.get(0).getName(), is("some random name"));
     assertThat(statusChanges.get(0).getCreatedBy().getId(), is(user.getId()));
 
     assertStatusPresent(statusChanges, INITIATED);

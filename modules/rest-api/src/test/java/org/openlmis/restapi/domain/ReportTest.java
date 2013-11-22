@@ -27,6 +27,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.openlmis.restapi.builder.ReportBuilder.approverName;
 import static org.openlmis.restapi.builder.ReportBuilder.products;
 
 @Category(UnitTests.class)
@@ -101,6 +102,26 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport));
     String productCode = null;
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    expectedEx.expect(DataException.class);
+    expectedEx.expectMessage("error.restapi.mandatory.missing");
+
+    report.validateForApproval();
+  }
+
+  @Test
+  public void shouldSetApproverNameInReport() throws Exception {
+    Report report = make(a(ReportBuilder.defaultReport));
+    Rnr requisition = report.getRequisition();
+    assertThat(requisition.getId(), is(report.getRequisitionId()));
+    assertThat(requisition.getFullSupplyLineItems(), is(report.getProducts()));
+  }
+
+  @Test
+  public void shouldThrowExceptionIfApproverNameMissing() throws Exception {
+    String nullApproverName = null;
+    Report report = make(a(ReportBuilder.defaultReport, with(approverName, nullApproverName)));
+    report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem))));
 
     expectedEx.expect(DataException.class);
     expectedEx.expectMessage("error.restapi.mandatory.missing");

@@ -176,8 +176,8 @@ public class RequisitionRepository {
     commentMapper.insert(comment);
   }
 
-  public void logStatusChange(Rnr requisition) {
-    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
+  public void logStatusChange(Rnr requisition, String name) {
+    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition, name);
     requisitionStatusChangeMapper.insert(statusChange);
   }
 

@@ -11,7 +11,6 @@
 
 package org.openlmis.rnr.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
@@ -20,12 +19,12 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class RequisitionStatusChange {
   private Long id;
 
   private Long rnrId;
   private RnrStatus status;
+  private String name;
   private User createdBy;
   private Date createdDate;
 
@@ -33,5 +32,18 @@ public class RequisitionStatusChange {
     this.rnrId = requisition.getId();
     this.status = requisition.getStatus();
     this.createdBy = new User(requisition.getModifiedBy(), null);
+  }
+
+  public RequisitionStatusChange(Rnr requisition, String name) {
+    this(requisition);
+    this.name = name;
+  }
+
+
+  public RequisitionStatusChange(Long rnrId, RnrStatus status, User createdBy, Date createdDate) {
+    this.rnrId = rnrId;
+    this.status = status;
+    this.createdBy = createdBy;
+    this.createdDate = createdDate;
   }
 }
