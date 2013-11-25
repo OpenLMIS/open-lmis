@@ -37,7 +37,7 @@ public class ProgramProduct extends BaseModel implements Importable {
   @ImportField(name = "Is Active", type = "boolean", mandatory = true)
   private boolean active;
 
-  private Integer productCategoryId;
+  private Long productCategoryId;
 
   private Integer displayOrder;
 
