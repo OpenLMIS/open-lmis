@@ -25,7 +25,7 @@ public interface FacilityApprovedProductMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(FacilityTypeApprovedProduct facilityTypeApprovedProduct);
 
-  @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
+  @Select({"SELECT #{category} fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
     "p.*, p.code as product_code ",
     "FROM facility_approved_products fap ",
     "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
@@ -70,9 +70,10 @@ public interface FacilityApprovedProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                          @Param("programId") Long programId);
+                                                                          @Param("programId") Long programId,
+                                                                          @Param("category") String category);
 
-  @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
+  @Select({"SELECT  #{category} fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
     "p.*, p.code as product_code ",
     "FROM facility_approved_products fap ",
     "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
@@ -117,14 +118,16 @@ public interface FacilityApprovedProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(property = "facilityType.id", column = "facilityTypeId")})
   List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                             @Param("programId") Long programId);
+                                                                             @Param("programId") Long programId,
+                                                                             @Param("category") String category);
 
-  @Select({"SELECT fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
+  @Select({"SELECT  #{category} fap.id, fap.facilityTypeId, fap.programProductId, fap.maxMonthsOfStock, fap.modifiedDate, fap.modifiedBy",
     "FROM facility_approved_products fap, facility_types ft",
     "where fap.programProductId = #{programProductId} and",
     "ft.code = #{facilityTypeCode} and ft.id = fap.facilityTypeId"})
   FacilityTypeApprovedProduct getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(@Param("programProductId") Long programProductId,
-                                                                                          @Param("facilityTypeCode") String facilityTypeCode);
+                                                                                          @Param("facilityTypeCode") String facilityTypeCode,
+                                                                                          @Param("category") String category);
 
   @Update("UPDATE facility_approved_products set " +
     "facilityTypeId=#{facilityType.id}, programProductId=#{programProduct.id}, maxMonthsOfStock=#{maxMonthsOfStock}, minMonthsOfStock=#{minMonthsOfStock}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} " +
@@ -133,7 +136,7 @@ public interface FacilityApprovedProductMapper {
 
 
 
-    @Select({"SELECT fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
+    @Select({"SELECT  #{category} fap.*, pp.*, pgm.*, pgm.code as program_code, pgm.name as program_name, pgm.active as program_active, " +
             "p.*, p.code as product_code ",
             "FROM facility_approved_products fap ",
             "INNER JOIN facilities f ON f.typeId = fap.facilityTypeId",
@@ -177,11 +180,12 @@ public interface FacilityApprovedProductMapper {
                     one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
             @Result(property = "facilityType.id", column = "facilityTypeId")})
     List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(@Param("facilityId") Long facilityId,
-                                                                                   @Param("programId") Long programId);
+                                                                                   @Param("programId") Long programId,
+                                                                                   @Param("category") String category);
 
 
 
-    @Select({"select fap.*,pp.*, p.code as product_code " +
+    @Select({"select  #{category} fap.*,pp.*, p.code as product_code " +
             "from program_products pp ",
             "JOIN products p on pp.productId = p.id ",
             "WHERE ",
@@ -213,10 +217,11 @@ public interface FacilityApprovedProductMapper {
                     one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
             @Result(property = "facilityType.id", column = "facilityTypeId")})
     List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(@Param("facilityTypeId") Long facilityTypeId,
-                                                                                      @Param("programId") Long programId);
+                                                                                      @Param("programId") Long programId,
+                                                                                      @Param("category") String category);
 
 
-    @Select({"SELECT fap.*, pp.productId as productId FROM facility_approved_products fap, program_products pp,products p WHERE fap.facilityTypeId = #{facilityTypeId} ",
+    @Select({"SELECT  #{category} fap.*, pp.productId as productId FROM facility_approved_products fap, program_products pp,products p WHERE fap.facilityTypeId = #{facilityTypeId} ",
             "AND pp.programId=#{programId} AND fap.programProductId = pp.id AND pp.productId = p.id ORDER BY ",
             "pp.displayOrder NULLS LAST, p.code"})
     @Results(value = {
@@ -224,10 +229,11 @@ public interface FacilityApprovedProductMapper {
             @Result(property = "programProduct.product.isSelected", column="isSelected")
     })
     List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(@Param("facilityTypeId") Long facilityTypeId,
-                                                                                             @Param("programId") Long programId);
+                                                                                             @Param("programId") Long programId,
+                                                                                             @Param("category") String category);
 
 
-    @Select({"select fap.*,pp.*, p.code as product_code " +
+    @Select({"select  #{category} fap.*,pp.*, p.code as product_code " +
             "from program_products pp ",
             "JOIN products p on pp.productId = p.id ",
             "JOIN facility_approved_products fap on pp.id = fap.programProductId ",
@@ -261,7 +267,8 @@ public interface FacilityApprovedProductMapper {
             @Result(property = "facilityType.id", column = "facilityTypeId")})
     FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeId(@Param("facilityTypeId") Long facilityTypeId,
                                                                                             @Param("programId") Long programId,
-                                                                                            @Param("productId") Long productId);
+                                                                                            @Param("productId") Long productId,
+                                                                                            @Param("category") String category);
 
 
     @Delete({"delete from facility_approved_products where id in (select fap.id " +

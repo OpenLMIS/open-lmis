@@ -15,6 +15,7 @@ import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,34 +32,43 @@ public class FacilityApprovedProductRepository {
   private ProductMapper productMapper;
 
   @Autowired
+  private ConfigurationSettingService settingService;
+
+  @Autowired
   public FacilityApprovedProductRepository(FacilityApprovedProductMapper facilityApprovedProductMapper, FacilityMapper facilityMapper, ProductMapper productMapper) {
     this.facilityApprovedProductMapper = facilityApprovedProductMapper;
     this.facilityMapper = facilityMapper;
     this.productMapper = productMapper;
   }
 
+  //TODO: Move this to the mapper and implement a conditional select there.
+  private String getProductCategorySelection(){
+    return (settingService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM"))?"p.categoryId as categoryId, ":"pp.productCategoryId as categoryId, ";
+  }
+
   public List<FacilityTypeApprovedProduct> getFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+
+    return facilityApprovedProductMapper.getFullSupplyProductsByFacilityAndProgram(facilityId, programId, getProductCategorySelection());
   }
 
   public List<FacilityTypeApprovedProduct> getNonFullSupplyProductsByFacilityAndProgram(Long facilityId, Long programId) {
-    return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
+    return facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId, getProductCategorySelection());
   }
 
   public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityAndProgram(Long facilityId, Long programId) {
-      return facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId);
+      return facilityApprovedProductMapper.getProductsCompleteListByFacilityAndProgram(facilityId, programId, getProductCategorySelection());
   }
 
   public List<FacilityTypeApprovedProduct> getProductsCompleteListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
-      return facilityApprovedProductMapper.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId);
+      return facilityApprovedProductMapper.getProductsCompleteListByFacilityTypeAndProgram(facilityTypeId, programId, getProductCategorySelection());
   }
 
   public List<FacilityTypeApprovedProduct> getProductsAlreadyApprovedListByFacilityTypeAndProgram(Long facilityTypeId, Long programId) {
-      return facilityApprovedProductMapper.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId);
+      return facilityApprovedProductMapper.getProductsAlreadyApprovedListByFacilityTypeAndProgram(facilityTypeId, programId, getProductCategorySelection());
   }
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
-      return facilityApprovedProductMapper.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId);
+      return facilityApprovedProductMapper.getFacilityApprovedProductByProgramProductAndFacilityTypeId(facilityTypeId,programId,productId, getProductCategorySelection());
   }
 
   public void removeFacilityApprovedProductByProgramProductAndFacilityTypeId(Long facilityTypeId,Long programId,Long productId){
@@ -75,6 +85,6 @@ public class FacilityApprovedProductRepository {
 
   public FacilityTypeApprovedProduct getFacilityApprovedProductByProgramProductAndFacilityTypeCode(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     return facilityApprovedProductMapper.getFacilityApprovedProductIdByProgramProductAndFacilityTypeCode(
-        facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode());
+        facilityTypeApprovedProduct.getProgramProduct().getId(), facilityTypeApprovedProduct.getFacilityType().getCode(), getProductCategorySelection());
   }
 }
