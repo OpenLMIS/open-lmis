@@ -434,6 +434,32 @@ public class CalculationServiceTest {
   }
 
   @Test
+  public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInPreviousPeriodAndTrackFromPreviousPeriodStartDateIfOnly1PreviousPeriodExists() throws Exception {
+    Rnr requisition = getVirtualFacilityRnr();
+    String productCode = "Code1";
+    requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    Date trackingStartDate = DateTime.now().minusMonths(2).toDate();
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, trackingStartDate, new Date(), 2, "previousPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
+    when(requisitionRepository.getNNormalizedConsumptions(productCode, requisition, 1, trackingStartDate)).thenReturn(asList(4));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(requisition).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    verify(requisitionRepository).getNNormalizedConsumptions(productCode, requisition, 1, trackingStartDate);
+    assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
+  }
+
+  @Test
   public void shouldGetPreviousOneNormalizedConsumptionFor2MonthsInPreviousPeriodAndShouldTrackFromLast2Periods() throws Exception {
     Rnr requisition = getVirtualFacilityRnr();
     String productCode = "Code1";

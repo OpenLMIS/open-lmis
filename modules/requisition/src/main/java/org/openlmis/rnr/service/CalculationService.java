@@ -109,8 +109,8 @@ public class CalculationService {
   }
 
   private Date getDateForNthPreviousPeriod(List<ProcessingPeriod> fivePreviousPeriods, Integer n) {
-    ProcessingPeriod desiredPeriod = fivePreviousPeriods.get(n);
-    return desiredPeriod == null ? fivePreviousPeriods.get(fivePreviousPeriods.size() - 1).getStartDate() : desiredPeriod.getStartDate();
+    Integer numberOfPeriods = fivePreviousPeriods.size();
+    return numberOfPeriods <= n ? fivePreviousPeriods.get(numberOfPeriods - 1).getStartDate() : fivePreviousPeriods.get(n).getStartDate();
   }
 
   private void calculateForNonFullSupply(Rnr requisition, RnrCalculationStrategy calcStrategy) {
