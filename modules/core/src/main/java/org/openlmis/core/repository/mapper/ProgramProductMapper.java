@@ -22,9 +22,9 @@ import java.util.List;
 @Repository
 public interface ProgramProductMapper {
 
-  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, displayOrder, createdBy, modifiedBy, modifiedDate)",
+  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, displayOrder, productCategoryId, createdBy, modifiedBy, modifiedDate)",
     "VALUES (#{program.id},",
-    "#{product.id}, #{dosesPerMonth}, #{active}, #{displayOrder}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
+    "#{product.id}, #{dosesPerMonth}, #{active}, #{displayOrder}, #{productCategoryId}, #{createdBy}, #{modifiedBy}, #{modifiedDate})"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
@@ -37,7 +37,7 @@ public interface ProgramProductMapper {
   @Select(("SELECT * FROM program_products WHERE programId = #{programId} AND productId = #{productId}"))
   ProgramProduct getByProgramAndProductId(@Param("programId") Long programId, @Param("productId") Long productId);
 
-  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, displayOrder=#{displayOrder}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
+  @Update("UPDATE program_products SET  dosesPerMonth=#{dosesPerMonth}, active=#{active}, displayOrder=#{displayOrder},productCategoryId = #{productCategoryId}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate} WHERE programId=#{program.id} AND productId=#{product.id}")
   void update(ProgramProduct programProduct);
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} and pp.active = true",
@@ -55,7 +55,7 @@ public interface ProgramProductMapper {
 
 
   @Select({"SELECT " +
-      "   pp.id as id, pp.active, p.id as programId,p.name as programName, coalesce(pp.currentPrice,0) as currentPrice, coalesce(pp.dosesPerMonth,1) as dosesPerMonth, productId = #{id}, pp.displayOrder , pp.createdBy, pp.modifiedBy, pp.createdDate, pp.modifiedDate " +
+      "   pp.id as id, pp.active, p.id as programId,p.name as programName, coalesce(pp.currentPrice,0) as currentPrice, coalesce(pp.dosesPerMonth,1) as dosesPerMonth, productId = #{id}, pp.displayOrder, pp.productCategoryId , pp.createdBy, pp.modifiedBy, pp.createdDate, pp.modifiedDate " +
       " FROM programs p " +
       " left outer join ( select * from program_products where productId = #{id} ) pp on p.id = pp.programId" +
       " ORDER BY p.name "})
