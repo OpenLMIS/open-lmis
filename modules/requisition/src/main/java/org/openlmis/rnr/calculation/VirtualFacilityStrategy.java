@@ -10,8 +10,6 @@
 
 package org.openlmis.rnr.calculation;
 
-import org.openlmis.core.domain.ProcessingPeriod;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 public class VirtualFacilityStrategy extends RnrCalculationStrategy {
 
   @Override
-  public Integer calculateAmc(ProcessingPeriod period, final Integer normalizedConsumption, final List<Integer> previousNormalizedConsumptions) {
+  public Integer calculateAmc(final Integer normalizedConsumption, final List<Integer> previousNormalizedConsumptions) {
     ArrayList<Integer> normalizedConsumptions = new ArrayList<Integer>() {{
       add(normalizedConsumption);
       addAll(previousNormalizedConsumptions);

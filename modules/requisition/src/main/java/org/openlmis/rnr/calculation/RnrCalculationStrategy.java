@@ -14,13 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.repository.RequisitionRepository;
 
+import java.math.BigDecimal;
 import java.math.MathContext;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.floor;
@@ -84,14 +85,27 @@ public abstract class RnrCalculationStrategy {
     return totalLossesAndAdjustments;
   }
 
+  public Integer calculateAmc(final Integer normalizedConsumption, final List<Integer> previousNormalizedConsumptions) {
+    ArrayList<Integer> normalizedConsumptions = new ArrayList<Integer>() {{
+      add(normalizedConsumption);
+      addAll(previousNormalizedConsumptions);
+    }};
+    Integer amc = getSum(normalizedConsumptions);
+    return new BigDecimal(amc).divide(new BigDecimal(normalizedConsumptions.size()), 0, HALF_UP).intValue();
+  }
+
+
   public abstract Integer calculateNormalizedConsumption(Integer stockOutDays, Integer quantityDispensed,
                                                          Integer newPatientCount, Integer dosesPerMonth,
                                                          Integer dosesPerDispensingUnit, Integer D);
 
-
-  public abstract Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption,
-                                       List<Integer> previousNormalizedConsumptions);
-
+  private Integer getSum(List<Integer> previousNormalizedConsumptions) {
+    Integer amc = 0;
+    for (Integer nc : previousNormalizedConsumptions) {
+      amc += nc;
+    }
+    return amc;
+  }
 
   private boolean isAnyNull(Integer... fields) {
     for (Integer field : fields) {

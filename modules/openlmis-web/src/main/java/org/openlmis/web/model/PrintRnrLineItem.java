@@ -63,7 +63,7 @@ public class PrintRnrLineItem {
 
   private void calculateAmc(RnrCalculationStrategy calcStrategy, ProcessingPeriod period) {
     try {
-      rnrLineItem.calculateAmc(calcStrategy, period);
+      rnrLineItem.calculateAmc(calcStrategy);
     } catch (NullPointerException e) {
       rnrLineItem.setAmc(null);
     }

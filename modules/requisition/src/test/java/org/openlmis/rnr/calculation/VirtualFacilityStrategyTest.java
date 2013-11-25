@@ -12,7 +12,6 @@ package org.openlmis.rnr.calculation;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.List;
@@ -110,7 +109,7 @@ public class VirtualFacilityStrategyTest {
     Integer normalizedConsumption = 4;
     List<Integer> previousNormalizedConsumption = asList(99, 8);
 
-    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(normalizedConsumption, previousNormalizedConsumption);
 
     assertThat(amc, is(37));
   }
@@ -120,7 +119,7 @@ public class VirtualFacilityStrategyTest {
     Integer normalizedConsumption = 4;
     List<Integer> previousNormalizedConsumption = asList();
 
-    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(normalizedConsumption, previousNormalizedConsumption);
 
     assertThat(amc, is(4));
   }
@@ -130,7 +129,7 @@ public class VirtualFacilityStrategyTest {
     Integer normalizedConsumption = 44;
     List<Integer> previousNormalizedConsumption = asList(66);
 
-    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(normalizedConsumption, previousNormalizedConsumption);
 
     assertThat(amc, is(55));
   }
@@ -140,7 +139,7 @@ public class VirtualFacilityStrategyTest {
     Integer normalizedConsumption = 44;
     List<Integer> previousNormalizedConsumption = asList(67);
 
-    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(normalizedConsumption, previousNormalizedConsumption);
 
     assertThat(amc, is(56));
   }
@@ -150,7 +149,7 @@ public class VirtualFacilityStrategyTest {
     Integer normalizedConsumption = 4;
     List<Integer> previousNormalizedConsumption = asList(6, 3);
 
-    Integer amc = new VirtualFacilityStrategy().calculateAmc(new ProcessingPeriod(), normalizedConsumption, previousNormalizedConsumption);
+    Integer amc = new VirtualFacilityStrategy().calculateAmc(normalizedConsumption, previousNormalizedConsumption);
 
     assertThat(amc, is(4));
   }

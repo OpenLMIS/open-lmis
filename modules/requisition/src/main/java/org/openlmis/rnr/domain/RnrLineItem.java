@@ -209,7 +209,7 @@ public class RnrLineItem extends LineItem {
     calculateNormalizedConsumption(calcStrategy);
 
     if (rnrStatus == AUTHORIZED) {
-      calculateAmc(calcStrategy, period);
+      calculateAmc(calcStrategy);
       calculateMaxStockQuantity(calcStrategy);
       calculateOrderQuantity(calcStrategy);
     }
@@ -217,8 +217,8 @@ public class RnrLineItem extends LineItem {
     calculatePacksToShip(calcStrategy);
   }
 
-  public void calculateAmc(RnrCalculationStrategy calcStrategy, ProcessingPeriod period) {
-    amc = calcStrategy.calculateAmc(period, normalizedConsumption, previousNormalizedConsumptions);
+  public void calculateAmc(RnrCalculationStrategy calcStrategy) {
+    amc = calcStrategy.calculateAmc(normalizedConsumption, previousNormalizedConsumptions);
   }
 
   public void calculatePacksToShip(RnrCalculationStrategy calcStrategy) {

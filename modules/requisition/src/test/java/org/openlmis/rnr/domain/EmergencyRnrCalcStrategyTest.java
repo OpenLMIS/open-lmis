@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
 
@@ -41,7 +40,7 @@ public class EmergencyRnrCalcStrategyTest {
 
   @Test
   public void shouldReturnAmcAsNull() throws Exception {
-    Integer amc = emergencyCalcStrategy.calculateAmc(new ProcessingPeriod(), 3, Collections.<Integer>emptyList());
+    Integer amc = emergencyCalcStrategy.calculateAmc(3, Collections.<Integer>emptyList());
 
     assertThat(amc, is(nullValue()));
   }

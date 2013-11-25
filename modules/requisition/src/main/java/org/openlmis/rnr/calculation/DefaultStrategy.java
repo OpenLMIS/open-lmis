@@ -12,7 +12,6 @@ package org.openlmis.rnr.calculation;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 
@@ -24,17 +23,7 @@ import static java.math.RoundingMode.HALF_UP;
 import static org.openlmis.rnr.domain.RnrLineItem.MULTIPLIER;
 import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
-
 public class DefaultStrategy extends RnrCalculationStrategy {
-
-  public Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption,
-                              List<Integer> previousNormalizedConsumptions) {
-    int denominator = period.getNumberOfMonths() * (1 + previousNormalizedConsumptions.size());
-    return (new BigDecimal(normalizedConsumption).add(sumOfPreviousNormalizedConsumptions(previousNormalizedConsumptions))).
-        divide(new BigDecimal(denominator), DECIMAL64).setScale(0, HALF_UP).intValue();
-
-  }
-
 
   public Integer calculateNormalizedConsumption(Integer stockOutDays,
                                                 Integer quantityDispensed,
@@ -57,7 +46,6 @@ public class DefaultStrategy extends RnrCalculationStrategy {
 
     return (consumptionAdjustedWithStockOutDays.add(adjustmentForNewPatients)).intValue();
   }
-
 
   public Integer calculateStockInHand(Integer beginningBalance, Integer quantityReceived, Integer totalLossesAndAdjustments, Integer quantityDispensed) {
     return beginningBalance + quantityReceived + totalLossesAndAdjustments - quantityDispensed;
@@ -87,13 +75,5 @@ public class DefaultStrategy extends RnrCalculationStrategy {
         lossesAndAdjustmentsTypes, predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
-  }
-
-  private BigDecimal sumOfPreviousNormalizedConsumptions(List<Integer> previousNormalizedConsumptions) {
-    Integer total = 0;
-    for (Integer consumption : previousNormalizedConsumptions) {
-      total += consumption;
-    }
-    return new BigDecimal(total);
   }
 }
