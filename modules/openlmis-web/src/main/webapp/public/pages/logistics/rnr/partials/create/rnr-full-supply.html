@@ -33,10 +33,8 @@
       <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
         <span ng-bind="column.label"></span>
         <span ng-if="column.name == 'skipped'">
-        <a href="" id="selectAll" ng-click="rnr.skipAll = true; toggleSkipFlag()" openlmis-message="label.select.all"
-           ng-disabled="formDisabled"></a>&nbsp;|
-        <a href="" id="selectNone" ng-click="rnr.skipAll = false; toggleSkipFlag()" openlmis-message="label.select.none"
-           ng-disabled="formDisabled"></a>
+        <a href="" id="selectAll" ng-click="setSkipAll(true)" openlmis-message="label.select.all"></a>&nbsp;|
+        <a href="" id="selectNone" ng-click="setSkipAll(false)" openlmis-message="label.select.none"></a>
         </span>
       </th>
     </tr>
