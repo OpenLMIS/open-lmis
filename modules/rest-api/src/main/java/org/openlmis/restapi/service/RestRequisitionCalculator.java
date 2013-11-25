@@ -11,27 +11,37 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
+import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
-public class RestRequisitionValidator {
+public class RestRequisitionCalculator {
 
   @Autowired
   private RequisitionService requisitionService;
 
   @Autowired
   private MessageService messageService;
+
+  @Autowired
+  private RnrTemplateService rnrTemplateService;
+
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
 
   public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
 
@@ -65,4 +75,29 @@ public class RestRequisitionValidator {
     }
   }
 
+  public Rnr setDefaultValues(Rnr requisition) {
+    Integer M = processingScheduleService.findM(requisition.getPeriod());
+
+    List<ProcessingPeriod> nPreviousPeriods = M >= 3 ? processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 1) : processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 2);
+    Date trackingDate = nPreviousPeriods.size() > 0 ? nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate() : requisition.getPeriod().getStartDate();
+
+    for (RnrLineItem rnrLineItem : requisition.getFullSupplyLineItems()) {
+      if (rnrLineItem.getSkipped())
+        continue;
+      List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+      setBeginningBalance(rnrLineItem, nRnrLineItems);
+    }
+    return requisition;
+  }
+
+  private void setBeginningBalance(RnrLineItem rnrLineItem, List<RnrLineItem> nRnrLineItems) {
+    if (rnrLineItem.getBeginningBalance() != null)
+      return;
+    if (nRnrLineItems.size() != 0) {
+      rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
+      return;
+    }
+    Integer beginningBalance = rnrLineItem.getStockInHand() != null ? rnrLineItem.getStockInHand() : 0;
+    rnrLineItem.setBeginningBalance(beginningBalance);
+  }
 }

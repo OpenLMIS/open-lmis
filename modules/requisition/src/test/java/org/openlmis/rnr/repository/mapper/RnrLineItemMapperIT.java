@@ -409,7 +409,6 @@ public class RnrLineItemMapperIT {
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
     lineItem.setNormalizedConsumption(3);
     lineItem.setBeginningBalance(0);
-    lineItem.setQuantityReceived(1);
     rnrLineItemMapper.update(lineItem);
 
     rnr.setStatus(AUTHORIZED);
@@ -439,7 +438,6 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItems.size(), is(1));
     assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(3));
     assertThat(rnrLineItems.get(0).getBeginningBalance(), is(0));
-    assertThat(rnrLineItems.get(0).getQuantityReceived(), is(1));
   }
 
   @Test

@@ -61,22 +61,24 @@ public class CalculationService {
   }
 
   public void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
+    List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5);
+    Integer M = processingScheduleService.findM(requisition.getPeriod());
 
-    if (fivePreviousPeriods.size() == 0) {
-      requisition.setFieldsAccordingToTemplateFrom(null, rnrTemplate, regimenTemplate);
-      fillPreviousNCsInLineItems(requisition, requisition.getPeriod().getNumberOfMonths(), requisition.getPeriod().getStartDate());
-      return;
+    Rnr previousRequisition = null;
+    Date trackingDate;
+
+    if (fivePreviousPeriods.size() != 0) {
+      previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
+        requisition.getProgram(), fivePreviousPeriods.get(0));
+      if (M == 1)
+        trackingDate = getDateForNthPreviousPeriod(fivePreviousPeriods, 4);
+      else
+        trackingDate = M == 2 ? getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
+    } else {
+      trackingDate = requisition.getPeriod().getStartDate();
     }
 
-    Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-      requisition.getProgram(), fivePreviousPeriods.get(0));
     requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
-
-    Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
-    Date trackingDate = (M == 1) ? getDateForNthPreviousPeriod(fivePreviousPeriods, 4) : (M == 2) ?
-      getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
-
     fillPreviousNCsInLineItems(requisition, M, trackingDate);
   }
 
@@ -104,7 +106,7 @@ public class CalculationService {
 
   private Date findDateToStartTracking(Rnr requisition) {
     Date startDate;
-    List<ProcessingPeriod> twoPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
+    List<ProcessingPeriod> twoPreviousPeriods = processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 2);
 
     if (twoPreviousPeriods.size() != 0) {
       Integer M = twoPreviousPeriods.get(0).getNumberOfMonths();

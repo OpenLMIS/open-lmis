@@ -57,7 +57,7 @@ public class RestRequisitionService {
   private RnrTemplateService rnrTemplateService;
 
   @Autowired
-  private RestRequisitionValidator restRequisitionValidator;
+  private RestRequisitionCalculator restRequisitionCalculator;
 
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
@@ -68,13 +68,15 @@ public class RestRequisitionService {
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
-    restRequisitionValidator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
 
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
 
-    restRequisitionValidator.validateProducts(report.getProducts(), rnr);
+    restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
+
+    restRequisitionCalculator.setDefaultValues(rnr);
 
     requisitionService.save(rnr);
 
@@ -96,7 +98,7 @@ public class RestRequisitionService {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
-    restRequisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+    restRequisitionCalculator.validateProducts(report.getProducts(), savedRequisition);
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition, report.getApproverName());
