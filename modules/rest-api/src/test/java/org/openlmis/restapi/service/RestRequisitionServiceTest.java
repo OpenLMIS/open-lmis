@@ -26,7 +26,6 @@ import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.restapi.RequisitionValidator;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.RequisitionBuilder;
@@ -75,7 +74,7 @@ public class RestRequisitionServiceTest {
   private RnrTemplateService rnrTemplateService;
 
   @Mock
-  private RequisitionValidator requisitionValidator;
+  private RestRequisitionValidator restRequisitionValidator;
 
   @InjectMocks
   RestRequisitionService service;
@@ -151,7 +150,7 @@ public class RestRequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
 
-    doThrow(new DataException("rnr.error")).when(requisitionValidator).validatePeriod(any(Facility.class), any(Program.class));
+    doThrow(new DataException("rnr.error")).when(restRequisitionValidator).validatePeriod(any(Facility.class), any(Program.class));
 
     service.submitReport(report, 1l);
 
@@ -165,7 +164,7 @@ public class RestRequisitionServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
 
-    doThrow(new DataException("rnr.error")).when(requisitionValidator).validateProducts(any(List.class), any(Rnr.class));
+    doThrow(new DataException("rnr.error")).when(restRequisitionValidator).validateProducts(any(List.class), any(Rnr.class));
 
     service.submitReport(report, 1L);
 
@@ -297,7 +296,7 @@ public class RestRequisitionServiceTest {
     when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
     when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
     when(requisitionService.initiate(facility, program, userId, false)).thenReturn(rnr);
-    doThrow(new DataException("invalid product codes")).when(requisitionValidator).validateProducts(productList, rnr);
+    doThrow(new DataException("invalid product codes")).when(restRequisitionValidator).validateProducts(productList, rnr);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("invalid product codes");
@@ -375,10 +374,10 @@ public class RestRequisitionServiceTest {
     Integer nullInteger = null;
     String nullString = null;
     RnrLineItem initiatedLineItem = make(a(defaultRnrLineItem, with(productCode, "P10"), with(stockInHand, nullInteger),
-        with(quantityDispensed, nullInteger), with(beginningBalance, nullInteger), with(quantityReceived, nullInteger),
-        with(totalLossesAndAdjustments, 0), with(newPatientCount, 0), with(stockOutDays, 0), with(quantityRequested, nullInteger),
-        with(reasonForRequestedQuantity, nullString), with(remarks, nullString),
-        with(skipped, false)));
+      with(quantityDispensed, nullInteger), with(beginningBalance, nullInteger), with(quantityReceived, nullInteger),
+      with(totalLossesAndAdjustments, 0), with(newPatientCount, 0), with(stockOutDays, 0), with(quantityRequested, nullInteger),
+      with(reasonForRequestedQuantity, nullString), with(remarks, nullString),
+      with(skipped, false)));
 
     report.setProducts(asList(reportedLineItem));
 

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.Â  If not, see http://www.gnu.org/licenses. Â For additional information contact info@OpenLMIS.org.Â 
  */
 
-package org.openlmis.restapi;
+package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class RequisitionValidator {
+public class RestRequisitionValidator {
 
   @Autowired
   private RequisitionService requisitionService;
@@ -42,7 +42,7 @@ public class RequisitionValidator {
       searchCriteria.setFacilityId(reportingFacility.getId());
 
       if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+        (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
         throw new DataException("error.rnr.previous.not.filled");
       }
     }

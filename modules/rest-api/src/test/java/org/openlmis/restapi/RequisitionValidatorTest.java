@@ -24,6 +24,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.restapi.service.RestRequisitionValidator;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -51,7 +52,7 @@ public class RequisitionValidatorTest {
   public ExpectedException expectedException = ExpectedException.none();
 
   @InjectMocks
-  private RequisitionValidator requisitionValidator;
+  private RestRequisitionValidator restRequisitionValidator;
 
 
   @Test
@@ -60,7 +61,7 @@ public class RequisitionValidatorTest {
 
     facility.setVirtualFacility(true);
 
-    requisitionValidator.validatePeriod(facility, new Program());
+    restRequisitionValidator.validatePeriod(facility, new Program());
   }
 
   @Test
@@ -72,7 +73,7 @@ public class RequisitionValidatorTest {
     when(requisitionService.getCurrentPeriod(any(RequisitionSearchCriteria.class))).thenReturn(processingPeriod);
     when(requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram)).thenReturn(processingPeriod);
 
-    requisitionValidator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionValidator.validatePeriod(reportingFacility, reportingProgram);
   }
 
   @Test
@@ -88,7 +89,7 @@ public class RequisitionValidatorTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.rnr.previous.not.filled");
 
-    requisitionValidator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionValidator.validatePeriod(reportingFacility, reportingProgram);
   }
 
 
@@ -98,7 +99,7 @@ public class RequisitionValidatorTest {
     Report report = new Report();
     Rnr savedRequisition = new Rnr();
 
-    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+    restRequisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
   }
 
@@ -114,7 +115,7 @@ public class RequisitionValidatorTest {
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem2)).thenReturn(rnrLineItem2);
     when(savedRequisition.getNonSkippedLineItems()).thenReturn(asList(rnrLineItem1, rnrLineItem2));
 
-    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+    restRequisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem1);
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem2);
@@ -136,7 +137,7 @@ public class RequisitionValidatorTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("invalid products [P12]");
 
-    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+    restRequisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem1);
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem2);

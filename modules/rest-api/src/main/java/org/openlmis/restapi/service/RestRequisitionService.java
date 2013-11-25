@@ -19,7 +19,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.restapi.RequisitionValidator;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Column;
@@ -58,7 +57,7 @@ public class RestRequisitionService {
   private RnrTemplateService rnrTemplateService;
 
   @Autowired
-  private RequisitionValidator requisitionValidator;
+  private RestRequisitionValidator restRequisitionValidator;
 
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
@@ -69,11 +68,11 @@ public class RestRequisitionService {
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
-    requisitionValidator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionValidator.validatePeriod(reportingFacility, reportingProgram);
 
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
 
-    requisitionValidator.validateProducts(report.getProducts(), rnr);
+    restRequisitionValidator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
 
@@ -97,7 +96,7 @@ public class RestRequisitionService {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
-    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+    restRequisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition, report.getApproverName());
