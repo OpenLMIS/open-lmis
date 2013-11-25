@@ -10,6 +10,7 @@
 
 package org.openlmis.rnr.service;
 
+import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingScheduleService;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import static org.apache.commons.collections.CollectionUtils.collect;
 
 @Service
 public class CalculationService {
@@ -67,12 +70,12 @@ public class CalculationService {
     }
 
     Rnr previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
-        requisition.getProgram(), fivePreviousPeriods.get(0));
+      requisition.getProgram(), fivePreviousPeriods.get(0));
     requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
     Date trackingDate = (M == 1) ? getDateForNthPreviousPeriod(fivePreviousPeriods, 4) : (M == 2) ?
-        getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
+      getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
 
     fillPreviousNCsInLineItems(requisition, M, trackingDate);
   }
@@ -83,8 +86,14 @@ public class CalculationService {
       return;
 
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
-      List<Integer> nNormalizedConsumptions = requisitionRepository.getNNormalizedConsumptions(lineItem.getProductCode(),
-          requisition, getNumberOfPreviousNCToTrack(m), trackingDate);
+      List<RnrLineItem> previousLineItems = requisitionRepository.getNRnrLineItems(lineItem.getProductCode(),
+        requisition, getNumberOfPreviousNCToTrack(m), trackingDate);
+      List<Integer> nNormalizedConsumptions = (List<Integer>) collect(previousLineItems, new Transformer() {
+        @Override
+        public Object transform(Object o) {
+          return ((RnrLineItem) o).getNormalizedConsumption();
+        }
+      });
       lineItem.setPreviousNormalizedConsumptions(nNormalizedConsumptions);
     }
   }
@@ -100,7 +109,7 @@ public class CalculationService {
     if (twoPreviousPeriods.size() != 0) {
       Integer M = twoPreviousPeriods.get(0).getNumberOfMonths();
       startDate = (M < 3 && twoPreviousPeriods.size() != 1) ? twoPreviousPeriods.get(1).getStartDate() :
-          twoPreviousPeriods.get(0).getStartDate();
+        twoPreviousPeriods.get(0).getStartDate();
     } else {
       startDate = requisition.getPeriod().getStartDate();
     }

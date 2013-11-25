@@ -193,7 +193,7 @@ public class RequisitionRepository {
                                                                    Integer pageSize, Long userId, Right right, String sortBy,
                                                                    String sortDirection) {
     return requisitionMapper.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal, pageNumber, pageSize,
-        userId, right, sortBy, sortDirection);
+      userId, right, sortBy, sortDirection);
   }
 
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, Right right) {
@@ -212,8 +212,8 @@ public class RequisitionRepository {
     return rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(rnr, productCode, periodStartDate);
   }
 
-  public List<Integer> getNNormalizedConsumptions(String productCode, Rnr rnr, Integer n, Date startDate) {
-    return rnrLineItemMapper.getNNormalizedConsumptions(productCode, rnr, n, startDate);
+  public List<RnrLineItem> getNRnrLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
+    return rnrLineItemMapper.getNRnrLineItems(productCode, rnr, n, startDate);
   }
 }
 
