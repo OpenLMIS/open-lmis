@@ -68,7 +68,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
-
+    assertEquals("some random name",dbWrapper.getApproverName(id));
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
 
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":"));
@@ -178,6 +178,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+    assertEquals("some random name",dbWrapper.getApproverName(id));
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
 
@@ -206,6 +207,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+    assertEquals("some random name",dbWrapper.getApproverName(id));
     dbWrapper.updateActiveStatusOfProgram("HIV", true);
   }
 
@@ -234,7 +236,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
-
+    assertEquals("some random name",dbWrapper.getApproverName(id));
     dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 
