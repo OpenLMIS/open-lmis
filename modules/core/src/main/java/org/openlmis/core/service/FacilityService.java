@@ -217,8 +217,8 @@ public class FacilityService {
     return facilityRepository.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
   }
 
-  public List<Facility> getAllByModifiedDate(Date modifiedDate) {
-    return facilityRepository.getAllByModifiedDate(modifiedDate);
+  public List<Facility> getAllParentsByModifiedDate(Date modifiedDate) {
+    return facilityRepository.getAllParentsByModifiedDate(modifiedDate);
   }
 
   public Facility getOperativeFacilityByCode(String facilityCode) {
