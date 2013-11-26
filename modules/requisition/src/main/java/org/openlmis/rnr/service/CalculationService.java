@@ -76,11 +76,12 @@ public class CalculationService {
         requisition.getProgram(), fivePreviousPeriods.get(0));
     requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
-    Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
-    Date trackingDate = (M == 1) ? getStartDateForNthPreviousPeriod(fivePreviousPeriods, 4) : (M == 2) ?
-        getStartDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
+    Integer numberOfMonths = fivePreviousPeriods.get(0).getNumberOfMonths();
+    Date trackingDate = (numberOfMonths == 1) ? getStartDateForNthPreviousPeriod(fivePreviousPeriods, 4)
+        : (numberOfMonths == 2) ? getStartDateForNthPreviousPeriod(fivePreviousPeriods, 1)
+        : fivePreviousPeriods.get(0).getStartDate();
 
-    fillPreviousNCsInLineItems(requisition, M, trackingDate);
+    fillPreviousNCsInLineItems(requisition, numberOfMonths, trackingDate);
   }
 
   private Integer getReportingDaysBasedOnRequisition(Rnr requisition, String lineItemProductCode, Date startDate, Integer M) {
@@ -101,8 +102,9 @@ public class CalculationService {
   }
 
   private void fillPreviousNCsInLineItems(Rnr requisition, Integer m, Date trackingDate) {
-    if (!requisition.isForVirtualFacility())
+    if (m >= 3 && !(requisition.isEmergency() || requisition.isForVirtualFacility())) {
       return;
+    }
 
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
       List<RnrLineItem> previousLineItems = requisitionRepository.getNRnrLineItems(lineItem.getProductCode(),

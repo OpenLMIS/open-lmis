@@ -529,6 +529,46 @@ public class RnrLineItemMapperIT {
     assertThat(lineItems.get(0).getPreviousNormalizedConsumptions(), is(asList(4, 6)));
   }
 
+  @Test
+  public void shouldNotIncludeEmergencyRnrWhileFetchingPreviousNC() throws Exception {
+    requisitionMapper.insert(rnr);
+
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    lineItem.setNormalizedConsumption(3);
+    rnrLineItemMapper.update(lineItem);
+
+    rnr.setStatus(AUTHORIZED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
+
+    Rnr emergencyRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod),
+        with(RequisitionBuilder.emergency, true)));
+    requisitionMapper.insert(emergencyRnr);
+
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    rnrLineItem.setRnrId(emergencyRnr.getId());
+    rnrLineItemMapper.insert(rnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItem.setNormalizedConsumption(9);
+    rnrLineItemMapper.update(rnrLineItem);
+
+    emergencyRnr.setStatus(AUTHORIZED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(emergencyRnr));
+
+    Rnr currentRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    RnrLineItem currentRnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    requisitionMapper.insert(currentRnr);
+
+    currentRnrLineItem.setRnrId(currentRnr.getId());
+    rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    List<RnrLineItem> lineItems = rnrLineItemMapper.getNRnrLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+
+    assertThat(lineItems.size(), is(1));
+    assertThat(lineItems.get(0).getPreviousNormalizedConsumptions(), is(asList(3)));
+  }
+
   private java.sql.Date getDateByDays(int days) {
     Calendar currentDate = Calendar.getInstance();
     currentDate.add(Calendar.DATE, days);

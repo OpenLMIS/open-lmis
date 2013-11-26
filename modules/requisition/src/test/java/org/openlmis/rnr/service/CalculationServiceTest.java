@@ -552,6 +552,59 @@ public class CalculationServiceTest {
   }
 
   @Test
+  public void shouldNotTrackPreviousRequisitionsIfRegularRnrAndMIs3() throws Exception {
+    Rnr spyRnr = spy(rnr);
+    String productCode = "Code1";
+    spyRnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 3, "previousPeriod");
+    ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 3, "secondLastPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, previousPeriod)));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(spyRnr.getFacility(), spyRnr.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(spyRnr).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(spyRnr, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5);
+    verify(requisitionRepository, never()).getNRnrLineItems(anyString(), any(Rnr.class), anyInt(), any(Date.class));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(Collections.EMPTY_LIST));
+  }
+
+  @Test
+  public void shouldTrackPreviousRequisitionsIfRegularRnrAndMIs1() throws Exception {
+    Rnr spyRnr = spy(rnr);
+    String productCode = "Code1";
+    spyRnr.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
+
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 1, "previousPeriod");
+    ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 1, "secondLastPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    RnrLineItem previousLineItem = new RnrLineItem();
+    previousLineItem.setNormalizedConsumption(5);
+    when(requisitionRepository.getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate())).thenReturn(asList(previousLineItem));
+
+    Rnr previousRnr = make(a(defaultRequisition, with(period, previousPeriod)));
+    ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+
+    when(requisitionRepository.getRegularRequisitionWithLineItems(spyRnr.getFacility(), spyRnr.getProgram(), previousPeriod)).thenReturn(previousRnr);
+    doNothing().when(spyRnr).setFieldsAccordingToTemplateFrom(previousRnr, programTemplate, regimenTemplate);
+
+    calculationService.fillFieldsForInitiatedRequisition(spyRnr, programTemplate, regimenTemplate);
+
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5);
+    verify(requisitionRepository).getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate());
+    assertThat(spyRnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(5)));
+  }
+
+  @Test
   public void shouldSetDto90daysForRegularRnrWithMEqualTo3() throws Exception {
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
