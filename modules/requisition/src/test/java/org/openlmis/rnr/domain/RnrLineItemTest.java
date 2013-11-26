@@ -384,7 +384,7 @@ public class RnrLineItemTest {
     RnrLineItem spyLineItem = spy(lineItem);
     doNothing().when(spyLineItem, "calculateNormalizedConsumption", calcStrategy);
 
-    spyLineItem.calculateForFullSupply(calcStrategy, period, template, AUTHORIZED, lossesAndAdjustmentsList);
+    spyLineItem.calculateForFullSupply(calcStrategy, template, AUTHORIZED, lossesAndAdjustmentsList);
 
     verify(spyLineItem).calculateAmc(calcStrategy);
     verify(spyLineItem).calculateMaxStockQuantity(calcStrategy);
@@ -528,7 +528,7 @@ public class RnrLineItemTest {
       add(make(a(defaultRnrColumn, with(source, USER_INPUT), with(columnName, ProgramRnrTemplate.QUANTITY_DISPENSED))));
     }};
     lineItem.setStockInHand(99);
-    lineItem.calculateForFullSupply(calcStrategy, period, new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
 
     verify(calcStrategy).calculateStockInHand(lineItem.getBeginningBalance(), lineItem.getQuantityReceived(),
         lineItem.getTotalLossesAndAdjustments(), lineItem.getQuantityDispensed());
@@ -542,7 +542,7 @@ public class RnrLineItemTest {
     }};
     ProgramRnrTemplate template = new ProgramRnrTemplate(columns);
     lineItem.setStockInHand(66);
-    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, template, SUBMITTED, lossesAndAdjustmentsList);
 
     verify(calcStrategy, never()).calculateStockInHand(lineItem.getBeginningBalance(), lineItem.getQuantityReceived(),
         lineItem.getTotalLossesAndAdjustments(), lineItem.getQuantityDispensed());
@@ -556,7 +556,7 @@ public class RnrLineItemTest {
     }};
     ProgramRnrTemplate template = new ProgramRnrTemplate(columns);
     lineItem.setQuantityDispensed(4);
-    lineItem.calculateForFullSupply(calcStrategy, period, template, SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, template, SUBMITTED, lossesAndAdjustmentsList);
 
     verify(calcStrategy).calculateQuantityDispensed(lineItem.getBeginningBalance(), lineItem.getQuantityReceived(),
         lineItem.getTotalLossesAndAdjustments(), lineItem.getStockInHand());
@@ -570,7 +570,7 @@ public class RnrLineItemTest {
     }};
 
     lineItem.setQuantityDispensed(0);
-    lineItem.calculateForFullSupply(calcStrategy, period, new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
+    lineItem.calculateForFullSupply(calcStrategy, new ProgramRnrTemplate(columns), SUBMITTED, lossesAndAdjustmentsList);
 
     verify(calcStrategy, never()).calculateQuantityDispensed(lineItem.getBeginningBalance(), lineItem.getQuantityReceived(),
         lineItem.getTotalLossesAndAdjustments(), lineItem.getStockInHand());

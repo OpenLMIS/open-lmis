@@ -25,7 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.floor;
+import static java.math.MathContext.DECIMAL64;
 import static java.math.RoundingMode.HALF_UP;
+import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -94,10 +96,39 @@ public abstract class RnrCalculationStrategy {
     return new BigDecimal(amc).divide(new BigDecimal(normalizedConsumptions.size()), 0, HALF_UP).intValue();
   }
 
+  public Integer calculateNormalizedConsumption(Integer stockOutDays,
+                                                Integer quantityDispensed,
+                                                Integer newPatientCount,
+                                                Integer dosesPerMonth,
+                                                Integer dosesPerDispensingUnit, Integer daysSinceLastRnr) {
 
-  public abstract Integer calculateNormalizedConsumption(Integer stockOutDays, Integer quantityDispensed,
-                                                         Integer newPatientCount, Integer dosesPerMonth,
-                                                         Integer dosesPerDispensingUnit, Integer D);
+    dosesPerDispensingUnit = Math.max(1, dosesPerDispensingUnit);
+
+    return calculateNormalizedConsumption(new BigDecimal(stockOutDays),
+        new BigDecimal(quantityDispensed),
+        new BigDecimal(newPatientCount),
+        new BigDecimal(dosesPerMonth),
+        new BigDecimal(dosesPerDispensingUnit),
+        daysSinceLastRnr);
+  }
+
+  private Integer calculateNormalizedConsumption(BigDecimal stockOutDays,
+                                                 BigDecimal quantityDispensed,
+                                                 BigDecimal newPatientCount,
+                                                 BigDecimal dosesPerMonth,
+                                                 BigDecimal dosesPerDispensingUnit, Integer daysSinceLastRnr) {
+
+    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT).setScale(0, HALF_UP));
+
+    if (daysSinceLastRnr == null || stockOutDays.compareTo(new BigDecimal(daysSinceLastRnr)) >= 0) {
+      return quantityDispensed.add(newPatientFactor).intValue();
+    }
+
+    BigDecimal daysSinceLastRequisition = new BigDecimal(daysSinceLastRnr);
+    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRequisition.subtract(stockOutDays)), 0, HALF_UP), DECIMAL64);
+
+    return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+  }
 
   private Integer getSum(List<Integer> previousNormalizedConsumptions) {
     Integer amc = 0;

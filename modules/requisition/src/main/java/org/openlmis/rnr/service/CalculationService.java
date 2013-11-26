@@ -144,7 +144,7 @@ public class CalculationService {
       if (!lineItem.getSkipped()) {
 
         lineItem.validateMandatoryFields(template);
-        lineItem.calculateForFullSupply(calcStrategy, requisition.getPeriod(), template, requisition.getStatus(), lossesAndAdjustmentsTypes);
+        lineItem.calculateForFullSupply(calcStrategy, template, requisition.getStatus(), lossesAndAdjustmentsTypes);
         lineItem.validateCalculatedFields(template);
 
         requisition.addToFullSupplyCost(lineItem.calculateCost());

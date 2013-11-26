@@ -113,7 +113,7 @@ public class CalculationServiceTest {
 
     ArgumentCaptor<DefaultStrategy> capture = forClass(DefaultStrategy.class);
 
-    verify(firstLineItem).calculateForFullSupply(capture.capture(), eq(period), eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
+    verify(firstLineItem).calculateForFullSupply(capture.capture(), eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
     assertThat(capture.getValue().getClass(), is(DefaultStrategy.class.getClass()));
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
@@ -139,7 +139,7 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     ArgumentCaptor<EmergencyRnrCalcStrategy> captor = forClass(EmergencyRnrCalcStrategy.class);
-    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(rnr.getPeriod()), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
+    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
 
     verify(rnrLineItem2).calculatePacksToShip(captor.capture());
@@ -159,7 +159,7 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     ArgumentCaptor<VirtualFacilityStrategy> captor = forClass(VirtualFacilityStrategy.class);
-    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(rnr.getPeriod()), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
+    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
     verify(rnrLineItem1).validateMandatoryFields(template);
     verify(rnrLineItem1).validateCalculatedFields(template);
     assertThat(captor.getValue().getClass(), is(VirtualFacilityStrategy.class.getClass()));
@@ -183,7 +183,6 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     verify(skippedLineItem, never()).calculateForFullSupply(any(RnrCalculationStrategy.class),
-        any(ProcessingPeriod.class),
         any(ProgramRnrTemplate.class),
         any(RnrStatus.class),
         anyListOf(LossesAndAdjustmentsType.class));

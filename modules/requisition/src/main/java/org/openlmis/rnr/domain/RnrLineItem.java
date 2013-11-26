@@ -190,7 +190,6 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateForFullSupply(RnrCalculationStrategy calcStrategy,
-                                     ProcessingPeriod period,
                                      ProgramRnrTemplate template,
                                      RnrStatus rnrStatus,
                                      List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {

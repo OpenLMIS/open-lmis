@@ -14,9 +14,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.math.MathContext.DECIMAL64;
 import static java.math.RoundingMode.HALF_UP;
-import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
 public class VirtualFacilityStrategy extends RnrCalculationStrategy {
 
@@ -36,40 +34,5 @@ public class VirtualFacilityStrategy extends RnrCalculationStrategy {
       amc += nc;
     }
     return amc;
-  }
-
-  @Override
-  public Integer calculateNormalizedConsumption(Integer stockOutDays,
-                                                Integer quantityDispensed,
-                                                Integer newPatientCount,
-                                                Integer dosesPerMonth,
-                                                Integer dosesPerDispensingUnit, Integer daysSinceLastRnr) {
-
-    dosesPerDispensingUnit = Math.max(1, dosesPerDispensingUnit);
-
-    return calculateNormalizedConsumption(new BigDecimal(stockOutDays),
-        new BigDecimal(quantityDispensed),
-        new BigDecimal(newPatientCount),
-        new BigDecimal(dosesPerMonth),
-        new BigDecimal(dosesPerDispensingUnit),
-        daysSinceLastRnr);
-  }
-
-  private Integer calculateNormalizedConsumption(BigDecimal stockOutDays,
-                                                 BigDecimal quantityDispensed,
-                                                 BigDecimal newPatientCount,
-                                                 BigDecimal dosesPerMonth,
-                                                 BigDecimal dosesPerDispensingUnit, Integer daysSinceLastRnr) {
-
-    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT).setScale(0, HALF_UP));
-
-    if (daysSinceLastRnr == null || stockOutDays.compareTo(new BigDecimal(daysSinceLastRnr)) >= 0) {
-      return quantityDispensed.add(newPatientFactor).intValue();
-    }
-
-    BigDecimal daysSinceLastRequisition = new BigDecimal(daysSinceLastRnr);
-    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRequisition.subtract(stockOutDays)), 0, HALF_UP), DECIMAL64);
-
-    return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }
 }
