@@ -57,7 +57,7 @@ public class RestRequisitionCalculator {
       searchCriteria.setFacilityId(reportingFacility.getId());
 
       if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-        (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
         throw new DataException("error.rnr.previous.not.filled");
       }
     }
@@ -83,13 +83,14 @@ public class RestRequisitionCalculator {
   public Rnr setDefaultValues(Rnr requisition) {
     Integer M = processingScheduleService.findM(requisition.getPeriod());
 
-    List<ProcessingPeriod> nPreviousPeriods = M >= 3 ? processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 1) : processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
-    Date trackingDate = nPreviousPeriods.size() > 0 ? nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate() : requisition.getPeriod().getStartDate();
+    List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
+    Date trackingDate = requisition.getPeriod().getStartDate();
 
-    for (RnrLineItem rnrLineItem : requisition.getFullSupplyLineItems()) {
-      if (rnrLineItem.getSkipped())
-        continue;
+    if (nPreviousPeriods.size() != 0) {
+      trackingDate = M >= 3 ? nPreviousPeriods.get(0).getStartDate() : nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate();
+    }
 
+    for (RnrLineItem rnrLineItem : requisition.getNonSkippedLineItems()) {
       setBeginningBalance(rnrLineItem, requisition, trackingDate);
       setQuantityReceived(rnrLineItem, requisition, trackingDate);
     }
@@ -99,6 +100,7 @@ public class RestRequisitionCalculator {
   private void setQuantityReceived(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
     if (rnrLineItem.getQuantityReceived() != null)
       return;
+
     List<PODLineItem> nPodLineItems = podService.getNPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
 
     Integer quantityReceived = nPodLineItems.size() != 0 ? nPodLineItems.get(0).getQuantityReceived() : 0;
@@ -109,11 +111,14 @@ public class RestRequisitionCalculator {
   private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
     if (rnrLineItem.getBeginningBalance() != null)
       return;
+
     List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+
     if (nRnrLineItems.size() != 0) {
       rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
       return;
     }
+
     Integer beginningBalance = rnrLineItem.getStockInHand() != null ? rnrLineItem.getStockInHand() : 0;
     rnrLineItem.setBeginningBalance(beginningBalance);
   }

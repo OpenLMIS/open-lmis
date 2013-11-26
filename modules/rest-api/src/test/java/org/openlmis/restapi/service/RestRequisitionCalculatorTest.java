@@ -53,7 +53,6 @@ import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 @RunWith(PowerMockRunner.class)
 public class RestRequisitionCalculatorTest {
 
-
   @Mock
   private RequisitionService requisitionService;
 
@@ -70,7 +69,6 @@ public class RestRequisitionCalculatorTest {
   public ExpectedException expectedException = ExpectedException.none();
   @InjectMocks
   private RestRequisitionCalculator restRequisitionCalculator;
-
 
   @Test
   public void shouldSkipPeriodValidationForVirtualFacility() throws Exception {
@@ -109,7 +107,6 @@ public class RestRequisitionCalculatorTest {
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
   }
 
-
   @Test
   public void shouldPassProductValidationIfNoneExist() throws Exception {
 
@@ -117,7 +114,6 @@ public class RestRequisitionCalculatorTest {
     Rnr savedRequisition = new Rnr();
 
     restRequisitionCalculator.validateProducts(report.getProducts(), savedRequisition);
-
   }
 
   @Test
@@ -169,7 +165,7 @@ public class RestRequisitionCalculatorTest {
 
     Date trackingDate = new Date();
     ProcessingPeriod previousPeriod = make(a(defaultProcessingPeriod, with(startDate, trackingDate)));
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 1)).thenReturn(asList(previousPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(asList(previousPeriod));
 
     when(requisitionService.getNRnrLineItems("P121", requisition, 1, trackingDate))
       .thenReturn(asList(make(a(defaultRnrLineItem, with(stockInHand, 45)))));
@@ -314,7 +310,7 @@ public class RestRequisitionCalculatorTest {
     List<PODLineItem> podLineItems = asList(new PODLineItem(1l, productCode, 100));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(3);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 1)).thenReturn(asList(previousPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(asList(previousPeriod));
     when(podService.getNPodLineItems(productCode, requisition, 1, trackingDate)).thenReturn(podLineItems);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
