@@ -23,7 +23,7 @@ import java.util.List;
 @Repository
 public interface PODMapper {
 
-  @Insert({"INSERT INTO pod_line_items (podId, productCode, quantityReceived, createdBy, modifiedBy) values ",
+  @Insert({"INSERT INTO pod_line_items (podId, productCode, quantityReceived, createdBy, modifiedBy) values",
     "(#{podId}, #{productCode}, #{quantityReceived}, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(PODLineItem podLineItem);
@@ -31,7 +31,8 @@ public interface PODMapper {
   @Select("SELECT * FROM pod_line_items where podId = #{podId}")
   List<PODLineItem> getPODLineItemsByPODId(Long podId);
 
-  @Insert("INSERT INTO pod (orderId, receivedDate, createdBy, modifiedBy) values (#{orderId}, DEFAULT, #{createdBy}, #{modifiedBy} )")
+  @Insert({"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) values ",
+    "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, DEFAULT, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(POD pod);
 
