@@ -18,9 +18,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Right;
-import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductService;
@@ -117,6 +115,8 @@ public class PODServiceTest {
     order.setSupplyLine(supplyLine);
     when(order.getSupplyLine()).thenReturn(supplyLine);
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
+    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
     podService.updatePOD(pod);
 
     verify(order).setStatus(OrderStatus.RECEIVED);
@@ -147,6 +147,8 @@ public class PODServiceTest {
     when(order.getSupplyLine()).thenReturn(supplyLine);
     when(messageService.message("error.invalid.product.code", invalidProducts.toString())).thenReturn("Invalid Product");
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
+    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Invalid Product");
@@ -185,7 +187,7 @@ public class PODServiceTest {
   @Test
   public void shouldFillPODWithFacilityProgramAndPeriodBeforeInserting() throws Exception {
     pod = spy(pod);
-    Rnr requisition = new Rnr();
+    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
     when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
     when(fulfillmentPermissionService.hasPermission(anyLong(), anyLong(), any(Right.class))).thenReturn(true);
     SupplyLine supplyLine = new SupplyLine();
@@ -193,7 +195,7 @@ public class PODServiceTest {
     supplyLine.setSupplyingFacility(supplyingFacility);
     Order order = new Order(orderId);
     order.setSupplyLine(supplyLine);
-
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
     when(orderService.getOrder(pod.getOrderId())).thenReturn(order);
 
 
