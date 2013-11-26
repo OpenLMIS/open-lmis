@@ -123,7 +123,7 @@ public interface RnrLineItemMapper {
     "ORDER BY RSC.createdDate DESC LIMIT 1"})
   Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
 
-  @Select({"SELECT RLI.normalizedConsumption, RLI.beginningBalance FROM requisition_line_items RLI",
+  @Select({"SELECT RLI.normalizedConsumption, RLI.stockInHand FROM requisition_line_items RLI",
     "INNER JOIN requisitions R ON R.id = RLI.rnrId",
     "AND R.facilityId = #{rnr.facility.id}",
     "AND R.programId = #{rnr.program.id}",

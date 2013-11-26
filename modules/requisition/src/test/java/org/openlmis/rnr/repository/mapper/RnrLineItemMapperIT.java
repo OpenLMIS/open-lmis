@@ -408,7 +408,7 @@ public class RnrLineItemMapperIT {
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
     rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
     lineItem.setNormalizedConsumption(3);
-    lineItem.setBeginningBalance(0);
+    lineItem.setStockInHand(0);
     rnrLineItemMapper.update(lineItem);
 
     rnr.setStatus(AUTHORIZED);
@@ -437,7 +437,7 @@ public class RnrLineItemMapperIT {
 
     assertThat(rnrLineItems.size(), is(1));
     assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(3));
-    assertThat(rnrLineItems.get(0).getBeginningBalance(), is(0));
+    assertThat(rnrLineItems.get(0).getStockInHand(), is(0));
   }
 
   @Test
