@@ -10,6 +10,7 @@
 
 package org.openlmis.rnr.service;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -182,10 +183,10 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     verify(skippedLineItem, never()).calculateForFullSupply(any(RnrCalculationStrategy.class),
-      any(ProcessingPeriod.class),
-      any(ProgramRnrTemplate.class),
-      any(RnrStatus.class),
-      anyListOf(LossesAndAdjustmentsType.class));
+        any(ProcessingPeriod.class),
+        any(ProgramRnrTemplate.class),
+        any(RnrStatus.class),
+        anyListOf(LossesAndAdjustmentsType.class));
 
     verify(skippedLineItem, never()).calculateCost();
     verify(nonSkippedLineItem).calculateCost();
@@ -194,109 +195,110 @@ public class CalculationServiceTest {
 
   @Test
   public void shouldCalculateDaysDifferenceUsingCurrentPeriodIfPreviousPeriodNotPresent() throws Exception {
-    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+    Date authorizedDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+    Rnr rnr = getVirtualFacilityRnr();
 
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(Collections.EMPTY_LIST);
-    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(Collections.EMPTY_LIST);
+    when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate())).thenReturn(authorizedDateOfPreviousLineItem);
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate());
+    assertThat(lineItem.getReportingDays(), is(5));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate());
   }
 
   @Test
   public void shouldCalculateDaysDifferenceUsingPreviousPeriodIfPreviousPeriodPresentButSecondPreviousPeriodIsNotPresent() throws Exception {
-    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
-
+    Date authorizedDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+    Rnr rnr = getVirtualFacilityRnr();
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 2, "previousPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod));
-    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod));
+    when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate())).thenReturn(authorizedDateOfPreviousLineItem);
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
+    assertThat(lineItem.getReportingDays(), is(5));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
   }
 
   @Test
   public void shouldCalculateDaysDifferenceUsingSecondPreviousPeriodIfPreviousPeriodAndSecondPreviousPeriodPresent() throws Exception {
-    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
-
+    Date authorizedDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+    Rnr rnr = getVirtualFacilityRnr();
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 2, "previousPeriod");
     ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 2, "secondLastPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
-    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate())).thenReturn(authorizedDateOfPreviousLineItem);
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
+    assertThat(lineItem.getReportingDays(), is(5));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
   }
 
   @Test
   public void shouldCalculateDaysDifferenceUsingPreviousPeriodIfPreviousPeriodPresentAndNumberOfMonthsIsGreaterThanOrEqualToThree() throws Exception {
-    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
-
+    Date authorizedDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+    Rnr rnr = getVirtualFacilityRnr();
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 4, "previousPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod));
-    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod));
+    when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate())).thenReturn(authorizedDateOfPreviousLineItem);
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
+    assertThat(lineItem.getReportingDays(), is(5));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
   }
 
   @Test
   public void shouldCalculateDaysDifferenceUsingSecondPreviousPeriodIfMIsSmallerThanThree() throws Exception {
-    Date createdDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
-
+    Date authorizedDateOfPreviousLineItem = setLineItemDatesAndReturnDate();
+    Rnr rnr = getVirtualFacilityRnr();
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 2, "previousPeriod");
     ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 2, "secondLastPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
-    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate())).thenReturn(createdDateOfPreviousLineItem);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate())).thenReturn(authorizedDateOfPreviousLineItem);
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertThat(lineItem.getDaysSinceLastLineItem(), is(5));
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
+    assertThat(lineItem.getReportingDays(), is(5));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
   }
 
   @Test
   public void shouldNotCalculateDaysDifferenceIfPreviousAuthorizedLineItemIsNotPresent() throws Exception {
+    Rnr rnr = getVirtualFacilityRnr();
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
-
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 4, "previousPeriod");
     ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 2, "secondLastPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
-    when(requisitionRepository.getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate())).thenReturn(null);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate())).thenReturn(null);
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertNull(lineItem.getDaysSinceLastLineItem());
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
+    assertNull(lineItem.getReportingDays());
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
   }
 
   @Test
@@ -308,13 +310,13 @@ public class CalculationServiceTest {
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 4, "previousPeriod");
     ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 2, "secondLastPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod, secondLastPeriod));
 
-    calculationService.calculateDaysDifference(rnr);
+    calculationService.fillReportingDays(rnr);
 
-    assertNull(lineItem.getDaysSinceLastLineItem());
-    verify(processingScheduleService).getNPreviousPeriods(rnr.getPeriod(), 2);
-    verify(requisitionRepository, never()).getCreatedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
+    assertNull(lineItem.getReportingDays());
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository, never()).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), secondLastPeriod.getStartDate());
   }
 
   @Test
@@ -328,7 +330,7 @@ public class CalculationServiceTest {
     RegimenTemplate regimenTemplate = new RegimenTemplate();
     doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
 
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
@@ -336,7 +338,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
@@ -352,7 +354,7 @@ public class CalculationServiceTest {
     RegimenTemplate regimenTemplate = new RegimenTemplate();
     doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
 
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
@@ -360,7 +362,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
@@ -377,7 +379,7 @@ public class CalculationServiceTest {
     doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     RnrLineItem rnrLineItem2 = new RnrLineItem();
@@ -387,7 +389,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 2, requisition.getPeriod().getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4, 9)));
   }
@@ -401,7 +403,7 @@ public class CalculationServiceTest {
     Date trackingStartDate = new Date();
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, trackingStartDate, new Date(), 3, "previousPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
@@ -416,7 +418,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, previousPeriod.getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
@@ -432,7 +434,7 @@ public class CalculationServiceTest {
     ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, trackingStartDate, new Date(), 2, "secondLastPeriod");
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(2);
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod));
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
@@ -447,7 +449,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
@@ -461,7 +463,7 @@ public class CalculationServiceTest {
     Date trackingStartDate = DateTime.now().minusMonths(2).toDate();
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, trackingStartDate, new Date(), 2, "previousPeriod");
 
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
 
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
@@ -477,7 +479,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
@@ -494,7 +496,7 @@ public class CalculationServiceTest {
     ProcessingPeriod thirdLastPeriod = new ProcessingPeriod(4l, new Date(), new Date(), 1, "thirdLastPeriod");
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(2);
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod, thirdLastPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod, thirdLastPeriod));
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
@@ -509,7 +511,7 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
@@ -528,7 +530,7 @@ public class CalculationServiceTest {
     ProcessingPeriod fifthLastPeriod = new ProcessingPeriod(6l, trackingStartDate, new Date(), 1, "fifthLastPeriod");
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod, thirdLastPeriod, fourthLastPeriod, fifthLastPeriod));
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod, thirdLastPeriod, fourthLastPeriod, fifthLastPeriod));
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     RnrLineItem rnrLineItem2 = new RnrLineItem();
@@ -545,9 +547,44 @@ public class CalculationServiceTest {
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
-    verify(processingScheduleService).getNPreviousPeriods(requisition.getPeriod(), 5);
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 2, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4, 5)));
+  }
+
+  @Test
+  public void shouldSetDto90daysForRegularRnrWithMEqualTo3() throws Exception {
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+
+    Integer numberOfMonths = 3;
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), numberOfMonths, "previousPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod));
+
+    calculationService.fillReportingDays(rnr);
+
+    Integer expectedNumberOfDays = 90;
+    assertThat(lineItem.getReportingDays(), is(expectedNumberOfDays));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository, never()).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
+  }
+
+  @Test
+  public void shouldUseCurrentPeriodStartDateToCalculateDForEmergencyRnr() throws Exception {
+    rnr.setEmergency(true);
+    rnr.setCreatedDate(DateUtils.parseDate("01-02-12", new String[]{"dd-MM-yy"}));
+    RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
+
+    ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 3, "previousPeriod");
+
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(asList(previousPeriod));
+
+    calculationService.fillReportingDays(rnr);
+
+    Integer expectedNumberOfDays = 31;
+    assertThat(lineItem.getReportingDays(), is(expectedNumberOfDays));
+    verify(processingScheduleService).getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2);
+    verify(requisitionRepository, never()).getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), previousPeriod.getStartDate());
   }
 
   private Rnr getVirtualFacilityRnr() {
@@ -562,10 +599,10 @@ public class CalculationServiceTest {
     Calendar previousDate = (Calendar) currentDate.clone();
     previousDate.add(Calendar.DATE, -5);
 
-    Date createdDateOfPreviousLineItem = new Date(previousDate.getTimeInMillis());
+    Date authorizedDateOfPreviousLineItem = new Date(previousDate.getTimeInMillis());
     Date createdDateOfCurrentLineItem = new Date(currentDate.getTimeInMillis());
     rnr.setCreatedDate(createdDateOfCurrentLineItem);
-    return createdDateOfPreviousLineItem;
+    return authorizedDateOfPreviousLineItem;
   }
 
 }

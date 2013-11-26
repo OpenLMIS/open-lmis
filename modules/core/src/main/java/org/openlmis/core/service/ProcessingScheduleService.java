@@ -115,7 +115,7 @@ public class ProcessingScheduleService {
     return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
   }
 
-  public List<ProcessingPeriod> getNPreviousPeriods(ProcessingPeriod currentPeriod, Integer n) {
+  public List<ProcessingPeriod> getNPreviousPeriodsInDescOrder(ProcessingPeriod currentPeriod, Integer n) {
     return periodRepository.getNPreviousPeriods(currentPeriod, n);
   }
 

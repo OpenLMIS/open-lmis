@@ -83,7 +83,7 @@ public class RestRequisitionCalculator {
   public Rnr setDefaultValues(Rnr requisition) {
     Integer M = processingScheduleService.findM(requisition.getPeriod());
 
-    List<ProcessingPeriod> nPreviousPeriods = M >= 3 ? processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 1) : processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 2);
+    List<ProcessingPeriod> nPreviousPeriods = M >= 3 ? processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 1) : processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
     Date trackingDate = nPreviousPeriods.size() > 0 ? nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate() : requisition.getPeriod().getStartDate();
 
     for (RnrLineItem rnrLineItem : requisition.getFullSupplyLineItems()) {

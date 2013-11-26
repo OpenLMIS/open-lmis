@@ -78,7 +78,7 @@ public class RequisitionService {
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
   @Autowired
-  private CalculationService calculateService;
+  private CalculationService calculationService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -107,7 +107,7 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
 
-    calculateService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
+    calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
 
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
@@ -152,8 +152,8 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-    calculateService.calculateDaysDifference(savedRnr);
-    calculateService.perform(savedRnr, template);
+    calculationService.fillReportingDays(savedRnr);
+    calculationService.perform(savedRnr, template);
 
     return update(savedRnr);
   }
@@ -173,7 +173,7 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-    calculateService.perform(savedRnr, template);
+    calculationService.perform(savedRnr, template);
     savedRnr.setFieldsForApproval();
 
     return update(savedRnr);

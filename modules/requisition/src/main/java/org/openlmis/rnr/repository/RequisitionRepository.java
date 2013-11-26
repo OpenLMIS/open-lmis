@@ -208,7 +208,7 @@ public class RequisitionRepository {
     return requisitionMapper.getLastRegularRequisition(facility, program);
   }
 
-  public Date getCreatedDateForPreviousLineItem(Rnr rnr, String productCode, Date periodStartDate) {
+  public Date getAuthorizedDateForPreviousLineItem(Rnr rnr, String productCode, Date periodStartDate) {
     return rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(rnr, productCode, periodStartDate);
   }
 

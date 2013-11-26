@@ -73,7 +73,7 @@ public class RnrLineItem extends LineItem {
   private Integer calculatedOrderQuantity;
   private Integer maxStockQuantity;
   private Integer quantityApproved;
-  private Integer daysSinceLastLineItem;
+  private Integer reportingDays;
 
   private Integer packsToShip;
   private String expirationDate;
@@ -232,7 +232,7 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculateNormalizedConsumption(RnrCalculationStrategy calcStrategy) {
-    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit, daysSinceLastLineItem);
+    normalizedConsumption = calcStrategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed, newPatientCount, dosesPerMonth, dosesPerDispensingUnit, reportingDays);
   }
 
   public void calculateTotalLossesAndAdjustments(RnrCalculationStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
