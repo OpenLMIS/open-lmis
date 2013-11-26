@@ -179,7 +179,6 @@ public class RequisitionService {
     return update(savedRnr);
   }
 
-
   @Transactional
   public Rnr approve(Rnr requisition, String name) {
     Rnr savedRnr = getFullRequisitionById(requisition.getId());

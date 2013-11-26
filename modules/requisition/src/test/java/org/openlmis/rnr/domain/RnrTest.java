@@ -58,7 +58,6 @@ public class RnrTest {
 
   @Before
   public void setUp() throws Exception {
-
     initMocks(this);
     rnr = make(a(defaultRequisition));
     rnrTemplate = mock(ProgramRnrTemplate.class);
@@ -69,7 +68,6 @@ public class RnrTest {
 
   @Test
   public void shouldFillNormalizedConsumptionsFromPreviousTwoPeriodsRnr() throws Exception {
-
     final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     lastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(1);
 
@@ -86,7 +84,6 @@ public class RnrTest {
 
   @Test
   public void shouldFillNormalizedConsumptionsFromOnlyNonNullPreviousTwoPeriodsRnr() throws Exception {
-
     final Rnr lastPeriodsRnr = null;
 
     final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));

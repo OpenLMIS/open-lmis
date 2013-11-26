@@ -188,7 +188,7 @@ public class Rnr extends BaseModel {
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
     this.program = program.basicInformation();
-    this.period = period.basicInformation();
+    this.period = period;
     this.facility = facility.basicInformation();
   }
 

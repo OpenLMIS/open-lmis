@@ -67,10 +67,6 @@ public class ProcessingPeriod extends BaseModel {
     }
   }
 
-  public ProcessingPeriod basicInformation() {
-    return new ProcessingPeriod(id, startDate, endDate, numberOfMonths, name);
-  }
-
   public void includeEntireDuration() throws ParseException {
     SimpleDateFormat dateFormatWithoutTime = new SimpleDateFormat("dd/MM/yyyy");
     SimpleDateFormat dateFormatWithTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

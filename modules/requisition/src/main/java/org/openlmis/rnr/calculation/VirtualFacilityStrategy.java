@@ -68,7 +68,7 @@ public class VirtualFacilityStrategy extends RnrCalculationStrategy {
     }
 
     BigDecimal daysSinceLastRequisition = new BigDecimal(daysSinceLastRnr);
-    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide(daysSinceLastRequisition.subtract(stockOutDays)), DECIMAL64);
+    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRequisition.subtract(stockOutDays)), 0, HALF_UP), DECIMAL64);
 
     return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }
