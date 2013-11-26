@@ -1,0 +1,4 @@
+User Name,Password,First Name,Last Name,Employee Id,Job Title,Primary Notification Method,Office Phone,Cell Phone,Email,Supervisor User Name,Restrict Login
+User1234,User123,William,Lamba,45,Incharge,Email,2143546,98765,openlmisUser4234@open.com,Admin123,
+User1235,User123,William,Lamba,445,Incharge,Email,2143546,98765,openlmisUser5234@open.com,Admin123,true
+User1236,User123,William,Lamba,545,Incharge,Email,2143546,98765,openlmisUser6234@open.com,Admin123,false

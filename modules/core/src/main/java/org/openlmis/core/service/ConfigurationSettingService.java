@@ -55,9 +55,9 @@ public class ConfigurationSettingService {
   public Boolean getBoolValue(String key){
     String value = getConfigurationStringValue(key);
 
-    // if the configuration was not set at all in the configurations table ... return null
+    // if the configuration was not set at all in the configurations table ... return false
     if(value.isEmpty())
-         return null;
+         return false;
 
     return Boolean.parseBoolean(value);
   }

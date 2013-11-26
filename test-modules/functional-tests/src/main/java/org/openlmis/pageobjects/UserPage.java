@@ -263,6 +263,7 @@ public class UserPage extends Page {
     firstNameField.sendKeys(firstName);
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
+    testWebDriver.handleScroll();
     clickRestrictLoginNo();
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();

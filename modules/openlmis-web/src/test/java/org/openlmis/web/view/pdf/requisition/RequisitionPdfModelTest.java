@@ -94,9 +94,9 @@ public class RequisitionPdfModelTest {
     User submittingUser = make(a(defaultUser, with(firstName, "submit-firstName"), with(lastName, "submit-lastName")));
     User authorizingUser = make(a(defaultUser, with(firstName, "auth-firstName"), with(lastName, "auth-lastName")));
 
-    final RequisitionStatusChange initiatedStatusChange = new RequisitionStatusChange(1L, 2L, INITIATED, initiatingUser, currentDate);
-    final RequisitionStatusChange submittedStatusChange = new RequisitionStatusChange(1L, 2L, SUBMITTED, submittingUser, currentDate);
-    final RequisitionStatusChange authorizedStatusChange = new RequisitionStatusChange(1L, 2L, AUTHORIZED, authorizingUser, authorizedDate);
+    final RequisitionStatusChange initiatedStatusChange = new RequisitionStatusChange(2L, INITIATED, initiatingUser, currentDate);
+    final RequisitionStatusChange submittedStatusChange = new RequisitionStatusChange(2L, SUBMITTED, submittingUser, currentDate);
+    final RequisitionStatusChange authorizedStatusChange = new RequisitionStatusChange(2L, AUTHORIZED, authorizingUser, authorizedDate);
 
 
     return new ArrayList<RequisitionStatusChange>() {{

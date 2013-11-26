@@ -209,6 +209,15 @@ public class DBWrapper {
     update("update users set restrictLogin = '%s' where userName = '%s'", status, userName);
   }
 
+  public String getRestrictLogin(String userName) throws SQLException, IOException {
+    String status=null;
+    ResultSet rs = query("select restrictLogin from users where userName='%s'", userName);
+
+    if (rs.next()) {
+       status = rs.getString("restrictLogin");
+    }
+    return status;
+  }
   public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
@@ -736,17 +745,6 @@ public class DBWrapper {
   public Long getFacilityID(String facilityCode) throws IOException, SQLException {
     Long id = null;
     ResultSet rs = query("select id from facilities where code='" + facilityCode + "';");
-
-    if (rs.next()) {
-      id = rs.getLong("id");
-    }
-    return id;
-  }
-
-
-  public Long getPeriodID(String periodName) throws IOException, SQLException {
-    Long id = null;
-    ResultSet rs = query("select id from processing_periods where name='" + periodName + "';");
 
     if (rs.next()) {
       id = rs.getLong("id");
@@ -1347,10 +1345,6 @@ public class DBWrapper {
       "((SELECT id FROM facilities WHERE code='" + facilityCode + "'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
   }
 
-  public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
-    update("update products set fullsupply=" + flag + " where code='" + productCode + "';");
-  }
-
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
      int rgId=0;
     ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
@@ -1464,10 +1458,14 @@ public class DBWrapper {
         "(SELECT id from programs where code='" + programCode + "');");
     }
 
-    public void updateConfigureTemplate(String programCode, String fieldName,String fieldValue,String flag ) throws SQLException {
-        update("UPDATE program_rnr_columns SET visible ='"+flag+"', "+fieldName+"='"+fieldValue+"' WHERE programid=" +
+    public void updateConfigureTemplate(String programCode, String fieldName,String fieldValue,String visibilityFlag,String fieldName2 ) throws SQLException {
+        update("UPDATE program_rnr_columns SET visible ='"+visibilityFlag+"', "+fieldName+"='"+fieldValue+"' WHERE programid=" +
                 "(SELECT id from programs where code='" + programCode + "')" +
-                "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = 'stockInHand') ;");
+                "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '"+fieldName2+"') ;");
 
     }
+
+  public void deleteConfigureTemplate(String program) throws SQLException {
+    update("DELETE FROM program_rnr_columns where programid=(select id from programs where code = '" + program + "');");
+  }
 }

@@ -36,12 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
-import static com.natpryce.makeiteasy.MakeItEasy.with;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -49,9 +47,7 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
-import static org.openlmis.core.builder.UserBuilder.active;
-import static org.openlmis.core.builder.UserBuilder.defaultUser;
-import static org.openlmis.core.builder.UserBuilder.facilityId;
+import static org.openlmis.core.builder.UserBuilder.*;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
@@ -103,7 +99,7 @@ public class OrderMapperIT {
     processingPeriod = insertPeriod();
     supervisoryNode = insertSupervisoryNode();
     supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+        with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);
   }
 
@@ -134,7 +130,6 @@ public class OrderMapperIT {
     assertThat(orders.get(0).getId(), is(order3.getId()));
     assertThat(orders.get(1).getId(), is(order4.getId()));
   }
-
 
 
   @Test
@@ -189,9 +184,9 @@ public class OrderMapperIT {
   public void shouldGetOrderFileTemplate() throws Exception {
     List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
-      "header.quantity.approved", "label.period", "header.order.date"};
+        "header.quantity.approved", "label.period", "header.order.date"};
     String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
-      "Period", "Order date"};
+        "Period", "Order date"};
     assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
       assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
@@ -244,7 +239,7 @@ public class OrderMapperIT {
     Role role = new Role("r1", "random description", new HashSet<>(asList(Right.VIEW_ORDER)));
     Long roleId = Long.valueOf(roleRightsMapper.insertRole(role));
     role.setId(roleId);
-    for(Right right : role.getRights()) {
+    for (Right right : role.getRights()) {
       roleRightsMapper.createRoleRight(role, right);
     }
 
@@ -285,8 +280,8 @@ public class OrderMapperIT {
   }
 
   private Rnr insertRequisition(Long programId) {
-    Rnr rnr = make(a(defaultRnr, with(RequisitionBuilder.facility, facility),
-      with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
+    Rnr rnr = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
     requisitionMapper.insert(rnr);
     return rnr;
   }

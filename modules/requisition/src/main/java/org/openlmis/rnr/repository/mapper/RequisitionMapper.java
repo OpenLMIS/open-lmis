@@ -28,9 +28,7 @@ public interface RequisitionMapper {
   void insert(Rnr requisition);
 
   @Update({"UPDATE requisitions SET",
-      "modifiedBy = #{modifiedBy},",
-      "status = #{status},",
-      "modifiedDate = CURRENT_TIMESTAMP,",
+      "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP, status = #{status},",
       "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
       "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
       "supervisoryNodeId = #{supervisoryNodeId}",
@@ -74,24 +72,20 @@ public interface RequisitionMapper {
       @Result(property = "regimenLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
   })
-  Rnr getRequisitionWithLineItems(@Param("facility") Facility facility,
-                                  @Param("program") Program program,
-                                  @Param("period") ProcessingPeriod period);
+  Rnr getRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
 
   @Select({"SELECT * FROM requisitions R",
       "WHERE facilityId = #{facilityId}",
       "AND programId = #{programId} ",
       "AND status NOT IN ('INITIATED', 'SUBMITTED')",
       "AND emergency = false",
-      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC",
-      "LIMIT 1"})
+      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId")
   })
-  Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
-                                                        @Param(value = "programId") Long programId);
+  Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
   @Select({"SELECT * FROM requisitions WHERE",
       "facilityId = #{facility.id} AND",
@@ -116,10 +110,7 @@ public interface RequisitionMapper {
       @Result(property = "program.id", column = "programId"),
       @Result(property = "period.id", column = "periodId")
   })
-  Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId,
-                                     @Param("programId") Long programId,
-                                     @Param("periodId") Long periodId);
-
+  Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("periodId") Long periodId);
 
   @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
   @Results(value = {
@@ -203,19 +194,16 @@ public interface RequisitionMapper {
       String sortBy = (String) params.get("sortBy");
       String sortDirection = (String) params.get("sortDirection");
 
-
       return sql.append("ORDER BY " + sortBy + " " + sortDirection).append(" LIMIT ").append(pageSize)
           .append(" OFFSET ").append((pageNumber - 1) * pageSize).toString();
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public static String getCountOfApprovedRequisitionsForCriteria(Map params) {
-
       StringBuilder sql = new StringBuilder();
       sql.append("SELECT COUNT(DISTINCT R.id) FROM Requisitions R ");
 
       appendQueryClausesBySearchType(sql, params);
-
       return sql.toString();
     }
 
@@ -252,7 +240,6 @@ public interface RequisitionMapper {
       sql.append("FRA.userid = " + userId + " AND RR.rightName = '" + right + "' AND ");
       sql.append("R.status = 'APPROVED'");
     }
-
   }
 }
 

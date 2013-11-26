@@ -11,47 +11,137 @@
 INSERT INTO roles (name) VALUES ('FieldCoordinator');
 
 INSERT INTO role_rights (roleId, rightName) VALUES
-((SELECT id FROM roles WHERE name = 'FieldCoordinator'), 'MANAGE_DISTRIBUTION');
+((SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'), 'MANAGE_DISTRIBUTION');
 
 
 INSERT INTO users
-(userName, password, facilityId, firstName, lastName, email, verified, active) VALUES
+(userName, password, facilityId, firstName, lastName, email, verified, active, restrictLogin) VALUES
 ('FieldCoordinator', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT id FROM facilities WHERE code = 'F10'), 'Field', 'Coordinator', 'fieldcoordinator@openlmis.com', TRUE, TRUE);
+ (SELECT
+    id
+  FROM facilities
+  WHERE code = 'F10'), 'Field', 'Coordinator', 'fieldcoordinator@openlmis.com', TRUE, TRUE, FALSE);
 
 INSERT INTO role_assignments (userId, roleId, deliveryZoneId, programId) VALUES
-((SELECT id FROM USERS WHERE username = 'FieldCoordinator'),
- (SELECT id FROM ROLES WHERE name = 'FieldCoordinator'),
- (SELECT id FROM DELIVERY_ZONES WHERE code = 'Norte'),
- (SELECT id FROM programs WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM ROLES
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM DELIVERY_ZONES
+  WHERE code = 'Norte'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
-((SELECT id FROM USERS WHERE username = 'FieldCoordinator'),
- (SELECT id FROM roles WHERE name = 'FieldCoordinator'),
- (SELECT id FROM delivery_zones WHERE code = 'Centro'),
- (SELECT id FROM programs WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'Centro'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
-((SELECT id FROM USERS WHERE username = 'FieldCoordinator'),
- (SELECT id FROM roles WHERE name = 'FieldCoordinator'),
- (SELECT id FROM delivery_zones WHERE code = 'Sul'),
- (SELECT id FROM programs WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'Sul'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
-((SELECT id FROM USERS WHERE username = 'superuser'),
- (SELECT id FROM roles WHERE name = 'FieldCoordinator'),
- (SELECT id FROM delivery_zones WHERE code = 'Norte'),
- (SELECT id FROM programs WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'superuser'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'Norte'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
-((SELECT id FROM USERS WHERE username = 'superuser'),
- (SELECT id FROM roles WHERE name = 'FieldCoordinator'),
- (SELECT id FROM delivery_zones WHERE code = 'Centro'),
- (SELECT id FROM programs WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'superuser'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'Centro'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
-((SELECT id FROM USERS WHERE username = 'superuser'),
- (SELECT id FROM roles WHERE name = 'FieldCoordinator'),
- (SELECT id FROM delivery_zones WHERE code = 'Sul'),
- (SELECT id FROM programs WHERE name = 'VACCINES')),
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'superuser'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'Sul'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES')),
 
-((SELECT id FROM USERS WHERE username = 'FieldCoordinator'),
- (SELECT id FROM roles WHERE name = 'FieldCoordinator'),
- (SELECT id FROM delivery_zones WHERE code = 'DZ1'),
- (SELECT id FROM programs WHERE name = 'VACCINES'));
+((SELECT
+    id
+  FROM USERS
+  WHERE username = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM roles
+  WHERE name = 'FieldCoordinator'),
+ (SELECT
+    id
+  FROM delivery_zones
+  WHERE code = 'DZ1'),
+ (SELECT
+    id
+  FROM programs
+  WHERE name = 'VACCINES'));
 

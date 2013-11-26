@@ -15,7 +15,6 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -25,9 +24,8 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.builder.RequisitionBuilder.emergency;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -35,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 public class RnrDTOTest {
   @Test
   public void shouldPrepareRequisitionsForApproval() throws Exception {
-    Rnr rnr = make(a(defaultRnr, with(emergency, true)));
+    Rnr rnr = make(a(defaultRequisition, with(emergency, true)));
     List<Rnr> rnrList = Arrays.asList(rnr);
 
     List<RnrDTO> rnrDTOs = RnrDTO.prepareForListApproval(rnrList);
@@ -47,7 +45,7 @@ public class RnrDTOTest {
 
   @Test
   public void shouldPrepareRequisitionsForView() throws Exception {
-    Rnr rnr = make(a(defaultRnr, with(emergency, false)));
+    Rnr rnr = make(a(defaultRequisition, with(emergency, false)));
     List<Rnr> rnrList = Arrays.asList(rnr);
 
     List<RnrDTO> rnrDTOs = RnrDTO.prepareForView(rnrList);

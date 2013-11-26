@@ -22,13 +22,13 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 
 @Category(UnitTests.class)
 public class OrderStatusFeedDTOTest {
   @Test
   public void shouldPopulateFeedFromRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
     Order order = new Order(rnr);
     order.setStatus(READY_TO_PACK);
     OrderStatusFeedDTO feed = new OrderStatusFeedDTO(order);

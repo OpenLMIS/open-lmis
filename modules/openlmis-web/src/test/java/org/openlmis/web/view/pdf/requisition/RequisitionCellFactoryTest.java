@@ -27,6 +27,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.defaultRnrColumn;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.skipped;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 
@@ -98,7 +99,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetLossesAndAdjustmentCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
     assertThat(cells.get(0).getPhrase().getContent(), is(lineItem.getTotalLossesAndAdjustments().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -108,7 +109,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetCostCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, COST))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
     assertThat(cells.get(0).getPhrase().getContent(), is("$" + lineItem.calculateCost().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -117,7 +118,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetPriceCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRICE))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
     assertThat(cells.get(0).getPhrase().getContent(), is("$" + lineItem.getPrice().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -126,7 +127,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetTotalCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, TOTAL))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
     assertThat(cells.get(0).getPhrase().getContent(), is("13"));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -135,7 +136,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetProductCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRODUCT))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
     assertThat(cells.get(0).getPhrase().getContent(), is(""));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_LEFT));
   }
@@ -144,10 +145,31 @@ public class RequisitionCellFactoryTest {
   public void shouldGetBeginningBalance() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
     assertThat(cells.get(0).getPhrase().getContent(), is(lineItem.getBeginningBalance().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
+
+  @Test
+  public void shouldGetSkippedAsSkippedTextIfLineItemIsSkipped() throws Exception {
+    String skippedText = "Skipped";
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
+    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, true)));
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
+    assertThat(cells.get(0).getPhrase().getContent(), is(skippedText));
+    assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_LEFT));
+  }
+
+  @Test
+  public void shouldGetSkippedAsBlankIfLineItemIsNotSkipped() throws Exception {
+    String skippedText = "Skipped";
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
+    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, false)));
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
+    assertThat(cells.get(0).getPhrase().getContent(), is(""));
+    assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_LEFT));
+  }
+
 
 }
 

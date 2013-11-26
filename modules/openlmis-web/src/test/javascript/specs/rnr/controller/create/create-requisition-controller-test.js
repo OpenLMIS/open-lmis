@@ -11,7 +11,7 @@
 describe('CreateRequisitionController', function () {
 
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService;
+      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
@@ -20,7 +20,7 @@ describe('CreateRequisitionController', function () {
   beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_, _requisitionService_) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
-    requisitionService =_requisitionService_;
+    requisitionService = _requisitionService_;
     $rootScope.hasPermission = function () {
     };
     location = $location;
@@ -107,14 +107,14 @@ describe('CreateRequisitionController', function () {
 
   }));
 
-  it("should toggle skip flag for all rnrLineItems", function(){
+  it("should toggle skip flag for all rnrLineItems", function () {
     var lineItem1 = {skipped: true};
     lineItem1.cost = 100;
     var lineItem2 = {skipped: true};
     lineItem2.cost = 200;
 
-    scope.page = {fullSupply:[lineItem1,lineItem2]};
-    scope.rnr = new Rnr({"id": "rnrId", skipAll:false});
+    scope.page = {fullSupply: [lineItem1, lineItem2]};
+    scope.rnr = new Rnr({"id": "rnrId", skipAll: false});
     spyOn(scope.rnr, 'calculateFullSupplyItemsSubmittedCost');
 
     scope.toggleSkipFlag();
@@ -353,7 +353,6 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should not set disable flag if rnr is initiated and user has create right', function () {
-
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "INITIATED"};
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
@@ -375,9 +374,11 @@ describe('CreateRequisitionController', function () {
 
   it('should set disable flag if rnr is not initiated/submitted', function () {
     var rnr = {id: "rnrId", fullSupplyLineItems: [], regimenLineItems: [], status: "some random status"};
+
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: rnr, rnrColumns: [], regimenTemplate: regimenTemplate,
       currency: '$', pageSize: pageSize, lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes, facilityApprovedProducts: facilityApprovedProducts,
       requisitionRights: requisitionRights, $routeParams: routeParams, $rootScope: rootScope, localStorageService: localStorageService});
+
     expect(scope.formDisabled).toEqual(true);
   });
 
@@ -593,23 +594,21 @@ describe('CreateRequisitionController', function () {
     expect(scope.requisitionRights).toEqual([
       {right: 'CREATE_REQUISITION'},
       {right: 'AUTHORIZE_REQUISITION'}
-    ])
+    ]);
   });
 
   it('should check permission using requisition rights', function () {
-    expect(scope.hasPermission('CREATE_REQUISITION')).toBeTruthy()
-  })
-  it('should set regimenLineItemInValid as true if the required fields are missing', function () {
+    expect(scope.hasPermission('CREATE_REQUISITION')).toBeTruthy();
+  });
 
+  it('should set regimenLineItemInValid as true if the required fields are missing', function () {
     var regimenLineItems = [
       {"id": 6, "rnrId": 2, "code": "001", "name": "REGIMEN1", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7,
         "category": {"name": "Adults", "displayOrder": 1}},
       {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
         "category": {"name": "Adults", "displayOrder": 1}}
     ];
-
     var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
-
     scope.rnr = rnr;
 
     scope.submitRnr();
@@ -619,16 +618,13 @@ describe('CreateRequisitionController', function () {
   });
 
   it('should set regimenLineItemInValid as false if the required fields are not missing', function () {
-
     var regimenLineItems = [
       {"id": 6, "rnrId": 2, "code": "001", "name": "REGIMEN1", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 5,
         "category": {"name": "Adults", "displayOrder": 1}},
       {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
         "category": {"name": "Adults", "displayOrder": 1}}
     ];
-
     var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
-
     scope.rnr = rnr;
 
     scope.submitRnr();
@@ -637,6 +633,24 @@ describe('CreateRequisitionController', function () {
     expect(scope.error).toEqual("");
   });
 
+  it('should set skipAll flag if formDisabled is false', function () {
+    scope.rnr.skipAll = false;
+    scope.formDisabled = false;
+    spyOn(scope, 'toggleSkipFlag').andCallThrough();
+    scope.setSkipAll(true);
 
+    expect(scope.rnr.skipAll).toBeTruthy();
+    expect(scope.toggleSkipFlag).toHaveBeenCalled();
+  });
+
+  it('should not set skipAll flag if formDisabled is true', function () {
+    scope.rnr.skipAll = true;
+    scope.formDisabled = true;
+    spyOn(scope, 'toggleSkipFlag').andCallThrough();
+    scope.setSkipAll(true);
+
+    expect(scope.rnr.skipAll).toBeTruthy();
+    expect(scope.toggleSkipFlag).not.toHaveBeenCalled();
+  });
 });
 

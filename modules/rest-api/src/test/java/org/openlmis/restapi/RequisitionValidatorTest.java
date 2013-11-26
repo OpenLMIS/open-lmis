@@ -34,8 +34,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
-import static org.openlmis.rnr.builder.RnrLineItemBuilder.productCode;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
 
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
@@ -99,7 +98,7 @@ public class RequisitionValidatorTest {
     Report report = new Report();
     Rnr savedRequisition = new Rnr();
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
   }
 
@@ -113,8 +112,9 @@ public class RequisitionValidatorTest {
     Rnr savedRequisition = mock(Rnr.class);
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem1)).thenReturn(rnrLineItem1);
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem2)).thenReturn(rnrLineItem2);
+    when(savedRequisition.getNonSkippedLineItems()).thenReturn(asList(rnrLineItem1, rnrLineItem2));
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem1);
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem2);
@@ -128,6 +128,7 @@ public class RequisitionValidatorTest {
 
     report.setProducts(asList(rnrLineItem1, rnrLineItem2));
     Rnr savedRequisition = mock(Rnr.class);
+    when(savedRequisition.getNonSkippedLineItems()).thenReturn(asList(new RnrLineItem(), new RnrLineItem()));
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem1)).thenReturn(rnrLineItem1);
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem2)).thenReturn(null);
     when(messageService.message("invalid.product.codes", "[P12]")).thenReturn("invalid products [P12]");
@@ -135,9 +136,34 @@ public class RequisitionValidatorTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("invalid products [P12]");
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem1);
     verify(savedRequisition).findCorrespondingLineItem(rnrLineItem2);
   }
+
+  @Test
+  public void shouldThrowErrorIfSkippedProductReportedForApproval() throws Exception {
+    Report report = new Report();
+    RnrLineItem rnrLineItem1 = make(a(defaultRnrLineItem, with(productCode, "P11")));
+    RnrLineItem skippedLineItem1 = make(a(defaultRnrLineItem, with(productCode, "P12"), with(skipped, true)));
+    RnrLineItem rnrLineItem3 = make(a(defaultRnrLineItem, with(productCode, "P13")));
+    RnrLineItem skippedLineItem2 = make(a(defaultRnrLineItem, with(productCode, "P14"), with(skipped, true)));
+
+    report.setProducts(asList(skippedLineItem1, skippedLineItem2));
+
+    Rnr savedRequisition = mock(Rnr.class);
+    when(savedRequisition.findCorrespondingLineItem(rnrLineItem1)).thenReturn(rnrLineItem1);
+    when(savedRequisition.findCorrespondingLineItem(skippedLineItem1)).thenReturn(skippedLineItem1);
+    when(savedRequisition.findCorrespondingLineItem(rnrLineItem3)).thenReturn(rnrLineItem3);
+    when(savedRequisition.findCorrespondingLineItem(skippedLineItem2)).thenReturn(skippedLineItem2);
+    when(savedRequisition.getNonSkippedLineItems()).thenReturn(asList(rnrLineItem1, rnrLineItem3));
+    when(messageService.message("invalid.product.codes", "[P12, P14]")).thenReturn("invalid products [P12, P14]");
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("invalid products [P12, P14]");
+
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+  }
+
 }

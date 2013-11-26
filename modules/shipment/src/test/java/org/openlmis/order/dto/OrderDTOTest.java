@@ -30,7 +30,7 @@ import java.util.List;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -47,11 +47,11 @@ public class OrderDTOTest {
     final Order order1 = new Order();
     Date createdDate = new Date();
     order1.setCreatedDate(createdDate);
-    order1.setRnr(make(a(defaultRnr)));
+    order1.setRnr(make(a(defaultRequisition)));
     order1.setShipmentFileInfo(new ShipmentFileInfo("1.csv", false));
     order1.setSupplyLine(supplyLine);
     final Order order2 = new Order();
-    order2.setRnr(make(a(defaultRnr, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L)))));
+    order2.setRnr(make(a(defaultRequisition, with(RequisitionBuilder.periodId, 2L), with(RequisitionBuilder.program, new Program(11L)))));
     order2.setShipmentFileInfo(new ShipmentFileInfo("2.csv", true));
     final RnrDTO dtoForOrder1 = new RnrDTO();
     dtoForOrder1.setId(1L);

@@ -28,8 +28,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_CATEGORY;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.event.RequisitionStatusChangeEvent.FEED_TITLE;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -45,7 +44,7 @@ public class RequisitionStatusChangeEventTest {
   public void shouldCreateEventFromRequisition() throws Exception {
     mockStatic(DateTime.class);
 
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
 
     DateTime date = DateTime.now();
     when(DateTime.now()).thenReturn(date);

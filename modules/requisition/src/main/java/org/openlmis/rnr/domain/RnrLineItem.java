@@ -74,8 +74,8 @@ public class RnrLineItem extends LineItem {
   private Integer normalizedConsumption;
   private Integer calculatedOrderQuantity;
   private Integer maxStockQuantity;
-
   private Integer quantityApproved;
+  private Integer daysSinceLastLineItem;
 
   private Integer packsToShip;
   private String expirationDate;
@@ -84,10 +84,7 @@ public class RnrLineItem extends LineItem {
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
 
   private Money price;
-
   private Integer total;
-
-  private Integer daysSinceLastLineItem;
 
   @SuppressWarnings("unused")
   private Boolean skipped = false;
@@ -96,7 +93,6 @@ public class RnrLineItem extends LineItem {
 
   public RnrLineItem(Long rnrId, FacilityTypeApprovedProduct facilityTypeApprovedProduct, Long modifiedBy, Long createdBy) {
     this.rnrId = rnrId;
-
     this.maxMonthsOfStock = facilityTypeApprovedProduct.getMaxMonthsOfStock();
     ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();
     this.price = programProduct.getCurrentPrice();
@@ -123,9 +119,9 @@ public class RnrLineItem extends LineItem {
 
   private String productName(Product product) {
     return (product.getPrimaryName() == null ? "" : (product.getPrimaryName() + " ")) +
-      (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
-      (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
-      (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
+        (product.getForm().getCode() == null ? "" : (product.getForm().getCode() + " ")) +
+        (product.getStrength() == null ? "" : (product.getStrength() + " ")) +
+        (product.getDosageUnit().getCode() == null ? "" : product.getDosageUnit().getCode());
   }
 
   public void setFieldsForApproval(RnrCalculationStrategy calcStrategy) {
@@ -176,13 +172,11 @@ public class RnrLineItem extends LineItem {
 
   }
 
-
   public void validateForApproval() {
     if (!skipped && quantityApproved == null) throw new DataException(RNR_VALIDATION_ERROR);
   }
 
   public void validateMandatoryFields(ProgramRnrTemplate template) {
-
     String[] nonNullableFields = {BEGINNING_BALANCE, QUANTITY_RECEIVED, STOCK_IN_HAND, QUANTITY_DISPENSED, NEW_PATIENT_COUNT, STOCK_OUT_DAYS};
     for (String fieldName : nonNullableFields) {
       if (template.columnsVisible(fieldName) && !template.columnsCalculated(fieldName)) {
@@ -191,7 +185,6 @@ public class RnrLineItem extends LineItem {
         }
       }
     }
-
     requestedQuantityConditionalValidation(template);
   }
 
@@ -362,8 +355,8 @@ public class RnrLineItem extends LineItem {
 
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
     if (template.columnsVisible(QUANTITY_REQUESTED)
-      && quantityRequested != null
-      && reasonForRequestedQuantity == null) {
+        && quantityRequested != null
+        && reasonForRequestedQuantity == null) {
       throw new DataException(RNR_VALIDATION_ERROR);
     }
   }

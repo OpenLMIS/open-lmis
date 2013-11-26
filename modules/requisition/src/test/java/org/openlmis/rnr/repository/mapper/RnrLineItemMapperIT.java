@@ -34,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
@@ -120,7 +121,7 @@ public class RnrLineItemMapperIT {
     lineItem.setPacksToShip(20);
     lineItem.setBeginningBalance(5);
     lineItem.setFullSupply(true);
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     LossesAndAdjustments lossesAndAdjustmentsClinicReturn = new LossesAndAdjustments();
     LossesAndAdjustmentsType lossesAndAdjustmentsTypeClinicReturn = new LossesAndAdjustmentsType();
@@ -194,7 +195,7 @@ public class RnrLineItemMapperIT {
   public void shouldUpdateRnrLineItem() {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
     Long anotherModifiedBy = 2L;
     lineItem.setModifiedBy(anotherModifiedBy);
     lineItem.setBeginningBalance(43);
@@ -221,7 +222,7 @@ public class RnrLineItemMapperIT {
   public void shouldUpdateSkipFlag() throws Exception {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     lineItem.setSkipped(true);
 
@@ -265,11 +266,11 @@ public class RnrLineItemMapperIT {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = make(a(defaultRnrLineItem, with(fullSupply, false)));
     lineItem.setRnrId(rnr.getId());
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(fullSupply, true)));
     lineItem2.setRnrId(rnr.getId());
-    rnrLineItemMapper.insert(lineItem2);
+    rnrLineItemMapper.insert(lineItem2, lineItem.getPreviousNormalizedConsumptions().toString());
 
     rnrLineItemMapper.deleteAllNonFullSupplyForRequisition(rnr.getId());
 
@@ -279,7 +280,6 @@ public class RnrLineItemMapperIT {
     assertThat(rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId()).get(0).getProductCategory(),
         is(lineItem2.getProductCategory()));
   }
-
 
   @Test
   public void shouldReturnCategoryCountForFullSupplyLineItems() {
@@ -305,7 +305,7 @@ public class RnrLineItemMapperIT {
       facilityApprovedProductMapper.insert(facilityTypeApprovedProduct);
 
       RnrLineItem item = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, 1L, 1L);
-      rnrLineItemMapper.insert(item);
+      rnrLineItemMapper.insert(item, null);
     }
     assertThat(rnrLineItemMapper.getCategoryCount(rnr, fullSupplyFlag), is(10));
   }
@@ -314,7 +314,7 @@ public class RnrLineItemMapperIT {
   public void shouldUpdateApprovedQuantityAndRemarks() throws Exception {
     requisitionMapper.insert(rnr);
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
     rnr.setStatus(AUTHORIZED);
 
     lineItem.setQuantityApproved(23);
@@ -332,35 +332,36 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldGetCreatedDateForMostRecentNonSkippedAuthorizedLineItem() throws Exception {
     requisitionMapper.insert(rnr);
-    rnr.setStatus(AUTHORIZED);
+
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    rnr.setStatus(AUTHORIZED);
     requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
     queryExecutor.executeUpdate("UPDATE requisition_status_changes SET createdDate = ? WHERE rnrId = ?", getDateByDays(-3), rnr.getId());
 
-    Rnr rnr1 = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility),
+    Rnr rnr1 = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
         with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
     requisitionMapper.insert(rnr1);
 
     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
     rnrLineItem.setRnrId(rnr1.getId());
-
-    rnrLineItemMapper.insert(rnrLineItem);
+    rnrLineItemMapper.insert(rnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     rnr1.setStatus(AUTHORIZED);
     requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr1));
 
     List<RequisitionStatusChange> changeList = requisitionStatusChangeMapper.getByRnrId(rnr1.getId());
 
-    Rnr currentRnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility),
+    Rnr currentRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
         with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
     RnrLineItem currentRnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
     requisitionMapper.insert(currentRnr);
 
     currentRnrLineItem.setRnrId(currentRnr.getId());
-    rnrLineItemMapper.insert(currentRnrLineItem);
+    rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    Date createdDateForPreviousLineItem = rnrLineItemMapper.getCreatedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-4));
+    Date createdDateForPreviousLineItem = rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-4));
 
     assertThat(createdDateForPreviousLineItem, is(changeList.get(0).getCreatedDate()));
   }
@@ -368,35 +369,161 @@ public class RnrLineItemMapperIT {
   @Test
   public void shouldNotGetCreatedDateIfNoAuthorizedLineItemExistAfterGivenDateForAProduct() throws Exception {
     requisitionMapper.insert(rnr);
-    rnr.setStatus(AUTHORIZED);
+
     RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
-    rnrLineItemMapper.insert(lineItem);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    rnr.setStatus(AUTHORIZED);
     requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
     queryExecutor.executeUpdate("UPDATE requisition_status_changes SET createdDate = ? WHERE rnrId = ?", getDateByDays(-3), rnr.getId());
 
-    Rnr rnr1 = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility),
+    Rnr rnr1 = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
         with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
     requisitionMapper.insert(rnr1);
 
     RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
     rnrLineItem.setRnrId(rnr1.getId());
-
-    rnrLineItemMapper.insert(rnrLineItem);
+    rnrLineItemMapper.insert(rnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
     rnr1.setStatus(SUBMITTED);
     requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr1));
 
-    Rnr currentRnr = make(a(RequisitionBuilder.defaultRnr, with(RequisitionBuilder.facility, facility),
+    Rnr currentRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
         with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
     RnrLineItem currentRnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
     requisitionMapper.insert(currentRnr);
 
     currentRnrLineItem.setRnrId(currentRnr.getId());
-    rnrLineItemMapper.insert(currentRnrLineItem);
+    rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    Date createdDateForPreviousLineItem = rnrLineItemMapper.getCreatedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-2));
+    Date createdDateForPreviousLineItem = rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(currentRnr, lineItem.getProductCode(), getDateByDays(-2));
 
     assertNull(createdDateForPreviousLineItem);
+  }
+
+  @Test
+  public void shouldGetPreviousNNormalizedConsumptionsGivenProductCode() throws Exception {
+    requisitionMapper.insert(rnr);
+
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    lineItem.setNormalizedConsumption(3);
+    rnrLineItemMapper.update(lineItem);
+
+    rnr.setStatus(AUTHORIZED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
+
+    Rnr rnr1 = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    requisitionMapper.insert(rnr1);
+
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    rnrLineItem.setRnrId(rnr1.getId());
+    rnrLineItemMapper.insert(rnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    rnr1.setStatus(SUBMITTED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr1));
+
+    Rnr currentRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    RnrLineItem currentRnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    requisitionMapper.insert(currentRnr);
+
+    currentRnrLineItem.setRnrId(currentRnr.getId());
+    rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    List<Integer> normalizedConsumptions = rnrLineItemMapper.getNNormalizedConsumptions(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+
+    assertThat(normalizedConsumptions.size(), is(1));
+    assertThat(normalizedConsumptions.get(0), is(3));
+  }
+
+  @Test
+  public void shouldNotGetPreviousNNormalizedConsumptionsGivenProductCodeIfNoAuthorizedRnrExist() throws Exception {
+    requisitionMapper.insert(rnr);
+
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    lineItem.setNormalizedConsumption(3);
+    rnrLineItemMapper.update(lineItem);
+
+    rnr.setStatus(SUBMITTED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
+
+    Rnr rnr1 = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    requisitionMapper.insert(rnr1);
+
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    rnrLineItem.setRnrId(rnr1.getId());
+    rnrLineItemMapper.insert(rnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    rnr1.setStatus(SUBMITTED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr1));
+
+    Rnr currentRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    RnrLineItem currentRnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    requisitionMapper.insert(currentRnr);
+
+    currentRnrLineItem.setRnrId(currentRnr.getId());
+    rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    List<Integer> normalizedConsumptions = rnrLineItemMapper.getNNormalizedConsumptions(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+
+    assertThat(normalizedConsumptions.size(), is(0));
+  }
+
+  @Test
+  public void shouldGetPreviousNNormalizedConsumptionsGivenProductCodeIfTwoRequisitionsAuthorized() {
+    requisitionMapper.insert(rnr);
+
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    lineItem.setNormalizedConsumption(3);
+    rnrLineItemMapper.update(lineItem);
+
+    rnr.setStatus(AUTHORIZED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr));
+
+    Rnr rnr1 = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    requisitionMapper.insert(rnr1);
+
+    RnrLineItem rnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    rnrLineItem.setRnrId(rnr1.getId());
+    rnrLineItemMapper.insert(rnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+    rnrLineItem.setNormalizedConsumption(9);
+    rnrLineItemMapper.update(rnrLineItem);
+
+    rnr1.setStatus(AUTHORIZED);
+    requisitionStatusChangeMapper.insert(new RequisitionStatusChange(rnr1));
+
+    Rnr currentRnr = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.facility, facility),
+        with(RequisitionBuilder.program, new Program(PROGRAM_ID)), with(RequisitionBuilder.period, processingPeriod)));
+    RnrLineItem currentRnrLineItem = make(a(defaultRnrLineItem, with(productCode, lineItem.getProductCode())));
+    requisitionMapper.insert(currentRnr);
+
+    currentRnrLineItem.setRnrId(currentRnr.getId());
+    rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    List<Integer> normalizedConsumptions = rnrLineItemMapper.getNNormalizedConsumptions(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+
+    assertThat(normalizedConsumptions.size(), is(2));
+    assertThat(normalizedConsumptions, is(asList(3, 9)));
+  }
+
+  @Test
+  public void shouldInsertPreviousNormalizedConsumptions() throws Exception {
+    requisitionMapper.insert(rnr);
+
+    RnrLineItem lineItem = new RnrLineItem(rnr.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
+    lineItem.setPreviousNormalizedConsumptions(asList(4, 6));
+    rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
+
+    List<RnrLineItem> lineItems = rnrLineItemMapper.getRnrLineItemsByRnrId(rnr.getId());
+
+    assertThat(lineItems.get(0).getPreviousNormalizedConsumptions(), is(asList(4, 6)));
   }
 
   private java.sql.Date getDateByDays(int days) {
@@ -404,5 +531,5 @@ public class RnrLineItemMapperIT {
     currentDate.add(Calendar.DATE, days);
     return new java.sql.Date(currentDate.getTimeInMillis());
   }
-
 }
+

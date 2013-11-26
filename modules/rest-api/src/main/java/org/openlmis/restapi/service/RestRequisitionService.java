@@ -73,7 +73,7 @@ public class RestRequisitionService {
 
     Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
 
-    requisitionValidator.validateProducts(report, rnr);
+    requisitionValidator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
 
@@ -84,29 +84,28 @@ public class RestRequisitionService {
 
 
   @Transactional
-  public void approve(Report report, Long userId) {
-    Rnr requisition = report.getRequisition();
-    requisition.setModifiedBy(userId);
+  public void approve(Report report, Long requisitionId, Long userId) {
+    Rnr requisition = report.getRequisition(requisitionId, userId);
 
     Rnr savedRequisition = requisitionService.getFullRequisitionById(requisition.getId());
 
-    if (!savedRequisition.getFacility().getVirtualFacility())
+    if (!savedRequisition.getFacility().getVirtualFacility()) {
       throw new DataException("error.approval.not.allowed");
+    }
 
-    if (savedRequisition.getFullSupplyLineItems().size() != report.getProducts().size()) {
+    if (savedRequisition.getNonSkippedLineItems().size() != report.getProducts().size()) {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
-    requisitionValidator.validateProducts(report, savedRequisition);
+    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
 
     requisitionService.save(requisition);
-    requisitionService.approve(requisition);
+    requisitionService.approve(requisition, report.getApproverName());
   }
 
   public ReplenishmentDTO getReplenishmentDetails(Long id) {
     Rnr requisition = requisitionService.getFullRequisitionById(id);
-    ReplenishmentDTO replenishmentDTO = prepareForREST(requisition, orderService.getOrder(id));
-    return replenishmentDTO;
+    return prepareForREST(requisition, orderService.getOrder(id));
   }
 
 

@@ -62,6 +62,7 @@ public class User extends BaseModel implements Importable {
   @ImportField(name = "Supervisor User Name", nested = "userName")
   private User supervisor;
 
+  @ImportField(name = "Restrict Login", type = "boolean")
   private Boolean restrictLogin;
 
   private Long facilityId;

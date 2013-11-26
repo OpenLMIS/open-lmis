@@ -20,8 +20,9 @@ import java.util.List;
 @Repository
 public interface RequisitionStatusChangeMapper {
 
-  @Insert({"INSERT INTO requisition_status_changes(rnrId, status, createdBy, modifiedBy) VALUES (#{rnrId}, #{status},",
-    "#{createdBy.id}, #{createdBy.id})"})
+  @Insert({"INSERT INTO requisition_status_changes",
+      "(rnrId, status, name, createdBy, modifiedBy) VALUES ",
+      "(#{rnrId}, #{status}, #{name}, #{createdBy.id}, #{createdBy.id})"})
   @Options(useGeneratedKeys = true)
   void insert(RequisitionStatusChange statusChange);
 

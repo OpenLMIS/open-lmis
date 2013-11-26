@@ -31,14 +31,11 @@
     <thead>
     <tr>
       <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed">
-        <span class='skipped-checkbox' ng-if="column.name == 'skipped'">
-          <input ng-model="rnr.skipAll"
-                 ng-disabled="formDisabled"
-                 id="selectAll"
-                 type="checkbox"
-                 ng-change="toggleSkipFlag()"/>
-        </span>
         <span ng-bind="column.label"></span>
+        <span ng-if="column.name == 'skipped'">
+        <a href="" id="selectAll" ng-click="setSkipAll(true)" openlmis-message="label.select.all"></a>&nbsp;|
+        <a href="" id="selectNone" ng-click="setSkipAll(false)" openlmis-message="label.select.none"></a>
+        </span>
       </th>
     </tr>
     </thead>

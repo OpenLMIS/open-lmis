@@ -32,7 +32,6 @@ public class SubmitReportTest extends JsonUtility {
   public static final String MINIMUM_JSON_TXT_FILE_NAME = "ReportMinimumJson.txt";
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String PRODUCT_JSON_TXT_FILE_NAME = "ReportWithProductJson.txt";
-  public static final String MASTER_TEMPLATE_VALIDATION_JSON_TXT_FILE_NAME = "ReportMasterTemplateValidationJson.txt";
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
@@ -41,7 +40,7 @@ public class SubmitReportTest extends JsonUtility {
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1");
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -60,12 +59,12 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(
+            getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
@@ -81,12 +80,12 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack1000",
-        "Admin123");
+        client.SendJSON(
+            getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack1000",
+            "Admin123");
 
     assertEquals(401, responseEntity.getStatus());
   }
@@ -102,10 +101,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"User does not have permission\"}");
@@ -121,10 +120,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Invalid Facility code\"}");
@@ -139,10 +138,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSONWithoutHeaders(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "",
-      "");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "",
+        "");
     assertEquals(401, responseEntity.getStatus());
   }
 
@@ -155,10 +154,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("InvalidProgram");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid program code\"}", responseEntity.getResponse());
@@ -172,10 +171,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setAgentCode("V10");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Missing mandatory fields\"}", responseEntity.getResponse());
@@ -184,10 +183,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Missing mandatory fields\"}", responseEntity.getResponse());
@@ -203,10 +202,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
@@ -222,10 +221,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
@@ -241,10 +240,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
@@ -260,10 +259,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"User does not have permission\"}", responseEntity.getResponse());
@@ -280,10 +279,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"User does not have permission\"}", responseEntity.getResponse());
@@ -299,10 +298,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Facility is inoperative\"}", responseEntity.getResponse());
@@ -319,10 +318,10 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.setProgramCode("HIV");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Please contact admin to define R&R template for this program\"}", responseEntity.getResponse());
@@ -340,16 +339,16 @@ public class SubmitReportTest extends JsonUtility {
 
     String jsonStringFor = getJsonStringFor(reportFromJson);
     client.SendJSON(jsonStringFor,
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(jsonStringFor,
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
@@ -366,8 +365,8 @@ public class SubmitReportTest extends JsonUtility {
 
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
-      "commTrack",
-      "Admin123");
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [null]\"}", responseEntity.getResponse());
@@ -384,15 +383,14 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
-      "commTrack",
-      "Admin123");
+        "commTrack",
+        "Admin123");
 
-    String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Program configuration missing\"}");
   }
 
-  // @Test(groups = {"webservice"}) invalid product code
+  @Test(groups = {"webservice"})
   public void testInitiateRnrWhenProgramStartDateIsAfterCurrentDateAndInCurrentPeriod() throws Exception {
     dbWrapper.updateProgramsSupportedByField("startDate", "2015-01-01", "V10");
     HttpClient client = new HttpClient();
@@ -400,10 +398,15 @@ public class SubmitReportTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    reportFromJson.getProducts().get(0).setStockInHand(4);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
-      "commTrack",
-      "Admin123");
+        "commTrack",
+        "Admin123");
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
@@ -421,8 +424,8 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson), "http://localhost:9091/rest-api/requisitions.json", POST,
-      "commTrack",
-      "Admin123");
+        "commTrack",
+        "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(responseEntity.getResponse(), "{\"error\":\"Program configuration missing\"}");
@@ -439,11 +442,11 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10000");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10000]\"}", responseEntity.getResponse());
@@ -451,7 +454,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testGloballyInactiveProductSubmitReport() throws Exception {
-    dbWrapper.updateActiveStatusOfProduct("P10","False");
+    dbWrapper.updateActiveStatusOfProduct("P10", "False");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -461,20 +464,20 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProduct("P10","True");
+    dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 
   @Test(groups = {"webservice"})
   public void testProductNotActiveAtProgramSubmitReport() throws Exception {
-    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","false");
+    dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "false");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -484,15 +487,15 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
-    dbWrapper.updateActiveStatusOfProgramProduct("P10","HIV","true");
+    dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "true");
   }
 
   @Test(groups = {"webservice"})
@@ -507,11 +510,11 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Invalid product codes [P10]\"}", responseEntity.getResponse());
@@ -522,22 +525,22 @@ public class SubmitReportTest extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    String wrongJson="{\"agentCode\": \"V10\"," +
-      "    \"programCode\": \"HIV\"," +
-      "    \"blah\" : \"blah\"," +
-      "    \"products\": [" +
-      "        {" +
-      "            \"productCode\": \"P10\"," +
-      "        }" +
-      "    ]" +
-      "}";
+    String wrongJson = "{\"agentCode\": \"V10\"," +
+        "    \"programCode\": \"HIV\"," +
+        "    \"blah\" : \"blah\"," +
+        "    \"products\": [" +
+        "        {" +
+        "            \"productCode\": \"P10\"," +
+        "        }" +
+        "    ]" +
+        "}";
 
     ResponseEntity responseEntity =
-      client.SendJSON(wrongJson,
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(wrongJson,
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
   }
@@ -553,11 +556,11 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Please finish all R&R of previous period(s)\"}", responseEntity.getResponse());
@@ -565,7 +568,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCurrentPeriodSubmitReportForParentFacility() throws Exception {
-    dbWrapper.updateProgramsSupportedByField("startdate","NOW()","F10");
+    dbWrapper.updateProgramsSupportedByField("startDate", "NOW()", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -575,11 +578,11 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
@@ -587,7 +590,7 @@ public class SubmitReportTest extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testMultipleSubmitReportForParentFacility() throws Exception {
-    dbWrapper.updateProgramsSupportedByField("startdate","NOW()","F10");
+    dbWrapper.updateProgramsSupportedByField("startDate", "NOW()", "F10");
     HttpClient client = new HttpClient();
     client.createContext();
 
@@ -597,24 +600,51 @@ public class SubmitReportTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
 
     responseEntity =
-      client.SendJSON(getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
     assertEquals(400, responseEntity.getStatus());
     assertEquals("{\"error\":\"Please finish all R&R of previous period(s)\"}", responseEntity.getResponse());
 
+  }
+
+  //@Test(groups = {"webservice"})
+  public void testCommTrackSubmitReportValidRnR() throws Exception {
+    dbWrapper.deleteConfigureTemplate("HIV");
+    dbWrapper.configureTemplateForCommTrack("HIV");
+    dbWrapper.insertPastPeriodRequisitionAndLineItems("F10", "HIV", "Period1", "P10");
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = readObjectFromFile("CommTrackReportJson.txt", Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(10);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(10);
+    reportFromJson.getProducts().get(0).setQuantityReceived(10);
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        "POST",
+        "commTrack",
+        "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
   }
 
   public void testSubmitReportValidRnR() throws Exception {
@@ -629,10 +659,10 @@ public class SubmitReportTest extends JsonUtility {
 
     String jsonStringFor = getJsonStringFor(reportFromJson);
     ResponseEntity responseEntity = client.SendJSON(jsonStringFor,
-      "http://localhost:9091/rest-api/requisitions.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
@@ -643,16 +673,16 @@ public class SubmitReportTest extends JsonUtility {
     client.createContext();
 
     Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setProgramId(dbWrapper.getProgramID("HIV"));
+    reportFromJson.setProgramCode("HIV");
     reportFromJson.getProducts().get(0).setProductCode("P10");
 
     ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        client.SendJSON(
+            getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -672,117 +702,144 @@ public class SubmitReportTest extends JsonUtility {
     agentJson.setActive("true");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-      "http://localhost:9091/rest-api/agents.json",
-      POST,
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/agents.json",
+        POST,
+        "commTrack",
+        "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+   responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
-    @Test(groups = {"webservice"})
-    public void testMasterTemplateValidationInvalidRnR() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
+  @Test(groups = {"webservice"})
+  public void testMasterTemplateValidationMissingBothMandatoryUserInputFields() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
+    Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(null);
+        reportFromJson.getProducts().get(0).setStockInHand(null);
+    ResponseEntity responseEntity =
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
-        Report reportFromJson = JsonUtility.readObjectFromFile(MASTER_TEMPLATE_VALIDATION_JSON_TXT_FILE_NAME,Report.class);
-        reportFromJson.setAgentCode("V10");
-        reportFromJson.setProgramCode("HIV");
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setBeginningBalance(1);
-        reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+  }
 
-        ResponseEntity responseEntity =
-                client.SendJSON(getJsonStringFor(reportFromJson),
-                        "http://localhost:9091/rest-api/requisitions.json",
-                        POST,
-                        "commTrack",
-                        "Admin123");
+  @Test(groups = {"webservice"})
+  public void testMasterTemplateValidationMissingOneMandatoryUserInputFields() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
+    Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME,Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    reportFromJson.getProducts().get(0).setStockInHand(null);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(1);
 
-        assertEquals(400, responseEntity.getStatus());
-        assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
-    }
+    ResponseEntity responseEntity =
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
 
-    @Test(groups = {"webservice"})
-    public void testMasterTemplateValidationViolateArithmeticValidation() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        dbWrapper.updateConfigureTemplate("HIV","source","U","true");
-        dbWrapper.updateConfigureTemplateValidationFlag("HIV","true" );
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+  }
 
-        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setAgentCode("V10");
-        reportFromJson.setProgramCode("HIV");
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setBeginningBalance(1);
-        reportFromJson.getProducts().get(0).setQuantityReceived(4);
-        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
-        reportFromJson.getProducts().get(0).setStockInHand(10);
+  @Test(groups = {"webservice"})
+  public void testMasterTemplateValidationViolateArithmeticValidation() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
+    dbWrapper.updateConfigureTemplateValidationFlag("HIV","true" );
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
+    Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+    reportFromJson.getProducts().get(0).setStockInHand(10);
 
-        ResponseEntity responseEntity =
-                client.SendJSON(getJsonStringFor(reportFromJson),
-                        "http://localhost:9091/rest-api/requisitions.json",
-                        POST,
-                        "commTrack",
-                        "Admin123");
-        assertEquals(400, responseEntity.getStatus());
-        assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
-    }
-
-
-
-    @Test(groups = {"webservice"})
-    public void testMasterTemplateValidationOverrideWithCalculatedValue() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-
-        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setAgentCode("V10");
-        reportFromJson.setProgramCode("HIV");
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setBeginningBalance(1);
-        reportFromJson.getProducts().get(0).setQuantityReceived(4);
-        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
-        reportFromJson.getProducts().get(0).setStockInHand(10);
-
-        ResponseEntity responseEntity =
-                client.SendJSON(getJsonStringFor(reportFromJson),
-                        "http://localhost:9091/rest-api/requisitions.json",
-                        POST,
-                        "commTrack",
-                        "Admin123");
-
-        assertEquals(201, responseEntity.getStatus());
-        assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
-        String latestReqId= dbWrapper.getLatestRequisitionId() ;
-        String str=dbWrapper.getStockInHand(latestReqId);
-        assertEquals("4",str);
-    }
+    ResponseEntity responseEntity =
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+  }
 
 
-    @Test(groups = {"webservice"})
-    public void testMasterTemplateValidationIgnoreReportedValue() throws Exception {
-        HttpClient client = new HttpClient();
-        client.createContext();
-        dbWrapper.updateConfigureTemplate("HIV","source","C","false" );
-        Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
-        reportFromJson.setAgentCode("V10");
-        reportFromJson.setProgramCode("HIV");
-        reportFromJson.getProducts().get(0).setProductCode("P10");
-        reportFromJson.getProducts().get(0).setBeginningBalance(1);
-        reportFromJson.getProducts().get(0).setQuantityReceived(4);
-        reportFromJson.getProducts().get(0).setQuantityDispensed(1);
-        reportFromJson.getProducts().get(0).setStockInHand(10);
+  @Test(groups = {"webservice"})
+  public void testMasterTemplateValidationOverrideWithCalculatedValue() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
 
-        ResponseEntity responseEntity =
-                client.SendJSON(getJsonStringFor(reportFromJson),
-                        "http://localhost:9091/rest-api/requisitions.json",
-                        POST,
-                        "commTrack",
-                        "Admin123");
-        assertEquals(201, responseEntity.getStatus());
-        assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
-    }
+    Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+    reportFromJson.getProducts().get(0).setStockInHand(10);
+
+    ResponseEntity responseEntity =
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+    String latestReqId = dbWrapper.getLatestRequisitionId();
+    String str = dbWrapper.getStockInHand(latestReqId);
+    assertEquals("4", str);
+  }
+
+
+  @Test(groups = {"webservice"})
+  public void testMasterTemplateValidationIgnoreReportedValue() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+        dbWrapper.updateConfigureTemplate("HIV","source","C","false","stockInHand");
+    Report reportFromJson = JsonUtility.readObjectFromFile(MINIMUM_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(1);
+    reportFromJson.getProducts().get(0).setQuantityReceived(4);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(1);
+    reportFromJson.getProducts().get(0).setStockInHand(10);
+
+    ResponseEntity responseEntity =
+        client.SendJSON(getJsonStringFor(reportFromJson),
+            "http://localhost:9091/rest-api/requisitions.json",
+            POST,
+            "commTrack",
+            "Admin123");
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
 
 }
 

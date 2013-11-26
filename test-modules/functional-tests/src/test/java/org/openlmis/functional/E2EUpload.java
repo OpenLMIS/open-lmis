@@ -424,6 +424,13 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRestrictLogin("User123"),"f");
+
+    uploadPage.uploadUsers("QA_Users_Others.csv");
+    uploadPage.verifySuccessMessageOnUploadScreen();
+    assertEquals(dbWrapper.getRestrictLogin("User1234"),"f");
+    assertEquals(dbWrapper.getRestrictLogin("User1235"),"t");
+    assertEquals(dbWrapper.getRestrictLogin("User1236"),"f");
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -431,27 +438,27 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_Email.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate email address in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_EmployeeId.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate employee id in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Duplicate_UserName.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Invalid_Supervisor.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Supervisor User Name not present in the system in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_Duplicate_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
     uploadPage.uploadInvalidUserScenarios("QA_Users_Subsequent_InvalidCombination.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate User Name in Record No");
-    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "5");
   }
 
   private void verifyValidProductCategoryUpload(UploadPage uploadPage) throws IOException, SQLException {

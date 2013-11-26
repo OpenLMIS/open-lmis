@@ -26,11 +26,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @NoArgsConstructor
 public class Report {
 
-  private Long requisitionId;
-  private Long programId;
   private List<RnrLineItem> products;
   private String agentCode;
   private String programCode;
+  private String approverName;
+
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
@@ -39,15 +39,16 @@ public class Report {
   }
 
   @JsonIgnore
-  public Rnr getRequisition() {
-    Rnr rnr = new Rnr();
-    rnr.setId(requisitionId);
-    rnr.setFullSupplyLineItems(products);
-    return rnr;
+  public Rnr getRequisition(Long requisitionId, Long modifiedBy) {
+    Rnr requisition = new Rnr(requisitionId);
+    requisition.setModifiedBy(modifiedBy);
+    requisition.setFullSupplyLineItems(products);
+
+    return requisition;
   }
 
   public void validateForApproval() {
-    if (products == null) {
+    if (products == null || isEmpty(approverName)) {
       throw new DataException("error.restapi.mandatory.missing");
     }
     for (RnrLineItem rnrLineItem : products) {

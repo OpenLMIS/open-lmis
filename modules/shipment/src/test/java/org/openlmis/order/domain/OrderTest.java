@@ -24,7 +24,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -32,7 +32,7 @@ public class OrderTest {
 
   @Test
   public void shouldCreateOrderFromRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
 
     Order order = new Order(rnr);
 

@@ -26,8 +26,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 @Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(RequisitionEventService.class)
@@ -44,7 +45,7 @@ public class RequisitionEventServiceTest {
 
   @Test
   public void shouldTriggerNotifyOnEventService() throws Exception {
-    Rnr requisition = make(a(defaultRnr));
+    Rnr requisition = make(a(defaultRequisition));
     RequisitionStatusChangeEvent event = mock(RequisitionStatusChangeEvent.class);
 
     whenNew(RequisitionStatusChangeEvent.class).withArguments(requisition, notificationServices).thenReturn(event);
