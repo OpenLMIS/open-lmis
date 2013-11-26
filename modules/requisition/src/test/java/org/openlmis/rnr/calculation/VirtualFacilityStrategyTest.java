@@ -56,6 +56,38 @@ public class VirtualFacilityStrategyTest {
   }
 
   @Test
+  public void shouldRoundFinalValueWhileCalculatingNC() throws Exception {
+    VirtualFacilityStrategy strategy = new VirtualFacilityStrategy();
+    Integer stockOutDays = 0;
+    Integer quantityDispensed = 40;
+    Integer newPatientCount = 0;
+    Integer dosesPerMonth = 30;
+    Integer dosesPerDispensingUnit = 10;
+    Integer daysSinceLastRnr = 159;
+
+    Integer normalizedConsumption = strategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed,
+        newPatientCount, dosesPerMonth, dosesPerDispensingUnit, daysSinceLastRnr);
+
+    assertThat(normalizedConsumption, is(8));
+  }
+
+  @Test
+  public void shouldCalculateNCWithoutNonTerminatingError() throws Exception {
+    VirtualFacilityStrategy strategy = new VirtualFacilityStrategy();
+    Integer stockOutDays = 3;
+    Integer quantityDispensed = 40;
+    Integer newPatientCount = 1;
+    Integer dosesPerMonth = 10;
+    Integer dosesPerDispensingUnit = 3;
+    Integer daysSinceLastRnr = 10;
+
+    Integer normalizedConsumption = strategy.calculateNormalizedConsumption(stockOutDays, quantityDispensed,
+        newPatientCount, dosesPerMonth, dosesPerDispensingUnit, daysSinceLastRnr);
+
+    assertThat(normalizedConsumption, is(175));
+  }
+
+  @Test
   public void shouldSumNewPatientFactorAndStockOutFactorWhenDaysSinceLastRnrMoreThanStockOutDays() throws Exception {
     VirtualFacilityStrategy strategy = new VirtualFacilityStrategy();
     Integer stockOutDays = 3;

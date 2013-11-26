@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.floor;
-import static java.math.MathContext.DECIMAL64;
 import static java.math.RoundingMode.HALF_UP;
 import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
@@ -33,7 +32,7 @@ import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 @NoArgsConstructor
 public abstract class RnrCalculationStrategy {
 
-  public static final MathContext MATH_CONTEXT = new MathContext(12, HALF_UP);
+  public static final MathContext MATH_CONTEXT = new MathContext(3, HALF_UP);
 
   ProcessingScheduleService processingScheduleService;
 
@@ -93,7 +92,7 @@ public abstract class RnrCalculationStrategy {
       addAll(previousNormalizedConsumptions);
     }};
     Integer amc = getSum(normalizedConsumptions);
-    return new BigDecimal(amc).divide(new BigDecimal(normalizedConsumptions.size()), 0, HALF_UP).intValue();
+    return new BigDecimal(amc).divide(new BigDecimal(normalizedConsumptions.size()), MATH_CONTEXT).setScale(0, HALF_UP).intValue();
   }
 
   public Integer calculateNormalizedConsumption(Integer stockOutDays,
@@ -121,11 +120,11 @@ public abstract class RnrCalculationStrategy {
     BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT).setScale(0, HALF_UP));
 
     if (daysSinceLastRnr == null || stockOutDays.compareTo(new BigDecimal(daysSinceLastRnr)) >= 0) {
-      return quantityDispensed.add(newPatientFactor).intValue();
+      return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
     }
 
     BigDecimal daysSinceLastRequisition = new BigDecimal(daysSinceLastRnr);
-    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRequisition.subtract(stockOutDays)), 0, HALF_UP), DECIMAL64);
+    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRequisition.subtract(stockOutDays)), MATH_CONTEXT));
 
     return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }

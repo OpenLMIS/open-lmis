@@ -77,8 +77,8 @@ public class CalculationService {
     requisition.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     Integer M = fivePreviousPeriods.get(0).getNumberOfMonths();
-    Date trackingDate = (M == 1) ? getDateForNthPreviousPeriod(fivePreviousPeriods, 4) : (M == 2) ?
-        getDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
+    Date trackingDate = (M == 1) ? getStartDateForNthPreviousPeriod(fivePreviousPeriods, 4) : (M == 2) ?
+        getStartDateForNthPreviousPeriod(fivePreviousPeriods, 1) : fivePreviousPeriods.get(0).getStartDate();
 
     fillPreviousNCsInLineItems(requisition, M, trackingDate);
   }
@@ -101,7 +101,6 @@ public class CalculationService {
   }
 
   private void fillPreviousNCsInLineItems(Rnr requisition, Integer m, Date trackingDate) {
-    //TODO: For now, don't fill in case of regular
     if (!requisition.isForVirtualFacility())
       return;
 
@@ -122,7 +121,7 @@ public class CalculationService {
     return (m == 1) ? 2 : 1;
   }
 
-  private Date getDateForNthPreviousPeriod(List<ProcessingPeriod> fivePreviousPeriods, Integer n) {
+  private Date getStartDateForNthPreviousPeriod(List<ProcessingPeriod> fivePreviousPeriods, Integer n) {
     Integer numberOfPeriods = fivePreviousPeriods.size();
     return numberOfPeriods <= n ? fivePreviousPeriods.get(numberOfPeriods - 1).getStartDate() : fivePreviousPeriods.get(n).getStartDate();
   }
