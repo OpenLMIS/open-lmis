@@ -302,6 +302,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public void enterBeginningBalance(String beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalance);
+    beginningBalance.clear();
     beginningBalance.sendKeys(beginningBalanceValue);
   }
 
@@ -345,6 +346,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void enterQuantityReceived(String quantityReceivedValue) {
     testWebDriver.waitForElementToAppear(quantityReceived);
+    quantityReceived.clear();
     quantityReceived.sendKeys(quantityReceivedValue);
   }
 
@@ -359,6 +361,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void enterQuantityDispensed(String quantityDispensedValue) {
     testWebDriver.waitForElementToAppear(quantityDispensed);
+    quantityDispensed.clear();
     quantityDispensed.sendKeys(quantityDispensedValue);
   }
 
