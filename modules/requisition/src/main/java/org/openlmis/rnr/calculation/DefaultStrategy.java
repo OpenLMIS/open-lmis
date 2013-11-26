@@ -92,7 +92,9 @@ public class DefaultStrategy extends RnrCalculationStrategy {
   private BigDecimal sumOfPreviousNormalizedConsumptions(List<Integer> previousNormalizedConsumptions) {
     Integer total = 0;
     for (Integer consumption : previousNormalizedConsumptions) {
-      total += consumption;
+      if(consumption != null){
+        total += consumption;
+      }
     }
     return new BigDecimal(total);
   }
