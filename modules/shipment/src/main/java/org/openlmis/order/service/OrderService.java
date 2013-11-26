@@ -99,7 +99,7 @@ public class OrderService {
 
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
-    if(order == null) {
+    if (order == null) {
       return order;
     }
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
@@ -118,7 +118,7 @@ public class OrderService {
   private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
     List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
     for (RnrLineItem rnrLineItem : rnrLineItems) {
-      if (rnrLineItem.getPacksToShip() > 0) {
+      if (rnrLineItem.getPacksToShip() != null && rnrLineItem.getPacksToShip() > 0) {
         lineItemsForOrder.add(rnrLineItem);
       }
     }

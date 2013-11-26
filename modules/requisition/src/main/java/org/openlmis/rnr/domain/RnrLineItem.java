@@ -11,6 +11,7 @@ package org.openlmis.rnr.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
@@ -302,7 +303,7 @@ public class RnrLineItem extends LineItem {
   private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {
     if (template.columnsVisible(QUANTITY_REQUESTED)
       && quantityRequested != null
-      && reasonForRequestedQuantity == null) {
+      && StringUtils.isEmpty(reasonForRequestedQuantity)) {
       throw new DataException(RNR_VALIDATION_ERROR);
     }
   }
