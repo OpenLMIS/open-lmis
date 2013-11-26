@@ -30,7 +30,8 @@
           <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
             <span ng-switch on="column.name">
               <span ng-switch-when="skipped">
-                <div class="ngCellText checked"><i ng-class="{'icon-ok': rnrLineItem[column.name]}"></i></div>
+                <input ng-model="rnrLineItem[column.name]" id="skip_{{$parent.$parent.$index}}"
+                       ng-disabled="true" type="checkbox" ng-show="rnrLineItem[column.name] == true"/>
               </span>
               <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}"
                     class="cell-text"></span>
