@@ -13,8 +13,12 @@ package org.openlmis.pod.repository;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.pod.domain.PODLineItem;
 import org.openlmis.pod.repository.mapper.PODMapper;
+import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 @Repository
 public class PODRepository {
@@ -32,5 +36,9 @@ public class PODRepository {
 
   public POD getPODByOrderId(Long orderId) {
     return podMapper.getPODByOrderId(orderId);
+  }
+
+  public List<PODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+    return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
   }
 }

@@ -9,6 +9,7 @@
  */
 package org.openlmis.pod.repository.mapper;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,6 +28,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 @Category(UnitTests.class)
 public class PODMapperIT extends ApplicationTestContext {
@@ -102,4 +104,18 @@ public class PODMapperIT extends ApplicationTestContext {
   }
 
 
+  @Test
+  public void shouldGetNPreviousPODLineItemsAfterGivenTrackingDateForGivenProgramPeriodAndProduct() {
+    POD pod = new POD();
+    pod.setOrderId(order.getId());
+    pod.fillPOD(order.getRnr());
+    Rnr requisition = order.getRnr();
+    podMapper.insertPOD(pod);
+    PODLineItem podLineItem = new PODLineItem(pod.getId(), productCode, 100);
+    podMapper.insertPODLineItem(podLineItem);
+
+    List<PODLineItem> nPodLineItems = podMapper.getNPodLineItems(productCode, requisition, 1, DateTime.now().minusDays(5).toDate());
+
+    assertThat(nPodLineItems, hasItems(podLineItem));
+  }
 }

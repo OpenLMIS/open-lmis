@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.MANAGE_POD;
@@ -82,6 +83,10 @@ public class PODService {
 
   public POD getPODByOrderId(Long orderId) {
     return podRepository.getPODByOrderId(orderId);
+  }
+
+  public List<PODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+    return podRepository.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
   private Long getWarehouseForOrder(Long orderId) {
