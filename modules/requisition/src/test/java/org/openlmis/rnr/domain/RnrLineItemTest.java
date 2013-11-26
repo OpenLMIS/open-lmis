@@ -228,6 +228,17 @@ public class RnrLineItemTest {
   }
 
   @Test
+  public void shouldThrowErrorIfBeginningBalanceIsNegative() throws Exception {
+    lineItem.setBeginningBalance(-678);
+    ProgramRnrTemplate template = new ProgramRnrTemplate(templateColumns);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+
+    lineItem.validateMandatoryFields(template);
+  }
+
+  @Test
   public void shouldThrowErrorIfQuantityReceivedNotPresent() throws Exception {
     lineItem.setQuantityReceived(null);
     expectedException.expect(DataException.class);

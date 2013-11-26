@@ -80,7 +80,9 @@ public class RestRequisitionService {
 
     requisitionService.save(rnr);
 
-    return requisitionService.submit(rnr);
+    rnr = requisitionService.submit(rnr);
+
+    return requisitionService.authorize(rnr);
   }
 
 
@@ -114,41 +116,39 @@ public class RestRequisitionService {
 
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(rnr.getProgram().getId());
 
-    List<RnrLineItem> fullSupplyLineItems = rnr.getFullSupplyLineItems();
-    List<RnrLineItem> products = report.getProducts();
+    List<RnrLineItem> savedLineItems = rnr.getFullSupplyLineItems();
+    List<RnrLineItem> reportedProducts = report.getProducts();
 
-    for (final RnrLineItem fullSupplyLineItem : fullSupplyLineItems) {
-      RnrLineItem productLineItem = (RnrLineItem) find(products, new Predicate() {
+    for (final RnrLineItem savedLineItem : savedLineItems) {
+      RnrLineItem reportedLineItem = (RnrLineItem) find(reportedProducts, new Predicate() {
         @Override
         public boolean evaluate(Object product) {
-          return ((RnrLineItem) product).getProductCode().equals(fullSupplyLineItem.getProductCode());
+          return ((RnrLineItem) product).getProductCode().equals(savedLineItem.getProductCode());
         }
       });
 
-      copyInto(fullSupplyLineItem, productLineItem, rnrTemplate);
+      copyInto(savedLineItem, reportedLineItem, rnrTemplate);
     }
   }
 
-  private void copyInto(RnrLineItem fullSupplyLineItem, RnrLineItem productLineItem, ProgramRnrTemplate rnrTemplate) {
-    if (productLineItem == null) {
-      fullSupplyLineItem.setSkipped(true);
+  private void copyInto(RnrLineItem savedLineItem, RnrLineItem reportedLineItem, ProgramRnrTemplate rnrTemplate) {
+    if (reportedLineItem == null) {
+      savedLineItem.setSkipped(true);
       return;
     }
 
     for (Column column : rnrTemplate.getColumns()) {
+      if (!column.getVisible() || !rnrTemplate.columnsUserInput(column.getName()))
+        continue;
+      try {
+        Field field = RnrLineItem.class.getDeclaredField(column.getName());
+        field.setAccessible(true);
 
-      if (column.getVisible() && rnrTemplate.columnsUserInput(column.getName())) {
-        try {
-          Field field = RnrLineItem.class.getDeclaredField(column.getName());
-          field.setAccessible(true);
-
-          Object reportedValue = field.get(productLineItem);
-          Object toBeSavedValue = (reportedValue != null ? reportedValue : field.get(fullSupplyLineItem));
-          field.set(fullSupplyLineItem, toBeSavedValue);
-
-        } catch (Exception e) {
-          logger.error("could not copy field: " + column.getName());
-        }
+        Object reportedValue = field.get(reportedLineItem);
+        Object toBeSavedValue = (reportedValue != null ? reportedValue : field.get(savedLineItem));
+        field.set(savedLineItem, toBeSavedValue);
+      } catch (Exception e) {
+        logger.error("could not copy field: " + column.getName());
       }
     }
   }

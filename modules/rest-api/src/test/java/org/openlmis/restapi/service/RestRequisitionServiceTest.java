@@ -142,12 +142,12 @@ public class RestRequisitionServiceTest {
 
     when(requisitionService.submit(requisition)).thenReturn(requisition);
 
-    Rnr expectedRequisition = service.submitReport(report, 1L);
+    service.submitReport(report, 1L);
 
     verify(facilityService).getOperativeFacilityByCode(DEFAULT_AGENT_CODE);
     verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
     verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false);
-    assertThat(expectedRequisition, is(requisition));
+    verify(requisitionService).submit(requisition);
   }
 
   @Test
@@ -410,6 +410,26 @@ public class RestRequisitionServiceTest {
     assertThat(rnrLineItem.getReasonForRequestedQuantity(), is(nullValue()));
     assertThat(rnrLineItem.getRemarks(), is(nullValue()));
     assertThat(rnrLineItem.getSkipped(), is(false));
+  }
+
+  @Test
+  public void shouldAuthorizeRnr() throws Exception {
+    String facilityCode = "agent";
+    String programCode = "program";
+    Facility facility = new Facility();
+    Program program = new Program(1l);
+    Report report = make(a(defaultReport, with(agentCode, facilityCode), with(ReportBuilder.programCode, programCode)));
+    when(facilityService.getOperativeFacilityByCode(facilityCode)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(programCode)).thenReturn(program);
+    Rnr rnr = new Rnr(facility, program, new ProcessingPeriod());
+    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(rnr);
+    when(requisitionService.submit(rnr)).thenReturn(rnr);
+    when(requisitionService.authorize(rnr)).thenReturn(rnr);
+
+    Rnr authorizedRequisition = service.submitReport(report, 3l);
+
+    verify(requisitionService).authorize(rnr);
+    assertThat(authorizedRequisition, is(rnr));
   }
 
   @Test

@@ -16,6 +16,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -39,6 +41,9 @@ public class RestRequisitionCalculator {
 
   @Autowired
   private RnrTemplateService rnrTemplateService;
+
+  @Autowired
+  private PODService podService;
 
   @Autowired
   private ProcessingScheduleService processingScheduleService;
@@ -84,15 +89,27 @@ public class RestRequisitionCalculator {
     for (RnrLineItem rnrLineItem : requisition.getFullSupplyLineItems()) {
       if (rnrLineItem.getSkipped())
         continue;
-      List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
-      setBeginningBalance(rnrLineItem, nRnrLineItems);
+
+      setBeginningBalance(rnrLineItem, requisition, trackingDate);
+      setQuantityReceived(rnrLineItem, requisition, trackingDate);
     }
     return requisition;
   }
 
-  private void setBeginningBalance(RnrLineItem rnrLineItem, List<RnrLineItem> nRnrLineItems) {
+  private void setQuantityReceived(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
+    if (rnrLineItem.getQuantityReceived() != null)
+      return;
+    List<PODLineItem> nPodLineItems = podService.getNPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+
+    Integer quantityReceived = nPodLineItems.size() != 0 ? nPodLineItems.get(0).getQuantityReceived() : 0;
+
+    rnrLineItem.setQuantityReceived(quantityReceived);
+  }
+
+  private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
     if (rnrLineItem.getBeginningBalance() != null)
       return;
+    List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
     if (nRnrLineItems.size() != 0) {
       rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
       return;

@@ -462,7 +462,11 @@ public class CalculationServiceTest {
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, trackingStartDate, new Date(), 2, "previousPeriod");
 
     when(processingScheduleService.getNPreviousPeriods(requisition.getPeriod(), 5)).thenReturn(asList(previousPeriod));
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(asList(4));
+
+    RnrLineItem rnrLineItem = new RnrLineItem();
+    rnrLineItem.setNormalizedConsumption(4);
+    List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
+    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
