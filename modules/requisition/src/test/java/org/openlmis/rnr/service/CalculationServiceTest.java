@@ -586,9 +586,11 @@ public class CalculationServiceTest {
     ProcessingPeriod secondLastPeriod = new ProcessingPeriod(3l, new Date(), new Date(), 1, "secondLastPeriod");
 
     when(processingScheduleService.getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5)).thenReturn(asList(previousPeriod, secondLastPeriod));
-    RnrLineItem previousLineItem = new RnrLineItem();
-    previousLineItem.setNormalizedConsumption(5);
-    when(requisitionRepository.getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate())).thenReturn(asList(previousLineItem));
+    RnrLineItem previousLineItem1 = new RnrLineItem();
+    previousLineItem1.setNormalizedConsumption(5);
+    RnrLineItem previousLineItem2 = new RnrLineItem();
+    previousLineItem2.setNormalizedConsumption(50);
+    when(requisitionRepository.getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate())).thenReturn(asList(previousLineItem1, previousLineItem2));
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, previousPeriod)));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -601,7 +603,7 @@ public class CalculationServiceTest {
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5);
     verify(requisitionRepository).getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate());
-    assertThat(spyRnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(5)));
+    assertThat(spyRnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(5, 50)));
   }
 
   @Test
