@@ -57,7 +57,7 @@ public abstract class RnrCalculationStrategy {
   }
 
   public Integer calculateDefaultApprovedQuantity(boolean fullSupply, Integer calculatedOrderQuantity, Integer quantityRequested) {
-    return fullSupply ? calculatedOrderQuantity : quantityRequested;
+    return quantityRequested == null ? calculatedOrderQuantity : quantityRequested;
   }
 
   public Integer calculateQuantityDispensed(Integer beginningBalance, Integer quantityReceived, Integer totalLossesAndAdjustments, Integer stockInHand) {
