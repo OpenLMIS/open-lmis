@@ -10,6 +10,7 @@
 
 package org.openlmis.restapi.service;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -40,7 +41,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
-import static java.util.Collections.EMPTY_LIST;
+import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -55,7 +56,6 @@ public class RestRequisitionCalculatorTest {
 
   @Mock
   private RequisitionService requisitionService;
-
   @Mock
   private MessageService messageService;
 
@@ -67,8 +67,20 @@ public class RestRequisitionCalculatorTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
+
   @InjectMocks
   private RestRequisitionCalculator restRequisitionCalculator;
+
+  private List<ProcessingPeriod> emptyPeriodList;
+  private List<RnrLineItem> emptyLineItemList;
+  private List<PODLineItem> emptyPodLineItemList;
+
+  @Before
+  public void setUp() throws Exception {
+    emptyPeriodList = emptyList();
+    emptyLineItemList = emptyList();
+    emptyPodLineItemList = emptyList();
+  }
 
   @Test
   public void shouldSkipPeriodValidationForVirtualFacility() throws Exception {
@@ -155,7 +167,7 @@ public class RestRequisitionCalculatorTest {
   }
 
   @Test
-  public void shouldSetBeginningBalanceFromPreviousRnrsStockInHandGoingBack1PeriodIfMIs3() throws Exception {
+  public void shouldSetBeginningBalanceFromPreviousRequisitionsStockInHandGoingBack1PeriodIfMIs3() throws Exception {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 3)));
 
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, processingPeriod)));
@@ -168,7 +180,7 @@ public class RestRequisitionCalculatorTest {
     when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(asList(previousPeriod));
 
     when(requisitionService.getNRnrLineItems("P121", requisition, 1, trackingDate))
-      .thenReturn(asList(make(a(defaultRnrLineItem, with(stockInHand, 45)))));
+        .thenReturn(asList(make(a(defaultRnrLineItem, with(stockInHand, 45)))));
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
@@ -176,7 +188,7 @@ public class RestRequisitionCalculatorTest {
   }
 
   @Test
-  public void shouldSetBeginningBalanceFromPreviousRnrsStockInHandGoingBack2PeriodIfMIsLessThan3() throws Exception {
+  public void shouldSetBeginningBalanceFromPreviousRequisitionsStockInHandGoingBack2PeriodIfMIsLessThan3() throws Exception {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 3)));
 
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, processingPeriod)));
@@ -199,7 +211,7 @@ public class RestRequisitionCalculatorTest {
   }
 
   @Test
-  public void shouldSetBeginningBalanceFromPreviousRnrsStockInHandFromCurrentPeriodIfNoPreviousPeriods() throws Exception {
+  public void shouldSetBeginningBalanceFromPreviousRequisitionsStockInHandUsingCurrentPeriodIfNoPreviousPeriods() throws Exception {
     ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 3)));
 
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, processingPeriod)));
@@ -207,7 +219,7 @@ public class RestRequisitionCalculatorTest {
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P121"), with(beginningBalance, nullInteger)))));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(emptyPeriodList);
     when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(asList(make(a(defaultRnrLineItem, with(stockInHand, 45)))));
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
@@ -225,8 +237,8 @@ public class RestRequisitionCalculatorTest {
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P121"), with(stockInHand, nullInteger), with(beginningBalance, nullInteger)))));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(EMPTY_LIST);
-    when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(emptyPeriodList);
+    when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(emptyLineItemList);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
@@ -242,8 +254,8 @@ public class RestRequisitionCalculatorTest {
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P121"), with(stockInHand, 56), with(beginningBalance, nullInteger)))));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(EMPTY_LIST);
-    when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(emptyPeriodList);
+    when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(emptyLineItemList);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
@@ -258,8 +270,8 @@ public class RestRequisitionCalculatorTest {
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P121"), with(beginningBalance, 56)))));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(EMPTY_LIST);
-    when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(emptyPeriodList);
+    when(requisitionService.getNRnrLineItems("P121", requisition, 1, processingPeriod.getStartDate())).thenReturn(emptyLineItemList);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
@@ -273,10 +285,10 @@ public class RestRequisitionCalculatorTest {
     Rnr requisition = make(a(RequisitionBuilder.defaultRequisition, with(RequisitionBuilder.period, processingPeriod)));
     Integer nullInt = null;
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem,
-      with(productCode, "P121"), with(stockInHand, 56), with(skipped, true), with(beginningBalance, nullInt)))));
+        with(productCode, "P121"), with(stockInHand, 56), with(skipped, true), with(beginningBalance, nullInt)))));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(emptyPeriodList);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
@@ -291,7 +303,7 @@ public class RestRequisitionCalculatorTest {
     requisition.setFullSupplyLineItems(asList(make(a(defaultRnrLineItem, with(productCode, "P121"), with(quantityReceived, 34)))));
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 2)).thenReturn(emptyPeriodList);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 
@@ -348,7 +360,7 @@ public class RestRequisitionCalculatorTest {
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(3);
     when(processingScheduleService.getNPreviousPeriodsInDescOrder(processingPeriod, 1)).thenReturn(asList(previousPeriod));
-    when(podService.getNPodLineItems(productCode, requisition, 1, trackingDate)).thenReturn(EMPTY_LIST);
+    when(podService.getNPodLineItems(productCode, requisition, 1, trackingDate)).thenReturn(emptyPodLineItemList);
 
     Rnr filledRequisition = restRequisitionCalculator.setDefaultValues(requisition);
 

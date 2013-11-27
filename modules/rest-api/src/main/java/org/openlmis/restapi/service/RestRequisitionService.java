@@ -41,6 +41,8 @@ import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 @NoArgsConstructor
 public class RestRequisitionService {
 
+  public static final boolean EMERGENCY = false;
+
   @Autowired
   private RequisitionService requisitionService;
 
@@ -70,7 +72,7 @@ public class RestRequisitionService {
 
     restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY);
 
     restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 

@@ -22,7 +22,6 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
-import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,9 +37,6 @@ public class RestRequisitionCalculator {
 
   @Autowired
   private MessageService messageService;
-
-  @Autowired
-  private RnrTemplateService rnrTemplateService;
 
   @Autowired
   private PODService podService;
