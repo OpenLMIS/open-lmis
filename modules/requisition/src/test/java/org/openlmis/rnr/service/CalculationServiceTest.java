@@ -26,7 +26,6 @@ import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
-import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 
@@ -147,7 +146,7 @@ public class CalculationServiceTest {
   }
 
   @Test
-  public void shouldCalculateForVirtualRequisitionUsingVirtualStrategy() throws Exception {
+  public void shouldCalculateForVirtualRequisitionUsingDefaultStrategy() throws Exception {
     rnr.getFacility().setVirtualFacility(true);
     final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
     ProgramRnrTemplate template = new ProgramRnrTemplate(Collections.<Column>emptyList());
@@ -158,11 +157,11 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    ArgumentCaptor<VirtualFacilityStrategy> captor = forClass(VirtualFacilityStrategy.class);
+    ArgumentCaptor<DefaultStrategy> captor = forClass(DefaultStrategy.class);
     verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
     verify(rnrLineItem1).validateMandatoryFields(template);
     verify(rnrLineItem1).validateCalculatedFields(template);
-    assertThat(captor.getValue().getClass(), is(VirtualFacilityStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
   }
 
   @Test
@@ -183,9 +182,9 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     verify(skippedLineItem, never()).calculateForFullSupply(any(RnrCalculationStrategy.class),
-        any(ProgramRnrTemplate.class),
-        any(RnrStatus.class),
-        anyListOf(LossesAndAdjustmentsType.class));
+      any(ProgramRnrTemplate.class),
+      any(RnrStatus.class),
+      anyListOf(LossesAndAdjustmentsType.class));
 
     verify(skippedLineItem, never()).calculateCost();
     verify(nonSkippedLineItem).calculateCost();

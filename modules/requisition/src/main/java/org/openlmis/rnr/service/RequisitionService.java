@@ -108,6 +108,7 @@ public class RequisitionService {
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
+    calculationService.fillReportingDays(requisition);
 
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
@@ -152,7 +153,6 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-    calculationService.fillReportingDays(savedRnr);
     calculationService.perform(savedRnr, template);
 
     return update(savedRnr);

@@ -22,7 +22,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
-import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -122,7 +121,7 @@ public class Rnr extends BaseModel {
 
   @JsonIgnore
   public RnrCalculationStrategy getRnrCalcStrategy() {
-    return facility.getVirtualFacility() ? new VirtualFacilityStrategy() : (emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy());
+    return emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy();
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -142,8 +141,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-        previousRequisition.status == INITIATED ||
-        previousRequisition.status == SUBMITTED) {
+      previousRequisition.status == INITIATED ||
+      previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
