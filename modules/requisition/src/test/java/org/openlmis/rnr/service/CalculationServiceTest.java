@@ -23,8 +23,8 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -110,14 +110,14 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    ArgumentCaptor<DefaultStrategy> capture = forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> capture = forClass(RegularRnrCalcStrategy.class);
 
     verify(firstLineItem).calculateForFullSupply(capture.capture(), eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
-    assertThat(capture.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(capture.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
     verify(secondLineItem).calculatePacksToShip(capture.capture());
-    assertThat(capture.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(capture.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("10")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("20")));
   }
@@ -157,11 +157,11 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    ArgumentCaptor<DefaultStrategy> captor = forClass(DefaultStrategy.class);
+    ArgumentCaptor<RnrCalculationStrategy> captor = forClass(RnrCalculationStrategy.class);
     verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
     verify(rnrLineItem1).validateMandatoryFields(template);
     verify(rnrLineItem1).validateCalculatedFields(template);
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
   }
 
   @Test

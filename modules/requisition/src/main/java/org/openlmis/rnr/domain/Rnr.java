@@ -19,8 +19,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 
 import javax.persistence.Transient;
@@ -121,7 +121,8 @@ public class Rnr extends BaseModel {
 
   @JsonIgnore
   public RnrCalculationStrategy getRnrCalcStrategy() {
-    return emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy();
+    return isForVirtualFacility() ? new RnrCalculationStrategy() :
+      (emergency ? new EmergencyRnrCalcStrategy() : new RegularRnrCalcStrategy());
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {

@@ -30,7 +30,7 @@ import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class RnrCalculationStrategy {
+public class RnrCalculationStrategy {
 
   public static final MathContext MATH_CONTEXT = new MathContext(3, HALF_UP);
 
@@ -104,11 +104,11 @@ public abstract class RnrCalculationStrategy {
     dosesPerDispensingUnit = Math.max(1, dosesPerDispensingUnit);
 
     return calculateNormalizedConsumption(new BigDecimal(stockOutDays),
-        new BigDecimal(quantityDispensed),
-        new BigDecimal(newPatientCount),
-        new BigDecimal(dosesPerMonth),
-        new BigDecimal(dosesPerDispensingUnit),
-        daysSinceLastRnr);
+      new BigDecimal(quantityDispensed),
+      new BigDecimal(newPatientCount),
+      new BigDecimal(dosesPerMonth),
+      new BigDecimal(dosesPerDispensingUnit),
+      daysSinceLastRnr);
   }
 
   private Integer calculateNormalizedConsumption(BigDecimal stockOutDays,
@@ -166,7 +166,7 @@ public abstract class RnrCalculationStrategy {
     };
 
     LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
-        lossesAndAdjustmentsTypes, predicate);
+      lossesAndAdjustmentsTypes, predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
   }

@@ -16,7 +16,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.rnr.calculation.DefaultStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +29,12 @@ import static org.junit.Assert.assertThat;
 @Category(UnitTests.class)
 public class DefaultStrategyTest {
 
-  private DefaultStrategy calcStrategy;
+  private RegularRnrCalcStrategy calcStrategy;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
 
   @Before
   public void setup() {
-    calcStrategy = new DefaultStrategy();
+    calcStrategy = new RegularRnrCalcStrategy();
     LossesAndAdjustmentsType additive1 = new LossesAndAdjustmentsType("TRANSFER_IN", "TRANSFER IN", true, 1);
     LossesAndAdjustmentsType additive2 = new LossesAndAdjustmentsType("additive2", "Additive 2", true, 2);
     LossesAndAdjustmentsType subtractive1 = new LossesAndAdjustmentsType("subtractive1", "Subtractive 1", false, 3);
@@ -45,7 +45,7 @@ public class DefaultStrategyTest {
 
   @Test
   public void shouldRecalculateNormalizedConsumption() throws Exception {
-    assertThat(calcStrategy.calculateNormalizedConsumption(3, 10, 3, 30, 10, null), is(37));
+    assertThat(calcStrategy.calculateNormalizedConsumption(3, 10, 3, 30, 10, 0), is(19));
   }
 
   @Test

@@ -23,8 +23,8 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 
 import java.util.ArrayList;
@@ -35,7 +35,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.mock;
@@ -104,17 +103,26 @@ public class RnrTest {
 
     RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
 
-    assertTrue(rnrCalcStrategy instanceof EmergencyRnrCalcStrategy);
-
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("EmergencyRnrCalcStrategy"));
   }
 
   @Test
-  public void shouldGetDefaultCalculationStrategyIfRequisitionIsRegular() throws Exception {
+  public void shouldGetRegularRnrCalculationStrategyIfRequisitionIsRegular() throws Exception {
     rnr.setEmergency(false);
 
     RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
 
-    assertTrue(rnrCalcStrategy instanceof DefaultStrategy);
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("RegularRnrCalcStrategy"));
+  }
+
+
+  @Test
+  public void shouldGetRnrCalculationStrategyIfRequisitionIsForVirtualFacility() throws Exception {
+    rnr.getFacility().setVirtualFacility(true);
+
+    RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
+
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("RnrCalculationStrategy"));
 
   }
 
@@ -214,12 +222,12 @@ public class RnrTest {
 
     rnr.calculateForApproval();
 
-    ArgumentCaptor<DefaultStrategy> captor = forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> captor = forClass(RegularRnrCalcStrategy.class);
     verify(fullSupply).calculatePacksToShip(captor.capture());
     verify(nonFullSupply).calculatePacksToShip(captor.capture());
 
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("28")));
   }
@@ -472,13 +480,13 @@ public class RnrTest {
 
     rnr.setFieldsForApproval();
 
-    ArgumentCaptor<DefaultStrategy> captor = ArgumentCaptor.forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> captor = ArgumentCaptor.forClass(RegularRnrCalcStrategy.class);
 
     verify(rnrLineItem1).setFieldsForApproval(captor.capture());
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
 
     verify(rnrLineItem2).setFieldsForApproval(captor.capture());
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
   }
 
   @Test
@@ -492,7 +500,7 @@ public class RnrTest {
     rnr.setFieldsForApproval();
     rnr.setEmergency(true);
 
-    ArgumentCaptor<DefaultStrategy> captor = ArgumentCaptor.forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> captor = ArgumentCaptor.forClass(RegularRnrCalcStrategy.class);
 
     verify(rnrLineItem1).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
