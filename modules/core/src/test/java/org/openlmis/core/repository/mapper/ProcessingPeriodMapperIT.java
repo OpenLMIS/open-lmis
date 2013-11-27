@@ -37,7 +37,6 @@ import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertNull;
 import static org.apache.commons.lang.time.DateUtils.addDays;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -206,35 +205,6 @@ public class ProcessingPeriodMapperIT {
     assertThat(relevantPeriods.get(0).getId(), is(period2.getId()));
     assertThat(relevantPeriods.get(1).getId(), is(period3.getId()));
     assertThat(relevantPeriods.get(2).getId(), is(period4.getId()));
-  }
-
-  @Test
-  public void shouldGetNoImmediatePreviousPeriodIfDoesNotExist() throws Exception {
-    DateTime date1 = new DateTime();
-    DateTime date2 = date1.plusMonths(3);
-    ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, date1.toDate()), with(scheduleId, schedule.getId())));
-    ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.startDate, date2.toDate()), with(scheduleId, schedule.getId()), with(name, "Month2")));
-    mapper.insert(period1);
-    mapper.insert(period2);
-
-    ProcessingPeriod immediatePreviousPeriod = mapper.getImmediatePreviousPeriodFor(period2);
-
-    assertThat(immediatePreviousPeriod, is(nullValue()));
-  }
-
-  @Test
-  public void shouldGetImmediatePreviousPeriodFromGivenPeriod() throws Exception {
-    DateTime date1 = new DateTime();
-    ProcessingPeriod period1 = make(a(defaultProcessingPeriod, with(startDate, date1.toDate()), with(scheduleId, schedule.getId())));
-
-    DateTime date2 = new DateTime(period1.getEndDate()).plusDays(1);
-    ProcessingPeriod period2 = make(a(defaultProcessingPeriod, with(startDate, date2.toDate()), with(scheduleId, schedule.getId()), with(name, "Month2")));
-    mapper.insert(period1);
-    mapper.insert(period2);
-
-    ProcessingPeriod immediatePreviousPeriod = mapper.getImmediatePreviousPeriodFor(period2);
-
-    assertThat(immediatePreviousPeriod.getId(), is(period1.getId()));
   }
 
   @Test

@@ -227,18 +227,6 @@ public class ProcessingScheduleServiceTest {
   }
 
   @Test
-  public void shouldGetImmediatePreviousPeriod() throws Exception {
-    ProcessingPeriod expected = new ProcessingPeriod();
-    ProcessingPeriod period = new ProcessingPeriod(1L);
-    when(periodRepository.getImmediatePreviousPeriod(period)).thenReturn(expected);
-
-    ProcessingPeriod immediatePreviousPeriod = service.getImmediatePreviousPeriod(period);
-
-    verify(periodRepository).getImmediatePreviousPeriod(period);
-    assertThat(immediatePreviousPeriod, is(expected));
-  }
-
-  @Test
   public void shouldGetAllPeriodsInDateRange() throws Exception {
     Long scheduleId = 1L;
     Date startDate = DateTime.now().toDate();
@@ -259,7 +247,7 @@ public class ProcessingScheduleServiceTest {
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(
-      requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
+        requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
     when(periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
 
     List<ProcessingPeriod> actual = service.getAllPeriodsForDateRange(facility, program, startDate, endDate);
@@ -289,7 +277,7 @@ public class ProcessingScheduleServiceTest {
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     requisitionGroup.setId(5L);
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(2L), new Facility(1L)))
-      .thenReturn(requisitionGroup);
+        .thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(5L, 2L)).thenReturn(schedule);
     Date programStartDate = new Date();
     service.getCurrentPeriod(1L, 2L, programStartDate);
