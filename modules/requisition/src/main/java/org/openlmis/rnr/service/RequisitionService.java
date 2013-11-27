@@ -100,7 +100,7 @@ public class RequisitionService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-      facility.getId(), program.getId());
+        facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
@@ -278,7 +278,7 @@ public class RequisitionService {
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
-      programService.getProgramStartDate(facility.getId(), program.getId()));
+        programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
       throw new DataException("error.program.configuration.missing");
@@ -323,12 +323,12 @@ public class RequisitionService {
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {
-    if (requisition == null) return null;
+    if (requisition == null) {
+      return null;
+    }
 
     fillFacilityPeriodProgramWithAuditFields(asList(requisition));
 
-    if (!requisition.isEmergency() && !requisition.isForVirtualFacility())
-      fillPreviousRequisitionsForAmc(requisition);
     return requisition;
   }
 
@@ -344,29 +344,6 @@ public class RequisitionService {
       if (supplyLine != null)
         requisition.setSupplyingDepot(supplyLine.getSupplyingFacility());
     }
-  }
-
-  private void fillPreviousRequisitionsForAmc(Rnr requisition) {
-    Rnr lastPeriodsRnr = null;
-    Rnr secondLastPeriodsRnr = null;
-
-    if (requisition.getPeriod().getNumberOfMonths() <= 2) {
-      lastPeriodsRnr = getLastPeriodsRnr(requisition);
-      if (requisition.getPeriod().getNumberOfMonths() == 1)
-        secondLastPeriodsRnr = getLastPeriodsRnr(lastPeriodsRnr);
-    }
-    requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
-  }
-
-
-  private Rnr getLastPeriodsRnr(Rnr requisition) {
-    if (requisition == null) return null;
-
-    ProcessingPeriod lastPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
-    if (lastPeriod == null) return null;
-
-    return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-      lastPeriod);
   }
 
   public List<Rnr> listForApproval(Long userId) {
@@ -445,7 +422,7 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-      pageNumber, pageSize, userId, right, sortBy, sortDirection);
+        pageNumber, pageSize, userId, right, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
