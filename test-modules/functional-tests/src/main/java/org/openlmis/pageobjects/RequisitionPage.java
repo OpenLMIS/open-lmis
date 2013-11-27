@@ -10,7 +10,6 @@
 
 package org.openlmis.pageobjects;
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotVisibleException;
@@ -24,6 +23,7 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -130,16 +130,16 @@ public class RequisitionPage extends Page {
 
     commentsButton.click();
     WebElement comment = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/span");
-    SeleneseTestNgHelper.assertEquals(comment.getText(), comments);
+    assertEquals(comment.getText(),comments);
 
     WebElement commentAddedBy = testWebDriver.getElementByXpath("//ul[@id='comments-list']/li[" + commentNumber + "]/div");
 
     isAddedBy = commentAddedBy.getText().contains("By: " + AddedBy);
-    SeleneseTestNgHelper.assertTrue(isAddedBy);
+    assertTrue(isAddedBy);
     Date date = new Date();
     SimpleDateFormat ft = new SimpleDateFormat("dd/MM/YYYY");
     isAddedOn = commentAddedBy.getText().contains(ft.format(date));
-    SeleneseTestNgHelper.assertTrue(isAddedOn);
+    assertTrue(isAddedOn);
     commentCloseIcon.click();
   }
 
@@ -166,7 +166,7 @@ public class RequisitionPage extends Page {
   public void verifyValueInCommentsTextArea(String textToVerify) {
     testWebDriver.waitForElementToAppear(addCommentTextArea);
     addCommentTextArea.click();
-    SeleneseTestNgHelper.assertEquals(addCommentTextArea.getAttribute("value").trim(), textToVerify.trim());
+    assertEquals(addCommentTextArea.getAttribute("value").trim(), textToVerify.trim());
   }
 
   public void verifyCommentBoxNotPresent() {
@@ -199,7 +199,8 @@ public class RequisitionPage extends Page {
     String totalValue = total.getText();
     String beginningBalanceValue = testWebDriver.getAttribute(beginningBalance, "value");
     String quantityReceivedValue = testWebDriver.getAttribute(quantityReceived, "value");
-    SeleneseTestNgHelper.assertEquals(totalValue, String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
+    assertEquals(totalValue,
+            String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
   }
 
   public void verifyTotalFieldPostAuthorize() {
@@ -207,7 +208,8 @@ public class RequisitionPage extends Page {
     String totalValue = total.getText();
     String beginningBalanceValue = beginningBalance.getText();
     String quantityReceivedValue = quantityReceived.getText();
-    SeleneseTestNgHelper.assertEquals(totalValue, String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
+    assertEquals(totalValue,
+            String.valueOf(Integer.parseInt(beginningBalanceValue) + Integer.parseInt(quantityReceivedValue)));
   }
 
   public void clickFullSupplyTab() {
