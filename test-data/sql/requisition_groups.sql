@@ -42,6 +42,6 @@ insert into requisition_group_program_schedules ( requisitionGroupId , programId
 insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values
 ('supplying node for MALARIA', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='MALARIA'),(select id from facilities where code = 'F10'),'t'),
 ('supplying node for TB', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='TB'),(select id from facilities where code = 'F10'),'t'),
-('supplying node for TB', (select id from supervisory_nodes where code = 'N3'), (select id from programs where code='ESS_MEDS'),(select id from facilities where code = 'F11'),'t'),
+('supplying node for ESS_MEDS', (select id from supervisory_nodes where code = 'N1'), (select id from programs where code='ESS_MEDS'),(select id from facilities where code = 'F10'),'t'),
 ('supplying node for TB', (select id from supervisory_nodes where code = 'N3'), (select id from programs where code='MALARIA'),(select id from facilities where code = 'F11'),'f');
 
