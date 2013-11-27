@@ -8,15 +8,7 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-\i ../../test-data/sql/products.sql
-\i ../../test-data/sql/facilities.sql
-\i ../../test-data/sql/rnr_template.sql
-\i ../../test-data/sql/users.sql
-\i ../../test-data/sql/processing_schedules.sql
-\i ../../test-data/sql/requisition_groups.sql
-\i ../../test-data/sql/regimens.sql
-
---\i ../../test-data/sql/report.sql
-
-\i ../../test-data/sql/delivery_zones.sql
-\i ../../test-data/sql/allocation_users.sql
+ALTER TABLE POD
+ADD COLUMN facilityId INTEGER REFERENCES facilities (id),
+ADD COLUMN programId INTEGER REFERENCES programs (id),
+ADD COLUMN periodId INTEGER REFERENCES processing_periods (id);

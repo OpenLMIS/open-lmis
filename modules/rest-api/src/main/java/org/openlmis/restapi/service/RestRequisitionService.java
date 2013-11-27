@@ -19,7 +19,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.restapi.RequisitionValidator;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.domain.Column;
@@ -42,6 +41,8 @@ import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
 @NoArgsConstructor
 public class RestRequisitionService {
 
+  public static final boolean EMERGENCY = false;
+
   @Autowired
   private RequisitionService requisitionService;
 
@@ -58,7 +59,7 @@ public class RestRequisitionService {
   private RnrTemplateService rnrTemplateService;
 
   @Autowired
-  private RequisitionValidator requisitionValidator;
+  private RestRequisitionCalculator restRequisitionCalculator;
 
   private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
@@ -69,17 +70,22 @@ public class RestRequisitionService {
     Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
     Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
 
-    requisitionValidator.validatePeriod(reportingFacility, reportingProgram);
+    restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
 
-    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, false);
+    Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY);
 
-    requisitionValidator.validateProducts(report.getProducts(), rnr);
+    restRequisitionCalculator.validateProducts(report.getProducts(), rnr);
 
     markSkippedLineItems(rnr, report);
 
+    if (reportingFacility.getVirtualFacility())
+      restRequisitionCalculator.setDefaultValues(rnr);
+
     requisitionService.save(rnr);
 
-    return requisitionService.submit(rnr);
+    rnr = requisitionService.submit(rnr);
+
+    return requisitionService.authorize(rnr);
   }
 
 
@@ -97,7 +103,7 @@ public class RestRequisitionService {
       throw new DataException("error.number.of.line.items.mismatch");
     }
 
-    requisitionValidator.validateProducts(report.getProducts(), savedRequisition);
+    restRequisitionCalculator.validateProducts(report.getProducts(), savedRequisition);
 
     requisitionService.save(requisition);
     requisitionService.approve(requisition, report.getApproverName());
@@ -113,41 +119,39 @@ public class RestRequisitionService {
 
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(rnr.getProgram().getId());
 
-    List<RnrLineItem> fullSupplyLineItems = rnr.getFullSupplyLineItems();
-    List<RnrLineItem> products = report.getProducts();
+    List<RnrLineItem> savedLineItems = rnr.getFullSupplyLineItems();
+    List<RnrLineItem> reportedProducts = report.getProducts();
 
-    for (final RnrLineItem fullSupplyLineItem : fullSupplyLineItems) {
-      RnrLineItem productLineItem = (RnrLineItem) find(products, new Predicate() {
+    for (final RnrLineItem savedLineItem : savedLineItems) {
+      RnrLineItem reportedLineItem = (RnrLineItem) find(reportedProducts, new Predicate() {
         @Override
         public boolean evaluate(Object product) {
-          return ((RnrLineItem) product).getProductCode().equals(fullSupplyLineItem.getProductCode());
+          return ((RnrLineItem) product).getProductCode().equals(savedLineItem.getProductCode());
         }
       });
 
-      copyInto(fullSupplyLineItem, productLineItem, rnrTemplate);
+      copyInto(savedLineItem, reportedLineItem, rnrTemplate);
     }
   }
 
-  private void copyInto(RnrLineItem fullSupplyLineItem, RnrLineItem productLineItem, ProgramRnrTemplate rnrTemplate) {
-    if (productLineItem == null) {
-      fullSupplyLineItem.setSkipped(true);
+  private void copyInto(RnrLineItem savedLineItem, RnrLineItem reportedLineItem, ProgramRnrTemplate rnrTemplate) {
+    if (reportedLineItem == null) {
+      savedLineItem.setSkipped(true);
       return;
     }
 
     for (Column column : rnrTemplate.getColumns()) {
+      if (!column.getVisible() || !rnrTemplate.columnsUserInput(column.getName()))
+        continue;
+      try {
+        Field field = RnrLineItem.class.getDeclaredField(column.getName());
+        field.setAccessible(true);
 
-      if (column.getVisible() && rnrTemplate.columnsUserInput(column.getName())) {
-        try {
-          Field field = RnrLineItem.class.getDeclaredField(column.getName());
-          field.setAccessible(true);
-
-          Object reportedValue = field.get(productLineItem);
-          Object toBeSavedValue = (reportedValue != null ? reportedValue : field.get(fullSupplyLineItem));
-          field.set(fullSupplyLineItem, toBeSavedValue);
-
-        } catch (Exception e) {
-          logger.error("could not copy field: " + column.getName());
-        }
+        Object reportedValue = field.get(reportedLineItem);
+        Object toBeSavedValue = (reportedValue != null ? reportedValue : field.get(savedLineItem));
+        field.set(savedLineItem, toBeSavedValue);
+      } catch (Exception e) {
+        logger.error("could not copy field: " + column.getName());
       }
     }
   }

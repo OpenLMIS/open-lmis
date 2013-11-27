@@ -15,13 +15,19 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.rnr.domain.Rnr;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -42,6 +48,18 @@ public class PODTest {
     expectedException.expectMessage("error.restapi.mandatory.missing");
 
     pod.validate();
+  }
+
+  @Test
+  public void shouldFillPODWithFacilityProgramAndPeriodFromRequisition() throws Exception {
+    Rnr rnr = new Rnr(new Facility(2L), new Program(3L), new ProcessingPeriod(4L));
+    POD pod = new POD();
+
+    pod.fillPOD(rnr);
+
+    assertThat(pod.getFacilityId(), is(2L));
+    assertThat(pod.getProgramId(), is(3L));
+    assertThat(pod.getPeriodId(), is(4L));
   }
 
   @Test

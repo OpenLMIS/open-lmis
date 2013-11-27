@@ -106,6 +106,7 @@ public class FacilityFeed extends JsonUtility {
     manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     manageFacilityPage.enableFacility();
+    manageFacilityPage.verifyEnabledFacility();
     responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");

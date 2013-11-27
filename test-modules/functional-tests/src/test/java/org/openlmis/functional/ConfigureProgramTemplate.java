@@ -81,7 +81,8 @@ public class ConfigureProgramTemplate extends TestCaseHelper {
     int columns = initiateRnRPage.getSizeOfElements(tableXpathTillTr + "/th");
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Expiration Date", columns);
       initiateRnRPage.verifyColumnHeadingNotPresent(tableXpathTillTr, "Total", columns);
-      initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Skip", columns);
+      initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Skip\n" +
+              "All | None", columns);
       initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product", columns);
       initiateRnRPage.verifyColumnsHeadingPresent(tableFrozenXpathTillTr, "Product Code", columns);
   }

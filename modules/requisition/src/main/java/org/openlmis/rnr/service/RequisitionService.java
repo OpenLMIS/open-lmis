@@ -4,6 +4,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
+import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -78,8 +79,10 @@ public class RequisitionService {
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
   @Autowired
-  private CalculationService calculateService;
+  private CalculationService calculationService;
 
+  @Autowired
+  private DbMapper dbMapper;
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
@@ -106,8 +109,10 @@ public class RequisitionService {
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
+    requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
 
-    calculateService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
+    calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
+    calculationService.fillReportingDays(requisition);
 
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
@@ -142,7 +147,6 @@ public class RequisitionService {
   public Rnr submit(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
 
-
     if (savedRnr.getStatus() != INITIATED)
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
 
@@ -153,8 +157,7 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-    calculateService.calculateDaysDifference(savedRnr);
-    calculateService.perform(savedRnr, template);
+    calculationService.perform(savedRnr, template);
 
     return update(savedRnr);
   }
@@ -174,12 +177,11 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-    calculateService.perform(savedRnr, template);
+    calculationService.perform(savedRnr, template);
     savedRnr.setFieldsForApproval();
 
     return update(savedRnr);
   }
-
 
   @Transactional
   public Rnr approve(Rnr requisition, String name) {
@@ -325,12 +327,12 @@ public class RequisitionService {
   }
 
   private Rnr fillSupportingInfo(Rnr requisition) {
-    if (requisition == null) return null;
+    if (requisition == null) {
+      return null;
+    }
 
     fillFacilityPeriodProgramWithAuditFields(asList(requisition));
 
-    if (!requisition.isEmergency() && !requisition.isForVirtualFacility())
-      fillPreviousRequisitionsForAmc(requisition);
     return requisition;
   }
 
@@ -348,29 +350,6 @@ public class RequisitionService {
     }
   }
 
-  private void fillPreviousRequisitionsForAmc(Rnr requisition) {
-    Rnr lastPeriodsRnr = null;
-    Rnr secondLastPeriodsRnr = null;
-
-    if (requisition.getPeriod().getNumberOfMonths() <= 2) {
-      lastPeriodsRnr = getLastPeriodsRnr(requisition);
-      if (requisition.getPeriod().getNumberOfMonths() == 1)
-        secondLastPeriodsRnr = getLastPeriodsRnr(lastPeriodsRnr);
-    }
-    requisition.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
-  }
-
-
-  private Rnr getLastPeriodsRnr(Rnr requisition) {
-    if (requisition == null) return null;
-
-    ProcessingPeriod lastPeriod = processingScheduleService.getImmediatePreviousPeriod(requisition.getPeriod());
-    if (lastPeriod == null) return null;
-
-    return requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(), requisition.getProgram(),
-        lastPeriod);
-  }
-
   public List<Rnr> listForApproval(Long userId) {
     List<RoleAssignment> assignments = roleAssignmentService.getRoleAssignments(APPROVE_REQUISITION, userId);
     List<Rnr> requisitionsForApproval = new ArrayList<>();
@@ -382,6 +361,9 @@ public class RequisitionService {
     return requisitionsForApproval;
   }
 
+  public List<RnrLineItem> getNRnrLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
+    return requisitionRepository.getNRnrLineItems(productCode, rnr, n, startDate);
+  }
 
   private Rnr update(Rnr requisition) {
     requisitionRepository.update(requisition);

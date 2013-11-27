@@ -22,11 +22,14 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.pod.domain.PODLineItem;
 import org.openlmis.pod.repository.PODRepository;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.openlmis.core.domain.Right.MANAGE_POD;
@@ -44,6 +47,9 @@ public class PODService {
   private OrderService orderService;
 
   @Autowired
+  RequisitionService requisitionService;
+
+  @Autowired
   private MessageService messageService;
 
   @Autowired
@@ -51,11 +57,10 @@ public class PODService {
 
   @Transactional
   public void updatePOD(POD pod) {
-
     if (!fulfillmentPermissionService.hasPermission(pod.getCreatedBy(), getWarehouseForOrder(pod.getOrderId()), MANAGE_POD)) {
       throw new DataException("error.permission.denied");
     }
-    podRepository.insertPOD(pod);
+    insert(pod);
     if (pod.getPodLineItems() == null) return;
     List<String> invalidProductCodes = getInvalidProductCodes(pod.getPodLineItems());
     if (invalidProductCodes.size() > 0) {
@@ -70,8 +75,18 @@ public class PODService {
     orderService.updateOrderStatus(order);
   }
 
+  private void insert(POD pod) {
+    Rnr requisition = requisitionService.getLWById(pod.getOrderId());
+    pod.fillPOD(requisition);
+    podRepository.insertPOD(pod);
+  }
+
   public POD getPODByOrderId(Long orderId) {
     return podRepository.getPODByOrderId(orderId);
+  }
+
+  public List<PODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+    return podRepository.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
   private Long getWarehouseForOrder(Long orderId) {

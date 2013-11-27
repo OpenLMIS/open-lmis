@@ -11,6 +11,7 @@
 package org.openlmis.functional;
 
 
+import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
@@ -264,7 +265,58 @@ public class ViewRequisition extends TestCaseHelper {
         assertTrue(str1.contains("F10"));;
     }
 
-  @AfterMethod(groups = "requisition")
+    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+    public void testViewRnRSkipProductField(String program, String userSIC, String password) throws Exception {
+        List<String> rightsList = new ArrayList<>();
+        rightsList.add("CREATE_REQUISITION");
+        rightsList.add("AUTHORIZE_REQUISITION");
+        rightsList.add("APPROVE_REQUISITION");
+        rightsList.add("VIEW_REQUISITION");
+        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+        dbWrapper.deletePeriod("Period1");
+        dbWrapper.deletePeriod("Period2");
+        dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+        dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+        HomePage homePage = loginPage.loginAs(userSIC, password);
+
+        homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+        initiateRnRPage.enterBeginningBalance("1");
+        initiateRnRPage.enterQuantityDispensed("1");
+        initiateRnRPage.enterQuantityReceived("2");
+        initiateRnRPage.enterBeginningBalanceSecondProduct("10");
+        initiateRnRPage.enterQuantityReceivedSecondProduct("0");
+        initiateRnRPage.enterQuantityDispensedSecondProduct("0");
+        initiateRnRPage.calculateAndVerifyTotalCost();
+        initiateRnRPage.verifyCostOnFooter();
+        initiateRnRPage.skipAllProduct();
+        initiateRnRPage.verifyAllFieldsDisabled();
+        initiateRnRPage.calculateAndVerifyTotalCost();
+        SeleneseTestNgHelper.assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
+        SeleneseTestNgHelper.assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
+
+        initiateRnRPage.unskipAllProduct();
+        assertTrue(initiateRnRPage.isEnableBeginningBalance());
+        initiateRnRPage.skipSingleProduct(1);
+        initiateRnRPage.submitRnR();
+        initiateRnRPage.clickOk();
+        initiateRnRPage.verifySubmitRnrSuccessMsg();
+        initiateRnRPage.clickAuthorizeButton();
+        initiateRnRPage.clickOk();
+        initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+        initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+        ViewRequisitionPage viewRequisitionPage = homePage.navigateViewRequisition();
+        viewRequisitionPage.verifyElementsOnViewRequisitionScreen();
+        viewRequisitionPage.enterViewSearchCriteria();
+        viewRequisitionPage.clickSearch();
+        viewRequisitionPage.clickRnRList();
+        viewRequisitionPage.verifySkippedProductsOnRnRScreen(1);
+    }
+
+
+
+    @AfterMethod(groups = "requisition")
   @After
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);

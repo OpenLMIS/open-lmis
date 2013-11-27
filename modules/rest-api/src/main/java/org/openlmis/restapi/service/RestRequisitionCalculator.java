@@ -8,12 +8,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.Â  If not, see http://www.gnu.org/licenses. Â For additional information contact info@OpenLMIS.org.Â 
  */
 
-package org.openlmis.restapi;
+package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -22,16 +26,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
-public class RequisitionValidator {
+public class RestRequisitionCalculator {
 
   @Autowired
   private RequisitionService requisitionService;
 
   @Autowired
   private MessageService messageService;
+
+  @Autowired
+  private PODService podService;
+
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
 
   public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
 
@@ -65,4 +76,46 @@ public class RequisitionValidator {
     }
   }
 
+  public Rnr setDefaultValues(Rnr requisition) {
+    Integer M = processingScheduleService.findM(requisition.getPeriod());
+
+    List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
+    Date trackingDate = requisition.getPeriod().getStartDate();
+
+    if (nPreviousPeriods.size() != 0) {
+      trackingDate = M >= 3 ? nPreviousPeriods.get(0).getStartDate() : nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate();
+    }
+
+    for (RnrLineItem rnrLineItem : requisition.getNonSkippedLineItems()) {
+      setBeginningBalance(rnrLineItem, requisition, trackingDate);
+      setQuantityReceived(rnrLineItem, requisition, trackingDate);
+    }
+    return requisition;
+  }
+
+  private void setQuantityReceived(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
+    if (rnrLineItem.getQuantityReceived() != null)
+      return;
+
+    List<PODLineItem> nPodLineItems = podService.getNPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+
+    Integer quantityReceived = nPodLineItems.size() != 0 ? nPodLineItems.get(0).getQuantityReceived() : 0;
+
+    rnrLineItem.setQuantityReceived(quantityReceived);
+  }
+
+  private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
+    if (rnrLineItem.getBeginningBalance() != null)
+      return;
+
+    List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+
+    if (nRnrLineItems.size() != 0) {
+      rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
+      return;
+    }
+
+    Integer beginningBalance = rnrLineItem.getStockInHand() != null ? rnrLineItem.getStockInHand() : 0;
+    rnrLineItem.setBeginningBalance(beginningBalance);
+  }
 }

@@ -1440,18 +1440,18 @@ public class DBWrapper {
             fullSupplyItemsSubmittedCost = rs.getFloat(1) ;
         }
         return fullSupplyItemsSubmittedCost;
-    }
+  }
 
-   public String getStockInHand(String requisitionId) throws IOException, SQLException {
-        String stockInHand = null;
-        ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
+ public String getStockInHand(String requisitionId) throws IOException, SQLException {
+   String stockInHand = null;
+   ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
 
-        if (rs.next()) {
-            stockInHand = rs.getString("stockinhand");
-        }
-        return stockInHand;
+   if (rs.next()) {
+      stockInHand = rs.getString("stockinhand");
+   }
+   return stockInHand;
 
-    }
+ }
 
     public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
         update("UPDATE program_rnr_columns set formulavalidationrequired ='"+flag+"' WHERE programid=" +
@@ -1468,4 +1468,15 @@ public class DBWrapper {
   public void deleteConfigureTemplate(String program) throws SQLException {
     update("DELETE FROM program_rnr_columns where programid=(select id from programs where code = '" + program + "');");
   }
+
+    public String getApproverName(long requisitionId) throws IOException, SQLException {
+        String name = null;
+        ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrid =" + requisitionId + " and status='APPROVED';");
+
+        if (rs.next()) {
+            name = rs.getString("name");
+        }
+        return name;
+
+    }
 }

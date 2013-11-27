@@ -117,7 +117,7 @@ public class CreateUpdateCHW extends JsonUtility {
 
     manageFacilityPage.verifyDisabledFacility(agentCode, DEFAULT_AGENT_NAME);
     HomePage homePageRestore = manageFacilityPage.enableFacility();
-
+    manageFacilityPage.verifyEnabledFacility();
     ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
     manageFacilityPageRestore.searchFacility(agentCode);
     manageFacilityPageRestore.clickFacilityList(agentCode);

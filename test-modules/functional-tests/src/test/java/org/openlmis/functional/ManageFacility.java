@@ -58,6 +58,10 @@ public class ManageFacility extends TestCaseHelper {
     String operatedBy = "MoH";
     String facilityCodePrefix = "FCcode";
     String facilityNamePrefix = "FCname";
+    String catchmentPopulationValue = "600000";
+    String latitudeValue = "955.5555";
+    String longitudeValue = "644.4444";
+    String altitudeValue = "6545.4545";
 
     String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
@@ -70,15 +74,22 @@ public class ManageFacility extends TestCaseHelper {
     manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     HomePage homePageRestore = manageFacilityPage.enableFacility();
-
+    manageFacilityPage.verifyEnabledFacility();
     ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
     manageFacilityPageRestore.searchFacility(date_time);
     manageFacilityPageRestore.clickFacilityList(date_time);
-    HomePage homePageEdit = manageFacilityPageRestore.editAndVerifyFacility("ESSENTIAL MEDICINES", facilityNamePrefix + date_time);
+    manageFacilityPageRestore.verifyEditFacilityHeader("Edit facility") ;
+    HomePage homePageEdit = manageFacilityPageRestore.editFacility("ESSENTIAL MEDICINES",catchmentPopulationValue, latitudeValue,longitudeValue, altitudeValue);
+
+    manageFacilityPageRestore.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "updated");
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility(date_time);
+    manageFacilityPage.clickFacilityList(date_time);
+    manageFacilityPageRestore.verifyEditedFacility(catchmentPopulationValue, latitudeValue,longitudeValue, altitudeValue);
 
     ManageFacilityPage manageFacilityPageEdit = homePageEdit.navigateSearchFacility();
     manageFacilityPageEdit.searchFacility(date_time);
-
+    manageFacilityPageEdit.clickFacilityList(date_time);
     ArrayList<String> programsSupported = new ArrayList<String>();
     programsSupported.add("HIV");
     programsSupported.add("ESSENTIAL MEDICINES");

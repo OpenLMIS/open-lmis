@@ -19,10 +19,9 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
-import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -123,7 +122,8 @@ public class Rnr extends BaseModel {
 
   @JsonIgnore
   public RnrCalculationStrategy getRnrCalcStrategy() {
-    return facility.getVirtualFacility() ? new VirtualFacilityStrategy() : (emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy());
+    return isForVirtualFacility() ? new RnrCalculationStrategy() :
+      (emergency ? new EmergencyRnrCalcStrategy() : new RegularRnrCalcStrategy());
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -143,8 +143,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-        previousRequisition.status == INITIATED ||
-        previousRequisition.status == SUBMITTED) {
+      previousRequisition.status == INITIATED ||
+      previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -189,7 +189,7 @@ public class Rnr extends BaseModel {
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
     this.program = program.basicInformation();
-    this.period = period.basicInformation();
+    this.period = period;
     this.facility = facility.basicInformation();
   }
 

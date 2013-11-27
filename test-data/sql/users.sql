@@ -67,6 +67,10 @@ INSERT INTO role_rights
 ((SELECT
     id
   FROM roles
+  WHERE name = 'Shipment'), 'VIEW_ORDER'),
+((SELECT
+    id
+  FROM roles
   WHERE name = 'View-Report'), 'VIEW_REPORT');
 
 

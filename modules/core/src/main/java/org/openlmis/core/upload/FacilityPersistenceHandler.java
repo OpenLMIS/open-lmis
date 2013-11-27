@@ -40,9 +40,10 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
   protected void save(BaseModel record) {
     facilityService.save((Facility) record);
   }
+
   @Override
   public void postProcess(AuditFields auditFields) {
-    List<Facility> facilities = facilityService.getAllByModifiedDate(auditFields.getCurrentTimestamp());
+    List<Facility> facilities = facilityService.getAllParentsByModifiedDate(auditFields.getCurrentTimestamp());
     for (Facility facility : facilities) {
       facilityService.updateAndNotifyForVirtualFacilities(facility);
     }

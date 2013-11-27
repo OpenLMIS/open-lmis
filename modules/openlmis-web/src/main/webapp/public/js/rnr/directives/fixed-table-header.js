@@ -53,6 +53,7 @@ app.directive('fixedTableHeader', function () {
         if (element.offset().top < 0 && element.is(':visible')) {
           setWidthAndHeightFromParent();
           fixedHeader.show();
+          fixedHeader.scrollLeft(element.parent().scrollLeft());
         }
       });
 
@@ -62,14 +63,3 @@ app.directive('fixedTableHeader', function () {
     }
   };
 });
-
-
-var viewFixedHeaderOnScroll = function (fixedHeaderElement, element) {
-  angular.element('.rnr-body').scroll(function () {
-    fixedHeaderElement.hide();
-    if (element.offset().top < 0 && !element.is(':hidden') && fixedHeaderElement.is(':hidden')) {
-      fixedHeaderElement.show();
-      fixedHeaderElement.scrollLeft(element.parent().scrollLeft());
-    }
-  });
-};

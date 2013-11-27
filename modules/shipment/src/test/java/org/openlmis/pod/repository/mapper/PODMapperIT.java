@@ -9,16 +9,17 @@
  */
 package org.openlmis.pod.repository.mapper;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.context.ApplicationTestContext;
 import org.openlmis.core.query.QueryExecutor;
-import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItems;
 
 @Category(UnitTests.class)
 public class PODMapperIT extends ApplicationTestContext {
@@ -42,7 +44,6 @@ public class PODMapperIT extends ApplicationTestContext {
 
   @Before
   public void setUp() throws Exception {
-
     productCode = "P10";
     order = insertOrder(productCode);
   }
@@ -51,11 +52,16 @@ public class PODMapperIT extends ApplicationTestContext {
   public void shouldInsertPOD() {
     POD pod = new POD();
     pod.setOrderId(order.getId());
-
+    Rnr rnr = order.getRnr();
+    pod.fillPOD(rnr);
     podMapper.insertPOD(pod);
 
-    assertThat(pod.getId(), is(notNullValue()));
+    POD savedPod = podMapper.getPODByOrderId(pod.getOrderId());
 
+    assertThat(savedPod.getId(), is(notNullValue()));
+    assertThat(savedPod.getFacilityId(), is(rnr.getFacility().getId()));
+    assertThat(savedPod.getProgramId(), is(rnr.getProgram().getId()));
+    assertThat(savedPod.getPeriodId(), is(rnr.getPeriod().getId()));
   }
 
   @Test
@@ -85,12 +91,12 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(podLineItems.size(), is(1));
     assertThat(podLineItems.get(0).getProductCode(), is(productCode));
   }
-  
+
   @Test
   public void shouldGetPODByOrderId() throws SQLException {
     POD pod = new POD();
     pod.setOrderId(order.getId());
-    queryExecutor.executeUpdate("INSERT INTO pod(orderId) values(?)",order.getId());
+    queryExecutor.executeUpdate("INSERT INTO pod(orderId) values(?)", order.getId());
 
     POD savedPOD = podMapper.getPODByOrderId(order.getId());
     assertThat(savedPOD, is(notNullValue()));
@@ -98,4 +104,18 @@ public class PODMapperIT extends ApplicationTestContext {
   }
 
 
+  @Test
+  public void shouldGetNPreviousPODLineItemsAfterGivenTrackingDateForGivenProgramPeriodAndProduct() {
+    POD pod = new POD();
+    pod.setOrderId(order.getId());
+    pod.fillPOD(order.getRnr());
+    Rnr requisition = order.getRnr();
+    podMapper.insertPOD(pod);
+    PODLineItem podLineItem = new PODLineItem(pod.getId(), productCode, 100);
+    podMapper.insertPODLineItem(podLineItem);
+
+    List<PODLineItem> nPodLineItems = podMapper.getNPodLineItems(productCode, requisition, 1, DateTime.now().minusDays(5).toDate());
+
+    assertThat(nPodLineItems, hasItems(podLineItem));
+  }
 }
