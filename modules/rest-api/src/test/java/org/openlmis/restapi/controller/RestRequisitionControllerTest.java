@@ -110,7 +110,7 @@ public class RestRequisitionControllerTest {
     doNothing().when(report).validateForApproval();
     doNothing().when(service).approve(report, requisitionId, userId);
     ResponseEntity<RestResponse> expectResponse = new ResponseEntity<>(new RestResponse(SUCCESS, "success"), OK);
-    when(RestResponse.success("msg.rnr.approve.success")).thenReturn(expectResponse);
+    when(RestResponse.success("msg.rnr.approved.success")).thenReturn(expectResponse);
 
     ResponseEntity<RestResponse> response = controller.approve(requisitionId, report, principal);
 

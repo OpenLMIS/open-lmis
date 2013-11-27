@@ -56,7 +56,7 @@ public class RestRequisitionController extends BaseController {
     try {
       report.validateForApproval();
       restRequisitionService.approve(report, requisitionId, loggedInUserId(principal));
-      return success("msg.rnr.approve.success");
+      return success("msg.rnr.approved.success");
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

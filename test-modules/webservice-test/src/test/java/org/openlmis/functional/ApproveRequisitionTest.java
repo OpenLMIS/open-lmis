@@ -66,7 +66,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     String response = responseEntity.getResponse();
 
     assertEquals(200, responseEntity.getStatus());
-    assertTrue(response.contains("{\"success\":"));
+    assertTrue(response.contains("success\":\"R&R approved successfully!"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
     assertEquals("some random name",dbWrapper.getApproverName(id));
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
