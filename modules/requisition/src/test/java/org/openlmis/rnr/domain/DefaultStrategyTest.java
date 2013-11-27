@@ -93,7 +93,7 @@ public class DefaultStrategyTest {
 
   @Test
   public void shouldSetRequestedQuantityAsDefaultApprovedQuantityForFullSupplyItems() throws Exception {
-    assertThat(calcStrategy.calculateDefaultApprovedQuantity(true, 1, 6), is(1));
+    assertThat(calcStrategy.calculateDefaultApprovedQuantity(true, 1, 6), is(6));
   }
 
   @Test
