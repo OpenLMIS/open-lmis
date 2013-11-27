@@ -74,7 +74,7 @@ public class ManageFacility extends TestCaseHelper {
     manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     HomePage homePageRestore = manageFacilityPage.enableFacility();
-
+    manageFacilityPage.verifyEnabledFacility();
     ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
     manageFacilityPageRestore.searchFacility(date_time);
     manageFacilityPageRestore.clickFacilityList(date_time);

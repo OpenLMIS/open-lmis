@@ -417,7 +417,6 @@ public class ManageFacilityPage extends Page {
 
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
-
     String expectedMessageOnAlert = String.format("\"%s\" / \"%s\" will be disabled in the system.", facilityNameValue, facilityCodeValue);
     verifyEditFacilityHeader("Edit facility");
     clickDisableButtonOnFacilityScreen();
@@ -439,7 +438,7 @@ public class ManageFacilityPage extends Page {
     testWebDriver.waitForElementToAppear(disableMessageOnAlert);
 
     String disableMessageOnAlertValue = disableMessageOnAlert.getText();
-    SeleneseTestNgHelper.assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
+    assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
   }
 
   public void verifyDisabledFacility(String facilityCodeValue, String facilityNameValue) {
@@ -449,10 +448,10 @@ public class ManageFacilityPage extends Page {
 
     testWebDriver.sleep(1000);
     String disableMessageOnFacilityScreenValue = successMessageDiv.getText();
-    SeleneseTestNgHelper.assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
+    assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
 
     String enableValue = enabledFlag.getText();
-    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "No");
+    assertEquals(enableValue.trim(), "No");
 
     SeleneseTestNgHelper.assertTrue(isActiveRadioNoOption.isSelected());
   }
@@ -475,7 +474,6 @@ public class ManageFacilityPage extends Page {
     testWebDriver.sleep(1000);
     okLink.click();
     testWebDriver.sleep(1000);
-    verifyEnabledFacility();
 
     return new HomePage(testWebDriver);
   }
