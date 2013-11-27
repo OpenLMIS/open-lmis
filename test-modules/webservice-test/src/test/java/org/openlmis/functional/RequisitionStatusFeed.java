@@ -56,7 +56,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    submitRnrFromApi("commTrack", "Admin123", "HIV", "P10");
+    submitRnrFromApiForF10("commTrack", "Admin123", "HIV", "P10");
     Long id = (long)dbWrapper.getMaxRnrID();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");

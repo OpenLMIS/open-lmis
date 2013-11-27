@@ -17,6 +17,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.domain.Report;
 
 import java.io.File;
@@ -86,7 +87,7 @@ public class JsonUtility extends TestCaseHelper {
     convertOrderPage.convertToOrder();
   }
 
-  public void submitRnrFromApi(String user, String password, String program, String product) throws Exception {
+  public void submitRnrFromApiForF10(String user, String password, String program, String product) throws Exception {
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     HttpClient client = new HttpClient();
     client.createContext();
@@ -105,6 +106,24 @@ public class JsonUtility extends TestCaseHelper {
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
+  public void createVirtualFacilityThroughApi(String agentCode, String facilityCode) throws IOException {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    Agent agentJson = JsonUtility.readObjectFromFile("AgentValid.txt", Agent.class);
+    agentJson.setAgentCode(agentCode);
+    agentJson.setAgentName("Agent");
+    agentJson.setParentFacilityCode(facilityCode);
+    agentJson.setPhoneNumber("3434234");
+    agentJson.setActive("true");
+
+    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
+      "http://localhost:9091/rest-api/agents.json",
+      POST,
+      "commTrack",
+      "Admin123");
+    assertTrue("Showing response as : " + responseEntity.getResponse(),
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 }
 

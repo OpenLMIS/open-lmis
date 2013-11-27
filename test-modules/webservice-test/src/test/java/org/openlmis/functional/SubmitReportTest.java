@@ -691,25 +691,6 @@ public class SubmitReportTest extends JsonUtility {
     assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
   }
 
-  public void createVirtualFacilityThroughApi(String agentCode, String facilityCode) throws IOException {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    Agent agentJson = JsonUtility.readObjectFromFile("AgentValid.txt", Agent.class);
-    agentJson.setAgentCode(agentCode);
-    agentJson.setAgentName("Agent");
-    agentJson.setParentFacilityCode(facilityCode);
-    agentJson.setPhoneNumber("3434234");
-    agentJson.setActive("true");
-
-    ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-      "http://localhost:9091/rest-api/agents.json",
-      POST,
-      "commTrack",
-      "Admin123");
-    assertTrue("Showing response as : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
-  }
-
   @Test(groups = {"webservice"})
   public void testMasterTemplateValidationMissingBothMandatoryUserInputFields() throws Exception {
     HttpClient client = new HttpClient();
