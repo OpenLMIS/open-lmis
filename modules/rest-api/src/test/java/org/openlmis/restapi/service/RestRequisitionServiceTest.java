@@ -437,6 +437,7 @@ public class RestRequisitionServiceTest {
     String facilityCode = "agent";
     String programCode = "program";
     Facility facility = new Facility();
+    facility.setVirtualFacility(true);
     Program program = new Program(1l);
     Report report = make(a(defaultReport, with(agentCode, facilityCode), with(ReportBuilder.programCode, programCode)));
     when(facilityService.getOperativeFacilityByCode(facilityCode)).thenReturn(facility);

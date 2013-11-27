@@ -76,7 +76,8 @@ public class RestRequisitionService {
 
     markSkippedLineItems(rnr, report);
 
-    restRequisitionCalculator.setDefaultValues(rnr);
+    if (reportingFacility.getVirtualFacility())
+      restRequisitionCalculator.setDefaultValues(rnr);
 
     requisitionService.save(rnr);
 
