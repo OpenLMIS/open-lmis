@@ -336,4 +336,14 @@ public class RequisitionPage extends Page {
     List<WebElement> tr_collection = table_element.findElements(By.xpath("id('regimenTable')/tbody[1]/tr/td"));
     return tr_collection.size();
   }
+
+    public void verifySkippedProductsOnRnRScreen(int rowNumber)
+    {
+        WebElement skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber - 1));
+        testWebDriver.waitForElementToAppear(skipCheckBox);
+        assertTrue(skipCheckBox.isSelected());
+        skipCheckBox=null;
+        skipCheckBox = testWebDriver.getElementById("skip_" + (rowNumber));
+        assertFalse(skipCheckBox.isSelected());
+    }
 }
