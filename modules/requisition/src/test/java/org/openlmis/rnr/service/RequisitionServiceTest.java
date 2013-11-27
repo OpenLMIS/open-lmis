@@ -30,6 +30,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -124,6 +125,9 @@ public class RequisitionServiceTest {
 
   @Mock
   private CalculationService calculationService;
+
+  @Mock
+  private DbMapper dbMapper;
 
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
@@ -1319,14 +1323,20 @@ public class RequisitionServiceTest {
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(rnrTemplate);
 
     when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(previousRnr);
-
-    Rnr requisition = new Rnr();
+    Date createdDateFromDB = DateTime.now().toDate();
+    when(dbMapper.getCurrentTimeStamp()).thenReturn(createdDateFromDB);
+    Rnr requisition = mock(Rnr.class);
+    when(requisition.getId()).thenReturn(1l);
+    when(requisition.getFacility()).thenReturn(FACILITY);
+    when(requisition.getProgram()).thenReturn(PROGRAM);
+    when(requisition.getPeriod()).thenReturn(PERIOD);
     whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
+    when(requisitionRepository.getById(1l)).thenReturn(requisition);
 
     spyRequisitionService.initiate(FACILITY, PROGRAM, USER_ID, false);
 
     verify(calculationService).fillReportingDays(requisition);
-
+    verify(requisition).setCreatedDate(createdDateFromDB);
   }
 
   private void setupForInitRnr() {

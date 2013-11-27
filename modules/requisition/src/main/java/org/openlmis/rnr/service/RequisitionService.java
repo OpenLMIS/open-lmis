@@ -4,6 +4,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
+import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -80,6 +81,8 @@ public class RequisitionService {
   @Autowired
   private CalculationService calculationService;
 
+  @Autowired
+  private DbMapper dbMapper;
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
@@ -106,6 +109,7 @@ public class RequisitionService {
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
+    requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);

@@ -22,70 +22,70 @@ import java.util.List;
 public interface RnrLineItemMapper {
 
   @Insert({"INSERT INTO requisition_line_items",
-      "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
-      "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
-      "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-      "newPatientCount, stockOutDays, previousNormalizedConsumptions,",
-      "modifiedBy,createdBy)",
-      "VALUES (",
-      "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
-      "#{lineItem.productCategoryDisplayOrder}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
-      "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
-      "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
-      "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
-      "#{previousNormalizedConsumptions}, #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
+    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
+    "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
+    "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
+    "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, ",
+    "modifiedBy,createdBy)",
+    "VALUES (",
+    "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
+    "#{lineItem.productCategoryDisplayOrder}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
+    "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
+    "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
+    "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
+    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true order by id")
   @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
-      @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+    @Result(property = "id", column = "id"),
+    @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
+    @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
   public List<RnrLineItem> getRnrLineItemsByRnrId(Long rnrId);
 
   @Update({"UPDATE requisition_line_items",
-      "SET quantityReceived = #{quantityReceived},",
-      "quantityDispensed = #{quantityDispensed},",
-      "beginningBalance = #{beginningBalance},",
-      "stockInHand = #{stockInHand},",
-      "quantityRequested = #{quantityRequested},",
-      "reasonForRequestedQuantity = #{reasonForRequestedQuantity},",
-      "totalLossesAndAdjustments = #{totalLossesAndAdjustments},",
-      "calculatedOrderQuantity = #{calculatedOrderQuantity},",
-      "quantityApproved = #{quantityApproved},",
-      "newPatientCount = #{newPatientCount},",
-      "stockOutDays = #{stockOutDays},",
-      "normalizedConsumption = #{normalizedConsumption},",
-      "amc = #{amc},",
-      "maxStockQuantity = #{maxStockQuantity},",
-      "packsToShip = #{packsToShip},",
-      "remarks = #{remarks},",
-      "reportingDays = #{reportingDays},",
-      "expirationDate = #{expirationDate},",
-      "skipped = #{skipped},",
-      "modifiedBy = #{modifiedBy},",
-      "modifiedDate = CURRENT_TIMESTAMP",
-      "WHERE id = #{id}"
+    "SET quantityReceived = #{quantityReceived},",
+    "quantityDispensed = #{quantityDispensed},",
+    "beginningBalance = #{beginningBalance},",
+    "stockInHand = #{stockInHand},",
+    "quantityRequested = #{quantityRequested},",
+    "reasonForRequestedQuantity = #{reasonForRequestedQuantity},",
+    "totalLossesAndAdjustments = #{totalLossesAndAdjustments},",
+    "calculatedOrderQuantity = #{calculatedOrderQuantity},",
+    "quantityApproved = #{quantityApproved},",
+    "newPatientCount = #{newPatientCount},",
+    "stockOutDays = #{stockOutDays},",
+    "normalizedConsumption = #{normalizedConsumption},",
+    "amc = #{amc},",
+    "maxStockQuantity = #{maxStockQuantity},",
+    "packsToShip = #{packsToShip},",
+    "remarks = #{remarks},",
+    "reportingDays = #{reportingDays},",
+    "expirationDate = #{expirationDate},",
+    "skipped = #{skipped},",
+    "modifiedBy = #{modifiedBy},",
+    "modifiedDate = CURRENT_TIMESTAMP",
+    "WHERE id = #{id}"
   })
   int update(RnrLineItem rnrLineItem);
 
   @Insert({"INSERT INTO requisition_line_items",
-      "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, dispensingUnit,",
-      "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packSize, price, roundToZero,",
-      "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
-      "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
-      "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
-      "remarks, quantityRequested, reasonForRequestedQuantity)",
-      "VALUES ( ",
-      "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
-      "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{packSize}, #{price}, #{roundToZero},",
-      "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
-      "0, 0, 0, #{quantityApproved},",
-      "0, 0, 0, 0, 0,",
-      " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
+    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, dispensingUnit,",
+    "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packSize, price, roundToZero,",
+    "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
+    "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
+    "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
+    "remarks, quantityRequested, reasonForRequestedQuantity)",
+    "VALUES ( ",
+    "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
+    "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{packSize}, #{price}, #{roundToZero},",
+    "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
+    "0, 0, 0, #{quantityApproved},",
+    "0, 0, 0, 0, 0,",
+    " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
   @Options(useGeneratedKeys = true)
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
 
@@ -100,12 +100,12 @@ public interface RnrLineItemMapper {
   public Integer getCategoryCount(@Param(value = "rnr") Rnr rnr, @Param(value = "isFullSupply") Boolean isFullSupply);
 
   @Update("UPDATE requisition_line_items " +
-      "SET quantityApproved = #{quantityApproved}, " +
-      " packsToShip = #{packsToShip}, " +
-      " remarks = #{remarks}, " +
-      " modifiedBy = #{modifiedBy}, " +
-      " modifiedDate = CURRENT_TIMESTAMP " +
-      " WHERE id = #{id}"
+    "SET quantityApproved = #{quantityApproved}, " +
+    " packsToShip = #{packsToShip}, " +
+    " remarks = #{remarks}, " +
+    " modifiedBy = #{modifiedBy}, " +
+    " modifiedDate = CURRENT_TIMESTAMP " +
+    " WHERE id = #{id}"
   )
   void updateOnApproval(RnrLineItem lineItem);
 
@@ -113,27 +113,27 @@ public interface RnrLineItemMapper {
   RnrLineItem getExistingNonFullSupplyItemByRnrIdAndProductCode(@Param(value = "rnrId") Long rnrId, @Param(value = "productCode") String productCode);
 
   @Select({"SELECT RSC.createdDate FROM requisition_status_changes RSC INNER JOIN requisitions",
-      "R ON RSC.rnrId = R.id AND RSC.status = 'AUTHORIZED'",
-      "AND R.facilityId = #{rnr.facility.id}",
-      "AND R.programId = #{rnr.program.id}",
-      "AND RSC.createdDate >= #{periodStartDate}",
-      "INNER JOIN requisition_line_items RLI ON R.id = RLI.rnrId",
-      "AND RLI.skipped = false",
-      "AND RLI.productCode = #{productCode}",
-      "ORDER BY RSC.createdDate DESC LIMIT 1"})
+    "R ON RSC.rnrId = R.id AND RSC.status = 'AUTHORIZED'",
+    "AND R.facilityId = #{rnr.facility.id}",
+    "AND R.programId = #{rnr.program.id}",
+    "AND RSC.createdDate >= #{periodStartDate}",
+    "INNER JOIN requisition_line_items RLI ON R.id = RLI.rnrId",
+    "AND RLI.skipped = false",
+    "AND RLI.productCode = #{productCode}",
+    "ORDER BY RSC.createdDate DESC LIMIT 1"})
   Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
 
   @Select({"SELECT RLI.normalizedConsumption, RLI.stockInHand FROM requisition_line_items RLI",
-      "INNER JOIN requisitions R ON R.id = RLI.rnrId",
-      "AND R.facilityId = #{rnr.facility.id}",
-      "AND R.programId = #{rnr.program.id}",
-      "AND RLI.productCode = #{productCode}",
-      "INNER JOIN requisition_status_changes",
-      "RSC ON RSC.rnrId = R.id",
-      "AND RLI.skipped = false",
-      "AND RSC.status = 'AUTHORIZED'",
-      "AND R.emergency = false",
-      "AND RSC.createdDate >= #{startDate}",
-      "ORDER BY RSC.createdDate DESC LIMIT #{n}"})
+    "INNER JOIN requisitions R ON R.id = RLI.rnrId",
+    "AND R.facilityId = #{rnr.facility.id}",
+    "AND R.programId = #{rnr.program.id}",
+    "AND RLI.productCode = #{productCode}",
+    "INNER JOIN requisition_status_changes",
+    "RSC ON RSC.rnrId = R.id",
+    "AND RLI.skipped = false",
+    "AND RSC.status = 'AUTHORIZED'",
+    "AND R.emergency = false",
+    "AND RSC.createdDate >= #{startDate}",
+    "ORDER BY RSC.createdDate DESC LIMIT #{n}"})
   List<RnrLineItem> getNRnrLineItems(@Param("productCode") String productCode, @Param("rnr") Rnr rnr, @Param("n") Integer n, @Param("startDate") Date startDate);
 }
