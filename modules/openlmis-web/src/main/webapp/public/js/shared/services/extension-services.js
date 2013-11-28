@@ -14,6 +14,9 @@ services.factory('AverageConsumptionReport', function ($resource) {
 services.factory('Products', function($resource){
     return $resource('/reports/products.json', {}, {});
 }) ;
+services.factory('ReportRegimenCategories', function($resource){
+   return $resource('/reports/regimenCategories.json', {}, {}) ;
+} );
 
 services.factory('ProductsByCategory', function($resource){
     return $resource('/reports/products_by_category.json', {}, {});
@@ -88,6 +91,18 @@ services.factory('ReportSchedules', function ($resource) {
 services.factory('ReportFacilityTypes', function ($resource) {
     return $resource('/reports/facilityTypes.json', {}, {});
 });
+services.factory('ReportRegimenCategories', function ($resource) {
+    return $resource('/reports/regimenCategories.json', {}, {});
+});
+
+services.factory('ReportRegimensByCategory',function ($resource){
+    return $resource('/reports/regimenCategories/:regimenCategoryId/regimens.json', {}, {});
+});
+
+
+services.factory('ReportRegimens',function ($resource){
+    return $resource('/reports/regiments.json', {}, {}) ;
+});
 
 services.factory('FacilityList', function ($resource) {
     return $resource('/reports/reportdata/facilitylist.json', {}, {});
@@ -100,7 +115,6 @@ services.factory('ReportPeriods', function ($resource) {
 services.factory('ReportPeriodsByScheduleAndYear', function ($resource) {
     return $resource('/reports/schedules/:scheduleId/year/:year/periods.json', {}, {});
 });
-
 services.factory('AllReportPeriods', function ($resource) {
     return $resource('/reports/allPeriods.json', {}, {});
 });
@@ -348,4 +362,8 @@ services.factory("GetRequisitionGroupsForSupervisoryNode", function($resource) {
 
 services.factory('OrderFillRateReport', function ($resource) {
     return $resource('/reports/reportdata/orderFillRate.json', {}, {});
+});
+
+services.factory('RegimenSummaryReport', function ($resource) {
+    return $resource('/reports/reportdata/regimenSummary.json', {}, {});
 });

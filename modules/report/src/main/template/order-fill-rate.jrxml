@@ -55,9 +55,17 @@
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
-	<variable name="ORDER_FILL_RATE_R" class="java.lang.Long" resetType="Column" calculation="Count">
-		<variableExpression><![CDATA[$F{ORDER_FILL_RATE}]]></variableExpression>
-		<initialValueExpression><![CDATA[$F{ORDER_FILL_RATE}]]></initialValueExpression>
+	<variable name="ORDER_FILL_RATE_R" class="java.lang.Double" calculation="Average">
+		<variableExpression><![CDATA[$V{receipts_COUNT}.divide( $V{approved_COUNT} )]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="approved_COUNT" class="java.lang.Double" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{approved}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="receipts_COUNT" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{receipts}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
 	</variable>
 	<group name="GroupByFacilityReport" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupExpression><![CDATA[$F{facility}+$F{facilityType}]]></groupExpression>
