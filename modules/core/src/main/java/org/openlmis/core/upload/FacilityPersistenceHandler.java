@@ -54,5 +54,4 @@ public class FacilityPersistenceHandler extends AbstractModelPersistenceHandler 
     return "error.duplicate.facility.code";
   }
 
-
 }
