@@ -26,8 +26,13 @@ app.directive('fixedTableHeader', function () {
         element.parent().append(fixedHeader);
       };
 
+      var removeLinksFromFixedHeader = function() {
+        fixedHeader.find('a').parent().remove();
+      }
+
       setTimeout(function () {
         cloneAndAppendTableHeader();
+        removeLinksFromFixedHeader();
         element.parent().scroll(function () {
           fixedHeader.scrollLeft(element.parent().scrollLeft());
         });
