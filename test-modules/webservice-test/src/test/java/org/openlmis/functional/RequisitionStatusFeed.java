@@ -40,7 +40,7 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack",true);
   }

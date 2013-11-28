@@ -1,0 +1,14 @@
+{
+       "agentCode": "",
+       "programCode": "",
+       "products": [
+           {
+               "productCode": "",
+               "stockInHand": ""
+           } ,
+           {
+                "productCode": "",
+                "stockInHand": ""
+           }
+       ]
+   }

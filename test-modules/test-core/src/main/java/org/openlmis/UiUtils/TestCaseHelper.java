@@ -159,13 +159,13 @@ public class TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     dbWrapper.insertUser(userId, user, passwordUsers, "F10", "");
     dbWrapper.insertSupervisoryNodeSecond("F10", "N2", "Node 2", "N1");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(userId, "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
   }
 
   public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
     dbWrapper.insertProducts(product1, product2);
     dbWrapper.insertProgramProducts(product1, product2, program);
-    dbWrapper.insertFacilityApprovedProducts(product1, product2, program, facilityType);
+    dbWrapper.insertFacilityApprovedProductsAfterDelete(product1, product2, program, facilityType);
   }
 
   public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {

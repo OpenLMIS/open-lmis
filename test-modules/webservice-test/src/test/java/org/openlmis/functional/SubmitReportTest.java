@@ -12,7 +12,6 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.domain.Report;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -39,7 +38,7 @@ public class SubmitReportTest extends JsonUtility {
     super.setupTestData(false);
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 

@@ -23,6 +23,7 @@ import org.openlmis.restapi.domain.Report;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -124,6 +125,35 @@ public class JsonUtility extends TestCaseHelper {
       "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+  }
+
+  public Long submitRnRThroughApiForV10(String program, String product, Integer beginningBalance, Integer stockInHand) throws IOException, SQLException {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode(program);
+    reportFromJson.getProducts().get(0).setProductCode(product);
+    reportFromJson.getProducts().get(0).setBeginningBalance(beginningBalance);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(null);
+    reportFromJson.getProducts().get(0).setQuantityReceived(null);
+    reportFromJson.getProducts().get(0).setStockInHand(stockInHand);
+    reportFromJson.getProducts().get(0).setNewPatientCount(null);
+    reportFromJson.getProducts().get(0).setStockOutDays(null);
+
+    ResponseEntity responseEntity =
+      client.SendJSON(
+        getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+    Long id = Long.valueOf(dbWrapper.getMaxRnrID());
+    assertEquals("AUTHORIZED",dbWrapper.getRequisitionStatus(id));
+    return id;
   }
 }
 
