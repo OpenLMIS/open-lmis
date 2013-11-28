@@ -103,28 +103,17 @@ public class RnrCalculationStrategy {
 
     dosesPerDispensingUnit = Math.max(1, dosesPerDispensingUnit);
 
-    return calculateNormalizedConsumption(new BigDecimal(stockOutDays),
-      new BigDecimal(quantityDispensed),
-      new BigDecimal(newPatientCount),
-      new BigDecimal(dosesPerMonth),
-      new BigDecimal(dosesPerDispensingUnit),
-      daysSinceLastRnr);
-  }
+    BigDecimal stockOutDays1 = new BigDecimal(stockOutDays);
+    BigDecimal quantityDispensed1 = new BigDecimal(quantityDispensed);
+    BigDecimal daysSinceLastRnr1 = new BigDecimal(daysSinceLastRnr);
 
-  private Integer calculateNormalizedConsumption(BigDecimal stockOutDays,
-                                                 BigDecimal quantityDispensed,
-                                                 BigDecimal newPatientCount,
-                                                 BigDecimal dosesPerMonth,
-                                                 BigDecimal dosesPerDispensingUnit, Integer daysSinceLastRnr) {
+    BigDecimal newPatientFactor = new BigDecimal(newPatientCount).multiply(new BigDecimal(dosesPerMonth).divide(new BigDecimal(dosesPerDispensingUnit), MATH_CONTEXT).setScale(0, HALF_UP));
 
-    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT).setScale(0, HALF_UP));
-
-    if (daysSinceLastRnr == null || stockOutDays.compareTo(new BigDecimal(daysSinceLastRnr)) >= 0) {
-      return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+    if (daysSinceLastRnr1 == null || stockOutDays1.compareTo(daysSinceLastRnr1) >= 0) {
+      return quantityDispensed1.add(newPatientFactor).setScale(0, HALF_UP).intValue();
     }
 
-    BigDecimal daysSinceLastRequisition = new BigDecimal(daysSinceLastRnr);
-    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRequisition.subtract(stockOutDays)), MATH_CONTEXT));
+    BigDecimal stockOutFactor = quantityDispensed1.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRnr1.subtract(stockOutDays1)), MATH_CONTEXT));
 
     return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }

@@ -24,7 +24,6 @@ import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 
 import java.util.ArrayList;
@@ -107,12 +106,12 @@ public class RnrTest {
   }
 
   @Test
-  public void shouldGetRegularRnrCalculationStrategyIfRequisitionIsRegular() throws Exception {
+  public void shouldGetRnrCalculationStrategyIfRequisitionIsRegular() throws Exception {
     rnr.setEmergency(false);
 
     RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
 
-    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("RegularRnrCalcStrategy"));
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("RnrCalculationStrategy"));
   }
 
 
@@ -222,12 +221,12 @@ public class RnrTest {
 
     rnr.calculateForApproval();
 
-    ArgumentCaptor<RegularRnrCalcStrategy> captor = forClass(RegularRnrCalcStrategy.class);
+    ArgumentCaptor<RnrCalculationStrategy> captor = forClass(RnrCalculationStrategy.class);
     verify(fullSupply).calculatePacksToShip(captor.capture());
     verify(nonFullSupply).calculatePacksToShip(captor.capture());
 
-    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
-    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("28")));
   }
@@ -480,13 +479,13 @@ public class RnrTest {
 
     rnr.setFieldsForApproval();
 
-    ArgumentCaptor<RegularRnrCalcStrategy> captor = ArgumentCaptor.forClass(RegularRnrCalcStrategy.class);
+    ArgumentCaptor<RnrCalculationStrategy> captor = ArgumentCaptor.forClass(RnrCalculationStrategy.class);
 
     verify(rnrLineItem1).setFieldsForApproval(captor.capture());
-    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
 
     verify(rnrLineItem2).setFieldsForApproval(captor.capture());
-    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
   }
 
   @Test
@@ -500,7 +499,7 @@ public class RnrTest {
     rnr.setFieldsForApproval();
     rnr.setEmergency(true);
 
-    ArgumentCaptor<RegularRnrCalcStrategy> captor = ArgumentCaptor.forClass(RegularRnrCalcStrategy.class);
+    ArgumentCaptor<RnrCalculationStrategy> captor = ArgumentCaptor.forClass(RnrCalculationStrategy.class);
 
     verify(rnrLineItem1).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));

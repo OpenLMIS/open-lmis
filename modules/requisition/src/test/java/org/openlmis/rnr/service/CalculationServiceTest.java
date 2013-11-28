@@ -24,7 +24,6 @@ import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -110,14 +109,14 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    ArgumentCaptor<RegularRnrCalcStrategy> capture = forClass(RegularRnrCalcStrategy.class);
+    ArgumentCaptor<RnrCalculationStrategy> capture = forClass(RnrCalculationStrategy.class);
 
     verify(firstLineItem).calculateForFullSupply(capture.capture(), eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
-    assertThat(capture.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(capture.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
     verify(secondLineItem).calculatePacksToShip(capture.capture());
-    assertThat(capture.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(capture.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("10")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("20")));
   }
@@ -161,7 +160,7 @@ public class CalculationServiceTest {
     verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
     verify(rnrLineItem1).validateMandatoryFields(template);
     verify(rnrLineItem1).validateCalculatedFields(template);
-    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RnrCalculationStrategy.class.getClass()));
   }
 
   @Test

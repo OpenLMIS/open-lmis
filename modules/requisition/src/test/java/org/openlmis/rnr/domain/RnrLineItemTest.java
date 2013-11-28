@@ -19,7 +19,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -63,7 +63,7 @@ public class RnrLineItemTest {
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsList;
   ProgramRnrTemplate template;
 
-  private RegularRnrCalcStrategy calcStrategy;
+  private RnrCalculationStrategy calcStrategy;
 
   @Before
   public void setUp() throws Exception {
@@ -80,7 +80,7 @@ public class RnrLineItemTest {
     LossesAndAdjustmentsType subtractive2 = new LossesAndAdjustmentsType("subtractive2", "Subtractive 2", false, 4);
     lossesAndAdjustmentsList = asList(
       new LossesAndAdjustmentsType[]{additive1, additive2, subtractive1, subtractive2});
-    calcStrategy = mock(RegularRnrCalcStrategy.class);
+    calcStrategy = mock(RnrCalculationStrategy.class);
   }
 
   private void addVisibleColumns(List<RnrColumn> templateColumns) {
