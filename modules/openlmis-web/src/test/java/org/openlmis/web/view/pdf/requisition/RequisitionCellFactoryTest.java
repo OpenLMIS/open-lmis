@@ -11,10 +11,14 @@
 package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfPCell;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.List;
 
@@ -24,13 +28,19 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.defaultRnrColumn;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.skipped;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
 import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Image.class, RequisitionCellFactory.class})
 public class RequisitionCellFactoryTest {
 
   @Test
@@ -84,6 +94,19 @@ public class RequisitionCellFactoryTest {
   public void headingCellShouldHaveRequiredPadding() throws Exception {
     PdfPCell cell = headingCell("value");
     assertThat(cell.getPaddingLeft(), is(CELL_PADDING));
+  }
+
+  @Test
+  public void imageCellShouldHaveRequiredPadding() throws Exception {
+    PdfPCell cell = imageCell("modules/openlmis-web/src/main/webapp/public/images/ok-icon.png");
+    assertThat(cell.getPaddingLeft(), is(CELL_PADDING));
+  }
+
+  @Test
+  public void imageCellShouldHaveCenterAlignment() throws Exception {
+    PdfPCell cell = imageCell("modules/openlmis-web/src/main/webapp/public/images/ok-icon.png");
+    assertThat(cell.getHorizontalAlignment(), is(Element.ALIGN_CENTER));
+    assertThat(cell.getVerticalAlignment(), is(Element.ALIGN_MIDDLE));
   }
 
   @Test
@@ -151,13 +174,40 @@ public class RequisitionCellFactoryTest {
   }
 
   @Test
-  public void shouldGetSkippedAsSkippedTextIfLineItemIsSkipped() throws Exception {
+  public void shouldGetSkippedAsSkippedTextIfLineItemIsSkippedAndImageIsNotFound() throws Exception {
+    RequisitionCellFactory requisitionCellFactory = new RequisitionCellFactory();
+    requisitionCellFactory.setImageBaseUrl("http://localhost:9091");
     String skippedText = "Skipped";
+    mockStatic(Image.class);
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, true)));
+
+    when(Image.getInstance(requisitionCellFactory.getImageBaseUrl() + "/public/images/ok-icon.png")).thenThrow(new RuntimeException("Image not found"));
+
     List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
+
     assertThat(cells.get(0).getPhrase().getContent(), is(skippedText));
-    assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_LEFT));
+
+  }
+
+  @Test
+  public void shouldGetSkippedAsImageIfLineItemIsSkippedAndImageIsFound() throws Exception {
+    RequisitionCellFactory requisitionCellFactory = new RequisitionCellFactory();
+    requisitionCellFactory.setImageBaseUrl("http://localhost:9091");
+    String skippedText = "Skipped";
+    mockStatic(Image.class);
+    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
+    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, true)));
+
+    Image image = mock(Image.class);
+    PdfPCell pdfCell = new PdfPCell();
+    whenNew(PdfPCell.class).withArguments(image).thenReturn(pdfCell);
+    when(Image.getInstance(requisitionCellFactory.getImageBaseUrl() + "/public/images/ok-icon.png")).thenReturn(image);
+
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
+
+    assertThat(cells.get(0), is(pdfCell));
+
   }
 
   @Test

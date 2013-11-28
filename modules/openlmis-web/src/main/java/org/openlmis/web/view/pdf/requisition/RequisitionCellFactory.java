@@ -12,19 +12,36 @@ package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
+import lombok.Data;
+import org.apache.log4j.Logger;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.ColumnType;
 import org.openlmis.rnr.domain.LineItem;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class RequisitionCellFactory {
   public static final float CELL_PADDING = 5f;
   public static final BaseColor HEADER_BACKGROUND = new BaseColor(210, 210, 210);
   public static final Font H2_FONT = FontFactory.getFont(FontFactory.TIMES, 20f, Font.BOLD, BaseColor.BLACK);
   public static final int WIDTH_PERCENTAGE = 100;
+  public static final Logger logger = Logger.getLogger(RequisitionCellFactory.class);
+  private static String imageBaseUrl;
+
+  public String getImageBaseUrl() {
+    return imageBaseUrl;
+  }
+
+  @Autowired
+  public void setImageBaseUrl(@Value("${app.url}") String imageBaseUrl) {
+    this.imageBaseUrl = imageBaseUrl;
+  }
 
   public static PdfPCell numberCell(String value) {
     PdfPCell cell = getPdfPCell(value);
@@ -74,9 +91,26 @@ public class RequisitionCellFactory {
     }
 
     if (columnType.equals(ColumnType.BOOLEAN)) {
-      value = value.equalsIgnoreCase("true") ? skippedText : "";
-      result.add(textCell(value));
+      if (value.equalsIgnoreCase("true")) {
+        try {
+          result.add(imageCell(imageBaseUrl + "/public/images/ok-icon.png"));
+        } catch (Exception e) {
+          result.add(textCell(skippedText));
+          logger.error("Exception in reading image", e);
+        }
+      } else {
+        result.add(textCell(""));
+      }
     }
+  }
+
+  public static PdfPCell imageCell(String imageUrl) throws BadElementException, IOException {
+    Image image = Image.getInstance(imageUrl);
+    PdfPCell cell = new PdfPCell(image);
+    cell.setPadding(CELL_PADDING);
+    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+    return cell;
   }
 
   public static PdfPCell categoryRow(Integer visibleColumnsSize, LineItem lineItem) {
