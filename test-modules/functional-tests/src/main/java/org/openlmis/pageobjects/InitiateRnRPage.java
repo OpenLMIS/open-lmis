@@ -456,14 +456,8 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
   }
 
-  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer numberOfNewPatients, Integer stockOutDays, Integer N, Integer P, Integer H,
-                                                          Integer I, boolean emergency) {
+  public void enterQuantities(Integer numberOfNewPatients, Integer stockOutDays) {
     enterValuesCalculatedOrderQuantity(numberOfNewPatients, stockOutDays);
-    if (emergency)
-      VerifyCalculatedOrderQuantityForEmergencyRnR();
-    else
-      VerifyCalculatedOrderQuantity(N, P, H, I);
-
     testWebDriver.sleep(1000);
   }
 
@@ -479,7 +473,9 @@ public class InitiateRnRPage extends RequisitionPage {
     adjustedTotalConsumption.click();
   }
 
-  public void VerifyCalculatedOrderQuantity(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+  public void verifyCalculatedOrderQuantity(Integer expectedAdjustedTotalConsumption, Integer expectedAMC,
+                                            Integer expectedMaximumStockQuantity,
+                                            Integer expectedCalculatedOrderQuantity) {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
     verifyFieldValue(expectedAdjustedTotalConsumption.toString(), actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amc);
@@ -490,7 +486,7 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-  public void VerifyCalculatedOrderQuantityForEmergencyRnR() {
+  public void verifyCalculatedOrderQuantityForEmergencyRnR() {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
     verifyFieldValue("", actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amc);

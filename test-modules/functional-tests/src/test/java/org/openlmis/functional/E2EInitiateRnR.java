@@ -233,14 +233,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 36, 36, 108, 97, false);
+    initiateRnRPage.enterQuantities(10, 10);
+    initiateRnRPage.verifyCalculatedOrderQuantity(36, 36, 108, 97);
     initiateRnRPage.verifyPacksToShip("10");
   }
 
   @And("^I update & verify ordered quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142, true);
+    initiateRnRPage.enterQuantities(10, 10);
+    initiateRnRPage.verifyCalculatedOrderQuantityForEmergencyRnR();
     initiateRnRPage.verifyPacksToShip("");
   }
 
