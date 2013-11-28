@@ -108,8 +108,7 @@ war {
 }
 
 task prepareVersionedDirectory(type: Copy) {
-  def now = new Date();
-  ext.currentTime = now.getTime() + "";
+  ext.currentTime = System.properties.get('version', new Date().getTime() + "");
   from('src/main/webapp/public') {
     exclude 'pages/**/*.*', 'v' + ext.currentTime + '**/*';
   }
