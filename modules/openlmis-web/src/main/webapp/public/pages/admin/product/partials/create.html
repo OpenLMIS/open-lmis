@@ -290,6 +290,7 @@
             <th style="width:200px;text-align: left;">Program</th>
             <th style="width:50px"></th>
             <th style="width:100px">R&R Display Order</th>
+            <th>Category</th>
             <th style="text-align: left; width:200px;">Price Per Pack</th>
             <th style="text-align:left;width:200px">Doses Per Month</th>
         </tr>
@@ -297,6 +298,13 @@
             <td>{{ pg.programName }}</td>
             <td><input type="checkbox" ng-model="pg.active"/></td>
             <td><input type="number" ng-model="pg.displayOrder"/></td>
+            <td>
+              <select style="width:200px;"  ng-model="pp.productCategoryId"
+                      ng-disabled="(!pp.active || !editProduct.active)"
+                      ng-options="option.id as option.name for option in productCategories">
+
+              </select>
+            </td>
             <td>
                 <input ng-model="pg.currentPrice"
                        type="text"/>

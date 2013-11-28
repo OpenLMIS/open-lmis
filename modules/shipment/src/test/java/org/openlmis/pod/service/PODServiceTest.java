@@ -18,8 +18,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.SupplyLine;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductService;
@@ -31,6 +30,8 @@ import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.pod.domain.PODLineItem;
 import org.openlmis.pod.repository.PODRepository;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -41,8 +42,11 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.openlmis.core.domain.Right.MANAGE_POD;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 
 @Category(IntegrationTests.class)
@@ -57,6 +61,9 @@ public class PODServiceTest {
 
   @Mock
   private ProductService productService;
+
+  @Mock
+  private RequisitionService requisitionService;
 
   @Mock
   private MessageService messageService;
@@ -108,6 +115,8 @@ public class PODServiceTest {
     order.setSupplyLine(supplyLine);
     when(order.getSupplyLine()).thenReturn(supplyLine);
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
+    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
     podService.updatePOD(pod);
 
     verify(order).setStatus(OrderStatus.RECEIVED);
@@ -138,6 +147,8 @@ public class PODServiceTest {
     when(order.getSupplyLine()).thenReturn(supplyLine);
     when(messageService.message("error.invalid.product.code", invalidProducts.toString())).thenReturn("Invalid Product");
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
+    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Invalid Product");
@@ -173,4 +184,23 @@ public class PODServiceTest {
     podService.updatePOD(pod);
   }
 
+  @Test
+  public void shouldFillPODWithFacilityProgramAndPeriodBeforeInserting() throws Exception {
+    pod = spy(pod);
+    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
+    when(fulfillmentPermissionService.hasPermission(anyLong(), anyLong(), any(Right.class))).thenReturn(true);
+    SupplyLine supplyLine = new SupplyLine();
+    Facility supplyingFacility = new Facility(facilityId);
+    supplyLine.setSupplyingFacility(supplyingFacility);
+    Order order = new Order(orderId);
+    order.setSupplyLine(supplyLine);
+    when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
+    when(orderService.getOrder(pod.getOrderId())).thenReturn(order);
+
+
+    podService.updatePOD(pod);
+
+    verify(pod).fillPOD(requisition);
+  }
 }

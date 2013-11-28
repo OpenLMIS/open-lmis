@@ -27,7 +27,7 @@ import static org.openlmis.core.domain.Right.commaSeparateRightNames;
 
 @Component
 @NoArgsConstructor
-public class  FacilityRepository {
+public class FacilityRepository {
 
   @Autowired
   private FacilityMapper mapper;
@@ -221,7 +221,7 @@ public class  FacilityRepository {
     return mapper.getAllByRequisitionGroupMemberModifiedDate(modifiedDate);
   }
 
-  public List<Facility> getAllByModifiedDate(Date modifiedDate) {
-    return mapper.getAllByModifiedDate(modifiedDate);
+  public List<Facility> getAllParentsByModifiedDate(Date modifiedDate) {
+    return mapper.getAllParentsByModifiedDate(modifiedDate);
   }
 }

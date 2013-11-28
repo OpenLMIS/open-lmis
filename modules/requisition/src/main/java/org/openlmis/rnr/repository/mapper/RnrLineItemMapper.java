@@ -15,6 +15,7 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,20 +25,22 @@ public interface RnrLineItemMapper {
     "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, beginningBalance,",
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
-    "previousStockInHandAvailable,stockInHand, newPatientCount, stockOutDays,",
-    "modifiedBy, createdBy)",
+    "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, ",
+    "modifiedBy,createdBy)",
     "VALUES (",
-    "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{beginningBalance},",
-    "#{quantityReceived}, #{quantityDispensed}, #{dispensingUnit},#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},",
-    "#{totalLossesAndAdjustments}, #{packsToShip}, #{packSize}, #{price},#{roundToZero}, #{packRoundingThreshold}, #{fullSupply},",
-    "#{previousStockInHandAvailable}, #{stockInHand}, #{newPatientCount}, #{stockOutDays},",
-    "#{modifiedBy},  #{createdBy})"})
-  @Options(useGeneratedKeys = true)
-  public Integer insert(RnrLineItem rnrLineItem);
+    "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
+    "#{lineItem.productCategoryDisplayOrder}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
+    "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
+    "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
+    "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
+    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
+  @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
+  public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} and fullSupply = true order by id")
   @Results(value = {
     @Result(property = "id", column = "id"),
+    @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
   })
@@ -60,6 +63,7 @@ public interface RnrLineItemMapper {
     "maxStockQuantity = #{maxStockQuantity},",
     "packsToShip = #{packsToShip},",
     "remarks = #{remarks},",
+    "reportingDays = #{reportingDays},",
     "expirationDate = #{expirationDate},",
     "skipped = #{skipped},",
     "modifiedBy = #{modifiedBy},",
@@ -92,8 +96,7 @@ public interface RnrLineItemMapper {
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   void deleteAllNonFullSupplyForRequisition(Long rnrId);
 
-  @Select(
-    "SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
+  @Select("SELECT COUNT(DISTINCT productCategory) FROM requisition_line_items WHERE rnrId=#{rnr.id} AND fullSupply = #{isFullSupply}")
   public Integer getCategoryCount(@Param(value = "rnr") Rnr rnr, @Param(value = "isFullSupply") Boolean isFullSupply);
 
   @Update("UPDATE requisition_line_items " +
@@ -108,4 +111,29 @@ public interface RnrLineItemMapper {
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND productCode = #{productCode} AND fullSupply = false")
   RnrLineItem getExistingNonFullSupplyItemByRnrIdAndProductCode(@Param(value = "rnrId") Long rnrId, @Param(value = "productCode") String productCode);
+
+  @Select({"SELECT RSC.createdDate FROM requisition_status_changes RSC INNER JOIN requisitions",
+    "R ON RSC.rnrId = R.id AND RSC.status = 'AUTHORIZED'",
+    "AND R.facilityId = #{rnr.facility.id}",
+    "AND R.programId = #{rnr.program.id}",
+    "AND RSC.createdDate >= #{periodStartDate}",
+    "INNER JOIN requisition_line_items RLI ON R.id = RLI.rnrId",
+    "AND RLI.skipped = false",
+    "AND RLI.productCode = #{productCode}",
+    "ORDER BY RSC.createdDate DESC LIMIT 1"})
+  Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
+
+  @Select({"SELECT RLI.normalizedConsumption, RLI.stockInHand FROM requisition_line_items RLI",
+    "INNER JOIN requisitions R ON R.id = RLI.rnrId",
+    "AND R.facilityId = #{rnr.facility.id}",
+    "AND R.programId = #{rnr.program.id}",
+    "AND RLI.productCode = #{productCode}",
+    "INNER JOIN requisition_status_changes",
+    "RSC ON RSC.rnrId = R.id",
+    "AND RLI.skipped = false",
+    "AND RSC.status = 'AUTHORIZED'",
+    "AND R.emergency = false",
+    "AND RSC.createdDate >= #{startDate}",
+    "ORDER BY RSC.createdDate DESC LIMIT #{n}"})
+  List<RnrLineItem> getNRnrLineItems(@Param("productCode") String productCode, @Param("rnr") Rnr rnr, @Param("n") Integer n, @Param("startDate") Date startDate);
 }

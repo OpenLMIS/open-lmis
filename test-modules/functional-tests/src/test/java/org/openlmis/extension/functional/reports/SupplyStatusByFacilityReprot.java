@@ -55,7 +55,7 @@ public class SupplyStatusByFacilityReprot extends ReportTestHelper {
     private static final Integer REORDER_AMOUNT = 12;
 
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private SupplyStatusByFacilityPage supplyStatusByFacilityPage;
 

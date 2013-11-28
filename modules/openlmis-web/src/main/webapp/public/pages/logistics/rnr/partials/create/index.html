@@ -14,7 +14,7 @@
   <div class="rnr-tabs clearfix">
     <ul class="clearfix" set-focus>
       <li
-        ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
+          ng-class="{'selected': (visibleTab != 'nonFullSupply' && visibleTab != 'regimen'), 'has-error': fullSupplyTabError}">
         <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
            openlmis-message="label.full.supply.products"></a></li>
       <li ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
@@ -29,22 +29,22 @@
       </a>
     </span>
     <span class="pull-right print-button">
-      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" ng-show="fullScreen"
-         openlmis-message="button.print" target="_blank"></a>
+      <a class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf" openlmis-message="button.print"
+         target="_blank"></a>
     </span>
   </div>
 
   <div ng-hide="programRnrColumnList"></div>
   <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
-      <span ng-show="visibleTab === 'nonFullSupply'">
-        <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-non-full-supply.html'"></ng-include>
-      </span>
-      <span ng-show="visibleTab === 'regimen'">
-        <ng-include src="'/public/pages/logistics/rnr/partials/create/regimen-line-item.html'"></ng-include>
-      </span>
-      <span ng-show="visibleTab === 'fullSupply'">
-        <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
-      </span>
+    <span ng-show="visibleTab === 'nonFullSupply'">
+      <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-non-full-supply.html'"></ng-include>
+    </span>
+    <span ng-show="visibleTab === 'regimen'">
+      <ng-include src="'/public/pages/logistics/rnr/partials/create/regimen-line-item.html'"></ng-include>
+    </span>
+    <span ng-show="visibleTab === 'fullSupply'">
+      <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
+    </span>
 
     <div set-focus>
       <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"

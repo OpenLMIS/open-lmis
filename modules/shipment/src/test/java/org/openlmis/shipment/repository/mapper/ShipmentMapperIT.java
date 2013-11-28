@@ -35,7 +35,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.util.Arrays;
 import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -45,7 +44,7 @@ import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProductBuilder.defaultProduct;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.shipment.builder.ShipmentLineItemBuilder.*;
 
 @Category(IntegrationTests.class)
@@ -108,7 +107,7 @@ public class ShipmentMapperIT {
     processingPeriodMapper.insert(period);
     Program program = make(a(defaultProgram));
     programMapper.insert(program);
-    Rnr requisition = make(a(defaultRnr, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
+    Rnr requisition = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility), with(RequisitionBuilder.periodId, period.getId())));
     requisitionMapper.insert(requisition);
 
     Order order = new Order(requisition);
@@ -120,11 +119,11 @@ public class ShipmentMapperIT {
     productMapper.insert(product);
 
     return make(a(defaultShipmentLineItem,
-      with(productCode, product.getCode()),
-      with(orderId, order.getId()),
-      with(quantityShipped, 23),
-      with(shippedDate, new Date()),
-      with(packedDate, new Date())));
+        with(productCode, product.getCode()),
+        with(orderId, order.getId()),
+        with(quantityShipped, 23),
+        with(shippedDate, new Date()),
+        with(packedDate, new Date())));
 
   }
 

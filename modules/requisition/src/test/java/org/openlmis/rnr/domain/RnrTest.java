@@ -23,8 +23,9 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RegimenLineItemBuilder;
 import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Mockito.mock;
@@ -59,9 +59,8 @@ public class RnrTest {
 
   @Before
   public void setUp() throws Exception {
-
     initMocks(this);
-    rnr = make(a(defaultRnr));
+    rnr = make(a(defaultRequisition));
     rnrTemplate = mock(ProgramRnrTemplate.class);
     regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -70,11 +69,10 @@ public class RnrTest {
 
   @Test
   public void shouldFillNormalizedConsumptionsFromPreviousTwoPeriodsRnr() throws Exception {
-
-    final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     lastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(1);
 
-    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
@@ -87,10 +85,9 @@ public class RnrTest {
 
   @Test
   public void shouldFillNormalizedConsumptionsFromOnlyNonNullPreviousTwoPeriodsRnr() throws Exception {
-
     final Rnr lastPeriodsRnr = null;
 
-    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRnr));
+    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
     secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
 
     rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
@@ -98,6 +95,35 @@ public class RnrTest {
     List<Integer> previousNormalizedConsumptions = rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions();
     assertThat(previousNormalizedConsumptions.size(), is(1));
     assertThat(previousNormalizedConsumptions.get(0), is(2));
+  }
+
+  @Test
+  public void shouldGetEmergencyCalculationStrategyIfRequisitionIsEmergency() throws Exception {
+    rnr.setEmergency(true);
+
+    RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
+
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("EmergencyRnrCalcStrategy"));
+  }
+
+  @Test
+  public void shouldGetRegularRnrCalculationStrategyIfRequisitionIsRegular() throws Exception {
+    rnr.setEmergency(false);
+
+    RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
+
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("RegularRnrCalcStrategy"));
+  }
+
+
+  @Test
+  public void shouldGetRnrCalculationStrategyIfRequisitionIsForVirtualFacility() throws Exception {
+    rnr.getFacility().setVirtualFacility(true);
+
+    RnrCalculationStrategy rnrCalcStrategy = rnr.getRnrCalcStrategy();
+
+    assertThat(rnrCalcStrategy.getClass().getSimpleName(), is("RnrCalculationStrategy"));
+
   }
 
   @Test
@@ -127,28 +153,27 @@ public class RnrTest {
   @Test
   public void shouldFindLineItemInPreviousRequisitionAndSetBeginningBalance() throws Exception {
 
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
     Rnr previousRequisition = new Rnr();
     previousRequisition.setStatus(AUTHORIZED);
 
     RnrLineItem correspondingLineItemInPreviousRequisition = make(a(defaultRnrLineItem, with(stockInHand, 76)));
     previousRequisition.setFullSupplyLineItems(asList(correspondingLineItemInPreviousRequisition));
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(76));
-    assertTrue(rnr.getFullSupplyLineItems().get(0).getPreviousStockInHandAvailable());
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfLineItemDoesNotExistInPreviousRequisition() throws Exception {
-    Rnr rnr = make(a(defaultRnr));
+    Rnr rnr = make(a(defaultRequisition));
 
     Rnr previousRequisition = new Rnr();
 
     previousRequisition.setStatus(AUTHORIZED);
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
@@ -157,25 +182,25 @@ public class RnrTest {
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionDoesNotExist() throws Exception {
     Rnr previousRequisition = null;
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInInitiatedState() throws Exception {
-    Rnr previousRequisition = make(a(defaultRnr, with(status, INITIATED)));
+    Rnr previousRequisition = make(a(defaultRequisition, with(status, INITIATED)));
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
   @Test
   public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInSubmittedState() throws Exception {
-    Rnr previousRequisition = make(a(defaultRnr, with(status, SUBMITTED)));
+    Rnr previousRequisition = make(a(defaultRequisition, with(status, SUBMITTED)));
 
-    rnr.setFieldsAccordingToTemplate(previousRequisition, rnrTemplate, regimenTemplate);
+    rnr.setFieldsAccordingToTemplateFrom(previousRequisition, rnrTemplate, regimenTemplate);
 
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
@@ -183,26 +208,26 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShip() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
 
     rnr.calculateForApproval();
 
-    ArgumentCaptor<DefaultStrategy> captor = forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> captor = forClass(RegularRnrCalcStrategy.class);
     verify(fullSupply).calculatePacksToShip(captor.capture());
     verify(nonFullSupply).calculatePacksToShip(captor.capture());
 
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("28")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("28")));
   }
@@ -210,14 +235,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShipInCaseOfEmergencyRequisition() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -264,7 +289,7 @@ public class RnrTest {
   @Test
   public void shouldCopyCreatorEditableFields() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -303,7 +328,7 @@ public class RnrTest {
   @Test
   public void shouldAddNewNonFullSupplyLineItemsOnlyIfProductBelongsToTheProgram() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -329,7 +354,7 @@ public class RnrTest {
   @Test
   public void shouldCopyRegimenLineItems() throws Exception {
 
-    Rnr newRnr = make(a(defaultRnr));
+    Rnr newRnr = make(a(defaultRequisition));
     List<RegimenColumn> regimenColumns = new ArrayList<>();
     RegimenLineItem regimenLineItem = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
     regimenLineItem.setCode("R02");
@@ -365,7 +390,7 @@ public class RnrTest {
   @Test
   public void shouldNotCopyFieldsForExtraFullSupplyLineItemsAndThrowError() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
     RegimenTemplate regimenTemplate = new RegimenTemplate(rnr.getProgram().getId(), new ArrayList<RegimenColumn>());
 
@@ -386,7 +411,7 @@ public class RnrTest {
   @Test
   public void shouldNotCopyExtraLineItemForApprovalRnr() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
 
 
@@ -408,7 +433,7 @@ public class RnrTest {
   @Test
   public void shouldCopyApproverEditableFields() throws Exception {
     long userId = 5L;
-    Rnr newRnr = make(a(defaultRnr, with(modifiedBy, userId)));
+    Rnr newRnr = make(a(defaultRequisition, with(modifiedBy, userId)));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());
 
     RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(RnrLineItemBuilder.productCode, "P1")));
@@ -453,15 +478,15 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(rnrLineItem1));
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
-    rnr.calculateDefaultApprovedQuantity();
+    rnr.setFieldsForApproval();
 
-    ArgumentCaptor<DefaultStrategy> captor = ArgumentCaptor.forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> captor = ArgumentCaptor.forClass(RegularRnrCalcStrategy.class);
 
-    verify(rnrLineItem1).calculateDefaultApprovedQuantity(captor.capture());
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    verify(rnrLineItem1).setFieldsForApproval(captor.capture());
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
 
-    verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
-    assertThat(captor.getValue().getClass(), is(DefaultStrategy.class.getClass()));
+    verify(rnrLineItem2).setFieldsForApproval(captor.capture());
+    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
   }
 
   @Test
@@ -472,24 +497,24 @@ public class RnrTest {
     rnr.setFullSupplyLineItems(asList(rnrLineItem1));
     rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
 
-    rnr.calculateDefaultApprovedQuantity();
+    rnr.setFieldsForApproval();
     rnr.setEmergency(true);
 
-    ArgumentCaptor<DefaultStrategy> captor = ArgumentCaptor.forClass(DefaultStrategy.class);
+    ArgumentCaptor<RegularRnrCalcStrategy> captor = ArgumentCaptor.forClass(RegularRnrCalcStrategy.class);
 
-    verify(rnrLineItem1).calculateDefaultApprovedQuantity(captor.capture());
+    verify(rnrLineItem1).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
 
-    verify(rnrLineItem2).calculateDefaultApprovedQuantity(captor.capture());
+    verify(rnrLineItem2).setFieldsForApproval(captor.capture());
     assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
   }
 
   @Test
   public void shouldGetProductCodeDifferenceGivenARnr() throws Exception {
-    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRequisition));
     savedRnr.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")))));
 
-    Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRnr));
+    Rnr rnrForApproval = make(a(RequisitionBuilder.defaultRequisition));
     rnrForApproval.setFullSupplyLineItems(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P10")))));
 
     List<String> invalidProductCodes = new ArrayList<>();
@@ -503,7 +528,7 @@ public class RnrTest {
 
   @Test
   public void shouldFindCorrespondingLineItemInRnrAndReturnIfFound() {
-    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRequisition));
     RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")));
     savedRnr.setFullSupplyLineItems(asList(rnrLineItem));
 
@@ -514,9 +539,20 @@ public class RnrTest {
 
   @Test
   public void shouldFindCorrespondingLineItemInRnrAndReturnNullIfNotFound() {
-    Rnr savedRnr = make(a(RequisitionBuilder.defaultRnr));
+    Rnr savedRnr = make(a(RequisitionBuilder.defaultRequisition));
     RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11")));
 
     assertThat(savedRnr.findCorrespondingLineItem(rnrLineItem), is(nullValue()));
+  }
+
+  @Test
+  public void shouldReturnNonSkippedLineItemsForRnrWithoutAffectingFullSupplyLineItems() throws Exception {
+    Rnr savedRnr = make(a(defaultRequisition));
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P11"), with(skipped, true)));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(RnrLineItemBuilder.productCode, "P12"), with(skipped, false)));
+    savedRnr.setFullSupplyLineItems(asList(lineItem1, lineItem2));
+
+    assertThat(savedRnr.getNonSkippedLineItems(), is(asList(lineItem2)));
+    assertThat(savedRnr.getFullSupplyLineItems(), is(asList(lineItem1, lineItem2)));
   }
 }

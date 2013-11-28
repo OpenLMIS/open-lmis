@@ -12,7 +12,7 @@ public class ProcessingPeriodService {
     @Autowired
     ProcessingPeriodRepository repository;
 
-    public Long getIdByName(String name){
-        return repository.getIdByName( name );
-    }
+//    public Long getIdByName(String name){
+//        return repository.getIdByName( name );
+//    }
 }

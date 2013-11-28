@@ -19,10 +19,9 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.DefaultStrategy;
 import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
+import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
-import org.openlmis.rnr.calculation.VirtualFacilityStrategy;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.find;
+import static org.apache.commons.collections.CollectionUtils.selectRejected;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.BEGINNING_BALANCE;
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -84,6 +84,7 @@ public class Rnr extends BaseModel {
         RegimenLineItem regimenLineItem = new RegimenLineItem(regimen.getId(), regimen.getCategory(), createdBy, modifiedBy);
         regimenLineItem.setCode(regimen.getCode());
         regimenLineItem.setName(regimen.getName());
+        regimenLineItem.setRegimenDisplayOrder(regimen.getDisplayOrder());
         regimenLineItems.add(regimenLineItem);
       }
     }
@@ -121,7 +122,8 @@ public class Rnr extends BaseModel {
 
   @JsonIgnore
   public RnrCalculationStrategy getRnrCalcStrategy() {
-    return facility.getVirtualFacility() ? new VirtualFacilityStrategy() : (emergency ? new EmergencyRnrCalcStrategy() : new DefaultStrategy());
+    return isForVirtualFacility() ? new RnrCalculationStrategy() :
+      (emergency ? new EmergencyRnrCalcStrategy() : new RegularRnrCalcStrategy());
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -141,8 +143,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-        previousRequisition.status == INITIATED ||
-        previousRequisition.status == SUBMITTED) {
+      previousRequisition.status == INITIATED ||
+      previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -167,13 +169,13 @@ public class Rnr extends BaseModel {
     addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
-  public void calculateDefaultApprovedQuantity() {
+  public void setFieldsForApproval() {
     RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
-      item.calculateDefaultApprovedQuantity(calcStrategy);
+      item.setFieldsForApproval(calcStrategy);
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.calculateDefaultApprovedQuantity(calcStrategy);
+      item.setFieldsForApproval(calcStrategy);
     }
   }
 
@@ -187,7 +189,7 @@ public class Rnr extends BaseModel {
 
   public void fillBasicInformation(Facility facility, Program program, ProcessingPeriod period) {
     this.program = program.basicInformation();
-    this.period = period.basicInformation();
+    this.period = period;
     this.facility = facility.basicInformation();
   }
 
@@ -219,7 +221,7 @@ public class Rnr extends BaseModel {
     });
   }
 
-  public void setFieldsAccordingToTemplate(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
+  public void setFieldsAccordingToTemplateFrom(Rnr previousRequisition, ProgramRnrTemplate template, RegimenTemplate regimenTemplate) {
     this.setBeginningBalances(previousRequisition, template.columnsVisible(BEGINNING_BALANCE));
 
     for (RnrLineItem lineItem : this.fullSupplyLineItems) {
@@ -351,5 +353,18 @@ public class Rnr extends BaseModel {
     this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(cost);
   }
 
+  public boolean isForVirtualFacility() {
+    return this.facility.getVirtualFacility();
+  }
+
+  public List<RnrLineItem> getNonSkippedLineItems() {
+    return (List<RnrLineItem>) selectRejected(this.fullSupplyLineItems, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RnrLineItem rnrLineItem = (RnrLineItem) o;
+        return rnrLineItem.getSkipped();
+      }
+    });
+  }
 }
 

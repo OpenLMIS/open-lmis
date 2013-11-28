@@ -100,7 +100,9 @@ function SchedulePeriodController($scope, $routeParams, Periods, Schedule, Perio
   };
 
   $scope.blurDateFields = function () {
-    angular.element("input[ui-date]").blur();
+    setTimeout(function() {
+      angular.element("input[ui-date]").blur();
+    });
   };
 
   $scope.deletePeriod = function (periodId) {

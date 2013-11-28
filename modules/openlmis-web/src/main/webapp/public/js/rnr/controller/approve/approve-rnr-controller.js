@@ -13,7 +13,7 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.pageSize = pageSize;
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, ['skipped']);
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
   $scope.error = $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
 
@@ -92,8 +92,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
   $scope.dialogCloseCallback = function (result) {
     if (result) {
-      angular.element('.toggleFullScreen').show();
-      $scope.fullScreen = false;
       approveValidatedRnr();
     }
   };

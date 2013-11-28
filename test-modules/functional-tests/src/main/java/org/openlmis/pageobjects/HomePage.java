@@ -379,12 +379,12 @@ public class HomePage extends Page {
   }
 
   public ConvertOrderPage navigateConvertToOrder() throws IOException {
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requisitionMenuItem);
     testWebDriver.keyPress(requisitionMenuItem);
     testWebDriver.waitForElementToAppear(convertToOrderMenuItem);
     testWebDriver.keyPress(convertToOrderMenuItem);
-    testWebDriver.sleep(7000);
+    testWebDriver.sleep(5000);
     testWebDriver.waitForElementToAppear(convertToOrderHeader);
     return new ConvertOrderPage(testWebDriver);
   }
@@ -425,7 +425,7 @@ public class HomePage extends Page {
   }
 
   public ViewOrdersPage navigateViewOrders() throws IOException {
-    testWebDriver.sleep(3000);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(ordersMenuItem);
     testWebDriver.keyPress(ordersMenuItem);
     testWebDriver.waitForElementToAppear(viewOrdersMenuItem);
@@ -447,7 +447,7 @@ public class HomePage extends Page {
   public void navigateAndInitiateEmergencyRnr(String program) throws IOException {
     navigateRnr();
     myFacilityRadioButton.click();
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.selectByVisibleText(rnrTypeSelectBox, "Emergency");
@@ -461,9 +461,9 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(requisitionsLink);
     testWebDriver.keyPress(requisitionsLink);
     testWebDriver.waitForElementToAppear(createLink);
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(1000);
     testWebDriver.keyPress(createLink);
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
   }
 
@@ -478,7 +478,7 @@ public class HomePage extends Page {
     public void navigateAndInitiateRnrForSupervisedFacility(String program) throws IOException {
         navigateRnr();
         supervisedFacilityRadioButton.click();
-        testWebDriver.sleep(2000);
+        testWebDriver.sleep(1000);
         testWebDriver.waitForElementToAppear(ProgramDropDownSupervisedFacility);
         testWebDriver.selectByVisibleText(ProgramDropDownSupervisedFacility, program);
         testWebDriver.sleep(1000);

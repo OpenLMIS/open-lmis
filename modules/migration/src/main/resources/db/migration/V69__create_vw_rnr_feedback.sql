@@ -39,13 +39,13 @@ CREATE OR REPLACE VIEW vw_rnr_feedback AS
     vw_requisition_detail.packsize, vw_requisition_detail.fullsupply, 
     vw_requisition_detail.nominalmaxmonth, vw_requisition_detail.nominaleop, 
     vw_requisition_detail.dispensingunit, shipment_line_items.quantityshipped,
-        CASE
-            WHEN vw_requisition_detail.previousstockinhandavailable THEN 
-            CASE
-                WHEN fn_previous_cb(vw_requisition_detail.req_id, vw_requisition_detail.product_code) <> vw_requisition_detail.beginningbalance THEN 1
-                ELSE 0
-            END
-            ELSE 0
+        --CASE
+            --WHEN vw_requisition_detail.previousstockinhandavailable THEN
+          CASE
+              WHEN fn_previous_cb(vw_requisition_detail.req_id, vw_requisition_detail.product_code) <> vw_requisition_detail.beginningbalance THEN 1
+              ELSE 0
+          --END
+          --ELSE 0
         END AS err_open_balance, 
         CASE
             WHEN vw_requisition_detail.calculatedorderquantity <> vw_requisition_detail.quantityrequested THEN 0

@@ -320,6 +320,7 @@ Edit Product
             <th style="text-align:left;">Program</th>
             <th></th>
             <th>R&R Display Order</th>
+            <th>Category</th>
             <th style="text-align: left">Price Per Pack</th>
             <th style="text-align: left">Doses Per Month</th>
         </tr>
@@ -333,6 +334,13 @@ Edit Product
             <td>
                 <input type="number" ng-disabled="(!pp.active || !editProduct.active)"
                        ng-model="pp.displayOrder"/>
+            </td>
+            <td>
+              <select style="width:200px;"  ng-model="pp.productCategoryId"
+                      ng-disabled="(!pp.active || !editProduct.active)"
+                      ng-options="option.id as option.name for option in productCategories">
+
+              </select>
             </td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
@@ -382,6 +390,7 @@ Edit Product
             <td>
                 <div>{{cost.programname}}</div>
             </td>
+
             <!-- Price Per Pack-->
             <td>
                 <div>{{cost.priceperpack}}</div>

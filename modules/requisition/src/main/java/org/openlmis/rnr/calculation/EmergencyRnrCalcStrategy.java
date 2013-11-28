@@ -10,8 +10,6 @@
 
 package org.openlmis.rnr.calculation;
 
-import org.openlmis.core.domain.ProcessingPeriod;
-
 import java.util.List;
 
 public final class EmergencyRnrCalcStrategy extends RnrCalculationStrategy {
@@ -22,7 +20,8 @@ public final class EmergencyRnrCalcStrategy extends RnrCalculationStrategy {
     return null;
   }
 
-  public Integer calculateAmc(ProcessingPeriod period, Integer normalizedConsumption, List<Integer> previousNormalizedConsumptions) {
+  @Override
+  public Integer calculateAmc(Integer normalizedConsumption, List<Integer> previousNormalizedConsumptions) {
     return null;
   }
 

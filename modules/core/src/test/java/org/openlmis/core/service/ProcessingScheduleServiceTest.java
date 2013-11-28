@@ -27,17 +27,18 @@ import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.numberOfMonths;
 import static org.openlmis.core.builder.RequisitionGroupProgramScheduleBuilder.defaultRequisitionGroupProgramSchedule;
 
 @Category(UnitTests.class)
@@ -187,7 +188,7 @@ public class ProcessingScheduleServiceTest {
     Long scheduleId = 4L;
     Long startingPeriodId = 5L;
     Date programStartDate = new DateTime().toDate();
-    List<ProcessingPeriod> periodList = Arrays.asList(make(a(defaultProcessingPeriod)));
+    List<ProcessingPeriod> periodList = asList(make(a(defaultProcessingPeriod)));
 
     RequisitionGroup requisitionGroup = make(a(RequisitionGroupBuilder.defaultRequisitionGroup));
     requisitionGroup.setId(requisitionGroupId);
@@ -293,5 +294,26 @@ public class ProcessingScheduleServiceTest {
     Date programStartDate = new Date();
     service.getCurrentPeriod(1L, 2L, programStartDate);
     verify(periodRepository).getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
+  }
+
+  @Test
+  public void shouldGetNumberOfMonthsFromPreviousPeriodOfCurrentPeriod() {
+    ProcessingPeriod currentPeriod = new ProcessingPeriod();
+    List<ProcessingPeriod> previousPeriod = asList(make(a(defaultProcessingPeriod)));
+    when(periodRepository.getNPreviousPeriods(currentPeriod, 1)).thenReturn(previousPeriod);
+
+    Integer numberOfMonths = service.findM(currentPeriod);
+
+    assertThat(numberOfMonths, is(1));
+  }
+
+  @Test
+  public void shouldGetNumberOfMonthsFromCurrentPeriodIfPreviousDoesNotExist() {
+    ProcessingPeriod currentPeriod = make(a(defaultProcessingPeriod, with(numberOfMonths, 2)));
+    when(periodRepository.getNPreviousPeriods(currentPeriod, 1)).thenReturn(EMPTY_LIST);
+
+    Integer numberOfMonths = service.findM(currentPeriod);
+
+    assertThat(numberOfMonths, is(2));
   }
 }

@@ -80,7 +80,7 @@ public class UserMapperIT {
 
   @Test
   public void shouldGetUserByUserNameAndPassword() throws Exception {
-    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true)));
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true), with(restrictLogin, true)));
     userMapper.insert(someUser);
     userMapper.updateUserPasswordAndVerify(someUser.getId(), "random");
 
@@ -88,6 +88,7 @@ public class UserMapperIT {
     assertThat(user, is(notNullValue()));
     assertThat(user.getUserName(), is(defaultUserName));
     assertThat(user.getId(), is(someUser.getId()));
+    assertThat(user.getRestrictLogin(), is(true));
     User user1 = userMapper.selectUserByUserNameAndPassword(defaultUserName, "wrongPassword");
     assertThat(user1, is(nullValue()));
     User user2 = userMapper.selectUserByUserNameAndPassword("wrongUserName", defaultPassword);
@@ -106,6 +107,18 @@ public class UserMapperIT {
     assertThat(fetchedUser, is(notNullValue()));
     assertThat(fetchedUser.getId(), is(someUser.getId()));
     assertThat(fetchedUser.getModifiedDate(), is(notNullValue()));
+  }
+
+  @Test
+  public void shouldInsertUserWithRestrictLoginFLag() throws Exception {
+    User someUser = make(a(defaultUser, with(facilityId, facility.getId()), with(active, true), with(restrictLogin, true)));
+    someUser.setModifiedDate(null);
+
+    userMapper.insert(someUser);
+
+    User fetchedUser = userMapper.getByUserName(someUser.getUserName());
+
+    assertThat(fetchedUser.getRestrictLogin(), is(true));
   }
 
   @Test

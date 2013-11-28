@@ -75,13 +75,9 @@ var RegularRnrLineItem = base2.Base.extend({
     this.quantityApproved = utils.getValueFor(this.quantityApproved);
     var orderQuantity;
 
-    if (this.statusBeforeAuthorized()) {
-        orderQuantity = isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
-    } else {
-        orderQuantity = this.quantityApproved ;
-    }
-    // this section has been modifified to accept the approved quanitty in packs.
-    orderQuantity  = orderQuantity * utils.parseIntWithBaseTen(this.packSize);
+    if (this.statusBeforeAuthorized()) orderQuantity =
+      isUndefined(this.quantityRequested) ? this.calculatedOrderQuantity : this.quantityRequested;
+    else orderQuantity = this.quantityApproved;
 
     this.calculatePacksToShip(orderQuantity);
     this.calculateCost();
@@ -157,7 +153,7 @@ var RegularRnrLineItem = base2.Base.extend({
       this.packsToShip = 0;
       return;
     }
-
+    this.packsToShip = Math.floor(quantity / utils.parseIntWithBaseTen(this.packSize));
     this.applyRoundingRulesToPacksToShip(quantity);
   },
 
@@ -434,5 +430,4 @@ var RegularRnrLineItem = base2.Base.extend({
   visibleForNonFullSupplyColumns: ['dispensingUnit', 'quantityRequested', 'quantityApproved', 'reasonForRequestedQuantity', 'packsToShip', 'price', 'cost', 'remarks'],
   frozenColumns: ['skipped', 'product', 'productCode']
 });
-
 

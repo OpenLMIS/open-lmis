@@ -62,7 +62,7 @@ public class RequisitionRepository {
     for (RnrLineItem lineItem : lineItems) {
       lineItem.setRnrId(requisition.getId());
       lineItem.setModifiedBy(requisition.getModifiedBy());
-      rnrLineItemMapper.insert(lineItem);
+      rnrLineItemMapper.insert(lineItem, lineItem.getPreviousNormalizedConsumptions().toString());
     }
   }
 
@@ -176,8 +176,8 @@ public class RequisitionRepository {
     commentMapper.insert(comment);
   }
 
-  public void logStatusChange(Rnr requisition) {
-    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition);
+  public void logStatusChange(Rnr requisition, String name) {
+    RequisitionStatusChange statusChange = new RequisitionStatusChange(requisition, name);
     requisitionStatusChangeMapper.insert(statusChange);
   }
 
@@ -206,6 +206,14 @@ public class RequisitionRepository {
 
   public Rnr getLastRegularRequisition(Facility facility, Program program) {
     return requisitionMapper.getLastRegularRequisition(facility, program);
+  }
+
+  public Date getAuthorizedDateForPreviousLineItem(Rnr rnr, String productCode, Date periodStartDate) {
+    return rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(rnr, productCode, periodStartDate);
+  }
+
+  public List<RnrLineItem> getNRnrLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
+    return rnrLineItemMapper.getNRnrLineItems(productCode, rnr, n, startDate);
   }
 }
 

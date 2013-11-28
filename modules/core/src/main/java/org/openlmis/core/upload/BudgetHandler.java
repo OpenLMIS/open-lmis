@@ -52,7 +52,7 @@ public class BudgetHandler extends AbstractModelPersistenceHandler {
       // this is to make sure that the save routine will be able to save this budget information
       budget.setFacility( facilityService.getByCode(budget.getFacility() ) );
       budget.setProgram( programService.getByCode(budget.getProgram().getCode()));
-      budget.getPeriod().setId(processingPeriodService.getIdByName(budget.getPeriod().getName()));
+      //budget.getPeriod().setId(processingPeriodService.getIdByName(budget.getPeriod().getName()));
   }
 
   private void validateBudget(Budget budget){

@@ -34,17 +34,17 @@ public class E2EManageRequisitionGroups extends TestCaseHelper {
     public void testE2EManageRequisitionGroupsAddNewReqGroup (String [] credentials ) throws IOException{
         LoginPage loginPage = new LoginPage(testWebDriver,baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(credentials[0],credentials[1]);
-        ManageRequisitionGroupsPage manageRequisitionGroupsPage = homePage.navigateToRequisitionGroup();
-        manageRequisitionGroupsPage.EnterAndVerifyNewrequisitionGroup("Code123","Test123","1","Test Description");
+//        ManageRequisitionGroupsPage manageRequisitionGroupsPage = homePage.navigateToRequisitionGroup();
+//        manageRequisitionGroupsPage.EnterAndVerifyNewrequisitionGroup("Code123","Test123","1","Test Description");
     }
 
     @Test(enabled=true, groups = {"functional2"},dataProvider = "Data-Provider-Function-Positive")
     public void testE2EManageRequisitionGroupsAddReqGroupAndAssociateFacility (String [] credentials ) throws IOException{
         LoginPage loginPage = new LoginPage(testWebDriver,baseUrlGlobal);
         HomePage homePage = loginPage.loginAs(credentials[0],credentials[1]);
-        ManageRequisitionGroupsPage manageRequisitionGroupsPage = homePage.navigateToRequisitionGroup();
-        manageRequisitionGroupsPage.EnterAndVerifyNewrequisitionGroup("NT","New Test","1","Test Description");
-        manageRequisitionGroupsPage.EnterAndVerifyNewAssociatedFacility("1");
+//        ManageRequisitionGroupsPage manageRequisitionGroupsPage = homePage.navigateToRequisitionGroup();
+//        manageRequisitionGroupsPage.EnterAndVerifyNewrequisitionGroup("NT","New Test","1","Test Description");
+//        manageRequisitionGroupsPage.EnterAndVerifyNewAssociatedFacility("1");
     }
 
     @AfterMethod

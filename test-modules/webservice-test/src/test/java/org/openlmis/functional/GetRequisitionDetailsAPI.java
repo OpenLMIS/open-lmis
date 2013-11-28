@@ -36,6 +36,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
+    dbWrapper.updateRestrictLogin("commTrack",true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -199,10 +200,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
+    dbWrapper.updateRestrictLogin("commTrack",false);
     approveRequisition(id, 65);
     convertToOrder("commTrack", "Admin123");
-
+    dbWrapper.updateRestrictLogin("commTrack",true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
   }
@@ -220,10 +221,10 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
-
     approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack",false);
     convertToOrder("commTrack", "Admin123");
-
+    dbWrapper.updateRestrictLogin("commTrack",true);
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
     checkOrderStatus("RELEASED", 65, "TRANSFER_FAILED", responseEntity);
   }
@@ -245,11 +246,9 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack",false);
     convertToOrder("commTrack", "Admin123");
-
-
-    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"IN_ROUTE\"");
-    checkOrderStatus("RELEASED", 65, "IN_ROUTE", responseEntity);
+    dbWrapper.updateRestrictLogin("commTrack",true);
 
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
     checkOrderStatus("RELEASED", 65, "RELEASED", responseEntity);
@@ -270,8 +269,9 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
 
     approveRequisition(id, 65);
+    dbWrapper.updateRestrictLogin("commTrack",false);
     convertToOrder("commTrack", "Admin123");
-
+    dbWrapper.updateRestrictLogin("commTrack",true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
 

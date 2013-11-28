@@ -59,7 +59,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
         COLUMN_NAME_REORDER_AMOUNT;
     }
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private SummaryReportPage summaryReportPage;
 
@@ -177,8 +177,6 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
         viewRequisitionPageInApproval.verifyStatus(IN_APPROVAL);
 
         ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
-        approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
-        approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
         approvePageTopSNUser.addComments("Dummy Comments");
         approvePageTopSNUser.approveRequisition();
         approvePageTopSNUser.clickOk();

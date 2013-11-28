@@ -77,10 +77,10 @@ public class ManageSchedulePage extends Page {
   }
 
 
-  public void createSchedule() {
+  public void createSchedule(String periodCode1,String periodCode2) {
     testWebDriver.waitForElementToAppear(addScheduleButton);
-    enterCreateScheduleDetails("Q1stM", "QuarterMonthly", "QuarterMonth");
-    enterCreateScheduleDetails("M", "Monthly", "Month");
+    enterCreateScheduleDetails(periodCode1, "QuarterMonthly", "QuarterMonth");
+    enterCreateScheduleDetails(periodCode2, "Monthly", "Month");
   }
 
   public void enterCreateScheduleDetails(String code, String name, String desc) {
@@ -96,18 +96,18 @@ public class ManageSchedulePage extends Page {
     testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
-  public void editSchedule() {
+  public void editSchedule(String periodCode1,String periodCode2) {
     testWebDriver.waitForElementToAppear(editFirstButton);
-    enterEditScheduleDetails("M1", "Monthly1", "Month");
+    enterEditScheduleDetails(periodCode1, "Monthly1", "Month");
     testWebDriver.sleep(500);
-    enterEditScheduleDetails("M", "Monthly", "Month");
+    enterEditScheduleDetails(periodCode2, "Monthly", "Month");
   }
 
-  public void verifyScheduleCode() {
+  public void verifyScheduleCode(String periodCode1,String periodCode2) {
     testWebDriver.sleep(500);
     assertEquals(testWebDriver.getElementByXpath(
-            "//form[@id='editScheduleForm_1']/div/div[1]/div[2]/span[1]").getText().trim(), "M1");
-    assertEquals(testWebDriver.getElementByXpath("//form[@id='editScheduleForm_0']/div/div[1]/div[2]/span[1]").getText().trim(), "M");
+            "//form[@id='editScheduleForm_0']/div/div[1]/div[2]/span[1]").getText().trim(), periodCode2);
+    assertEquals(testWebDriver.getElementByXpath("//form[@id='editScheduleForm_1']/div/div[1]/div[2]/span[1]").getText().trim(), periodCode1);
     assertTrue("First edit button is not showing up", editFirstButton.isDisplayed());
     assertTrue("Second edit button is not showing up", editSecondButton.isDisplayed());
   }

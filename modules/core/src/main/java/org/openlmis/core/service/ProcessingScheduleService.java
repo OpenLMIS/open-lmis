@@ -115,6 +115,18 @@ public class ProcessingScheduleService {
     return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
   }
 
+  public List<ProcessingPeriod> getNPreviousPeriodsInDescOrder(ProcessingPeriod currentPeriod, Integer n) {
+    return periodRepository.getNPreviousPeriods(currentPeriod, n);
+  }
+
+  public Integer findM(ProcessingPeriod currentPeriod) {
+    List<ProcessingPeriod> nPreviousPeriods = periodRepository.getNPreviousPeriods(currentPeriod, 1);
+    if (nPreviousPeriods.size() > 0) {
+      return nPreviousPeriods.get(0).getNumberOfMonths();
+    }
+    return currentPeriod.getNumberOfMonths();
+  }
+
   public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
         return periodRepository.getAllPeriodsForScheduleAndYear(scheduleId, year);
     }

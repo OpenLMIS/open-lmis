@@ -14,7 +14,8 @@ public enum ColumnType {
 
   TEXT,
   NUMERIC,
-  CURRENCY
+  CURRENCY,
+  BOOLEAN
 
 
 }

@@ -58,9 +58,6 @@ public class ManageFacilityPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='false']")
   private static WebElement isActiveRadioNoOption=null;
 
-  @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='true']")
-  private static WebElement isActiveRadioYesOption=null;
-
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
   private static WebElement enableButton=null;
 
@@ -69,9 +66,6 @@ public class ManageFacilityPage extends Page {
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
   private static WebElement okLink=null;
-
-  @FindBy(how = How.XPATH, using = " //div[@id='activeConfirmModel']/div[@class='modal-body']/p")
-  private static WebElement isActiveMessageOnAlert=null;
 
   @FindBy(how = How.ID, using = "remove0")
   private static WebElement removeSupportedProgram=null;
@@ -226,6 +220,12 @@ public class ManageFacilityPage extends Page {
   public void verifyNewFacilityHeader(String headerToBeVerified) {
     testWebDriver.waitForElementToAppear(facilityHeader);
     assertEquals(facilityHeader.getText().trim(), headerToBeVerified);
+  }
+
+  public ManageFacilityPage(TestWebDriver driver) throws IOException {
+    super(driver);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
+    testWebDriver.setImplicitWait(10);
   }
 
   public void verifyEditFacilityHeader(String headerToBeVerified) {
@@ -397,13 +397,6 @@ public class ManageFacilityPage extends Page {
         testWebDriver.sleep(1000);
     }
 
-  public ManageFacilityPage(TestWebDriver driver) throws IOException {
-    super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
-    testWebDriver.setImplicitWait(10);
-
-  }
-
   public void saveFacility(){
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
@@ -416,7 +409,7 @@ public class ManageFacilityPage extends Page {
   }
 
   public void clickFacilityList(String facility){
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(3000);
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]"));
     testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]").click();
     testWebDriver.waitForElementToAppear(facilityCode);
@@ -424,7 +417,6 @@ public class ManageFacilityPage extends Page {
 
 
   public void disableFacility(String facilityCodeValue, String facilityNameValue) {
-
     String expectedMessageOnAlert = String.format("\"%s\" / \"%s\" will be disabled in the system.", facilityNameValue, facilityCodeValue);
     verifyEditFacilityHeader("Edit facility");
     clickDisableButtonOnFacilityScreen();
@@ -446,7 +438,7 @@ public class ManageFacilityPage extends Page {
     testWebDriver.waitForElementToAppear(disableMessageOnAlert);
 
     String disableMessageOnAlertValue = disableMessageOnAlert.getText();
-    SeleneseTestNgHelper.assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
+    assertEquals(disableMessageOnAlertValue, expectedMessageOnAlert);
   }
 
   public void verifyDisabledFacility(String facilityCodeValue, String facilityNameValue) {
@@ -456,10 +448,10 @@ public class ManageFacilityPage extends Page {
 
     testWebDriver.sleep(1000);
     String disableMessageOnFacilityScreenValue = successMessageDiv.getText();
-    SeleneseTestNgHelper.assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
+    assertEquals(disableMessageOnFacilityScreenValue, expectedMessageOnFacilityScreenAfterDisable);
 
     String enableValue = enabledFlag.getText();
-    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "No");
+    assertEquals(enableValue.trim(), "No");
 
     SeleneseTestNgHelper.assertTrue(isActiveRadioNoOption.isSelected());
   }
@@ -468,14 +460,11 @@ public class ManageFacilityPage extends Page {
 
     testWebDriver.sleep(1000);
     String enableValue = enabledFlag.getText();
-    SeleneseTestNgHelper.assertEquals(enableValue.trim(), "Yes");
-    SeleneseTestNgHelper.assertTrue(isActiveRadioYesOption.isSelected());
+    assertEquals(enableValue.trim(), "Yes");
     verifyEditFacilityHeader("Edit facility");
   }
 
   public HomePage enableFacility() throws IOException {
-    String expectedIsActiveMessageOnAlert = "Do you want to set facility as active?";
-
     testWebDriver.waitForElementToAppear(enableButton);
     testWebDriver.sleep(1000);
     enableButton.click();
@@ -485,37 +474,24 @@ public class ManageFacilityPage extends Page {
     testWebDriver.sleep(1000);
     okLink.click();
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(isActiveMessageOnAlert);
-    String isActiveMessageOnAlertValue = isActiveMessageOnAlert.getText();
-    SeleneseTestNgHelper.assertEquals(isActiveMessageOnAlertValue, expectedIsActiveMessageOnAlert);
-    testWebDriver.waitForElementToAppear(okLink);
-    testWebDriver.sleep(1000);
-    okLink.click();
-
-    verifyEnabledFacility();
 
     return new HomePage(testWebDriver);
   }
 
-  public HomePage editAndVerifyFacility(String program, String facilityNameValue) throws IOException {
-    String catchmentPopulationValue = "600000";
-    String latitudeValue = "955.5555";
-    String longitudeValue = "644.4444";
-    String altitudeValue = "6545.4545";
-
-    verifyEditFacilityHeader("Edit facility") ;
-
+  public HomePage editFacility(String program, String catchmentPopulationValue,
+                               String latitudeValue,
+                               String longitudeValue, String altitudeValue) throws IOException {
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(facilityCode);
-    catchmentPopulation.clear();
-    catchmentPopulation.sendKeys(catchmentPopulationValue);
-    latitude.clear();
-    latitude.sendKeys(latitudeValue);
-    longitude.clear();
-    longitude.sendKeys(longitudeValue);
-    altitude.clear();
-    altitude.sendKeys(altitudeValue);
+    ManageFacilityPage.catchmentPopulation.clear();
+    ManageFacilityPage.catchmentPopulation.sendKeys(catchmentPopulationValue);
+    ManageFacilityPage.latitude.clear();
+    ManageFacilityPage.latitude.sendKeys(latitudeValue);
+    ManageFacilityPage.longitude.clear();
+    ManageFacilityPage.longitude.sendKeys(longitudeValue);
+    ManageFacilityPage.altitude.clear();
+    ManageFacilityPage.altitude.sendKeys(altitudeValue);
 
     testWebDriver.selectByVisibleText(programsSupported, program);
     programsSupportedActiveFlag.click();
@@ -526,39 +502,34 @@ public class ManageFacilityPage extends Page {
     okAlert.click();
     testWebDriver.sleep(500);
     addSupportedProgram.click();
-
-    verifyEditedFacility(catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
-
     SaveButton.click();
-    verifyMessageOnFacilityScreen(facilityNameValue, "updated");
 
     return new HomePage(testWebDriver);
   }
 
-  private void verifyEditedFacility(String catchmentPopulationValue, String latitudeValue, String longitudeValue, String altitudeValue) {
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(catchmentPopulation, "value"), catchmentPopulationValue);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(latitude, "value"), latitudeValue);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(longitude, "value"), longitudeValue);
-    SeleneseTestNgHelper.assertEquals(testWebDriver.getAttribute(altitude, "value"), altitudeValue);
+  public void verifyEditedFacility(String catchmentPopulationValue, String latitudeValue, String longitudeValue, String altitudeValue) {
+    assertEquals(testWebDriver.getAttribute(catchmentPopulation, "value"), catchmentPopulationValue);
+    assertEquals(testWebDriver.getAttribute(latitude, "value"), latitudeValue);
+    assertEquals(testWebDriver.getAttribute(longitude, "value"), longitudeValue);
+    assertEquals(testWebDriver.getAttribute(altitude, "value"), altitudeValue);
 
-    SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
+    assertTrue(removeSupportedProgram.isDisplayed());
   }
 
   public HomePage verifyProgramSupported(java.util.ArrayList<String> programsSupported, String date_time) throws IOException {
     int i = 1;
-    clickFacilityList(date_time);
     verifyEditFacilityHeader("Edit facility") ;
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     for (String program : programsSupported) {
       WebElement programsSupportedElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[1]");
       WebElement programsActiveElement = testWebDriver.getElementByXpath("//table[@class='table table-striped table-bordered']/tbody/tr[" + i + "]/td[2]/input");
-      SeleneseTestNgHelper.assertEquals(programsSupportedElement.getText().trim(), program);
-      SeleneseTestNgHelper.assertTrue("Program " + i + " should be active", programsActiveElement.isSelected());
+      assertEquals(programsSupportedElement.getText().trim(), program);
+      assertTrue("Program " + i + " should be active", programsActiveElement.isSelected());
 
       i++;
     }
-    SeleneseTestNgHelper.assertTrue(removeSupportedProgram.isDisplayed());
+    assertTrue(removeSupportedProgram.isDisplayed());
 
     return new HomePage(testWebDriver);
   }

@@ -8,13 +8,13 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-app.directive('rnrBody', function () {
+app.directive('rnrBody', function ($timeout) {
   return{
     restrict: 'C',
     link: function (scope, element) {
-      setTimeout(function () {
+      $timeout(function () {
         element.css('max-height', $(window).height() + 'px');
-      });
+      },0);
 
       $(window).on('resize', function () {
         element.css('max-height', $(window).height() + 'px');

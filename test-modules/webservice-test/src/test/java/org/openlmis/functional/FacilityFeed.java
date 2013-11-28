@@ -43,6 +43,7 @@ public class FacilityFeed extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
+    dbWrapper.updateRestrictLogin("commTrack",true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -105,6 +106,7 @@ public class FacilityFeed extends JsonUtility {
     manageFacilityPage.disableFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     manageFacilityPage.verifyDisabledFacility(facilityCodePrefix + date_time, facilityNamePrefix + date_time);
     manageFacilityPage.enableFacility();
+    manageFacilityPage.verifyEnabledFacility();
     responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -120,7 +122,7 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(1), feedJSONList.get(1).contains("\"operatedBy\":\"" + operatedBy + "\""));
 
-    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":true"));
+    assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"active\":false"));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"enabled\":true"));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"facilityType\":\"" + facilityType + "\""));
     assertTrue("feed json list : " + feedJSONList.get(2), feedJSONList.get(2).contains("\"operatedBy\":\"" + operatedBy + "\""));

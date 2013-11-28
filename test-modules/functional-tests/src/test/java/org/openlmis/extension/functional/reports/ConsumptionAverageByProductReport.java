@@ -46,7 +46,7 @@ public class ConsumptionAverageByProductReport extends ReportTestHelper {
     public static final Integer AMC = 7;
 
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private AverageConsumptionReportPage averageConsumptionReportPage;
 

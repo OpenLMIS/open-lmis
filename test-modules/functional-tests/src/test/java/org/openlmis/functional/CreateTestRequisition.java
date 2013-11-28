@@ -49,7 +49,7 @@ public class CreateTestRequisition extends TestCaseHelper {
   }
 
   @Test(groups = {"createTestRequisition"}, dataProvider = "Data-Provider-Function-Including-Regimen")
-  public void testViewRequisitionRegimenAndEmergencyStatus(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
+  public void testCreateRequisitionWithEmergencyStatus(String program, String userSIC, String categoryCode, String password, String regimenCode, String regimenName, String regimenCode2, String regimenName2) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -78,8 +78,9 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
     ApprovePage approvePageTopSNUser = homePage.navigateToApprove();
-    approvePageTopSNUser.verifyAndClickRequisitionPresentForApproval();
-    approvePageTopSNUser.editApproveQuantityAndVerifyTotalCostViewRequisition("20");
+    approvePageTopSNUser.ClickRequisitionPresentForApproval();
+    approvePageTopSNUser.verifyNoRequisitionMessage();
+    approvePageTopSNUser.editFullSupplyApproveQuantity("20");
     approvePageTopSNUser.clickRegimenTab();
     approvePageTopSNUser.approveRequisition();
     approvePageTopSNUser.clickOk();

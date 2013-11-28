@@ -117,8 +117,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void createUser(DataTable userTable) throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     List<Map<String, String>> data = userTable.asMaps();
-    for (Map map : data)
+    for (Map map : data){
       createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
+    }
   }
 
   @And("^I update user$")
@@ -145,10 +146,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void periodScheduleAndRequisitionGroupDataSetup() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
-    manageSchedulePage.createSchedule();
-    manageSchedulePage.verifyScheduleCode();
-    manageSchedulePage.editSchedule();
-    manageSchedulePage.verifyScheduleCode();
+    manageSchedulePage.createSchedule("Q1stM","M");
+    manageSchedulePage.verifyScheduleCode("Q1stM","M");
+    manageSchedulePage.editSchedule("M1","M");
+    manageSchedulePage.verifyScheduleCode("Q1stM","M");
     PeriodsPage periodsPage = manageSchedulePage.navigatePeriods();
     periodsPage.createAndVerifyPeriods();
     periodsPage.deleteAndVerifyPeriods();
@@ -246,7 +247,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterAndVerifyRequestedQuantityExplanation(10);
+    initiateRnRPage.enterRequestedQuantity(10);
+    initiateRnRPage.verifyRequestedQuantityExplanation();
+    initiateRnRPage.enterExplanationReason();
     initiateRnRPage.verifyPacksToShip("1");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
@@ -287,7 +290,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void nevigateRequisitionApprovalPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ApprovePage approvePage = homePage.navigateToApprove();
-    periodTopSNUser = approvePage.verifyAndClickRequisitionPresentForApproval();
+    periodTopSNUser = approvePage.ClickRequisitionPresentForApproval();
+  }
+
+  @Then("I access non full supply tab$")
+  public void accessNonFullSupplyTab() throws Exception {
+    ApprovePage approvePage = new ApprovePage(testWebDriver);
+    approvePage.accessNonFullSupplyTab();
   }
 
   @Then("I should see RnR Header$")
@@ -296,10 +305,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
   }
 
-  @Then("I should see approved quantity$")
-  public void verifyApprovedQuantity() throws Exception {
+  @Then("I should see full supply approved quantity$")
+  public void verifyFullSupplyApprovedQuantity() throws Exception {
     ApprovePage approvePage = new ApprovePage(testWebDriver);
-    approvePage.verifyApprovedQuantity();
+    approvePage.verifyFullSupplyApprovedQuantity();
+  }
+
+  @Then("I should see non full supply approved quantity$")
+    public void verifyNonFullSupplyApprovedQuantity() throws Exception {
+        ApprovePage approvePage = new ApprovePage(testWebDriver);
+        approvePage.verifyNonFullSupplyApprovedQuantity();
   }
 
   @Then("I should see approved quantity from lower hierarchy$")
@@ -308,10 +323,28 @@ public class E2EInitiateRnR extends TestCaseHelper {
     approvePage.verifyApprovedQuantityApprovedFromLowerHierarchy("290");
   }
 
-  @When("I update approve quantity and verify total cost as \"([^\"]*)\"$")
-  public void updateApproveQuantityAndVerifyTotalCost(String cost) throws Exception {
+  @When("I update full supply approve quantity as \"([^\"]*)\"$")
+  public void updateFullSupplyApproveQuantity(String approvedQuantity) throws Exception {
     ApprovePage approvePage = new ApprovePage(testWebDriver);
-    approvePage.editApproveQuantityAndVerifyTotalCost(cost);
+    approvePage.editFullSupplyApproveQuantity(approvedQuantity);
+  }
+
+  @Then("I verify full supply cost for approved quantity \"([^\"]*)\"$")
+  public void verifyFullSupplyCost(String approvedQuantity) throws Exception {
+    ApprovePage approvePage = new ApprovePage(testWebDriver);
+    approvePage.verifyFullSupplyCost(approvedQuantity);
+  }
+
+  @When("I update non full supply approve quantity as \"([^\"]*)\"$")
+  public void updateNonFullSupplyApproveQuantity(String approvedQuantity) throws Exception {
+    ApprovePage approvePage = new ApprovePage(testWebDriver);
+    approvePage.editNonFullSupplyApproveQuantity(approvedQuantity);
+  }
+
+  @Then("I verify non full supply cost for approved quantity \"([^\"]*)\"$")
+   public void verifyNonFullSupplyCost(String approvedQuantity) throws Exception {
+     ApprovePage approvePage = new ApprovePage(testWebDriver);
+     approvePage.verifyNonFullSupplyCost(approvedQuantity);
   }
 
   @And("I add comments without save$")

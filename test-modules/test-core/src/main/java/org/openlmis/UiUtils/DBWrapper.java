@@ -205,7 +205,19 @@ public class DBWrapper {
     update("update users set password = '%s', active = TRUE, verified = TRUE  where email = '%s'", password, email);
   }
 
+  public void updateRestrictLogin(String userName, boolean status) throws SQLException, IOException {
+    update("update users set restrictLogin = '%s' where userName = '%s'", status, userName);
+  }
 
+  public String getRestrictLogin(String userName) throws SQLException, IOException {
+    String status=null;
+    ResultSet rs = query("select restrictLogin from users where userName='%s'", userName);
+
+    if (rs.next()) {
+       status = rs.getString("restrictLogin");
+    }
+    return status;
+  }
   public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
@@ -554,7 +566,7 @@ public class DBWrapper {
 
     update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product1 + "'), 30, 12.5, true),\n" +
-      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 0, true);");
+      "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true);");
   }
 
   public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException, IOException {
@@ -615,31 +627,31 @@ public class DBWrapper {
 
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
-      "(masterColumnId, programId, visible, source, position, label) VALUES\n" +
-      "(1, (select id from programs where code = '" + program + "'),  true, 'U', 1,  'Skip'),\n" +
-      "(2, (select id from programs where code = '" + program + "'),  true, 'R', 2,  'Product Code'),\n" +
-      "(3, (select id from programs where code = '" + program + "'),  true, 'R', 3,  'Product'),\n" +
-      "(4, (select id from programs where code = '" + program + "'),  true, 'R', 4,  'Unit/Unit of Issue'),\n" +
-      "(5, (select id from programs where code = '" + program + "'),  true, 'U', 5,  'Beginning Balance'),\n" +
-      "(6, (select id from programs where code = '" + program + "'),  true, 'U', 6,  'Total Received Quantity'),\n" +
-      "(7, (select id from programs where code = '" + program + "'),  true, 'C', 7,  'Total'),\n" +
-      "(8, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Consumed Quantity'),\n" +
-      "(9, (select id from programs where code = '" + program + "'),  true, 'U', 9,  'Total Losses / Adjustments'),\n" +
-      "(10, (select id from programs where code = '" + program + "'),  true, 'C', 10,  'Stock on Hand'),\n" +
-      "(11, (select id from programs where code = '" + program + "'),  true, 'U', 11, 'New Patients'),\n" +
-      "(12, (select id from programs where code = '" + program + "'), true, 'U', 12, 'Total Stockout days'),\n" +
-      "(13, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Adjusted Total Consumption'),\n" +
-      "(14, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Average Monthly Consumption(AMC)'),\n" +
-      "(15, (select id from programs where code = '" + program + "'), true, 'C', 15, 'Maximum Stock Quantity'),\n" +
-      "(16, (select id from programs where code = '" + program + "'), true, 'C', 16, 'Calculated Order Quantity'),\n" +
-      "(17, (select id from programs where code = '" + program + "'), true, 'U', 17, 'Requested quantity'),\n" +
-      "(18, (select id from programs where code = '" + program + "'), true, 'U', 18, 'Requested quantity explanation'),\n" +
-      "(19, (select id from programs where code = '" + program + "'), true, 'U', 19, 'Approved Quantity'),\n" +
-      "(20, (select id from programs where code = '" + program + "'), true, 'C', 20, 'Packs to Ship'),\n" +
-      "(21, (select id from programs where code = '" + program + "'), true, 'R', 21, 'Price per pack'),\n" +
-      "(22, (select id from programs where code = '" + program + "'), true, 'C', 22, 'Total cost'),\n" +
-      "(23, (select id from programs where code = '" + program + "'), true, 'U', 23, 'Expiration Date'),\n" +
-      "(24, (select id from programs where code = '" + program + "'), true, 'U', 24, 'Remarks');");
+      "(masterColumnId, programId, visible, source, formulavalidationrequired, position, label) VALUES\n" +
+      "(1, (select id from programs where code = '" + program + "'),  true, 'U', false,1,  'Skip'),\n" +
+      "(2, (select id from programs where code = '" + program + "'),  true, 'R', false,2,  'Product Code'),\n" +
+      "(3, (select id from programs where code = '" + program + "'),  true, 'R', false,3,  'Product'),\n" +
+      "(4, (select id from programs where code = '" + program + "'),  true, 'R', false,4,  'Unit/Unit of Issue'),\n" +
+      "(5, (select id from programs where code = '" + program + "'),  true, 'U', false,5,  'Beginning Balance'),\n" +
+      "(6, (select id from programs where code = '" + program + "'),  true, 'U', false,6,  'Total Received Quantity'),\n" +
+      "(7, (select id from programs where code = '" + program + "'),  true, 'C', false,7,  'Total'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'U', false,8,  'Total Consumed Quantity'),\n" +
+      "(9, (select id from programs where code = '" + program + "'),  true, 'U', false,9,  'Total Losses / Adjustments'),\n" +
+      "(10, (select id from programs where code = '" + program + "'),  true, 'C', true,10,  'Stock on Hand'),\n" +
+      "(11, (select id from programs where code = '" + program + "'),  true, 'U', false,11, 'New Patients'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'U', false,12, 'Total Stockout days'),\n" +
+      "(13, (select id from programs where code = '" + program + "'), true, 'C', false,13, 'Adjusted Total Consumption'),\n" +
+      "(14, (select id from programs where code = '" + program + "'), true, 'C', false,14, 'Average Monthly Consumption(AMC)'),\n" +
+      "(15, (select id from programs where code = '" + program + "'), true, 'C', false,15, 'Maximum Stock Quantity'),\n" +
+      "(16, (select id from programs where code = '" + program + "'), true, 'C', false,16, 'Calculated Order Quantity'),\n" +
+      "(17, (select id from programs where code = '" + program + "'), true, 'U', false,17, 'Requested quantity'),\n" +
+      "(18, (select id from programs where code = '" + program + "'), true, 'U', false,18, 'Requested quantity explanation'),\n" +
+      "(19, (select id from programs where code = '" + program + "'), true, 'U', false,19, 'Approved Quantity'),\n" +
+      "(20, (select id from programs where code = '" + program + "'), true, 'C', false,20, 'Packs to Ship'),\n" +
+      "(21, (select id from programs where code = '" + program + "'), true, 'R', false,21, 'Price per pack'),\n" +
+      "(22, (select id from programs where code = '" + program + "'), true, 'C', false,22, 'Total cost'),\n" +
+      "(23, (select id from programs where code = '" + program + "'), true, 'U', false,23, 'Expiration Date'),\n" +
+      "(24, (select id from programs where code = '" + program + "'), true, 'U', false,24, 'Remarks');");
   }
 
   public void configureTemplateForCommTrack(String program) throws SQLException, IOException {
@@ -651,7 +663,7 @@ public class DBWrapper {
       "(5, (select id from programs where code = '" + program + "'),  false, 'C', 4,  'Beginning Balance'),\n" +
       "(6, (select id from programs where code = '" + program + "'),  false, 'C', 5,  'Total Received Quantity'),\n" +
       "(7, (select id from programs where code = '" + program + "'),  true, 'C', 6,  'Total'),\n" +
-      "(8, (select id from programs where code = '" + program + "'),  false, 'C', 7,  'Total Consumed Quantity'),\n" +
+      "(8, (select id from programs where code = '" + program + "'),  true, 'C', 7,  'Total Consumed Quantity'),\n" +
       "(9, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Losses / Adjustments'),\n" +
       "(10, (select id from programs where code = '" + program + "'),  true, 'U', 9,  'Stock on Hand'),\n" +
       "(11, (select id from programs where code = '" + program + "'),  true, 'U', 10, 'New Patients'),\n" +
@@ -733,17 +745,6 @@ public class DBWrapper {
   public Long getFacilityID(String facilityCode) throws IOException, SQLException {
     Long id = null;
     ResultSet rs = query("select id from facilities where code='" + facilityCode + "';");
-
-    if (rs.next()) {
-      id = rs.getLong("id");
-    }
-    return id;
-  }
-
-
-  public Long getPeriodID(String periodName) throws IOException, SQLException {
-    Long id = null;
-    ResultSet rs = query("select id from processing_periods where name='" + periodName + "';");
 
     if (rs.next()) {
       id = rs.getLong("id");
@@ -1405,15 +1406,6 @@ public class DBWrapper {
     return res;
   }
 
-  public int getRequisitionIdForGroup(String requisitionGroup) throws SQLException {
-    int rgId=0;
-    ResultSet rs = query("SELECT id FROM requisition_groups WHERE code ='"+requisitionGroup+"';");
-    if (rs.next()) {
-      rgId = rs.getInt(1);
-    }
-    return rgId;
-  }
-
   public void deleteCurrentPeriod() throws SQLException {
     update("delete from processing_periods where endDate>=NOW()") ;
   }
@@ -1431,4 +1423,60 @@ public class DBWrapper {
     update("delete from program_rnr_columns");
   }
 
+  public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {
+    update("delete from facility_approved_products where facilitytypeid=(select typeid from facilities where code='"+ facilityCode+ "') " +
+      "and programproductid=(select id from program_products where programid=(select id from programs where code='"+programCode+"')" +
+      "and productid=(select id from products where code='"+productCode+"'));");
+  }
+
+  public void UpdateProductFullSupplyStatus(String productCode,boolean fullSupply) throws SQLException {
+    update("UPDATE products SET fullSupply=" + fullSupply +  " WHERE code='" + productCode + "';");
+  }
+
+  public float getRequisitionFullSupplyItemsSubmittedCost(int requisitionId) throws SQLException {
+    float fullSupplyItemsSubmittedCost=0f;
+        ResultSet rs = query("SELECT fullSupplyItemsSubmittedCost FROM requisitions WHERE id =" + requisitionId + ";");
+        if (rs.next()) {
+            fullSupplyItemsSubmittedCost = rs.getFloat(1) ;
+        }
+        return fullSupplyItemsSubmittedCost;
+  }
+
+ public String getStockInHand(String requisitionId) throws IOException, SQLException {
+   String stockInHand = null;
+   ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
+
+   if (rs.next()) {
+      stockInHand = rs.getString("stockinhand");
+   }
+   return stockInHand;
+
+ }
+
+    public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
+        update("UPDATE program_rnr_columns set formulavalidationrequired ='"+flag+"' WHERE programid=" +
+        "(SELECT id from programs where code='" + programCode + "');");
+    }
+
+    public void updateConfigureTemplate(String programCode, String fieldName,String fieldValue,String visibilityFlag,String fieldName2 ) throws SQLException {
+        update("UPDATE program_rnr_columns SET visible ='"+visibilityFlag+"', "+fieldName+"='"+fieldValue+"' WHERE programid=" +
+                "(SELECT id from programs where code='" + programCode + "')" +
+                "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '"+fieldName2+"') ;");
+
+    }
+
+  public void deleteConfigureTemplate(String program) throws SQLException {
+    update("DELETE FROM program_rnr_columns where programid=(select id from programs where code = '" + program + "');");
+  }
+
+    public String getApproverName(long requisitionId) throws IOException, SQLException {
+        String name = null;
+        ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrid =" + requisitionId + " and status='APPROVED';");
+
+        if (rs.next()) {
+            name = rs.getString("name");
+        }
+        return name;
+
+    }
 }

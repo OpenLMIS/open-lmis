@@ -50,7 +50,7 @@ public class StockImbalanceByFacilityReport extends ReportTestHelper {
     private static final Integer MOS = 6;
     private static final Integer ORDER_QUANITY = 7;
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private StockImbalanceByFacilityPage stockImbalanceByFacilityPage;
 

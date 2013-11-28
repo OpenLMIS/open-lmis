@@ -1,7 +1,5 @@
 {
-    "requisitionId": "",
-    "emergency" : "false",
-    "userName": "",
+    "approverName" : "some random name",
     "products": [
         {
             "productCode": "",

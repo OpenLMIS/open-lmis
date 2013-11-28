@@ -36,7 +36,7 @@ CREATE OR REPLACE VIEW vw_requisition_detail AS
     requisition_line_items.maxmonthsofstock, 
     requisition_line_items.maxstockquantity, requisition_line_items.packstoship, 
     requisition_line_items.packsize, requisition_line_items.fullsupply, 
-    requisition_line_items.previousstockinhandavailable, 
+    --requisition_line_items.previousstockinhandavailable,
     facilities.id AS facility_id, requisitions.id AS req_id, 
     requisitions.status AS req_status, requisition_line_items.id AS req_line_id, 
     geographic_zones.id AS zone_id, geographic_zones.name AS region, 

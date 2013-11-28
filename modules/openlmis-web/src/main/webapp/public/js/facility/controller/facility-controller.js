@@ -192,12 +192,6 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.error = data.data.error;
   };
 
-  $scope.enableFacility = function (active) {
-    $scope.activeConfirmModal = false;
-    $scope.facility.active = active;
-    Facility.restore({id: $scope.facility.id, active: active}, successFunc, errorFunc);
-  };
-
   $scope.disableFacilityCallBack = function (result) {
     if (!result) return;
     Facility.remove({id: $scope.facility.id}, {}, successFunc, errorFunc);
@@ -223,20 +217,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
 
   $scope.enableFacilityCallBack = function (result) {
     if (!result) return;
-    $scope.showConfirmFacilityActivate();
-  };
-
-  $scope.showConfirmFacilityActivate = function () {
-    var dialogOpts = {
-      id: "activeConfirmModel",
-      header: messageService.get("create.facility.activateFacility"),
-      body: messageService.get("create.facility.setFacilityActive")
-    };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.activateFacilityCallBack, $dialog, messageService);
-  };
-
-  $scope.activateFacilityCallBack = function (result) {
-    $scope.enableFacility(result);
+    Facility.restore({id: $scope.facility.id}, successFunc, errorFunc);
   };
 
   function updateProgramsToDisplay() {

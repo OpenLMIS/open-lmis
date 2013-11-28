@@ -59,7 +59,6 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
   private static WebElement enableButton = null;
 
-
   @FindBy(how = How.ID, using = "searchUser")
   private static WebElement searchUserTextField = null;
 
@@ -193,6 +192,11 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'No matches found for')]")
   private static WebElement noMatchFoundLink = null;
 
+  @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[1]")
+  private static WebElement restrictLoginYesOption = null;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[2]")
+  private static WebElement restrictLoginNoOption = null;
 
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -204,7 +208,6 @@ public class UserPage extends Page {
   public void searchUser(String user) {
     testWebDriver.waitForElementToAppear(searchUserTextField);
     sendKeys(searchUserTextField, user);
-    testWebDriver.sleep(2000);
   }
 
   public void clickUserList() {
@@ -260,16 +263,12 @@ public class UserPage extends Page {
     firstNameField.sendKeys(firstName);
     lastNameField.clear();
     lastNameField.sendKeys(lastName);
+    testWebDriver.handleScroll();
+    clickRestrictLoginNo();
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.sleep(1500);
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(viewHereLink);
-
-    testWebDriver.waitForElementToAppear(successMessage);
-
-    String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
-      " password link has been sent on registered Email address. View Here", firstName, lastName);
-    assertEquals(expectedMessage, successMessage.getText());
   }
 
   public void verifyUserCreated(String firstName, String lastName)
@@ -290,7 +289,6 @@ public class UserPage extends Page {
       searchFacility.sendKeys(Keys.DELETE);
     }
     searchFacility.sendKeys(facilityCode);
-    testWebDriver.sleep(1000);
   }
 
   public void verifyNoMatchedFoundMessage() {
@@ -303,6 +301,14 @@ public class UserPage extends Page {
 
   public void collapseAll() {
     collapseAllOption.click();
+  }
+
+  public void clickRestrictLoginYes() {
+    restrictLoginYesOption.click();
+  }
+
+  public void clickRestrictLoginNo() {
+    restrictLoginNoOption.click();
   }
 
   public void verifyExpandAll() {
@@ -321,6 +327,7 @@ public class UserPage extends Page {
     testWebDriver.waitForElementToAppear(searchFacility);
     if (!roleType.equals("ADMIN")) {
       enterUserHomeFacility(facilityCode);
+      testWebDriver.sleep(500);
       selectFacility.click();
       homeFacilityRolesAccordion.click();
       testWebDriver.sleep(500);
@@ -331,16 +338,13 @@ public class UserPage extends Page {
       testWebDriver.waitForElementToAppear(rolesSelectFieldHomeFacility);
       rolesSelectFieldHomeFacility.click();
       addHomeFacilityRolesButton.click();
-      testWebDriver.sleep(1000);
-
-
+      testWebDriver.waitForElementToAppear(supervisoryRolesAccordion);
       supervisoryRolesAccordion.click();
       testWebDriver.sleep(500);
       testWebDriver.selectByVisibleText(programsToSupervise, program1);
       testWebDriver.sleep(1000);
       testWebDriver.selectByVisibleText(supervisoryNodeToSupervise, node);
       testWebDriver.sleep(1000);
-
       testWebDriver.handleScroll();
       testWebDriver.sleep(500);
       rolesInputFieldSupervisoryRole.click();
@@ -354,7 +358,6 @@ public class UserPage extends Page {
 
 
       addSupervisoryRoleButton.click();
-      testWebDriver.sleep(1000);
 
     } else {
       testWebDriver.handleScroll();
@@ -371,12 +374,11 @@ public class UserPage extends Page {
 
   public void saveUser() {
     saveButton.click();
-    testWebDriver.sleep(1000);
   }
 
   public void verifyUserUpdated(String firstName, String lastName) {
-    SeleneseTestNgHelper.assertTrue(
-      "User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed",
+    testWebDriver.sleep(1000);
+    assertTrue("User '" + firstName + " " + lastName + "' has been successfully updated message is not getting displayed",
       successMessage.isDisplayed());
 
   }
@@ -385,7 +387,7 @@ public class UserPage extends Page {
     warehouseRolesAccordion.click();
     testWebDriver.sleep(500);
     testWebDriver.selectByVisibleText(warehouseToSelect, warehouse);
-    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(rolesInputFieldWarehouse);
     rolesInputFieldWarehouse.click();
     rolesInputFieldWarehouse.clear();
     rolesInputFieldWarehouse.sendKeys(role);
@@ -397,8 +399,6 @@ public class UserPage extends Page {
     testWebDriver.sleep(1000);
     verifyWarehouseSelectedNotAvailable(warehouse);
     warehouseRolesAccordion.click();
-    testWebDriver.sleep(1000);
-
   }
 
   public void verifyMessage(String message) {
@@ -420,7 +420,6 @@ public class UserPage extends Page {
     rolesInputFieldMDeliveryZone.sendKeys(role);
     rolesInputFieldMDeliveryZone.sendKeys(Keys.RETURN);
     addDeliveryZoneRoleButton.click();
-    testWebDriver.sleep(1000);
   }
 
   public void enterDeliveryZoneDataWithoutHomeAndSupervisoryRolesAssigned(String deliveryZoneCode, String program, String role) {
@@ -437,7 +436,6 @@ public class UserPage extends Page {
     rolesInputFieldDeliveryZone.sendKeys(role);
     rolesInputFieldDeliveryZone.sendKeys(Keys.RETURN);
     addDeliveryZoneRoleButton.click();
-    testWebDriver.sleep(1000);
   }
 
 
@@ -455,32 +453,14 @@ public class UserPage extends Page {
     }
   }
 
-
-  public void verifyRoleNotPresent(String roleName) {
-    boolean rolePresent;
-    try {
-      testWebDriver.sleep(1000);
-      WebElement element = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
-      element.click();
-      rolePresent = true;
-    } catch (ElementNotVisibleException e) {
-      rolePresent = false;
-    } catch (NoSuchElementException e) {
-      rolePresent = false;
-    }
-    assertFalse(rolePresent);
-  }
-
   public void clickCancelButton() {
     testWebDriver.waitForElementToAppear(cancelButton);
     cancelButton.click();
-    testWebDriver.sleep(100);
   }
 
   public void clickSaveButton() {
     testWebDriver.waitForElementToAppear(saveButton);
     saveButton.click();
-    testWebDriver.sleep(100);
   }
 
   public void clickDisableButton() {
@@ -499,6 +479,20 @@ public class UserPage extends Page {
     testWebDriver.sleep(500);
     WebElement roleElement = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
     assertTrue(roleName + " should be displayed", roleElement.isDisplayed());
+  }
+
+  public void verifyRoleNotPresent(String roleName) {
+    boolean rolePresent;
+    try {
+          testWebDriver.sleep(500);
+          WebElement element = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
+          rolePresent = element.isDisplayed();
+    } catch (ElementNotVisibleException e) {
+            rolePresent = false;
+    } catch (NoSuchElementException e) {
+            rolePresent = false;
+    }
+    assertFalse(rolePresent);
   }
 
   public String getAllProgramsToSupervise() {
@@ -523,14 +517,13 @@ public class UserPage extends Page {
   public void clickOk() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
-    testWebDriver.sleep(100);
   }
 
   public void verifyRemoveNotPresent() {
     boolean removePresent;
     try {
-      testWebDriver.sleep(1000);
-      removeButton.click();
+      testWebDriver.sleep(500);
+      removeButton.isDisplayed();
       removePresent = true;
     } catch (ElementNotVisibleException e) {
       removePresent = false;
@@ -544,8 +537,6 @@ public class UserPage extends Page {
     testWebDriver.sleep(500);
     testWebDriver.getElementByXpath("(//input[@value='Remove'])[" + removeButtonNumber + "]").click();
     clickOk();
-    testWebDriver.sleep(100);
-
   }
 
   public String getAddedDeliveryZoneLabel() {

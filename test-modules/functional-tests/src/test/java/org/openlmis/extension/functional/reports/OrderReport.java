@@ -46,7 +46,7 @@ public class OrderReport extends ReportTestHelper {
     public static final Integer PACK_QUANITTY = 6;
     public static final Integer DISCREPANCY_OR_DAMAGES = 7;
 
-    private ReportHomePage homePage;
+    private ExtensionHomePage homePage;
     private ReportLoginPage loginPage;
     private OrderReportPage orderReportPage;
 

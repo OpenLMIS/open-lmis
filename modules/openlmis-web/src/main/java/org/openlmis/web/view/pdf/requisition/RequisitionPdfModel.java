@@ -20,6 +20,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
@@ -40,6 +41,7 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 @NoArgsConstructor
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
+  public static final String SKIPPED_PRODUCTS_TEXT = "label.skipped.products";
   private List<RequisitionStatusChange> statusChanges;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
@@ -53,13 +55,16 @@ public class RequisitionPdfModel {
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
   private MessageService messageService;
 
-  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService) {
+  private ConfigurationSettingService configService;
+
+  public RequisitionPdfModel(Map<String, Object> model, MessageService messageService, ConfigurationSettingService configService) {
     this.statusChanges = (List<RequisitionStatusChange>) model.get(STATUS_CHANGES);
     this.rnrColumnList = (List<RnrColumn>) model.get(RNR_TEMPLATE);
     this.regimenColumnList = (List<RegimenColumn>) model.get(REGIMEN_TEMPLATE);
     this.requisition = (Rnr) model.get(RNR);
     this.lossesAndAdjustmentsTypes = (List<LossesAndAdjustmentsType>) model.get(LOSSES_AND_ADJUSTMENT_TYPES);
     this.messageService = messageService;
+    this.configService = configService;
   }
 
   public Paragraph getFullSupplyHeader() {
@@ -102,7 +107,13 @@ public class RequisitionPdfModel {
         printRnrLineItem.calculate(calcStrategy, requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
-      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
+      String currencySymbol = messageService.message(LABEL_CURRENCY_SYMBOL);
+
+      if(!configService.getBoolValue("RNR_PRINT_REPEAT_CURRENCY_SYMBOL")){
+        currencySymbol = "";
+      }
+
+      List<PdfPCell> cells = getCells(visibleColumns, lineItem, currencySymbol, messageService. message(SKIPPED_PRODUCTS_TEXT));
       odd = !odd;
 
       for (PdfPCell cell : cells) {
@@ -125,7 +136,6 @@ public class RequisitionPdfModel {
       widths.add(column.getColumnWidth());
     }
     PdfPTable table = new PdfPTable(widths.size());
-
     table.setWidths(ArrayUtils.toPrimitive(widths.toArray(new Integer[widths.size()])));
     table.getDefaultCell().setBackgroundColor(HEADER_BACKGROUND);
     table.getDefaultCell().setPadding(CELL_PADDING);
@@ -168,8 +178,8 @@ public class RequisitionPdfModel {
 
   private void addHeading(PdfPTable table) throws DocumentException {
     Chunk chunk = new Chunk(String.format(messageService.message("label.requisition") + ": %s (%s)",
-        this.requisition.getProgram().getName(),
-        this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
+      this.requisition.getProgram().getName(),
+      this.requisition.getFacility().getFacilityType().getName()), H1_FONT);
 
     PdfPCell cell = new PdfPCell(new Phrase(chunk));
     cell.setColspan(4);
@@ -209,8 +219,8 @@ public class RequisitionPdfModel {
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
     builder.append(messageService.message("label.facility.reportingPeriod")).append(": ")
-        .append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ")
-        .append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+      .append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ")
+      .append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
 
     insertCell(table, builder.toString(), 1);
 
@@ -271,11 +281,11 @@ public class RequisitionPdfModel {
 
     String submittedDate = submittedStatusChange != null ? DATE_FORMAT.format(submittedStatusChange.getCreatedDate()) : "";
     String submittedBy = submittedStatusChange != null ?
-        submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
+      submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
 
     String authorizedDate = authorizedStatusChange != null ? DATE_FORMAT.format(authorizedStatusChange.getCreatedDate()) : "";
     String authorizedBy = authorizedStatusChange != null ?
-        authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
+      authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
 
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": " + submittedBy)));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));

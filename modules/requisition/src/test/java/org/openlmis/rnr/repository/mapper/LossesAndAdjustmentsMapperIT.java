@@ -98,7 +98,7 @@ public class LossesAndAdjustmentsMapperIT {
     requisitionMapper.insert(requisition);
 
     rnrLineItem = new RnrLineItem(requisition.getId(), facilityTypeApprovedProduct, MODIFIED_BY, 1L);
-    rnrLineItemMapper.insert(rnrLineItem);
+    rnrLineItemMapper.insert(rnrLineItem, null);
     lossAndAdjustment = new LossesAndAdjustments();
     LossesAndAdjustmentsType lossesAndAdjustmentsType = new LossesAndAdjustmentsType();
     lossesAndAdjustmentsType.setName("CLINIC_RETURN");

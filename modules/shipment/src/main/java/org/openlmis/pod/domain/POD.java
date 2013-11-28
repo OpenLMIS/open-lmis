@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.domain.Rnr;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ import java.util.List;
 public class POD extends BaseModel {
 
   private Long orderId;
+  private Long facilityId;
+  private Long programId;
+  private Long periodId;
   private List<PODLineItem> podLineItems;
 
   public POD(Long id) {
@@ -39,5 +43,11 @@ public class POD extends BaseModel {
       lineItem.setCreatedBy(createdBy);
       lineItem.setModifiedBy(modifiedBy);
     }
+  }
+
+  public void fillPOD(Rnr requisition) {
+    this.facilityId = requisition.getFacility().getId();
+    this.programId = requisition.getProgram().getId();
+    this.periodId = requisition.getPeriod().getId();
   }
 }

@@ -69,8 +69,8 @@ public class ProcessingPeriodRepository {
 
   public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long scheduleId, Long startPeriodId, Date afterDate, Date beforeDate) {
     return startPeriodId == null ?
-      mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
-      mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
+        mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
+        mapper.getAllPeriodsAfterDateAndPeriod(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
   public ProcessingPeriod getById(Long id) {
@@ -93,11 +93,15 @@ public class ProcessingPeriodRepository {
     return mapper.getCurrentPeriod(scheduleId, programStartDate);
   }
 
+  public List<ProcessingPeriod> getNPreviousPeriods(ProcessingPeriod currentPeriod, Integer n) {
+    return mapper.getNPreviousPeriods(currentPeriod, n);
+  }
+
   public List<ProcessingPeriod>  getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
       return mapper.getAllPeriodsForScheduleAndYear(scheduleId, year);
   }
 
-  public Long getIdByName(String name){
-      return mapper.getIdByName(name);
-  }
+//  public Long getIdByName(String name){
+//      return mapper.getIdByName(name);
+//  }
 }

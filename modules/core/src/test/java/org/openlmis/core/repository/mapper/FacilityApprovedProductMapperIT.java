@@ -34,6 +34,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.FACILITY_TYPE_ID;
 import static org.openlmis.core.builder.ProductBuilder.*;
+import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.core.builder.ProgramBuilder.programCode;
 
@@ -105,13 +106,13 @@ public class FacilityApprovedProductMapperIT {
     Product pro06 = product("PRO06", true, 5, category6); //
     Product pro07 = product("PRO07", true, null, category2);
 
-    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true);
-    ProgramProduct programProduct2 = addToProgramProduct(yellowFeverProgram, pro02, true);
-    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true);
-    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false);
-    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true);
-    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true);
-    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true);
+    ProgramProduct programProduct1 = addToProgramProduct(yellowFeverProgram, pro01, true, 1);
+    ProgramProduct programProduct2 = addToProgramProduct(yellowFeverProgram, pro02, true, 2);
+    ProgramProduct programProduct3 = addToProgramProduct(yellowFeverProgram, pro03, true, 3);
+    ProgramProduct programProduct4 = addToProgramProduct(yellowFeverProgram, pro04, false, 4);
+    ProgramProduct programProduct5 = addToProgramProduct(yellowFeverProgram, pro05, true, 5);
+    ProgramProduct programProduct6 = addToProgramProduct(yellowFeverProgram, pro06, true, 6);
+    ProgramProduct programProduct7 = addToProgramProduct(bpProgram, pro07, true, 7);
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct1);
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct3);
@@ -127,10 +128,10 @@ public class FacilityApprovedProductMapperIT {
 
     FacilityTypeApprovedProduct facilityTypeApprovedProduct = facilityTypeApprovedProducts.get(0);
 
-    assertEquals(programProduct6.getId(), facilityTypeApprovedProduct.getProgramProduct().getId());
+    assertEquals(programProduct1.getId(), facilityTypeApprovedProduct.getProgramProduct().getId());
     assertEquals(30, facilityTypeApprovedProduct.getProgramProduct().getDosesPerMonth().intValue());
     Product product = facilityTypeApprovedProduct.getProgramProduct().getProduct();
-    assertEquals("PRO06", product.getCode());
+    assertEquals("PRO01", product.getCode());
     assertEquals("Primary Name", product.getPrimaryName());
     assertEquals("strength", product.getStrength());
     assertThat(product.getForm().getCode(), Is.is("Tablet"));
@@ -139,12 +140,12 @@ public class FacilityApprovedProductMapperIT {
     assertNotNull(product.getForm());
     assertEquals("Tablet", product.getForm().getCode());
     assertNotNull(product.getDosageUnit());
-    assertThat(product.getCategory().getName() , is("Category 6") );
+    assertThat(product.getCategory().getName() , is("Category 1") );
     assertEquals("mg", product.getDosageUnit().getCode());
     assertEquals(10, product.getDosesPerDispensingUnit().intValue());
 
     assertEquals("PRO05", facilityTypeApprovedProducts.get(1).getProgramProduct().getProduct().getCode());
-    assertEquals("PRO01", facilityTypeApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
+    assertEquals("PRO06", facilityTypeApprovedProducts.get(2).getProgramProduct().getProduct().getCode());
 
     // Non-full supply products
     List<FacilityTypeApprovedProduct> nonFullSupplyfacilityTypeApprovedProducts = facilityApprovedProductMapper.getNonFullSupplyProductsByFacilityAndProgram(
@@ -182,8 +183,9 @@ public class FacilityApprovedProductMapperIT {
     return product;
   }
 
-  private ProgramProduct addToProgramProduct(Program program, Product product, boolean isActive) {
+  private ProgramProduct addToProgramProduct(Program program, Product product, boolean isActive, Integer displayOrder) {
     ProgramProduct programProduct = new ProgramProduct(program, product, 30, isActive);
+    programProduct.setDisplayOrder(displayOrder);
     programProductMapper.insert(programProduct);
     return programProduct;
   }
@@ -195,7 +197,7 @@ public class FacilityApprovedProductMapperIT {
     Product product = make(a(defaultProduct));
     productMapper.insert(product);
 
-    ProgramProduct programProduct = addToProgramProduct(program, product, true);
+    ProgramProduct programProduct = addToProgramProduct(program, product, true, 1);
 
 
     insertFacilityApprovedProduct(FACILITY_TYPE_ID, programProduct);

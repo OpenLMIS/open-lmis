@@ -58,7 +58,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
+import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
 import static org.openlmis.rnr.builder.RequisitionSearchCriteriaBuilder.*;
 import static org.openlmis.rnr.service.RequisitionService.RNR_SUBMITTED_SUCCESSFULLY;
 import static org.openlmis.web.controller.RequisitionController.*;
@@ -154,7 +154,7 @@ public class RequisitionControllerTest {
   public void shouldAllowSubmittingOfRnrAndTagWithModifiedBy() throws Exception {
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    Rnr submittedRnr = make(a(defaultRnr));
+    Rnr submittedRnr = make(a(defaultRequisition));
     when(requisitionService.submit(rnr)).thenReturn(submittedRnr);
     OpenLmisMessage message = new OpenLmisMessage(RNR_SUBMITTED_SUCCESSFULLY);
     when(requisitionService.getSubmitMessageBasedOnSupervisoryNode(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(message);
@@ -187,7 +187,7 @@ public class RequisitionControllerTest {
 
     Rnr rnr = new Rnr(1L);
     whenNew(Rnr.class).withArguments(1L).thenReturn(rnr);
-    Rnr authorizedRnr = make(a(defaultRnr));
+    Rnr authorizedRnr = make(a(defaultRequisition));
     when(requisitionService.authorize(rnr)).thenReturn(authorizedRnr);
     OpenLmisMessage openLmisMessage = new OpenLmisMessage(code);
     when(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(authorizedRnr.getFacility(),
@@ -253,13 +253,13 @@ public class RequisitionControllerTest {
   @Test
   public void shouldApproveRequisitionAndTagWithModifiedBy() throws Exception {
     Rnr approvedrnr = new Rnr();
-    when(requisitionService.approve(rnr)).thenReturn(approvedrnr);
+    when(requisitionService.approve(rnr, null)).thenReturn(approvedrnr);
     whenNew(Rnr.class).withArguments(rnr.getId()).thenReturn(rnr);
     OpenLmisMessage message = new OpenLmisMessage("message.key");
     when(messageService.message(message)).thenReturn("R&R saved successfully!");
     when(requisitionService.getApproveMessageBasedOnParentNode(approvedrnr)).thenReturn(message);
     final ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
-    verify(requisitionService).approve(rnr);
+    verify(requisitionService).approve(rnr, null);
     assertThat(rnr.getModifiedBy(), CoreMatchers.is(USER_ID));
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat(response.getBody().getSuccessMsg(), is("R&R saved successfully!"));
@@ -267,11 +267,11 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGiveErrorMessageWhenServiceThrowsSomeExceptionWhileApprovingAnRnr() throws Exception {
-    doThrow(new DataException("some-error")).when(requisitionService).approve(rnr);
+    doThrow(new DataException("some-error")).when(requisitionService).approve(rnr, null);
 
     ResponseEntity<OpenLmisResponse> response = controller.approve(rnr.getId(), request);
 
-    verify(requisitionService).approve(rnr);
+    verify(requisitionService).approve(rnr, null);
     assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     assertThat(response.getBody().getErrorMsg(), is("some-error"));
   }
@@ -425,7 +425,7 @@ public class RequisitionControllerTest {
   public void shouldSetStatusChangesInModelForPrint() throws Exception {
     List<RequisitionStatusChange> statusChanges = new ArrayList<>();
     when(requisitionStatusChangeService.getByRnrId(1L)).thenReturn(statusChanges);
-    when(requisitionService.getFullRequisitionById(1L)).thenReturn(make(a(defaultRnr)));
+    when(requisitionService.getFullRequisitionById(1L)).thenReturn(make(a(defaultRequisition)));
 
     ModelAndView printModel = controller.printRequisition(1L);
 

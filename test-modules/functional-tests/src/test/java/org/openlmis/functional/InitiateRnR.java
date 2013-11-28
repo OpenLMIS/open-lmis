@@ -290,7 +290,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.ClickRequisitionPresentForApproval();
     approvePageLowerSNUser.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, "100", "200", "300", "testing");
     approvePageLowerSNUser.clickSaveButton();
@@ -324,10 +324,10 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.verifyAndClickRequisitionPresentForApproval();
-    approvePageLowerSNUser.editApproveQuantity("");
+    approvePageLowerSNUser.ClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.editFullSupplyApproveQuantity("");
     approvePageLowerSNUser.clickApproveButton();
-    approvePageLowerSNUser.editApproveQuantity("100");
+    approvePageLowerSNUser.editFullSupplyApproveQuantity("100");
     approvePageLowerSNUser.clickApproveButton();
     approvePageLowerSNUser.clickOk();
     approvePageLowerSNUser.verifyNoRequisitionPendingMessage();
@@ -375,11 +375,9 @@ public class InitiateRnR extends TestCaseHelper {
     assertFalse("Regimen tab should not be displayed.", initiateRnRPage.existRegimenTab());
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testRnRErrorMessageIfPeriodNotDefinedForRegularType(String program, String userSIC, String categoryCode,
-                                                                  String password, String regimenCode,
-                                                                  String regimenName, String regimenCode2,
-                                                                  String regimenName2) throws Exception {
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testRnRErrorMessageIfPeriodNotDefinedForRegularType(String program, String userSIC,
+                                                                  String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -392,11 +390,9 @@ public class InitiateRnR extends TestCaseHelper {
     verifyErrorMessages("No current period defined. Please contact the Admin.");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testRnRErrorMessageWhileAuthorizingForRegularType(String program, String userSIC, String categoryCode,
-                                                                String password, String regimenCode,
-                                                                String regimenName, String regimenCode2,
-                                                                String regimenName2) throws Exception {
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testRnRErrorMessageWhileAuthorizingForRegularType(String program, String userSIC,
+                                                                String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -409,11 +405,9 @@ public class InitiateRnR extends TestCaseHelper {
     verifyErrorMessages("No current period defined. Please contact the Admin.");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testRnRErrorMessageWhileAuthorizingForEmergencyType(String program, String userSIC, String categoryCode,
-                                                                  String password, String regimenCode,
-                                                                  String regimenName, String regimenCode2,
-                                                                  String regimenName2) throws Exception {
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testRnRErrorMessageWhileAuthorizingForEmergencyType(String program, String userSIC,
+                                                                  String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -425,12 +419,10 @@ public class InitiateRnR extends TestCaseHelper {
     verifyErrorMessages("No current period defined. Please contact the Admin.");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRErrorMessageIfPeriodNotDefinedForEmergencyType(String program, String userSIC,
-                                                                    String categoryCode, String password,
-                                                                    String regimenCode, String regimenName,
-                                                                    String regimenCode2,
-                                                                    String regimenName2) throws Exception {
+                                                                    String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -444,15 +436,11 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.clickProceed();
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void shouldVerifyRequisitionAlreadySubmittedMessage(String program,
                                                              String userSIC,
-                                                             String categoryCode,
-                                                             String password,
-                                                             String regimenCode,
-                                                             String regimenName,
-                                                             String regimenCode2,
-                                                             String regimenName2) throws Exception {
+                                                             String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(AUTHORIZE_REQUISITION);
@@ -483,15 +471,11 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program,
                                                                         String userSIC,
-                                                                        String categoryCode,
-                                                                        String password,
-                                                                        String regimenCode,
-                                                                        String regimenName,
-                                                                        String regimenCode2,
-                                                                        String regimenName2) throws Exception {
+                                                                        String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -501,7 +485,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-      rightsList1);
+        rightsList1);
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -572,15 +556,10 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testEmergencyRnRApprovedAndConvertedToOrder(String program,
                                                           String userSIC,
-                                                          String categoryCode,
-                                                          String password,
-                                                          String regimenCode,
-                                                          String regimenName,
-                                                          String regimenCode2,
-                                                          String regimenName2) throws Exception {
+                                                          String password) throws Exception {
     String LMU_IN_CHARGE = "lmuincharge";
 
     List<String> rightsList = new ArrayList<>();
@@ -592,19 +571,19 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-      rightsList1);
+        rightsList1);
 
     List<String> rightsList2 = new ArrayList<>();
     rightsList2.add(APPROVE_REQUISITION);
     rightsList2.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu",
-      rightsList2);
+        rightsList2);
 
     List<String> rightsList3 = new ArrayList<>();
     rightsList3.add(CONVERT_TO_ORDER);
     rightsList3.add("VIEW_ORDER");
     createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE,
-      rightsList3);
+        rightsList3);
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -637,16 +616,16 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage2 = loginPage.loginAs("lmu", password);
     ApprovePage approvePage = homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
-    approvePage.verifyAndClickRequisitionPresentForApproval();
+    approvePage.ClickRequisitionPresentForApproval();
     assertEquals("0", approvePage.getApprovedQuantity());
     assertEquals("", approvePage.getAdjustedTotalConsumption());
     assertEquals("", approvePage.getAMC());
     assertEquals("", approvePage.getMaxStockQuantity());
     assertEquals("", approvePage.getCalculatedOrderQuantity());
-    approvePage.editApproveQuantity("");
+    approvePage.editFullSupplyApproveQuantity("");
     approvePage.approveRequisition();
     approvePage.verifyApproveErrorDiv();
-    approvePage.editApproveQuantity("0");
+    approvePage.editFullSupplyApproveQuantity("0");
     approvePage.approveRequisition();
     approvePage.clickOk();
     approvePage.verifyNoRequisitionPendingMessage();
@@ -672,15 +651,11 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testValidationsOnStockOnHandRnRField(String program,
                                                    String userSIC,
-                                                   String categoryCode,
-                                                   String password,
-                                                   String regimenCode,
-                                                   String regimenName,
-                                                   String regimenCode2,
-                                                   String regimenName2) throws Exception {
+                                                   String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -700,15 +675,11 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testValidationsOnTotalConsumedQuantityRnRField(String program,
                                                              String userSIC,
-                                                             String categoryCode,
-                                                             String password,
-                                                             String regimenCode,
-                                                             String regimenName,
-                                                             String regimenCode2,
-                                                             String regimenName2) throws Exception {
+                                                             String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -731,15 +702,11 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifyStockOnHand("1000");
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyAllStatusOfRequisitions(String program,
                                                 String userSIC,
-                                                String categoryCode,
-                                                String password,
-                                                String regimenCode,
-                                                String regimenName,
-                                                String regimenCode2,
-                                                String regimenName2) throws Exception {
+                                                String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -764,15 +731,11 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRnRErrorMessageForSubmitterWithRequisitionAlreadyAuthorized(String program,
                                                                               String userSIC,
-                                                                              String categoryCode,
-                                                                              String password,
-                                                                              String regimenCode,
-                                                                              String regimenName,
-                                                                              String regimenCode2,
-                                                                              String regimenName2) throws Exception {
+                                                                              String password
+  ) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -782,7 +745,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-      rightsList1);
+        rightsList1);
 
 
     dbWrapper.deletePeriod("Period1");
@@ -816,7 +779,7 @@ public class InitiateRnR extends TestCaseHelper {
     testWebDriver.sleep(1000);
 
     testWebDriver.selectByVisibleText(testWebDriver.getElementByXpath("//select[@id='programListMyFacility']"),
-      program);
+        program);
 
     verifyErrorMessages("R&R for current period already submitted");
 
@@ -824,15 +787,10 @@ public class InitiateRnR extends TestCaseHelper {
     homePage2.clickProceed();
   }
 
-  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void shouldVerifyNoCurrentPeriodDefinedMessage(String program,
                                                         String userSIC,
-                                                        String categoryCode,
-                                                        String password,
-                                                        String regimenCode,
-                                                        String regimenName,
-                                                        String regimenCode2,
-                                                        String regimenName2) throws Exception {
+                                                        String password) throws Exception {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add(AUTHORIZE_REQUISITION);
@@ -887,63 +845,176 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
 
-    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-    public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
-        List<String> rightsList = new ArrayList<>();
-        rightsList.add(CREATE_REQUISITION);
-        rightsList.add(VIEW_REQUISITION);
-        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-        dbWrapper.updateVirtualPropertyOfFacility("F10","True");
-        dbWrapper.insertRoleAssignmentForSupervisoryNode("200","store in-charge","N1");
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "True");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode("200", "store in-charge", "N1");
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userSIC, password);
-        homePage.navigateAndInitiateRnrForSupervisedFacility(program);
-        String str=homePage.getFacilityDropDownList();
-        assertFalse(str.contains("F10"));
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateAndInitiateRnrForSupervisedFacility(program);
+    String str = homePage.getFacilityDropDownList();
+    assertFalse(str.contains("F10"));
 
-    }
+  }
 
-    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
-    public void testSkipProductRnRField(String program,
-                                                               String userSIC,
-                                                               String categoryCode,
-                                                               String password,
-                                                               String regimenCode,
-                                                               String regimenName,
-                                                               String regimenCode2,
-                                                               String regimenName2) throws Exception {
-        List<String> rightsList = new ArrayList<>();
-        rightsList.add(CREATE_REQUISITION);
-        rightsList.add(VIEW_REQUISITION);
-        setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-        dbWrapper.deletePeriod("Period1");
-        dbWrapper.deletePeriod("Period2");
-        dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userSIC, password);
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testSkipProductRnRField(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
 
-        homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-        InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-        initiateRnRPage.enterRequestedQuantity(100);
-        initiateRnRPage.calculateAndVerifyTotalCost();
-        initiateRnRPage.verifyCostOnFooter();
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterRequestedQuantity(100);
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    initiateRnRPage.verifyCostOnFooter();
 
-        initiateRnRPage.skipSingleProduct(1);
-        initiateRnRPage.verifyAllFieldsDisabled();
-        initiateRnRPage.calculateAndVerifyTotalCost();
-        assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
-        assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
+    initiateRnRPage.skipSingleProduct(1);
+    initiateRnRPage.verifyAllFieldsDisabled();
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
+    assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
-        initiateRnRPage.skipSingleProduct(1);
-        assertTrue(initiateRnRPage.isEnableBeginningBalance());
-        initiateRnRPage.calculateAndVerifyTotalCost();
+    initiateRnRPage.skipSingleProduct(1);
+    assertTrue(initiateRnRPage.isEnableBeginningBalance());
+    initiateRnRPage.calculateAndVerifyTotalCost();
 
-        initiateRnRPage.skipAllProduct();
-        initiateRnRPage.verifyAllFieldsDisabled();
-        assertEquals(initiateRnRPage.getTotalCostFooter(),"0.00");
-        assertEquals(initiateRnRPage.getFullySupplyCostFooter(),"0.00");
-    }
+    initiateRnRPage.skipAllProduct();
+    initiateRnRPage.verifyAllFieldsDisabled();
+    assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
+    assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
+
+    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.enterBeginningBalance("10");
+    initiateRnRPage.enterQuantityReceived("0");
+    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.enterExplanationReason();
+    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
+    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
+    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
+    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitRnrSuccessMsg();
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    initiateRnRPage.verifyCostOnFooter();
+    assertEquals("125.0", dbWrapper.getRequisitionFullSupplyItemsSubmittedCost(dbWrapper.getMaxRnrID()));
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testSkipProductRnRAuthorizeApproveForRegularRnR(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(APPROVE_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("10");
+    initiateRnRPage.enterQuantityReceived("0");
+    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.enterExplanationReason();
+    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
+    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
+    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
+    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitRnrSuccessMsg();
+    initiateRnRPage.skipAllProduct();
+    initiateRnRPage.verifyAllFieldsDisabled();
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
+    assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
+    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.ClickRequisitionPresentForApproval();
+    assertTrue(approvePage.approveQuantityVisible(1));
+    approvePage.editFullSupplyApproveQuantity("5");
+    assertFalse(approvePage.approveQuantityVisible(2));
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+    approvePage.verifyNoRequisitionPendingMessage();
+  }
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testSkipProductRnRAuthorizeApproveForEmergencyRnR(String program, String userSIC, String password) throws Exception {
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add(CREATE_REQUISITION);
+    rightsList.add(VIEW_REQUISITION);
+    rightsList.add(AUTHORIZE_REQUISITION);
+    rightsList.add(APPROVE_REQUISITION);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalance("10");
+    initiateRnRPage.enterQuantityReceived("0");
+    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.enterExplanationReason();
+    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
+    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
+    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
+    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifySubmitRnrSuccessMsg();
+    initiateRnRPage.skipAllProduct();
+    initiateRnRPage.verifyAllFieldsDisabled();
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
+    assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
+    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.skipSingleProduct(2);
+    initiateRnRPage.calculateAndVerifyTotalCost();
+    initiateRnRPage.verifyCostOnFooter();
+    initiateRnRPage.clickAuthorizeButton();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
+    ApprovePage approvePage = homePage.navigateToApprove();
+    approvePage.ClickRequisitionPresentForApproval();
+    assertTrue(approvePage.approveQuantityVisible(1));
+    approvePage.editFullSupplyApproveQuantity("5");
+    assertFalse(approvePage.approveQuantityVisible(2));
+    approvePage.clickApproveButton();
+    approvePage.clickOk();
+    approvePage.verifyNoRequisitionPendingMessage();
+  }
 
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
                                                       InitiateRnRPage initiateRnRPage) {
@@ -962,10 +1033,10 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyErrorMessages(String message) {
     testWebDriver.sleep(500);
     assertTrue("Message : " + message + " should show up. Showing : " + testWebDriver.getElementByXpath(
-      "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(),
-      testWebDriver.getElementByXpath(
-        "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText().equalsIgnoreCase(
-        message));
+        "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(),
+        testWebDriver.getElementByXpath(
+            "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText().equalsIgnoreCase(
+            message));
   }
 
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
@@ -973,7 +1044,7 @@ public class InitiateRnR extends TestCaseHelper {
                                            String remarks) {
     SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
     SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
-      initiateRnRPage.getPatientsToInitiateTreatmentValue());
+        initiateRnRPage.getPatientsToInitiateTreatmentValue());
     SeleneseTestBase.assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
     SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
@@ -983,17 +1054,17 @@ public class InitiateRnR extends TestCaseHelper {
                                                     String patientsStoppedTreatment, String remarks) {
     SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
     SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
-      initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
+        initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
     SeleneseTestBase.assertEquals(patientsStoppedTreatment,
-      initiateRnRPage.getPatientsStoppedTreatmentInputValue());
+        initiateRnRPage.getPatientsStoppedTreatmentInputValue());
     SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
   }
 
   private void verifyRnRsInGrid(String period, String rnrStatus, String row) {
     assertEquals(testWebDriver.getElementByXpath(
-      "//div[@class='ngCanvas']/div[" + row + "]/div[1]/div[2]/div/span").getText(), period);
+        "//div[@class='ngCanvas']/div[" + row + "]/div[1]/div[2]/div/span").getText(), period);
     assertEquals(testWebDriver.getElementByXpath(
-      "//div[@class='ngCanvas']/div[" + row + "]/div[4]/div[2]/div/span").getText(), rnrStatus);
+        "//div[@class='ngCanvas']/div[" + row + "]/div[4]/div[2]/div/span").getText(), rnrStatus);
   }
 
   private void verifyStockOnHandErrorMessage() {
@@ -1028,14 +1099,14 @@ public class InitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+        {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
   }
 
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
     return new Object[][]{
-      {"HIV", "storeIncharge", "Admin123"}
+        {"HIV", "storeIncharge", "Admin123"}
     };
   }
 }

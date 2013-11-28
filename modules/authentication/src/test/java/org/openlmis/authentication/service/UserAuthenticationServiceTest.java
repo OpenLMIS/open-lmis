@@ -54,10 +54,11 @@ public class UserAuthenticationServiceTest {
     User user = new User();
     user.setUserName("defaultUserName");
     user.setPassword("defaultPassword");
+    user.setRestrictLogin(false);
 
     when(userService.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(user);
 
-    UserToken userToken = userAuthenticationService.authorizeUser(user);
+    UserToken userToken = userAuthenticationService.authenticateUser(user);
     verify(userService).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
 
     assertThat(userToken.isAuthenticated(), is(true));
@@ -73,7 +74,24 @@ public class UserAuthenticationServiceTest {
 
     when(userService.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(null);
 
-    UserToken userToken = userAuthenticationService.authorizeUser(user);
+    UserToken userToken = userAuthenticationService.authenticateUser(user);
+
+    verify(userService).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
+    assertThat(userToken.isAuthenticated(), is(false));
+  }
+
+  @Test
+  public void shouldNotAuthenticateRestrictedUser() {
+    mockStatic(Encoder.class);
+    when(Encoder.hash("defaultPassword")).thenReturn("hashedPassword");
+    User user = new User();
+    user.setUserName("defaultUserName");
+    user.setPassword("defaultPassword");
+    user.setRestrictLogin(true);
+
+    when(userService.selectUserByUserNameAndPassword("defaultUserName", "hashedPassword")).thenReturn(user);
+
+    UserToken userToken = userAuthenticationService.authenticateUser(user);
 
     verify(userService).selectUserByUserNameAndPassword("defaultUserName", "hashedPassword");
     assertThat(userToken.isAuthenticated(), is(false));
