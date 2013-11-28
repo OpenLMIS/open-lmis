@@ -70,29 +70,5 @@ public class OrderFillRateQueryBuilder {
             }
         }
     }
-      /*
-    public static String getTotalQuantityReceived(Map params){
 
-            OrderFillRateReportFilter filter  = (OrderFillRateReportFilter)params.get("filterCriteria");
-
-            BEGIN();
-            SELECT("COUNT(*) receipts");
-            FROM("vw_order_fill_rate");
-           // writePredicates(filter);
-            String sql = SQL();
-            return sql;
-        }
-
-
-        public static String getTotalQuantityApproved(Map params){
-
-            OrderFillRateReportFilter filter  = (OrderFillRateReportFilter)params.get("filterCriteria");
-            BEGIN();
-            SELECT("COUNT(*) approved");
-            FROM("vw_order_fill_rate");
-            WHERE("approved>0");
-           // writePredicates(filter);
-            String sql = SQL();
-            return sql;
-        }*/
 }
