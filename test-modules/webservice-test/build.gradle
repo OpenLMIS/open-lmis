@@ -50,7 +50,7 @@ test {
 
 task buildOpenLmis(type: GradleBuild) {
     buildFile = '../../modules/openlmis-web/build.gradle'
-    tasks = ['jettyDaemon']
+    tasks = ['jettyRun']
 }
 
 task webservicetest(type: Test) {
