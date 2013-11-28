@@ -117,7 +117,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void createUser(DataTable userTable) throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     List<Map<String, String>> data = userTable.asMaps();
-    for (Map map : data){
+    for (Map map : data) {
       createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
     }
   }
@@ -146,10 +146,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void periodScheduleAndRequisitionGroupDataSetup() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ManageSchedulePage manageSchedulePage = homePage.navigateToSchedule();
-    manageSchedulePage.createSchedule("Q1stM","M");
-    manageSchedulePage.verifyScheduleCode("Q1stM","M");
-    manageSchedulePage.editSchedule("M1","M");
-    manageSchedulePage.verifyScheduleCode("Q1stM","M");
+    manageSchedulePage.createSchedule("Q1stM", "M");
+    manageSchedulePage.verifyScheduleCode("Q1stM", "M");
+    manageSchedulePage.editSchedule("M1", "M");
+    manageSchedulePage.verifyScheduleCode("Q1stM", "M");
     PeriodsPage periodsPage = manageSchedulePage.navigatePeriods();
     periodsPage.createAndVerifyPeriods();
     periodsPage.deleteAndVerifyPeriods();
@@ -233,8 +233,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
   public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 101, 51, 153, 142, false);
-    initiateRnRPage.verifyPacksToShip("15");
+    initiateRnRPage.enterValuesAndVerifyCalculatedOrderQuantity(10, 10, 36, 36, 108, 97, false);
+    initiateRnRPage.verifyPacksToShip("10");
   }
 
   @And("^I update & verify ordered quantities for emergency RnR$")
@@ -312,9 +312,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @Then("I should see non full supply approved quantity$")
-    public void verifyNonFullSupplyApprovedQuantity() throws Exception {
-        ApprovePage approvePage = new ApprovePage(testWebDriver);
-        approvePage.verifyNonFullSupplyApprovedQuantity();
+  public void verifyNonFullSupplyApprovedQuantity() throws Exception {
+    ApprovePage approvePage = new ApprovePage(testWebDriver);
+    approvePage.verifyNonFullSupplyApprovedQuantity();
   }
 
   @Then("I should see approved quantity from lower hierarchy$")
@@ -342,9 +342,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @Then("I verify non full supply cost for approved quantity \"([^\"]*)\"$")
-   public void verifyNonFullSupplyCost(String approvedQuantity) throws Exception {
-     ApprovePage approvePage = new ApprovePage(testWebDriver);
-     approvePage.verifyNonFullSupplyCost(approvedQuantity);
+  public void verifyNonFullSupplyCost(String approvedQuantity) throws Exception {
+    ApprovePage approvePage = new ApprovePage(testWebDriver);
+    approvePage.verifyNonFullSupplyCost(approvedQuantity);
   }
 
   @And("I add comments without save$")

@@ -396,10 +396,10 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
 
-  public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D) {
-    Integer StockOnHand = A + B - C + D;
+  public void calculateAndVerifyStockOnHand(Integer beginningBalance, Integer quantityReceived, Integer quantityDispensed, Integer lossesAndAdjustments) {
+    Integer StockOnHand = beginningBalance + quantityReceived - quantityDispensed + lossesAndAdjustments;
     String stockOnHandActualValue = StockOnHand.toString();
-    String stockOnHandExpectedValue = calculateStockOnHand(A, B, C, D);
+    String stockOnHandExpectedValue = calculateStockOnHand(beginningBalance, quantityReceived, quantityDispensed, lossesAndAdjustments);
     verifyFieldValue(stockOnHandExpectedValue, stockOnHandActualValue);
   }
 
@@ -456,9 +456,9 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
   }
 
-  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H,
+  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer numberOfNewPatients, Integer stockOutDays, Integer N, Integer P, Integer H,
                                                           Integer I, boolean emergency) {
-    enterValuesCalculatedOrderQuantity(F, X);
+    enterValuesCalculatedOrderQuantity(numberOfNewPatients, stockOutDays);
     if (emergency)
       VerifyCalculatedOrderQuantityForEmergencyRnR();
     else
@@ -551,8 +551,8 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(500);
     actualTotalCostFullSupply = calculateTotalCost();
     assertEquals(totalCostFooter.getText().trim().substring(1),
-        new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
-            BigDecimal.ROUND_HALF_UP).toString());
+      new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
+        BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
 
@@ -568,7 +568,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
                                         String productPrimaryName, String productCode, String category)
-      throws IOException, SQLException {
+    throws IOException, SQLException {
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();
