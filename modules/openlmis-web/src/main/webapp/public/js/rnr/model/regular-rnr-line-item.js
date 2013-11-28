@@ -199,7 +199,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   calculateNormalizedConsumption: function () {
-    var numberOfMonthsInPeriod = 3; // will be picked up from the database in future
+    this.reportingDays = utils.getValueFor(this.reportingDays);
     this.stockOutDays = utils.getValueFor(this.stockOutDays);
     this.newPatientCount = utils.getValueFor(this.newPatientCount);
     if (this.getSource('newPatientCount') === null) this.newPatientCount = 0;
@@ -211,10 +211,11 @@ var RegularRnrLineItem = base2.Base.extend({
 
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
-    var consumptionAdjustedWithStockOutDays = ((numberOfMonthsInPeriod * 30) - this.stockOutDays) === 0 ?
+    g = Math.max(g, 1);
+    var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) === 0 ?
       this.quantityDispensed :
-      (this.quantityDispensed * ((numberOfMonthsInPeriod * 30) / ((numberOfMonthsInPeriod * 30) - this.stockOutDays)));
-    var adjustmentForNewPatients = (this.newPatientCount * Math.ceil(this.dosesPerMonth / g) ) * numberOfMonthsInPeriod;
+      ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
+    var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / g) );
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   },
 
@@ -223,8 +224,7 @@ var RegularRnrLineItem = base2.Base.extend({
       this.amc = null;
       return;
     }
-    var numberOfMonthsInPeriod = this.numberOfMonths;
-    var divider = numberOfMonthsInPeriod * (1 + this.previousNormalizedConsumptions.length);
+    var divider = (1 + this.previousNormalizedConsumptions.length);
 
     this.amc = Math.round((this.normalizedConsumption + this.sumOfPreviousNormalizedConsumptions()) / divider);
   },

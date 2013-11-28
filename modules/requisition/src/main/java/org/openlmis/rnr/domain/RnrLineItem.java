@@ -39,7 +39,6 @@ public class RnrLineItem extends LineItem {
 
   public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
-  public static final BigDecimal MULTIPLIER = new BigDecimal(3);
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
 
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
