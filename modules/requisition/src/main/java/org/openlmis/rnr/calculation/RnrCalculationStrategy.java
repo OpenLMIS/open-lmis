@@ -99,21 +99,20 @@ public class RnrCalculationStrategy {
                                                 Integer quantityDispensed,
                                                 Integer newPatientCount,
                                                 Integer dosesPerMonth,
-                                                Integer dosesPerDispensingUnit, Integer daysSinceLastRnr) {
+                                                Integer dosesPerDispensingUnit, Integer reportingDays) {
 
     dosesPerDispensingUnit = Math.max(1, dosesPerDispensingUnit);
 
-    BigDecimal stockOutDays1 = new BigDecimal(stockOutDays);
-    BigDecimal quantityDispensed1 = new BigDecimal(quantityDispensed);
-    BigDecimal daysSinceLastRnr1 = new BigDecimal(daysSinceLastRnr);
+    BigDecimal stockOutDaysCount = new BigDecimal(stockOutDays);
+    BigDecimal quantityConsumed = new BigDecimal(quantityDispensed);
 
     BigDecimal newPatientFactor = new BigDecimal(newPatientCount).multiply(new BigDecimal(dosesPerMonth).divide(new BigDecimal(dosesPerDispensingUnit), MATH_CONTEXT).setScale(0, HALF_UP));
 
-    if (daysSinceLastRnr1 == null || stockOutDays1.compareTo(daysSinceLastRnr1) >= 0) {
-      return quantityDispensed1.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+    if (reportingDays == null || stockOutDaysCount.compareTo(new BigDecimal(reportingDays)) >= 0) {
+      return quantityConsumed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
     }
 
-    BigDecimal stockOutFactor = quantityDispensed1.multiply(NUMBER_OF_DAYS.divide((daysSinceLastRnr1.subtract(stockOutDays1)), MATH_CONTEXT));
+    BigDecimal stockOutFactor = quantityConsumed.multiply(NUMBER_OF_DAYS.divide((new BigDecimal(reportingDays).subtract(stockOutDaysCount)), MATH_CONTEXT));
 
     return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }

@@ -16,7 +16,7 @@ public final class EmergencyRnrCalcStrategy extends RnrCalculationStrategy {
 
   public Integer calculateNormalizedConsumption(Integer stockOutDays, Integer quantityDispensed,
                                                 Integer newPatientCount, Integer dosesPerMonth,
-                                                Integer dosesPerDispensingUnit, Integer D) {
+                                                Integer dosesPerDispensingUnit, Integer reportingDays) {
     return null;
   }
 
