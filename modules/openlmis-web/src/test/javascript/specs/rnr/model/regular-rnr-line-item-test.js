@@ -194,6 +194,19 @@ describe('RegularRnrLineItem', function () {
         expect(regularRnrLineItem.normalizedConsumption).toEqual(23);
       });
 
+    it('should calculate normalized consumption when reporting days are less than stock out days',
+      function () {
+        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
+          "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 0, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
+          "reportingDays": 80};
+        var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
+        jQuery.extend(regularRnrLineItem, lineItem);
+
+        regularRnrLineItem.calculateNormalizedConsumption();
+
+        expect(regularRnrLineItem.normalizedConsumption).toEqual(13);
+      });
+
     it('should calculate normalized consumption when newPatientCount is not in the template', function () {
       programRnrColumnList = [
         {"indicator": "A", "name": "beginningBalance", "source": {"name": "USER_INPUT"}},

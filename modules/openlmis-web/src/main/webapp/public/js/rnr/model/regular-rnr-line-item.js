@@ -212,7 +212,7 @@ var RegularRnrLineItem = base2.Base.extend({
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
     var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
     g = Math.max(g, 1);
-    var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) === 0 ?
+    var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) <= 0 ?
       this.quantityDispensed :
       ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
     var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / g) );
