@@ -306,6 +306,22 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,max,orderFillRateReportList);
     }
 
+    @RequestMapping(value = "/reportdata/regimenSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REGIMEN_SUMMARY_REPORT')")
+    public Pages getRegimenSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      HttpServletRequest request
+
+    ) {
+
+
+
+        Report report = reportManager.getReportByKey("regimen_summary");
+        List<RegimenSummaryReport> regimenSummaryReportList =
+                (List<RegimenSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        return new Pages(page,max,regimenSummaryReportList);
+    }
+
 
 
 
