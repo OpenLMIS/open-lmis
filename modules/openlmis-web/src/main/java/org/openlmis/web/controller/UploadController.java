@@ -46,7 +46,7 @@ public class UploadController extends BaseController {
   public static final String INCORRECT_FILE = "upload.incorrect.file";
   public static final String FILE_IS_EMPTY = "upload.file.empty";
   public static final String INCORRECT_FILE_FORMAT = "upload.incorrect.file.format";
-  public static final String UPLOAD_FILE_SUCCESS = "upload.file.successfull";
+  public static final String UPLOAD_FILE_SUCCESS = "upload.file.successful";
   public static final String SUCCESS = "success";
   public static final String ERROR = "error";
   public static final String SUPPORTED_UPLOADS = "supportedUploads";
@@ -59,7 +59,6 @@ public class UploadController extends BaseController {
 
   @Autowired
   private HashMap<String, UploadBean> uploadBeansMap;
-
 
   @RequestMapping(value = "/upload", method = POST)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'UPLOADS')")
@@ -92,8 +91,9 @@ public class UploadController extends BaseController {
   private ResponseEntity<OpenLmisResponse> successResponse(String model, int initialRecordCount, int recordsToBeUploaded) {
     int finalRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
     int recordsCreated = finalRecordCount - initialRecordCount;
+    int recordsUpdated = recordsToBeUploaded - recordsCreated;
 
-    return successPage(recordsCreated, recordsToBeUploaded - recordsCreated);
+    return successPage(recordsCreated, recordsUpdated);
   }
 
   @RequestMapping(value = "/supported-uploads", method = GET, headers = ACCEPT_JSON)
