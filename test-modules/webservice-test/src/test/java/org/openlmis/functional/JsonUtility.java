@@ -88,6 +88,35 @@ public class JsonUtility extends TestCaseHelper {
     convertOrderPage.convertToOrder();
   }
 
+    public Long submitRnRThroughApiForV10(String program, String product, Integer beginningBalance, Integer stockInHand) throws IOException, SQLException {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
+        reportFromJson.setAgentCode("V10");
+        reportFromJson.setProgramCode(program);
+        reportFromJson.getProducts().get(0).setProductCode(product);
+        reportFromJson.getProducts().get(0).setBeginningBalance(beginningBalance);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(null);
+        reportFromJson.getProducts().get(0).setQuantityReceived(null);
+        reportFromJson.getProducts().get(0).setStockInHand(stockInHand);
+        reportFromJson.getProducts().get(0).setNewPatientCount(null);
+        reportFromJson.getProducts().get(0).setStockOutDays(null);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(
+                        getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
+
+        assertEquals(201, responseEntity.getStatus());
+        assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+        Long id = Long.valueOf(dbWrapper.getMaxRnrID());
+        assertEquals("AUTHORIZED",dbWrapper.getRequisitionStatus(id));
+        return id;
+    }
+
   public void submitRnrFromApiForF10(String user, String password, String program, String product) throws Exception {
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     HttpClient client = new HttpClient();
@@ -108,6 +137,7 @@ public class JsonUtility extends TestCaseHelper {
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
   }
+
   public void createVirtualFacilityThroughApi(String agentCode, String facilityCode) throws IOException {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -127,33 +157,5 @@ public class JsonUtility extends TestCaseHelper {
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
-  public Long submitRnRThroughApiForV10(String program, String product, Integer beginningBalance, Integer stockInHand) throws IOException, SQLException {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
-    reportFromJson.setAgentCode("V10");
-    reportFromJson.setProgramCode(program);
-    reportFromJson.getProducts().get(0).setProductCode(product);
-    reportFromJson.getProducts().get(0).setBeginningBalance(beginningBalance);
-    reportFromJson.getProducts().get(0).setQuantityDispensed(null);
-    reportFromJson.getProducts().get(0).setQuantityReceived(null);
-    reportFromJson.getProducts().get(0).setStockInHand(stockInHand);
-    reportFromJson.getProducts().get(0).setNewPatientCount(null);
-    reportFromJson.getProducts().get(0).setStockOutDays(null);
-
-    ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
-
-    assertEquals(201, responseEntity.getStatus());
-    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
-    Long id = Long.valueOf(dbWrapper.getMaxRnrID());
-    assertEquals("AUTHORIZED",dbWrapper.getRequisitionStatus(id));
-    return id;
-  }
 }
 

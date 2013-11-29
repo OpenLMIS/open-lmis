@@ -37,7 +37,9 @@
       <class name="org.openlmis.functional.GetRequisitionDetailsAPI">
       </class>
         <class name="org.openlmis.functional.CalculationInRnR">
-        </class>
+      </class>
+      <class name="org.openlmis.functional.RequisitionStatusFeed">
+      </class>
     </classes>
   </test>
 </suite>
