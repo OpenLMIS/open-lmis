@@ -71,11 +71,6 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
     });
 
-    RequisitionGroups.get(function (data) {
-        $scope.requisitionGroups = data.requisitionGroupList;
-        $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-    });
-
     $scope.ChangeSchedule = function(scheduleBy){
 
         if(scheduleBy == 'byYear'){
@@ -92,14 +87,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
                 $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
 
             });
-
-
         }
-
-        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-        });
     };
 
     $scope.$watch('filterObject.regimenCategoryId', function (selection) {
@@ -225,21 +213,6 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         $scope.ChangeSchedule('');
 
     });
-
-    /* $scope.$watch('year', function (selection) {
-        if (selection == "-- All Years --") {
-            $scope.filterObject.year = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.year = selection;
-        } else {
-            $scope.filterObject.year = 0;
-        }
-        $scope.filterGrid();
-
-    });*/
-
-
-
     $scope.$watch('filterObject.year', function (selection) {
 
         if (selection == "-- All Years --") {
@@ -282,9 +255,8 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
         schedule: "",
         regimenCategoryId: "",
         regimenCategory : "",
-        rgroupId: "",
+
         year : "",
-        rgroup: "" ,
         zoneId : $scope.zone,
         zone:"" ,
         regimenId: $scope.regimen,

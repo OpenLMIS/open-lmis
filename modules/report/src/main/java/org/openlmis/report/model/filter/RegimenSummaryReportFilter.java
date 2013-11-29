@@ -47,8 +47,8 @@ public class RegimenSummaryReportFilter implements ReportData {
                 append("Program : ").append(this.program).append("\n").
                 append("Regimen Category : ").append(this.regimenCategory).append("\n").
                 append("Regimen : ").append(this.regimenId).append("\n").
-                append("District : ").append(this.zone).append("\n").
-                append("Reporting Groups : ").append(this.getRgroup());
+                append("District : ").append(this.zone).append("\n");
+
 
         return filtersValue.toString();
     }
