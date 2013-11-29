@@ -485,7 +485,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-        rightsList1);
+      rightsList1);
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -571,19 +571,19 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList1.add(AUTHORIZE_REQUISITION);
     rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-        rightsList1);
+      rightsList1);
 
     List<String> rightsList2 = new ArrayList<>();
     rightsList2.add(APPROVE_REQUISITION);
     rightsList2.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu",
-        rightsList2);
+      rightsList2);
 
     List<String> rightsList3 = new ArrayList<>();
     rightsList3.add(CONVERT_TO_ORDER);
     rightsList3.add("VIEW_ORDER");
     createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE,
-        rightsList3);
+      rightsList3);
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -617,11 +617,11 @@ public class InitiateRnR extends TestCaseHelper {
     ApprovePage approvePage = homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
     approvePage.ClickRequisitionPresentForApproval();
-    assertEquals("0", approvePage.getApprovedQuantity());
-    assertEquals("", approvePage.getAdjustedTotalConsumption());
-    assertEquals("", approvePage.getAMC());
-    assertEquals("", approvePage.getMaxStockQuantity());
-    assertEquals("", approvePage.getCalculatedOrderQuantity());
+    assertEquals("59", approvePage.getApprovedQuantity());
+    assertEquals("53", approvePage.getAdjustedTotalConsumption());
+    assertEquals("53", approvePage.getAMC());
+    assertEquals("159", approvePage.getMaxStockQuantity());
+    assertEquals("59", approvePage.getCalculatedOrderQuantity());
     approvePage.editFullSupplyApproveQuantity("");
     approvePage.approveRequisition();
     approvePage.verifyApproveErrorDiv();
@@ -736,17 +736,10 @@ public class InitiateRnR extends TestCaseHelper {
                                                                               String userSIC,
                                                                               String password
   ) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
+    setupTestDataToInitiateRnR(true, program, userSIC, "200", asList(CREATE_REQUISITION, VIEW_REQUISITION));
 
-    List<String> rightsList1 = new ArrayList<>();
-    rightsList1.add(AUTHORIZE_REQUISITION);
-    rightsList1.add(VIEW_REQUISITION);
     createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-        rightsList1);
-
+      asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION));
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
@@ -779,7 +772,7 @@ public class InitiateRnR extends TestCaseHelper {
     testWebDriver.sleep(1000);
 
     testWebDriver.selectByVisibleText(testWebDriver.getElementByXpath("//select[@id='programListMyFacility']"),
-        program);
+      program);
 
     verifyErrorMessages("R&R for current period already submitted");
 
@@ -792,7 +785,7 @@ public class InitiateRnR extends TestCaseHelper {
                                                         String userSIC,
                                                         String password) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add(AUTHORIZE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -1033,10 +1026,10 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyErrorMessages(String message) {
     testWebDriver.sleep(500);
     assertTrue("Message : " + message + " should show up. Showing : " + testWebDriver.getElementByXpath(
-        "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(),
-        testWebDriver.getElementByXpath(
-            "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText().equalsIgnoreCase(
-            message));
+      "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText(),
+      testWebDriver.getElementByXpath(
+        "//div[@id='saveSuccessMsgDiv' and @class='alert alert-error']").getText().equalsIgnoreCase(
+        message));
   }
 
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
@@ -1044,7 +1037,7 @@ public class InitiateRnR extends TestCaseHelper {
                                            String remarks) {
     SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
     SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
-        initiateRnRPage.getPatientsToInitiateTreatmentValue());
+      initiateRnRPage.getPatientsToInitiateTreatmentValue());
     SeleneseTestBase.assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
     SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
@@ -1054,17 +1047,17 @@ public class InitiateRnR extends TestCaseHelper {
                                                     String patientsStoppedTreatment, String remarks) {
     SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
     SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
-        initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
+      initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
     SeleneseTestBase.assertEquals(patientsStoppedTreatment,
-        initiateRnRPage.getPatientsStoppedTreatmentInputValue());
+      initiateRnRPage.getPatientsStoppedTreatmentInputValue());
     SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
   }
 
   private void verifyRnRsInGrid(String period, String rnrStatus, String row) {
     assertEquals(testWebDriver.getElementByXpath(
-        "//div[@class='ngCanvas']/div[" + row + "]/div[1]/div[2]/div/span").getText(), period);
+      "//div[@class='ngCanvas']/div[" + row + "]/div[1]/div[2]/div/span").getText(), period);
     assertEquals(testWebDriver.getElementByXpath(
-        "//div[@class='ngCanvas']/div[" + row + "]/div[4]/div[2]/div/span").getText(), rnrStatus);
+      "//div[@class='ngCanvas']/div[" + row + "]/div[4]/div[2]/div/span").getText(), rnrStatus);
   }
 
   private void verifyStockOnHandErrorMessage() {
@@ -1099,14 +1092,14 @@ public class InitiateRnR extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
+      {"HIV", "storeIncharge", "ADULTS", "Admin123", "RegimenCode1", "RegimenName1", "RegimenCode2", "RegimenName2"}
     };
   }
 
   @DataProvider(name = "Data-Provider-Function-RnR")
   public Object[][] parameterIntTestProviderRnR() {
     return new Object[][]{
-        {"HIV", "storeIncharge", "Admin123"}
+      {"HIV", "storeIncharge", "Admin123"}
     };
   }
 }

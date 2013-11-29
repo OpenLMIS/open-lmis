@@ -21,9 +21,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static com.thoughtworks.selenium.SeleneseTestBase.fail;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 
@@ -119,7 +117,7 @@ public class TestCaseHelper {
     dbWrapper.insertUser(userId, userSIC, passwordUsers, "F10", "Fatima_Doe@openlmis.com");
   }
 
-  public void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, List<String> rightsList) throws IOException, SQLException {
+  protected void createUserAndAssignRoleRights(String userId, String user, String email, String homeFacility, String role, List<String> rightsList) throws IOException, SQLException {
     dbWrapper.insertRole(role, "");
     for (String rights : rightsList) {
       dbWrapper.assignRight(role, rights);
@@ -353,12 +351,12 @@ public class TestCaseHelper {
     String line;
     String[] array = new String[50];
     String filePath = DOWNLOAD_FILE_PATH + getProperty("file.separator") + file;
-    int waitTime=0;
+    int waitTime = 0;
     File f = new File(filePath);
 
-    while (!f.exists() && waitTime<10000){
-        Thread.sleep(500);
-        waitTime+=500;
+    while (!f.exists() && waitTime < 10000) {
+      Thread.sleep(500);
+      waitTime += 500;
     }
     try {
       int i = 0;
@@ -369,7 +367,7 @@ public class TestCaseHelper {
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
-      assertFalse("Order file not downloaded",true);
+      assertFalse("Order file not downloaded", true);
     } finally {
       if (br != null) {
         try {
@@ -383,8 +381,8 @@ public class TestCaseHelper {
   }
 
   public void deleteFile(String file) throws InterruptedException {
-    int waitTime=0;
-    boolean success=false;
+    int waitTime = 0;
+    boolean success = false;
     String filePath = DOWNLOAD_FILE_PATH + getProperty("file.separator") + file;
     File f = new File(filePath);
 
@@ -402,11 +400,11 @@ public class TestCaseHelper {
         throw new IllegalArgumentException(
           "Delete: directory not empty: " + filePath);
     }
-      while (f.exists() && waitTime<10000){
-          Thread.sleep(500);
-          waitTime+=500;
-          success = f.delete();
-      }
+    while (f.exists() && waitTime < 10000) {
+      Thread.sleep(500);
+      waitTime += 500;
+      success = f.delete();
+    }
 
     if (!success)
       throw new IllegalArgumentException("Delete: deletion failed");

@@ -188,13 +188,12 @@ var Rnr = function (rnr, programRnrColumns) {
     var thisRnr = this;
 
     function prepareLineItems(lineItems) {
-      var lineItemsJson = lineItems;
-      lineItems = [];
-
-      $(lineItemsJson).each(function (i, lineItem) {
-        lineItems.push(RnrLineItemFactory.getInstance(lineItem, thisRnr, programRnrColumns));
+      var regularLineItems = [];
+      $(lineItems).each(function (i, lineItem) {
+        var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.period.numberOfMonths, programRnrColumns, thisRnr.status);
+        regularLineItems.push(regularLineItem);
       });
-      return lineItems;
+      return regularLineItems;
     }
 
     this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
