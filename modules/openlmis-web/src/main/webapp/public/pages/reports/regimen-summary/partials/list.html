@@ -33,6 +33,42 @@
 
 
                                 <div class="clearfix"></div>
+
+                                <br />
+                                <br />
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Schedule <span class="label-required">*</span></label>
+
+                                    <div class="form-fields">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="filterObject.scheduleId">
+                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <br />
+                               <div class="form-cell horizontalFilters">
+                                    <label class="labels">Year <span class="label-required"></span></label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="filterObject.year">
+                                            <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Period <span class="label-required">*</span></label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="filterObject.periodId">
+                                            <option ng-repeat="option in periods" value="{{option.id}}">{{option.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <br />
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Regimen Category <span class="label-required">*</span></label>
@@ -56,40 +92,6 @@
                                 </div>
                                 <br />
 
-
-
-
-                                <div class="form-cell horizontalFilters" >
-                                    <label class="labels">Schedule <span class="label-required">*</span></label>
-
-                                    <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="schedule" ng-change="ChangeSchedule()" ng-model="filterObject.scheduleId">
-                                            <option  ng-repeat="option in schedules" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-
-                               <div class="form-cell horizontalFilters">
-                                    <label class="labels">Year <span class="label-required"></span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="filterObject.year">
-                                            <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Period <span class="label-required">*</span></label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="period" ng-model="filterObject.periodId">
-                                            <option ng-repeat="option in periods" value="{{option.id}}">{{option.name}}</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <br/>
                                 <div class="form-cell horizontalFilters">
                                     <label class="labels">Zone</label>
@@ -101,7 +103,8 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="form-cell horizontalFilters" >
+                                <br />
+                              <div class="form-cell horizontalFilters" >
                                     <label class="labels">Requisition Groups</label>
 
                                     <div class="form-fields">
