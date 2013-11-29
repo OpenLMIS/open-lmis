@@ -822,7 +822,7 @@ public class InitiateRnR extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
 
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
