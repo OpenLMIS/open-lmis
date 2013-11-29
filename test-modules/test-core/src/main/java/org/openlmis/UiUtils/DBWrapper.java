@@ -10,12 +10,10 @@
 
 package org.openlmis.UiUtils;
 
-import org.apache.commons.lang.time.DateUtils;
-
 import java.io.IOException;
 import java.sql.*;
-import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.lang.String.format;
@@ -1434,7 +1432,7 @@ public class DBWrapper {
         return fullSupplyItemsSubmittedCost;
   }
 
- public String getStockInHand(String requisitionId) throws IOException, SQLException {
+ public String getStockInHand(long requisitionId) throws IOException, SQLException {
    String stockInHand = null;
    ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
 

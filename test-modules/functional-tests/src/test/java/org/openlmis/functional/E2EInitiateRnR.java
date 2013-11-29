@@ -482,10 +482,9 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   private void verifyOrderedList(boolean downloadFlag) throws Exception {
     ViewOrdersPage viewOrdersPage = new ViewOrdersPage(testWebDriver);
-    String requisitionId = dbWrapper.getLatestRequisitionId();
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
-    viewOrdersPage.verifyOrderListElements(program, requisitionId, facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
+    viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
   @After

@@ -31,7 +31,6 @@ import static org.openlmis.UiUtils.HttpClient.POST;
 
 
 public class JsonUtility extends TestCaseHelper {
-  public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String STORE_IN_CHARGE = "store in-charge";
 
@@ -88,19 +87,22 @@ public class JsonUtility extends TestCaseHelper {
     convertOrderPage.convertToOrder();
   }
 
-    public Long submitRnRThroughApiForV10(String program, String product, Integer beginningBalance, Integer stockInHand) throws IOException, SQLException {
+    public Long submitRnRThroughApi(String agentCode, String program, String product, Integer beginningBalance,
+                                    Integer stockInHand,
+                                    Integer quantityConsumed, Integer quantityReceived, Integer newPatientCount,
+                                    Integer stockOutDays) throws IOException, SQLException {
         HttpClient client = new HttpClient();
         client.createContext();
         Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
-        reportFromJson.setAgentCode("V10");
+        reportFromJson.setAgentCode(agentCode);
         reportFromJson.setProgramCode(program);
         reportFromJson.getProducts().get(0).setProductCode(product);
         reportFromJson.getProducts().get(0).setBeginningBalance(beginningBalance);
-        reportFromJson.getProducts().get(0).setQuantityDispensed(null);
-        reportFromJson.getProducts().get(0).setQuantityReceived(null);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(quantityConsumed);
+        reportFromJson.getProducts().get(0).setQuantityReceived(quantityReceived);
         reportFromJson.getProducts().get(0).setStockInHand(stockInHand);
-        reportFromJson.getProducts().get(0).setNewPatientCount(null);
-        reportFromJson.getProducts().get(0).setStockOutDays(null);
+        reportFromJson.getProducts().get(0).setNewPatientCount(newPatientCount);
+        reportFromJson.getProducts().get(0).setStockOutDays(stockOutDays);
 
         ResponseEntity responseEntity =
                 client.SendJSON(
@@ -113,30 +115,8 @@ public class JsonUtility extends TestCaseHelper {
         assertEquals(201, responseEntity.getStatus());
         assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
         Long id = Long.valueOf(dbWrapper.getMaxRnrID());
-        assertEquals("AUTHORIZED",dbWrapper.getRequisitionStatus(id));
         return id;
     }
-
-  public void submitRnrFromApiForF10(String user, String password, String program, String product) throws Exception {
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
-    HttpClient client = new HttpClient();
-    client.createContext();
-    Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
-    reportFromJson.setAgentCode("F10");
-    reportFromJson.setProgramCode(program);
-    reportFromJson.getProducts().get(0).setProductCode(product);
-
-    ResponseEntity responseEntity =
-        client.SendJSON(
-            getJsonStringFor(reportFromJson),
-            "http://localhost:9091/rest-api/requisitions.json",
-            POST,
-            user,
-            password);
-
-    assertEquals(201, responseEntity.getStatus());
-    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
-  }
 
   public void createVirtualFacilityThroughApi(String agentCode, String facilityCode) throws IOException {
     HttpClient client = new HttpClient();
