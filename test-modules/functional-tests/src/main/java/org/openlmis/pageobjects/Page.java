@@ -39,19 +39,14 @@ public abstract class Page {
             element.sendKeys("");
             element.sendKeys(Keys.RETURN);
             //wait for the modal dialog to open
-            Thread.sleep(2000);
+            Thread.sleep(3000);
             //press s key to save
             robot.keyPress(KeyEvent.VK_ALT);
             robot.keyPress(KeyEvent.VK_S);
             robot.keyRelease(KeyEvent.VK_S);
             robot.keyRelease(KeyEvent.VK_ALT);
-            Thread.sleep(2000);
-            robot.keyPress(KeyEvent.VK_ALT);
-            robot.keyPress(KeyEvent.VK_O);
-            robot.keyRelease(KeyEvent.VK_O);
-            robot.keyRelease(KeyEvent.VK_ALT);
+            Thread.sleep(3000);
 
-            Thread.sleep(2000);
         } catch (AWTException e) {
 
             e.printStackTrace();
