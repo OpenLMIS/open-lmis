@@ -19,7 +19,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.RnrCalculator;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -116,11 +115,6 @@ public class Rnr extends BaseModel {
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
-  @JsonIgnore
-  public RnrCalculator getRnrCalcStrategy() {
-    return new RnrCalculator();
-  }
-
   private Money calculateCost(List<RnrLineItem> lineItems) {
     Money totalFullSupplyCost = new Money("0");
     for (RnrLineItem lineItem : lineItems) {
@@ -138,8 +132,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-        previousRequisition.status == INITIATED ||
-        previousRequisition.status == SUBMITTED) {
+      previousRequisition.status == INITIATED ||
+      previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -157,11 +151,6 @@ public class Rnr extends BaseModel {
     for (RnrLineItem lineItem : fullSupplyLineItems) {
       lineItem.setBeginningBalance(0);
     }
-  }
-
-  public void fillLastTwoPeriodsNormalizedConsumptions(Rnr lastPeriodsRnr, Rnr secondLastPeriodsRnr) {
-    addPreviousNormalizedConsumptionFrom(lastPeriodsRnr);
-    addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
   }
 
   public void setFieldsForApproval() {
@@ -185,14 +174,6 @@ public class Rnr extends BaseModel {
     this.program = program.basicInformation();
     this.period = period;
     this.facility = facility.basicInformation();
-  }
-
-  private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
-    if (rnr == null) return;
-    for (RnrLineItem currentLineItem : fullSupplyLineItems) {
-      RnrLineItem previousLineItem = rnr.findCorrespondingLineItem(currentLineItem);
-      currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
-    }
   }
 
   public RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {

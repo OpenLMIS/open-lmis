@@ -63,37 +63,6 @@ public class RnrTest {
   }
 
   @Test
-  public void shouldFillNormalizedConsumptionsFromPreviousTwoPeriodsRnr() throws Exception {
-    final Rnr lastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
-    lastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(1);
-
-    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
-    secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
-
-    rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
-
-    List<Integer> previousNormalizedConsumptions = rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions();
-    assertThat(previousNormalizedConsumptions.size(), is(2));
-    assertThat(previousNormalizedConsumptions.get(0), is(1));
-    assertThat(previousNormalizedConsumptions.get(1), is(2));
-  }
-
-  @Test
-  public void shouldFillNormalizedConsumptionsFromOnlyNonNullPreviousTwoPeriodsRnr() throws Exception {
-    final Rnr lastPeriodsRnr = null;
-
-    final Rnr secondLastPeriodsRnr = make(a(RequisitionBuilder.defaultRequisition));
-    secondLastPeriodsRnr.getFullSupplyLineItems().get(0).setNormalizedConsumption(2);
-
-    rnr.fillLastTwoPeriodsNormalizedConsumptions(lastPeriodsRnr, secondLastPeriodsRnr);
-
-    List<Integer> previousNormalizedConsumptions = rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions();
-    assertThat(previousNormalizedConsumptions.size(), is(1));
-    assertThat(previousNormalizedConsumptions.get(0), is(2));
-  }
-
-
-  @Test
   public void shouldPopulateRnrLineItemsAndRegimenLineItems() throws Exception {
 
     List<Regimen> regimens = new ArrayList<>();
@@ -175,14 +144,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShip() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
@@ -199,14 +168,14 @@ public class RnrTest {
   @Test
   public void shouldCalculatePacksToShipInCaseOfEmergencyRequisition() throws Exception {
     RnrLineItem fullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     RnrLineItem nonFullSupply = spy(make(a(defaultRnrLineItem,
-        with(packRoundingThreshold, 6),
-        with(quantityApproved, 66),
-        with(packSize, 10))));
+      with(packRoundingThreshold, 6),
+      with(quantityApproved, 66),
+      with(packSize, 10))));
 
     rnr.setFullSupplyLineItems(asList(fullSupply));
     rnr.setNonFullSupplyLineItems(asList(nonFullSupply));
