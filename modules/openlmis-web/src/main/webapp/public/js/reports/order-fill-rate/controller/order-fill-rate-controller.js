@@ -67,10 +67,6 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
     });
 
-    RequisitionGroups.get(function (data) {
-        $scope.requisitionGroups = data.requisitionGroupList;
-        $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-    });
 
     ReportFacilityTypes.get(function (data) {
         $scope.facilityTypes = data.facilityTypes;
@@ -101,11 +97,6 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
 
         }
-
-        RequisitionGroupsByProgramSchedule.get({program: $scope.filterObject.programId, schedule:$scope.filterObject.scheduleId}, function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --','id':'0'});
-        });
         $scope.loadFacilities();
     };
 
@@ -335,9 +326,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         product : "",
         productCategoryId: "",
         productCategory : "",
-        rgroupId: "",
         year : "",
-        rgroup: "",
         facility: "" ,
         facilityId:""
     };
