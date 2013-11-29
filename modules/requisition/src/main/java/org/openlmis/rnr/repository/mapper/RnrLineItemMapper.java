@@ -110,7 +110,8 @@ public interface RnrLineItemMapper {
   void updateOnApproval(RnrLineItem lineItem);
 
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND productCode = #{productCode} AND fullSupply = false")
-  RnrLineItem getExistingNonFullSupplyItemByRnrIdAndProductCode(@Param(value = "rnrId") Long rnrId, @Param(value = "productCode") String productCode);
+  RnrLineItem getExistingNonFullSupplyItemByRnrIdAndProductCode(@Param(value = "rnrId") Long rnrId,
+                                                                @Param(value = "productCode") String productCode);
 
   @Select({"SELECT RSC.createdDate FROM requisition_status_changes RSC INNER JOIN requisitions",
     "R ON RSC.rnrId = R.id AND RSC.status = 'AUTHORIZED'",
@@ -121,7 +122,9 @@ public interface RnrLineItemMapper {
     "AND RLI.skipped = false",
     "AND RLI.productCode = #{productCode}",
     "ORDER BY RSC.createdDate DESC LIMIT 1"})
-  Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr, @Param("productCode") String productCode, @Param("periodStartDate") Date periodStartDate);
+  Date getAuthorizedDateForPreviousLineItem(@Param("rnr") Rnr rnr,
+                                            @Param("productCode") String productCode,
+                                            @Param("periodStartDate") Date periodStartDate);
 
   @Select({"SELECT RLI.normalizedConsumption, RLI.stockInHand FROM requisition_line_items RLI",
     "INNER JOIN requisitions R ON R.id = RLI.rnrId",
@@ -134,6 +137,8 @@ public interface RnrLineItemMapper {
     "AND RSC.status = 'AUTHORIZED'",
     "AND R.emergency = false",
     "AND RSC.createdDate >= #{startDate}",
-    "ORDER BY RSC.createdDate DESC LIMIT #{n}"})
-  List<RnrLineItem> getNRnrLineItems(@Param("productCode") String productCode, @Param("rnr") Rnr rnr, @Param("n") Integer n, @Param("startDate") Date startDate);
+    "ORDER BY RSC.createdDate DESC LIMIT #{count}"})
+  List<RnrLineItem> getAuthorizedRegularUnSkippedLineItems(@Param("productCode") String productCode,
+                                                           @Param("rnr") Rnr rnr, @Param("count") Integer count,
+                                                           @Param("startDate") Date startDate);
 }

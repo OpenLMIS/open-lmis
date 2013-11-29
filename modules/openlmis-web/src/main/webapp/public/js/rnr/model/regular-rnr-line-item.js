@@ -210,12 +210,12 @@ var RegularRnrLineItem = base2.Base.extend({
     }
 
     this.dosesPerMonth = utils.parseIntWithBaseTen(this.dosesPerMonth);
-    var g = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
-    g = Math.max(g, 1);
+    var dosesPerDispensingUnit = utils.parseIntWithBaseTen(this.dosesPerDispensingUnit);
+    dosesPerDispensingUnit = Math.max(dosesPerDispensingUnit, 1);
     var consumptionAdjustedWithStockOutDays = ((this.reportingDays) - this.stockOutDays) <= 0 ?
       this.quantityDispensed :
       ((this.quantityDispensed * 30) / ((this.reportingDays) - this.stockOutDays));
-    var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / g) );
+    var adjustmentForNewPatients = (this.newPatientCount * Math.round(this.dosesPerMonth / dosesPerDispensingUnit) );
     this.normalizedConsumption = Math.round(consumptionAdjustedWithStockOutDays + adjustmentForNewPatients);
   },
 

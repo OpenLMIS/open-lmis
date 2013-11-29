@@ -435,7 +435,7 @@ public class RnrLineItemMapperIT {
     currentRnrLineItem.setRnrId(currentRnr.getId());
     rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getNRnrLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
 
     assertThat(rnrLineItems.size(), is(1));
     assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(3));
@@ -473,7 +473,7 @@ public class RnrLineItemMapperIT {
     currentRnrLineItem.setRnrId(currentRnr.getId());
     rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getNRnrLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
 
     assertThat(rnrLineItems.size(), is(0));
   }
@@ -511,7 +511,7 @@ public class RnrLineItemMapperIT {
     currentRnrLineItem.setRnrId(currentRnr.getId());
     rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getNRnrLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+    List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
 
     assertThat(rnrLineItems.size(), is(2));
     assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(3));
@@ -565,7 +565,7 @@ public class RnrLineItemMapperIT {
     currentRnrLineItem.setRnrId(currentRnr.getId());
     rnrLineItemMapper.insert(currentRnrLineItem, lineItem.getPreviousNormalizedConsumptions().toString());
 
-    List<RnrLineItem> lineItems = rnrLineItemMapper.getNRnrLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
+    List<RnrLineItem> lineItems = rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
 
     assertThat(lineItems.size(), is(1));
     assertThat(lineItems.get(0).getNormalizedConsumption(), is(3));

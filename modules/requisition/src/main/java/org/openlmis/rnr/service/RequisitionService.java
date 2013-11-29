@@ -364,7 +364,7 @@ public class RequisitionService {
   }
 
   public List<RnrLineItem> getNRnrLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
-    return requisitionRepository.getNRnrLineItems(productCode, rnr, n, startDate);
+    return requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, rnr, n, startDate);
   }
 
   private Rnr update(Rnr requisition) {
