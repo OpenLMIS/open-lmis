@@ -16,141 +16,71 @@ INSERT INTO roles
 ('FacilityHead', ''),
 ('Medical-Officer', ''),
 ('View-Report', ''),
+('API testing', ''),
+('API testing Order', ''),
 ('Shipment', '');
 
 INSERT INTO role_rights
 (roleId, rightName) VALUES
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Store In-Charge'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Store In-Charge'), 'CREATE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Medical-Officer'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Medical-Officer'), 'APPROVE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'FacilityHead'), 'AUTHORIZE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'FacilityHead'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU'), 'VIEW_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU'), 'APPROVE_REQUISITION'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU In-Charge'), 'CONVERT_TO_ORDER'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'LMU In-Charge'), 'VIEW_ORDER'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'Shipment'), 'VIEW_ORDER'),
-((SELECT
-    id
-  FROM roles
-  WHERE name = 'View-Report'), 'VIEW_REPORT');
+((SELECT id FROM roles WHERE name = 'Store In-Charge'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'Store In-Charge'), 'CREATE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'Medical-Officer'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'Medical-Officer'), 'APPROVE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'FacilityHead'), 'AUTHORIZE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'FacilityHead'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'LMU'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'LMU'), 'APPROVE_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'LMU In-Charge'), 'CONVERT_TO_ORDER'),
+((SELECT id FROM roles WHERE name = 'LMU In-Charge'), 'VIEW_ORDER'),
+((SELECT id FROM roles WHERE name = 'Shipment'), 'FACILITY_FILL_SHIPMENT'),
+((SELECT id FROM roles WHERE name = 'Shipment'), 'VIEW_ORDER'),
+((SELECT id FROM roles WHERE name = 'Shipment'), 'MANAGE_POD'),
+((SELECT id FROM roles WHERE name = 'View-Report'), 'VIEW_REPORT'),
+((SELECT id FROM roles WHERE name = 'API testing'), 'VIEW_REQUISITION'),
+((SELECT id FROM roles WHERE name = 'API testing Order'), 'VIEW_ORDER'),
+((SELECT id FROM roles WHERE name = 'API testing Order'), 'CONVERT_TO_ORDER');
 
 
 INSERT INTO users
 (userName, password, facilityId, firstName, lastName, email, verified, active, restrictLogin) VALUES
 ('StoreInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Fatima', 'Doe', 'Fatima_Doe@openlmis.com', TRUE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Fatima', 'Doe', 'Fatima_Doe@openlmis.com', TRUE, TRUE, FALSE),
 
 ('FacilityHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Jane', 'Doe', 'Kutt_Doe@openlmis.com', TRUE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Kutt_Doe@openlmis.com', TRUE, TRUE, FALSE),
 
 ('FacilityInCharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com', FALSE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Jane', 'Doe', 'Jane_Doe@openlmis.com', FALSE, TRUE, FALSE),
 
 ('MedicalOfficer', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'John', 'Doe', 'Joh_Doe@openlmis.com', TRUE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'John', 'Doe', 'Joh_Doe@openlmis.com', TRUE, TRUE, FALSE),
 
 ('lmu', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Frank', 'Doe', 'Frank_Doe@openlmis.com', TRUE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Frank_Doe@openlmis.com', TRUE, TRUE, FALSE),
 
 ('StoreHead', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Frank', 'Doe', 'Bhann_Doe@openlmis.com', FALSE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Frank', 'Doe', 'Bhann_Doe@openlmis.com', FALSE, TRUE, FALSE),
 
 ('superuser', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Maafi-de', 'Doe', 'Maafi_de_Doe@openlmis.com', TRUE, TRUE, FALSE),
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Maafi-de', 'Doe', 'Maafi_de_Doe@openlmis.com', TRUE, TRUE, FALSE),
 
 ('lmuincharge', 'Agismyf1Whs0fxr1FFfK8cs3qisVJ1qMs3yuMLDTeEcZEGzstjiswaaUsQNQTIKk1U5JRzrDbPLCzCO1isvB5YGaEQieie',
- (SELECT
-    id
-  FROM facilities
-  WHERE code = 'F10'), 'Jake', 'Doe', 'Jake_Doe@openlmis.com', TRUE, TRUE, FALSE);
+ (SELECT id FROM facilities WHERE code = 'F10'), 'Jake', 'Doe', 'Jake_Doe@openlmis.com', TRUE, TRUE, FALSE),
+
+('CommTest', '0DShprXfNKp4xUug7wQQFpYzrQURNmRx1E73PJISTGQllQzpBGYgPcXQ9Zgp8BG49TvaxVBHjAK45wTTSt58bgieie',
+ NULL, 'Comm', 'Track', 'CommTest@openlmis.com', TRUE, TRUE, FALSE);
 
 INSERT INTO USERS
-(id, userName, password, facilityId, firstName, lastName, email, verified, active,restrictLogin) VALUES
+(id, userName, password, facilityId, firstName, lastName, email, verified, active, restrictLogin) VALUES
 (700, 'commTrack1', '0DShprXfNKp4xUug7wQQFpYzrQURNmRx1E73PJISTGQllQzpBGYgPcXQ9Zgp8BG49TvaxVBHjAK45wTTSt58bgieie',
  (SELECT id FROM facilities WHERE code = 'F10'), 'CommTrack', 'Doe', 'commTrack@openlmis.com', TRUE, TRUE,TRUE);
 
 
 INSERT INTO supervisory_nodes
-(parentId, facilityId, name, code) VALUES
-(null, (SELECT
-          id
-        FROM facilities
-        WHERE code = 'F10'), 'Node 1', 'N1');
-
-INSERT INTO supervisory_nodes
-(parentId, facilityId, name, code) VALUES
-((SELECT
-    id
-  FROM supervisory_nodes
-  WHERE code = 'N1'), (SELECT
-                         id
-                       FROM facilities
-                       WHERE code = 'F11'), 'Node 2', 'N2'),
-(null, (SELECT
-          id
-        FROM facilities
-        WHERE code = 'F11'), 'Node 3', 'N3');
-
+(facilityId, name, code, parentId) VALUES
+((SELECT id FROM facilities WHERE code = 'F10'), 'Node 1', 'N1', null),
+((SELECT id FROM facilities WHERE code = 'F11'), 'Node 2', 'N2', (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT id FROM facilities WHERE code = 'F11'), 'Node 3', 'N3', null);
 
 INSERT INTO role_assignments
 (userId, roleId, programId, supervisoryNodeId) VALUES
@@ -614,60 +544,23 @@ INSERT INTO role_assignments
                                     id
                                   FROM roles
                                   WHERE name = 'View-Report'), null, null),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'Store In-Charge'), 2, null),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'FacilityHead'), 2, null),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'Store In-Charge'), 2, (SELECT
-                                                                          id
-                                                                        FROM supervisory_nodes
-                                                                        WHERE code = 'N1')),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'FacilityHead'), 2, (SELECT
-                                                                       id
-                                                                     FROM supervisory_nodes
-                                                                     WHERE code = 'N1')),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'LMU'), 2, (SELECT
-                                                              id
-                                                            FROM supervisory_nodes
-                                                            WHERE code = 'N1')),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'Medical-Officer'), 2, (SELECT
-                                                                          id
-                                                                        FROM supervisory_nodes
-                                                                        WHERE code = 'N1'));
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, null),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, null),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'LMU'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Medical-Officer'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N1')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 4, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 4, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'LMU'), 4, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Medical-Officer'), 4, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Store In-Charge'), 3, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'FacilityHead'), 3, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'LMU'), 3, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Medical-Officer'), 3, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'CommTest'),   (SELECT id FROM roles WHERE name = 'API testing'), 2, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'CommTest'),   (SELECT id FROM roles WHERE name = 'API testing'), 3, (SELECT id FROM supervisory_nodes WHERE code = 'N3')),
+((SELECT ID FROM USERS WHERE username = 'CommTest'),   (SELECT id FROM roles WHERE name = 'API testing'), 4, (SELECT id FROM supervisory_nodes WHERE code = 'N3'));
 
 INSERT INTO fulfillment_role_assignments
 (userId, roleId, facilityId) VALUES
@@ -719,16 +612,8 @@ INSERT INTO fulfillment_role_assignments
                                                                  facilities
                                                                WHERE
                                                                  code = 'F11')),
-((SELECT
-    ID
-  FROM USERS
-  WHERE username = 'commTrack1'), (SELECT
-                                     id
-                                   FROM roles
-                                   WHERE name = 'Shipment'), (SELECT
-                                                                id
-                                                              FROM
-                                                                facilities
-                                                              WHERE
-                                                                code = 'F10'));
+
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Shipment'), (SELECT id FROM facilities WHERE code = 'F10')),
+((SELECT ID FROM USERS WHERE username = 'commTrack1'), (SELECT id FROM roles WHERE name = 'Shipment'), (SELECT id FROM facilities WHERE code = 'F11')),
+((SELECT ID FROM USERS WHERE username = 'CommTest'), (SELECT id FROM roles WHERE name = 'API testing Order'), (SELECT id FROM facilities WHERE code = 'F11'));
 
