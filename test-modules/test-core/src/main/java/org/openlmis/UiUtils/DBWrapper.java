@@ -1507,8 +1507,8 @@ public class DBWrapper {
       "(select id from processing_schedules where code='"+scheduleCode+"'),TRUE);");
   }
 
-  public void updateRequisitionStatusChangesCreatedDate(String newDate, Long rnrid) throws SQLException {
-    update("update requisition_status_changes SET createdDate= "+newDate+" WHERE rnrid="+rnrid+";");
+  public void updateCreatedDateInRequisitionStatusChanges(String newDate, Long rnrid) throws SQLException {
+    update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrid="+rnrid+";");
   }
 
 }

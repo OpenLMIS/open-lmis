@@ -24,6 +24,9 @@ import static org.openlmis.UiUtils.HttpClient.POST;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CalculationInRnR extends JsonUtility{
 
@@ -121,14 +124,17 @@ public class CalculationInRnR extends JsonUtility{
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("NOW()-interval '7 Days'",id);
+    SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+    Date d = new Date();
+    String dateBefore = ft.format(new Date(d.getTime() - 7 * 24 * 3600 * 1000 ));
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges(dateBefore, id);
     id = submitRnRThroughApiForV10("HIV","P10",null,3);
     assertEquals("7",dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("146",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("75",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2012-12-15'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges("2012-12-15", id);
     id = submitRnRThroughApiForV10("HIV","P10",null,15);
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2012-12-5'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges("2012-12-5", id);
     id = submitRnRThroughApiForV10("HIV","P10",null,3);
     assertEquals("7",dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("146",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
@@ -144,7 +150,7 @@ public class CalculationInRnR extends JsonUtility{
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2012-9-11'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges("2012-9-11", id);
     id = submitRnRThroughApiForV10("HIV","P10",5,3);
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
@@ -161,7 +167,7 @@ public class CalculationInRnR extends JsonUtility{
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2012-8-11'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges("2012-8-11", id);
     id = submitRnRThroughApiForV10("HIV","P10",5,3);
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
@@ -179,7 +185,7 @@ public class CalculationInRnR extends JsonUtility{
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2013-2-11'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges("2013-2-11", id);
     id = submitRnRThroughApiForV10("HIV","P10",5,3);
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
@@ -188,6 +194,7 @@ public class CalculationInRnR extends JsonUtility{
 
   @Test(groups = {"webservice"})
   public void testCalculationWithPeriodTrackingWhenNumberOfMonthsIs2() throws Exception{
+    String createdDate="2013-4-11";
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.insertProcessingPeriod("p1", "1 period", "2013-2-1", "2013-3-31", 2, "M");
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 2, "M");
@@ -196,17 +203,19 @@ public class CalculationInRnR extends JsonUtility{
     Long id = submitRnRThroughApiForV10("HIV","P10",40,37);
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
-    assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2013-4-11'",id);
+    assertEquals("3", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges(createdDate, id);
     id = submitRnRThroughApiForV10("HIV","P10",5,3);
-    assertEquals("231",dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
-    assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
-    assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
+
+    assertEquals(calculateDaysDifference(createdDate), dbWrapper.getRequisitionLineItemFieldValue(id, "reportingdays", "P10"));
+    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    assertEquals("2", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
   }
 
   @Test(groups = {"webservice"})
   public void testCalculationWithPeriodTrackingWhenNumberOfMonthsIs3() throws Exception{
     dbWrapper.deleteCurrentPeriod();
+    String createdDate="2013-6-11";
     dbWrapper.insertProcessingPeriod("p1", "1 period", "2013-2-1", "2013-3-31", 3, "M");
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 3, "M");
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 3, "M");
@@ -215,9 +224,10 @@ public class CalculationInRnR extends JsonUtility{
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2013-6-11'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges(createdDate, id);
     id = submitRnRThroughApiForV10("HIV","P10",5,3);
-    assertEquals("170",dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
+
+    assertEquals(calculateDaysDifference(createdDate),dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
   }
@@ -233,11 +243,19 @@ public class CalculationInRnR extends JsonUtility{
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id,"quantitydispensed","P10"),dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("3",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
-    dbWrapper.updateRequisitionStatusChangesCreatedDate("'2013-4-11'",id);
+    dbWrapper.updateCreatedDateInRequisitionStatusChanges("2013-4-11", id);
     id = submitRnRThroughApiForV10("HIV","P10",5,3);
     assertEquals(null,dbWrapper.getRequisitionLineItemFieldValue(id,"reportingdays","P10"));
     assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"normalizedconsumption","P10"));
     assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"amc","P10"));
   }
 
+
+  public long calculateDaysDifference(String createdDateInString) throws ParseException {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    Date formattedCreatedDate = formatter.parse(createdDateInString);
+    long timeDifference=new Date().getTime() - formattedCreatedDate.getTime();
+    long daysDifference=timeDifference/(24*3600*1000);
+    return (daysDifference);
+  }
 }
