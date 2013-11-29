@@ -17,9 +17,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-public class RnrCalculationStrategyTest {
+public class RnrCalculatorTest {
 
-  private RnrCalculationStrategy calculationStrategy = new RnrCalculationStrategy();
+  private RnrCalculator calculationStrategy = new RnrCalculator();
 
 
   @Test

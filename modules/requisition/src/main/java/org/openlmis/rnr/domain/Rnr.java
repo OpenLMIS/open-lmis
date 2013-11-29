@@ -19,8 +19,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RnrCalculationStrategy;
+import org.openlmis.rnr.calculation.RnrCalculator;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -107,20 +106,19 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateForApproval() {
-    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculatePacksToShip(calcStrategy);
+      lineItem.calculatePacksToShip();
     }
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculatePacksToShip(calcStrategy);
+      lineItem.calculatePacksToShip();
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
   }
 
   @JsonIgnore
-  public RnrCalculationStrategy getRnrCalcStrategy() {
-    return emergency ? new EmergencyRnrCalcStrategy() : new RnrCalculationStrategy();
+  public RnrCalculator getRnrCalcStrategy() {
+    return new RnrCalculator();
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -140,8 +138,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-      previousRequisition.status == INITIATED ||
-      previousRequisition.status == SUBMITTED) {
+        previousRequisition.status == INITIATED ||
+        previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();
@@ -167,12 +165,11 @@ public class Rnr extends BaseModel {
   }
 
   public void setFieldsForApproval() {
-    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
-      item.setFieldsForApproval(calcStrategy);
+      item.setFieldsForApproval();
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.setFieldsForApproval(calcStrategy);
+      item.setFieldsForApproval();
     }
   }
 

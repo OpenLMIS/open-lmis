@@ -92,12 +92,14 @@ public class RequisitionService {
 
   @Transactional
   public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency) {
-    if (!requisitionPermissionService.hasPermission(modifiedBy, facility, program, CREATE_REQUISITION))
+    if (!requisitionPermissionService.hasPermission(modifiedBy, facility, program, CREATE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
+    }
 
     ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(program.getId());
-    if (rnrTemplate.getColumns().size() == 0)
+    if (rnrTemplate.getColumns().size() == 0) {
       throw new DataException("error.rnr.template.not.defined");
+    }
 
     ProcessingPeriod period = findPeriod(facility, program, emergency);
 

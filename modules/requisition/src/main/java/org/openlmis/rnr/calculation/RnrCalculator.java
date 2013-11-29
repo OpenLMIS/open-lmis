@@ -10,14 +10,11 @@
 
 package org.openlmis.rnr.calculation;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.rnr.domain.LossesAndAdjustments;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
-import org.openlmis.rnr.repository.RequisitionRepository;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -28,15 +25,10 @@ import static java.lang.Math.floor;
 import static java.math.RoundingMode.HALF_UP;
 import static org.openlmis.rnr.domain.RnrLineItem.NUMBER_OF_DAYS;
 
-@AllArgsConstructor
 @NoArgsConstructor
-public class RnrCalculationStrategy {
+public class RnrCalculator {
 
   public static final MathContext MATH_CONTEXT = new MathContext(3, HALF_UP);
-
-  ProcessingScheduleService processingScheduleService;
-
-  RequisitionRepository requisitionRepository;
 
   public Integer calculatePacksToShip(Integer orderQuantity, Integer packSize, Integer packRoundingThreshold, Boolean roundToZero) {
     Integer packsToShip = null;
@@ -107,15 +99,15 @@ public class RnrCalculationStrategy {
     BigDecimal quantityConsumed = new BigDecimal(quantityDispensed);
 
     BigDecimal newPatientFactor = new BigDecimal(newPatientCount)
-      .multiply(new BigDecimal(dosesPerMonth)
-        .divide(new BigDecimal(dosesPerDispensingUnit), MATH_CONTEXT).setScale(0, HALF_UP));
+        .multiply(new BigDecimal(dosesPerMonth)
+            .divide(new BigDecimal(dosesPerDispensingUnit), MATH_CONTEXT).setScale(0, HALF_UP));
 
     if (reportingDays == null || stockOutDaysCount.compareTo(new BigDecimal(reportingDays)) >= 0) {
       return quantityConsumed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
     }
 
     BigDecimal stockOutFactor = quantityConsumed.multiply(NUMBER_OF_DAYS
-      .divide((new BigDecimal(reportingDays).subtract(stockOutDaysCount)), MATH_CONTEXT));
+        .divide((new BigDecimal(reportingDays).subtract(stockOutDaysCount)), MATH_CONTEXT));
 
     return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }
@@ -157,7 +149,7 @@ public class RnrCalculationStrategy {
     };
 
     LossesAndAdjustmentsType lossAndAdjustmentTypeFromList = (LossesAndAdjustmentsType) CollectionUtils.find(
-      lossesAndAdjustmentsTypes, predicate);
+        lossesAndAdjustmentsTypes, predicate);
 
     return lossAndAdjustmentTypeFromList.getAdditive();
   }
