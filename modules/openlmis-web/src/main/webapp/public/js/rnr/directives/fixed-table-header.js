@@ -28,7 +28,7 @@ app.directive('fixedTableHeader', function () {
 
       var removeLinksFromFixedHeader = function () {
         fixedHeader.find('a').parent().remove();
-      }
+      };
 
       setTimeout(function () {
         cloneAndAppendTableHeader();
