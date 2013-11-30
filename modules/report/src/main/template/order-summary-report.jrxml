@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
-
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order-summary-report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -28,6 +19,9 @@
 	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
 	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="ADDRESS" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship UnitSize,requisition_line_items.packstoship UnitQuantity, requisition_line_items.packsize PackQuantity,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders
@@ -55,62 +49,17 @@
 		<groupHeader>
 			<band height="164">
 				<staticText>
-					<reportElement uuid="c01b3439-b524-4607-bd5e-4d1cf65a1095" x="24" y="4" width="100" height="14">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[To The Managing Director]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="1eece93d-a11e-47c8-b6cc-284e6c4291f8" x="24" y="46" width="100" height="14">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[Lusaka]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="64520ed4-e25f-4165-be84-3add06dce93c" x="24" y="32" width="100" height="14">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[P.O.Box  30207 ]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="e8bcc2aa-bf03-4271-a096-22eccd2667f3" x="24" y="18" width="100" height="14">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[Medical Stores Ltd.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="09b0a4cc-4464-4be7-ad82-0841fe48bf4a" x="24" y="60" width="180" height="14">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
-					</reportElement>
-					<textElement>
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[Fax numbers : 01-241193, 01-246288]]></text>
-				</staticText>
-				<staticText>
-					<reportElement uuid="8b6e9e42-adf5-4b5a-bbac-ce5ef802ff50" mode="Transparent" x="341" y="4" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="4" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="8b6e9e42-adf5-4b5a-bbac-ce5ef802ff50">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
-					<text><![CDATA[MSL Reference No.]]></text>
+					<text><![CDATA[Reference No.]]></text>
 				</staticText>
 				<line>
-					<reportElement uuid="a0dbe148-d103-491c-b513-43c083d7ae9e" x="451" y="15" width="205" height="1">
+					<reportElement x="451" y="15" width="205" height="1" uuid="a0dbe148-d103-491c-b513-43c083d7ae9e">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -118,7 +67,7 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement uuid="8fd8809b-32c8-4a05-989f-35f6123e1c3c" x="341" y="18" width="99" height="14">
+					<reportElement x="341" y="18" width="99" height="14" uuid="8fd8809b-32c8-4a05-989f-35f6123e1c3c">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top">
@@ -128,7 +77,7 @@
 					<text><![CDATA[Consign to :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="e9fe88f2-5aef-468a-9a56-dd33dbe089c8" mode="Transparent" x="341" y="32" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="32" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="e9fe88f2-5aef-468a-9a56-dd33dbe089c8">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -138,7 +87,7 @@
 					<text><![CDATA[Facility Name :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="da2976d8-b33f-4283-8ad0-5a34e1e2ae40" mode="Transparent" x="341" y="46" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="46" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="da2976d8-b33f-4283-8ad0-5a34e1e2ae40">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -148,7 +97,7 @@
 					<text><![CDATA[Facility Code :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="5533da03-66de-4a17-942f-1a590149814f" mode="Transparent" x="341" y="60" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="60" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="5533da03-66de-4a17-942f-1a590149814f">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -158,7 +107,7 @@
 					<text><![CDATA[Contact  ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="ba22919a-6661-463e-a851-759b4c60f0a4" mode="Transparent" x="341" y="74" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="74" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="ba22919a-6661-463e-a851-759b4c60f0a4">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -168,7 +117,7 @@
 					<text><![CDATA[Address :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="d18ab833-b9e7-464e-ad88-1ecbb9c53b0c" mode="Transparent" x="341" y="88" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="88" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="d18ab833-b9e7-464e-ad88-1ecbb9c53b0c">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -178,7 +127,7 @@
 					<text><![CDATA[City :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="f7ef8dea-3f1d-4b4c-8aea-eaaacb1f5fe0" mode="Transparent" x="341" y="102" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="102" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="f7ef8dea-3f1d-4b4c-8aea-eaaacb1f5fe0">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -188,7 +137,7 @@
 					<text><![CDATA[Province :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="b636b287-4c5b-462c-910f-d361ef1ef9d1" mode="Transparent" x="341" y="116" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="116" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="b636b287-4c5b-462c-910f-d361ef1ef9d1">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -198,7 +147,7 @@
 					<text><![CDATA[Postal Code :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="20746afa-fe86-4523-9d48-df3a65e6d4cf" mode="Transparent" x="341" y="130" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="341" y="130" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="20746afa-fe86-4523-9d48-df3a65e6d4cf">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
@@ -208,7 +157,7 @@
 					<text><![CDATA[Phone :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="0836a53f-ca39-499f-b9ae-fa94af765054" x="541" y="130" width="99" height="14">
+					<reportElement x="541" y="130" width="99" height="14" uuid="0836a53f-ca39-499f-b9ae-fa94af765054">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -218,7 +167,7 @@
 					<text><![CDATA[Fax :]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="b92d7349-d6d2-46b7-8f59-a0fc2e565174" x="451" y="32" width="131" height="14">
+					<reportElement x="451" y="32" width="131" height="14" uuid="b92d7349-d6d2-46b7-8f59-a0fc2e565174">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement>
@@ -227,7 +176,7 @@
 					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="de4a07f1-0039-4435-85f1-b00c31f6c2d2" x="451" y="18" width="131" height="14">
+					<reportElement x="451" y="18" width="131" height="14" uuid="de4a07f1-0039-4435-85f1-b00c31f6c2d2">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement>
@@ -236,7 +185,7 @@
 					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="34ad37d0-504c-4507-bd3b-813840d2b423" x="451" y="46" width="131" height="14">
+					<reportElement x="451" y="46" width="131" height="14" uuid="34ad37d0-504c-4507-bd3b-813840d2b423">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement>
@@ -245,7 +194,7 @@
 					<textFieldExpression><![CDATA[$F{facilityCode}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement uuid="a2e751cd-6b14-4467-8d1b-0e03b888ffdc" x="451" y="74" width="131" height="14">
+					<reportElement x="451" y="74" width="131" height="14" uuid="a2e751cd-6b14-4467-8d1b-0e03b888ffdc">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement>
@@ -254,14 +203,13 @@
 					<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="144" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement mode="Opaque" x="0" y="144" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
-					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="72" y="144" width="102" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="72" y="144" width="102" height="20" forecolor="#000000" backcolor="#333333" uuid="a41380d3-14bd-4d3e-9c5f-143f77375523"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -269,7 +217,7 @@
 					<text><![CDATA[Product Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe" mode="Transparent" x="392" y="144" width="90" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="392" y="144" width="90" height="20" forecolor="#000000" backcolor="#333333" uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -277,7 +225,7 @@
 					<text><![CDATA[Unit Size]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="1138c634-4150-46c6-a83e-b93243223977" mode="Transparent" x="174" y="144" width="218" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="174" y="144" width="218" height="20" forecolor="#000000" backcolor="#333333" uuid="1138c634-4150-46c6-a83e-b93243223977"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -285,7 +233,7 @@
 					<text><![CDATA[Description]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="144" width="72" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="0" y="144" width="72" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -293,7 +241,7 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="81e85722-5d3c-4cf4-9cbf-e1312d5c6e21" mode="Transparent" x="482" y="144" width="73" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="482" y="144" width="73" height="20" forecolor="#000000" backcolor="#333333" uuid="81e85722-5d3c-4cf4-9cbf-e1312d5c6e21"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -301,7 +249,7 @@
 					<text><![CDATA[Unit Quantity]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="b5beb655-83c8-405c-9b05-cc642ebfc189" mode="Transparent" x="555" y="144" width="83" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="555" y="144" width="83" height="20" forecolor="#000000" backcolor="#333333" uuid="b5beb655-83c8-405c-9b05-cc642ebfc189"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
@@ -309,59 +257,65 @@
 					<text><![CDATA[Pack Quantity]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="c326ca9f-1a0d-411d-bec2-b65952aa1c52" mode="Transparent" x="638" y="144" width="164" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="638" y="144" width="164" height="20" forecolor="#000000" backcolor="#333333" uuid="c326ca9f-1a0d-411d-bec2-b65952aa1c52"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="10"/>
 					</textElement>
 					<text><![CDATA[Discrepancies or Damages]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="10" y="0" width="220" height="110" uuid="04e65a67-2f47-4f8f-b9b1-c99a77b31e4b"/>
+					<textElement>
+						<paragraph lineSpacing="1_1_2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{ADDRESS}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="153">
 				<staticText>
-					<reportElement uuid="9d59529d-daa2-434b-bb0e-ec1bd84622c5" x="0" y="2" width="272" height="20">
+					<reportElement x="0" y="2" width="272" height="20" uuid="9d59529d-daa2-434b-bb0e-ec1bd84622c5">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement/>
 					<text><![CDATA[Explain any discrepancies or Damages]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9" x="0" y="22" width="802" height="65">
+					<reportElement x="0" y="22" width="802" height="65" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 				</rectangle>
 				<staticText>
-					<reportElement uuid="797d322d-e41f-4cfa-88fc-4f0f76fee629" x="4" y="100" width="214" height="20">
+					<reportElement x="4" y="100" width="214" height="20" uuid="797d322d-e41f-4cfa-88fc-4f0f76fee629">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
 					<text><![CDATA[LMU Technical Officer signature and Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="e01b8a4d-d017-4f7d-bc94-4b61a6ffce9b" x="4" y="120" width="214" height="20">
+					<reportElement x="4" y="120" width="214" height="20" uuid="e01b8a4d-d017-4f7d-bc94-4b61a6ffce9b">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
 					<text><![CDATA[MSL Authorized  signature and Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="7651950f-7427-469b-a85f-e50d03ef8065" x="415" y="100" width="205" height="20">
+					<reportElement x="415" y="100" width="205" height="20" uuid="7651950f-7427-469b-a85f-e50d03ef8065">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
 					<text><![CDATA[MSL/Customer Driver Signature and Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="81938a4e-7b1e-49d6-9944-5484270f77a4" x="415" y="120" width="205" height="20">
+					<reportElement x="415" y="120" width="205" height="20" uuid="81938a4e-7b1e-49d6-9944-5484270f77a4">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
 					<text><![CDATA[MSL/Customer Vehicle Number]]></text>
 				</staticText>
 				<line>
-					<reportElement uuid="969e35dc-8637-46c1-9aab-4545664ab3f4" x="218" y="119" width="102" height="1">
+					<reportElement x="218" y="119" width="102" height="1" uuid="969e35dc-8637-46c1-9aab-4545664ab3f4">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -369,7 +323,7 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement uuid="5be7998d-8dbc-4b01-bea8-12f575bac732" x="218" y="139" width="102" height="1">
+					<reportElement x="218" y="139" width="102" height="1" uuid="5be7998d-8dbc-4b01-bea8-12f575bac732">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -377,14 +331,14 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement uuid="264d7f42-eace-4b78-af96-eb86a324d5c1" x="321" y="100" width="35" height="20">
+					<reportElement x="321" y="100" width="35" height="20" uuid="264d7f42-eace-4b78-af96-eb86a324d5c1">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 					<text><![CDATA[Date]]></text>
 				</staticText>
 				<line>
-					<reportElement uuid="a2cc2512-cc11-494c-902f-c5d37fbcfaad" x="355" y="119" width="60" height="1">
+					<reportElement x="355" y="119" width="60" height="1" uuid="a2cc2512-cc11-494c-902f-c5d37fbcfaad">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -392,14 +346,14 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement uuid="002617cc-f117-4c67-9224-2e778ef95209" x="321" y="120" width="35" height="20">
+					<reportElement x="321" y="120" width="35" height="20" uuid="002617cc-f117-4c67-9224-2e778ef95209">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 					<text><![CDATA[Date]]></text>
 				</staticText>
 				<line>
-					<reportElement uuid="06a706ca-cfbd-49d8-9123-dd3b07e3be50" x="355" y="139" width="60" height="1">
+					<reportElement x="355" y="139" width="60" height="1" uuid="06a706ca-cfbd-49d8-9123-dd3b07e3be50">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -407,14 +361,14 @@
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement uuid="013227ab-7686-41d1-8c58-04fcfd0466fa" x="695" y="100" width="35" height="20">
+					<reportElement x="695" y="100" width="35" height="20" uuid="013227ab-7686-41d1-8c58-04fcfd0466fa">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 					<text><![CDATA[Date]]></text>
 				</staticText>
 				<line>
-					<reportElement uuid="2690b11f-8a28-4c2d-9aa8-24ebe9a05a27" x="620" y="119" width="75" height="1">
+					<reportElement x="620" y="119" width="75" height="1" uuid="2690b11f-8a28-4c2d-9aa8-24ebe9a05a27">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -422,7 +376,7 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement uuid="72972c4a-4778-474f-af8b-d472fa81c21e" x="730" y="119" width="60" height="1">
+					<reportElement x="730" y="119" width="60" height="1" uuid="72972c4a-4778-474f-af8b-d472fa81c21e">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -430,7 +384,7 @@
 					</graphicElement>
 				</line>
 				<line>
-					<reportElement uuid="29bc132b-a847-4c9a-9868-c7bc5710c3f7" x="620" y="139" width="75" height="1">
+					<reportElement x="620" y="139" width="75" height="1" uuid="29bc132b-a847-4c9a-9868-c7bc5710c3f7">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<graphicElement>
@@ -446,7 +400,7 @@
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
+				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -481,7 +435,7 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement uuid="8334c2de-4f9f-4ab2-8347-18920a336062" x="73" y="0" width="730" height="20" forecolor="#006666">
+				<reportElement x="73" y="0" width="730" height="20" forecolor="#006666" uuid="8334c2de-4f9f-4ab2-8347-18920a336062">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -490,21 +444,20 @@
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4">
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
-				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="72" height="20"/>
+				<reportElement x="0" y="0" width="72" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="802" height="1" forecolor="#3D9297">
+				<reportElement x="0" y="19" width="802" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -512,38 +465,36 @@
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="5ff47d82-991d-49e3-a822-b0a5b44e196c" x="72" y="0" width="102" height="20"/>
-				<textElement/>
+				<reportElement x="72" y="0" width="102" height="20" uuid="5ff47d82-991d-49e3-a822-b0a5b44e196c"/>
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="70960fb2-c1cc-4194-8a7a-dd3e8fb30c7d" x="174" y="0" width="218" height="20"/>
-				<textElement/>
+				<reportElement x="174" y="0" width="218" height="20" uuid="70960fb2-c1cc-4194-8a7a-dd3e8fb30c7d"/>
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement uuid="d3eac902-fedc-487a-a65a-f86f8399af4d" x="392" y="0" width="90" height="20"/>
+				<reportElement x="392" y="0" width="90" height="20" uuid="d3eac902-fedc-487a-a65a-f86f8399af4d"/>
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{unitSize}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement uuid="64a1af0d-e57b-4949-9df8-3ca0e1ef7e4b" x="482" y="0" width="73" height="20"/>
+				<reportElement x="482" y="0" width="73" height="20" uuid="64a1af0d-e57b-4949-9df8-3ca0e1ef7e4b"/>
 				<textElement textAlignment="Right">
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{unitQuantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement uuid="b10898f1-30a8-4fed-86f2-5e4e42332d9c" x="555" y="0" width="83" height="20"/>
+				<reportElement x="555" y="0" width="83" height="20" uuid="b10898f1-30a8-4fed-86f2-5e4e42332d9c"/>
 				<textElement textAlignment="Right">
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packQuantity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="070035bb-1f40-4e3e-9224-f0bd3e76b123" x="638" y="0" width="164" height="20"/>
+				<reportElement x="638" y="0" width="164" height="20" uuid="070035bb-1f40-4e3e-9224-f0bd3e76b123"/>
 				<textElement>
 					<paragraph leftIndent="10"/>
 				</textElement>
