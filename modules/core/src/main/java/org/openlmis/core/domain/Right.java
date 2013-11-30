@@ -76,7 +76,9 @@ public enum Right {
   VIEW_ORDER_REPORT("Report - Order Report", REPORT, "Permission to view Order Report",45),
   VIEW_STOCK_IMBALANCE_REPORT("Report - Stock Imbalance Report", REPORT, "Permission to view Stock Imbalance Report",46),
   VIEW_RNR_FEEDBACK_REPORT("Report - Report and Requisition Feedback", REPORT, "Permission to view Report and Requisition Feedback Report",47),
-  VIEW_ORDER_FILL_RATE_REPORT("Report - Order Fill Rate Report", REPORT, "Permission to view Order Fill Rate Report",48);
+  VIEW_ORDER_FILL_RATE_REPORT("Report - Order Fill Rate Report", REPORT, "Permission to view Order Fill Rate Report",48),
+  VIEW_REGIMEN_SUMMARY_REPORT("Report - Regimen Summary Report", REPORT, "Permission to view Regimen Summary Report",49);
+
 
   @Getter
   private final String rightName;

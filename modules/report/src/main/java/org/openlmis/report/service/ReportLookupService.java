@@ -27,7 +27,8 @@ import java.util.*;
 @Service
 @NoArgsConstructor
 public class ReportLookupService {
-
+    @Autowired
+    private RegimenReportMapper regimenReportMapper;
     @Autowired
     private ProductReportMapper productMapper;
 
@@ -73,11 +74,27 @@ public class ReportLookupService {
     @Autowired
     private ProductFormReportMapper productFormReportMapper;
 
+    @Autowired
+    private RegimenCategoryReportMapper regimenCategoryReportMapper;
 
     public List<Product> getAllProducts(){
         return productMapper.getAll();
     }
 
+    //Return all regimen Categories
+    public List<RegimenCategory>getAllRegimenCategory(){
+        return regimenCategoryReportMapper.getAll();
+    }
+    public List<RegimenCategory>getRegimenCategoryById(Long id){
+        return regimenCategoryReportMapper.getById(id);
+    }
+    public List<Regimen>getRegimenByProgram(){
+       return regimenReportMapper.getByProgram();
+    }
+
+    public List<Regimen>getRegimenByCategory(Long regimenCategoryId){
+      return regimenReportMapper.getRegimenByCategory(regimenCategoryId);
+    }
     public List<Product> getProductsActiveUnderProgram(Long programId){
         return productMapper.getProductsForProgram(programId);
     }

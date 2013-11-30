@@ -12,15 +12,11 @@ package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.service.RegimenService;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
-import org.openlmis.report.model.dto.AdjustmentType;
-import org.openlmis.report.model.dto.Product;
-import org.openlmis.report.model.dto.Schedule;
-import org.openlmis.report.model.dto.Program;
-import org.openlmis.report.model.dto.ProductCategory;
-import org.openlmis.report.model.dto.RequisitionGroup;
+import org.openlmis.report.model.dto.*;
 import org.openlmis.report.service.ReportLookupService;
 import org.openlmis.report.response.OpenLmisResponse;
 import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
@@ -58,7 +54,6 @@ public class ReportLookupController extends BaseController {
 
     @Autowired
     private ProcessingScheduleService processingScheduleService;
-
     @RequestMapping(value="/programs", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getPrograms(){
         return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
@@ -74,10 +69,25 @@ public class ReportLookupController extends BaseController {
         return OpenLmisResponse.response( "facilityTypes", this.reportLookupService.getFacilityTypes() ) ;
     }
 
-
+    @RequestMapping(value="/regimenCategories", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllRegimenCategory(){
+        return OpenLmisResponse.response( "regimenCategories", this.reportLookupService.getAllRegimenCategory() ) ;
+    }
     @RequestMapping(value="/products.json", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<Product> getProducts(){
           return this.reportLookupService.getAllProducts();
+    }
+
+    @RequestMapping(value = "/regiments", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRegimentListByProgram() {
+        return OpenLmisResponse.response("regimens", this.reportLookupService.getRegimenByProgram());
+    }
+
+    @RequestMapping(value = "/regimenCategories/{regimenCategoryId}/regimens", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRegimensByCategory(@PathVariable("regimenCategoryId") Long regimenCategoryId) {
+
+        List<Regimen> regimenList = reportLookupService.getRegimenByCategory(regimenCategoryId);
+        return OpenLmisResponse.response("regimens", regimenList);
     }
 
     @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)

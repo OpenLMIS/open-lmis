@@ -1,5 +1,5 @@
-function OrderFillRateController($scope, $filter, ngTableParams,
-                                 OrderFillRateReport,RequisitionGroupsByProgramSchedule,ReportProductsByProgram,FacilitiesByProgramParams,GetFacilityByFacilityType ,AllReportPeriods,ReportPeriodsByScheduleAndYear, Products, ProductCategories, ProductsByCategory, ReportFacilityTypes, RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
+function RegimenSummaryControllers($scope, $filter, ngTableParams,
+                                 RegimenSummaryReport,GeographicZones,ReportRegimens,ReportRegimenCategories,ReportRegimensByCategory,RequisitionGroupsByProgramSchedule,FacilitiesByProgramParams,ReportPeriodsByScheduleAndYear,  RequisitionGroups,ReportSchedules,ReportPrograms,ReportPeriods, OperationYears, SettingsByKey,localStorageService, $http, $routeParams, $location) {
     //to minimize and maximize the filter section
     var section = 1;
     $scope.showMessage = true;
@@ -28,56 +28,49 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.getPagedDataAsync(0, 0);
     };
 
-    $scope.startYears = [];
+    $scope.years = [];
     OperationYears.get(function (data) {
-        $scope.startYears = data.years;
-        $scope.startYears.unshift('-- All Years --');
+        $scope.years = data.years;
+        $scope.years.unshift('-- All Years --');
     });
+
+
+
+
     ReportPrograms.get(function(data){
-        $scope.programs = data.programs;
-        $scope.programs.unshift({'name':'-- All Programs --','id':'0'});
 
-        $scope.products = [];
-        $scope.products.push({name:"-- Select a product --"});
+        $scope.programs = data.programs;
+        $scope.programs.unshift({'name':'-- Select a Program --','id':'0'});
     });
 
-    $scope.ProgramChanged = function(){
-        ReportProductsByProgram.get({programId: $scope.filterObject.programId}, function(data){
-            $scope.products = data.productList;
-            $scope.products.unshift({id: '',name: '-- Select Product --'});
-        });
-    };
+    ReportRegimenCategories.get(function(data){
 
-    $scope.ChangeProductList = function () {
-        ProductsByCategory.get({category: $scope.filterObject.productCategoryId}, function (data) {
-            $scope.products = data.productList;
-            $scope.products.unshift({'name': '-- All Products --','id':'All'});
+        $scope.regimenCategories = data.regimenCategories;
+        $scope.regimenCategories.unshift({'name':'-- Select Regimen Category --','id':'0'});
+    });
 
-        });
-    };
+  $scope.RegimenCategoryChanged= function(){
 
+      ReportRegimensByCategory.get({regimenCategoryId: $scope.filterObject.regimenCategoryId}, function(data){
+          $scope.regimens = data.regimens;
+          $scope.regimens.unshift({'name':'All Regimens'});
+      });
+
+  };
+    GeographicZones.get(function(data) {
+        $scope.zones = data.zones;
+        $scope.zones.unshift({'name': '-- All Geographic Zones --'});
+    });
+    ReportRegimens.get(function(data){
+    $scope.regimens = data.regimens;
+    $scope.regimens.unshift({'name': '-- All Regimens --'});
+
+    });
     ReportSchedules.get(function(data){
         $scope.schedules = data.schedules;
         $scope.schedules.unshift({'name':'-- Select a Schedule --', 'id':'0'}) ;
-
-        $scope.allFacilities = [];
-        $scope.allFacilities.unshift({code:'-- Select a Facility --',id:'0'});
-
-
-
     });
 
-
-    ReportFacilityTypes.get(function (data) {
-        $scope.facilityTypes = data.facilityTypes;
-        $scope.facilityTypes.unshift({'name':'-- All Facility Types --','id':'0'});
-    });
-
-
-    ProductCategories.get(function (data) {
-        $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.unshift({'name':'-- All Product Categories --','id':'0'});
-    });
     $scope.ChangeSchedule = function(scheduleBy){
 
         if(scheduleBy == 'byYear'){
@@ -94,108 +87,63 @@ function OrderFillRateController($scope, $filter, ngTableParams,
                 $scope.periods.unshift({'name':'-- Select a Period --','id':'0'});
 
             });
-
-
         }
-        $scope.loadFacilities();
     };
 
-
-    $scope.loadFacilities = function(){
-
-        if(isUndefined($scope.filterObject.programId) || isUndefined($scope.filterObject.scheduleId)){
-            return;
-        }
-
-        // load facilities
-        FacilitiesByProgramParams.get({
-                program: $scope.filterObject.programId ,
-                schedule: $scope.filterObject.scheduleId,
-                type: $scope.filterObject.facilityTypeId
-            }, function(data){
-                $scope.allFacilities = data.facilities;
-                $scope.allFacilities.unshift({code:'-- Select a Facility --',id:''});
-
-            }
-        );
-    };
-
-
-
-    $scope.$watch('filterObject.facilityTypeId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.facilityTypeId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.facilityTypeId = selection;
-            $.each($scope.facilityTypes, function (item, idx) {
-                if (idx.id == selection) {
-                    $scope.filterObject.facilityType = idx.name;
-                }
-            });
-        } else {
-            $scope.filterObject.facilityTypeId = 0;
-            $scope.filterObject.facilityType="";
-        }
-
-        $scope.filterGrid();
-    });
-
-
-    $scope.$watch('filterObject.facilityId', function (selection) {
+    $scope.$watch('filterObject.regimenCategoryId', function (selection) {
         if (selection === "All") {
-            $scope.filterObject.facilityId = 0;
+            $scope.filterObject.regimenCategoryId = 0;
         } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.facilityId = selection;
-            $.each($scope.allFacilities, function (item, idx) {
+            $scope.filterObject.regimenCategoryId = selection;
+            $.each($scope.regimenCategories, function (item, idx) {
                 if (idx.id == selection) {
-                    $scope.filterObject.facility = idx.name;
+                    $scope.filterObject.regimenCategory = idx.name;
                 }
             });
 
         } else {
-            $scope.filterObject.facilityId = -1;
-            $scope.filterObject.facility="";
+            $scope.filterObject.regimenCategoryId = -1;
+            $scope.filterObject.regimenCategory="";
 
         }
         $scope.filterGrid();
 
     });
 
-    $scope.$watch('filterObject.productCategoryId', function (selection) {
-        if (selection == "All") {
-            $scope.filterObject.productCategoryId = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.productCategoryId = selection;
-            $.each($scope.productCategories, function(item, idx){
+    $scope.$watch('zone.value', function(selection){
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.zoneId =  selection;
+            $.each( $scope.zones,function( item,idx){
                 if(idx.id == selection){
-                    $scope.filterObject.productCategory = idx.name;
+                    $scope.filterObject.zone = idx.name;
                 }
             });
-        } else {
-            $scope.filterObject.productCategoryId = 0;
+        }else{
+            $scope.filterObject.zoneId = 0;
+            $scope.filterObject.zone = "";
         }
-        $scope.ChangeProductList();
-
         $scope.filterGrid();
     });
 
-    $scope.$watch('filterObject.productId', function (selection) {
-
+    $scope.$watch('regimen.value', function(selection){
         if (selection == "All") {
-            $scope.filterObject.productId = 0;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.productId = selection;
-            $.each($scope.products, function(item, idx){
+            $scope.filterObject.regimenId = " ";
+        }
+        if(selection !== undefined || selection === ""){
+            $scope.filterObject.regimenId =  selection;
+            $.each( $scope.regimens,function( item,idx){
                 if(idx.id == selection){
-                    $scope.filterObject.product = idx.name;
+                    $scope.filterObject.regimen = idx.name;
                 }
             });
-
-        } else {
-            $scope.filterObject.productId = -1;
+        }else{
+            $scope.filterObject.regimenId = " ";
+            $scope.filterObject.regimen = "";
         }
         $scope.filterGrid();
     });
+
+
 
     $scope.$watch('filterObject.rgroupId', function (selection) {
         if (selection == "All") {
@@ -215,7 +163,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
     $scope.$watch('filterObject.programId', function (selection) {
         if (selection == "All") {
-            $scope.filterObject.programId = -1;
+            $scope.filterObject.programId = 0;
         } else if (selection !== undefined || selection === "") {
             $scope.filterObject.programId = selection;
             $.each($scope.programs, function (item, idx) {
@@ -226,6 +174,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
         } else {
             $scope.filterObject.programId = 0;
+            $scope.filterObject.program = "";
         }
         $scope.filterGrid();
     });
@@ -265,21 +214,6 @@ function OrderFillRateController($scope, $filter, ngTableParams,
         $scope.ChangeSchedule('');
 
     });
-
-
-    $scope.$watch('year', function (selection) {
-        if (selection == "-- All Years --") {
-            $scope.filterObject.year = -1;
-        } else if (selection !== undefined || selection === "") {
-            $scope.filterObject.year = selection;
-        } else {
-            $scope.filterObject.year = 0;
-        }
-        $scope.filterGrid();
-
-    });
-
-
     $scope.$watch('filterObject.year', function (selection) {
 
         if (selection == "-- All Years --") {
@@ -305,7 +239,7 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
         $scope.filterObject.pdformat = 1;
         var params = jQuery.param($scope.filterObject);
-        var url = '/reports/download/order_fill_rate/' + type + '?' + params;
+        var url = '/reports/download/regimen_summary/' + type + '?' + params;
 
 
         window.open(url);
@@ -314,21 +248,20 @@ function OrderFillRateController($scope, $filter, ngTableParams,
 
     //filter form data section
     $scope.filterObject = {
-        facilityTypeId: "",
-        facilityType: "",
         periodId : "",
         period : "",
         programId: "",
         program: "",
         scheduleId: "",
         schedule: "",
-        productId: "",
-        product : "",
-        productCategoryId: "",
-        productCategory : "",
+        regimenCategoryId: "",
+        regimenCategory : "",
+
         year : "",
-        facility: "" ,
-        facilityId:""
+        zoneId : $scope.zone,
+        zone:"" ,
+        regimenId: $scope.regimen,
+        regimen:""
     };
 
     //filter form data section
@@ -388,12 +321,10 @@ function OrderFillRateController($scope, $filter, ngTableParams,
             params[index] = value;
         });
 
-        OrderFillRateReport.get(params, function (data) {
+        RegimenSummaryReport.get(params, function (data) {
             $scope.data = data.pages.rows;
-
             $scope.paramsChanged($scope.tableParams);
         });
-
     };
 
     $scope.formatNumber = function (value, format) {

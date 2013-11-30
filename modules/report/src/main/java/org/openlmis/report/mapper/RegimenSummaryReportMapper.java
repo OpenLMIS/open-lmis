@@ -11,9 +11,9 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.builder.OrderFillRateQueryBuilder;
+import org.openlmis.report.builder.RegimenSummaryQueryBuilder;
 import org.openlmis.report.model.ReportData;
-import org.openlmis.report.model.report.OrderFillRateReport;
+import org.openlmis.report.model.report.RegimenSummaryReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,20 +21,20 @@ import java.util.Map;
 
 /**
  * User: Hassan
- * Date: 7/27/13
+ * Date: 11/25/13
  * Time: 4:47 PM
  */
 @Repository
-public interface OrderFillRateReportMapper {
+public interface RegimenSummaryReportMapper {
 
-    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQuery")
+    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<OrderFillRateReport> getReport(@Param("filterCriteria") ReportData filterCriteria,
+    public List<RegimenSummaryReport> getReport(@Param("filterCriteria") ReportData filterCriteria,
                                                @Param("SortCriteria") Map<String, String[]> SortCriteria,
                                                @Param("RowBounds") RowBounds rowBounds);
 
-    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getOrderFillRateQuery")
+    @SelectProvider(type=RegimenSummaryQueryBuilder.class, method="getOrderFillRateQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<OrderFillRateReport> getReport(Map params);
+    public List<RegimenSummaryReport> getReport(Map params);
 
 }
