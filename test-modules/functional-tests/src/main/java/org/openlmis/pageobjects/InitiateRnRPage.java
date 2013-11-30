@@ -396,10 +396,10 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
 
-  public void calculateAndVerifyStockOnHand(Integer A, Integer B, Integer C, Integer D) {
-    Integer StockOnHand = A + B - C + D;
+  public void calculateAndVerifyStockOnHand(Integer beginningBalance, Integer quantityReceived, Integer quantityDispensed, Integer lossesAndAdjustments) {
+    Integer StockOnHand = beginningBalance + quantityReceived - quantityDispensed + lossesAndAdjustments;
     String stockOnHandActualValue = StockOnHand.toString();
-    String stockOnHandExpectedValue = calculateStockOnHand(A, B, C, D);
+    String stockOnHandExpectedValue = calculateStockOnHand(beginningBalance, quantityReceived, quantityDispensed, lossesAndAdjustments);
     verifyFieldValue(stockOnHandExpectedValue, stockOnHandActualValue);
   }
 
@@ -456,14 +456,8 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
   }
 
-  public void enterValuesAndVerifyCalculatedOrderQuantity(Integer F, Integer X, Integer N, Integer P, Integer H,
-                                                          Integer I, boolean emergency) {
-    enterValuesCalculatedOrderQuantity(F, X);
-    if (emergency)
-      VerifyCalculatedOrderQuantityForEmergencyRnR();
-    else
-      VerifyCalculatedOrderQuantity(N, P, H, I);
-
+  public void enterQuantities(Integer numberOfNewPatients, Integer stockOutDays) {
+    enterValuesCalculatedOrderQuantity(numberOfNewPatients, stockOutDays);
     testWebDriver.sleep(1000);
   }
 
@@ -479,7 +473,9 @@ public class InitiateRnRPage extends RequisitionPage {
     adjustedTotalConsumption.click();
   }
 
-  public void VerifyCalculatedOrderQuantity(Integer expectedAdjustedTotalConsumption, Integer expectedAMC, Integer expectedMaximumStockQuantity, Integer expectedCalculatedOrderQuantity) {
+  public void verifyCalculatedOrderQuantity(Integer expectedAdjustedTotalConsumption, Integer expectedAMC,
+                                            Integer expectedMaximumStockQuantity,
+                                            Integer expectedCalculatedOrderQuantity) {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
     verifyFieldValue(expectedAdjustedTotalConsumption.toString(), actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amc);
@@ -490,7 +486,7 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-  public void VerifyCalculatedOrderQuantityForEmergencyRnR() {
+  public void verifyCalculatedOrderQuantityForEmergencyRnR() {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
     verifyFieldValue("", actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amc);
@@ -551,8 +547,8 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(500);
     actualTotalCostFullSupply = calculateTotalCost();
     assertEquals(totalCostFooter.getText().trim().substring(1),
-        new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
-            BigDecimal.ROUND_HALF_UP).toString());
+      new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
+        BigDecimal.ROUND_HALF_UP).toString());
     testWebDriver.sleep(500);
   }
 
@@ -568,7 +564,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,
                                         String productPrimaryName, String productCode, String category)
-      throws IOException, SQLException {
+    throws IOException, SQLException {
     DBWrapper dbWrapper = new DBWrapper();
     String nonFullSupplyItems = dbWrapper.fetchNonFullSupplyData(productCode, "2", "1");
     clickNonFullSupplyTab();

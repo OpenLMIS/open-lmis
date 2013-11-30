@@ -12,8 +12,6 @@ package org.openlmis.web.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.openlmis.rnr.domain.ProgramRnrTemplate;
@@ -30,56 +28,55 @@ public class PrintRnrLineItem {
 
   private RnrLineItem rnrLineItem;
 
-  public void calculate(RnrCalculationStrategy calcStrategy, ProcessingPeriod period,
-                        List<? extends Column> rnrColumns,
+  public void calculate(List<? extends Column> rnrColumns,
                         List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
-    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand(calcStrategy);
-    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed(calcStrategy);
-    calculateNormalizedConsumption(calcStrategy,template);
-    calculateAmc(calcStrategy, period);
-    calculateMaxStockQuantity(calcStrategy,template);
-    calculateLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
-    rnrLineItem.calculateOrderQuantity(calcStrategy);
+    if (template.columnsCalculated(STOCK_IN_HAND)) calculateStockInHand();
+    if (template.columnsCalculated(QUANTITY_DISPENSED)) rnrLineItem.calculateQuantityDispensed();
+    calculateNormalizedConsumption(template);
+    calculateAmc();
+    calculateMaxStockQuantity(template);
+    calculateLossesAndAdjustments(lossesAndAdjustmentsTypes);
+    rnrLineItem.calculateOrderQuantity();
 
-    rnrLineItem.calculatePacksToShip(calcStrategy);
+    rnrLineItem.calculatePacksToShip();
   }
 
-  private void calculateStockInHand(RnrCalculationStrategy calcStrategy) {
+  private void calculateStockInHand() {
     try {
-      rnrLineItem.calculateStockInHand(calcStrategy);
+      rnrLineItem.calculateStockInHand();
     } catch (NullPointerException e) {
       rnrLineItem.setStockInHand(null);
     }
   }
 
-  private void calculateMaxStockQuantity(RnrCalculationStrategy calcStrategy, ProgramRnrTemplate template) {
+  private void calculateMaxStockQuantity(ProgramRnrTemplate template) {
     try {
-      rnrLineItem.calculateMaxStockQuantity(calcStrategy, template);
+      rnrLineItem.calculateMaxStockQuantity(template);
     } catch (NullPointerException e) {
       rnrLineItem.setMaxStockQuantity(null);
     }
   }
 
-  private void calculateAmc(RnrCalculationStrategy calcStrategy, ProcessingPeriod period) {
+  private void calculateAmc() {
     try {
-      rnrLineItem.calculateAmc(calcStrategy);
+      rnrLineItem.calculateAmc();
     } catch (NullPointerException e) {
       rnrLineItem.setAmc(null);
     }
   }
 
-  private void calculateNormalizedConsumption(RnrCalculationStrategy calcStrategy, ProgramRnrTemplate template) {
+  private void calculateNormalizedConsumption(ProgramRnrTemplate template) {
     try {
-      rnrLineItem.calculateNormalizedConsumption(calcStrategy,template);
+      rnrLineItem.calculateNormalizedConsumption(template);
     } catch (NullPointerException e) {
       rnrLineItem.setNormalizedConsumption(null);
     }
   }
 
-  private void calculateLossesAndAdjustments(RnrCalculationStrategy calcStrategy, List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
+  private void calculateLossesAndAdjustments(List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes) {
     try {
-      rnrLineItem.calculateTotalLossesAndAdjustments(calcStrategy, lossesAndAdjustmentsTypes);
+      rnrLineItem.calculateTotalLossesAndAdjustments(lossesAndAdjustmentsTypes);
     } catch (NullPointerException e) {
       rnrLineItem.setTotalLossesAndAdjustments(null);
     }

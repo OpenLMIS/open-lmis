@@ -181,16 +181,6 @@ public class ProcessingPeriodRepositoryTest {
   }
 
   @Test
-  public void shouldGetImmediatePreviousPeriod() throws Exception {
-    ProcessingPeriod previousPeriod = new ProcessingPeriod();
-
-    ProcessingPeriod period = new ProcessingPeriod(1L);
-    when(mapper.getImmediatePreviousPeriodFor(period)).thenReturn(previousPeriod);
-
-    assertThat(repository.getImmediatePreviousPeriod(period), is(previousPeriod));
-  }
-
-  @Test
   public void shouldGetAllPeriodsInDateRange() throws Exception {
     Date startDate = DateTime.now().toDate();
     Date endDate = DateTime.now().toDate();

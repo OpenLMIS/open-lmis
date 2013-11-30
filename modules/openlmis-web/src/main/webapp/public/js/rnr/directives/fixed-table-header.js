@@ -26,8 +26,13 @@ app.directive('fixedTableHeader', function () {
         element.parent().append(fixedHeader);
       };
 
+      var removeLinksFromFixedHeader = function () {
+        fixedHeader.find('a').parent().remove();
+      };
+
       setTimeout(function () {
         cloneAndAppendTableHeader();
+        removeLinksFromFixedHeader();
         element.parent().scroll(function () {
           fixedHeader.scrollLeft(element.parent().scrollLeft());
         });
@@ -49,11 +54,15 @@ app.directive('fixedTableHeader', function () {
       }
 
       angular.element('.rnr-body').scroll(function () {
-        fixedHeader.hide();
         if (element.offset().top < 0 && element.is(':visible')) {
-          setWidthAndHeightFromParent();
-          fixedHeader.show();
-          fixedHeader.scrollLeft(element.parent().scrollLeft());
+          if (fixedHeader.is(':hidden')) {
+            setWidthAndHeightFromParent();
+            fixedHeader.show();
+            fixedHeader.scrollLeft(element.parent().scrollLeft());
+          }
+        }
+        else {
+          fixedHeader.hide();
         }
       });
 

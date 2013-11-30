@@ -22,7 +22,6 @@ import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.model.PrintRnrLineItem;
 
@@ -103,8 +102,7 @@ public class RequisitionPdfModel {
 
       if (lineItem.isRnrLineItem()) {
         PrintRnrLineItem printRnrLineItem = new PrintRnrLineItem((RnrLineItem) lineItem);
-        RnrCalculationStrategy calcStrategy = requisition.getRnrCalcStrategy();
-        printRnrLineItem.calculate(calcStrategy, requisition.getPeriod(), rnrColumnList, lossesAndAdjustmentsTypes);
+        printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
       String currencySymbol = messageService.message(LABEL_CURRENCY_SYMBOL);

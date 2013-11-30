@@ -75,7 +75,7 @@ INSERT INTO facilities
 
 INSERT INTO facilities
 (code, name, description, gln, mainPhone, fax, address1, address2, geographiczoneid, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility, parentfacilityid, modifieddate) values
-('V10','Virtual Facility1','Virtual IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code ='District1'),1,0,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','TRUE',(select id from facilities where code ='F10'),'11/11/2012');
+('V10','Virtual Facility1','Virtual IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code ='District1'),1,NULL,22.3,1.2,3.3,3,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','FALSE','fc','TRUE','TRUE',(select id from facilities where code ='F10'),'11/11/2012');
 
 
 INSERT INTO programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES

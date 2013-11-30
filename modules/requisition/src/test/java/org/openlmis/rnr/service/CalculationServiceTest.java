@@ -15,7 +15,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.Money;
@@ -23,9 +22,6 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RnrLineItemBuilder;
-import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 
@@ -33,10 +29,10 @@ import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -51,23 +47,25 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 public class CalculationServiceTest {
 
   private Rnr rnr;
-
   @Mock
   List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
 
   @Mock
   RequisitionRepository requisitionRepository;
+
   @Mock
   ProcessingScheduleService processingScheduleService;
-
   @InjectMocks
   CalculationService calculationService;
+
+  private List<ProcessingPeriod> emptyPeriodList;
 
   @Before
   public void setUp() throws Exception {
     initMocks(this);
     rnr = make(a(defaultRequisition));
     when(requisitionRepository.getLossesAndAdjustmentsTypes()).thenReturn(lossesAndAdjustmentsTypes);
+    emptyPeriodList = Collections.emptyList();
   }
 
   @Test
@@ -110,39 +108,12 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    ArgumentCaptor<RegularRnrCalcStrategy> capture = forClass(RegularRnrCalcStrategy.class);
-
-    verify(firstLineItem).calculateForFullSupply(capture.capture(), eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
-    assertThat(capture.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    verify(firstLineItem).calculateForFullSupply(eq(template), eq(SUBMITTED), eq(lossesAndAdjustmentsTypes));
     verify(firstLineItem).calculateCost();
     verify(secondLineItem).calculateCost();
-    verify(secondLineItem).calculatePacksToShip(capture.capture());
-    assertThat(capture.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
+    verify(secondLineItem).calculatePacksToShip();
     assertThat(rnr.getFullSupplyItemsSubmittedCost(), is(new Money("10")));
     assertThat(rnr.getNonFullSupplyItemsSubmittedCost(), is(new Money("20")));
-  }
-
-  @Test
-  public void shouldCalculateForEmergencyRequisitionUsingEmergencyStrategy() throws Exception {
-    rnr.setEmergency(true);
-    final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
-    final RnrLineItem rnrLineItem2 = mock(RnrLineItem.class);
-    ProgramRnrTemplate template = new ProgramRnrTemplate(Collections.<Column>emptyList());
-
-
-    when(rnrLineItem1.calculateCost()).thenReturn(new Money("10"));
-    when(rnrLineItem2.calculateCost()).thenReturn(new Money("10"));
-    rnr.setFullSupplyLineItems(asList(rnrLineItem1));
-    rnr.setNonFullSupplyLineItems(asList(rnrLineItem2));
-
-    calculationService.perform(rnr, template);
-
-    ArgumentCaptor<EmergencyRnrCalcStrategy> captor = forClass(EmergencyRnrCalcStrategy.class);
-    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
-    assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
-
-    verify(rnrLineItem2).calculatePacksToShip(captor.capture());
-    assertThat(captor.getValue().getClass(), is(EmergencyRnrCalcStrategy.class.getClass()));
   }
 
   @Test
@@ -157,11 +128,9 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    ArgumentCaptor<RnrCalculationStrategy> captor = forClass(RnrCalculationStrategy.class);
-    verify(rnrLineItem1).calculateForFullSupply(captor.capture(), eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
+    verify(rnrLineItem1).calculateForFullSupply(eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes));
     verify(rnrLineItem1).validateMandatoryFields(template);
     verify(rnrLineItem1).validateCalculatedFields(template);
-    assertThat(captor.getValue().getClass(), is(RegularRnrCalcStrategy.class.getClass()));
   }
 
   @Test
@@ -181,10 +150,9 @@ public class CalculationServiceTest {
 
     calculationService.perform(rnr, template);
 
-    verify(skippedLineItem, never()).calculateForFullSupply(any(RnrCalculationStrategy.class),
-      any(ProgramRnrTemplate.class),
-      any(RnrStatus.class),
-      anyListOf(LossesAndAdjustmentsType.class));
+    verify(skippedLineItem, never()).calculateForFullSupply(any(ProgramRnrTemplate.class),
+        any(RnrStatus.class),
+        anyListOf(LossesAndAdjustmentsType.class));
 
     verify(skippedLineItem, never()).calculateCost();
     verify(nonSkippedLineItem).calculateCost();
@@ -198,7 +166,7 @@ public class CalculationServiceTest {
 
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(rnr.getPeriod(), 2)).thenReturn(emptyPeriodList);
     when(requisitionRepository.getAuthorizedDateForPreviousLineItem(rnr, lineItem.getProductCode(), rnr.getPeriod().getStartDate())).thenReturn(authorizedDateOfPreviousLineItem);
 
     calculationService.fillReportingDays(rnr);
@@ -328,16 +296,16 @@ public class CalculationServiceTest {
     RegimenTemplate regimenTemplate = new RegimenTemplate();
     doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
 
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(emptyPeriodList);
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate())).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate())).thenReturn(rnrLineItems);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate());
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
 
@@ -352,16 +320,16 @@ public class CalculationServiceTest {
     RegimenTemplate regimenTemplate = new RegimenTemplate();
     doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
 
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(emptyPeriodList);
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate())).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate())).thenReturn(rnrLineItems);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate());
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, requisition.getPeriod().getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
 
@@ -377,18 +345,18 @@ public class CalculationServiceTest {
     doNothing().when(requisition).setFieldsAccordingToTemplateFrom(null, programTemplate, regimenTemplate);
 
     when(processingScheduleService.findM(requisition.getPeriod())).thenReturn(1);
-    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(Collections.EMPTY_LIST);
+    when(processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5)).thenReturn(emptyPeriodList);
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     RnrLineItem rnrLineItem2 = new RnrLineItem();
     rnrLineItem2.setNormalizedConsumption(9);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem, rnrLineItem2);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 2, requisition.getPeriod().getStartDate())).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 2, requisition.getPeriod().getStartDate())).thenReturn(rnrLineItems);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 2, requisition.getPeriod().getStartDate());
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 2, requisition.getPeriod().getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4, 9)));
   }
 
@@ -405,7 +373,7 @@ public class CalculationServiceTest {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, previousPeriod.getStartDate())).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, previousPeriod.getStartDate())).thenReturn(rnrLineItems);
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -417,7 +385,7 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, previousPeriod.getStartDate());
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, previousPeriod.getStartDate());
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
 
@@ -436,7 +404,7 @@ public class CalculationServiceTest {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -448,7 +416,7 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, trackingStartDate);
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
 
@@ -466,7 +434,7 @@ public class CalculationServiceTest {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -478,7 +446,7 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, trackingStartDate);
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
 
@@ -498,7 +466,7 @@ public class CalculationServiceTest {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setNormalizedConsumption(4);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, trackingStartDate)).thenReturn(rnrLineItems);
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -510,7 +478,7 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 1, trackingStartDate);
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 1, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4)));
   }
 
@@ -534,7 +502,7 @@ public class CalculationServiceTest {
     RnrLineItem rnrLineItem2 = new RnrLineItem();
     rnrLineItem2.setNormalizedConsumption(5);
     List<RnrLineItem> rnrLineItems = asList(rnrLineItem, rnrLineItem2);
-    when(requisitionRepository.getNRnrLineItems(productCode, requisition, 2, trackingStartDate)).thenReturn(rnrLineItems);
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 2, trackingStartDate)).thenReturn(rnrLineItems);
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, make(a(defaultProcessingPeriod, with(numberOfMonths, 3))))));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -546,7 +514,7 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(requisition, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, requisition, 2, trackingStartDate);
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, requisition, 2, trackingStartDate);
     assertThat(requisition.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(4, 5)));
   }
 
@@ -571,8 +539,8 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(spyRnr, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5);
-    verify(requisitionRepository, never()).getNRnrLineItems(anyString(), any(Rnr.class), anyInt(), any(Date.class));
-    assertThat(rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(Collections.EMPTY_LIST));
+    verify(requisitionRepository, never()).getAuthorizedRegularUnSkippedLineItems(anyString(), any(Rnr.class), anyInt(), any(Date.class));
+    assertThat(rnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(EMPTY_LIST));
   }
 
   @Test
@@ -589,7 +557,7 @@ public class CalculationServiceTest {
     previousLineItem1.setNormalizedConsumption(5);
     RnrLineItem previousLineItem2 = new RnrLineItem();
     previousLineItem2.setNormalizedConsumption(50);
-    when(requisitionRepository.getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate())).thenReturn(asList(previousLineItem1, previousLineItem2));
+    when(requisitionRepository.getAuthorizedRegularUnSkippedLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate())).thenReturn(asList(previousLineItem1, previousLineItem2));
 
     Rnr previousRnr = make(a(defaultRequisition, with(period, previousPeriod)));
     ProgramRnrTemplate programTemplate = new ProgramRnrTemplate();
@@ -601,7 +569,7 @@ public class CalculationServiceTest {
     calculationService.fillFieldsForInitiatedRequisition(spyRnr, programTemplate, regimenTemplate);
 
     verify(processingScheduleService).getNPreviousPeriodsInDescOrder(spyRnr.getPeriod(), 5);
-    verify(requisitionRepository).getNRnrLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate());
+    verify(requisitionRepository).getAuthorizedRegularUnSkippedLineItems(productCode, spyRnr, 2, secondLastPeriod.getStartDate());
     assertThat(spyRnr.getFullSupplyLineItems().get(0).getPreviousNormalizedConsumptions(), is(asList(5, 50)));
   }
 
@@ -625,7 +593,7 @@ public class CalculationServiceTest {
   @Test
   public void shouldUseCurrentPeriodStartDateToCalculateDForEmergencyRnr() throws Exception {
     rnr.setEmergency(true);
-    rnr.setCreatedDate(DateUtils.parseDate("01-02-12", new String[]{"dd-MM-yy"}));
+    rnr.setCreatedDate(DateUtils.parseDate("01-02-12", "dd-MM-yy"));
     RnrLineItem lineItem = rnr.getFullSupplyLineItems().get(0);
 
     ProcessingPeriod previousPeriod = new ProcessingPeriod(2l, new Date(), new Date(), 3, "previousPeriod");

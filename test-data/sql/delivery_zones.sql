@@ -20,7 +20,6 @@ INSERT INTO delivery_zones ( code ,name)values
 
 INSERT INTO delivery_zone_members ( deliveryZoneId ,facilityId )values
 ((select id from  delivery_zones where code ='DZ1'),(select id from  facilities where code ='F10')),
-((select id from  delivery_zones where code ='DZ1'),(select id from  facilities where code ='V10')),
 ((select id from  delivery_zones where code ='DZ1'),(select id from  facilities where code ='F11')),
 ((select id from  delivery_zones where code ='DZ2'),(select id from  facilities where code ='F11')),
 

@@ -39,8 +39,9 @@ public class RequisitionStatusFeed extends JsonUtility {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
+    createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode("700", "store in-charge", "N1");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
     dbWrapper.updateRestrictLogin("commTrack",true);
   }
@@ -55,8 +56,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-
-    submitRnrFromApiForF10("commTrack", "Admin123", "HIV", "P10");
+    submitRnRThroughApi("V10","HIV", "P10",1,10,1,0,0,2);
     Long id = (long)dbWrapper.getMaxRnrID();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
@@ -107,9 +107,8 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrue() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    submitRequisition("commTrack1","HIV");
+    submitRnRThroughApi("V10","HIV", "P10",1,10,1,0,0,2);
     Long id = (long)dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
@@ -145,9 +144,8 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagTrueAndFtpDetailsValid() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
 
-    submitRequisition("commTrack1","HIV");
+    submitRnRThroughApi("V10","HIV", "P10",1,10,1,0,0,2);
     Long id = (long)dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
@@ -197,8 +195,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionId\":" + id));
     assertTrue("feed json list : " + feedSting, feedSting.contains("\"requisitionStatus\":\"RELEASED\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1358274600000"));
-    assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1359570599000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":\"" + orderStatus + "\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderId\":" + id));
   }

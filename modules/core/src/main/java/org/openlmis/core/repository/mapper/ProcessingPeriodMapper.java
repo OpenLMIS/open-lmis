@@ -58,15 +58,6 @@ public interface ProcessingPeriodMapper {
                                                 @Param(value = "afterDate") Date afterDate,
                                                 @Param(value = "beforeDate") Date beforeDate);
 
-
-  @Select({"SELECT * FROM processing_periods pp INNER JOIN processing_periods cp",
-      "ON DATE(pp.endDate) =  (DATE(cp.startDate)-1)",
-      "WHERE pp.scheduleId = cp.scheduleId",
-      "AND cp.id = #{id}",
-      "AND pp.id <> cp.id"})
-  ProcessingPeriod getImmediatePreviousPeriodFor(ProcessingPeriod period);
-
-
   @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} ",
       "AND (( startDate<=#{startDate} AND endDate>=#{startDate}) OR (startDate<=#{endDate} AND endDate>=#{endDate})",
       "OR (startDate>=#{startDate} AND endDate<=#{endDate}))"})
@@ -82,7 +73,6 @@ public interface ProcessingPeriodMapper {
 
   @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{scheduleId} AND startDate<=NOW() AND endDate>= #{programStartDate} AND endDate>=NOW()"})
   ProcessingPeriod getCurrentPeriod(@Param("scheduleId") Long scheduleId, @Param("programStartDate") Date programStartDate);
-
 
   @Select({"SELECT * FROM processing_periods WHERE scheduleId = #{currentPeriod.scheduleId}",
       "AND startDate < #{currentPeriod.startDate}",

@@ -104,7 +104,7 @@ public class ShipmentFileProcessor {
                                       EDIFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
     boolean status = true;
 
-    List<EDIFileColumn> shipmentFileColumns = (List<EDIFileColumn>) shipmentFileTemplate.getColumns();
+    List<EDIFileColumn> shipmentFileColumns = shipmentFileTemplate.getColumns();
 
     Collection<EDIFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
 
@@ -190,7 +190,6 @@ public class ShipmentFileProcessor {
   }
 
   private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<EDIFileColumn> shipmentFileColumns) {
-
     ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
 
     for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
@@ -202,7 +201,7 @@ public class ShipmentFileProcessor {
         field.set(dto, fieldsInOneRow.get(position - 1));
       } catch (Exception e) {
         logger.error("Unable to set field '" + name +
-          "' in ShipmentLinetItemDTO, check mapping between DTO and ShipmentFileColumn", e);
+            "' in ShipmentLinetItemDTO, check mapping between DTO and ShipmentFileColumn", e);
       }
     }
 
@@ -224,6 +223,5 @@ public class ShipmentFileProcessor {
     }
     return null;
   }
-
 
 }

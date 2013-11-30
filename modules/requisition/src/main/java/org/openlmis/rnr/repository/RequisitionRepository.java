@@ -212,8 +212,8 @@ public class RequisitionRepository {
     return rnrLineItemMapper.getAuthorizedDateForPreviousLineItem(rnr, productCode, periodStartDate);
   }
 
-  public List<RnrLineItem> getNRnrLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
-    return rnrLineItemMapper.getNRnrLineItems(productCode, rnr, n, startDate);
+  public List<RnrLineItem> getAuthorizedRegularUnSkippedLineItems(String productCode, Rnr rnr, Integer n, Date startDate) {
+    return rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(productCode, rnr, n, startDate);
   }
 }
 

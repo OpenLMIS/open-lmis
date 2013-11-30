@@ -19,9 +19,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.rnr.calculation.EmergencyRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RegularRnrCalcStrategy;
-import org.openlmis.rnr.calculation.RnrCalculationStrategy;
 
 import javax.persistence.Transient;
 import java.util.ArrayList;
@@ -109,21 +106,14 @@ public class Rnr extends BaseModel {
   }
 
   public void calculateForApproval() {
-    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem lineItem : fullSupplyLineItems) {
-      lineItem.calculatePacksToShip(calcStrategy);
+      lineItem.calculatePacksToShip();
     }
     for (RnrLineItem lineItem : nonFullSupplyLineItems) {
-      lineItem.calculatePacksToShip(calcStrategy);
+      lineItem.calculatePacksToShip();
     }
     this.fullSupplyItemsSubmittedCost = calculateCost(fullSupplyLineItems);
     this.nonFullSupplyItemsSubmittedCost = calculateCost(nonFullSupplyLineItems);
-  }
-
-  @JsonIgnore
-  public RnrCalculationStrategy getRnrCalcStrategy() {
-    return isForVirtualFacility() ? new RnrCalculationStrategy() :
-      (emergency ? new EmergencyRnrCalcStrategy() : new RegularRnrCalcStrategy());
   }
 
   private Money calculateCost(List<RnrLineItem> lineItems) {
@@ -164,18 +154,12 @@ public class Rnr extends BaseModel {
     }
   }
 
-  public void fillLastTwoPeriodsNormalizedConsumptions(Rnr lastPeriodsRnr, Rnr secondLastPeriodsRnr) {
-    addPreviousNormalizedConsumptionFrom(lastPeriodsRnr);
-    addPreviousNormalizedConsumptionFrom(secondLastPeriodsRnr);
-  }
-
   public void setFieldsForApproval() {
-    RnrCalculationStrategy calcStrategy = getRnrCalcStrategy();
     for (RnrLineItem item : fullSupplyLineItems) {
-      item.setFieldsForApproval(calcStrategy);
+      item.setFieldsForApproval();
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.setFieldsForApproval(calcStrategy);
+      item.setFieldsForApproval();
     }
   }
 
@@ -191,14 +175,6 @@ public class Rnr extends BaseModel {
     this.program = program.basicInformation();
     this.period = period;
     this.facility = facility.basicInformation();
-  }
-
-  private void addPreviousNormalizedConsumptionFrom(Rnr rnr) {
-    if (rnr == null) return;
-    for (RnrLineItem currentLineItem : fullSupplyLineItems) {
-      RnrLineItem previousLineItem = rnr.findCorrespondingLineItem(currentLineItem);
-      currentLineItem.addPreviousNormalizedConsumptionFrom(previousLineItem);
-    }
   }
 
   public RnrLineItem findCorrespondingLineItem(final RnrLineItem item) {

@@ -4,12 +4,12 @@
        "products": [
            {
                "productCode": "",
-               "beginningBalance": "1",
-               "quantityDispensed": "1",
-               "quantityReceived": "0",
-               "stockInHand": "10",
-               "newPatientCount": "0",
-               "stockOutDays": "2"
+               "beginningBalance": "",
+               "quantityDispensed": "",
+               "quantityReceived": "",
+               "stockInHand": "",
+               "newPatientCount": "",
+               "stockOutDays": ""
            }
        ]
    }

@@ -75,11 +75,11 @@ public class ViewOrdersPage extends RequisitionPage {
     assertTrue("First row should show up",programOnViewOrderScreen.isDisplayed());
   }
 
-  public void verifyOrderListElements(String program, String orderNumber, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
+  public void verifyOrderListElements(String program, long orderId, String facilityCodeName, String periodDetails, String supplyFacilityName, String orderStatus, boolean downloadLinkPresent) throws IOException {
     testWebDriver.refresh();
     testWebDriver.waitForElementToAppear(programOnViewOrderScreen);
     SeleneseTestNgHelper.assertEquals(programOnViewOrderScreen.getText().trim(), program);
-    SeleneseTestNgHelper.assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), orderNumber);
+    SeleneseTestNgHelper.assertEquals(orderNumberOnViewOrdersScreen.getText().trim(), orderId);
     SeleneseTestNgHelper.assertEquals(facilityCodeNameOnOrderScreen.getText().trim(), facilityCodeName);
     SeleneseTestNgHelper.assertEquals(periodDetailsOnViewOrderScreen.getText().trim(), periodDetails);
     SeleneseTestNgHelper.assertEquals(supplyDepotOnViewOrderScreen.getText().trim(), supplyFacilityName);

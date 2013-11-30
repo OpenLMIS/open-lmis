@@ -32,7 +32,7 @@ public class CSVParser {
 
   @Transactional
   public int process(InputStream inputStream, ModelClass modelClass, RecordHandler recordHandler, AuditFields auditFields)
-    throws UploadException {
+      throws UploadException {
 
     CsvBeanReader csvBeanReader = null;
     String[] headers = null;
@@ -68,7 +68,6 @@ public class CSVParser {
     return csvBeanReader.getRowNumber() - 1;
   }
 
-
   private void createHeaderException(String error, String[] headers, SuperCsvException exception) {
     CsvContext csvContext = exception.getCsvContext();
     String header = headers[csvContext.getColumnNumber() - 1];
@@ -81,9 +80,4 @@ public class CSVParser {
     Integer rowNum = csvContext.getRowNumber() - 1;
     throw new UploadException(error, headers.toString(), "in Record No. ", rowNum.toString(), csvContext.getRowSource().toString());
   }
-
-  public void process(InputStream inputStream, ModelClass modelClass, RecordHandler handler) throws IOException {
-    process(inputStream, modelClass, handler, null);
-  }
-
 }

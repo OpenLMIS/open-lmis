@@ -23,7 +23,6 @@ import static com.natpryce.makeiteasy.Property.newProperty;
 public class RnrLineItemBuilder {
 
 
-  public static final Property<RnrLineItem, Float> cost = newProperty();
   public static final Property<RnrLineItem, Integer> stockInHand = newProperty();
   public static final Property<RnrLineItem, LossesAndAdjustments> lossesAndAdjustments = newProperty();
   public static final Property<RnrLineItem, Boolean> fullSupply = newProperty();
@@ -48,11 +47,11 @@ public class RnrLineItemBuilder {
   public static final Property<RnrLineItem, Integer> quantityRequested = newProperty();
   private static Property<RnrLineItem, String> productCategory = newProperty();
 
-  public static final int STOCK_IN_HAND = 4;
-  public static final int BEGINNING_BALANCE = 10;
+  public static final int DEFAULT_STOCK_IN_HAND = 4;
+  public static final int DEFAULT_BEGINNING_BALANCE = 10;
   public static final int QUANTITY_RECEIVED = 3;
   public static final int TOTAL_LOSSES_AND_ADJUSTMENTS = 1;
-  public static final int QUANTITY_DISPENSED = 10;
+  public static final int DEFAULT_QUANTITY_DISPENSED = 10;
   public static final int NEW_PATIENT_COUNT = 3;
   public static final int STOCK_OUT_DAYS = 3;
   public static final int QUANTITY_REQUESTED = 6;
@@ -83,13 +82,13 @@ public class RnrLineItemBuilder {
       RnrLineItem rnrLineItem = new RnrLineItem();
       rnrLineItem.setProductCode(lookup.valueOf(productCode, PRODUCT_CODE));
       rnrLineItem.setProductCategory(lookup.valueOf(productCategory, PRODUCT_CATEGORY));
-      rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, BEGINNING_BALANCE));
+      rnrLineItem.setBeginningBalance(lookup.valueOf(beginningBalance, DEFAULT_BEGINNING_BALANCE));
       rnrLineItem.setQuantityReceived(lookup.valueOf(quantityReceived, QUANTITY_RECEIVED));
 
       rnrLineItem.addLossesAndAdjustments(lookup.valueOf(lossesAndAdjustments, ONE_LOSS));
       rnrLineItem.setTotalLossesAndAdjustments(lookup.valueOf(totalLossesAndAdjustments, TOTAL_LOSSES_AND_ADJUSTMENTS));
-      rnrLineItem.setStockInHand(lookup.valueOf(stockInHand, STOCK_IN_HAND));
-      rnrLineItem.setQuantityDispensed(lookup.valueOf(quantityDispensed, QUANTITY_DISPENSED));
+      rnrLineItem.setStockInHand(lookup.valueOf(stockInHand, DEFAULT_STOCK_IN_HAND));
+      rnrLineItem.setQuantityDispensed(lookup.valueOf(quantityDispensed, DEFAULT_QUANTITY_DISPENSED));
 
       rnrLineItem.setDispensingUnit("tablet");
       rnrLineItem.setMaxMonthsOfStock(1);

@@ -142,14 +142,14 @@ describe('RegularRnrLineItem', function () {
 
     it('should calculate normalized consumption', function () {
       var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 5,
-        "stockOutDays": 5, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28};
+        "stockOutDays": 5, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28, "reportingDays": 30};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
       regularRnrLineItem.totalLossesAndAdjustments = -4;
 
       regularRnrLineItem.calculateNormalizedConsumption();
 
-      expect(regularRnrLineItem.normalizedConsumption).toEqual(65);
+      expect(regularRnrLineItem.normalizedConsumption).toEqual(16);
     });
 
     it('should not calculate normalized consumption when newPatientCount is displayed but not set', function () {
@@ -183,13 +183,28 @@ describe('RegularRnrLineItem', function () {
 
     it('should calculate normalized consumption when facility is stocked out for the entire reporting period',
       function () {
-        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13, "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28};
+        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
+          "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 10, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
+          "reportingDays": 90};
         var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
         jQuery.extend(regularRnrLineItem, lineItem);
 
         regularRnrLineItem.calculateNormalizedConsumption();
 
-        expect(regularRnrLineItem.normalizedConsumption).toEqual(73);
+        expect(regularRnrLineItem.normalizedConsumption).toEqual(23);
+      });
+
+    it('should calculate normalized consumption when reporting days are less than stock out days',
+      function () {
+        var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 13,
+          "totalLossesAndAdjustments": 4, "stockOutDays": 90, "newPatientCount": 0, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
+          "reportingDays": 80};
+        var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
+        jQuery.extend(regularRnrLineItem, lineItem);
+
+        regularRnrLineItem.calculateNormalizedConsumption();
+
+        expect(regularRnrLineItem.normalizedConsumption).toEqual(13);
       });
 
     it('should calculate normalized consumption when newPatientCount is not in the template', function () {
@@ -201,46 +216,48 @@ describe('RegularRnrLineItem', function () {
         {"indicator": "E", "name": "stockInHand", "source": {"name": "CALCULATED"}},
         {"indicator": "X", "name": "stockOutDays", "source": {"name": "USER_INPUT"}}
       ];
-      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 5, "totalLossesAndAdjustments": -4, "stockOutDays": 5, "newPatientCount": null, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28};
+      var lineItem = {"beginningBalance": 1, "quantityReceived": 10, "quantityDispensed": 5,
+        "totalLossesAndAdjustments": -4, "stockOutDays": 5, "newPatientCount": null, "dosesPerMonth": 30, "dosesPerDispensingUnit": 28,
+        "reportingDays": 30};
       var regularRnrLineItem = new RegularRnrLineItem({}, rnr, programRnrColumnList);
       jQuery.extend(regularRnrLineItem, lineItem);
 
       regularRnrLineItem.calculateNormalizedConsumption();
 
-      expect(regularRnrLineItem.normalizedConsumption).toEqual(5);
+      expect(regularRnrLineItem.normalizedConsumption).toEqual(6);
     });
   });
 
   describe('Calculate AMC', function () {
-    it('should calculate AMC when number of months in a period is 3 or more', function () {
+    it('should calculate AMC when previous normalized consumption is not available', function () {
       var regularRnrLineItem = new RegularRnrLineItem({}, 3, null, 'INITIATED');
       regularRnrLineItem.normalizedConsumption = 10;
       regularRnrLineItem.previousNormalizedConsumptions = [];
 
       regularRnrLineItem.calculateAMC();
 
-      expect(regularRnrLineItem.amc).toEqual(3);
+      expect(regularRnrLineItem.amc).toEqual(10);
     });
 
-    it('should calculate AMC when number of months in a period is 2', function () {
+    it('should calculate AMC when previous one normalized consumption is available', function () {
       var regularRnrLineItem = new RegularRnrLineItem({}, 2, null, 'INITIATED');
       regularRnrLineItem.normalizedConsumption = 10;
       regularRnrLineItem.previousNormalizedConsumptions = [14];
 
       regularRnrLineItem.calculateAMC();
 
-      expect(regularRnrLineItem.amc).toEqual(6);
+      expect(regularRnrLineItem.amc).toEqual(12);
     });
 
-    it('should calculate AMC when number of months in a period is 2 but previous normalized consumption is not available',
+    it('should calculate AMC when 2 previous normalized consumption are available',
       function () {
         var regularRnrLineItem = new RegularRnrLineItem({}, 2, null, 'INITIATED');
         regularRnrLineItem.normalizedConsumption = 10;
-        regularRnrLineItem.previousNormalizedConsumptions = [];
+        regularRnrLineItem.previousNormalizedConsumptions = [12, 7];
 
         regularRnrLineItem.calculateAMC();
 
-        expect(regularRnrLineItem.amc).toEqual(5);
+        expect(regularRnrLineItem.amc).toEqual(10);
       });
 
     it('should calculate AMC when number of months in a period is 1', function () {

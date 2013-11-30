@@ -65,7 +65,8 @@ describe('Full screen', function () {
 
       var spyScroll = spyOn(element, 'scrollTop').andCallThrough();
       var spySlideUP = spyOn(div, 'slideUp').andCallThrough();
-      var spyCss = spyOn(printElement, 'css').andCallThrough();
+      var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
+      var spyPrintShow = spyOn(printElement, 'show').andCallThrough();
       $.browser = {msie: false};
 
       element.trigger('click');
@@ -75,13 +76,15 @@ describe('Full screen', function () {
       expect(spyElement).toHaveBeenCalledWith('.print-button');
       expect(spyScroll).toHaveBeenCalledWith(0);
       expect(spySlideUP).toHaveBeenCalledWith({duration: 'slow', progress: 'progressFunc', complete: 'completeFunc'});
-      expect(spyCss).toHaveBeenCalledWith('opacity', '1.0')
+      expect(spyAnimate).toHaveBeenCalledWith({opacity: 1.0}, 1000);
+      expect(spyPrintShow).toHaveBeenCalledWith();
     });
 
     it('should hide browser is IE', function () {
       var spyScroll = spyOn(element, 'scrollTop').andCallThrough();
       var spyHide = spyOn(div, 'hide').andCallThrough();
-      var spyCss = spyOn(printElement, 'css').andCallThrough();
+      var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
+      var spyPrintShow = spyOn(printElement, 'show').andCallThrough();
       $.browser = {msie: true};
 
       element.trigger('click');
@@ -91,7 +94,8 @@ describe('Full screen', function () {
       expect(spyElement).toHaveBeenCalledWith('.print-button');
       expect(spyScroll).toHaveBeenCalledWith(0);
       expect(spyHide).toHaveBeenCalledWith();
-      expect(spyCss).toHaveBeenCalledWith('opacity', '1.0')
+      expect(spyAnimate).toHaveBeenCalledWith({opacity: 1.0}, 1000);
+      expect(spyPrintShow).toHaveBeenCalledWith();
     });
 
   });
@@ -104,7 +108,7 @@ describe('Full screen', function () {
     it('should slide down if not IE', function () {
       var spyScroll = spyOn(element, 'scrollTop').andCallThrough();
       var spySlideDown = spyOn(div, 'slideDown').andCallThrough();
-      var spyCss = spyOn(printElement, 'css').andCallThrough();
+      var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
       $.browser = {msie: false};
 
       element.trigger('click');
@@ -114,13 +118,19 @@ describe('Full screen', function () {
       expect(spyElement).toHaveBeenCalledWith('.print-button');
       expect(spyScroll).toHaveBeenCalledWith(0);
       expect(spySlideDown).toHaveBeenCalledWith({duration: 'slow', progress: 'progressFunc', complete: 'completeFunc'});
-      expect(spyCss).toHaveBeenCalledWith('opacity', '0')
+      expect(spyAnimate).toHaveBeenCalledWith({opacity: 0}, 1000, jasmine.any(Function));
+
+      var callBack = spyAnimate.calls[0].args[2];
+      callBack();
+
+      expect(printElement.css('display')).toEqual('none');
+
     });
 
     it('should show if IE', function () {
       var spyScroll = spyOn(element, 'scrollTop').andCallThrough();
       var spyShow = spyOn(div, 'show').andCallThrough();
-      var spyCss = spyOn(printElement, 'css').andCallThrough();
+      var spyAnimate = spyOn(printElement, 'animate').andCallThrough();
       $.browser = {msie: true};
 
       element.trigger('click');
@@ -130,7 +140,12 @@ describe('Full screen', function () {
       expect(spyElement).toHaveBeenCalledWith('.print-button');
       expect(spyScroll).toHaveBeenCalledWith(0);
       expect(spyShow).toHaveBeenCalled();
-      expect(spyCss).toHaveBeenCalledWith('opacity', '0')
+      expect(spyAnimate).toHaveBeenCalledWith({opacity: 0}, 1000, jasmine.any(Function));
+
+      var callBack = spyAnimate.calls[0].args[2];
+      callBack();
+
+      expect(printElement.css('display')).toEqual('none');
     });
   })
 

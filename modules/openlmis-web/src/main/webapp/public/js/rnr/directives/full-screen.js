@@ -39,8 +39,17 @@ app.directive('fullScreen', function () {
           fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
           $('.rnr-body').trigger('scroll');
         }
-        fullScreen ? angular.element('.print-button').css('opacity',
-          '1.0') : angular.element('.print-button').css('opacity', '0');
+
+        var printButton = angular.element('.print-button');
+
+        if (fullScreen) {
+          printButton.show();
+          printButton.animate({opacity: 1.0}, 1000);
+        } else {
+          printButton.animate({opacity: 0}, 1000, function () {
+            printButton.hide();
+          });
+        }
       });
     }
   };
