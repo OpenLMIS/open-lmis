@@ -17,8 +17,10 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pod.domain.POD;
 import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.domain.Report;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +29,15 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static java.lang.String.format;
 import static org.openlmis.UiUtils.HttpClient.POST;
 
 
 public class JsonUtility extends TestCaseHelper {
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String STORE_IN_CHARGE = "store in-charge";
+  public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
+  public static final String POD_URL = "http://localhost:9091/rest-api/orders/%s/pod.json";
 
   public static <T> T readObjectFromFile(String fullJsonTxtFileName, Class<T> clazz) throws IOException {
     String classPathFile = JsonUtility.class.getClassLoader().getResource(fullJsonTxtFileName).getFile();
@@ -137,5 +142,35 @@ public class JsonUtility extends TestCaseHelper {
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
+    public void convertToOrderAndUpdatePOD(String userName, String program,Integer quantityReceived) throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+        dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
+        dbWrapper.updateRequisitionStatus("APPROVED", "commTrack", "HIV");
+        dbWrapper.insertApprovedQuantity(10);
+        dbWrapper.insertOrders("RELEASED", userName, program);
+        dbWrapper.updatePacksToShip("1");
+        Long id = (long) dbWrapper.getMaxRnrID();
+
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10");
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(quantityReceived);
+
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        format(POD_URL, id),
+                        "POST",
+                        "commTrack",
+                        "Admin123");
+
+        String response = responseEntity.getResponse();
+
+        assertEquals(200, responseEntity.getStatus());
+        assertEquals(response, "{\"success\":\"POD updated successfully\"}");
+        assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
+        dbWrapper.verifyPODAndPODLineItems(id.toString(), "P10", "10");
+
+    }
 }
 
