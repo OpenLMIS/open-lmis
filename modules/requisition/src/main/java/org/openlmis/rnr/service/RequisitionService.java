@@ -261,8 +261,7 @@ public class RequisitionService {
   }
 
   private void fillFieldsForInitiatedRequisitionAccordingToTemplate(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
-    if (!requisition.isEmergency())
-      requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
+    requisition.setBeginningBalances(getPreviousRequisition(requisition), rnrTemplate.columnsVisible(BEGINNING_BALANCE));
     requisition.setFieldsAccordingToTemplate(rnrTemplate, regimenTemplate);
   }
 
@@ -296,7 +295,7 @@ public class RequisitionService {
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(RequisitionSearchCriteria criteria) {
     Date programStartDate = programService.getProgramStartDate(criteria.getFacilityId(), criteria.getProgramId());
 
-    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(
+    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(
       criteria.getFacilityId(), criteria.getProgramId());
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ?
       null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
@@ -317,7 +316,7 @@ public class RequisitionService {
       requisition.getPeriod());
     Rnr previousRequisition = null;
     if (immediatePreviousPeriod != null)
-      previousRequisition = requisitionRepository.getRequisitionWithLineItems(requisition.getFacility(),
+      previousRequisition = requisitionRepository.getRegularRequisitionWithLineItems(requisition.getFacility(),
         requisition.getProgram(), immediatePreviousPeriod);
     return previousRequisition;
   }

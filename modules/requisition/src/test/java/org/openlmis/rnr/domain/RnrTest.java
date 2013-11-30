@@ -31,11 +31,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRnr;
-import static org.openlmis.rnr.builder.RequisitionBuilder.modifiedBy;
+import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
-import static org.openlmis.rnr.domain.RnrStatus.RELEASED;
-import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
+import static org.openlmis.rnr.domain.RnrStatus.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -183,6 +181,19 @@ public class RnrTest {
     assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
   }
 
+  @Test
+  public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInInitiatedState() throws Exception {
+    rnr.setBeginningBalances(make(a(defaultRnr, with(status, INITIATED))), false);
+
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
+  }
+
+  @Test
+  public void shouldSetBeginningBalanceToZeroIfPreviousRequisitionIsInSubmittedState() throws Exception {
+    rnr.setBeginningBalances(make(a(defaultRnr, with(status, SUBMITTED))), false);
+
+    assertThat(rnr.getFullSupplyLineItems().get(0).getBeginningBalance(), is(0));
+  }
 
   @Test
   public void testCalculatePacksToShip() throws Exception {

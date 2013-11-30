@@ -191,9 +191,9 @@ public class RequisitionRepositoryTest {
   @Test
   public void shouldGetTheLastRequisitionToEnterThePostSubmitFlow() throws Exception {
     Rnr rnr = new Rnr();
-    when(requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(rnr);
+    when(requisitionMapper.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID)).thenReturn(rnr);
 
-    assertThat(requisitionRepository.getLastRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID), is(rnr));
+    assertThat(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID), is(rnr));
   }
 
   @Test

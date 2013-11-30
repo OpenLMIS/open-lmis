@@ -83,6 +83,7 @@ public interface RequisitionMapper {
     "WHERE facilityId = #{facilityId}",
     "AND programId = #{programId} ",
     "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+    "AND emergency = false",
     "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC",
     "LIMIT 1"})
   @Results(value = {
@@ -90,8 +91,8 @@ public interface RequisitionMapper {
     @Result(property = "program.id", column = "programId"),
     @Result(property = "period.id", column = "periodId")
   })
-  Rnr getLastRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
-                                                 @Param(value = "programId") Long programId);
+  Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId,
+                                                        @Param(value = "programId") Long programId);
 
   @Select({"SELECT * FROM requisitions WHERE",
     "facilityId = #{facility.id} AND",
@@ -130,6 +131,17 @@ public interface RequisitionMapper {
     @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
   })
   Rnr getLWById(Long rnrId);
+
+  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id} AND emergency = false")
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "facility.id", column = "facilityId"),
+    @Result(property = "program.id", column = "programId"),
+    @Result(property = "period.id", column = "periodId"),
+    @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+      many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+  })
+  Rnr getRegularRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
 
   @Select({"SELECT * FROM requisitions WHERE",
     "facilityId = #{facilityId} AND",

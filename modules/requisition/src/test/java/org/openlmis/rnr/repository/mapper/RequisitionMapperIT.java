@@ -197,6 +197,16 @@ public class RequisitionMapperIT {
   }
 
   @Test
+  public void shouldGetOnlyRegularRequisitions() throws Exception {
+    Rnr regularRnr = insertRequisition(processingPeriod1, program, INITIATED, false);
+    insertRequisition(processingPeriod1, program, INITIATED, true);
+
+    Rnr regularRequisition = mapper.getRegularRequisitionWithLineItems(facility, program, processingPeriod1);
+
+    assertThat(regularRequisition.getId(), is(regularRnr.getId()));
+  }
+
+  @Test
   public void shouldPopulateLineItemsWhenGettingRnrById() throws Exception {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false);
     Product product = insertProduct(true, "P1");
@@ -246,7 +256,7 @@ public class RequisitionMapperIT {
   }
 
   @Test
-  public void shouldGetTheLastRequisitionToEnterThePostSubmitFlow() throws Exception {
+  public void shouldGetTheLastRegularRequisitionToEnterThePostSubmitFlow() throws Exception {
     DateTime date1 = now();
     DateTime date2 = date1.plusMonths(1);
 
@@ -267,9 +277,19 @@ public class RequisitionMapperIT {
 
     insertRequisition(processingPeriod3, program, INITIATED, false);
 
-    Rnr lastRequisitionToEnterThePostSubmitFlow = mapper.getLastRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
+    Rnr lastRequisitionToEnterThePostSubmitFlow = mapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
 
     assertThat(lastRequisitionToEnterThePostSubmitFlow.getId(), is(rnr2.getId()));
+  }
+
+  @Test
+  public void shouldNotGetEmergencyRequisitionsForPostSubmitFlow() throws Exception {
+    insertRequisition(processingPeriod1, program, INITIATED, false);
+    insertRequisition(processingPeriod1, program, AUTHORIZED, true);
+
+    Rnr lastRequisition = mapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facility.getId(), program.getId());
+
+    assertThat(lastRequisition, is(nullValue()));
   }
 
   @Test
@@ -293,7 +313,7 @@ public class RequisitionMapperIT {
   }
 
   private void approve(Rnr... requisitions) {
-    for(Rnr requisition : requisitions) {
+    for (Rnr requisition : requisitions) {
       requisition.setStatus(APPROVED);
       mapper.update(requisition);
     }

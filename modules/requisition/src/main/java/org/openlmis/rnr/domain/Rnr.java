@@ -154,7 +154,7 @@ public class Rnr extends BaseModel {
   }
 
   public void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
-    if (previousRequisition == null) {
+    if (previousRequisition == null || previousRequisition.status == INITIATED || previousRequisition.status == SUBMITTED) {
       if (!beginningBalanceVisible) resetBeginningBalances();
       return;
     }

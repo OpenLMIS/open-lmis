@@ -137,7 +137,7 @@ public class RnrLineItem extends LineItem {
       return;
     }
     this.beginningBalance = lineItem.getStockInHand();
-    this.setPreviousStockInHandAvailable(TRUE);
+    this.previousStockInHandAvailable = TRUE;
   }
 
   void setLineItemFieldsAccordingToTemplate(ProgramRnrTemplate template) {

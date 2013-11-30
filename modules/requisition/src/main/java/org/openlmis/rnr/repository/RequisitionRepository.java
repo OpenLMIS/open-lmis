@@ -133,6 +133,10 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisitionWithoutLineItems(facilityId, programId, periodId);
   }
 
+  public Rnr getRegularRequisitionWithLineItems(Facility facility, Program program, ProcessingPeriod period) {
+    return requisitionMapper.getRegularRequisitionWithLineItems(facility, program, period);
+  }
+
   public List<Rnr> getInitiatedEmergencyRequisition(Long facilityId, Long programId) {
     return requisitionMapper.getInitiatedEmergencyRequisition(facilityId, programId);
   }
@@ -152,8 +156,8 @@ public class RequisitionRepository {
     return requisitionMapper.getAuthorizedRequisitions(roleAssignment);
   }
 
-  public Rnr getLastRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
-    return requisitionMapper.getLastRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+  public Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(Long facilityId, Long programId) {
+    return requisitionMapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
   public List<Rnr> getPostSubmitRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
