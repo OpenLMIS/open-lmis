@@ -20,17 +20,17 @@ public class RegimenSummaryQueryBuilder {
 
     RegimenSummaryReportFilter filter  = (RegimenSummaryReportFilter)params.get("filterCriteria");
 
-       String sql ="WITH temp as ( select regimen,program,regimenid,district,code,programid,SUM(patientsontreatment) patientsontreatment,SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,SUM(patientsstoppedtreatment) patientsstoppedtreatment,regimencategory,\n" +
+       String sql ="WITH temp as ( select regimen,program,regimenid,district,status,code,programid,SUM(patientsontreatment) patientsontreatment,SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,SUM(patientsstoppedtreatment) patientsstoppedtreatment,regimencategory,\n" +
                "                 period,periodid,rgroup,rgroupid, schedule,scheduleid,zoneid,regimencategorydisplayorder \n" +
                "                 from vw_regimen_summary \n" +
                writePredicates(filter)+
                "                \n" +
-               "                group by regimen,regimencategory,program,district,code,patientsontreatment,period,periodid,zoneid\n" +
+               "                group by regimen,regimencategory,program,district,code,patientsontreatment,period,periodid,zoneid,status\n" +
                "                ,rgroup,regimencategory,schedule,district,regimenid,programid,rgroupid,scheduleid,regimencategorydisplayorder\n" +
                "                 order by regimen,district)\n" +
                "                \n" +
                "                select distinct t.district district, t.regimen regimen,t.regimenid regimenid,program,\n" +
-               "                t.regimencategory regimencategory,t.code code,t.patientsontreatment patientsontreatment,\n" +
+               "                t.regimencategory regimencategory,t.code code,t.patientsontreatment patientsontreatment,t.status,\n" +
                "                t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
                "                t.programid,t.rgroupid rgroupid,t.zoneid zoneid,rgroup,t.schedule schedule,t.scheduleid scheduleid,t.periodid periodid,t.regimencategorydisplayorder regimencategorydisplayorder,\n" +
                "                t.period period, \n" +
@@ -45,7 +45,7 @@ public class RegimenSummaryQueryBuilder {
 
 
     private static String writePredicates(RegimenSummaryReportFilter filter){
-        String predicate = "";
+        String predicate = " WHERE status in ('APPROVED','RELEASED') ";
         if(filter != null){
             if (!filter.getRegimenId().equals("")) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";

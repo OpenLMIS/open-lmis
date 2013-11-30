@@ -163,7 +163,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
 
     $scope.$watch('filterObject.programId', function (selection) {
         if (selection == "All") {
-            $scope.filterObject.programId = -1;
+            $scope.filterObject.programId = 0;
         } else if (selection !== undefined || selection === "") {
             $scope.filterObject.programId = selection;
             $.each($scope.programs, function (item, idx) {
@@ -174,6 +174,7 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
 
         } else {
             $scope.filterObject.programId = 0;
+            $scope.filterObject.program = "";
         }
         $scope.filterGrid();
     });
