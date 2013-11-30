@@ -445,6 +445,37 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility{
     }
 
 
+    @Test(groups = {"webservice"})
+    public void testCalculationForAllFieldWhenStockInHandIsCalculated() throws Exception{
+        dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
+        dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "quantityDispensed");
+        Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 20, 2 , 10 ,null ,null);
+        assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"beginningBalance","P10"));
+        assertEquals("8",dbWrapper.getRequisitionLineItemFieldValue(id,"stockInHand","P10"));
+        assertEquals("10",dbWrapper.getRequisitionLineItemFieldValue(id,"quantityReceived","P10"));
+        assertEquals("2",dbWrapper.getRequisitionLineItemFieldValue(id,"quantityDispensed","P10"));
+        assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"newPatientCount","P10"));
+        assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"stockOutDays","P10"));
+    }
+
+
+
+    public void testCalculationForAllFieldWhenBeginningBalanceIsHidden() throws Exception{
+        Long id=null;
+        dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
+        dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
+        dbWrapper.updateConfigureTemplate("HIV", "source", "U", "false", "beginningBalance");
+
+        id = submitRnRThroughApi("V10", "HIV", "P10", null, 10,null,null ,null ,null);
+        id = submitRnRThroughApi("V10", "HIV", "P10", null, 5,null,10 ,null ,null);
+        assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"beginningBalance","P10"));
+        assertEquals("5",dbWrapper.getRequisitionLineItemFieldValue(id,"stockInHand","P10"));
+        assertEquals("10",dbWrapper.getRequisitionLineItemFieldValue(id,"quantityReceived","P10"));
+        assertEquals("5",dbWrapper.getRequisitionLineItemFieldValue(id,"quantityDispensed","P10"));
+        assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"newPatientCount","P10"));
+        assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id,"stockOutDays","P10"));
+    }
+
     public long calculateDaysDifference(String createdDateInString) throws ParseException {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     Date formattedCreatedDate = formatter.parse(createdDateInString);
