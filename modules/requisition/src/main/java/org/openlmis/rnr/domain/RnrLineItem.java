@@ -359,17 +359,17 @@ public class RnrLineItem extends LineItem {
                                                  BigDecimal dosesPerDispensingUnit,
                                                  Integer reportingDays) {
 
-    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth).divide(dosesPerDispensingUnit, MATH_CONTEXT)
-      .setScale(0, HALF_UP);
+      BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth).divide(dosesPerDispensingUnit, MATH_CONTEXT)
+              .setScale(0, HALF_UP);
 
-    if (reportingDays == null || stockOutDays.compareTo(new BigDecimal(reportingDays)) >= 0) {
-      return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
-    }
+      if (reportingDays == null || stockOutDays.compareTo(new BigDecimal(reportingDays)) >= 0) {
+          return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+      }
 
-    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS
-      .divide((new BigDecimal(reportingDays).subtract(stockOutDays)), MATH_CONTEXT));
+      BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS
+              .divide((new BigDecimal(reportingDays).subtract(stockOutDays)), MATH_CONTEXT));
 
-    return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+      return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }
 
   private void copyField(String fieldName, RnrLineItem lineItem, ProgramRnrTemplate template) {
