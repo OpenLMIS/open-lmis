@@ -34,12 +34,15 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
     super.setup();
-    super.setupTestData(true);
+    boolean previousPeriodRnRRequired = true;
+    boolean fullSupply = true;
+    super.setupTestData(previousPeriodRnRRequired);
+
     createVirtualFacilityThroughApi("V10", "F10");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.updateRestrictLogin("commTrack", true);
-    dbWrapper.updateProductFullSupplyFlag(true, "P11");
+    dbWrapper.updateProductFullSupplyFlag(fullSupply, "P11");
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -93,10 +96,10 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
     Long id = (long) dbWrapper.getMaxRnrID();
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P11"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P11"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P11"));
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P11"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P11"));
     assertEquals("2", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P11"));
   }
 
@@ -111,7 +114,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     submitRnRThroughApi("V10", "ESS_MEDS", "P10", 5, 3, null, null, null, null);
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 10, 5, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"));
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
   }
 
@@ -119,7 +122,9 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
   public void testCalculationWithPeriodTrackingWhenNumberOfMonthsIs1() throws Exception {
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 40, 37, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    String quantityDispensed = dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10");
+    String normalizedConsumption = dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10");
+    assertEquals(quantityDispensed, normalizedConsumption);
     assertEquals("3", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
     SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
     Date d = new Date();
@@ -145,7 +150,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2012-10-1", "2013-10-31", 1, "M");
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 40, 37, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"));
     assertEquals("3", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
     dbWrapper.updateCreatedDateInRequisitionStatusChanges("2012-9-11", id);
     id = submitRnRThroughApi("V10", "HIV", "P10", 5, 3, null, null, null, null);
@@ -162,7 +167,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2012-10-1", "2013-10-31", 1, "M");
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 40, 37, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"));
     assertEquals("3", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
     dbWrapper.updateCreatedDateInRequisitionStatusChanges("2012-8-11", id);
     id = submitRnRThroughApi("V10", "HIV", "P10", 5, 3, null, null, null, null);
@@ -180,7 +185,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 2, "M");
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 40, 37, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedconsumption", "P10"));
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"));
     assertEquals("3", dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
     dbWrapper.updateCreatedDateInRequisitionStatusChanges("2013-2-11", id);
     id = submitRnRThroughApi("V10", "HIV", "P10", 5, 3, null, null, null, null);
@@ -277,13 +282,12 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs1() throws Exception {
-    Long id = null;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
 
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
@@ -294,7 +298,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition1WhenNumberOfMonthsIs2() throws Exception {
-    Long id = null;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
 
@@ -303,7 +306,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 2, "M");
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 2, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 2, "M");
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
@@ -315,7 +318,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs2() throws Exception {
-    Long id = null;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.deleteCurrentPeriod();
@@ -324,10 +326,10 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 2, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 2, "M");
 
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
 
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
@@ -364,10 +366,10 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 3, "M");
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 3, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 3, "M");
-    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
@@ -379,7 +381,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
 
   public void testCalculationForAllFieldsForWhenNumberOfMonthsIs3AndPODCreatedDateIsChanged() throws Exception {
-    Long id = null;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.deleteCurrentPeriod();
@@ -387,8 +388,8 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 3, "M");
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 3, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 3, "M");
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
     dbWrapper.updateCreatedDateInRequisitionStatusChanges("2010-02-11", id);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
@@ -429,7 +430,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
 
-    Long id = Long.valueOf(dbWrapper.getMaxRnrID());
+    Long id = (long) dbWrapper.getMaxRnrID();
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
@@ -460,13 +461,12 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
 
   public void testCalculationForAllFieldWhenBeginningBalanceIsHidden() throws Exception {
-    Long id = null;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "false", "beginningBalance");
 
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, 10, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, 10, null, null);
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));

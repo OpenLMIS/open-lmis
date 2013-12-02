@@ -1473,16 +1473,16 @@ public class DBWrapper {
 
   public String getRequisitionLineItemFieldValue(Long requisitionId, String field, String productCode) throws SQLException {
     String value = null;
-    ResultSet rs = query("SELECT " + field + " from requisition_line_items WHERE rnrid=" + requisitionId + "and productCode='"
-      + productCode + "';");
+    ResultSet rs = query("SELECT %s FROM requisition_line_items WHERE rnrId = %d AND productCode = '%s'",
+      field, requisitionId, productCode);
     if (rs.next()) {
       value = rs.getString(field);
     }
     return value;
   }
 
-  public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
-    update("UPDATE products set fullsupply='" + flag + "' WHERE code='" + productCode + "';");
+  public void updateProductFullSupplyFlag(boolean isFullSupply, String productCode) throws SQLException {
+    update("UPDATE products SET fullSupply = %b WHERE code = '%s'", isFullSupply, productCode);
   }
 
   public void insertRoleAssignmentForSupervisoryNode(String userID, String roleName, String supervisoryNode, String programCode) throws SQLException {
