@@ -1195,41 +1195,6 @@ public class DBWrapper {
     update("INSERT INTO budget_configuration(headerInFile) VALUES('" + headerInFile + "')");
   }
 
-  public void defaultSetupOrderFileOpenLMISColumns() throws IOException, SQLException {
-    update("DELETE FROM order_file_columns where openLMISField=TRUE;");
-
-    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLMISField) VALUES ('header.order.number', 'order', 'id', 'Order number', 1, TRUE);");
-    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLMISField) VALUES ('create.facility.code', 'order', 'rnr/facility/code', 'Facility code', 2, TRUE);");
-    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLMISField) VALUES ('header.product.code', 'lineItem', 'productCode', 'Product code', 3, TRUE);");
-    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLMISField) VALUES ('header.quantity.approved', 'lineItem', 'quantityApproved', 'Approved quantity', 4, TRUE);");
-    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLMISField, format) VALUES ('label.period', 'order', 'rnr/period/startDate', 'Period', 5, TRUE,'MM/yy');");
-    update("INSERT INTO order_file_columns (dataFieldLabel, nested, keyPath, columnLabel, position, openLMISField,format) VALUES ('header.order.date', 'order', 'createdDate', 'Order date', 6, TRUE,'dd/MM/yy');");
-
-  }
-
-  public void defaultSetupShipmentFileColumns() throws IOException, SQLException {
-    update("DELETE FROM shipment_file_columns;");
-
-    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('orderId', 'header.order.number', 1, TRUE, TRUE);");
-    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('productCode', 'header.product.code', 2, TRUE, TRUE);");
-    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('quantityShipped', 'header.quantity.shipped', 3, TRUE, TRUE);");
-    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('cost', 'header.cost', 4, FALSE, FALSE);");
-    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) VALUES ('packedDate', 'header.packed.date', 5, FALSE, FALSE, 'dd/MM/yy');");
-    update("INSERT INTO shipment_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) VALUES ('shippedDate', 'header.shipped.date', 6, FALSE, FALSE, 'dd/MM/yy');");
-
-  }
-
-  public void defaultSetupBudgetFileColumns() throws IOException, SQLException {
-    update("DELETE FROM budget_file_columns;");
-
-    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('facilityCode', 'header.facility.code', 1, TRUE, TRUE);");
-    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('programCode', 'header.program.code', 2, TRUE, TRUE);");
-    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory, datePattern) VALUES ('periodStartDate', 'header.period.start.date', 3, TRUE, TRUE, 'dd/MM/yy');");
-    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('allocatedBudget', 'header.allocatedBudget', 4, TRUE, TRUE);");
-    update("INSERT INTO budget_file_columns (name, dataFieldLabel, position, include, mandatory) VALUES              ('notes', 'header.notes', 5, FALSE, FALSE);");
-
-  }
-
   public void setupOrderFileOpenLMISColumns(String dataFieldLabel, String includeInOrderFile, String columnLabel,
                                             int position, String Format) throws IOException, SQLException {
     update("UPDATE order_file_columns SET " +

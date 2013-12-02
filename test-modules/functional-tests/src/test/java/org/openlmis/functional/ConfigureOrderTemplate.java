@@ -18,8 +18,8 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ConfigureOrderPage;
 import org.openlmis.pageobjects.ConfigureEDIPage;
+import org.openlmis.pageobjects.ConfigureOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -42,9 +42,8 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   @Before
   public void setUp() throws Exception {
     super.setup();
-      dbWrapper.setupOrderFileConfiguration("O","TRUE");
-      dbWrapper.defaultSetupOrderFileOpenLMISColumns();
-      dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.setupOrderFileConfiguration("O", "TRUE");
+    dbWrapper.deleteOrderFileNonOpenLMISColumns();
   }
 
 
