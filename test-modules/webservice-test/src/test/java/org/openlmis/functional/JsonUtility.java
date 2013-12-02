@@ -167,7 +167,7 @@ public class JsonUtility extends TestCaseHelper {
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
-    dbWrapper.verifyPODAndPODLineItems(id.toString(), "P10", "10");
+    dbWrapper.verifyPODAndPODLineItems(id, "P10", 10);
 
   }
 }

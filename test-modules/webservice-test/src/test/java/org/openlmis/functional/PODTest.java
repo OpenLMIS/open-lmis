@@ -36,7 +36,7 @@ public class PODTest extends JsonUtility {
     super.setup();
     super.setupTestData(false);
     super.setupDataRequisitionApprover();
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -74,7 +74,7 @@ public class PODTest extends JsonUtility {
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
 
-    dbWrapper.verifyPODAndPODLineItems(id.toString(), "P10", "65");
+    dbWrapper.verifyPODAndPODLineItems(id, "P10", 65);
 
     responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
@@ -116,7 +116,7 @@ public class PODTest extends JsonUtility {
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
 
-    dbWrapper.verifyPODAndPODLineItems(id.toString(), "P11", "650");
+    dbWrapper.verifyPODAndPODLineItems(id, "P11", 650);
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -284,11 +284,11 @@ public class PODTest extends JsonUtility {
     assertEquals("TRANSFER_FAILED", dbWrapper.getOrderStatus(id));
   }
 
-    @DataProvider(name = "Data-Provider")
-    public Object[][] parameterIntTest() {
-        return new Object[][]{
-                {"commTrack1","HIV"}
-        };
-    }
+  @DataProvider(name = "Data-Provider")
+  public Object[][] parameterIntTest() {
+    return new Object[][]{
+      {"commTrack1", "HIV"}
+    };
+  }
 }
 

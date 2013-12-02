@@ -1280,19 +1280,22 @@ public class DBWrapper {
     update("UPDATE facilities SET enabled='true' WHERE name='" + warehouseName + "';");
   }
 
-  public void verifyPODAndPODLineItems(String OrderId, String productCode, String quantityReceived) throws Exception {
-    ResultSet rs = query("select id,receivedDate from pod where OrderId='" + OrderId + "';");
-    while (rs.next()) {
-      rs = query("select productcode,quantityreceived from POD_line_items where podId='" + rs.getString("id") + "';");
-      while (rs.next()) {
-        assertEquals(rs.getString("productcode"), productCode);
-        assertEquals(rs.getString("quantityreceived"), quantityReceived);
+  public void verifyPODAndPODLineItems(long orderId, String productCode, Integer quantityReceived) throws Exception {
+    try (ResultSet rs1 = query("SELECT id FROM pod WHERE OrderId = %d", orderId)) {
+      if (rs1.next()) {
+        int podId = rs1.getInt("id");
+        try (ResultSet rs2 = query("SELECT productCode, quantityReceived FROM pod_line_items WHERE podId = %d", podId)) {
+          if (rs2.next()) {
+            assertEquals(productCode, rs2.getString(1));
+            assertEquals(quantityReceived, rs2.getInt(2));
+          }
+        }
       }
     }
   }
 
   public void setExportOrdersFlagInSupplyLinesTable(boolean flag, String facilityCode) throws SQLException {
-    update("UPDATE supply_lines SET exportorders='" + flag + "' WHERE supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
+    update("UPDATE supply_lines SET exportOrders='" + flag + "' WHERE supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
   }
 
   public void enterValidDetailsInFacilityFtpDetailsTable(String facilityCode) throws SQLException {
