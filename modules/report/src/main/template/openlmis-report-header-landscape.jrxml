@@ -26,11 +26,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[($P{CUSTOM_REPORT_TITLE} != null)?$P{CUSTOM_REPORT_TITLE}:$P{REPORT_TITLE}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="13" y="60" width="193" height="20" isPrintInFirstWholeBand="true" uuid="79ea64d5-863d-4acc-a682-e3d8e6ab307e"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{REPORT_NAME}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="13" y="79" width="193" height="20" uuid="ce1e06b8-6c60-4c59-97a0-58adbf54c0f2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
