@@ -1012,7 +1012,7 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
                                                       InitiateRnRPage initiateRnRPage) {
     assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
-    SeleneseTestBase.assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
+    assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
 
     assertTrue("Regimen Code should be displayed.", initiateRnRPage.existRegimenCode(regimenCode, 2));
     assertTrue("Regimen Name should be displayed.", initiateRnRPage.existRegimenName(regimenName, 2));
@@ -1035,22 +1035,22 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
                                            String patientsToInitiateTreatment, String patientsStoppedTreatment,
                                            String remarks) {
-    SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
-    SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
+    assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
+    assertEquals(patientsToInitiateTreatment,
       initiateRnRPage.getPatientsToInitiateTreatmentValue());
-    SeleneseTestBase.assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
-    SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksValue());
+    assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
+    assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
   private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
                                                     String patientsToInitiateTreatment,
                                                     String patientsStoppedTreatment, String remarks) {
-    SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
-    SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
+    assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
+    assertEquals(patientsToInitiateTreatment,
       initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
-    SeleneseTestBase.assertEquals(patientsStoppedTreatment,
+    assertEquals(patientsStoppedTreatment,
       initiateRnRPage.getPatientsStoppedTreatmentInputValue());
-    SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
+    assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
   }
 
   private void verifyRnRsInGrid(String period, String rnrStatus, String row) {
