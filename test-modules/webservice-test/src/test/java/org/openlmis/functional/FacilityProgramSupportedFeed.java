@@ -49,7 +49,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testFacilityProgramSupportedFeed_Upload(String program, String[] credentials) throws Exception {
+  public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 
