@@ -37,7 +37,6 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ConfigureOrderTemplate extends TestCaseHelper {
 
-
   @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
@@ -45,7 +44,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
     dbWrapper.deleteOrderFileNonOpenLMISColumns();
   }
-
 
   @And("^I access configure order page$")
   public void accessOrderScreen() throws Exception {
@@ -88,18 +86,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void verifySaveSuccessfullyMessage(String message) throws Exception {
     ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
-  }
-
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDefaultSelectionOfPeriodAndOrderDateDropdown(String user, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
-    String period = configureOrderPage.getSelectedOptionOfPeriodDropDown();
-    assertEquals(period, "MM/yy");
-    String orderDate = configureOrderPage.getSelectedOptionOfOrderDateDropDown();
-    assertEquals(orderDate, "dd/MM/yy");
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")

@@ -84,16 +84,6 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDefaultSelectionOfPackedDropdown(String user, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureBudgetPage configureBudgetPage = configureEDIPage.navigateConfigureBudgetPage();
-    String packedDate = configureBudgetPage.getSelectedOptionOfPeriodStartDateDropDown();
-    assertEquals(packedDate, "dd/MM/yy");
-  }
-
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testEditPackedDropDown(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);

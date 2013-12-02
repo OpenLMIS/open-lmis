@@ -90,18 +90,6 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDefaultSelectionOfPackedAndShippedDateDropdown(String user, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
-    String packedDate = configureShipmentPage.getSelectedOptionOfPackedDateDropDown();
-    assertEquals(packedDate, "dd/MM/yy");
-    String shippedDate = configureShipmentPage.getSelectedOptionOfShippedDateDropDown();
-    assertEquals(shippedDate, "dd/MM/yy");
-  }
-
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
   public void testEditPackedAndShippedDateDropDown(String user, String password) throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
