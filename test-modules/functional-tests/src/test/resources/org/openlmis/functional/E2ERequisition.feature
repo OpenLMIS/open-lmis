@@ -1,7 +1,7 @@
 Feature: End to end requisition flow
 
   @e2e
-  Scenario: Requisition initiate, authorize, approve & convert to oder.
+  Scenario: Requisition initiate, authorize, approve & convert to order.
     Given I am logged in as Admin
     And I access create facility page
     When I create "HIV" program supported facility

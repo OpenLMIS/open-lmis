@@ -488,13 +488,13 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void verifyCalculatedOrderQuantityForEmergencyRnR() {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
-    verifyFieldValue("", actualAdjustedTotalConsumption);
+    verifyFieldValue("44", actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amc);
-    verifyFieldValue("", actualAmc.trim());
+    verifyFieldValue("40", actualAmc.trim());
     String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
-    verifyFieldValue("", actualMaximumStockQuantity.trim());
+    verifyFieldValue("120", actualMaximumStockQuantity.trim());
     String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
-    verifyFieldValue("", actualCalculatedOrderQuantity.trim());
+    verifyFieldValue("109", actualCalculatedOrderQuantity.trim());
   }
 
   public void verifyPacksToShip(String V) {

@@ -243,7 +243,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantities(10, 10);
     initiateRnRPage.verifyCalculatedOrderQuantityForEmergencyRnR();
-    initiateRnRPage.verifyPacksToShip("");
+    initiateRnRPage.verifyPacksToShip("11");
   }
 
   @And("^I update & verify requested quantities$")
