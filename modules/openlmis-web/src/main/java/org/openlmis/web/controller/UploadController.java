@@ -69,7 +69,6 @@ public class UploadController extends BaseController {
         return errorResponse(errorMessage);
       }
 
-      int initialRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
       Date currentTimestamp = dbService.getCurrentTimestamp();
 
       RecordHandler recordHandler = uploadBeansMap.get(model).getRecordHandler();
@@ -78,7 +77,7 @@ public class UploadController extends BaseController {
 
       int recordsToBeUploaded = csvParser.process(csvFile.getInputStream(), modelClass, recordHandler, auditFields);
 
-      return successResponse(model, initialRecordCount, recordsToBeUploaded);
+      return successPage(recordsToBeUploaded);
     } catch (DataException dataException) {
       return errorResponse(dataException.getOpenLmisMessage());
     } catch (UploadException e) {
@@ -86,14 +85,6 @@ public class UploadController extends BaseController {
     } catch (IOException e) {
       return errorResponse(new OpenLmisMessage(e.getMessage()));
     }
-  }
-
-  private ResponseEntity<OpenLmisResponse> successResponse(String model, int initialRecordCount, int recordsToBeUploaded) {
-    int finalRecordCount = dbService.getCount(uploadBeansMap.get(model).getTableName());
-    int recordsCreated = finalRecordCount - initialRecordCount;
-    int recordsUpdated = recordsToBeUploaded - recordsCreated;
-
-    return successPage(recordsCreated, recordsUpdated);
   }
 
   @RequestMapping(value = "/supported-uploads", method = GET, headers = ACCEPT_JSON)
@@ -116,9 +107,9 @@ public class UploadController extends BaseController {
     return errorMessage;
   }
 
-  private ResponseEntity<OpenLmisResponse> successPage(int recordsCreated, int recordsUpdated) {
+  private ResponseEntity<OpenLmisResponse> successPage(int recordsProcessed) {
     Map<String, String> responseMessages = new HashMap<>();
-    String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsCreated, recordsUpdated);
+    String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsProcessed);
     responseMessages.put(SUCCESS, message);
     return response(responseMessages, OK, TEXT_HTML_VALUE);
   }

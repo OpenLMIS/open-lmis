@@ -12,7 +12,10 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ManageFacilityPage;
+import org.openlmis.pageobjects.UploadPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -46,7 +49,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
-  public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
+  public void testFacilityProgramSupportedFeed_Upload(String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
 

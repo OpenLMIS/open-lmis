@@ -1,12 +1,12 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
- */
+* This program is part of the OpenLMIS logistics management information system platform software.
+* Copyright © 2013 VillageReach
+*
+* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+*  
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+* You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+*/
 
 package org.openlmis.web.controller;
 
@@ -121,10 +121,9 @@ public class UploadControllerTest {
     byte[] content = new byte[1];
     MockMultipartFile multiPartMock = new MockMultipartFile("csvFile", "mock.csv", null, content);
     String uploadSuccessMessage = "File uploaded successfully.  " +
-        "'Number of records created: 0', " +
-        "'Number of records updated: 0'";
+      "'Number of records processed: 0'";
 
-    when(messageService.message(UPLOAD_FILE_SUCCESS, 0, 0)).thenReturn(uploadSuccessMessage);
+    when(messageService.message(UPLOAD_FILE_SUCCESS, 0)).thenReturn(uploadSuccessMessage);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartMock, "product", request);
 
@@ -140,9 +139,9 @@ public class UploadControllerTest {
     when(mockMultiPart.getInputStream()).thenReturn(mockInputStream);
 
     String uploadSuccessMessage = "File uploaded successfully. " +
-        "'Number of records created: 0', " +
-        "'Number of records updated: 0'";
-    when(messageService.message(UPLOAD_FILE_SUCCESS, 0, 0)).thenReturn(uploadSuccessMessage);
+      "'Number of records processed: 0'";
+
+    when(messageService.message(UPLOAD_FILE_SUCCESS, 0)).thenReturn(uploadSuccessMessage);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPart, "product", request);
     assertThat(uploadResponse.getBody().getSuccessMsg(), is(uploadSuccessMessage));
@@ -194,13 +193,11 @@ public class UploadControllerTest {
     when(csvParser.process(eq(mockMultiPartFile.getInputStream()), argThat(modelMatcher(Product.class)), eq(handler), eq(auditFields))).thenReturn(20);
 
     String uploadSuccessMessage = "File uploaded successfully. " +
-        "'Number of records created: 15', " +
-        "'Number of records updated: 5'";
-    when(messageService.message(UPLOAD_FILE_SUCCESS, 15, 5)).thenReturn(uploadSuccessMessage);
+      "'Number of records processed: 20'";
+    when(messageService.message(UPLOAD_FILE_SUCCESS, 20)).thenReturn(uploadSuccessMessage);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(mockMultiPartFile, "product", request);
 
-    verify(dbService, times(2)).getCount(productUploadBean.getTableName());
     assertThat(uploadResponse.getBody().getSuccessMsg(), is(uploadSuccessMessage));
   }
 
@@ -214,7 +211,7 @@ public class UploadControllerTest {
 
     when(dbService.getCount(productUploadBean.getTableName())).thenReturn(10).thenReturn(25);
     when(csvParser.process(eq(mockMultiPartFile.getInputStream()), argThat(modelMatcher(Product.class)),
-        eq(handler), eq(auditFields))).thenReturn(20);
+      eq(handler), eq(auditFields))).thenReturn(20);
 
     controller.upload(mockMultiPartFile, "product", request);
 
