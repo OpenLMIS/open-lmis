@@ -17,11 +17,10 @@ import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.OrderReportFilter;
 import org.openlmis.report.util.Constants;
-import org.openlmis.report.util.InteractiveReportPeriodFilterParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,4 +86,10 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     return getReportFilterData(params).toString();
   }
 
+  @Override
+  public HashMap<String, String> getAdditionalReportData(Map params){
+    HashMap<String, String> result = new HashMap<String, String>() ;
+    result.put("ADDRESS", configurationService.getConfigurationStringValue("ORDER_REPORT_ADDRESS"));
+    return result;
+  }
 }
