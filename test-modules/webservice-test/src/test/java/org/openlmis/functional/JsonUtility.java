@@ -20,6 +20,7 @@ import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pod.domain.POD;
 import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.domain.Report;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,10 +79,10 @@ public class JsonUtility extends TestCaseHelper {
     reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
 
     client.SendJSON(getJsonStringFor(reportFromJson),
-      "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
-      "PUT",
-      "commTrack",
-      "Admin123");
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
   }
 
   public static void convertToOrder(String userName, String password) throws Exception {
@@ -91,35 +92,36 @@ public class JsonUtility extends TestCaseHelper {
     convertOrderPage.convertToOrder();
   }
 
-  public Long submitRnRThroughApi(String agentCode, String program, String product, Integer beginningBalance,
-                                  Integer stockInHand,
-                                  Integer quantityConsumed, Integer quantityReceived, Integer newPatientCount,
-                                  Integer stockOutDays) throws IOException, SQLException {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
-    reportFromJson.setAgentCode(agentCode);
-    reportFromJson.setProgramCode(program);
-    reportFromJson.getProducts().get(0).setProductCode(product);
-    reportFromJson.getProducts().get(0).setBeginningBalance(beginningBalance);
-    reportFromJson.getProducts().get(0).setQuantityDispensed(quantityConsumed);
-    reportFromJson.getProducts().get(0).setQuantityReceived(quantityReceived);
-    reportFromJson.getProducts().get(0).setStockInHand(stockInHand);
-    reportFromJson.getProducts().get(0).setNewPatientCount(newPatientCount);
-    reportFromJson.getProducts().get(0).setStockOutDays(stockOutDays);
+    public Long submitRnRThroughApi(String agentCode, String program, String product, Integer beginningBalance,
+                                    Integer stockInHand,
+                                    Integer quantityConsumed, Integer quantityReceived, Integer newPatientCount,
+                                    Integer stockOutDays) throws IOException, SQLException {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        Report reportFromJson = JsonUtility.readObjectFromFile("ReportMinimumJson.txt", Report.class);
+        reportFromJson.setAgentCode(agentCode);
+        reportFromJson.setProgramCode(program);
+        reportFromJson.getProducts().get(0).setProductCode(product);
+        reportFromJson.getProducts().get(0).setBeginningBalance(beginningBalance);
+        reportFromJson.getProducts().get(0).setQuantityDispensed(quantityConsumed);
+        reportFromJson.getProducts().get(0).setQuantityReceived(quantityReceived);
+        reportFromJson.getProducts().get(0).setStockInHand(stockInHand);
+        reportFromJson.getProducts().get(0).setNewPatientCount(newPatientCount);
+        reportFromJson.getProducts().get(0).setStockOutDays(stockOutDays);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
+        ResponseEntity responseEntity =
+                client.SendJSON(
+                        getJsonStringFor(reportFromJson),
+                        "http://localhost:9091/rest-api/requisitions.json",
+                        POST,
+                        "commTrack",
+                        "Admin123");
 
-    assertEquals(201, responseEntity.getStatus());
-    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
-    return (long) dbWrapper.getMaxRnrID();
-  }
+        assertEquals(201, responseEntity.getStatus());
+        assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+        Long id = Long.valueOf(dbWrapper.getMaxRnrID());
+        return id;
+    }
 
   public void createVirtualFacilityThroughApi(String agentCode, String facilityCode) throws IOException {
     HttpClient client = new HttpClient();
@@ -140,35 +142,35 @@ public class JsonUtility extends TestCaseHelper {
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
   }
 
-  public void convertToOrderAndUpdatePOD(String userName, String program, Integer quantityReceived) throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
-    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
-    dbWrapper.updateRequisitionStatus("APPROVED", "commTrack", "HIV");
-    dbWrapper.insertApprovedQuantity(10);
-    dbWrapper.insertOrders("RELEASED", userName, program);
-    dbWrapper.updatePacksToShip("1");
-    Long id = (long) dbWrapper.getMaxRnrID();
+    public void convertToOrderAndUpdatePOD(String userName, String program,Integer quantityReceived) throws Exception {
+        HttpClient client = new HttpClient();
+        client.createContext();
+        dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+        dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
+        dbWrapper.updateRequisitionStatus("APPROVED", "commTrack", "HIV");
+        dbWrapper.insertApprovedQuantity(10);
+        dbWrapper.insertOrders("RELEASED", userName, program);
+        dbWrapper.updatePacksToShip("1");
+        Long id = (long) dbWrapper.getMaxRnrID();
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(quantityReceived);
+        POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
+        PODFromJson.getPodLineItems().get(0).setProductCode("P10");
+        PODFromJson.getPodLineItems().get(0).setQuantityReceived(quantityReceived);
 
-    ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
-        format(POD_URL, id),
-        "POST",
-        "commTrack",
-        "Admin123");
+        ResponseEntity responseEntity =
+                client.SendJSON(getJsonStringFor(PODFromJson),
+                        format(POD_URL, id),
+                        "POST",
+                        "commTrack",
+                        "Admin123");
 
-    String response = responseEntity.getResponse();
+        String response = responseEntity.getResponse();
 
-    assertEquals(200, responseEntity.getStatus());
-    assertEquals(response, "{\"success\":\"POD updated successfully\"}");
-    assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
-    dbWrapper.verifyPODAndPODLineItems(id, "P10", 10);
+        assertEquals(200, responseEntity.getStatus());
+        assertEquals(response, "{\"success\":\"POD updated successfully\"}");
+        assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
+       // dbWrapper.verifyPODAndPODLineItems(id.toString(), "P10", "quantityReceived");
 
-  }
+    }
 }
 

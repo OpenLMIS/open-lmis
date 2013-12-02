@@ -1472,4 +1472,18 @@ public class DBWrapper {
     update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrid=" + rnrid + ";");
   }
 
+    public void updateCreatedDateInPODLineItems(String newDate, Long rnrid) throws SQLException {
+        update("update pod SET createdDate= '" + newDate + "' WHERE orderid="+rnrid+";");
+    }
+
+    public void updatePeriodIdInRequisitions(Long rnrId) throws SQLException {
+        Integer reqId = 0;
+        ResultSet rs = query("select " + "periodId" + " from requisitions where id= "+rnrId+";") ;
+
+        if (rs.next()) {
+            reqId= Integer.parseInt(rs.getString(1));
+    }
+        reqId=reqId-1;
+        update("update requisitions SET periodId= '" + reqId + "' WHERE id=" + rnrId + ";");
+   }
 }
