@@ -248,15 +248,14 @@ function RegimenSummaryControllers($scope, $filter, ngTableParams,
 
     //filter form data section
     $scope.filterObject = {
-        periodId : "",
+        periodId :$scope.period,
         period : "",
-        programId: "",
+        programId:$scope.program,
         program: "",
-        scheduleId: "",
+        scheduleId: $scope.schedule,
         schedule: "",
-        regimenCategoryId: "",
+        regimenCategoryId: $scope.regimenCategory,
         regimenCategory : "",
-
         year : "",
         zoneId : $scope.zone,
         zone:"" ,

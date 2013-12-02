@@ -20,32 +20,35 @@ public class RegimenSummaryQueryBuilder {
 
     RegimenSummaryReportFilter filter  = (RegimenSummaryReportFilter)params.get("filterCriteria");
 
-       String sql ="WITH temp as ( select regimen,program,regimenid,district,status,code,programid,SUM(patientsontreatment) patientsontreatment,SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,SUM(patientsstoppedtreatment) patientsstoppedtreatment,regimencategory,\n" +
-               "                 period,periodid,rgroup,rgroupid, schedule,scheduleid,zoneid,regimencategorydisplayorder \n" +
-               "                 from vw_regimen_summary \n" +
+       String sql ="\n" +
+               "WITH temp as ( select regimen,program,district,code,programid,SUM(patientsontreatment) patientsontreatment,SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,SUM(patientsstoppedtreatment) patientsstoppedtreatment,regimencategory,\n" +
+               "\n" +
+               "                             period,periodid,rgroup,rgroupid, schedule,scheduleid,zoneid,regimencategorydisplayorder,status \n" +
+               "                             from vw_regimen_summary\n" +
                writePredicates(filter)+
-               "                \n" +
-               "                group by regimen,regimencategory,program,district,code,patientsontreatment,period,periodid,zoneid,status\n" +
-               "                ,rgroup,regimencategory,schedule,district,regimenid,programid,rgroupid,scheduleid,regimencategorydisplayorder\n" +
-               "                 order by regimen,district)\n" +
-               "                \n" +
-               "                select distinct t.district district, t.regimen regimen,t.regimenid regimenid,program,\n" +
-               "                t.regimencategory regimencategory,t.code code,t.patientsontreatment patientsontreatment,t.status,\n" +
-               "                t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-               "                t.programid,t.rgroupid rgroupid,t.zoneid zoneid,rgroup,t.schedule schedule,t.scheduleid scheduleid,t.periodid periodid,t.regimencategorydisplayorder regimencategorydisplayorder,\n" +
-               "                t.period period, \n" +
-               "                case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),1) ELSE temp2.total END totalOnTreatmentPercentage,\n" +
-               "                case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END totalpatientsToInitiateTreatmentPercentage  \n" +
-               "             \n" +
-               "                from temp t\n" +
-               "                \n" +
-               "                INNER JOIN (select regimen,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2 from temp GROUP BY regimen order by regimen) temp2 ON t.regimen= temp2.regimen ";
+               "            \n" +
+               "          group by regimen,regimencategory,program,district,code,patientsontreatment,period,periodid,zoneid\n" +
+               "  ,rgroup,regimencategory,schedule,district,programid,rgroupid,scheduleid,regimencategorydisplayorder,status\n" +
+               "                   order by regimen,district)\n" +
+               "                select distinct t.district district, t.regimen regimen,program,t.status status,\n" +
+               "             t.regimencategory regimencategory,t.code code,t.patientsontreatment patientsontreatment,\n" +
+               "              t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
+               "              t.programid,t.rgroupid rgroupid,t.zoneid zoneid,rgroup,t.schedule schedule,t.scheduleid scheduleid,t.periodid periodid,t.regimencategorydisplayorder regimencategorydisplayorder,\n" +
+               "              t.period period, \n" +
+               "                    case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),1) ELSE temp2.total END totalOnTreatmentPercentage,\n" +
+               "                          case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END totalpatientsToInitiateTreatmentPercentage  \n" +
+               "           \n" +
+               "                   from temp t\n" +
+               "            \n" +
+               "               INNER JOIN (select regimen,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2 from temp GROUP BY regimen order by regimen) temp2 ON t.regimen= temp2.regimen \n" +
+               "    ";
       return sql;
     }
 
 
     private static String writePredicates(RegimenSummaryReportFilter filter){
-        String predicate = " WHERE status in ('APPROVED','RELEASED') ";
+        String predicate="";
+       predicate = " WHERE status in ('APPROVED','RELEASED') ";
         if(filter != null){
             if (!filter.getRegimenId().equals("")) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
