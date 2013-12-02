@@ -22,7 +22,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.facilityApprovedProducts = facilityApprovedProducts;
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
-      ['quantityApproved']);
+    ['quantityApproved']);
 
   $scope.programRnrColumnList = rnrColumns;
   $scope.requisitionRights = requisitionRights;
@@ -68,8 +68,8 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   $scope.checkErrorOnPage = function (page) {
     return $scope.visibleTab === NON_FULL_SUPPLY ?
-        _.contains($scope.errorPages.nonFullSupply, page) :
-        $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
+      _.contains($scope.errorPages.nonFullSupply, page) :
+      $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) : [];
   };
 
   $scope.$watch("currentPage", function () {
@@ -143,14 +143,14 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
   var submitValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "submit"},
-        {}, function (data) {
-          $scope.rnr.status = "SUBMITTED";
-          $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
-          $scope.submitMessage = data.success;
-          $scope.saveRnrForm.$setPristine();
-        }, function (data) {
-          $scope.submitError = data.data.error;
-        });
+      {}, function (data) {
+        $scope.rnr.status = "SUBMITTED";
+        $scope.formDisabled = !$scope.hasPermission('AUTHORIZE_REQUISITION');
+        $scope.submitMessage = data.success;
+        $scope.saveRnrForm.$setPristine();
+      }, function (data) {
+        $scope.submitError = data.data.error;
+      });
   };
 
   $scope.callBack = function (result) {
@@ -245,9 +245,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
+    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost'];
+
     function transform(copyFrom) {
       return _.map(copyFrom, function (lineItem) {
-        return _.omit(lineItem, ['rnr', 'programRnrColumnList']);
+        return _.omit(lineItem, nonLineItemFields);
       });
     }
 
@@ -309,9 +311,9 @@ CreateRequisitionController.resolve = {
     var deferred = $q.defer();
     $timeout(function () {
       FacilityApprovedProducts.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
-          function (data) {
-            deferred.resolve(data.nonFullSupplyProducts);
-          }, {});
+        function (data) {
+          deferred.resolve(data.nonFullSupplyProducts);
+        }, {});
     }, 100);
     return deferred.promise;
   },
@@ -320,9 +322,9 @@ CreateRequisitionController.resolve = {
     var deferred = $q.defer();
     $timeout(function () {
       FacilityProgramRights.get({facilityId: $route.current.params.facility, programId: $route.current.params.program},
-          function (data) {
-            deferred.resolve(data.rights);
-          }, {});
+        function (data) {
+          deferred.resolve(data.rights);
+        }, {});
     }, 100);
     return deferred.promise;
   },

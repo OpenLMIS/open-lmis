@@ -16,7 +16,7 @@
                 }
             ],
             "stockInHand": "0",
-            "approvedQuantity": "65",
+            "quantityApproved": "65",
             "newPatientCount": "2",
             "stockOutDays": "2",
             "quantityRequested": "3",
