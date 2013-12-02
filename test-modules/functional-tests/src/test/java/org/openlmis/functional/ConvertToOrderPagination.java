@@ -53,7 +53,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   @And("^I have \"([^\"]*)\" requisitions for convert to order$")
-  public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws IOException, SQLException {
+  public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws Exception {
     String userSIC = "storeIncharge";
     setUpData("HIV", userSIC);
     dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true);
@@ -213,11 +213,11 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifySupplyingDepotInGrid(55, 50, "Village Dispensary");
   }
 
-  private void setUpData(String program, String userSIC) throws SQLException, IOException {
+  private void setUpData(String program, String userSIC) throws Exception {
     setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
 
@@ -234,9 +234,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
     testWebDriver.waitForPageToLoad();
-    List <WebElement> x= testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
+    List<WebElement> x = testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
     testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
-    x.get(whichRequisition-1).click();
+    x.get(whichRequisition - 1).click();
   }
 
 

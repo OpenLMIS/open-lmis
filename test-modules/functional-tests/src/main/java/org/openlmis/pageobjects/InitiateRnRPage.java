@@ -299,11 +299,11 @@ public class InitiateRnRPage extends RequisitionPage {
     return new HomePage(testWebDriver);
   }
 
-  public void enterBeginningBalance(String beginningBalanceValue) {
+  public void enterBeginningBalance(Integer beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalance);
     beginningBalance.clear();
-    beginningBalance.sendKeys(beginningBalanceValue);
+    beginningBalance.sendKeys(beginningBalanceValue.toString());
   }
 
   public void enterBeginningBalanceSecondProduct(String beginningBalanceValue) {
@@ -344,10 +344,10 @@ public class InitiateRnRPage extends RequisitionPage {
 
   }
 
-  public void enterQuantityReceived(String quantityReceivedValue) {
+  public void enterQuantityReceived(Integer quantityReceivedValue) {
     testWebDriver.waitForElementToAppear(quantityReceived);
     quantityReceived.clear();
-    quantityReceived.sendKeys(quantityReceivedValue);
+    quantityReceived.sendKeys(quantityReceivedValue.toString());
   }
 
   public void enterQuantityReceivedSecondProduct(String quantityReceivedValue) {
@@ -359,10 +359,10 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(testWebDriver.getAttribute(quantityReceived, "value"), quantityReceivedValue);
   }
 
-  public void enterQuantityDispensed(String quantityDispensedValue) {
+  public void enterQuantityDispensed(Integer quantityDispensedValue) {
     testWebDriver.waitForElementToAppear(quantityDispensed);
     quantityDispensed.clear();
-    quantityDispensed.sendKeys(quantityDispensedValue);
+    quantityDispensed.sendKeys(quantityDispensedValue.toString());
   }
 
   public void enterQuantityDispensedSecondProduct(String quantityDispensedValue) {
@@ -404,9 +404,9 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public String calculateStockOnHand(Integer A, Integer B, Integer C, Integer D) {
-    enterBeginningBalance(A.toString());
-    enterQuantityReceived(B.toString());
-    enterQuantityDispensed(C.toString());
+    enterBeginningBalance(A);
+    enterQuantityReceived(B);
+    enterQuantityDispensed(C);
     enterLossesAndAdjustments(D.toString());
 
     testWebDriver.waitForElementToAppear(stockInHand);

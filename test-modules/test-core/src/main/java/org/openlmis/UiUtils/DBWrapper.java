@@ -21,6 +21,7 @@ import static java.lang.System.getProperty;
 
 public class DBWrapper {
 
+  public static final int DEFAULT_MAX_MONTH_OF_STOCK = 3;
   Connection connection;
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
   public static final String DEFAULT_DB_USERNAME = "postgres";
@@ -210,14 +211,15 @@ public class DBWrapper {
   }
 
   public String getRestrictLogin(String userName) throws SQLException, IOException {
-    String status=null;
+    String status = null;
     ResultSet rs = query("select restrictLogin from users where userName='%s'", userName);
 
     if (rs.next()) {
-       status = rs.getString("restrictLogin");
+      status = rs.getString("restrictLogin");
     }
     return status;
   }
+
   public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
@@ -234,10 +236,10 @@ public class DBWrapper {
         "(Select id from processing_periods where name='PeriodName" + i + "'), 'APPROVED', 'false', 50.0000, 0.0000, " +
         "(select id from supervisory_nodes where code='N1'))");
 
-        update("INSERT INTO requisition_line_items " +
-                "(rnrId, productCode,product,productDisplayOrder,productCategory,productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, " +
-                "dispensingUnit, maxMonthsOfStock, dosesPerMonth, dosesPerDispensingUnit, packSize,fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price,roundToZero,packRoundingThreshold) VALUES" +
-                "((SELECT max(id) FROM requisitions), 'P10','antibiotic Capsule 300/200/600 mg',1,'Antibiotics',1, '0', '11' , '1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1);");
+      update("INSERT INTO requisition_line_items " +
+        "(rnrId, productCode,product,productDisplayOrder,productCategory,productCategoryDisplayOrder, beginningBalance, quantityReceived, quantityDispensed, stockInHand, " +
+        "dispensingUnit, maxMonthsOfStock, dosesPerMonth, dosesPerDispensingUnit, packSize,fullSupply,totalLossesAndAdjustments,newPatientCount,stockOutDays,price,roundToZero,packRoundingThreshold) VALUES" +
+        "((SELECT max(id) FROM requisitions), 'P10','antibiotic Capsule 300/200/600 mg',1,'Antibiotics',1, '0', '11' , '1', '10' ,'Strip','3', '30', '10', '10','t',0,0,0,12.5000,'f',1);");
     }
     if (withSupplyLine) {
       ResultSet rs1 = query("select * from supply_lines where supervisoryNodeId = " +
@@ -308,9 +310,9 @@ public class DBWrapper {
       "('" + facilityCode + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'TRUE',(SELECT id FROM facilities WHERE code = '" + parentFacilityCode + "'))");
 
     update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES" +
-                " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 1, '11/11/12', true, 1)," +
-                " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 2, '11/11/12', true, 1)," +
-                " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 5, '11/11/12', true, 1)");
+      " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 1, '11/11/12', true, 1)," +
+      " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 2, '11/11/12', true, 1)," +
+      " ((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), 5, '11/11/12', true, 1)");
 
     update("insert into requisition_group_members (requisitionGroupId, facilityId, createdDate, modifiedDate) values " +
       "((select requisitionGroupId from requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code = '" + parentFacilityCode + "'))," +
@@ -593,12 +595,20 @@ public class DBWrapper {
       + maximumValue + "," + adjustmentValue + ");");
   }
 
-  public void insertFacilityApprovedProductsAfterDelete(String product1, String product2, String program, String facilityType) throws SQLException, IOException {
-    update("delete from facility_approved_products;");
+  public void deleteFacilityApprovedProducts() throws SQLException {
+    update("DELETE FROM facility_approved_products");
+  }
 
-    update("INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES\n" +
-      "((select id from facility_types where name='" + facilityType + "'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + product1 + "')), 3),\n" +
-      "((select id from facility_types where name='" + facilityType + "'), (SELECT id FROM program_products WHERE programId=(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + product2 + "')), 3);");
+  public void insertFacilityApprovedProduct(String productCode, String programCode, String facilityType) throws Exception {
+
+    String facilityTypeIdQuery = format("(SELECT id FROM facility_types WHERE name = '%s')", facilityType);
+    String productIdQuery = format("(SELECT id FROM products WHERE  code = '%s')", productCode);
+    String programIdQuery = format("(SELECT ID from programs where code = '%s' )", programCode);
+    String programProductIdQuery = format("(SELECT id FROM program_products WHERE programId = %s AND productId = %s)",
+      programIdQuery, productIdQuery);
+
+    update(format("INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES (%s,%s,%d)",
+      facilityTypeIdQuery, programProductIdQuery, DEFAULT_MAX_MONTH_OF_STOCK));
   }
 
   public String fetchNonFullSupplyData(String productCode, String facilityTypeID, String programID) throws SQLException, IOException {
@@ -753,16 +763,6 @@ public class DBWrapper {
     return id;
   }
 
-  public String getLatestRequisitionId() throws IOException, SQLException {
-    String id = null;
-    ResultSet rs = query("select id from requisitions order by createdDate desc limit 1;");
-
-    if (rs.next()) {
-      id = rs.getString("id");
-    }
-    return id;
-  }
-
   public String getFacilityFieldBYCode(String field, String code) throws IOException, SQLException {
     String facilityField = null;
     ResultSet rs = query("select " + field + " from facilities where code='" + code + "';");
@@ -825,8 +825,8 @@ public class DBWrapper {
   }
 
   public void updateRequisitionStatusByRnrId(String status, String username, int rnrId) throws IOException, SQLException {
-    update("update requisitions set status='" + status + "' where id=" +  rnrId +";");
-      update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rnrId + ", '" + status + "', " +
+    update("update requisitions set status='" + status + "' where id=" + rnrId + ";");
+    update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rnrId + ", '" + status + "', " +
       "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
 
     update("update requisitions set supervisoryNodeId = (select id from supervisory_nodes where code='N1');");
@@ -857,10 +857,10 @@ public class DBWrapper {
   }
 
   public int getMaxRnrID() throws IOException, SQLException {
-    int rnrId=0;
+    int rnrId = 0;
     ResultSet rs = query("select max(id) from requisitions");
     if (rs.next()) {
-        rnrId = Integer.parseInt(rs.getString("max"));
+      rnrId = Integer.parseInt(rs.getString("max"));
     }
     return rnrId;
   }
@@ -1336,8 +1336,8 @@ public class DBWrapper {
   }
 
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
-     int rgId=0;
-    ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+    int rgId = 0;
+    ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
     if (rs.next()) {
       rgId = rs.getInt("requisitiongroupid");
     }
@@ -1345,16 +1345,17 @@ public class DBWrapper {
   }
 
   public List getAllProgramsOfFacility(String facilityCode) throws SQLException {
-    List <Integer> l1 = new ArrayList<>();
-    ResultSet rs = query("SELECT programId FROM programs_supported where facilityId=(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+    List<Integer> l1 = new ArrayList<>();
+    ResultSet rs = query("SELECT programId FROM programs_supported where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
     while (rs.next()) {
       l1.add(rs.getInt("programid"));
     }
     return l1;
   }
+
   public String getProgramFieldForProgramIdAndFacilityCode(int programId, String facilityCode, String field) throws SQLException {
-    String res=null;
-    ResultSet rs = query("select " + field + " from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+    String res = null;
+    ResultSet rs = query("select " + field + " from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
 
     if (rs.next()) {
       res = rs.getString(1);
@@ -1363,8 +1364,8 @@ public class DBWrapper {
   }
 
   public Date getProgramStartDateForProgramIdAndFacilityCode(int programId, String facilityCode) throws SQLException {
-    Date date=null;
-    ResultSet rs = query("select startdate from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='"+facilityCode+"');");
+    Date date = null;
+    ResultSet rs = query("select startdate from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
 
     if (rs.next()) {
       date = rs.getDate(1);
@@ -1372,13 +1373,13 @@ public class DBWrapper {
     return date;
   }
 
-  public void changeVirtualFacilityTypeId(String facilityCode,int facilityTypeId) throws SQLException {
-     update("UPDATE facilities SET typeid="+facilityTypeId+"WHERE code='"+facilityCode+"';");
+  public void changeVirtualFacilityTypeId(String facilityCode, int facilityTypeId) throws SQLException {
+    update("UPDATE facilities SET typeid=" + facilityTypeId + "WHERE code='" + facilityCode + "';");
   }
 
-  public String getGeographicZoneId(String geographicZone) throws SQLException{
-    String res=null;
-    ResultSet rs = query("select id  from geographic_zones WHERE code ='"+geographicZone+"';");
+  public String getGeographicZoneId(String geographicZone) throws SQLException {
+    String res = null;
+    ResultSet rs = query("select id  from geographic_zones WHERE code ='" + geographicZone + "';");
 
     if (rs.next()) {
       res = rs.getString(1);
@@ -1386,9 +1387,9 @@ public class DBWrapper {
     return res;
   }
 
-  public String getFacilityTypeId(String facilityType) throws SQLException{
-    String res=null;
-    ResultSet rs = query("select id  from facility_types WHERE code ='"+facilityType+"';");
+  public String getFacilityTypeId(String facilityType) throws SQLException {
+    String res = null;
+    ResultSet rs = query("select id  from facility_types WHERE code ='" + facilityType + "';");
 
     if (rs.next()) {
       res = rs.getString(1);
@@ -1397,12 +1398,12 @@ public class DBWrapper {
   }
 
   public void deleteCurrentPeriod() throws SQLException {
-    update("delete from processing_periods where endDate>=NOW()") ;
+    update("delete from processing_periods where endDate>=NOW()");
   }
 
   public void updateProgramsSupportedByField(String field, String newValue, String facilityCode) throws SQLException {
-    update("Update programs_supported set "+field+"='"+newValue+"' where facilityId=(Select id from facilities where code ='"
-      +facilityCode+"');");
+    update("Update programs_supported set " + field + "='" + newValue + "' where facilityId=(Select id from facilities where code ='"
+      + facilityCode + "');");
   }
 
   public void deleteSupervisoryRoleFromRoleAssignment() throws SQLException {
@@ -1414,66 +1415,66 @@ public class DBWrapper {
   }
 
   public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {
-    update("delete from facility_approved_products where facilitytypeid=(select typeid from facilities where code='"+ facilityCode+ "') " +
-      "and programproductid=(select id from program_products where programid=(select id from programs where code='"+programCode+"')" +
-      "and productid=(select id from products where code='"+productCode+"'));");
+    update("delete from facility_approved_products where facilitytypeid=(select typeid from facilities where code='" + facilityCode + "') " +
+      "and programproductid=(select id from program_products where programid=(select id from programs where code='" + programCode + "')" +
+      "and productid=(select id from products where code='" + productCode + "'));");
   }
 
-  public void UpdateProductFullSupplyStatus(String productCode,boolean fullSupply) throws SQLException {
-    update("UPDATE products SET fullSupply=" + fullSupply +  " WHERE code='" + productCode + "';");
+  public void UpdateProductFullSupplyStatus(String productCode, boolean fullSupply) throws SQLException {
+    update("UPDATE products SET fullSupply=" + fullSupply + " WHERE code='" + productCode + "';");
   }
 
   public float getRequisitionFullSupplyItemsSubmittedCost(int requisitionId) throws SQLException {
-    float fullSupplyItemsSubmittedCost=0f;
-        ResultSet rs = query("SELECT fullSupplyItemsSubmittedCost FROM requisitions WHERE id =" + requisitionId + ";");
-        if (rs.next()) {
-            fullSupplyItemsSubmittedCost = rs.getFloat(1) ;
-        }
-        return fullSupplyItemsSubmittedCost;
+    float fullSupplyItemsSubmittedCost = 0f;
+    ResultSet rs = query("SELECT fullSupplyItemsSubmittedCost FROM requisitions WHERE id =" + requisitionId + ";");
+    if (rs.next()) {
+      fullSupplyItemsSubmittedCost = rs.getFloat(1);
+    }
+    return fullSupplyItemsSubmittedCost;
   }
 
- public String getStockInHand(long requisitionId) throws IOException, SQLException {
-   String stockInHand = null;
-   ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
+  public String getStockInHand(long requisitionId) throws IOException, SQLException {
+    String stockInHand = null;
+    ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
 
-   if (rs.next()) {
+    if (rs.next()) {
       stockInHand = rs.getString("stockinhand");
-   }
-   return stockInHand;
-
- }
-
-    public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
-        update("UPDATE program_rnr_columns set formulavalidationrequired ='"+flag+"' WHERE programid=" +
-        "(SELECT id from programs where code='" + programCode + "');");
     }
+    return stockInHand;
 
-    public void updateConfigureTemplate(String programCode, String fieldName,String fieldValue,String visibilityFlag,String fieldName2 ) throws SQLException {
-        update("UPDATE program_rnr_columns SET visible ='"+visibilityFlag+"', "+fieldName+"='"+fieldValue+"' WHERE programid=" +
-                "(SELECT id from programs where code='" + programCode + "')" +
-                "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '"+fieldName2+"') ;");
+  }
 
-    }
+  public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
+    update("UPDATE program_rnr_columns set formulavalidationrequired ='" + flag + "' WHERE programid=" +
+      "(SELECT id from programs where code='" + programCode + "');");
+  }
+
+  public void updateConfigureTemplate(String programCode, String fieldName, String fieldValue, String visibilityFlag, String fieldName2) throws SQLException {
+    update("UPDATE program_rnr_columns SET visible ='" + visibilityFlag + "', " + fieldName + "='" + fieldValue + "' WHERE programid=" +
+      "(SELECT id from programs where code='" + programCode + "')" +
+      "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '" + fieldName2 + "') ;");
+
+  }
 
   public void deleteConfigureTemplate(String program) throws SQLException {
     update("DELETE FROM program_rnr_columns where programid=(select id from programs where code = '" + program + "');");
   }
 
-    public String getApproverName(long requisitionId) throws IOException, SQLException {
-        String name = null;
-        ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrid =" + requisitionId + " and status='APPROVED';");
+  public String getApproverName(long requisitionId) throws IOException, SQLException {
+    String name = null;
+    ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrid =" + requisitionId + " and status='APPROVED';");
 
-        if (rs.next()) {
-            name = rs.getString("name");
-        }
-        return name;
-
+    if (rs.next()) {
+      name = rs.getString("name");
     }
+    return name;
+
+  }
 
   public String getRequisitionLineItemFieldValue(Long requisitionId, String field, String productCode) throws SQLException {
-     String value=null;
-     ResultSet rs = query("SELECT "+field+" from requisition_line_items WHERE rnrid="+requisitionId +"and productCode='"
-       +productCode+"';");
+    String value = null;
+    ResultSet rs = query("SELECT " + field + " from requisition_line_items WHERE rnrid=" + requisitionId + "and productCode='"
+      + productCode + "';");
     if (rs.next()) {
       value = rs.getString(field);
     }
@@ -1481,32 +1482,26 @@ public class DBWrapper {
   }
 
   public void updateProductFullSupplyFlag(boolean flag, String productCode) throws SQLException {
-    update("UPDATE products set fullsupply='"+flag+ "' WHERE code='"+productCode+"';");
+    update("UPDATE products set fullsupply='" + flag + "' WHERE code='" + productCode + "';");
   }
 
   public void insertRoleAssignmentForSupervisoryNode(String userID, String roleName, String supervisoryNode, String programCode) throws SQLException {
     update(" INSERT INTO role_assignments\n" +
       "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "')," +
-      " (SELECT id from programs WHERE code='"+programCode+"'), " +
+      " (SELECT id from programs WHERE code='" + programCode + "'), " +
       "(SELECT id from supervisory_nodes WHERE code = '" + supervisoryNode + "'));");
   }
 
-  public void insertFacilityApprovedProducts(String productCode, String program, String facilityTypeCode) throws SQLException, IOException {
-    update("INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES\n" +
-      "((select id from facility_types where code='" + facilityTypeCode + "'), (SELECT id FROM program_products WHERE programId=" +
-      "(SELECT ID from programs where code='" + program + "') AND productId=(SELECT id FROM products WHERE  code='" + productCode + "')), 3);");
-  }
-
-  public  void insertRequisitionGroupProgramScheduleForProgram(String requisitionGroupCode, String programCode ,String scheduleCode) throws SQLException {
-    update("delete from requisition_group_program_schedules where programId=(select id from programs where code='"+programCode+"');");
+  public void insertRequisitionGroupProgramScheduleForProgram(String requisitionGroupCode, String programCode, String scheduleCode) throws SQLException {
+    update("delete from requisition_group_program_schedules where programId=(select id from programs where code='" + programCode + "');");
     update("insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
-      "((select id from requisition_groups where code='"+requisitionGroupCode+"'),(select id from programs where code='"+programCode+"')," +
-      "(select id from processing_schedules where code='"+scheduleCode+"'),TRUE);");
+      "((select id from requisition_groups where code='" + requisitionGroupCode + "'),(select id from programs where code='" + programCode + "')," +
+      "(select id from processing_schedules where code='" + scheduleCode + "'),TRUE);");
   }
 
   public void updateCreatedDateInRequisitionStatusChanges(String newDate, Long rnrid) throws SQLException {
-    update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrid="+rnrid+";");
+    update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrid=" + rnrid + ";");
   }
 
 }
