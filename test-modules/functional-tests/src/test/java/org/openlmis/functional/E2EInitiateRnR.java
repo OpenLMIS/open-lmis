@@ -49,7 +49,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public String facilityCodePrefix = "FCcode";
   public String facilityNamePrefix = "FCname";
   public String catchmentPopulation = "500000";
-  public String userIDSIC;
   public String periodDetails;
   public String periodTopSNUser;
   public String program = "HIV";
@@ -95,7 +94,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void createRoleWithRights(String roleName, String roleType, String rightsList) throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     String[] roleRights = rightsList.split(",");
-    List<String> userRoleListStoreInCharge = new ArrayList<String>();
+    List<String> userRoleListStoreInCharge = new ArrayList<>();
     for (int i = 0; i < roleRights.length; i++)
       userRoleListStoreInCharge.add(roleRights[i]);
     createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, roleType);
@@ -137,7 +136,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I setup product & requisition group data$")
   public void productAndRequisitionGroupDataSetup() throws Exception {
     dbWrapper.updateRoleGroupMember(facility_code);
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertRequisitionGroups("RG1", "RG2", "N1", "N2");
     dbWrapper.insertRequisitionGroupMembers("F10", facility_code);
   }

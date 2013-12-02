@@ -599,9 +599,9 @@ public class DBWrapper {
     update("DELETE FROM facility_approved_products");
   }
 
-  public void insertFacilityApprovedProduct(String productCode, String programCode, String facilityType) throws Exception {
+  public void insertFacilityApprovedProduct(String productCode, String programCode, String facilityTypeCode) throws Exception {
 
-    String facilityTypeIdQuery = format("(SELECT id FROM facility_types WHERE name = '%s')", facilityType);
+    String facilityTypeIdQuery = format("(SELECT id FROM facility_types WHERE code = '%s')", facilityTypeCode);
     String productIdQuery = format("(SELECT id FROM products WHERE  code = '%s')", productCode);
     String programIdQuery = format("(SELECT ID from programs where code = '%s' )", programCode);
     String programProductIdQuery = format("(SELECT id FROM program_products WHERE programId = %s AND productId = %s)",

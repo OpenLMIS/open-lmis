@@ -214,7 +214,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   private void setUpData(String program, String userSIC) throws Exception {
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
     List<String> rightsList = new ArrayList<>();
