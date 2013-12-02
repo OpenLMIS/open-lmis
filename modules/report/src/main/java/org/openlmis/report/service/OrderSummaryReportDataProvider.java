@@ -90,6 +90,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   public HashMap<String, String> getAdditionalReportData(Map params){
     HashMap<String, String> result = new HashMap<String, String>() ;
     result.put("ADDRESS", configurationService.getConfigurationStringValue("ORDER_REPORT_ADDRESS"));
+    result.put("CUSTOM_REPORT_TITLE", configurationService.getConfigurationStringValue("ORDER_REPORT_TITLE"));
     return result;
   }
 }

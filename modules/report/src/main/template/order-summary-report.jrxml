@@ -22,6 +22,7 @@
 	<parameter name="ADDRESS" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="CUSTOM_REPORT_TITLE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship UnitSize,requisition_line_items.packstoship UnitQuantity, requisition_line_items.packsize PackQuantity,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders
@@ -423,6 +424,9 @@
 				</subreportParameter>
 				<subreportParameter name="OPERATOR_LOGO">
 					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CUSTOM_REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{CUSTOM_REPORT_TITLE}]]></subreportParameterExpression>
 				</subreportParameter>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
