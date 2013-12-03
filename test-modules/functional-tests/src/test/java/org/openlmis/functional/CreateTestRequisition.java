@@ -13,7 +13,11 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.ApprovePage;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.InitiateRnRPage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;

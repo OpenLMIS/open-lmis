@@ -20,6 +20,7 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.DataProvider;
@@ -289,8 +290,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\" for product \"([^\"]*)\" in Database$")
   public void verifyNormalisedConsumptionAndAmcInDatabase(String normalizedConsumption, String amc, String productCode) throws Exception {
     Long rnrId = Long.valueOf(dbWrapper.getMaxRnrID());
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"normalizedConsumption",productCode),normalizedConsumption);
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"amc",productCode),amc);
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "normalizedConsumption", productCode), normalizedConsumption);
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode), amc);
   }
 
   @Then("^I verify cost & authorize message$")
