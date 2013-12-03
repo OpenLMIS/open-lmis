@@ -16,13 +16,15 @@ import org.codehaus.jackson.annotate.JsonAnySetter;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.exception.DataException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @NoArgsConstructor
 public class OpenLmisResponse {
@@ -45,15 +47,34 @@ public class OpenLmisResponse {
   }
 
   public static ResponseEntity<OpenLmisResponse> success(String successMessage) {
-    return response(SUCCESS, successMessage, HttpStatus.OK, MediaType.APPLICATION_JSON_VALUE);
+    return response(SUCCESS, successMessage, OK, APPLICATION_JSON_VALUE);
+  }
+
+  public ResponseEntity<OpenLmisResponse> successEntity(String successMessage) {
+    addData(SUCCESS, successMessage);
+    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", APPLICATION_JSON_VALUE);
+    return new ResponseEntity<>(this, headers, OK);
   }
 
   public static ResponseEntity<OpenLmisResponse> success(String successMessage, String contentType) {
-    return response(SUCCESS, successMessage, HttpStatus.OK, contentType);
+    return response(SUCCESS, successMessage, OK, contentType);
   }
 
+
   public static ResponseEntity<OpenLmisResponse> error(String errorMessage, HttpStatus statusCode) {
-    return error(errorMessage, statusCode, MediaType.APPLICATION_JSON_VALUE);
+    return error(errorMessage, statusCode, APPLICATION_JSON_VALUE);
+  }
+
+  public ResponseEntity<OpenLmisResponse> errorEntity(DataException exception, HttpStatus httpStatus) {
+    return errorEntity(exception.getOpenLmisMessage().toString(), httpStatus);
+  }
+
+  public ResponseEntity<OpenLmisResponse> errorEntity(String errorMessage, HttpStatus statusCode) {
+    addData(ERROR, errorMessage);
+    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", APPLICATION_JSON_VALUE);
+    return new ResponseEntity<>(this, headers, statusCode);
   }
 
   public static ResponseEntity<OpenLmisResponse> error(String errorMessage, HttpStatus statusCode, String contentType) {
@@ -65,7 +86,7 @@ public class OpenLmisResponse {
   }
 
   public static ResponseEntity<OpenLmisResponse> error(DataException exception, HttpStatus httpStatus) {
-    return error(exception, httpStatus, MediaType.APPLICATION_JSON_VALUE);
+    return error(exception, httpStatus, APPLICATION_JSON_VALUE);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(String key, String message, HttpStatus statusCode, String contentType) {
@@ -75,11 +96,11 @@ public class OpenLmisResponse {
   }
 
   public static ResponseEntity<OpenLmisResponse> response(String key, Object value) {
-    return new ResponseEntity<>(new OpenLmisResponse(key, value), HttpStatus.OK);
+    return new ResponseEntity<>(new OpenLmisResponse(key, value), OK);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(Map<String, String> messages, HttpStatus status) {
-    return response(messages, status, MediaType.APPLICATION_JSON_VALUE);
+    return response(messages, status, APPLICATION_JSON_VALUE);
   }
 
   public static ResponseEntity<OpenLmisResponse> response(Map<String, String> messages, HttpStatus status, String contentType) {
