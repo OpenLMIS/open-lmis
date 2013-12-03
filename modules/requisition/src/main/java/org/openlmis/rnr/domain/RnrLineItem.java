@@ -304,8 +304,8 @@ public class RnrLineItem extends LineItem {
                                                  BigDecimal dosesPerDispensingUnit,
                                                  Integer reportingDays) {
 
-    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth).divide(dosesPerDispensingUnit, MATH_CONTEXT)
-      .setScale(0, HALF_UP);
+    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT)
+      .setScale(0, HALF_UP));
 
     if (reportingDays == null || stockOutDays.compareTo(new BigDecimal(reportingDays)) >= 0) {
       return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
