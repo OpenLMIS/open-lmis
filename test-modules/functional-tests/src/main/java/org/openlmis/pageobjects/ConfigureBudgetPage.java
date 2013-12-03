@@ -28,61 +28,61 @@ public class ConfigureBudgetPage extends Page {
 
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeHeaders=null;
+  private static WebElement includeHeaders = null;
 
-  @FindBy(how = ID, using = "includeCheckbox0")
-  private static WebElement facilityCodeCheckBox=null;
+  @FindBy(how = ID, using = "facilityCodeIncludeCheckBox")
+  private static WebElement facilityCodeCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox1")
-  private static WebElement programCodeCheckBox=null;
+  @FindBy(how = ID, using = "programCodeIncludeCheckbox")
+  private static WebElement programCodeCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox2")
-  private static WebElement periodStartDateCheckBox=null;
+  @FindBy(how = ID, using = "periodStartDateIncludeCheckBox")
+  private static WebElement periodStartDateCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox3")
-  private static WebElement allocatedBudgetCheckBox=null;
+  @FindBy(how = ID, using = "allocatedBudgetIncludeCheckBox")
+  private static WebElement allocatedBudgetCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox4")
-  private static WebElement notesCheckBox=null;
+  @FindBy(how = ID, using = "notesIncludeCheckbox")
+  private static WebElement notesCheckBox = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[1]/div[4]/input")
-  private static WebElement facilityCodeTextField=null;
+  @FindBy(how = ID, using = "facilityCodePosition")
+  private static WebElement facilityCodePosition = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[2]/div[4]/input")
-  private static WebElement programCodeTextField=null;
+  @FindBy(how = ID, using = "programCodePosition")
+  private static WebElement programCodePosition = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[3]/div[4]/input")
-  private static WebElement periodStartDateTextField=null;
+  @FindBy(how = ID, using = "periodStartDatePosition")
+  private static WebElement periodStartDatePosition = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[4]/div[4]/input")
-  private static WebElement allocatedBudgetTextField=null;
+  @FindBy(how = ID, using = "allocatedBudgetPosition")
+  private static WebElement allocatedBudgetPosition = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='budgetFileColumns']/div[2]/div[5]/div[4]/input")
-  private static WebElement notesTextField=null;
+  @FindBy(how = ID, using = "notesPosition")
+  private static WebElement notesTextPosition = null;
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMessageDiv=null;
+  private static WebElement saveErrorMessageDiv = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv=null;
+  private static WebElement successMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton=null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton=null;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement periodStartDateSelectBoxTextField=null;
+  private static WebElement periodStartDateSelectBoxTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement periodStartDateSelectBoxSelectableElement=null;
+  private static WebElement periodStartDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/div/b")
-  private static WebElement periodStartDateSelectBoxClickableLink=null;
+  private static WebElement periodStartDateSelectBoxClickableLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/span")
-  private static WebElement periodStartDateSelectBoxDefaultSelected=null;
+  private static WebElement periodStartDateSelectBoxDefaultSelected = null;
 
 
   public ConfigureBudgetPage(TestWebDriver driver) throws IOException {
@@ -93,23 +93,21 @@ public class ConfigureBudgetPage extends Page {
   }
 
 
-  public String getSelectedOptionOfPeriodStartDateDropDown()
-  {
+  public String getPeriodStartDateFormat() {
     testWebDriver.waitForElementToAppear(periodStartDateSelectBoxDefaultSelected);
     return periodStartDateSelectBoxDefaultSelected.getText();
   }
 
-  public void selectValueFromPeriodStartDateDropDown(String value)
-  {
-      testWebDriver.waitForElementToAppear(periodStartDateSelectBoxClickableLink);
-      periodStartDateSelectBoxClickableLink.click();
-      testWebDriver.waitForElementToAppear(periodStartDateSelectBoxTextField);
-      sendKeys(periodStartDateSelectBoxTextField,value);
-      testWebDriver.waitForElementToAppear(periodStartDateSelectBoxSelectableElement);
-      periodStartDateSelectBoxSelectableElement.click();
+  public void selectValueFromPeriodStartDateDropDown(String value) {
+    testWebDriver.waitForElementToAppear(periodStartDateSelectBoxClickableLink);
+    periodStartDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(periodStartDateSelectBoxTextField);
+    sendKeys(periodStartDateSelectBoxTextField, value);
+    testWebDriver.waitForElementToAppear(periodStartDateSelectBoxSelectableElement);
+    periodStartDateSelectBoxSelectableElement.click();
   }
 
-  public boolean getIncludeHeader() {
+  public boolean isHeaderIncluded() {
     testWebDriver.waitForElementToAppear(includeHeaders);
     return includeHeaders.isSelected();
   }
@@ -117,87 +115,63 @@ public class ConfigureBudgetPage extends Page {
   public void checkIncludeHeader() {
     testWebDriver.waitForElementToAppear(includeHeaders);
     if (!includeHeaders.isSelected())
-        includeHeaders.click();
-  }
-
-  public void unCheckIncludeHeader() {
-    testWebDriver.waitForElementToAppear(includeHeaders);
-    if (includeHeaders.isSelected())
-        includeHeaders.click();
+      includeHeaders.click();
   }
 
   public void checkNotesCheckBox() {
     testWebDriver.waitForElementToAppear(notesCheckBox);
     if (!notesCheckBox.isSelected())
-        notesCheckBox.click();
+      notesCheckBox.click();
   }
 
-  public void unCheckCostCheckBox() {
-    testWebDriver.waitForElementToAppear(notesCheckBox);
-    if (notesCheckBox.isSelected())
-        notesCheckBox.click();
+  public String getAllocatedBudgetPosition() {
+    testWebDriver.waitForElementToAppear(allocatedBudgetPosition);
+    return testWebDriver.getAttribute(allocatedBudgetPosition, "value");
   }
 
-  public void checkPeriodStartDateCheckBox() {
-    testWebDriver.waitForElementToAppear(periodStartDateCheckBox);
-    if (!periodStartDateCheckBox.isSelected())
-        periodStartDateCheckBox.click();
+  public void setAllocatedBudgetPosition(String value) {
+    testWebDriver.waitForElementToAppear(allocatedBudgetPosition);
+    sendKeys(allocatedBudgetPosition, value);
   }
 
-  public void unCheckPeriodStartDateCheckBox() {
-    testWebDriver.waitForElementToAppear(periodStartDateCheckBox);
-    if (periodStartDateCheckBox.isSelected())
-        periodStartDateCheckBox.click();
+  public void setFacilityCodePosition(String value) {
+    testWebDriver.waitForElementToAppear(facilityCodePosition);
+    sendKeys(facilityCodePosition, value);
   }
 
-  public String getAllocatedBudget() {
-    testWebDriver.waitForElementToAppear(allocatedBudgetTextField);
-    return testWebDriver.getAttribute(allocatedBudgetTextField, "value");
+  public String getFacilityCodePosition() {
+    testWebDriver.waitForElementToAppear(facilityCodePosition);
+    return testWebDriver.getAttribute(facilityCodePosition, "value");
   }
 
-  public void setAllocatedBudget(String value) {
-    testWebDriver.waitForElementToAppear(allocatedBudgetTextField);
-    sendKeys(allocatedBudgetTextField, value);
+  public String getNotesPosition() {
+    testWebDriver.waitForElementToAppear(notesTextPosition);
+    return testWebDriver.getAttribute(notesTextPosition, "value");
   }
 
-  public void setFacilityCode(String value) {
-    testWebDriver.waitForElementToAppear(facilityCodeTextField);
-    sendKeys(facilityCodeTextField, value);
+  public void setNotesPosition(String value) {
+    testWebDriver.waitForElementToAppear(notesTextPosition);
+    sendKeys(notesTextPosition, value);
   }
 
-  public String getFacilityCode() {
-    testWebDriver.waitForElementToAppear(facilityCodeTextField);
-    return testWebDriver.getAttribute(facilityCodeTextField,"value");
+  public String getProgramCodePosition() {
+    testWebDriver.waitForElementToAppear(programCodePosition);
+    return testWebDriver.getAttribute(programCodePosition, "value");
   }
 
-  public String getNotes() {
-    testWebDriver.waitForElementToAppear(notesTextField);
-    return testWebDriver.getAttribute(notesTextField, "value");
+  public void setProgramCodePosition(String value) {
+    testWebDriver.waitForElementToAppear(programCodePosition);
+    sendKeys(programCodePosition, value);
   }
 
-  public void setNotes(String value) {
-    testWebDriver.waitForElementToAppear(notesTextField);
-    sendKeys(notesTextField, value);
+  public String getPeriodStartDatePosition() {
+    testWebDriver.waitForElementToAppear(periodStartDatePosition);
+    return testWebDriver.getAttribute(periodStartDatePosition, "value");
   }
 
-  public String getProgramCode() {
-    testWebDriver.waitForElementToAppear(programCodeTextField);
-    return testWebDriver.getAttribute(programCodeTextField, "value");
-  }
-
-  public void setProgramCode(String value) {
-    testWebDriver.waitForElementToAppear(programCodeTextField);
-    sendKeys(programCodeTextField, value);
-  }
-
-  public String getPeriodStartDate() {
-    testWebDriver.waitForElementToAppear(periodStartDateTextField);
-    return testWebDriver.getAttribute(periodStartDateTextField, "value");
-  }
-
-  public void setPeriodStartDate(String value) {
-    testWebDriver.waitForElementToAppear(periodStartDateTextField);
-    sendKeys(periodStartDateTextField, value);
+  public void setPeriodStartDatePosition(String value) {
+    testWebDriver.waitForElementToAppear(periodStartDatePosition);
+    sendKeys(periodStartDatePosition, value);
   }
 
   public void clickSaveButton() {
@@ -214,34 +188,39 @@ public class ConfigureBudgetPage extends Page {
 
   public void verifyMessage(String message) {
     testWebDriver.waitForElementToAppear(successMessageDiv);
-    assertEquals(message,successMessageDiv.getText());
+    assertEquals(message, successMessageDiv.getText());
   }
 
   public void verifyErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(saveErrorMessageDiv);
-    assertEquals(message,saveErrorMessageDiv.getText());
+    assertEquals(message, saveErrorMessageDiv.getText());
   }
 
-    public void verifyDefaultIncludeCheckboxForAllDataFields() {
-            assertTrue("facilityCodeCheckBox should be checked", facilityCodeCheckBox.isSelected());
-            assertTrue("allocatedBudgetCheckBox should be checked", allocatedBudgetCheckBox.isSelected());
-            assertTrue("programCodeCheckBox should be checked", programCodeCheckBox.isSelected());
-            assertTrue("periodStartDateCheckBox should be checked", periodStartDateCheckBox.isSelected());
-            assertFalse("notesCheckBox should be checked", notesCheckBox.isSelected());
+  public void verifyDefaultIncludeCheckboxForAllDataFields() {
+    assertTrue("facilityCodeCheckBox should be checked", facilityCodeCheckBox.isSelected());
+    assertTrue("allocatedBudgetCheckBox should be checked", allocatedBudgetCheckBox.isSelected());
+    assertTrue("programCodeCheckBox should be checked", programCodeCheckBox.isSelected());
+    assertTrue("periodStartDateCheckBox should be checked", periodStartDateCheckBox.isSelected());
+    assertFalse("notesCheckBox should be checked", notesCheckBox.isSelected());
 
-            assertFalse("facilityCodeCheckBox should be disabled", facilityCodeCheckBox.isEnabled());
-            assertFalse("allocatedBudgetCheckBox should be disabled", allocatedBudgetCheckBox.isEnabled());
-            assertFalse("programCodeCheckBox should be disabled", programCodeCheckBox.isEnabled());
-            assertTrue("notesCheckBox should be enabled", notesCheckBox.isEnabled());
-            assertFalse("periodStartDateCheckBox should be enabled", periodStartDateCheckBox.isEnabled());
+    assertFalse("facilityCodeCheckBox should be disabled", facilityCodeCheckBox.isEnabled());
+    assertFalse("allocatedBudgetCheckBox should be disabled", allocatedBudgetCheckBox.isEnabled());
+    assertFalse("programCodeCheckBox should be disabled", programCodeCheckBox.isEnabled());
+    assertTrue("notesCheckBox should be enabled", notesCheckBox.isEnabled());
+    assertFalse("periodStartDateCheckBox should be enabled", periodStartDateCheckBox.isEnabled());
 
-    }
+  }
 
-    public void verifyDefaultPositionValues() {
-        assertEquals("1", facilityCodeTextField.getAttribute("value")) ;
-        assertEquals("4", allocatedBudgetTextField.getAttribute("value"));
-        assertEquals("2", programCodeTextField.getAttribute("value"));
-        assertEquals("3", periodStartDateTextField.getAttribute("value"));
-        assertEquals("5", notesTextField.getAttribute("value"));
-    }
+  public void verifyDefaultPositionValues() {
+    assertEquals("1", facilityCodePosition.getAttribute("value"));
+    assertEquals("4", allocatedBudgetPosition.getAttribute("value"));
+    assertEquals("2", programCodePosition.getAttribute("value"));
+    assertEquals("3", periodStartDatePosition.getAttribute("value"));
+    assertEquals("5", notesTextPosition.getAttribute("value"));
+  }
+
+  public boolean isNotesChecked() {
+    testWebDriver.waitForElementToAppear(notesCheckBox);
+    return notesCheckBox.isSelected();
+  }
 }

@@ -1190,11 +1190,6 @@ public class DBWrapper {
     update("INSERT INTO shipment_configuration(headerInFile) VALUES('" + headerInFile + "')");
   }
 
-  public void setupBudgetFileConfiguration(String headerInFile) throws IOException, SQLException {
-    update("DELETE FROM budget_configuration;");
-    update("INSERT INTO budget_configuration(headerInFile) VALUES('" + headerInFile + "')");
-  }
-
   public void setupOrderFileOpenLMISColumns(String dataFieldLabel, String includeInOrderFile, String columnLabel,
                                             int position, String Format) throws IOException, SQLException {
     update("UPDATE order_file_columns SET " +
