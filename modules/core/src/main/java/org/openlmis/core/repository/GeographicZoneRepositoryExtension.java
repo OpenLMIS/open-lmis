@@ -48,4 +48,12 @@ public class GeographicZoneRepositoryExtension extends GeographicZoneRepository 
         }
     }
 
+    public void update(GeographicZone zone) {
+        try {
+            mapper.update(zone);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataException("error.incorrect.length");
+        }
+    }
+
 }
