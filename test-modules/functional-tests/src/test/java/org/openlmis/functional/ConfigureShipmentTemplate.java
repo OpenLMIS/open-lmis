@@ -25,7 +25,10 @@ import org.openlmis.pageobjects.edi.ConfigureEDIPage;
 import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -34,18 +37,9 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
-
 @Listeners(CaptureScreenshotOnFailureListener.class)
-
 public class ConfigureShipmentTemplate extends TestCaseHelper {
 
-
-  @BeforeMethod(groups = "admin")
-  @Before
-  public void setUp() throws Exception {
-    super.setup();
-    dbWrapper.setupShipmentFileConfiguration("false");
-  }
 
   @Given("^I have shipment file with Header In File as \"([^\"]*)\"$")
   public void setupShipmentFileConfiguration(String status) throws Exception {
@@ -89,8 +83,18 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.verifyMessage(message);
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testEditPackedAndShippedDateDropDown(String user, String password) throws Exception {
+  private static final String user = "Admin123";
+  private static final String password = "Admin123";
+
+  @BeforeMethod(groups = "admin")
+  @Before
+  public void setUp() throws Exception {
+    super.setup();
+    dbWrapper.setupShipmentFileConfiguration("false");
+  }
+
+  @Test(groups = {"admin"})
+  public void testEditPackedAndShippedDateDropDown() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -113,8 +117,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals(shippedDate, "ddMMyy");
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered(String user, String password) throws Exception {
+  @Test(groups = {"admin"})
+  public void testVerifyIncludeColumnHeaderONWithAllPositionsAltered() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -141,8 +145,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("106", configureShipmentPage.getShippedDate());
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered(String user, String password) throws Exception {
+  @Test(groups = {"admin"})
+  public void testVerifyIncludeColumnHeaderOFFWithMandatoryPositionsAltered() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -170,8 +174,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDuplicatePosition(String user, String password) throws Exception {
+  @Test(groups = {"admin"})
+  public void testVerifyDuplicatePosition() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -183,8 +187,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyZeroPosition(String user, String password) throws Exception {
+  @Test(groups = {"admin"})
+  public void testVerifyZeroPosition() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -196,8 +200,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   }
 
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyBlankPosition(String user, String password) throws Exception {
+  @Test(groups = {"admin"})
+  public void testVerifyBlankPosition() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -212,24 +216,12 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
   @After
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
-    testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
-      dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
 
   }
-
-
-  @DataProvider(name = "Data-Provider-Function")
-  public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"Admin123", "Admin123"}
-    };
-
-  }
-
 }
 
