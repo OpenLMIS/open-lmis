@@ -1419,10 +1419,10 @@ public class DBWrapper {
       "(SELECT id from programs where code='" + programCode + "');");
   }
 
-  public void updateConfigureTemplate(String programCode, String fieldName, String fieldValue, String visibilityFlag, String fieldName2) throws SQLException {
+  public void updateConfigureTemplate(String programCode, String fieldName, String fieldValue, String visibilityFlag, String rnrColumnName) throws SQLException {
     update("UPDATE program_rnr_columns SET visible ='" + visibilityFlag + "', " + fieldName + "='" + fieldValue + "' WHERE programid=" +
       "(SELECT id from programs where code='" + programCode + "')" +
-      "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '" + fieldName2 + "') ;");
+      "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '" + rnrColumnName + "') ;");
 
   }
 

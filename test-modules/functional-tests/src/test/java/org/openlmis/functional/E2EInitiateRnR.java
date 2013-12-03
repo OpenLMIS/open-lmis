@@ -54,7 +54,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public String program = "HIV";
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
-  public String userSICUserName = "storeIncharge";
+  public String userSICUserName = "storeInCharge";
 
 
   @Before
@@ -68,7 +68,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @And("^I access create facility page$")
-  public void nevigateManageFacilityPage() throws Exception {
+  public void navigateManageFacilityPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateCreateFacility();
     homePage.clickCreateFacilityButton();
@@ -117,7 +117,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data) {
-      createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("Firstname").toString(), map.get("Lastname").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
+      createUserAndAssignRoles(homePage, passwordUsers, map.get("Email").toString(), map.get("FirstName").toString(), map.get("LastName").toString(), map.get("UserName").toString(), map.get("FacilityCode").toString(), map.get("Program").toString(), map.get("Node").toString(), map.get("Role").toString(), map.get("RoleType").toString(), map.get("Warehouse").toString(), map.get("WarehouseRole").toString());
     }
   }
 
@@ -152,7 +152,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     PeriodsPage periodsPage = manageSchedulePage.navigatePeriods();
     periodsPage.createAndVerifyPeriods();
     periodsPage.deleteAndVerifyPeriods();
-
     dbWrapper.insertRequisitionGroupProgramSchedule();
   }
 
@@ -171,7 +170,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     TemplateConfigPage templateConfigPage = homePage.selectProgramToConfigTemplate(program);
     templateConfigPage.configureTemplate();
-
   }
 
   @And("^I initiate and submit requisition$")
@@ -183,9 +181,26 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails, geoZone, parentGeoZone, operatedBy, facilityType);
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifySubmitRnrErrorMsg();
-    initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
-    initiateRnRPage.verifyTotalField();
+  }
 
+  @And("^I enter beginning balance as \"([^\"]*)\", quantityDispensed as \"([^\"]*)\", quantityReceived as \"([^\"]*)\" and totalAdjustmentAndLoses as \"([^\"]*)\"$")
+  public void enterValuesInRnR(String beginningBalance, String quantityDispensed, String quantityReceived, String totalAdjustmentAndLoses) throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.calculateAndVerifyStockOnHand(Integer.parseInt(beginningBalance), Integer.parseInt(quantityDispensed),
+                                                   Integer.parseInt(quantityReceived), Integer.parseInt(totalAdjustmentAndLoses));
+    initiateRnRPage.verifyTotalField();
+  }
+
+  @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\"$")
+   public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.verifyNormalizedConsumption(Integer.parseInt(normalisedConsumption));
+    initiateRnRPage.verifyAmc(Integer.parseInt(amc));
+  }
+
+  @And("^I submit RnR$")
+  public void submitRnR() throws Exception {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
   }
@@ -203,7 +218,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifySubmitRnrErrorMsg();
     initiateRnRPage.calculateAndVerifyStockOnHand(10, 10, 10, 1);
     initiateRnRPage.verifyTotalField();
-
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
   }
@@ -270,6 +284,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
     initiateRnRPage.clickFullSupplyTab();
+  }
+
+  @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\" for product \"([^\"]*)\" in Database$")
+  public void verifyNormalisedConsumptionAndAmcInDatabase(String normalizedConsumption, String amc, String productCode) throws Exception {
+    Long rnrId = Long.valueOf(dbWrapper.getMaxRnrID());
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"normalizedConsumption",productCode),normalizedConsumption);
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"amc",productCode),amc);
   }
 
   @Then("^I verify cost & authorize message$")

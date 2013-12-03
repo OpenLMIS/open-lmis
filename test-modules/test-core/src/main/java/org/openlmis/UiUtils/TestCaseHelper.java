@@ -24,6 +24,7 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 
 public class TestCaseHelper {
 
@@ -204,9 +205,7 @@ public class TestCaseHelper {
   }
 
   public void setupDataRequisitionApprover() throws IOException, SQLException {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("APPROVE_REQUISITION");
-    rightsList.add("CONVERT_TO_ORDER");
+    List<String> rightsList = asList("APPROVE_REQUISITION", "CONVERT_TO_ORDER");
     setupTestDataToApproveRnR("commTrack1", "701", rightsList);
   }
 

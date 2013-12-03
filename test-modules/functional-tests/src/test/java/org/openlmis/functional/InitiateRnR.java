@@ -481,10 +481,8 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program,
-                                                                        String userSIC,
-                                                                        String password
-  ) throws Exception {
+  public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program, String userSIC,
+                                                                        String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);

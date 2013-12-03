@@ -822,4 +822,29 @@ public class InitiateRnRPage extends RequisitionPage {
   public String getProductCode(Integer rowNumber) {
     return testWebDriver.getElementById("productCode_" + rowNumber).getText();
   }
+
+  public void verifyNormalizedConsumption(Integer expectedValue){
+    testWebDriver.sleep(1000);
+    verifyFieldValue(expectedValue.toString(), adjustedTotalConsumption.getText());
+  }
+
+  public void verifyAmc(Integer expectedValue){
+    testWebDriver.sleep(1000);
+    verifyFieldValue(expectedValue.toString(), adjustedTotalConsumption.getText());
+  }
+
+  public void enterStockOutDays(Integer stockOutDaysValue) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(totalStockOutDays);
+    stockInHand.clear();
+    stockInHand.sendKeys(stockOutDaysValue.toString());
+  }
+
+  public void enterNewPatientCount(Integer newPatientCount) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(newPatient);
+    stockInHand.clear();
+    stockInHand.sendKeys(newPatientCount.toString());
+  }
+
 }
