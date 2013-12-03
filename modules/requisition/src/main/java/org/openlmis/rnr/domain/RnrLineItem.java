@@ -31,6 +31,7 @@ import static java.math.RoundingMode.HALF_UP;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 @Data
@@ -39,7 +40,6 @@ import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 @EqualsAndHashCode(callSuper = true)
 public class RnrLineItem extends LineItem {
 
-  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
 

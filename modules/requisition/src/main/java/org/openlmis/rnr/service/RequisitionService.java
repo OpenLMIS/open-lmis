@@ -80,9 +80,9 @@ public class RequisitionService {
   private StaticReferenceDataService staticReferenceDataService;
   @Autowired
   private CalculationService calculationService;
-
   @Autowired
   private DbMapper dbMapper;
+
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
@@ -105,7 +105,7 @@ public class RequisitionService {
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
     facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-        facility.getId(), program.getId());
+      facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
@@ -152,6 +152,8 @@ public class RequisitionService {
     if (savedRnr.getStatus() != INITIATED)
       throw new DataException(new OpenLmisMessage(RNR_SUBMISSION_ERROR));
 
+    savedRnr.validateRegimenLineItems(regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId()));
+
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, CREATE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
@@ -170,6 +172,8 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() != SUBMITTED)
       throw new DataException(new OpenLmisMessage(RNR_AUTHORIZATION_ERROR));
+
+    savedRnr.validateRegimenLineItems(regimenColumnService.getRegimenTemplateByProgramId(savedRnr.getProgram().getId()));
 
     if (!requisitionPermissionService.hasPermission(rnr.getModifiedBy(), savedRnr, AUTHORIZE_REQUISITION))
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
@@ -284,7 +288,7 @@ public class RequisitionService {
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
-        programService.getProgramStartDate(facility.getId(), program.getId()));
+      programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
       throw new DataException("error.program.configuration.missing");
@@ -428,7 +432,7 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, pageSize, userId, right, sortBy, sortDirection);
+      pageNumber, pageSize, userId, right, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));

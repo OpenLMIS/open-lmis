@@ -10,22 +10,31 @@
 
 package org.openlmis.rnr.domain;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.builder.RegimenColumnBuilder;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.rnr.builder.RegimenColumnBuilder.defaultRegimenColumn;
 import static org.openlmis.rnr.builder.RegimenLineItemBuilder.*;
+import static org.openlmis.rnr.domain.RegimenLineItem.INITIATED_TREATMENT;
+import static org.openlmis.rnr.domain.RegimenLineItem.ON_TREATMENT;
+import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 @Category(UnitTests.class)
 public class RegimenLineItemTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void shouldCopyCreatorEditableField() throws Exception {
@@ -37,7 +46,7 @@ public class RegimenLineItemTest {
     final RegimenColumn patientsStoppedTreatment = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "patientsStoppedTreatment")));
     RegimenColumn patientsToInitiateTreatment = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "patientsToInitiateTreatment")));
     RegimenColumn remarks = make(a(defaultRegimenColumn, with(RegimenColumnBuilder.name, "remarks")));
-    List<RegimenColumn> regimenColumns = Arrays.asList(patientsOnTreatment, patientsStoppedTreatment, patientsToInitiateTreatment, remarks);
+    List<RegimenColumn> regimenColumns = asList(patientsOnTreatment, patientsStoppedTreatment, patientsToInitiateTreatment, remarks);
 
     savedRegimenLineItem.copyCreatorEditableFieldsForRegimen(regimenLineItem, new RegimenTemplate(1L, regimenColumns));
 
@@ -48,4 +57,44 @@ public class RegimenLineItemTest {
     assertThat(savedRegimenLineItem.getRemarks(), is(regimenLineItem.getRemarks()));
 
   }
+
+  @Test
+  public void shouldNotThrowErrorIfPatientsOnTreatmentIsHiddenAndMissing() throws NoSuchFieldException, IllegalAccessException {
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    regimenLineItem.setPatientsOnTreatment(null);
+
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    RegimenColumn regimenColumn = new RegimenColumn(1l, ON_TREATMENT, ON_TREATMENT, "Number", false, 2l);
+    regimenTemplate.setColumns(asList(regimenColumn));
+    regimenLineItem.validate(regimenTemplate);
+  }
+
+  @Test
+  public void shouldThrowErrorIfPatientsOnTreatmentIsVisibleAndMissing() throws NoSuchFieldException, IllegalAccessException {
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    regimenLineItem.setPatientsOnTreatment(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    RegimenColumn regimenColumn = new RegimenColumn(1l, ON_TREATMENT, ON_TREATMENT, "Number", true, 2l);
+    regimenTemplate.setColumns(asList(regimenColumn));
+    regimenLineItem.validate(regimenTemplate);
+  }
+
+  @Test
+  public void shouldThrowErrorIfPatientsToInitiateTreatmentIsVisibleAndIsMissing() throws NoSuchFieldException, IllegalAccessException {
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    regimenLineItem.setPatientsToInitiateTreatment(null);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage(RNR_VALIDATION_ERROR);
+
+    RegimenTemplate regimenTemplate = new RegimenTemplate();
+    RegimenColumn regimenColumn = new RegimenColumn(1l, INITIATED_TREATMENT, INITIATED_TREATMENT, "Number", true, 2l);
+    regimenTemplate.setColumns(asList(regimenColumn));
+    regimenLineItem.validate(regimenTemplate);
+  }
 }
+

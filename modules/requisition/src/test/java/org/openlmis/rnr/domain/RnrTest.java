@@ -460,4 +460,14 @@ public class RnrTest {
     assertThat(savedRnr.getNonSkippedLineItems(), is(asList(lineItem2)));
     assertThat(savedRnr.getFullSupplyLineItems(), is(asList(lineItem1, lineItem2)));
   }
+
+  @Test
+  public void shouldValidateRegimenLineItems() throws NoSuchFieldException, IllegalAccessException {
+    Rnr rnr = new Rnr();
+    RegimenLineItem regimenLineItem = mock(RegimenLineItem.class);
+    List<RegimenLineItem> regimenLineItems = asList(regimenLineItem);
+    rnr.setRegimenLineItems(regimenLineItems);
+    rnr.validateRegimenLineItems(regimenTemplate);
+    verify(regimenLineItem).validate(regimenTemplate);
+  }
 }

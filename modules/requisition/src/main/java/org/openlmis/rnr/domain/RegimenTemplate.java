@@ -39,7 +39,7 @@ public class RegimenTemplate extends Template {
       }
     });
 
-    return ((RegimenColumn) column).getVisible();
+    return column != null && ((RegimenColumn) column).getVisible();
   }
 
   public List<? extends Column> getPrintableColumns(Boolean fullSupply) {

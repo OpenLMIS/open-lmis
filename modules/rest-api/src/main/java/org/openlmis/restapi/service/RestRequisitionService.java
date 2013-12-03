@@ -21,10 +21,7 @@ import org.openlmis.core.service.ProgramService;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
-import org.openlmis.rnr.domain.Column;
-import org.openlmis.rnr.domain.ProgramRnrTemplate;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,11 +78,24 @@ public class RestRequisitionService {
     if (reportingFacility.getVirtualFacility())
       restRequisitionCalculator.setDefaultValues(rnr);
 
+    copyRegimens(rnr, report);
+
     requisitionService.save(rnr);
 
     rnr = requisitionService.submit(rnr);
 
     return requisitionService.authorize(rnr);
+  }
+
+  private void copyRegimens(Rnr rnr, Report report) {
+    if (report.getRegimens() != null) {
+      for (RegimenLineItem regimenLineItem : report.getRegimens()) {
+        RegimenLineItem correspondingRegimenLineItem = rnr.findCorrespondingRegimenLineItem(regimenLineItem);
+        if (correspondingRegimenLineItem == null)
+          throw new DataException("error.invalid.regimen");
+        correspondingRegimenLineItem.populate(regimenLineItem);
+      }
+    }
   }
 
 

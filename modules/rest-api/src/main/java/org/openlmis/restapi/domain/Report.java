@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.domain.RegimenLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 
@@ -26,6 +27,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class Report {
 
   private List<RnrLineItem> products;
+  private List<RegimenLineItem> regimens;
   private String agentCode;
   private String programCode;
   private String approverName;
