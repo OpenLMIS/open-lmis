@@ -41,10 +41,10 @@ public class EmailService {
   @Async
   public Future<Boolean> send(SimpleMailMessage emailMessage) {
     if (!mailSendingFlag) {
-      return new AsyncResult(true);
+      return new AsyncResult<>(true);
     }
     mailSender.send(emailMessage);
-    return new AsyncResult(true);
+    return new AsyncResult<>(true);
   }
 
   @ServiceActivator(inputChannel = "inputChannel")
@@ -53,6 +53,6 @@ public class EmailService {
       return;
     }
 
-    mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[0]));
+    mailSender.send(simpleMailMessage.toArray(new SimpleMailMessage[simpleMailMessage.size()]));
   }
 }

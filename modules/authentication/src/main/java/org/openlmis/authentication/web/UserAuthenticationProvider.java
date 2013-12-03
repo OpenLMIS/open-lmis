@@ -44,7 +44,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
     if (userToken.isAuthenticated()) {
       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userToken.getUserId(), null, null);
-      Map userDetails = new HashMap();
+      Map<String, String> userDetails = new HashMap<>();
       userDetails.put(UserAuthenticationSuccessHandler.USER, userToken.getUserName());
       usernamePasswordAuthenticationToken.setDetails(userDetails);
       return usernamePasswordAuthenticationToken;

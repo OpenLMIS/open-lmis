@@ -34,14 +34,6 @@ public class RoleAssignmentService {
     this.roleAssignmentRepository = roleAssignmentRepository;
   }
 
-  /**
-   * @deprecated not used in production code
-   * @param id
-   */
-  public void deleteAllRoleAssignmentsForUser(Long id) {
-    roleAssignmentRepository.deleteAllRoleAssignmentsForUser(id);
-  }
-
   public List<RoleAssignment> getHomeFacilityRoles(Long userId) {
     return roleAssignmentRepository.getHomeFacilityRoles(userId);
   }

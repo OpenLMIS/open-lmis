@@ -23,69 +23,69 @@
                         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
                         ">
 
-    <context:annotation-config/>
-    <mvc:annotation-driven/>
+  <context:annotation-config/>
+  <mvc:annotation-driven/>
 
-    <global-method-security pre-post-annotations="enabled">
-    </global-method-security>
+  <global-method-security pre-post-annotations="enabled">
+  </global-method-security>
 
-    <context:component-scan base-package="org.openlmis.web.controller"/>
-    <context:component-scan base-package="org.openlmis.web"/>
+  <context:component-scan base-package="org.openlmis.web.controller"/>
+  <context:component-scan base-package="org.openlmis.web"/>
 
-    <beans:bean id="restAuthenticationEntryPoint"
-                class="org.openlmis.authentication.web.RestAuthenticationEntryPoint">
-        <beans:property name="loginFormUrl" value="/public/pages/login.html"/>
-    </beans:bean>
+  <beans:bean id="restAuthenticationEntryPoint"
+              class="org.openlmis.authentication.web.RestAuthenticationEntryPoint">
+    <beans:constructor-arg value="/public/pages/login.html"/>
+  </beans:bean>
 
-    <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
+  <beans:bean id="openLmisAccessDeniedHandler" class="org.openlmis.authentication.web.OpenLmisAccessDeniedHandler"/>
 
-    <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
-        <intercept-url pattern="/rest-api/**" access="isAuthenticated()" requires-channel="any"/>
-        <http-basic/>
-    </http>
+  <http pattern="/rest-api/**" use-expressions="true" authentication-manager-ref="restAuthenticationManager">
+    <intercept-url pattern="/rest-api/**" access="isAuthenticated()" requires-channel="any"/>
+    <http-basic/>
+  </http>
 
-    <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
-        <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
-        <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/messages.json" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/locales.json" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/changeLocale**" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/feeds/**" access="permitAll" requires-channel="any"/>
-        <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="any"/>
+  <http use-expressions="true" entry-point-ref="restAuthenticationEntryPoint">
+    <intercept-url pattern="/j_spring_security_check" access="IS_AUTHENTICATED_ANONYMOUSLY" requires-channel="any"/>
+    <intercept-url pattern="/favicon.ico" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/public/**" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/messages.json" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/locales.json" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/changeLocale**" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/forgot-password*" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/user/validatePasswordResetToken/*" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/user/resetPassword/*" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/feeds/**" access="permitAll" requires-channel="any"/>
+    <intercept-url pattern="/**" access="isAuthenticated()" requires-channel="any"/>
 
-        <form-login login-page="/public/pages/login.html"
-                    login-processing-url="/j_spring_security_check"
-                    authentication-success-handler-ref="authenticationSuccessHandler"
-                    authentication-failure-handler-ref="simpleUrlAuthenticationFailureHandler"/>
-        <access-denied-handler ref="openLmisAccessDeniedHandler"/>
-        <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
+    <form-login login-page="/public/pages/login.html"
+                login-processing-url="/j_spring_security_check"
+                authentication-success-handler-ref="authenticationSuccessHandler"
+                authentication-failure-handler-ref="simpleUrlAuthenticationFailureHandler"/>
+    <access-denied-handler ref="openLmisAccessDeniedHandler"/>
+    <logout logout-success-url="/" invalidate-session="true" delete-cookies="true"/>
 
-        <session-management>
-            <concurrency-control expired-url="/user-context.json" max-sessions="10"/>
-        </session-management>
-        <request-cache ref="nullRequestCache"/>
-    </http>
+    <session-management>
+      <concurrency-control expired-url="/user-context.json" max-sessions="10"/>
+    </session-management>
+    <request-cache ref="nullRequestCache"/>
+  </http>
 
-    <beans:bean id="nullRequestCache" class="org.openlmis.authentication.web.NullRequestCache"/>
+  <beans:bean id="nullRequestCache" class="org.openlmis.authentication.web.NullRequestCache"/>
 
-    <beans:bean id="authenticationSuccessHandler"
-                class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
-        <beans:property name="defaultTargetUrl" value="/user-context.json"/>
-    </beans:bean>
+  <beans:bean id="authenticationSuccessHandler"
+              class="org.openlmis.authentication.web.UserAuthenticationSuccessHandler">
+    <beans:property name="defaultTargetUrl" value="/user-context.json"/>
+  </beans:bean>
 
-    <beans:bean id="simpleUrlAuthenticationFailureHandler"
-                class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
-        <beans:property name="useForward" value="true"/>
-        <beans:property name="defaultFailureUrl" value="/authentication-error.json"/>
-    </beans:bean>
+  <beans:bean id="simpleUrlAuthenticationFailureHandler"
+              class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+    <beans:property name="useForward" value="true"/>
+    <beans:property name="defaultFailureUrl" value="/authentication-error.json"/>
+  </beans:bean>
 
-    <authentication-manager>
-        <authentication-provider ref="userAuthenticationProvider"/>
-    </authentication-manager>
+  <authentication-manager>
+    <authentication-provider ref="userAuthenticationProvider"/>
+  </authentication-manager>
 
 
 </beans:beans>

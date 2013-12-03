@@ -16,13 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class ReportController {
@@ -40,10 +41,9 @@ public class ReportController {
     return (Long) request.getSession().getAttribute(USER_ID);
   }
 
-
-  @RequestMapping(method = RequestMethod.GET, value = "/reports/{id}/{format}")
-  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Long id
-    , @PathVariable("format") String format) throws Exception {
+  @RequestMapping(method = GET, value = "/reports/{id}/{format}")
+  public ModelAndView generateReport(HttpServletRequest request, @PathVariable("id") Long id,
+                                     @PathVariable("format") String format) throws Exception {
 
     String viewFormat = format == null ? PDF_VIEW : format;
 
@@ -51,7 +51,7 @@ public class ReportController {
 
     JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(reportTemplate);
 
-    Map<String, Object> map = new HashMap();
+    Map<String, Object> map = new HashMap<>();
     map.put("format", viewFormat);
 
     setReportParameters(request, reportTemplate, map);
