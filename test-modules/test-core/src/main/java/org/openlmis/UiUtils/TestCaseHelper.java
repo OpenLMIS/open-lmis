@@ -24,6 +24,7 @@ import java.util.List;
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 
 public class TestCaseHelper {
 
@@ -90,8 +91,8 @@ public class TestCaseHelper {
     testWebDriver = new TestWebDriver(driverFactory.loadDriver(browser));
   }
 
-  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws IOException, SQLException {
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+  public void setupTestDataToInitiateRnR(boolean configureTemplate, String program, String user, String userId, List<String> rightsList) throws Exception {
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     if (configureTemplate)
       dbWrapper.configureTemplate(program);
@@ -128,8 +129,8 @@ public class TestCaseHelper {
   }
 
   public void setupRnRTestDataRnRForCommTrack(boolean configureGenericTemplate, String program, String user,
-                                              String userId, List<String> rightsList) throws IOException, SQLException {
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+                                              String userId, List<String> rightsList) throws Exception {
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
 
     setupTestUserRoleRightsData(userId, user, rightsList);
@@ -160,10 +161,12 @@ public class TestCaseHelper {
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1(userId, "store in-charge", "N1");
   }
 
-  public void setupProductTestData(String product1, String product2, String program, String facilityType) throws IOException, SQLException {
+  public void setupProductTestData(String product1, String product2, String program, String facilityTypeCode) throws Exception {
     dbWrapper.insertProducts(product1, product2);
     dbWrapper.insertProgramProducts(product1, product2, program);
-    dbWrapper.insertFacilityApprovedProductsAfterDelete(product1, product2, program, facilityType);
+    dbWrapper.deleteFacilityApprovedProducts();
+    dbWrapper.insertFacilityApprovedProduct(product1, program, facilityTypeCode);
+    dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
   }
 
   public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {
@@ -189,7 +192,7 @@ public class TestCaseHelper {
     }
   }
 
-  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws IOException, SQLException {
+  public void setupTestData(boolean isPreviousPeriodRnRRequired) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -202,9 +205,7 @@ public class TestCaseHelper {
   }
 
   public void setupDataRequisitionApprover() throws IOException, SQLException {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("APPROVE_REQUISITION");
-    rightsList.add("CONVERT_TO_ORDER");
+    List<String> rightsList = asList("APPROVE_REQUISITION", "CONVERT_TO_ORDER");
     setupTestDataToApproveRnR("commTrack1", "701", rightsList);
   }
 
@@ -238,8 +239,8 @@ public class TestCaseHelper {
 
   public void setupTestDataToInitiateRnRAndDistribution(String facilityCode1, String facilityCode2, boolean configureTemplate, String program, String user, String userId,
                                                         List<String> rightsList, String programCode,
-                                                        String geoLevel1, String geoLevel2, String parentGeoLevel) throws IOException, SQLException {
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+                                                        String geoLevel1, String geoLevel2, String parentGeoLevel) throws Exception {
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertGeographicZone(geoLevel1, geoLevel1, parentGeoLevel);
     dbWrapper.insertFacilitiesWithDifferentGeoZones(facilityCode1, facilityCode2, geoLevel2, geoLevel1);
     if (configureTemplate)

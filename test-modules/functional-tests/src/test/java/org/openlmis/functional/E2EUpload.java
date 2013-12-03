@@ -130,50 +130,48 @@ public class E2EUpload extends TestCaseHelper {
     verifyInValidDeliveryZonesWarehousesUpload(uploadPage);
     verifyValidDeliveryZonesWarehousesUpload(uploadPage);
 
-
     verifyValidVirtualFacilityUpload(uploadPage);
 
+    String parentFacilityCode = "F10";
+    String virtualFacilityCode = "V10";
 
-      String parentFacilityCode="F10";
-      String virtualFacilityCode="V10";
+    homePage.navigateUploads();
 
-      homePage.navigateUploads();
+    dbWrapper.insertVirtualFacility(virtualFacilityCode, parentFacilityCode);
+    uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
+    testWebDriver.sleep(2000);
+    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
+    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode); //---Flaky
 
-      dbWrapper.insertVirtualFacility(virtualFacilityCode,parentFacilityCode);
-      uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
-      testWebDriver.sleep(2000);
-      assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid",parentFacilityCode),dbWrapper.getGeographicZoneId("IND"));
-      verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode); //---Flaky
+    uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
+    testWebDriver.sleep(2000);
+    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode), dbWrapper.getFacilityTypeId("warehouse"));
+    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode); //---Flaky
 
-      uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
-      testWebDriver.sleep(2000);
-      assertEquals(dbWrapper.getFacilityFieldBYCode("typeid",parentFacilityCode),dbWrapper.getFacilityTypeId("warehouse"));
-      verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode,parentFacilityCode); //---Flaky
+    dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
+    uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
+    assertEquals("Dispensary", dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+    assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+    uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
+    testWebDriver.sleep(2000);
+    List<Integer> listOfProgramsSupportedByParentFacility;
+    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
+    assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
+    List<Integer> listOfProgramsSupportedByVirtualFacility;
+    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(virtualFacilityCode);
+    Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
+    setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
+    Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
+    setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
+    assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
+    assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
+    for (Integer programId : listOfProgramsSupportedByParentFacility) {
+      assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, parentFacilityCode, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, virtualFacilityCode, "active"));
+      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, parentFacilityCode), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, virtualFacilityCode));
+    }
 
-      dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
-      uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
-      assertEquals("Dispensary",dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-      assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-      uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
-      testWebDriver.sleep(2000);
-      List<Integer> listOfProgramsSupportedByParentFacility;
-      listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
-      assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
-      List<Integer> listOfProgramsSupportedByVirtualFacility;
-      listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(virtualFacilityCode);
-      Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
-      setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
-      Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
-      setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
-      assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
-      assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
-      for(Integer programId : listOfProgramsSupportedByParentFacility){
-          assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, parentFacilityCode, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, virtualFacilityCode, "active"));
-          assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, parentFacilityCode), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, virtualFacilityCode));
-      }
-
-      uploadPage.uploadRequisitionGroupProgramSchedule("QA_Parent_Requisition_Program_Schedule.csv");
-      assertEquals(dbWrapper.getRequisitionGroupId(parentFacilityCode), dbWrapper.getRequisitionGroupId(virtualFacilityCode));
+    uploadPage.uploadRequisitionGroupProgramSchedule("QA_Parent_Requisition_Program_Schedule.csv");
+    assertEquals(dbWrapper.getRequisitionGroupId(parentFacilityCode), dbWrapper.getRequisitionGroupId(virtualFacilityCode));
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -379,6 +377,15 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Long.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length in Record No");
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Parent_Same_Level.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Parent_Below_Level.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_No_Parent.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
 
   }
 
@@ -424,13 +431,13 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
-    assertEquals(dbWrapper.getRestrictLogin("User123"),"f");
+    assertEquals(dbWrapper.getRestrictLogin("User123"), "f");
 
     uploadPage.uploadUsers("QA_Users_Others.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    assertEquals(dbWrapper.getRestrictLogin("User1234"),"f");
-    assertEquals(dbWrapper.getRestrictLogin("User1235"),"t");
-    assertEquals(dbWrapper.getRestrictLogin("User1236"),"f");
+    assertEquals(dbWrapper.getRestrictLogin("User1234"), "f");
+    assertEquals(dbWrapper.getRestrictLogin("User1235"), "t");
+    assertEquals(dbWrapper.getRestrictLogin("User1236"), "f");
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -562,19 +569,19 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyInValidDeliveryZonesMembersUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate.csv") ;
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Delivery Zone code and Member code combination found");
 
-    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate_Facility.csv") ;
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Duplicate_Facility.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Facility Code exists for the same program in multiple Delivery Zones");
 
-    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Invalid_Member.csv") ;
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Invalid_Member.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
 
-    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Delivery_Zone_Without_Program.csv") ;
+    uploadPage.uploadDeliveryZoneMembers("QA_Delivery_Zone_Members_Delivery_Zone_Without_Program.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("No Program(s) mapped for Delivery Zones");
   }
@@ -583,95 +590,95 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members_Subsequent.csv") ;
+    uploadPage.uploadDeliveryZoneMembersValidScenarios("QA_Delivery_Zone_Members_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Delivery_Zone.csv") ;
+    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Delivery_Zone.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Delivery zone code");
 
-    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Warehouse.csv") ;
+    uploadPage.uploadDeliveryZoneWarehouses("QA_Delivery_Zone_Warehouses_Invalid_Warehouse.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Warehouse code");
   }
 
   private void verifyValidDeliveryZonesWarehousesUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses.csv") ;
+    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv") ;
+    uploadPage.uploadDeliveryZoneWarehousesValidScenarios("QA_Delivery_zone_warehouses_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
   }
 
   private void verifyInValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadFacilityFTPDetails("QA_Blank.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Blank.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("File is empty");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Invalid_FacilityCode.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Invalid_FacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Duplicate.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Facility_Code.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Facility_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Facility Code of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Host.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Host.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Host of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Password.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Password.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Password of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Port.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Port.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Port of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Username.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Username.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Username of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Path.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Path.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Local Folder Path of Record No");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Incorrect_Data_length.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Incorrect_Data_length.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length");
 
-    uploadPage.uploadFacilityFTPDetails("UnassignedRequisitionGroupReport.jrxml") ;
+    uploadPage.uploadFacilityFTPDetails("UnassignedRequisitionGroupReport.jrxml");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect file format. Please upload Facility FTP details data as a .csv file");
 
-    uploadPage.uploadFacilityFTPDetails("QA_Delivery_Zone_Members.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Delivery_Zone_Members.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Headers in upload file");
   }
 
   private void verifyValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records created:0\", \"Number of records updated: 1\".");
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
 
   }
 
   private void verifyValidVirtualFacilityUpload(UploadPage uploadPage) throws IOException, SQLException {
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
 
-    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv") ;
+    uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records created:0\", \"Number of records updated: 1\".");
+    uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
 
   }
 
@@ -691,7 +698,7 @@ public class E2EUpload extends TestCaseHelper {
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {new String[]{"Admin123", "Admin123"}}
+      {new String[]{"Admin123", "Admin123"}}
     };
   }
 }

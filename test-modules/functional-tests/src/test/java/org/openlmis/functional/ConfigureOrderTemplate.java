@@ -18,10 +18,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ConfigureOrderPage;
-import org.openlmis.pageobjects.ConfigureEDIPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.edi.ConfigureEDIPage;
+import org.openlmis.pageobjects.edi.ConfigureOrderPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
@@ -37,16 +37,13 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ConfigureOrderTemplate extends TestCaseHelper {
 
-
   @BeforeMethod(groups = "admin")
   @Before
   public void setUp() throws Exception {
     super.setup();
-      dbWrapper.setupOrderFileConfiguration("O","TRUE");
-      dbWrapper.defaultSetupOrderFileOpenLMISColumns();
-      dbWrapper.deleteOrderFileNonOpenLMISColumns();
+    dbWrapper.setupOrderFileConfiguration("O", "TRUE");
+    dbWrapper.deleteOrderFileNonOpenLMISColumns();
   }
-
 
   @And("^I access configure order page$")
   public void accessOrderScreen() throws Exception {
@@ -89,18 +86,6 @@ public class ConfigureOrderTemplate extends TestCaseHelper {
   public void verifySaveSuccessfullyMessage(String message) throws Exception {
     ConfigureOrderPage configureOrderPage = new ConfigureOrderPage(testWebDriver);
     configureOrderPage.verifySuccessMessage(message);
-  }
-
-  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDefaultSelectionOfPeriodAndOrderDateDropdown(String user, String password) throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureOrderPage configureOrderPage = configureEDIPage.navigateConfigureOrderPage();
-    String period = configureOrderPage.getSelectedOptionOfPeriodDropDown();
-    assertEquals(period, "MM/yy");
-    String orderDate = configureOrderPage.getSelectedOptionOfOrderDateDropDown();
-    assertEquals(orderDate, "dd/MM/yy");
   }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")

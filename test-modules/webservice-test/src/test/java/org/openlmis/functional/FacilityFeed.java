@@ -12,7 +12,10 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ManageFacilityPage;
+import org.openlmis.pageobjects.UploadPage;
 import org.openlmis.restapi.domain.Agent;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -30,7 +33,7 @@ public class FacilityFeed extends JsonUtility {
   public static final String UPDATE_URL = "http://localhost:9091/rest-api/agents/";
   public static final String commTrackUser = "commTrack";
   public static final String PHONE_NUMBER = "0099887766";
-  public static final String DEFAULT_AGENT_NAME = "AgentVinod";
+  public static final String DEFAULT_AGENT_NAME = "Agent A1";
   public static final String DEFAULT_PARENT_FACILITY_CODE = "F10";
   public static final String ACTIVE_STATUS = "true";
   public static final String DEFAULT_AGENT_CODE = "A2";
@@ -43,7 +46,7 @@ public class FacilityFeed extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})

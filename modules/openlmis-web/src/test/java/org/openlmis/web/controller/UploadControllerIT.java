@@ -75,9 +75,9 @@ public class UploadControllerIT {
   public void setUp() throws Exception {
 
     when(uploadBeansMap.get("mandatoryFields")).thenReturn(
-        new UploadBean("mandatoryFields", handler, MandatoryFields.class, "products"));
+      new UploadBean("mandatoryFields", handler, MandatoryFields.class, "products"));
     when(uploadBeansMap.get("nonMandatoryFields")).thenReturn(
-        new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class, "products"));
+      new UploadBean("nonMandatoryFields", handler, NonMandatoryFields.class, "products"));
     when(uploadBeansMap.containsKey("mandatoryFields")).thenReturn(true);
     when(uploadBeansMap.containsKey("nonMandatoryFields")).thenReturn(true);
 
@@ -89,46 +89,39 @@ public class UploadControllerIT {
   @Test
   public void shouldParseCsvWithMandatoryFields() throws Exception {
     InputStream inputStream = this.getClass().getClassLoader()
-        .getResourceAsStream("mandatory-fields.csv");
+      .getResourceAsStream("mandatory-fields.csv");
 
     MockMultipartFile multiPartFile = new MockMultipartFile("csvFile", "mock.csv", null, inputStream);
 
-    when(dbService.getCount("products")).thenReturn(10).thenReturn(12);
-
-    when(messageService.message(UploadController.UPLOAD_FILE_SUCCESS, 2, 0)).thenReturn("File uploaded successfully. " +
-        "'Number of records created: 2', " +
-        "'Number of records updated: 0'");
+    when(messageService.message(UploadController.UPLOAD_FILE_SUCCESS, 2)).thenReturn("File uploaded successfully. " +
+      "'Number of records processed: 2'");
 
     when(csvParser.process(any(InputStream.class), any(ModelClass.class),
-        any(RecordHandler.class), any(AuditFields.class))).thenReturn(2);
+      any(RecordHandler.class), any(AuditFields.class))).thenReturn(2);
 
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPartFile, "mandatoryFields", request);
 
     assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
-        "'Number of records created: 2', " +
-        "'Number of records updated: 0'"));
+      "'Number of records processed: 2'"));
   }
 
   @Test
   public void shouldParseCsvWithNonMandatoryFields() throws Exception {
     InputStream in = UploadControllerIT.class.getClassLoader()
-        .getResourceAsStream("non-mandatory-fields.csv");
+      .getResourceAsStream("non-mandatory-fields.csv");
     MockMultipartFile multiPart = new MockMultipartFile("csvFile", "mock.csv", null, in);
 
-    when(dbService.getCount("products")).thenReturn(10).thenReturn(12);
-    when(messageService.message(UploadController.UPLOAD_FILE_SUCCESS, 2, 1)).thenReturn("File uploaded successfully. " +
-        "'Number of records created: 2', " +
-        "'Number of records updated: 1'");
+    when(messageService.message(UploadController.UPLOAD_FILE_SUCCESS, 3)).thenReturn("File uploaded successfully. " +
+      "'Number of records processed: 3'");
 
     when(csvParser.process(any(InputStream.class), any(ModelClass.class),
-        any(RecordHandler.class), any(AuditFields.class))).thenReturn(3);
+      any(RecordHandler.class), any(AuditFields.class))).thenReturn(3);
 
     ResponseEntity<OpenLmisResponse> uploadResponse = controller.upload(multiPart, "nonMandatoryFields", request);
 
     assertThat(uploadResponse.getBody().getSuccessMsg(), is("File uploaded successfully. " +
-        "'Number of records created: 2', " +
-        "'Number of records updated: 1'"));
+      "'Number of records processed: 3'"));
   }
 
 }

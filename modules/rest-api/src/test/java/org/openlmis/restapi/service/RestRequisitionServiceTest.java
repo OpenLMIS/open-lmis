@@ -56,8 +56,10 @@ import static org.openlmis.core.builder.FacilityBuilder.*;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.PROGRAM_ID;
 import static org.openlmis.core.builder.ProgramSupportedBuilder.defaultProgramSupported;
 import static org.openlmis.restapi.builder.ReportBuilder.*;
+import static org.openlmis.rnr.builder.RegimenLineItemBuilder.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 import static org.openlmis.rnr.builder.RnrLineItemBuilder.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.remarks;
 import static org.powermock.api.mockito.PowerMockito.*;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -124,8 +126,14 @@ public class RestRequisitionServiceTest {
     List<RnrLineItem> products = asList(rnrLineItem);
     requisition.setFullSupplyLineItems(products);
     requisition.setProgram(new Program());
-    report.setProducts(products);
 
+    RegimenLineItem regimenLineItem = make(a(defaultRegimenLineItem));
+    requisition.setRegimenLineItems(asList(regimenLineItem));
+
+
+    report.setProducts(products);
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
     Long facility_id = 5L;
 
     ProgramSupported programSupported = make(a(defaultProgramSupported));
@@ -148,6 +156,8 @@ public class RestRequisitionServiceTest {
     verify(programService).getValidatedProgramByCode(DEFAULT_PROGRAM_CODE);
     verify(requisitionService).initiate(facility, new Program(PROGRAM_ID), 1L, false);
     verify(requisitionService).submit(requisition);
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsOnTreatment(), is(10));
+    assertThat(requisition.getRegimenLineItems().get(0).getPatientsStoppedTreatment(), is(5));
   }
 
   @Test
@@ -248,6 +258,30 @@ public class RestRequisitionServiceTest {
     service.submitReport(report, 3l);
 
     verify(requisitionService).save(rnr);
+
+  }
+
+  @Test
+  public void shouldThrowErrorIfInvalidRegimenIsProvided() throws Exception {
+    Program program = new Program();
+    report.setProducts(new ArrayList<RnrLineItem>());
+    RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
+    report.setRegimens(asList(reportRegimenLineItem));
+
+    when(programService.getValidatedProgramByCode(report.getProgramCode())).thenReturn(program);
+
+    Facility facility = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.virtualFacility, true)));
+    when(facilityService.getOperativeFacilityByCode(report.getAgentCode())).thenReturn(facility);
+
+    Rnr rnr = new Rnr();
+    rnr.setProgram(program);
+    when(requisitionService.initiate(facility, program, 3l, false)).thenReturn(rnr);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(any(Long.class))).thenReturn(new ProgramRnrTemplate(new ArrayList<RnrColumn>()));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.regimen");
+
+    service.submitReport(report, 3l);
 
   }
 

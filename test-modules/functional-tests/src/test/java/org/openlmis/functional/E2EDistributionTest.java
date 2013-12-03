@@ -189,6 +189,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
+    distributionPage.syncDistributionMessageDone();
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");

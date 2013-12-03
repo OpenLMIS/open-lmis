@@ -39,7 +39,7 @@ public class ManageRights extends TestCaseHelper {
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testOnlyCreateRight(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
@@ -52,15 +52,15 @@ public class ManageRights extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-    initiateRnRPage.enterBeginningBalance("10");
-    initiateRnRPage.enterQuantityDispensed("10");
-    initiateRnRPage.enterQuantityReceived("10");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(10);
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
 
-    initiateRnRPage.verifyBeginningBalance("10");
-    initiateRnRPage.verifyQuantityReceived("10");
-    initiateRnRPage.verifyQuantityDispensed("10");
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct("10");
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct("10");
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct("10");
   }
 
 

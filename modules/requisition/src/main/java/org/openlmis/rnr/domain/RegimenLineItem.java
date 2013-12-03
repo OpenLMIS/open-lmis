@@ -15,12 +15,14 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.RegimenCategory;
+import org.openlmis.core.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 @Data
 @NoArgsConstructor
@@ -109,4 +111,22 @@ public class RegimenLineItem extends LineItem {
     return false;
   }
 
+  public void validate(RegimenTemplate regimenTemplate) throws NoSuchFieldException, IllegalAccessException {
+    String[] mandatoryVisibleColumns = new String[]{ON_TREATMENT, INITIATED_TREATMENT, STOPPED_TREATMENT};
+    for (String mandatoryColumn : mandatoryVisibleColumns) {
+      if (regimenTemplate.isRegimenColumnVisible(mandatoryColumn)) {
+        Field field = RegimenLineItem.class.getDeclaredField(mandatoryColumn);
+        field.setAccessible(true);
+        Object fieldValue = field.get(this);
+        if (fieldValue == null)
+          throw new DataException(RNR_VALIDATION_ERROR);
+      }
+    }
+  }
+
+  public void populate(RegimenLineItem regimenLineItem) {
+    this.patientsOnTreatment = regimenLineItem.patientsOnTreatment;
+    this.patientsToInitiateTreatment = regimenLineItem.patientsToInitiateTreatment;
+    this.patientsStoppedTreatment = regimenLineItem.patientsStoppedTreatment;
+  }
 }

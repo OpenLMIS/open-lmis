@@ -20,6 +20,10 @@ import java.io.IOException;
 
 public final class RestAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
+  public RestAuthenticationEntryPoint(String loginFormUrl) {
+    super(loginFormUrl);
+  }
+
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,
                        AuthenticationException authException) throws IOException, ServletException {

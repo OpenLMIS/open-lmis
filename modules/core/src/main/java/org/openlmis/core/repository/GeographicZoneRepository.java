@@ -15,7 +15,6 @@ import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
-import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapperExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -73,21 +72,17 @@ public class GeographicZoneRepository {
     return mapper.getAllGeographicZones_Ext();
   }
 
-  public void insert(GeographicZone zone) {
-    try {
-      mapper.insert(zone);
-    } catch (DataIntegrityViolationException e) {
-      throw new DataException("error.incorrect.length");
-    }
-  }
-
-  public void update(GeographicZone zone) {
-    try {
-      mapper.update(zone);
-    } catch (DataIntegrityViolationException e) {
-      throw new DataException("error.incorrect.length");
-    }
-  }
+//  public void save(GeographicZone zone) {
+//    try {
+//      if (zone.getId() == null) {
+//        mapper.insert(zone);
+//        return;
+//      }
+//      mapper.update(zone);
+//    } catch (DataIntegrityViolationException e) {
+//      throw new DataException("error.incorrect.length");
+//    }
+//  }
 
   public GeographicLevel getGeographicLevelByCode(String code) {
     return mapper.getGeographicLevelByCode(code);

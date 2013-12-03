@@ -19,8 +19,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class ViewOrderPagination extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "TB");
     dbWrapper.insertApprovedQuantity(10);
     dbWrapper.updatePacksToShip("1");
-    dbWrapper.insertFulfilmentRoleAssignment(userSIC,"store in-charge","F10");
+    dbWrapper.insertFulfilmentRoleAssignment(userSIC, "store in-charge", "F10");
     dbWrapper.insertOrders("RELEASED", userSIC, "MALARIA");
     dbWrapper.insertOrders("RELEASED", userSIC, "TB");
 
@@ -70,11 +68,11 @@ public class ViewOrderPagination extends TestCaseHelper {
   }
 
 
-  private void setUpData(String program, String userSIC) throws SQLException, IOException {
-    setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
+  private void setUpData(String program, String userSIC) throws Exception {
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
     dbWrapper.insertFacilities("F10", "F11");
     dbWrapper.configureTemplate(program);
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("CONVERT_TO_ORDER");
     rightsList.add("VIEW_ORDER");
 

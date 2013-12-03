@@ -12,7 +12,6 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,27 +24,17 @@ public class GeographicZoneService {
   GeographicZoneRepository repository;
 
   public void save(GeographicZone geographicZone) {
-
-    validateAndSetParent(geographicZone);
-
-    if (geographicZone.getId() == null) {
-      repository.insert(geographicZone);
-      return;
-    }
-    repository.update(geographicZone);
-  }
-
-  private void validateAndSetParent(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
-    if (geographicZone.getLevel() == null)
-      throw new DataException("error.geo.level.invalid");
-    if (geographicZone.getParent() == null) {
-      geographicZone.setParent(repository.getByCode("Root"));
-      return;
+    geographicZone.validateLevel();
+
+    if (!geographicZone.isRootLevel()) {
+      geographicZone.validateParentExists();
+      geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
+      geographicZone.validateParentExists();
+      geographicZone.validateParentIsHigherInHierarchy();
     }
-    geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
-    if (geographicZone.getParent() == null)
-      throw new DataException("error.geo.zone.parent.invalid");
+
+    repository.save(geographicZone);
   }
 
   public GeographicZone getByCode(GeographicZone geographicZone) {

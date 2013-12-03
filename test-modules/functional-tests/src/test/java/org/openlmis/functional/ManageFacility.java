@@ -22,9 +22,7 @@ import org.testng.annotations.*;
 
 import java.util.ArrayList;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -66,7 +64,7 @@ public class ManageFacility extends TestCaseHelper {
     String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
-    assertEquals("f", dbWrapper.getVirtualPropertyOfFacility(facilityCodePrefix+date_time));
+    assertEquals("f", dbWrapper.getVirtualPropertyOfFacility(facilityCodePrefix + date_time));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
@@ -78,14 +76,14 @@ public class ManageFacility extends TestCaseHelper {
     ManageFacilityPage manageFacilityPageRestore = homePageRestore.navigateSearchFacility();
     manageFacilityPageRestore.searchFacility(date_time);
     manageFacilityPageRestore.clickFacilityList(date_time);
-    manageFacilityPageRestore.verifyEditFacilityHeader("Edit facility") ;
-    HomePage homePageEdit = manageFacilityPageRestore.editFacility("ESSENTIAL MEDICINES",catchmentPopulationValue, latitudeValue,longitudeValue, altitudeValue);
+    manageFacilityPageRestore.verifyEditFacilityHeader("Edit facility");
+    HomePage homePageEdit = manageFacilityPageRestore.editFacility("ESSENTIAL MEDICINES", catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
     manageFacilityPageRestore.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "updated");
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
-    manageFacilityPageRestore.verifyEditedFacility(catchmentPopulationValue, latitudeValue,longitudeValue, altitudeValue);
+    manageFacilityPageRestore.verifyEditedFacility(catchmentPopulationValue, latitudeValue, longitudeValue, altitudeValue);
 
     ManageFacilityPage manageFacilityPageEdit = homePageEdit.navigateSearchFacility();
     manageFacilityPageEdit.searchFacility(date_time);
@@ -98,107 +96,107 @@ public class ManageFacility extends TestCaseHelper {
 
   }
 
-    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-    public void testFacilityTypeAndGeoZonePropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
-        String geoZone = "District 1";
-        String facilityType = "Lvl2 Hospital";
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testFacilityTypeAndGeoZonePropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+    String geoZone = "District 1";
+    String facilityType = "Lvl2 Hospital";
 
-        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-        dbWrapper.insertFacilities("F10", "F11");
-        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-        dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-        dbWrapper.insertSchedule("M", "Monthly", "Month");
-        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
 
-        dbWrapper.insertVirtualFacility("V10", "F10");
-        dbWrapper.insertGeographicZone("District 1","District 1","Dodoma");
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    dbWrapper.insertVirtualFacility("V10", "F10");
+    dbWrapper.insertGeographicZone("District 1", "District 1", "Dodoma");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-        ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
-        manageFacilityPage.searchFacility("F10");
-        manageFacilityPage.clickFacilityList("F10");
-        manageFacilityPage.editFacilityType(facilityType);
-        manageFacilityPage.editGeographicZone(geoZone) ;
-        manageFacilityPage.saveFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility("F10");
+    manageFacilityPage.clickFacilityList("F10");
+    manageFacilityPage.editFacilityType(facilityType);
+    manageFacilityPage.editGeographicZone(geoZone);
+    manageFacilityPage.saveFacility();
 
-        manageFacilityPage.searchFacility("V10");
-        manageFacilityPage.clickFacilityList("V10");
+    manageFacilityPage.searchFacility("V10");
+    manageFacilityPage.clickFacilityList("V10");
 
-        assertEquals(facilityType,manageFacilityPage.getFacilityType());
-        assertEquals(geoZone,manageFacilityPage.getGeographicZone());
+    assertEquals(facilityType, manageFacilityPage.getFacilityType());
+    assertEquals(geoZone, manageFacilityPage.getGeographicZone());
 
-    }
+  }
 
-    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
-    public void testProgramSupportedPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
-        setupProductTestData("P10", "P11", program, "Lvl3 Hospital");
-        dbWrapper.insertFacilities("F10", "F11");
-        dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
-        dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
-        dbWrapper.insertSchedule("M", "Monthly", "Month");
-        setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
-        dbWrapper.insertVirtualFacility("V10","F10");
-        dbWrapper.insertGeographicZone("District 1","District 1","Dodoma");
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+  @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
+  public void testProgramSupportedPropagationFromParentFacility(String user, String program, String[] credentials) throws Exception {
+    setupProductTestData("P10", "P11", program, "lvl3_hospital");
+    dbWrapper.insertFacilities("F10", "F11");
+    dbWrapper.insertSupervisoryNode("F10", "N1", "Node 1", "null");
+    dbWrapper.insertSchedule("Q1stM", "QuarterMonthly", "QuarterMonth");
+    dbWrapper.insertSchedule("M", "Monthly", "Month");
+    setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
+    dbWrapper.insertVirtualFacility("V10", "F10");
+    dbWrapper.insertGeographicZone("District 1", "District 1", "Dodoma");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-        ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
-        manageFacilityPage.searchFacility("F10");
-        manageFacilityPage.clickFacilityList("F10");
-        manageFacilityPage.removeFirstProgram();
-        manageFacilityPage.saveFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility("F10");
+    manageFacilityPage.clickFacilityList("F10");
+    manageFacilityPage.removeFirstProgram();
+    manageFacilityPage.saveFacility();
 
-        manageFacilityPage.searchFacility("V10");
-        manageFacilityPage.clickFacilityList("V10");
+    manageFacilityPage.searchFacility("V10");
+    manageFacilityPage.clickFacilityList("V10");
 
-        assertEquals("ESSENTIAL MEDICINES",manageFacilityPage.getProgramSupported(1));
-        assertEquals("VACCINES",manageFacilityPage.getProgramSupported(2));
+    assertEquals("ESSENTIAL MEDICINES", manageFacilityPage.getProgramSupported(1));
+    assertEquals("VACCINES", manageFacilityPage.getProgramSupported(2));
 
-        homePage.navigateSearchFacility();
-        manageFacilityPage.searchFacility("F10");
-        manageFacilityPage.clickFacilityList("F10");
-        manageFacilityPage.removeFirstProgram();
-        manageFacilityPage.activeInactiveFirstProgram();
-        manageFacilityPage.saveFacility();
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility("F10");
+    manageFacilityPage.clickFacilityList("F10");
+    manageFacilityPage.removeFirstProgram();
+    manageFacilityPage.activeInactiveFirstProgram();
+    manageFacilityPage.saveFacility();
 
-        manageFacilityPage.searchFacility("V10");
-        manageFacilityPage.clickFacilityList("V10");
+    manageFacilityPage.searchFacility("V10");
+    manageFacilityPage.clickFacilityList("V10");
 
-        assertEquals("VACCINES",manageFacilityPage.getProgramSupported(1));
-        assertFalse("Program supported flag incorrect",manageFacilityPage.getProgramSupportedActive(1));
+    assertEquals("VACCINES", manageFacilityPage.getProgramSupported(1));
+    assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
 
-        manageFacilityPage.activeInactiveFirstProgram();
-        manageFacilityPage.saveFacility();
-        manageFacilityPage.clickFacilityList("V10");
-        assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+    manageFacilityPage.activeInactiveFirstProgram();
+    manageFacilityPage.saveFacility();
+    manageFacilityPage.clickFacilityList("V10");
+    assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
 
-        homePage.navigateSearchFacility();
-        manageFacilityPage.searchFacility("F10");
-        manageFacilityPage.clickFacilityList("F10");
-        manageFacilityPage.saveFacility();
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility("F10");
+    manageFacilityPage.clickFacilityList("F10");
+    manageFacilityPage.saveFacility();
 
-        manageFacilityPage.searchFacility("V10");
-        manageFacilityPage.clickFacilityList("V10");
+    manageFacilityPage.searchFacility("V10");
+    manageFacilityPage.clickFacilityList("V10");
 
-        assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+    assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
 
-        homePage.navigateSearchFacility();
-        manageFacilityPage.searchFacility("F10");
-        manageFacilityPage.clickFacilityList("F10");
-        manageFacilityPage.addProgram("HIV",false);
-        manageFacilityPage.saveFacility();
+    homePage.navigateSearchFacility();
+    manageFacilityPage.searchFacility("F10");
+    manageFacilityPage.clickFacilityList("F10");
+    manageFacilityPage.addProgram("HIV", false);
+    manageFacilityPage.saveFacility();
 
-        manageFacilityPage.searchFacility("V10");
-        manageFacilityPage.clickFacilityList("V10");
+    manageFacilityPage.searchFacility("V10");
+    manageFacilityPage.clickFacilityList("V10");
 
-        assertEquals("HIV",manageFacilityPage.getProgramSupported(1));
-        assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
-        assertEquals("VACCINES",manageFacilityPage.getProgramSupported(2));
-        assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
-        assertEquals(dbWrapper.getRequisitionGroupId("F10") , dbWrapper.getRequisitionGroupId("V10"));
+    assertEquals("HIV", manageFacilityPage.getProgramSupported(1));
+    assertTrue("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(1));
+    assertEquals("VACCINES", manageFacilityPage.getProgramSupported(2));
+    assertFalse("Program supported flag incorrect", manageFacilityPage.getProgramSupportedActive(2));
+    assertEquals(dbWrapper.getRequisitionGroupId("F10"), dbWrapper.getRequisitionGroupId("V10"));
 
-    }
+  }
 
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {

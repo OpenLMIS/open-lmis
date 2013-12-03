@@ -13,7 +13,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
@@ -33,19 +32,17 @@ import static java.math.RoundingMode.HALF_UP;
 import static org.apache.commons.collections.CollectionUtils.find;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.ProgramRnrTemplate.*;
+import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 import static org.openlmis.rnr.domain.RnrStatus.AUTHORIZED;
 
 @Data
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = true)
 public class RnrLineItem extends LineItem {
 
-  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
-  public static final MathContext mathContext = new MathContext(12, RoundingMode.HALF_UP);
 
   public static final MathContext MATH_CONTEXT = new MathContext(3, HALF_UP);
 
@@ -276,7 +273,7 @@ public class RnrLineItem extends LineItem {
                                       (90 * quantityDispensed))
                                              .divide(
                                                  new BigDecimal( (90 - stockOutDays))
-                                      , mathContext)
+                                      , MATH_CONTEXT)
                                    ).intValue();
         } else{
           normalizedConsumption = (90 * quantityDispensed);
@@ -359,17 +356,17 @@ public class RnrLineItem extends LineItem {
                                                  BigDecimal dosesPerDispensingUnit,
                                                  Integer reportingDays) {
 
-      BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth).divide(dosesPerDispensingUnit, MATH_CONTEXT)
-              .setScale(0, HALF_UP);
+    BigDecimal newPatientFactor = newPatientCount.multiply(dosesPerMonth.divide(dosesPerDispensingUnit, MATH_CONTEXT)
+      .setScale(0, HALF_UP));
 
-      if (reportingDays == null || stockOutDays.compareTo(new BigDecimal(reportingDays)) >= 0) {
-          return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
-      }
+    if (reportingDays == null || stockOutDays.compareTo(new BigDecimal(reportingDays)) >= 0) {
+      return quantityDispensed.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+    }
 
-      BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS
-              .divide((new BigDecimal(reportingDays).subtract(stockOutDays)), MATH_CONTEXT));
+    BigDecimal stockOutFactor = quantityDispensed.multiply(NUMBER_OF_DAYS
+      .divide((new BigDecimal(reportingDays).subtract(stockOutDays)), MATH_CONTEXT));
 
-      return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
+    return stockOutFactor.add(newPatientFactor).setScale(0, HALF_UP).intValue();
   }
 
   private void copyField(String fieldName, RnrLineItem lineItem, ProgramRnrTemplate template) {

@@ -50,6 +50,8 @@ public class Rnr extends BaseModel {
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
   private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
 
+  public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
+
   @Transient
   @JsonIgnore
   private List<RnrLineItem> allLineItems = new ArrayList<>();
@@ -187,7 +189,7 @@ public class Rnr extends BaseModel {
     });
   }
 
-  private RegimenLineItem findCorrespondingRegimenLineItem(final RegimenLineItem regimenLineItem) {
+  public RegimenLineItem findCorrespondingRegimenLineItem(final RegimenLineItem regimenLineItem) {
     return (RegimenLineItem) find(this.regimenLineItems, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -341,6 +343,16 @@ public class Rnr extends BaseModel {
         return rnrLineItem.getSkipped();
       }
     });
+  }
+
+  public void validateRegimenLineItems(RegimenTemplate regimenTemplate) {
+    for (RegimenLineItem regimenLineItem : this.regimenLineItems) {
+      try {
+        regimenLineItem.validate(regimenTemplate);
+      } catch (NoSuchFieldException | IllegalAccessException e) {
+        throw new DataException(RNR_VALIDATION_ERROR);
+      }
+    }
   }
 }
 

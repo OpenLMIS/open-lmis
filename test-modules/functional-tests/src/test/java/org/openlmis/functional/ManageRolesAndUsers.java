@@ -70,8 +70,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       userPage.enterUserDetails(map.get("UserName").toString(), map.get("Email").toString(),
-              map.get("FirstName").toString(), map.get("LastName").toString());
-      userPage.clickViewHere();
+        map.get("FirstName").toString(), map.get("LastName").toString());
+    userPage.clickViewHere();
   }
 
   @When("^I disable user \"([^\"]*)\"$")
@@ -185,13 +185,13 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     rolesPage.verifyCreatedRoleMessage("Facility Based Role Name");
   }
 
-    public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userName, password);
-        assertTrue(homePage.isHomeMenuTabDisplayed());
-        assertFalse(homePage.isRequisitionsMenuTabDisplayed());
+  public void testVerifyTabsForUserWithoutRights(String userName, String password) throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userName, password);
+    assertTrue(homePage.isHomeMenuTabDisplayed());
+    assertFalse(homePage.isRequisitionsMenuTabDisplayed());
 
-    }
+  }
 
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testE2EManageRolesAndFacility(String user, String program, String[] credentials, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -211,7 +211,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String facility_name = facilityNamePrefix + date_time;
     manageFacilityPage.verifyMessageOnFacilityScreen(facility_name, "created");
 
-    List<String> userRoleList = new ArrayList<String>();
+    List<String> userRoleList = new ArrayList<>();
     userRoleList.add(CREATE_REQUISITION);
     userRoleList.add(AUTHORIZE_REQUISITION);
     userRoleList.add(APPROVE_REQUISITION);
@@ -282,7 +282,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     testWebDriver.sleep(500);
     userPage.clickRemoveButtonWithOk(1);
     userPage.clickSaveButton();
-    testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE,"Admin123");
+    testVerifyTabsForUserWithoutRights(LAB_IN_CHARGE, "Admin123");
 
   }
 
@@ -329,7 +329,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     homePage.logout(baseUrlGlobal);
     loginPage.loginAs(LAB_IN_CHARGE, credentials[1]);
     assertEquals(loginPage.getLoginErrorMessage(),
-            "The username or password you entered is incorrect. Please try again.");
+      "The username or password you entered is incorrect. Please try again.");
 
     loginPage.loginAs(credentials[0], credentials[1]);
     homePage.navigateToUser();

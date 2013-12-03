@@ -19,11 +19,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.testng.Assert.assertNull;
@@ -38,7 +38,7 @@ public class CreateUpdateCHW extends JsonUtility {
   public static final String UPDATE_URL = "http://localhost:9091/rest-api/agents/";
   public static final String commTrackUser = "commTrack";
   public static final String PHONE_NUMBER = "0099887766";
-  public static final String DEFAULT_AGENT_NAME = "AgentVinod";
+  public static final String DEFAULT_AGENT_NAME = "Agent A1";
   public static final String DEFAULT_PARENT_FACILITY_CODE = "F10";
   public static final String ACTIVE_STATUS = "true";
   public static final String DEFAULT_AGENT_CODE = "A2";
@@ -51,7 +51,7 @@ public class CreateUpdateCHW extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -102,10 +102,10 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setPhoneNumber(PHONE_NUMBER);
     agentJson.setActive(ACTIVE_STATUS);
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
 
@@ -141,30 +141,27 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     assertEquals(dbWrapper.getRequisitionGroupId(DEFAULT_PARENT_FACILITY_CODE), dbWrapper.getRequisitionGroupId(DEFAULT_AGENT_CODE));
-    List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
-    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(DEFAULT_PARENT_FACILITY_CODE);
-    List<Integer> listOfProgramsSupportedByVirtualFacility = new ArrayList();
-    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(DEFAULT_AGENT_CODE);
+    List<Integer> listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(DEFAULT_PARENT_FACILITY_CODE);
+    List<Integer> listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(DEFAULT_AGENT_CODE);
     Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
     setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
     Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
     setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
     assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
-    assertEquals(listOfProgramsSupportedByParentFacility.size(),listOfProgramsSupportedByVirtualFacility.size());
-    for(Integer programId : listOfProgramsSupportedByParentFacility){
+    assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
+    for (Integer programId : listOfProgramsSupportedByParentFacility) {
       assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, DEFAULT_PARENT_FACILITY_CODE, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, DEFAULT_AGENT_CODE, "active"));
-      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,DEFAULT_PARENT_FACILITY_CODE),dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,DEFAULT_AGENT_CODE));
+      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, DEFAULT_PARENT_FACILITY_CODE), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, DEFAULT_AGENT_CODE));
     }
   }
-
 
 
   @Test(groups = {"webservice"})
@@ -179,33 +176,33 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     agentJson.setActive("false");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
     dbWrapper.updateFacilityFieldBYCode("enabled", "false", DEFAULT_AGENT_CODE);
 
     ResponseEntity responseEntityEnabledFalse = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityEnabledFalse.getResponse(),
-        responseEntityEnabledFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
+      responseEntityEnabledFalse.getResponse().contains("{\"error\":\"CHW cannot be updated as it has been deleted\"}"));
 
   }
 
@@ -221,12 +218,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -241,21 +238,21 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     agentJson.setPhoneNumber("0099887766759785759859757757887");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-        responseEntityUpdated.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Incorrect data length\"}"));
 
   }
 
@@ -272,22 +269,22 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     agentJson.setActive("false");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-        responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
     assertEquals(FALSE_FLAG, dbWrapper.getActivePropertyOfFacility(AGENT_CODE));
   }
@@ -313,12 +310,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
@@ -337,43 +334,41 @@ public class CreateUpdateCHW extends JsonUtility {
     assertEquals(dbWrapper.getFacilityFieldBYCode("active", agentCode), "t");
     assertEquals(dbWrapper.getFacilityFieldBYCode("enabled", agentCode), TRUE_FLAG);
     assertEquals(dbWrapper.getFacilityFieldBYCode("virtualFacility", agentCode), TRUE_FLAG);
-    assertEquals(dbWrapper.getRequisitionGroupId(firstParentFacility) , dbWrapper.getRequisitionGroupId(agentCode));
+    assertEquals(dbWrapper.getRequisitionGroupId(firstParentFacility), dbWrapper.getRequisitionGroupId(agentCode));
 
     agentJson.setParentFacilityCode(updateParentFacility);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + agentCode + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + agentCode + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-    responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(dbWrapper.getRequisitionGroupId(updateParentFacility) , dbWrapper.getRequisitionGroupId(agentCode));
+    assertEquals(dbWrapper.getRequisitionGroupId(updateParentFacility), dbWrapper.getRequisitionGroupId(agentCode));
 
-    List<Integer> listOfProgramsSupportedByParentFacility = new ArrayList();
-    listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(updateParentFacility);
-    List<Integer> listOfProgramsSupportedByVirtualFacility = new ArrayList();
-    listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(agentCode);
+    List<Integer> listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(updateParentFacility);
+    List<Integer> listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(agentCode);
     Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
     setOfProgramsSupportedByParentFacility.addAll(listOfProgramsSupportedByParentFacility);
     Set<Integer> setOfProgramsSupportedByVirtualFacility = new HashSet<>();
     setOfProgramsSupportedByVirtualFacility.addAll(listOfProgramsSupportedByVirtualFacility);
     assertTrue(setOfProgramsSupportedByParentFacility.equals(setOfProgramsSupportedByVirtualFacility));
-    assertEquals(listOfProgramsSupportedByParentFacility.size(),listOfProgramsSupportedByVirtualFacility.size());
-    for(Integer programId : listOfProgramsSupportedByParentFacility){
-       assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, updateParentFacility, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, agentCode, "active"));
-       assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,updateParentFacility),dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId,agentCode));
+    assertEquals(listOfProgramsSupportedByParentFacility.size(), listOfProgramsSupportedByVirtualFacility.size());
+    for (Integer programId : listOfProgramsSupportedByParentFacility) {
+      assertEquals(dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, updateParentFacility, "active"), dbWrapper.getProgramFieldForProgramIdAndFacilityCode(programId, agentCode, "active"));
+      assertEquals(dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, updateParentFacility), dbWrapper.getProgramStartDateForProgramIdAndFacilityCode(programId, agentCode));
     }
   }
 
   @Test(groups = {"webservice"})
   public void testVerifyFieldsAfterCHWCreation() throws Exception {
-    String typeId = "typeid";
-    String geographicZoneId = "geographiczoneid";
-    String parentFacilityId = "parentfacilityid";
+    String typeId = "typeId";
+    String geographicZoneId = "geographicZoneId";
+    String parentFacilityId = "parentFacilityId";
     String agentCode = "commtrk";
     String agentName = DEFAULT_AGENT_NAME;
     String agentNameUpdated = "AgentJyot";
@@ -382,11 +377,11 @@ public class CreateUpdateCHW extends JsonUtility {
     String code = "code";
     String name = "name";
     String id = "id";
-    String mainPhone = "mainphone";
+    String mainPhone = "mainPhone";
     String phoneNumber = PHONE_NUMBER;
     String phoneNumberUpdated = "12345678";
     String active = "active";
-    String virtualFacility = "virtualfacility";
+    String virtualFacility = "virtualFacility";
     String sdp = "sdp";
     String enabled = "enabled";
 
@@ -401,12 +396,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
@@ -426,12 +421,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive("false");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + agentCode + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + agentCode + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-        responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+      responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
     assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
     assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
@@ -457,12 +452,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -479,20 +474,20 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     dbWrapper.updateVirtualPropertyOfFacility(facilityCode, ACTIVE_STATUS);
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-        responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Parent facility can not be virtual facility\"}"));
   }
 
 
@@ -508,18 +503,18 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Agent already registered\"}"));
   }
 
 
@@ -535,12 +530,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + Agent_code + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + Agent_code + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"error\":\"Agent is not a virtual facility\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Agent is not a virtual facility\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -555,12 +550,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -575,19 +570,19 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     agentJson.setParentFacilityCode("A10");
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
-        responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Invalid Facility code\"}"));
   }
 
   @Test(groups = {"webservice"})
@@ -603,10 +598,10 @@ public class CreateUpdateCHW extends JsonUtility {
     String modifiedJson = getJsonStringFor(agentJson).replace(':', ';');
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedJson,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
     assertEquals(responseEntityUpdated.getStatus(), SC_BAD_REQUEST);
 
@@ -618,12 +613,12 @@ public class CreateUpdateCHW extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
     ResponseEntity responseEntity = client.SendJSON("{}",
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -637,16 +632,16 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     agentJson.setPhoneNumber(PHONE_NUMBER);
     agentJson.setActive(ACTIVE_STATUS);
-    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
+    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"Agent A1\",", " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -662,20 +657,20 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
-    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
+    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"Agent A1\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
-        responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -689,16 +684,16 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     agentJson.setPhoneNumber(PHONE_NUMBER);
     agentJson.setActive(ACTIVE_STATUS);
-    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
+    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"Agent A1\",", " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -715,22 +710,22 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
-    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
+    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"Agent A1\",", " ");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
-        responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -748,12 +743,12 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
   }
 
@@ -769,12 +764,12 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " +
-        getJsonStringFor(agentJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
+      getJsonStringFor(agentJson), responseEntity.getResponse().contains("{\"error\":\"Invalid agent code\"}"));
 
   }
 
@@ -790,22 +785,22 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(",\"active\":\"true\"", " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -823,12 +818,12 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -844,21 +839,21 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(DEFAULT_AGENT_NAME, "");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
 
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " modifiedString : " + modifiedString,
-        responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntityUpdated.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -876,12 +871,12 @@ public class CreateUpdateCHW extends JsonUtility {
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -897,22 +892,22 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(ACTIVE_STATUS, "");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
+      responseEntity.getResponse().contains("{\"error\":\"Missing mandatory fields\"}"));
 
   }
 
@@ -928,22 +923,22 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
 
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(ACTIVE_STATUS, " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("Active should be True/False"));
+      responseEntity.getResponse().contains("Active should be True/False"));
 
   }
 
@@ -959,18 +954,18 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
 
@@ -987,10 +982,10 @@ public class CreateUpdateCHW extends JsonUtility {
     String modifiedString = getJsonStringFor(agentJson).replaceFirst("phoneNumber", "phonenumber");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
 
 
     assertEquals(responseEntity.getStatus(), SC_BAD_REQUEST);
@@ -1008,22 +1003,22 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     agentJson.setAgentCode("CASESENSITIVE");
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
-        getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
+      getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"error\":\"Agent already registered\"}"));
 
   }
 
@@ -1040,24 +1035,24 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Admin123");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
+      responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
     String agent_code_updated = "CASESENSITIVE";
     agentJson.setAgentCode(agent_code_updated);
 
 
     ResponseEntity responseEntityUpdated = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + agent_code_updated + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + agent_code_updated + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse() + " updated json : " +
-        getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
+      getJsonStringFor(agentJson), responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
   }
 
@@ -1073,12 +1068,12 @@ public class CreateUpdateCHW extends JsonUtility {
     String modifiedString = getJsonStringFor(agentJson).replaceFirst(ACTIVE_STATUS, "truefalse");
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse() + " modifiedString : " + modifiedString,
-        responseEntity.getResponse().contains("Active should be True/False"));
+      responseEntity.getResponse().contains("Active should be True/False"));
 
   }
 
@@ -1094,12 +1089,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        commTrackUser,
-        "Testing");
+      CREATE_URL,
+      POST,
+      commTrackUser,
+      "Testing");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("Authentication Failed"));
+      responseEntity.getResponse().contains("Authentication Failed"));
 
 
   }
@@ -1115,10 +1110,10 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        commTrackUser,
-        "Testing");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      commTrackUser,
+      "Testing");
     assertEquals(responseEntity.getStatus(), SC_UNAUTHORIZED);
   }
 
@@ -1134,12 +1129,12 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        CREATE_URL,
-        POST,
-        "Testing",
-        "Admin123");
+      CREATE_URL,
+      POST,
+      "Testing",
+      "Admin123");
     assertTrue("Showing response as : " + responseEntity.getResponse(),
-        responseEntity.getResponse().contains("Authentication Failed"));
+      responseEntity.getResponse().contains("Authentication Failed"));
 
   }
 
@@ -1154,17 +1149,17 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setActive(ACTIVE_STATUS);
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(agentJson),
-        UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
-        PUT,
-        "Testing",
-        "Admin123");
+      UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,
+      PUT,
+      "Testing",
+      "Admin123");
     assertEquals(responseEntity.getStatus(), SC_UNAUTHORIZED);
   }
 
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
-        {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
+      {"User123", "HIV", new String[]{"Admin123", "Admin123"}}
     };
   }
 }

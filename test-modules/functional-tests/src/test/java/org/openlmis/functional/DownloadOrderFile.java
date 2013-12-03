@@ -17,20 +17,19 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.ConvertOrderPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ViewOrdersPage;
+import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -43,10 +42,9 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeIncharge";
-  private final String separator = getProperty("file.separator");
-  public  String[] csvRows;
+  public String[] csvRows;
 
-    @Before
+  @Before
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
@@ -75,7 +73,6 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I configure openlmis order file columns:$")
   public void setupOrderFileOpenLMISColumns(DataTable userTable) throws Exception {
-    dbWrapper.defaultSetupOrderFileOpenLMISColumns();
     List<Map<String, String>> data = userTable.asMaps();
     for (Map map : data)
       dbWrapper.setupOrderFileOpenLMISColumns(map.get("Data Field Label").toString(), map.get("Include In Order File").toString(), map.get("Column Label").toString(), Integer.parseInt(map.get("Position").toString()), map.get("Format").toString());
@@ -88,40 +85,40 @@ public class DownloadOrderFile extends TestCaseHelper {
     testWebDriver.sleep(5000);
   }
 
-    @And("^I get order data in file prefix \"([^\"]*)\"$")
-    public String[] getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
-        csvRows = null;
+  @And("^I get order data in file prefix \"([^\"]*)\"$")
+  public String[] getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
+    csvRows = null;
 
-        String orderId = dbWrapper.getOrderId();
+    String orderId = dbWrapper.getOrderId();
 
-        csvRows = readCSVFile(filePrefix + orderId + ".csv");
-        testWebDriver.sleep(5000);
-        deleteFile(filePrefix + orderId + ".csv");
+    csvRows = readCSVFile(filePrefix + orderId + ".csv");
+    testWebDriver.sleep(5000);
+    deleteFile(filePrefix + orderId + ".csv");
 
-        return csvRows;
-    }
+    return csvRows;
+  }
 
   @And("^I verify order file line \"([^\"]*)\" having \"([^\"]*)\"$")
-  public void checkOrderFileData(int lineNumber,String data) throws Exception {
-   testWebDriver.sleep(1000);
-   assertTrue("Order data incorrect in line number "+ lineNumber, csvRows[lineNumber-1].contains(data));
+  public void checkOrderFileData(int lineNumber, String data) throws Exception {
+    testWebDriver.sleep(1000);
+    assertTrue("Order data incorrect in line number " + lineNumber, csvRows[lineNumber - 1].contains(data));
   }
 
   @And("^I verify order date format \"([^\"]*)\" in line \"([^\"]*)\"$")
-    public void checkOrderFileOrderDate(String dateFormat,int lineNumber) throws Exception {
-      String createdDate = dbWrapper.getCreatedDate("orders", dateFormat);
-      assertTrue("Order date incorrect.", csvRows[lineNumber-1].contains(createdDate));
+  public void checkOrderFileOrderDate(String dateFormat, int lineNumber) throws Exception {
+    String createdDate = dbWrapper.getCreatedDate("orders", dateFormat);
+    assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(createdDate));
   }
-    @And("^I verify order id in line \"([^\"]*)\"$")
-    public void checkOrderFileOrderId(int lineNumber) throws Exception {
-        String orderId = dbWrapper.getOrderId();
-        assertTrue("Order date incorrect.", csvRows[lineNumber-1].contains(orderId));
-    }
+
+  @And("^I verify order id in line \"([^\"]*)\"$")
+  public void checkOrderFileOrderId(int lineNumber) throws Exception {
+    String orderId = dbWrapper.getOrderId();
+    assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(orderId));
+  }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForSpecificConfiguration(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("Zero", "TRUE");
-    dbWrapper.defaultSetupOrderFileOpenLMISColumns();
 
     dbWrapper.setupOrderFileOpenLMISColumns("create.facility.code", "TRUE", "Facility code", 5, "");
     dbWrapper.setupOrderFileOpenLMISColumns("header.order.number", "TRUE", "Order number", 7, "");
@@ -137,7 +134,7 @@ public class DownloadOrderFile extends TestCaseHelper {
     getOrderDataFromDownloadedFile("Zero");
     checkOrderFileData(1, "Extra 1,Approved quantity,Product code,Order date,Facility code,Period,Order number,");
     checkOrderFileData(2, ",10,P10,");
-    checkOrderFileData(2,",F10,2012-01,");
+    checkOrderFileData(2, ",F10,2012-01,");
     checkOrderFileOrderDate("MM-dd-yyyy", 2);
     checkOrderFileOrderId(2);
   }
@@ -145,39 +142,34 @@ public class DownloadOrderFile extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
   public void testVerifyOrderFileForDefaultConfiguration(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("O", "TRUE");
-    dbWrapper.defaultSetupOrderFileOpenLMISColumns();
 
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1,"Order number,Facility code,Product code,Approved quantity,Period,Order date");
-    checkOrderFileData(2,",F10,P10,10,01/12,");
+    checkOrderFileData(1, "Order number,Facility code,Product code,Approved quantity,Period,Order date");
+    checkOrderFileData(2, ",F10,P10,10,01/12,");
     checkOrderFileOrderDate("dd/MM/yy", 2);
     checkOrderFileOrderId(2);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyOrderFileForDefaultConfigurationWithNoHeades(String password) throws Exception {
+  public void testVerifyOrderFileForDefaultConfigurationWithNoHeaders(String password) throws Exception {
     dbWrapper.setupOrderFileConfiguration("O", "FALSE");
-    dbWrapper.defaultSetupOrderFileOpenLMISColumns();
 
     setupDownloadOrderFileSetup(password);
     getOrderDataFromDownloadedFile("O");
-    checkOrderFileData(1,",F10,P10,10,01/12,");
+    checkOrderFileData(1, ",F10,P10,10,01/12,");
     checkOrderFileOrderDate("dd/MM/yy", 1);
     checkOrderFileOrderId(1);
   }
 
   public void setupDownloadOrderFileSetup(String password) throws Exception {
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    rightsList.add("APPROVE_REQUISITION");
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "APPROVE_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSICUserName, "200", rightsList);
 
     setupTestRoleRightsData("lmu", "CONVERT_TO_ORDER,VIEW_ORDER");
     dbWrapper.insertUser("212", "lmu", passwordUsers, "F10", "Jake_Doe@openlmis.com");
     dbWrapper.insertRoleAssignment("212", "lmu");
-    dbWrapper.insertFulfilmentRoleAssignment("lmu","lmu","F10");
+    dbWrapper.insertFulfilmentRoleAssignment("lmu", "lmu", "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSICUserName, password);

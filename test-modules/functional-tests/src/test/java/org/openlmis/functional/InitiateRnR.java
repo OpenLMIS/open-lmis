@@ -21,19 +21,27 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.Integer.valueOf;
+import static java.lang.Math.round;
 import static java.util.Arrays.asList;
+import static org.openlmis.UiUtils.DBWrapper.DEFAULT_MAX_MONTH_OF_STOCK;
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -47,6 +55,8 @@ public class InitiateRnR extends TestCaseHelper {
   public static final String AUTHORIZED = "AUTHORIZED";
   public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
+  public static final String VIEW_ORDER = "VIEW_ORDER";
+  private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
   public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
 
   public LoginPage loginPage;
@@ -103,7 +113,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Given("I have \"([^\"]*)\" user with \"([^\"]*)\" rights and data to initiate requisition$")
   public void setupUserWithRightsAndInitiateRequisitionData(String user,
-                                                            String rights) throws IOException, SQLException {
+                                                            String rights) throws Exception {
     String[] rightList = rights.split(",");
 
     setupTestDataToInitiateRnR(true, program, user, "200", asList(rightList));
@@ -130,37 +140,37 @@ public class InitiateRnR extends TestCaseHelper {
   @When("^I enter beginning balance \"([^\"]*)\"$")
   public void enterBeginningBalance(String beginningBalance) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterBeginningBalance(beginningBalance);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(valueOf(beginningBalance));
   }
 
   @When("^I enter quantity received \"([^\"]*)\"$")
   public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantityReceived(quantityReceived);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(valueOf(quantityReceived));
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
   public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantityDispensed(quantityDispensed);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(valueOf(quantityDispensed));
   }
 
   @Then("^I validate beginning balance \"([^\"]*)\"$")
   public void validateBeginningBalance(String beginningBalance) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyBeginningBalance(beginningBalance);
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct(beginningBalance);
   }
 
   @Then("^I validate quantity received \"([^\"]*)\"$")
   public void validateQuantityReceived(String quantityReceived) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyQuantityReceived(quantityReceived);
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct(quantityReceived);
   }
 
   @Then("^I validate quantity dispensed \"([^\"]*)\"$")
   public void validateQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyQuantityDispensed(quantityDispensed);
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct(quantityDispensed);
   }
 
   @Then("^I should see regimen fields$")
@@ -472,10 +482,8 @@ public class InitiateRnR extends TestCaseHelper {
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
-  public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program,
-                                                                        String userSIC,
-                                                                        String password
-  ) throws Exception {
+  public void testValidRnRSubmittedAuthorizedViewAndVerifyStateOfFields(String program, String userSIC,
+                                                                        String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
@@ -495,23 +503,23 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance("100");
-    initiateRnRPage.enterQuantityReceived("100");
-    initiateRnRPage.enterQuantityDispensed("100");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(100);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(100);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "2");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.enterBeginningBalance("100");
-    initiateRnRPage1.enterQuantityReceived("100");
-    initiateRnRPage1.enterQuantityDispensed("100");
+    initiateRnRPage1.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage1.enterQuantityReceivedForFirstProduct(100);
+    initiateRnRPage1.enterQuantityDispensedForFirstProduct(100);
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
 
-    initiateRnRPage1.verifyBeginningBalance("100");
-    initiateRnRPage1.verifyQuantityReceived("100");
-    initiateRnRPage1.verifyQuantityDispensed("100");
+    initiateRnRPage1.verifyBeginningBalanceForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityReceivedForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityDispensedForFirstProduct("100");
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
@@ -560,47 +568,45 @@ public class InitiateRnR extends TestCaseHelper {
   public void testEmergencyRnRApprovedAndConvertedToOrder(String program,
                                                           String userSIC,
                                                           String password) throws Exception {
-    String LMU_IN_CHARGE = "lmuincharge";
 
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
+    String userName = "lmuInCharge";
+    String roleName = "lmuInCharge";
+
+    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
-    List<String> rightsList1 = new ArrayList<>();
-    rightsList1.add(AUTHORIZE_REQUISITION);
-    rightsList1.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist",
-      rightsList1);
+    List<String> rightsList1 = asList(AUTHORIZE_REQUISITION, VIEW_REQUISITION);
+    createUserAndAssignRoleRights("201", "mo", "Maar_Doe@openlmis.com", "F10", "district pharmacist", rightsList1);
 
-    List<String> rightsList2 = new ArrayList<>();
-    rightsList2.add(APPROVE_REQUISITION);
-    rightsList2.add(VIEW_REQUISITION);
-    createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu",
-      rightsList2);
+    List<String> rightsList2 = asList(APPROVE_REQUISITION, VIEW_REQUISITION);
+    createUserAndAssignRoleRights("301", "lmu", "Maafi_De_Doe@openlmis.com", "F10", "lmu", rightsList2);
 
-    List<String> rightsList3 = new ArrayList<>();
-    rightsList3.add(CONVERT_TO_ORDER);
-    rightsList3.add("VIEW_ORDER");
-    createUserAndAssignRoleRights("401", LMU_IN_CHARGE, "Jaan_V_Doe@openlmis.com", "F10", LMU_IN_CHARGE,
-      rightsList3);
+    List<String> rightsList3 = asList(CONVERT_TO_ORDER, VIEW_ORDER);
+    createUserAndAssignRoleRights("401", userName, "Jaan_V_Doe@openlmis.com", "F10", roleName, rightsList3);
 
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
-    dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
+    String periodStartDate = "2013-10-03";
+    String periodEndDate = "2014-01-30";
+    dbWrapper.insertProcessingPeriod("current Period", "current Period", periodStartDate, periodEndDate, 1, "M");
+
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
+    Integer quantityDispensed = 100;
+    Integer beginningBalance = 100;
+    Integer quantityReceived = 100;
+
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.enterBeginningBalance("100");
-    initiateRnRPage1.enterQuantityReceived("100");
-    initiateRnRPage1.enterQuantityDispensed("100");
+    initiateRnRPage1.enterBeginningBalanceForFirstProduct(beginningBalance);
+    initiateRnRPage1.enterQuantityReceivedForFirstProduct(quantityReceived);
+    initiateRnRPage1.enterQuantityDispensedForFirstProduct(quantityDispensed);
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifyBeginningBalance("100");
-    initiateRnRPage1.verifyQuantityReceived("100");
-    initiateRnRPage1.verifyQuantityDispensed("100");
+    initiateRnRPage1.verifyBeginningBalanceForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityReceivedForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityDispensedForFirstProduct("100");
     homePage.logout(baseUrlGlobal);
 
 
@@ -617,11 +623,21 @@ public class InitiateRnR extends TestCaseHelper {
     ApprovePage approvePage = homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
     approvePage.ClickRequisitionPresentForApproval();
-    assertEquals("59", approvePage.getApprovedQuantity());
-    assertEquals("53", approvePage.getAdjustedTotalConsumption());
-    assertEquals("53", approvePage.getAMC());
-    assertEquals("159", approvePage.getMaxStockQuantity());
-    assertEquals("59", approvePage.getCalculatedOrderQuantity());
+
+    int reportingDays = calculateReportingDays(periodStartDate);
+    int stockOutDays = 0;
+    int noOfDaysInOnePeriod = 30;
+    Integer normalizedConsumption = round(quantityDispensed * ((float) noOfDaysInOnePeriod / (reportingDays - stockOutDays)));
+    Integer AMC = normalizedConsumption / 1;
+    Integer maxStockQuantity = DEFAULT_MAX_MONTH_OF_STOCK * AMC;
+    Integer stockInHand = beginningBalance + quantityReceived - quantityDispensed;
+    Integer calculatedOrderQuantity = maxStockQuantity - stockInHand;
+
+    assertEquals(calculatedOrderQuantity.toString(), approvePage.getApprovedQuantity());
+    assertEquals(normalizedConsumption.toString(), approvePage.getAdjustedTotalConsumption());
+    assertEquals(AMC.toString(), approvePage.getAMC());
+    assertEquals(maxStockQuantity.toString(), approvePage.getMaxStockQuantity());
+    assertEquals(calculatedOrderQuantity.toString(), approvePage.getCalculatedOrderQuantity());
     approvePage.editFullSupplyApproveQuantity("");
     approvePage.approveRequisition();
     approvePage.verifyApproveErrorDiv();
@@ -632,14 +648,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage2.logout(baseUrlGlobal);
 
-    HomePage homePage3 = loginPage.loginAs(LMU_IN_CHARGE, password);
+    HomePage homePage3 = loginPage.loginAs(userName, password);
     ConvertOrderPage convertOrderPage = homePage3.navigateConvertToOrder();
     convertOrderPage.verifyNoRequisitionPendingMessage();
 
     ViewOrdersPage viewOrdersPage = homePage3.navigateViewOrders();
     viewOrdersPage.verifyNoRequisitionReleasedAsOrderMessage();
 
-    dbWrapper.insertFulfilmentRoleAssignment(LMU_IN_CHARGE, LMU_IN_CHARGE, "F10");
+    dbWrapper.insertFulfilmentRoleAssignment(userName, roleName, "F10");
     homePage3.navigateHomePage();
     homePage3.navigateConvertToOrder();
     convertOrderPage.verifyOrderListElements(program, "F10", "Village Dispensary", "03/10/2013", "30/01/2014", "Village Dispensary");
@@ -668,9 +684,9 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance("100");
-    initiateRnRPage.enterQuantityReceived("0");
-    initiateRnRPage.enterQuantityDispensed("1000");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(1000);
     verifyStockOnHandErrorMessage();
 
   }
@@ -695,11 +711,11 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance("100");
-    initiateRnRPage.enterQuantityReceived("0");
-    initiateRnRPage.enterStockOnHand("1000");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterStockOnHandForFirstProduct(1000);
     verifyTotalQuantityConsumedErrorMessage();
-    initiateRnRPage.verifyStockOnHand("1000");
+    initiateRnRPage.verifyStockOnHandForFirstProduct("1000");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -719,9 +735,9 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance("100");
-    initiateRnRPage.enterQuantityReceived("100");
-    initiateRnRPage.enterQuantityDispensed("100");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(100);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(100);
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifySubmitRnrSuccessMsg();
@@ -837,7 +853,6 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getBeginningBalance(), "1");
   }
 
-
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testRestrictVirtualFacilityFromRnRScreen(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
@@ -855,6 +870,7 @@ public class InitiateRnR extends TestCaseHelper {
 
   }
 
+
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testSkipProductRnRField(String program, String userSIC, String password) throws Exception {
     List<String> rightsList = new ArrayList<>();
@@ -870,7 +886,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterRequestedQuantity(100);
+    initiateRnRPage.enterRequestedQuantityForFirstProduct(100);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
 
@@ -881,7 +897,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
     initiateRnRPage.skipSingleProduct(1);
-    assertTrue(initiateRnRPage.isEnableBeginningBalance());
+    assertTrue(initiateRnRPage.isEnableBeginningBalanceForFirstProduct());
     initiateRnRPage.calculateAndVerifyTotalCost();
 
     initiateRnRPage.skipAllProduct();
@@ -889,15 +905,15 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
-    initiateRnRPage.unskipAllProduct();
-    initiateRnRPage.enterBeginningBalance("10");
-    initiateRnRPage.enterQuantityReceived("0");
-    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.unSkipAllProduct();
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
-    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -924,14 +940,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance("10");
-    initiateRnRPage.enterQuantityReceived("0");
-    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
-    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -941,7 +957,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
-    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
@@ -975,14 +991,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance("10");
-    initiateRnRPage.enterQuantityReceived("0");
-    initiateRnRPage.enterQuantityDispensed("0");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
-    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -992,7 +1008,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
-    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
@@ -1012,7 +1028,7 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyRegimenFieldsPresentOnRegimenTab(String regimenCode, String regimenName,
                                                       InitiateRnRPage initiateRnRPage) {
     assertTrue("Regimen tab should be displayed.", initiateRnRPage.existRegimenTab());
-    SeleneseTestBase.assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
+    assertEquals(initiateRnRPage.getRegimenTableRowCount(), 2);
 
     assertTrue("Regimen Code should be displayed.", initiateRnRPage.existRegimenCode(regimenCode, 2));
     assertTrue("Regimen Name should be displayed.", initiateRnRPage.existRegimenName(regimenName, 2));
@@ -1035,22 +1051,22 @@ public class InitiateRnR extends TestCaseHelper {
   private void verifyValuesOnRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
                                            String patientsToInitiateTreatment, String patientsStoppedTreatment,
                                            String remarks) {
-    SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
-    SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
+    assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentValue());
+    assertEquals(patientsToInitiateTreatment,
       initiateRnRPage.getPatientsToInitiateTreatmentValue());
-    SeleneseTestBase.assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
-    SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksValue());
+    assertEquals(patientsStoppedTreatment, initiateRnRPage.getPatientsStoppedTreatmentValue());
+    assertEquals(remarks, initiateRnRPage.getRemarksValue());
   }
 
   private void verifyValuesOnAuthorizeRegimenScreen(InitiateRnRPage initiateRnRPage, String patientsOnTreatment,
                                                     String patientsToInitiateTreatment,
                                                     String patientsStoppedTreatment, String remarks) {
-    SeleneseTestBase.assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
-    SeleneseTestBase.assertEquals(patientsToInitiateTreatment,
+    assertEquals(patientsOnTreatment, initiateRnRPage.getPatientsOnTreatmentInputValue());
+    assertEquals(patientsToInitiateTreatment,
       initiateRnRPage.getPatientsToInitiateTreatmentInputValue());
-    SeleneseTestBase.assertEquals(patientsStoppedTreatment,
+    assertEquals(patientsStoppedTreatment,
       initiateRnRPage.getPatientsStoppedTreatmentInputValue());
-    SeleneseTestBase.assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
+    assertEquals(remarks, initiateRnRPage.getRemarksInputValue());
   }
 
   private void verifyRnRsInGrid(String period, String rnrStatus, String row) {
@@ -1074,7 +1090,6 @@ public class InitiateRnR extends TestCaseHelper {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]"));
     testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]").click();
   }
-
 
   @AfterMethod(groups = "requisition")
   @After
@@ -1102,5 +1117,13 @@ public class InitiateRnR extends TestCaseHelper {
       {"HIV", "storeIncharge", "Admin123"}
     };
   }
+
+  private int calculateReportingDays(String periodStartString) throws ParseException {
+    Date currentDate = new Date();
+    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    Date periodStartDate = formatter.parse(periodStartString);
+    return (int) ((currentDate.getTime() - periodStartDate.getTime()) / MILLISECONDS_IN_ONE_DAY);
+  }
+
 }
 

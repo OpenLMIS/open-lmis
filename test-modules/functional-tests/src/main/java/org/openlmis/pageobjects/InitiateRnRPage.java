@@ -58,46 +58,58 @@ public class InitiateRnRPage extends RequisitionPage {
   private static WebElement submitErrorMessage = null;
 
   @FindBy(how = ID, using = "beginningBalance_0")
-  private static WebElement beginningBalance = null;
+  private static WebElement beginningBalanceFirstProduct = null;
 
   @FindBy(how = ID, using = "beginningBalance_1")
   private static WebElement beginningBalanceSecondProduct = null;
 
   @FindBy(how = ID, using = "quantityReceived_0")
-  private static WebElement quantityReceived = null;
+  private static WebElement quantityReceivedFirstProduct = null;
 
   @FindBy(how = ID, using = "quantityReceived_1")
   private static WebElement quantityReceivedSecondProduct = null;
 
   @FindBy(how = ID, using = "quantityDispensed_0")
-  private static WebElement quantityDispensed = null;
+  private static WebElement quantityDispensedFirstProduct = null;
 
   @FindBy(how = ID, using = "quantityDispensed_1")
   private static WebElement quantityDispensedSecondProduct = null;
 
   @FindBy(how = ID, using = "stockInHand_0")
-  private static WebElement stockInHand = null;
+  private static WebElement stockInHandFirstProduct = null;
+
+  @FindBy(how = ID, using = "stockInHand_1")
+  private static WebElement stockInHandSecondProduct = null;
 
   @FindBy(how = ID, using = "newPatientCount_0")
-  private static WebElement newPatient = null;
+  private static WebElement newPatientFirstProduct = null;
+
+  @FindBy(how = ID, using = "newPatientCount_1")
+  private static WebElement newPatientSecondProduct = null;
 
   @FindBy(how = ID, using = "maxStockQuantity_0")
   private static WebElement maximumStockQuantity = null;
 
   @FindBy(how = ID, using = "calculatedOrderQuantity_0")
-  private static WebElement caculatedOrderQuantity = null;
+  private static WebElement calculatedOrderQuantity = null;
 
   @FindBy(how = ID, using = "quantityRequested_0")
-  private static WebElement requestedQuantity = null;
+  private static WebElement requestedQuantityFirstProduct = null;
 
   @FindBy(how = ID, using = "quantityRequested_1")
   private static WebElement requestedQuantitySecondProduct = null;
 
   @FindBy(how = ID, using = "normalizedConsumption_0")
-  private static WebElement adjustedTotalConsumption = null;
+  private static WebElement adjustedTotalConsumptionFirstProduct = null;
+
+  @FindBy(how = ID, using = "normalizedConsumption_1")
+  private static WebElement adjustedTotalConsumptionSecondProduct = null;
 
   @FindBy(how = ID, using = "amc_0")
-  private static WebElement amc = null;
+  private static WebElement amcFirstProduct = null;
+
+  @FindBy(how = ID, using = "amc_1")
+  private static WebElement amcSecondProduct = null;
 
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCost = null;
@@ -130,7 +142,10 @@ public class InitiateRnRPage extends RequisitionPage {
   private static WebElement remarks = null;
 
   @FindBy(how = ID, using = "stockOutDays_0")
-  private static WebElement totalStockOutDays = null;
+  private static WebElement totalStockOutDaysFirstProduct = null;
+
+  @FindBy(how = ID, using = "stockOutDays_1")
+  private static WebElement totalStockOutDaysSecondProduct = null;
 
   @FindBy(how = XPATH, using = "//a[@class='rnr-adjustment']")
   private static WebElement addDescription = null;
@@ -262,13 +277,13 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.setImplicitWait(2);
   }
 
-  public void verifyRnRHeader(String FCode, String FName, String FCstring, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
+  public void verifyRnRHeader(String FCode, String FName, String FcString, String program, String periodDetails, String geoZone, String parentgeoZone, String operatedBy, String facilityType) {
     testWebDriver.sleep(1500);
     testWebDriver.waitForElementToAppear(requisitionHeader);
     String headerText = testWebDriver.getText(requisitionHeader);
     assertTrue(headerText.contains("Report and Requisition for " + program + " (" + facilityType + ")"));
     String facilityText = testWebDriver.getText(facilityLabel);
-    assertTrue(facilityText.contains(FCode + FCstring + " - " + FName + FCstring));
+    assertTrue(facilityText.contains(FCode + FcString + " - " + FName + FcString));
 
     assertEquals(periodDetails.trim(), reportingPeriodInitRnRScreen.getText().trim());
     assertEquals(geoZone, geoZoneInitRnRScreen.getText().trim());
@@ -287,7 +302,7 @@ public class InitiateRnRPage extends RequisitionPage {
     skipAllLink.click();
   }
 
-  public void unskipAllProduct() {
+  public void unSkipAllProduct() {
     testWebDriver.waitForElementToAppear(skipNoneLink);
     skipNoneLink.click();
   }
@@ -299,38 +314,45 @@ public class InitiateRnRPage extends RequisitionPage {
     return new HomePage(testWebDriver);
   }
 
-  public void enterBeginningBalance(String beginningBalanceValue) {
+  public void enterBeginningBalanceForFirstProduct(Integer beginningBalanceValue) {
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(beginningBalance);
-    beginningBalance.clear();
-    beginningBalance.sendKeys(beginningBalanceValue);
+    testWebDriver.waitForElementToAppear(beginningBalanceFirstProduct);
+    beginningBalanceFirstProduct.clear();
+    beginningBalanceFirstProduct.sendKeys(beginningBalanceValue.toString());
   }
 
-  public void enterBeginningBalanceSecondProduct(String beginningBalanceValue) {
+  public void enterBeginningBalanceForSecondProduct(Integer beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalanceSecondProduct);
-    beginningBalanceSecondProduct.sendKeys(beginningBalanceValue);
+    beginningBalanceSecondProduct.sendKeys(beginningBalanceValue.toString());
   }
 
-  public void verifyBeginningBalance(String beginningBalanceValue) {
-    verifyFieldValue(testWebDriver.getAttribute(beginningBalance, "value"), beginningBalanceValue);
+  public void verifyBeginningBalanceForFirstProduct(String beginningBalanceValue) {
+    verifyFieldValue(testWebDriver.getAttribute(beginningBalanceFirstProduct, "value"), beginningBalanceValue);
   }
 
-  public void enterStockOnHand(String stockOnHandValue) {
+  public void enterStockOnHandForFirstProduct(Integer stockOnHandValue) {
     testWebDriver.sleep(1000);
-    testWebDriver.waitForElementToAppear(stockInHand);
-    stockInHand.clear();
-    stockInHand.sendKeys(stockOnHandValue);
+    testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
+    stockInHandFirstProduct.clear();
+    stockInHandFirstProduct.sendKeys(stockOnHandValue.toString());
   }
 
-  public void verifyStockOnHand(String stockOnHandValue) {
+  public void enterStockOnHandForSecondProduct(Integer stockOnHandValue) {
     testWebDriver.sleep(1000);
-    verifyFieldValue(stockOnHandValue, testWebDriver.getAttribute(stockInHand, "value"));
+    testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
+    stockInHandSecondProduct.clear();
+    stockInHandSecondProduct.sendKeys(stockOnHandValue.toString());
   }
 
-  public boolean isEnableBeginningBalance() {
-    testWebDriver.waitForElementToAppear(beginningBalance);
-    return beginningBalance.isEnabled();
+  public void verifyStockOnHandForFirstProduct(String stockOnHandValue) {
+    testWebDriver.sleep(1000);
+    verifyFieldValue(stockOnHandValue, testWebDriver.getAttribute(stockInHandFirstProduct, "value"));
+  }
+
+  public boolean isEnableBeginningBalanceForFirstProduct() {
+    testWebDriver.waitForElementToAppear(beginningBalanceFirstProduct);
+    return beginningBalanceFirstProduct.isEnabled();
   }
 
   public void verifyFieldValue(String Expected, String Actual) {
@@ -344,34 +366,34 @@ public class InitiateRnRPage extends RequisitionPage {
 
   }
 
-  public void enterQuantityReceived(String quantityReceivedValue) {
-    testWebDriver.waitForElementToAppear(quantityReceived);
-    quantityReceived.clear();
-    quantityReceived.sendKeys(quantityReceivedValue);
+  public void enterQuantityReceivedForFirstProduct(Integer quantityReceivedValue) {
+    testWebDriver.waitForElementToAppear(quantityReceivedFirstProduct);
+    quantityReceivedFirstProduct.clear();
+    quantityReceivedFirstProduct.sendKeys(quantityReceivedValue.toString());
   }
 
-  public void enterQuantityReceivedSecondProduct(String quantityReceivedValue) {
+  public void enterQuantityReceivedForSecondProduct(Integer quantityReceivedValue) {
     testWebDriver.waitForElementToAppear(quantityReceivedSecondProduct);
-    quantityReceivedSecondProduct.sendKeys(quantityReceivedValue);
+    quantityReceivedSecondProduct.sendKeys(quantityReceivedValue.toString());
   }
 
-  public void verifyQuantityReceived(String quantityReceivedValue) {
-    verifyFieldValue(testWebDriver.getAttribute(quantityReceived, "value"), quantityReceivedValue);
+  public void verifyQuantityReceivedForFirstProduct(String quantityReceivedValue) {
+    verifyFieldValue(testWebDriver.getAttribute(quantityReceivedFirstProduct, "value"), quantityReceivedValue);
   }
 
-  public void enterQuantityDispensed(String quantityDispensedValue) {
-    testWebDriver.waitForElementToAppear(quantityDispensed);
-    quantityDispensed.clear();
-    quantityDispensed.sendKeys(quantityDispensedValue);
+  public void enterQuantityDispensedForFirstProduct(Integer quantityDispensedValue) {
+    testWebDriver.waitForElementToAppear(quantityDispensedFirstProduct);
+    quantityDispensedFirstProduct.clear();
+    quantityDispensedFirstProduct.sendKeys(quantityDispensedValue.toString());
   }
 
-  public void enterQuantityDispensedSecondProduct(String quantityDispensedValue) {
+  public void enterQuantityDispensedForSecondProduct(Integer quantityDispensedValue) {
     testWebDriver.waitForElementToAppear(quantityDispensedSecondProduct);
-    quantityDispensedSecondProduct.sendKeys(quantityDispensedValue);
+    quantityDispensedSecondProduct.sendKeys(quantityDispensedValue.toString());
   }
 
-  public void verifyQuantityDispensed(String quantityDispensedValue) {
-    verifyFieldValue(testWebDriver.getAttribute(quantityDispensed, "value"), quantityDispensedValue);
+  public void verifyQuantityDispensedForFirstProduct(String quantityDispensedValue) {
+    verifyFieldValue(testWebDriver.getAttribute(quantityDispensedFirstProduct, "value"), quantityDispensedValue);
   }
 
   public void enterLossesAndAdjustments(String adj) {
@@ -403,15 +425,16 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(stockOnHandExpectedValue, stockOnHandActualValue);
   }
 
-  public String calculateStockOnHand(Integer A, Integer B, Integer C, Integer D) {
-    enterBeginningBalance(A.toString());
-    enterQuantityReceived(B.toString());
-    enterQuantityDispensed(C.toString());
-    enterLossesAndAdjustments(D.toString());
+  public String calculateStockOnHand(Integer beginningBalance, Integer quantityReceived,
+                                     Integer quantityDispensed, Integer lossesAndAdjustment) {
+    enterBeginningBalanceForFirstProduct(beginningBalance);
+    enterQuantityReceivedForFirstProduct(quantityReceived);
+    enterQuantityDispensedForFirstProduct(quantityDispensed);
+    enterLossesAndAdjustments(lossesAndAdjustment.toString());
 
-    testWebDriver.waitForElementToAppear(stockInHand);
+    testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
     testWebDriver.sleep(2000);
-    return stockInHand.getText();
+    return stockInHandFirstProduct.getText();
   }
 
   public void PopulateMandatoryFullSupplyDetails(int numberOfLineItems, int numberOfLineItemsPerPage) {
@@ -439,13 +462,13 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(testWebDriver.getText(requestedQtyWarningMessage).trim(), "Please enter a reason");
   }
 
-  public void enterRequestedQuantity(Integer requestedQuantityValue) {
-    testWebDriver.waitForElementToAppear(requestedQuantity);
-    requestedQuantity.clear();
-    requestedQuantity.sendKeys(requestedQuantityValue.toString());
+  public void enterRequestedQuantityForFirstProduct(Integer requestedQuantityValue) {
+    testWebDriver.waitForElementToAppear(requestedQuantityFirstProduct);
+    requestedQuantityFirstProduct.clear();
+    requestedQuantityFirstProduct.sendKeys(requestedQuantityValue.toString());
   }
 
-  public void enterRequestedQuantitySecondProduct(Integer requestedQuantityValue) {
+  public void enterRequestedQuantityForSecondProduct(Integer requestedQuantityValue) {
     testWebDriver.waitForElementToAppear(requestedQuantitySecondProduct);
     requestedQuantitySecondProduct.clear();
     requestedQuantitySecondProduct.sendKeys(requestedQuantityValue.toString());
@@ -462,39 +485,39 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterValuesCalculatedOrderQuantity(Integer numberOfNewPatients, Integer StockOutDays) {
-    testWebDriver.waitForElementToAppear(newPatient);
-    newPatient.sendKeys(Keys.DELETE);
-    newPatient.sendKeys(numberOfNewPatients.toString());
-    testWebDriver.waitForElementToAppear(totalStockOutDays);
-    totalStockOutDays.sendKeys(Keys.DELETE);
-    totalStockOutDays.sendKeys(StockOutDays.toString());
-    testWebDriver.waitForElementToAppear(adjustedTotalConsumption);
+    testWebDriver.waitForElementToAppear(newPatientFirstProduct);
+    newPatientFirstProduct.sendKeys(Keys.DELETE);
+    newPatientFirstProduct.sendKeys(numberOfNewPatients.toString());
+    testWebDriver.waitForElementToAppear(totalStockOutDaysFirstProduct);
+    totalStockOutDaysFirstProduct.sendKeys(Keys.DELETE);
+    totalStockOutDaysFirstProduct.sendKeys(StockOutDays.toString());
+    testWebDriver.waitForElementToAppear(adjustedTotalConsumptionFirstProduct);
     testWebDriver.sleep(1500);
-    adjustedTotalConsumption.click();
+    adjustedTotalConsumptionFirstProduct.click();
   }
 
   public void verifyCalculatedOrderQuantity(Integer expectedAdjustedTotalConsumption, Integer expectedAMC,
                                             Integer expectedMaximumStockQuantity,
                                             Integer expectedCalculatedOrderQuantity) {
-    String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
+    String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumptionFirstProduct);
     verifyFieldValue(expectedAdjustedTotalConsumption.toString(), actualAdjustedTotalConsumption);
-    String actualAmc = testWebDriver.getText(amc);
+    String actualAmc = testWebDriver.getText(amcFirstProduct);
     verifyFieldValue(expectedAMC.toString(), actualAmc.trim());
     String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
     verifyFieldValue(expectedMaximumStockQuantity.toString(), actualMaximumStockQuantity.trim());
-    String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
+    String actualCalculatedOrderQuantity = testWebDriver.getText(calculatedOrderQuantity);
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
   public void verifyCalculatedOrderQuantityForEmergencyRnR() {
-    String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumption);
-    verifyFieldValue("", actualAdjustedTotalConsumption);
-    String actualAmc = testWebDriver.getText(amc);
-    verifyFieldValue("", actualAmc.trim());
+    String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumptionFirstProduct);
+    verifyFieldValue("44", actualAdjustedTotalConsumption);
+    String actualAmc = testWebDriver.getText(amcFirstProduct);
+    verifyFieldValue("40", actualAmc.trim());
     String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
-    verifyFieldValue("", actualMaximumStockQuantity.trim());
-    String actualCalculatedOrderQuantity = testWebDriver.getText(caculatedOrderQuantity);
-    verifyFieldValue("", actualCalculatedOrderQuantity.trim());
+    verifyFieldValue("120", actualMaximumStockQuantity.trim());
+    String actualCalculatedOrderQuantity = testWebDriver.getText(calculatedOrderQuantity);
+    verifyFieldValue("109", actualCalculatedOrderQuantity.trim());
   }
 
   public void verifyPacksToShip(String V) {
@@ -637,8 +660,8 @@ public class InitiateRnRPage extends RequisitionPage {
 
     assertEquals(nonFullSupplyItems, productDescriptionNonFullSupply.getText().trim());
     assertEquals(productCode, productCodeNonFullSupply.getText().trim());
-    testWebDriver.waitForElementToAppear(requestedQuantity);
-    assertEquals(requestedQuantityValue, testWebDriver.getAttribute(requestedQuantity, "value").trim());
+    testWebDriver.waitForElementToAppear(requestedQuantityFirstProduct);
+    assertEquals(requestedQuantityValue, testWebDriver.getAttribute(requestedQuantityFirstProduct, "value").trim());
     assertEquals(requestedQuantityExplanationValue, testWebDriver.getAttribute(requestedQuantityExplanation, "value").trim());
 
   }
@@ -746,12 +769,12 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void verifyAllFieldsDisabled() {
 
-    assertFalse("beginningBalance should be disabled", beginningBalance.isEnabled());
-    assertFalse("quantityReceived should be disabled", quantityReceived.isEnabled());
-    assertFalse("quantityDispensed should be disabled", quantityDispensed.isEnabled());
-    assertFalse("newPatient should be disabled", newPatient.isEnabled());
-    assertFalse("totalStockOutDays should be disabled", totalStockOutDays.isEnabled());
-    assertFalse("requestedQuantity should be disabled", requestedQuantity.isEnabled());
+    assertFalse("beginningBalanceFirstProduct should be disabled", beginningBalanceFirstProduct.isEnabled());
+    assertFalse("quantityReceivedFirstProduct should be disabled", quantityReceivedFirstProduct.isEnabled());
+    assertFalse("quantityDispensedFirstProduct should be disabled", quantityDispensedFirstProduct.isEnabled());
+    assertFalse("newPatientFirstProduct should be disabled", newPatientFirstProduct.isEnabled());
+    assertFalse("totalStockOutDaysFirstProduct should be disabled", totalStockOutDaysFirstProduct.isEnabled());
+    assertFalse("requestedQuantityFirstProduct should be disabled", requestedQuantityFirstProduct.isEnabled());
     assertFalse("requestedQuantityExplanation should be disabled", requestedQuantityExplanation.isEnabled());
     assertFalse("expirationDate should be disabled", expirationDate.isEnabled());
     assertFalse("remarks should be disabled", remarks.isEnabled());
@@ -822,4 +845,54 @@ public class InitiateRnRPage extends RequisitionPage {
   public String getProductCode(Integer rowNumber) {
     return testWebDriver.getElementById("productCode_" + rowNumber).getText();
   }
+
+  public void verifyNormalizedConsumptionForFirstProduct(Integer expectedValue){
+    testWebDriver.sleep(1000);
+    verifyFieldValue(expectedValue.toString(), adjustedTotalConsumptionFirstProduct.getText());
+  }
+
+  public void verifyNormalizedConsumptionForSecondProduct(Integer expectedValue){
+    testWebDriver.sleep(1000);
+    verifyFieldValue(expectedValue.toString(), adjustedTotalConsumptionSecondProduct.getText());
+  }
+
+
+  public void verifyAmcForFirstProduct(Integer expectedValue){
+    testWebDriver.sleep(1000);
+    verifyFieldValue(expectedValue.toString(), amcFirstProduct.getText());
+  }
+
+  public void verifyAmcForSecondProduct(Integer expectedValue){
+    testWebDriver.sleep(1000);
+    verifyFieldValue(expectedValue.toString(), amcSecondProduct.getText());
+  }
+
+  public void enterStockOutDaysForFirstProduct(Integer stockOutDaysValue) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(totalStockOutDaysFirstProduct);
+    totalStockOutDaysFirstProduct.clear();
+    totalStockOutDaysFirstProduct.sendKeys(stockOutDaysValue.toString());
+  }
+
+  public void enterStockOutDaysForSecondProduct(Integer stockOutDaysValue) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(totalStockOutDaysSecondProduct);
+    totalStockOutDaysSecondProduct.clear();
+    totalStockOutDaysSecondProduct.sendKeys(stockOutDaysValue.toString());
+  }
+
+  public void enterNewPatientCountForFirstProduct(Integer newPatientCount) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(newPatientFirstProduct);
+    newPatientFirstProduct.clear();
+    newPatientFirstProduct.sendKeys(newPatientCount.toString());
+  }
+
+  public void enterNewPatientCountForSecondProduct(Integer newPatientCount) {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(newPatientSecondProduct);
+    newPatientSecondProduct.clear();
+    newPatientSecondProduct.sendKeys(newPatientCount.toString());
+  }
+
 }

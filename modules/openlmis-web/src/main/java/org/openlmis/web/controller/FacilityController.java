@@ -39,7 +39,9 @@ import java.util.Map;
 import static org.openlmis.core.domain.Facility.createFacilityToBeDeleted;
 import static org.openlmis.core.domain.Facility.createFacilityToBeRestored;
 import static org.openlmis.core.domain.Right.*;
-import static org.openlmis.web.response.OpenLmisResponse.*;
+import static org.openlmis.web.response.OpenLmisResponse.response;
+import static org.openlmis.web.response.OpenLmisResponse.success;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -118,17 +120,21 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities/{id}", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity update(@RequestBody Facility facility, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> update(@PathVariable("id") long id,
+                                                 @RequestBody Facility facility,
+                                                 HttpServletRequest request) {
+    facility.setId(id);
     facility.setModifiedBy(loggedInUserId(request));
-    ResponseEntity<OpenLmisResponse> response;
+
     try {
       facilityService.update(facility);
     } catch (DataException exception) {
       return createErrorResponse(facility, exception);
     }
-    response = success(messageService.message("message.facility.updated.success", facility.getName()));
-    response.getBody().addData("facility", facility);
-    return response;
+
+    String successMessage = messageService.message("message.facility.updated.success", facility.getName());
+    OpenLmisResponse openLmisResponse = new OpenLmisResponse("facility", facility);
+    return openLmisResponse.successEntity(successMessage);
   }
 
   @RequestMapping(value = "/user/facilities/view", method = GET, headers = ACCEPT_JSON)
@@ -139,38 +145,36 @@ public class FacilityController extends BaseController {
 
   @RequestMapping(value = "/facilities/{facilityId}", method = DELETE, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-  public ResponseEntity softDelete(HttpServletRequest httpServletRequest, @PathVariable Long facilityId) {
-    ResponseEntity<OpenLmisResponse> response;
+  public ResponseEntity<OpenLmisResponse> softDelete(HttpServletRequest httpServletRequest, @PathVariable Long facilityId) {
     Facility facilityToBeDeleted = createFacilityToBeDeleted(facilityId, loggedInUserId(httpServletRequest));
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
     Facility deletedFacility = facilityService.getById(facilityId);
 
-    response = success(messageService.message("disable.facility.success", deletedFacility.getName(),
-      deletedFacility.getCode()));
-    response.getBody().addData("facility", deletedFacility);
-    return response;
+    String successMessage = messageService.message("disable.facility.success", deletedFacility.getName(), deletedFacility.getCode());
+    OpenLmisResponse response = new OpenLmisResponse("facility", deletedFacility);
+    return response.successEntity(successMessage);
   }
 
 
   @RequestMapping(value = "/facilities/{id}/restore", method = PUT, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
   public ResponseEntity<OpenLmisResponse> restore(HttpServletRequest request, @PathVariable("id") long facilityId) {
-    ResponseEntity<OpenLmisResponse> response;
     Facility facilityToBeDeleted = createFacilityToBeRestored(facilityId, loggedInUserId(request));
 
     facilityService.updateEnabledAndActiveFor(facilityToBeDeleted);
 
     Facility restoredFacility = facilityService.getById(facilityId);
 
-    response = success(messageService.message("enable.facility.success", restoredFacility.getName(),
-      restoredFacility.getCode()));
-    response.getBody().addData("facility", restoredFacility);
-    return response;
+    String successMessage = messageService.message("enable.facility.success", restoredFacility.getName(), restoredFacility.getCode());
+
+    OpenLmisResponse response = new OpenLmisResponse("facility", restoredFacility);
+    return response.successEntity(successMessage);
   }
 
   @RequestMapping(value = "/deliveryZones/{deliveryZoneId}/programs/{programId}/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_DISTRIBUTION')")
-  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId, @PathVariable("programId") Long programId) {
+  public ResponseEntity<OpenLmisResponse> getFacilitiesForDeliveryZoneAndProgram(@PathVariable("deliveryZoneId") Long deliveryZoneId,
+                                                                                 @PathVariable("programId") Long programId) {
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
 
     return response("facilities", facilities);
@@ -185,10 +189,8 @@ public class FacilityController extends BaseController {
   }
 
   private ResponseEntity<OpenLmisResponse> createErrorResponse(Facility facility, DataException exception) {
-    ResponseEntity<OpenLmisResponse> response;
-    response = error(exception, HttpStatus.BAD_REQUEST);
-    response.getBody().addData("facility", facility);
-    return response;
+    OpenLmisResponse openLmisResponse = new OpenLmisResponse("facility", facility);
+    return openLmisResponse.errorEntity(exception, BAD_REQUEST);
   }
 
   @RequestMapping(value="/facilities/getListInRequisitionGroup/{id}",method= GET, headers = ACCEPT_JSON)

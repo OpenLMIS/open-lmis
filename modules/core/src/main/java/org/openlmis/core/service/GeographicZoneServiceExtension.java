@@ -40,7 +40,7 @@ public class GeographicZoneServiceExtension extends GeographicZoneService {
     }
 
     public void update(GeographicZone geographicZone) {
-        repository.update(geographicZone);
+        //repository.update(geographicZone);
     }
 
     public GeographicZone getById(int id){

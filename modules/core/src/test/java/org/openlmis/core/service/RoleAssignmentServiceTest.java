@@ -22,9 +22,9 @@ import org.openlmis.core.repository.RoleAssignmentRepository;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -34,7 +34,7 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
- public class RoleAssignmentServiceTest {
+public class RoleAssignmentServiceTest {
 
   RoleAssignmentService service;
 
@@ -44,12 +44,6 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
   @Before
   public void setUp() throws Exception {
     service = new RoleAssignmentService(roleAssignmentRepository);
-  }
-
-  @Test
-  public void shouldDeleteRoleAssignmentsOfAUser() throws Exception {
-    service.deleteAllRoleAssignmentsForUser(1L);
-    verify(roleAssignmentRepository).deleteAllRoleAssignmentsForUser(1L);
   }
 
   @Test
@@ -95,8 +89,8 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 
   @Test
   public void shouldGetRoleAssignmentsForAGivenUserOnAGivenProgramWithRights() throws Exception {
-    Long userId =1L;
-    Long programId =2L;
+    Long userId = 1L;
+    Long programId = 2L;
     List<RoleAssignment> expected = new ArrayList<>();
     when(roleAssignmentRepository.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION)).thenReturn(expected);
     List<RoleAssignment> actual = service.getHomeFacilityRolesForUserOnGivenProgramWithRights(userId, programId, CREATE_REQUISITION, AUTHORIZE_REQUISITION);
@@ -113,9 +107,11 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
     supervisorRoleAssignment.setProgramId(2L);
     final RoleAssignment allocationRoleAssignment = new RoleAssignment();
     allocationRoleAssignment.setProgramId(3L);
-    List<RoleAssignment> homeFacilityRoles = new ArrayList<RoleAssignment>(){{add(homeRoleAssignment);}};
-    List<RoleAssignment> supervisorRoles = new ArrayList<RoleAssignment>(){{add(supervisorRoleAssignment);}};;
-    List<RoleAssignment> allocationRoles = new ArrayList<RoleAssignment>(){{add(allocationRoleAssignment);}};
+
+    List<RoleAssignment> homeFacilityRoles = asList(homeRoleAssignment);
+    List<RoleAssignment> supervisorRoles = asList(supervisorRoleAssignment);
+    List<RoleAssignment> allocationRoles = asList(allocationRoleAssignment);
+
     user.setHomeFacilityRoles(homeFacilityRoles);
     user.setSupervisorRoles(supervisorRoles);
     user.setAllocationRoles(allocationRoles);
@@ -127,6 +123,6 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
     verify(roleAssignmentRepository).insert(homeFacilityRoles, user.getId());
     verify(roleAssignmentRepository).insert(allocationRoles, user.getId());
     verify(roleAssignmentRepository).insert(supervisorRoles, user.getId());
-    verify(roleAssignmentRepository).insert(Arrays.asList(adminRole), user.getId());
+    verify(roleAssignmentRepository).insert(asList(adminRole), user.getId());
   }
 }

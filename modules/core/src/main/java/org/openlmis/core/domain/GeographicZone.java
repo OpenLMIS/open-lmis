@@ -14,8 +14,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -57,4 +59,47 @@ public class GeographicZone extends BaseModel implements Importable {
     this.level = level;
     this.parent = parent;
   }
+
+  @JsonIgnore
+  public boolean isParentHigherInHierarchy() {
+    return level.isLowerInHierarchyThan(parent.getLevel());
+  }
+
+  @JsonIgnore
+  public boolean isRootLevel() {
+    return level.isRootLevel();
+  }
+
+  @JsonIgnore
+  public void validateLevel() {
+    if (this.getLevel() == null)
+      throw new DataException("error.geo.level.invalid");
+
+    validateLevelAndParentAssociation();
+  }
+
+  @JsonIgnore
+  public void validateParentIsHigherInHierarchy() {
+    if (!this.isParentHigherInHierarchy()) {
+      throw new DataException("error.invalid.hierarchy");
+    }
+  }
+
+  @JsonIgnore
+  public void validateParentExists() {
+    if (parent == null) {
+      throw new DataException("error.geo.zone.parent.invalid");
+    }
+  }
+
+  private void validateLevelAndParentAssociation() {
+    if (this.parent == null && !this.isRootLevel()) {
+      throw new DataException("error.invalid.hierarchy");
+    }
+
+    if (this.parent != null && this.isRootLevel()) {
+      throw new DataException("error.invalid.hierarchy");
+    }
+  }
+
 }

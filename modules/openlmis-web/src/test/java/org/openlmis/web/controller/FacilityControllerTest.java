@@ -119,10 +119,10 @@ public class FacilityControllerTest {
   @Test
   public void
   shouldUpdateFacilityAndTagWithModifiedByAndModifiedDate() throws Exception {
-    Facility facility = new Facility();
+    Facility facility = new Facility(1234L);
     facility.setName("test facility");
     when(messageService.message("message.facility.updated.success", facility.getName())).thenReturn("Facility 'test facility' updated successfully");
-    ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
+    ResponseEntity responseEntity = facilityController.update(1234L, facility, httpServletRequest);
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getSuccessMsg(), is("Facility 'test facility' updated successfully"));
@@ -145,15 +145,14 @@ public class FacilityControllerTest {
 
   @Test
   public void shouldReturnErrorMessageIfUpdateFails() throws Exception {
-    Facility facility = new Facility();
+    Facility facility = new Facility(1234L);
     doThrow(new DataException("error message")).when(facilityService).update(facility);
-    ResponseEntity responseEntity = facilityController.update(facility, httpServletRequest);
+
+    ResponseEntity responseEntity = facilityController.update(1234L, facility, httpServletRequest);
+
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
     OpenLmisResponse response = (OpenLmisResponse) responseEntity.getBody();
     assertThat(response.getErrorMsg(), is("error message"));
-    MockHttpServletRequest httpServletRequest = httpRequest();
-
-    facilityController.update(facility, httpServletRequest);
   }
 
   @Test

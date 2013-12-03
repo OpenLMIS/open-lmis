@@ -53,6 +53,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -122,10 +123,8 @@ public class RequisitionServiceTest {
   private ProgramProductService programProductService;
   @Mock
   private MessageService messageService;
-
   @Mock
   private CalculationService calculationService;
-
   @Mock
   private DbMapper dbMapper;
 
@@ -1337,6 +1336,44 @@ public class RequisitionServiceTest {
 
     verify(calculationService).fillReportingDays(requisition);
     verify(requisition).setCreatedDate(createdDateFromDB);
+  }
+
+  @Test
+  public void shouldThrowErrorIfRegimenLineItemsAreNotValidWhileSubmittingRnr() throws NoSuchFieldException, IllegalAccessException {
+    Rnr rnr = new Rnr(1l);
+    rnr.setStatus(INITIATED);
+    rnr.setProgram(new Program(2l));
+    RegimenLineItem regimenLineItem = mock(RegimenLineItem.class);
+    doThrow(new DataException("Invalid regimen line item")).when(regimenLineItem).validate(any(RegimenTemplate.class));
+    rnr.setRegimenLineItems(asList(regimenLineItem));
+    RequisitionService spyRequisitionService = spy(requisitionService);
+    doReturn(rnr).when(spyRequisitionService).getFullRequisitionById(rnr.getId());
+    RegimenTemplate regimenTemplate = mock(RegimenTemplate.class);
+    when(regimenColumnService.getRegimenTemplateByProgramId(rnr.getProgram().getId())).thenReturn(regimenTemplate);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Invalid regimen line item");
+
+    spyRequisitionService.submit(rnr);
+  }
+
+  @Test
+  public void shouldThrowErrorIfRegimenLineItemsAreNotValidWhileAuthorizingRnr() throws NoSuchFieldException, IllegalAccessException {
+    Rnr rnr = new Rnr(1l);
+    rnr.setStatus(SUBMITTED);
+    rnr.setProgram(new Program(2l));
+    RegimenLineItem regimenLineItem = mock(RegimenLineItem.class);
+    doThrow(new DataException("Invalid regimen line item")).when(regimenLineItem).validate(any(RegimenTemplate.class));
+    rnr.setRegimenLineItems(asList(regimenLineItem));
+    RequisitionService spyRequisitionService = spy(requisitionService);
+    doReturn(rnr).when(spyRequisitionService).getFullRequisitionById(rnr.getId());
+    RegimenTemplate regimenTemplate = mock(RegimenTemplate.class);
+    when(regimenColumnService.getRegimenTemplateByProgramId(rnr.getProgram().getId())).thenReturn(regimenTemplate);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Invalid regimen line item");
+
+    spyRequisitionService.authorize(rnr);
   }
 
   private void setupForInitRnr() {
