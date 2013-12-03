@@ -57,4 +57,12 @@ public class GeographicZone extends BaseModel implements Importable {
     this.level = level;
     this.parent = parent;
   }
+
+  public boolean isParentValid() {
+    return level.isLowerInHierarchyThan(parent.getLevel());
+  }
+
+  public boolean isRootLevel() {
+    return level.isRootLevel();
+  }
 }

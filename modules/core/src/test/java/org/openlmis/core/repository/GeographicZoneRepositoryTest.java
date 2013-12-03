@@ -62,29 +62,30 @@ public class GeographicZoneRepositoryTest {
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileInserting() throws Exception {
     when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-        new GeographicLevel(1L, "abc", "abc", 1));
+      new GeographicLevel(1L, "abc", "abc", 1));
     when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-        new GeographicZone(1L, "xyz", "xyz", null, null));
+      new GeographicZone(1L, "xyz", "xyz", null, null));
 
     expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
 
     doThrow(new DataIntegrityViolationException("Incorrect Data Length")).when(mapper).insert(geographicZone);
 
-    repository.insert(geographicZone);
+    repository.save(geographicZone);
   }
 
   @Test
   public void shouldThrowErrorIfIncorrectDataLengthWhileUpdating() throws Exception {
+    geographicZone.setId(1l);
     when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-        new GeographicLevel(1L, "abc", "abc", 1));
+      new GeographicLevel(1L, "abc", "abc", 1));
     when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-        new GeographicZone(1L, "xyz", "xyz", null, null));
+      new GeographicZone(1L, "xyz", "xyz", null, null));
 
     expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
 
     doThrow(new DataIntegrityViolationException("Incorrect Data Length")).when(mapper).update(geographicZone);
 
-    repository.update(geographicZone);
+    repository.save(geographicZone);
   }
 
   @Test
@@ -116,7 +117,7 @@ public class GeographicZoneRepositoryTest {
   }
 
   @Test
-  public void shouldGetGeographicZoneById(){
+  public void shouldGetGeographicZoneById() {
     GeographicZone expectedGeographicZone = new GeographicZone();
     Long geographicZoneId = 1l;
     when(mapper.getWithParentById(geographicZoneId)).thenReturn(expectedGeographicZone);

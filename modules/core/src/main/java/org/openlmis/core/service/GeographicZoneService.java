@@ -25,27 +25,15 @@ public class GeographicZoneService {
   GeographicZoneRepository repository;
 
   public void save(GeographicZone geographicZone) {
-
-    validateAndSetParent(geographicZone);
-
-    if (geographicZone.getId() == null) {
-      repository.insert(geographicZone);
-      return;
-    }
-    repository.update(geographicZone);
-  }
-
-  private void validateAndSetParent(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
-    if (geographicZone.getLevel() == null)
-      throw new DataException("error.geo.level.invalid");
-    if (geographicZone.getParent() == null) {
-      geographicZone.setParent(repository.getByCode("Root"));
-      return;
-    }
+
+    validateLevel(geographicZone);
+    validateLevelAndParentAssociation(geographicZone);
+
     geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
-    if (geographicZone.getParent() == null)
-      throw new DataException("error.geo.zone.parent.invalid");
+    validateParent(geographicZone);
+
+    repository.save(geographicZone);
   }
 
   public GeographicZone getByCode(GeographicZone geographicZone) {
@@ -54,5 +42,33 @@ public class GeographicZoneService {
 
   public GeographicZone getById(long id) {
     return repository.getById(id);
+  }
+
+  private void validateParent(GeographicZone geographicZone) {
+    validateParentGeoZone(geographicZone);
+    if (!geographicZone.isParentValid()) {
+      throw new DataException("error.invalid.hierarchy");
+    }
+  }
+
+  private void validateParentGeoZone(GeographicZone geographicZone) {
+    if (geographicZone.getParent() == null) {
+      throw new DataException("error.geo.zone.parent.invalid");
+    }
+  }
+
+  private void validateLevelAndParentAssociation(GeographicZone geographicZone) {
+    if (geographicZone.getParent() == null && !geographicZone.isRootLevel()) {
+      throw new DataException("error.invalid.hierarchy");
+    }
+
+    if (geographicZone.getParent() != null && geographicZone.isRootLevel()) {
+      throw new DataException("error.invalid.hierarchy");
+    }
+  }
+
+  private void validateLevel(GeographicZone geographicZone) {
+    if (geographicZone.getLevel() == null)
+      throw new DataException("error.geo.level.invalid");
   }
 }

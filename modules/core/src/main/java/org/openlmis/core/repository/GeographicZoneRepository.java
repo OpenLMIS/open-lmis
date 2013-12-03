@@ -47,16 +47,12 @@ public class GeographicZoneRepository {
     return mapper.getAllGeographicZones();
   }
 
-  public void insert(GeographicZone zone) {
+  public void save(GeographicZone zone) {
     try {
-      mapper.insert(zone);
-    } catch (DataIntegrityViolationException e) {
-      throw new DataException("error.incorrect.length");
-    }
-  }
-
-  public void update(GeographicZone zone) {
-    try {
+      if (zone.getId() == null) {
+        mapper.insert(zone);
+        return;
+      }
       mapper.update(zone);
     } catch (DataIntegrityViolationException e) {
       throw new DataException("error.incorrect.length");

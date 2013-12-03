@@ -27,6 +27,7 @@ public class GeographicLevel extends BaseModel {
   String code;
   String name;
   Integer levelNumber;
+  private static Integer ROOT_LEVEL_NUMBER = 1;
 
   public GeographicLevel(Long id, String code, String name, Integer levelNumber) {
     this(code, name, levelNumber);
@@ -35,6 +36,14 @@ public class GeographicLevel extends BaseModel {
 
   public GeographicLevel(Long id) {
     this.id = id;
+  }
+
+  public boolean isRootLevel() {
+    return this.levelNumber.equals(ROOT_LEVEL_NUMBER);
+  }
+
+  public boolean isLowerInHierarchyThan(GeographicLevel level) {
+    return this.getLevelNumber() > level.getLevelNumber();
   }
 }
 
