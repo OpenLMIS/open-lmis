@@ -27,81 +27,79 @@ public class ConfigureShipmentPage extends Page {
 
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeHeaders=null;
+  private static WebElement includeHeaders = null;
 
-  @FindBy(how = ID, using = "includeCheckbox0")
-  private static WebElement orderNumberCheckBox=null;
+  @FindBy(how = ID, using = "orderNumberIncludeCheckbox")
+  private static WebElement orderNumberCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox1")
-  private static WebElement productCodeCheckBox=null;
+  @FindBy(how = ID, using = "productCodeIncludeCheckbox")
+  private static WebElement productCodeCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox2")
-  private static WebElement quantityShippedCheckBox=null;
+  @FindBy(how = ID, using = "quantityShippedIncludeCheckbox")
+  private static WebElement quantityShippedCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox3")
-  private static WebElement costCheckBox=null;
+  @FindBy(how = ID, using = "costIncludeCheckbox")
+  private static WebElement costCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox4")
-  private static WebElement packedDateCheckBox=null;
+  @FindBy(how = ID, using = "packedDateIncludeCheckbox")
+  private static WebElement packedDateCheckBox = null;
 
-  @FindBy(how = ID, using = "includeCheckbox5")
-  private static WebElement shippedDateCheckBox=null;
+  @FindBy(how = ID, using = "shippedDateIncludeCheckbox")
+  private static WebElement shippedDateCheckBox = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[1]/div[4]/input")
-  private static WebElement orderNumberTextField=null;
+  @FindBy(how = ID, using = "orderIdPosition")
+  private static WebElement orderNumberPositionTextField = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[2]/div[4]/input")
-  private static WebElement productCodeTextField=null;
+  @FindBy(how = ID, using = "productCodePosition")
+  private static WebElement productCodePositionTextField = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[3]/div[4]/input")
-  private static WebElement quantityShippedTextField=null;
+  @FindBy(how = ID, using = "quantityShippedPosition")
+  private static WebElement quantityShippedTextField = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[4]/div[4]/input")
-  private static WebElement costTextField=null;
+  @FindBy(how = ID, using = "costPosition")
+  private static WebElement costPositionTextField = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[5]/div[4]/input")
-  private static WebElement packedDateTextField=null;
+  @FindBy(how = ID, using = "packedDatePosition")
+  private static WebElement packedDatePositionTextField = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='shipmentFileColumns']/div[2]/div[6]/div[4]/input")
-  private static WebElement shippedDateTextField=null;
+  @FindBy(how = ID, using = "shippedDatePosition")
+  private static WebElement shippedDatePositionTextField = null;
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMessageDiv=null;
+  private static WebElement saveErrorMessageDiv = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv=null;
+  private static WebElement successMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton=null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton=null;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement packedDateSelectBoxTextField=null;
+  private static WebElement packedDateSelectBoxTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement shippedDateSelectBoxTextField=null;
+  private static WebElement shippedDateSelectBoxTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement packedDateSelectBoxSelectableElement=null;
+  private static WebElement packedDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement shippedDateSelectBoxSelectableElement=null;
+  private static WebElement shippedDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/div/b")
-  private static WebElement packedDateSelectBoxClickableLink=null;
+  private static WebElement packedDateSelectBoxClickableLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/div/b")
-  private static WebElement shippedDateSelectBoxClickableLink=null;
+  private static WebElement shippedDateSelectBoxClickableLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/span")
-  private static WebElement packedDateSelectBoxDefaultSelected=null;
+  private static WebElement packedDateSelectBoxDefaultSelected = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/span")
-  private static WebElement shippedDateSelectBoxDefaultSelected=null;
-
-
+  private static WebElement shippedDateSelectBoxDefaultSelected = null;
 
 
   public ConfigureShipmentPage(TestWebDriver driver) throws IOException {
@@ -112,34 +110,30 @@ public class ConfigureShipmentPage extends Page {
   }
 
 
-  public String getSelectedOptionOfPackedDateDropDown()
-  {
+  public String getSelectedOptionOfPackedDateDropDown() {
     testWebDriver.waitForElementToAppear(packedDateSelectBoxDefaultSelected);
     return packedDateSelectBoxDefaultSelected.getText();
   }
 
-  public String getSelectedOptionOfShippedDateDropDown()
-  {
+  public String getSelectedOptionOfShippedDateDropDown() {
     testWebDriver.waitForElementToAppear(shippedDateSelectBoxDefaultSelected);
     return shippedDateSelectBoxDefaultSelected.getText();
   }
 
-  public void selectValueFromPackedDateDropDown(String value)
-  {
-      testWebDriver.waitForElementToAppear(packedDateSelectBoxClickableLink);
-      packedDateSelectBoxClickableLink.click();
-      testWebDriver.waitForElementToAppear(packedDateSelectBoxTextField);
-      sendKeys(packedDateSelectBoxTextField,value);
-      testWebDriver.waitForElementToAppear(packedDateSelectBoxSelectableElement);
-      packedDateSelectBoxSelectableElement.click();
+  public void selectValueFromPackedDateDropDown(String value) {
+    testWebDriver.waitForElementToAppear(packedDateSelectBoxClickableLink);
+    packedDateSelectBoxClickableLink.click();
+    testWebDriver.waitForElementToAppear(packedDateSelectBoxTextField);
+    sendKeys(packedDateSelectBoxTextField, value);
+    testWebDriver.waitForElementToAppear(packedDateSelectBoxSelectableElement);
+    packedDateSelectBoxSelectableElement.click();
   }
 
-  public void selectValueFromShippedDateDropDown(String value)
-  {
+  public void selectValueFromShippedDateDropDown(String value) {
     testWebDriver.waitForElementToAppear(shippedDateSelectBoxClickableLink);
     shippedDateSelectBoxClickableLink.click();
     testWebDriver.waitForElementToAppear(shippedDateSelectBoxTextField);
-    sendKeys(shippedDateSelectBoxTextField,value);
+    sendKeys(shippedDateSelectBoxTextField, value);
     testWebDriver.waitForElementToAppear(shippedDateSelectBoxSelectableElement);
     shippedDateSelectBoxSelectableElement.click();
   }
@@ -152,49 +146,49 @@ public class ConfigureShipmentPage extends Page {
   public void checkIncludeHeader() {
     testWebDriver.waitForElementToAppear(includeHeaders);
     if (!includeHeaders.isSelected())
-        includeHeaders.click();
+      includeHeaders.click();
   }
 
   public void unCheckIncludeHeader() {
     testWebDriver.waitForElementToAppear(includeHeaders);
     if (includeHeaders.isSelected())
-        includeHeaders.click();
+      includeHeaders.click();
   }
 
   public void checkCostCheckBox() {
     testWebDriver.waitForElementToAppear(costCheckBox);
     if (!costCheckBox.isSelected())
-        costCheckBox.click();
+      costCheckBox.click();
   }
 
   public void unCheckCostCheckBox() {
     testWebDriver.waitForElementToAppear(costCheckBox);
     if (costCheckBox.isSelected())
-        costCheckBox.click();
+      costCheckBox.click();
   }
 
   public void checkPackedDateCheckBox() {
     testWebDriver.waitForElementToAppear(packedDateCheckBox);
     if (!packedDateCheckBox.isSelected())
-        packedDateCheckBox.click();
+      packedDateCheckBox.click();
   }
 
   public void unCheckPackedDateCheckBox() {
     testWebDriver.waitForElementToAppear(packedDateCheckBox);
     if (packedDateCheckBox.isSelected())
-        packedDateCheckBox.click();
+      packedDateCheckBox.click();
   }
 
   public void checkShippedDateCheckBox() {
     testWebDriver.waitForElementToAppear(shippedDateCheckBox);
     if (!shippedDateCheckBox.isSelected())
-        shippedDateCheckBox.click();
+      shippedDateCheckBox.click();
   }
 
   public void unCheckShippedDateCheckBox() {
     testWebDriver.waitForElementToAppear(shippedDateCheckBox);
     if (shippedDateCheckBox.isSelected())
-        shippedDateCheckBox.click();
+      shippedDateCheckBox.click();
   }
 
   public String getQuantityShipped() {
@@ -208,53 +202,53 @@ public class ConfigureShipmentPage extends Page {
   }
 
   public void setOrderNumber(String value) {
-    testWebDriver.waitForElementToAppear(orderNumberTextField);
-    sendKeys(orderNumberTextField, value);
+    testWebDriver.waitForElementToAppear(orderNumberPositionTextField);
+    sendKeys(orderNumberPositionTextField, value);
   }
 
   public String getOrderNumber() {
-    testWebDriver.waitForElementToAppear(orderNumberTextField);
-    return testWebDriver.getAttribute(orderNumberTextField,"value");
+    testWebDriver.waitForElementToAppear(orderNumberPositionTextField);
+    return testWebDriver.getAttribute(orderNumberPositionTextField, "value");
   }
 
   public String getCost() {
-    testWebDriver.waitForElementToAppear(costTextField);
-    return testWebDriver.getAttribute(costTextField, "value");
+    testWebDriver.waitForElementToAppear(costPositionTextField);
+    return testWebDriver.getAttribute(costPositionTextField, "value");
   }
 
   public void setCost(String value) {
-    testWebDriver.waitForElementToAppear(costTextField);
-    sendKeys(costTextField, value);
+    testWebDriver.waitForElementToAppear(costPositionTextField);
+    sendKeys(costPositionTextField, value);
   }
 
   public String getProductCode() {
-    testWebDriver.waitForElementToAppear(productCodeTextField);
-    return testWebDriver.getAttribute(productCodeTextField, "value");
+    testWebDriver.waitForElementToAppear(productCodePositionTextField);
+    return testWebDriver.getAttribute(productCodePositionTextField, "value");
   }
 
   public void setProductCode(String value) {
-    testWebDriver.waitForElementToAppear(productCodeTextField);
-    sendKeys(productCodeTextField, value);
+    testWebDriver.waitForElementToAppear(productCodePositionTextField);
+    sendKeys(productCodePositionTextField, value);
   }
 
   public String getPackedDate() {
-    testWebDriver.waitForElementToAppear(packedDateTextField);
-    return testWebDriver.getAttribute(packedDateTextField, "value");
+    testWebDriver.waitForElementToAppear(packedDatePositionTextField);
+    return testWebDriver.getAttribute(packedDatePositionTextField, "value");
   }
 
   public void setPackedDate(String value) {
-    testWebDriver.waitForElementToAppear(packedDateTextField);
-    sendKeys(packedDateTextField, value);
+    testWebDriver.waitForElementToAppear(packedDatePositionTextField);
+    sendKeys(packedDatePositionTextField, value);
   }
 
   public String getShippedDate() {
-    testWebDriver.waitForElementToAppear(shippedDateTextField);
-    return testWebDriver.getAttribute(shippedDateTextField, "value");
+    testWebDriver.waitForElementToAppear(shippedDatePositionTextField);
+    return testWebDriver.getAttribute(shippedDatePositionTextField, "value");
   }
 
   public void setShippedDate(String value) {
-    testWebDriver.waitForElementToAppear(shippedDateTextField);
-    sendKeys(shippedDateTextField, value);
+    testWebDriver.waitForElementToAppear(shippedDatePositionTextField);
+    sendKeys(shippedDatePositionTextField, value);
   }
 
   public void clickSaveButton() {
@@ -271,37 +265,37 @@ public class ConfigureShipmentPage extends Page {
 
   public void verifyMessage(String message) {
     testWebDriver.waitForElementToAppear(successMessageDiv);
-    assertEquals(message,successMessageDiv.getText());
+    assertEquals(message, successMessageDiv.getText());
   }
 
   public void verifyErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(saveErrorMessageDiv);
-    assertEquals(message,saveErrorMessageDiv.getText());
+    assertEquals(message, saveErrorMessageDiv.getText());
   }
 
-    public void verifyDefaultIncludeCheckboxForAllDataFields() {
-            assertTrue("orderNumberCheckBox should be checked", orderNumberCheckBox.isSelected());
-            assertTrue("quantityShippedCheckBox should be checked", quantityShippedCheckBox.isSelected());
-            assertTrue("productCodeCheckBox should be checked", productCodeCheckBox.isSelected());
-            assertFalse("packedDateCheckBox should be checked", packedDateCheckBox.isSelected());
-            assertFalse("shippedDateCheckBox should be checked", shippedDateCheckBox.isSelected());
-            assertFalse("costCheckBox should be checked", costCheckBox.isSelected());
+  public void verifyDefaultIncludeCheckboxForAllDataFields() {
+    assertTrue("orderNumberCheckBox should be checked", orderNumberCheckBox.isSelected());
+    assertTrue("quantityShippedCheckBox should be checked", quantityShippedCheckBox.isSelected());
+    assertTrue("productCodeCheckBox should be checked", productCodeCheckBox.isSelected());
+    assertFalse("packedDateCheckBox should be checked", packedDateCheckBox.isSelected());
+    assertFalse("shippedDateCheckBox should be checked", shippedDateCheckBox.isSelected());
+    assertFalse("costCheckBox should be checked", costCheckBox.isSelected());
 
-            assertFalse("orderNumberCheckBox should be disabled", orderNumberCheckBox.isEnabled());
-            assertFalse("quantityShippedCheckBox should be disabled", quantityShippedCheckBox.isEnabled());
-            assertFalse("productCodeCheckBox should be disabled", productCodeCheckBox.isEnabled());
-            assertTrue("costCheckBox should be enabled", costCheckBox.isEnabled());
-            assertTrue("packedDateCheckBox should be enabled", packedDateCheckBox.isEnabled());
-            assertTrue("shippedDateCheckBox should be enabled", shippedDateCheckBox.isEnabled());
+    assertFalse("orderNumberCheckBox should be disabled", orderNumberCheckBox.isEnabled());
+    assertFalse("quantityShippedCheckBox should be disabled", quantityShippedCheckBox.isEnabled());
+    assertFalse("productCodeCheckBox should be disabled", productCodeCheckBox.isEnabled());
+    assertTrue("costCheckBox should be enabled", costCheckBox.isEnabled());
+    assertTrue("packedDateCheckBox should be enabled", packedDateCheckBox.isEnabled());
+    assertTrue("shippedDateCheckBox should be enabled", shippedDateCheckBox.isEnabled());
 
-    }
+  }
 
-    public void verifyDefaultPositionValues() {
-        assertEquals("1", orderNumberTextField.getAttribute("value")) ;
-        assertEquals("3", quantityShippedTextField.getAttribute("value"));
-        assertEquals("2", productCodeTextField.getAttribute("value"));
-        assertEquals("5", packedDateTextField.getAttribute("value"));
-        assertEquals("6", shippedDateTextField.getAttribute("value"));
-        assertEquals("4", costTextField.getAttribute("value"));
-    }
+  public void verifyDefaultPositionValues() {
+    assertEquals("1", orderNumberPositionTextField.getAttribute("value"));
+    assertEquals("3", quantityShippedTextField.getAttribute("value"));
+    assertEquals("2", productCodePositionTextField.getAttribute("value"));
+    assertEquals("5", packedDatePositionTextField.getAttribute("value"));
+    assertEquals("6", shippedDatePositionTextField.getAttribute("value"));
+    assertEquals("4", costPositionTextField.getAttribute("value"));
+  }
 }
