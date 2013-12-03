@@ -1488,4 +1488,8 @@ public class DBWrapper {
     reqId = reqId - 1;
     update("update requisitions SET periodId= '" + reqId + "' WHERE id=" + rnrId + ";");
   }
+
+  public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {
+    update("update products set "+field + "="+ fieldValue+" where code='"+productCode+ "';");
+  }
 }

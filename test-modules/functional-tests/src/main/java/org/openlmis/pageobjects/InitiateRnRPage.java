@@ -836,15 +836,15 @@ public class InitiateRnRPage extends RequisitionPage {
   public void enterStockOutDays(Integer stockOutDaysValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(totalStockOutDays);
-    stockInHand.clear();
-    stockInHand.sendKeys(stockOutDaysValue.toString());
+    totalStockOutDays.clear();
+    totalStockOutDays.sendKeys(stockOutDaysValue.toString());
   }
 
   public void enterNewPatientCount(Integer newPatientCount) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(newPatient);
-    stockInHand.clear();
-    stockInHand.sendKeys(newPatientCount.toString());
+    newPatient.clear();
+    newPatient.sendKeys(newPatientCount.toString());
   }
 
 }
