@@ -78,7 +78,7 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
           stockedOutReportFilter.setFacilityType( StringUtils.isBlank( filterCriteria.get("facilityType")[0] ) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
 
          stockedOutReportFilter.setFacilityId( StringUtils.isBlank( filterCriteria.get("facilityId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
-         stockedOutReportFilter.setFacility( StringUtils.isBlank( filterCriteria.get("facility")[0] ) ? "All Facility Types" : filterCriteria.get("facility")[0]);
+         stockedOutReportFilter.setFacility( StringUtils.isBlank( filterCriteria.get("facility")[0] ) ? "All Facilities" : filterCriteria.get("facility")[0]);
 
           stockedOutReportFilter.setRgroupId( StringUtils.isBlank( filterCriteria.get("rgroupId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
           stockedOutReportFilter.setRgroup( StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
