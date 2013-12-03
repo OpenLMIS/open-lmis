@@ -140,7 +140,7 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertVirtualFacility(virtualFacilityCode, parentFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode), dbWrapper.getGeographicZoneId("test1"));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode); //---Flaky
 
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
@@ -377,6 +377,15 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Long.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Incorrect data length in Record No");
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Parent_Same_Level.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_Parent_Below_Level.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
+    uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_No_Parent.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
 
   }
 
@@ -674,8 +683,8 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   public void verifyGeographicZoneAndFacilityTypeForVirtualFacility(String virtualFacilityCode, String parentFacilityCode) throws IOException, SQLException {
-//    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode));
-//    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode));
+    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
   }
 
   @AfterMethod(groups = {"admin"})
