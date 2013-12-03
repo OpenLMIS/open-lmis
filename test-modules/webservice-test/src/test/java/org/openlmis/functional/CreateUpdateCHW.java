@@ -684,7 +684,7 @@ public class CreateUpdateCHW extends JsonUtility {
     agentJson.setParentFacilityCode(DEFAULT_PARENT_FACILITY_CODE);
     agentJson.setPhoneNumber(PHONE_NUMBER);
     agentJson.setActive(ACTIVE_STATUS);
-    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"AgentVinod\",", " ");
+    String modifiedString = getJsonStringFor(agentJson).replaceFirst("\"agentName\":\"Agent A1\",", " ");
 
 
     ResponseEntity responseEntity = client.SendJSON(modifiedString,
