@@ -41,8 +41,6 @@ CACHE:
 
 /public/pages/logistics/distribution/offline.html
 /public/pages/logistics/distribution/partials/list.html
-/public/pages/logistics/distribution/partials/init.html
-/public/pages/logistics/distribution/partials/init.html
 /public/pages/logistics/distribution/partials/record-facility-data.html
 /public/pages/logistics/distribution/partials/record-facility-menu.html
 /public/pages/logistics/distribution/partials/view-load-amount.html
