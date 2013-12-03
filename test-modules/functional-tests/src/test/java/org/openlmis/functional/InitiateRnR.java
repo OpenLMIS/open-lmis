@@ -140,37 +140,37 @@ public class InitiateRnR extends TestCaseHelper {
   @When("^I enter beginning balance \"([^\"]*)\"$")
   public void enterBeginningBalance(String beginningBalance) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterBeginningBalance(valueOf(beginningBalance));
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(valueOf(beginningBalance));
   }
 
   @When("^I enter quantity received \"([^\"]*)\"$")
   public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantityReceived(valueOf(quantityReceived));
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(valueOf(quantityReceived));
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
   public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantityDispensed(valueOf(quantityDispensed));
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(valueOf(quantityDispensed));
   }
 
   @Then("^I validate beginning balance \"([^\"]*)\"$")
   public void validateBeginningBalance(String beginningBalance) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyBeginningBalance(beginningBalance);
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct(beginningBalance);
   }
 
   @Then("^I validate quantity received \"([^\"]*)\"$")
   public void validateQuantityReceived(String quantityReceived) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyQuantityReceived(quantityReceived);
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct(quantityReceived);
   }
 
   @Then("^I validate quantity dispensed \"([^\"]*)\"$")
   public void validateQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyQuantityDispensed(quantityDispensed);
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct(quantityDispensed);
   }
 
   @Then("^I should see regimen fields$")
@@ -503,23 +503,23 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(100);
-    initiateRnRPage.enterQuantityReceived(100);
-    initiateRnRPage.enterQuantityDispensed(100);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(100);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(100);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "2");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.enterBeginningBalance(100);
-    initiateRnRPage1.enterQuantityReceived(100);
-    initiateRnRPage1.enterQuantityDispensed(100);
+    initiateRnRPage1.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage1.enterQuantityReceivedForFirstProduct(100);
+    initiateRnRPage1.enterQuantityDispensedForFirstProduct(100);
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
 
-    initiateRnRPage1.verifyBeginningBalance("100");
-    initiateRnRPage1.verifyQuantityReceived("100");
-    initiateRnRPage1.verifyQuantityDispensed("100");
+    initiateRnRPage1.verifyBeginningBalanceForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityReceivedForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityDispensedForFirstProduct("100");
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
@@ -599,14 +599,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
-    initiateRnRPage1.enterBeginningBalance(beginningBalance);
-    initiateRnRPage1.enterQuantityReceived(quantityReceived);
-    initiateRnRPage1.enterQuantityDispensed(quantityDispensed);
+    initiateRnRPage1.enterBeginningBalanceForFirstProduct(beginningBalance);
+    initiateRnRPage1.enterQuantityReceivedForFirstProduct(quantityReceived);
+    initiateRnRPage1.enterQuantityDispensedForFirstProduct(quantityDispensed);
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
-    initiateRnRPage1.verifyBeginningBalance("100");
-    initiateRnRPage1.verifyQuantityReceived("100");
-    initiateRnRPage1.verifyQuantityDispensed("100");
+    initiateRnRPage1.verifyBeginningBalanceForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityReceivedForFirstProduct("100");
+    initiateRnRPage1.verifyQuantityDispensedForFirstProduct("100");
     homePage.logout(baseUrlGlobal);
 
 
@@ -684,9 +684,9 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(100);
-    initiateRnRPage.enterQuantityReceived(0);
-    initiateRnRPage.enterQuantityDispensed(1000);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(1000);
     verifyStockOnHandErrorMessage();
 
   }
@@ -711,11 +711,11 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(100);
-    initiateRnRPage.enterQuantityReceived(0);
-    initiateRnRPage.enterStockOnHand("1000");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterStockOnHandForFirstProduct(1000);
     verifyTotalQuantityConsumedErrorMessage();
-    initiateRnRPage.verifyStockOnHand("1000");
+    initiateRnRPage.verifyStockOnHandForFirstProduct("1000");
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
@@ -735,9 +735,9 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(100);
-    initiateRnRPage.enterQuantityReceived(100);
-    initiateRnRPage.enterQuantityDispensed(100);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(100);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(100);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(100);
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifySubmitRnrSuccessMsg();
@@ -886,7 +886,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterRequestedQuantity(100);
+    initiateRnRPage.enterRequestedQuantityForFirstProduct(100);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
 
@@ -897,7 +897,7 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
     initiateRnRPage.skipSingleProduct(1);
-    assertTrue(initiateRnRPage.isEnableBeginningBalance());
+    assertTrue(initiateRnRPage.isEnableBeginningBalanceForFirstProduct());
     initiateRnRPage.calculateAndVerifyTotalCost();
 
     initiateRnRPage.skipAllProduct();
@@ -905,15 +905,15 @@ public class InitiateRnR extends TestCaseHelper {
     assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
-    initiateRnRPage.unskipAllProduct();
-    initiateRnRPage.enterBeginningBalance(10);
-    initiateRnRPage.enterQuantityReceived(0);
-    initiateRnRPage.enterQuantityDispensed(0);
+    initiateRnRPage.unSkipAllProduct();
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
-    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -940,14 +940,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(10);
-    initiateRnRPage.enterQuantityReceived(0);
-    initiateRnRPage.enterQuantityDispensed(0);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
-    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -957,7 +957,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
-    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
@@ -991,14 +991,14 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(10);
-    initiateRnRPage.enterQuantityReceived(0);
-    initiateRnRPage.enterQuantityDispensed(0);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
-    initiateRnRPage.enterRequestedQuantitySecondProduct(100);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -1008,7 +1008,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.calculateAndVerifyTotalCost();
     assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
-    initiateRnRPage.unskipAllProduct();
+    initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();

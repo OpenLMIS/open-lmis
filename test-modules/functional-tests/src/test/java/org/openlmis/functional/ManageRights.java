@@ -52,15 +52,15 @@ public class ManageRights extends TestCaseHelper {
     homePage.navigateAndInitiateRnr(program);
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
 
-    initiateRnRPage.enterBeginningBalance(10);
-    initiateRnRPage.enterQuantityDispensed(10);
-    initiateRnRPage.enterQuantityReceived(10);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(10);
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
 
-    initiateRnRPage.verifyBeginningBalance("10");
-    initiateRnRPage.verifyQuantityReceived("10");
-    initiateRnRPage.verifyQuantityDispensed("10");
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct("10");
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct("10");
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct("10");
   }
 
 

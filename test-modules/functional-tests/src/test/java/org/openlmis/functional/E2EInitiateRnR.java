@@ -195,8 +195,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\"$")
    public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyNormalizedConsumption(Integer.parseInt(normalisedConsumption));
-    initiateRnRPage.verifyAmc(Integer.parseInt(amc));
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(Integer.parseInt(normalisedConsumption));
+    initiateRnRPage.verifyAmcForFirstProduct(Integer.parseInt(amc));
   }
 
   @And("^I submit RnR$")
@@ -263,7 +263,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterRequestedQuantity(10);
+    initiateRnRPage.enterRequestedQuantityForFirstProduct(10);
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
     initiateRnRPage.verifyPacksToShip("1");

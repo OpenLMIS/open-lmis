@@ -12,6 +12,7 @@
 
 package org.openlmis.functional;
 
+import cucumber.api.java.After;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
@@ -34,7 +35,6 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
     super.setup();
-    dbWrapper.deleteData();
     List<String> rightsList = new ArrayList<>();
     rightsList.add("CREATE_REQUISITION");
     rightsList.add("VIEW_REQUISITION");
@@ -53,21 +53,70 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(10);
-    initiateRnRPage.enterQuantityReceived(5);
-    initiateRnRPage.enterQuantityDispensed(14);
-    initiateRnRPage.enterStockOutDays(0);
-    initiateRnRPage.enterNewPatientCount(5);
-    initiateRnRPage.verifyNormalizedConsumption(155);
-    initiateRnRPage.verifyAmc(155);
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(5);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(14);
+    initiateRnRPage.enterStockOutDaysForFirstProduct(0);
+    initiateRnRPage.enterNewPatientCountForFirstProduct(5);
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(155);
+    initiateRnRPage.verifyAmcForFirstProduct(155);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
     initiateRnRPage.authorizeRnR();
-    verifyNormalizedConsumptionAndAmcInDatabase(155,155);
+    initiateRnRPage.clickOk();
+    verifyNormalizedConsumptionAndAmcInDatabase(155,155,"P10");
+    verifyNormalizedConsumptionAndAmcInDatabase(155,155,"P11");
   }
 
-  public void verifyNormalizedConsumptionAndAmcInDatabase(Integer normalizedConsumption, Integer amc) throws IOException, SQLException {
+  @Test(groups = "requisition")
+  public void testCalculationWhenMIs1WithStockOnHandAndQuantityConsumedCalculatedAndMultipleProductsAndXLargerThan30M() throws IOException, SQLException {
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","quantityDispensed");
+    dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
+    dbWrapper.updateConfigureTemplateValidationFlag("HIV","true");
+    dbWrapper.updateProductsByField("dosesPerDispensingUnit","7","P10");
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(15);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(5);
+    initiateRnRPage.enterStockOnHandForFirstProduct(2);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(18);
+    initiateRnRPage.enterStockOutDaysForFirstProduct(45);
+    initiateRnRPage.enterNewPatientCountForFirstProduct(11);
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(62);
+    initiateRnRPage.verifyAmcForFirstProduct(62);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(8);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(5);
+    initiateRnRPage.enterStockOnHandForSecondProduct(5);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(8);
+    initiateRnRPage.enterStockOutDaysForSecondProduct(20);
+    initiateRnRPage.enterNewPatientCountForSecondProduct(10);
+    initiateRnRPage.verifyNormalizedConsumptionForSecondProduct(54);
+    initiateRnRPage.verifyAmcForSecondProduct(54);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+    verifyNormalizedConsumptionAndAmcInDatabase(62,62,"P10");
+    verifyNormalizedConsumptionAndAmcInDatabase(54,54,"P11");
+  }
+
+  public void verifyNormalizedConsumptionAndAmcInDatabase(Integer normalizedConsumption, Integer amc, String productCode) throws IOException, SQLException {
     Long rnrId = Long.valueOf(dbWrapper.getMaxRnrID());
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"normalizedConsumption","P10"),normalizedConsumption.toString());
-    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"amc","P10"),amc.toString());
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"normalizedConsumption",productCode),normalizedConsumption.toString());
+    assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode), amc.toString());
   }
 
-}
+  @After
+  public void tearDown() throws Exception {
+    testWebDriver.sleep(500);
+    if (!testWebDriver.getElementById("username").isDisplayed()) {
+      HomePage homePage = new HomePage(testWebDriver);
+      homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
+      dbWrapper.closeConnection();
+    }
+  }
+
+  }

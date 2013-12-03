@@ -283,12 +283,12 @@ public class ViewRequisition extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalance(1);
-    initiateRnRPage.enterQuantityDispensed(1);
-    initiateRnRPage.enterQuantityReceived(2);
-    initiateRnRPage.enterBeginningBalanceSecondProduct("10");
-    initiateRnRPage.enterQuantityReceivedSecondProduct("0");
-    initiateRnRPage.enterQuantityDispensedSecondProduct("0");
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(1);
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(1);
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(2);
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
     initiateRnRPage.skipAllProduct();
@@ -297,8 +297,8 @@ public class ViewRequisition extends TestCaseHelper {
     SeleneseTestNgHelper.assertEquals(initiateRnRPage.getTotalCostFooter(), "0.00");
     SeleneseTestNgHelper.assertEquals(initiateRnRPage.getFullySupplyCostFooter(), "0.00");
 
-    initiateRnRPage.unskipAllProduct();
-    assertTrue(initiateRnRPage.isEnableBeginningBalance());
+    initiateRnRPage.unSkipAllProduct();
+    assertTrue(initiateRnRPage.isEnableBeginningBalanceForFirstProduct());
     initiateRnRPage.skipSingleProduct(1);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
