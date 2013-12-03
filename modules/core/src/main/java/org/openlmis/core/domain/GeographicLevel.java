@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
@@ -38,10 +39,12 @@ public class GeographicLevel extends BaseModel {
     this.id = id;
   }
 
+  @JsonIgnore
   public boolean isRootLevel() {
     return this.levelNumber.equals(ROOT_LEVEL_NUMBER);
   }
 
+  @JsonIgnore
   public boolean isLowerInHierarchyThan(GeographicLevel level) {
     return this.getLevelNumber() > level.getLevelNumber();
   }
