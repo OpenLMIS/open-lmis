@@ -102,12 +102,10 @@ function RnRFeedbackController($scope, ngTableParams, $filter, RnRFeedbackReport
 
     ReportFacilityTypes.get(function(data) {
         $scope.facilityTypes = data.facilityTypes;
-        //  $scope.facilityTypes.push({'name': 'All Facility Types', 'id' : 'All'});
     });
 
     AllFacilites.get(function(data){
         $scope.allFacilities = data.allFacilities;
-        $scope.products.unshift({'name': '-- All Products --', 'id':'All'});
     });
 
 
