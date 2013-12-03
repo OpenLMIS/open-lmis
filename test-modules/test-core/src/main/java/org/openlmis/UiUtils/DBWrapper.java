@@ -765,7 +765,7 @@ public class DBWrapper {
 
   public String getFacilityFieldBYCode(String field, String code) throws IOException, SQLException {
     String facilityField = null;
-    ResultSet rs = query("select " + field + " from facilities where code='" + code + "';");
+    ResultSet rs = query("SELECT %s FROM facilities WHERE code = '%s'", field, code);
 
     if (rs.next()) {
       facilityField = rs.getString(1);
@@ -1109,9 +1109,9 @@ public class DBWrapper {
   }
 
   public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,
-                                                  String programFirst, String supervisoryNode, boolean exportorders) throws SQLException {
-    update("INSERT INTO supply_lines (supplyingfacilityid, programid, supervisorynodeid, description, exportorders, createdby, modifiedby) values " +
-      "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='" + programFirst + "')," + "(select id from supervisory_nodes where code='" + supervisoryNode + "'),'warehouse', " + exportorders + ", '1', '1');");
+                                                  String programFirst, String supervisoryNode, boolean exportOrders) throws SQLException {
+    update("INSERT INTO supply_lines (supplyingFacilityId, programId, supervisoryNodeId, description, exportOrders, createdBy, modifiedBy) values " +
+      "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='" + programFirst + "')," + "(select id from supervisory_nodes where code='" + supervisoryNode + "'),'warehouse', " + exportOrders + ", '1', '1');");
   }
 
   public void insertDeliveryZoneMembers(String code, String facility) throws SQLException {
@@ -1295,35 +1295,36 @@ public class DBWrapper {
   }
 
   public void setExportOrdersFlagInSupplyLinesTable(boolean flag, String facilityCode) throws SQLException {
-    update("UPDATE supply_lines SET exportOrders='" + flag + "' WHERE supplyingfacilityid=(select id from facilities where code='" + facilityCode + "');");
+    update("UPDATE supply_lines SET exportOrders='" + flag + "' WHERE supplyingFacilityId=(select id from facilities where code='" + facilityCode + "');");
   }
 
   public void enterValidDetailsInFacilityFtpDetailsTable(String facilityCode) throws SQLException {
-    update("INSERT INTO facility_ftp_details(facilityid,serverhost,serverport,username,password,localfolderpath) VALUES" +
-      "((SELECT id FROM facilities WHERE code='" + facilityCode + "'),'192.168.34.1',21,'openlmis','openlmis','/ftp');");
+    update("INSERT INTO facility_ftp_details(facilityId, serverHost, serverPort, username, password, localFolderPath) VALUES" +
+      "((SELECT id FROM facilities WHERE code = '%s' ), '192.168.34.1', 21, 'openlmis', 'openlmis', '/ftp');", facilityCode);
   }
 
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
     int rgId = 0;
     ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
     if (rs.next()) {
-      rgId = rs.getInt("requisitiongroupid");
+      rgId = rs.getInt(1);
     }
     return rgId;
   }
 
-  public List getAllProgramsOfFacility(String facilityCode) throws SQLException {
+  public List<Integer> getAllProgramsOfFacility(String facilityCode) throws SQLException {
     List<Integer> l1 = new ArrayList<>();
-    ResultSet rs = query("SELECT programId FROM programs_supported where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
+    ResultSet rs = query("SELECT programId FROM programs_supported WHERE facilityId = (SELECT id FROM facilities WHERE code ='%s')", facilityCode);
     while (rs.next()) {
-      l1.add(rs.getInt("programid"));
+      l1.add(rs.getInt(1));
     }
     return l1;
   }
 
   public String getProgramFieldForProgramIdAndFacilityCode(int programId, String facilityCode, String field) throws SQLException {
     String res = null;
-    ResultSet rs = query("select " + field + " from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
+    ResultSet rs = query("SELECT %s FROM programs_supported WHERE programId = %d AND facilityId = (SELECT id FROM facilities WHERE code = '%s')",
+      field, programId, facilityCode);
 
     if (rs.next()) {
       res = rs.getString(1);
@@ -1333,7 +1334,8 @@ public class DBWrapper {
 
   public Date getProgramStartDateForProgramIdAndFacilityCode(int programId, String facilityCode) throws SQLException {
     Date date = null;
-    ResultSet rs = query("select startdate from programs_supported where programid='" + programId + "' AND facilityid =(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
+    ResultSet rs = query("SELECT startDate FROM programs_supported WHERE programId = %d AND facilityId = (SELECT id FROM facilities WHERE code ='%s')",
+      programId, facilityCode);
 
     if (rs.next()) {
       date = rs.getDate(1);
@@ -1472,18 +1474,18 @@ public class DBWrapper {
     update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrid=" + rnrid + ";");
   }
 
-    public void updateCreatedDateInPODLineItems(String newDate, Long rnrid) throws SQLException {
-        update("update pod SET createdDate= '" + newDate + "' WHERE orderid="+rnrid+";");
-    }
+  public void updateCreatedDateInPODLineItems(String newDate, Long rnrid) throws SQLException {
+    update("update pod SET createdDate= '" + newDate + "' WHERE orderid=" + rnrid + ";");
+  }
 
-    public void updatePeriodIdInRequisitions(Long rnrId) throws SQLException {
-        Integer reqId = 0;
-        ResultSet rs = query("select " + "periodId" + " from requisitions where id= "+rnrId+";") ;
+  public void updatePeriodIdInRequisitions(Long rnrId) throws SQLException {
+    Integer reqId = 0;
+    ResultSet rs = query("select " + "periodId" + " from requisitions where id= " + rnrId + ";");
 
-        if (rs.next()) {
-            reqId= Integer.parseInt(rs.getString(1));
+    if (rs.next()) {
+      reqId = Integer.parseInt(rs.getString(1));
     }
-        reqId=reqId-1;
-        update("update requisitions SET periodId= '" + reqId + "' WHERE id=" + rnrId + ";");
-   }
+    reqId = reqId - 1;
+    update("update requisitions SET periodId= '" + reqId + "' WHERE id=" + rnrId + ";");
+  }
 }

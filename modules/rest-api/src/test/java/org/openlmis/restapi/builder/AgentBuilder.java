@@ -30,7 +30,7 @@ public class AgentBuilder {
     public Agent instantiate(PropertyLookup<Agent> lookup) {
       Agent agent = new Agent();
       agent.setAgentCode(lookup.valueOf(agentCode, "A1"));
-      agent.setAgentName(lookup.valueOf(agentName, "AgentVinod"));
+      agent.setAgentName(lookup.valueOf(agentName, "Agent A1"));
       agent.setParentFacilityCode(lookup.valueOf(baseFacilityCode, "F10"));
       agent.setPhoneNumber(lookup.valueOf(phoneNumber, "007"));
       agent.setActive(lookup.valueOf(active, "true"));
