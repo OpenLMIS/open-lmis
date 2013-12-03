@@ -12,7 +12,6 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,12 +25,14 @@ public class GeographicZoneService {
 
   public void save(GeographicZone geographicZone) {
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));
+    geographicZone.validateLevel();
 
-    validateLevel(geographicZone);
-    validateLevelAndParentAssociation(geographicZone);
-
-    geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
-    validateParent(geographicZone);
+    if (!geographicZone.isRootLevel()) {
+      geographicZone.validateParentExists();
+      geographicZone.setParent(repository.getByCode(geographicZone.getParent().getCode()));
+      geographicZone.validateParentExists();
+      geographicZone.validateParentIsHigherInHierarchy();
+    }
 
     repository.save(geographicZone);
   }
@@ -42,33 +43,5 @@ public class GeographicZoneService {
 
   public GeographicZone getById(long id) {
     return repository.getById(id);
-  }
-
-  private void validateParent(GeographicZone geographicZone) {
-    validateParentGeoZone(geographicZone);
-    if (!geographicZone.isParentValid()) {
-      throw new DataException("error.invalid.hierarchy");
-    }
-  }
-
-  private void validateParentGeoZone(GeographicZone geographicZone) {
-    if (geographicZone.getParent() == null) {
-      throw new DataException("error.geo.zone.parent.invalid");
-    }
-  }
-
-  private void validateLevelAndParentAssociation(GeographicZone geographicZone) {
-    if (geographicZone.getParent() == null && !geographicZone.isRootLevel()) {
-      throw new DataException("error.invalid.hierarchy");
-    }
-
-    if (geographicZone.getParent() != null && geographicZone.isRootLevel()) {
-      throw new DataException("error.invalid.hierarchy");
-    }
-  }
-
-  private void validateLevel(GeographicZone geographicZone) {
-    if (geographicZone.getLevel() == null)
-      throw new DataException("error.geo.level.invalid");
   }
 }
