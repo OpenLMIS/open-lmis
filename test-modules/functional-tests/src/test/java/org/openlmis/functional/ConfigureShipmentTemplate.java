@@ -30,6 +30,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -143,6 +145,8 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("104", configureShipmentPage.getProductCode());
     assertEquals("105", configureShipmentPage.getPackedDate());
     assertEquals("106", configureShipmentPage.getShippedDate());
+
+    setDefaultPositionValues();
   }
 
   @Test(groups = {"admin"})
@@ -168,14 +172,13 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     assertEquals("103", configureShipmentPage.getProductCode());
     assertEquals("5", configureShipmentPage.getPackedDate());
     assertEquals("6", configureShipmentPage.getShippedDate());
-
+    setDefaultPositionValues();
     configureShipmentPage.clickCancelButton();
     assertTrue("User should be redirected to home page", testWebDriver.getCurrentUrl().contains("public/pages/admin/edi/index.html#/configure-edi-file"));
-
   }
 
   @Test(groups = {"admin"})
-  public void testVerifyDuplicatePosition() throws Exception {
+  public void testVerifyInvalidPosition() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(user, password);
     ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
@@ -185,27 +188,11 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyErrorMessage("Position numbers cannot have duplicate values");
 
-  }
-
-  @Test(groups = {"admin"})
-  public void testVerifyZeroPosition() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
     configureShipmentPage.setQuantityShipped("0");
     configureShipmentPage.setOrderNumber("101");
     configureShipmentPage.clickSaveButton();
     configureShipmentPage.verifyErrorMessage("Position number cannot be blank or zero for an included field");
 
-  }
-
-  @Test(groups = {"admin"})
-  public void testVerifyBlankPosition() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(user, password);
-    ConfigureEDIPage configureEDIPage = homePage.navigateEdiScreen();
-    ConfigureShipmentPage configureShipmentPage = configureEDIPage.navigateConfigureShipmentPage();
     configureShipmentPage.setQuantityShipped("101");
     configureShipmentPage.setOrderNumber("");
     configureShipmentPage.clickSaveButton();
@@ -213,6 +200,23 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
 
   }
 
+  private void setDefaultPositionValues() throws IOException {
+    ConfigureShipmentPage configureShipmentPage = new ConfigureShipmentPage(testWebDriver);
+    configureShipmentPage.unCheckIncludeHeader();
+    configureShipmentPage.unCheckCostCheckBox();
+    configureShipmentPage.unCheckPackedDateCheckBox();
+    configureShipmentPage.unCheckShippedDateCheckBox();
+
+    configureShipmentPage.setOrderNumber("1");
+    configureShipmentPage.setProductCode("2");
+    configureShipmentPage.setQuantityShipped("3");
+    configureShipmentPage.setCost("4");
+    configureShipmentPage.setPackedDate("5");
+    configureShipmentPage.setShippedDate("6");
+    configureShipmentPage.selectValueFromPackedDateDropDown("dd/MM/yy");
+    configureShipmentPage.selectValueFromShippedDateDropDown("dd/MM/yy");
+    configureShipmentPage.clickSaveButton();
+  }
   @After
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
