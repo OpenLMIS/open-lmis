@@ -14,7 +14,6 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.Page;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
@@ -22,89 +21,90 @@ import java.io.IOException;
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
+import static org.openqa.selenium.support.PageFactory.initElements;
 
 
 public class ConfigureShipmentPage extends Page {
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private static WebElement includeHeaders = null;
+  private WebElement includeHeaders = null;
 
   @FindBy(how = ID, using = "orderIdIncludeCheckbox")
-  private static WebElement orderNumberCheckBox = null;
+  private WebElement orderNumberCheckBox = null;
 
   @FindBy(how = ID, using = "productCodeIncludeCheckbox")
-  private static WebElement productCodeCheckBox = null;
+  private WebElement productCodeCheckBox = null;
 
   @FindBy(how = ID, using = "quantityShippedIncludeCheckbox")
-  private static WebElement quantityShippedCheckBox = null;
+  private WebElement quantityShippedCheckBox = null;
 
   @FindBy(how = ID, using = "costIncludeCheckbox")
-  private static WebElement costCheckBox = null;
+  private WebElement costCheckBox = null;
 
   @FindBy(how = ID, using = "packedDateIncludeCheckbox")
-  private static WebElement packedDateCheckBox = null;
+  private WebElement packedDateCheckBox = null;
 
   @FindBy(how = ID, using = "shippedDateIncludeCheckbox")
-  private static WebElement shippedDateCheckBox = null;
+  private WebElement shippedDateCheckBox = null;
 
   @FindBy(how = ID, using = "orderIdPosition")
-  private static WebElement orderNumberPositionTextField = null;
+  private WebElement orderNumberPositionTextField = null;
 
   @FindBy(how = ID, using = "productCodePosition")
-  private static WebElement productCodePositionTextField = null;
+  private WebElement productCodePositionTextField = null;
 
   @FindBy(how = ID, using = "quantityShippedPosition")
-  private static WebElement quantityShippedTextField = null;
+  private WebElement quantityShippedTextField = null;
 
   @FindBy(how = ID, using = "costPosition")
-  private static WebElement costPositionTextField = null;
+  private WebElement costPositionTextField = null;
 
   @FindBy(how = ID, using = "packedDatePosition")
-  private static WebElement packedDatePositionTextField = null;
+  private WebElement packedDatePositionTextField = null;
 
   @FindBy(how = ID, using = "shippedDatePosition")
-  private static WebElement shippedDatePositionTextField = null;
+  private WebElement shippedDatePositionTextField = null;
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMessageDiv = null;
+  private WebElement saveErrorMessageDiv = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv = null;
+  private WebElement successMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private static WebElement saveButton = null;
+  private WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private static WebElement cancelButton = null;
+  private WebElement cancelButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement packedDateSelectBoxTextField = null;
+  private WebElement packedDateSelectBoxTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private static WebElement shippedDateSelectBoxTextField = null;
+  private WebElement shippedDateSelectBoxTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement packedDateSelectBoxSelectableElement = null;
+  private WebElement packedDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private static WebElement shippedDateSelectBoxSelectableElement = null;
+  private WebElement shippedDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/div/b")
-  private static WebElement packedDateSelectBoxClickableLink = null;
+  private WebElement packedDateSelectBoxClickableLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/div/b")
-  private static WebElement shippedDateSelectBoxClickableLink = null;
+  private WebElement shippedDateSelectBoxClickableLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen17']/a/span")
-  private static WebElement packedDateSelectBoxDefaultSelected = null;
+  private WebElement packedDateSelectBoxDefaultSelected = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen23']/a/span")
-  private static WebElement shippedDateSelectBoxDefaultSelected = null;
+  private WebElement shippedDateSelectBoxDefaultSelected = null;
 
 
   public ConfigureShipmentPage(TestWebDriver driver) throws IOException {
     super(driver);
-    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
+    initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
     testWebDriver.waitForElementToAppear(includeHeaders);
   }
