@@ -30,7 +30,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 public class ProcessingPeriod extends BaseModel {
 
   private Long scheduleId;
-
   private String name;
   private String description;
   private Date startDate;
@@ -73,4 +72,17 @@ public class ProcessingPeriod extends BaseModel {
     startDate = dateFormatWithoutTime.parse(dateFormatWithoutTime.format(startDate) + " 00:00:00");
     endDate = dateFormatWithTime.parse(dateFormatWithoutTime.format(endDate) + " 23:59:59");
   }
+
+  @SuppressWarnings("unused")
+  public String getStringStartDate() throws ParseException {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    return simpleDateFormat.format(this.startDate);
+  }
+
+  @SuppressWarnings("unused")
+  public String getStringEndDate() throws ParseException {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    return simpleDateFormat.format(this.endDate);
+  }
+
 }

@@ -8,9 +8,9 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<div ng-controller="SchedulePeriodController" ng-show="schedule">
+<div>
   <h2>
-    <span openlmis-message="period.schedule.header"></span>: {{schedule.name}}
+    <span openlmis-message="period.schedule.header"></span>: <span ng-bind="schedule.name"></span>
     <a href="#/list" class="pull-right btn btn-primary" openlmis-message="label.back.schedules"></a>
   </h2>
 
@@ -82,12 +82,17 @@
           </div>
         </div>
         <div class="form-row clearfix" ng-show="newPeriod.endDate">
-          <div class="form-cell"><span openlmis-message="period.total.days">:</span>
-            <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1">{{calculateDays(newPeriod.startDate, newPeriod.endDate)}}</span>
+          <div class="form-cell">
+            <span openlmis-message="period.total.days">:</span>
+            <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1"
+                  ng-bind="calculateDays(newPeriod.startDate, newPeriod.endDate)">
+            </span>
           </div>
           <div class="form-cell">
             <span openlmis-message="period.number.of.months"></span>
-            <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths">{{calculateMonths()}}</span>
+            <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths"
+                  ng-bind="calculateMonths()">
+            </span>
           </div>
         </div>
         <div class="form-cell button-row">
@@ -97,10 +102,9 @@
     </div>
   </form>
 
-  <span>
-    <div class="alert alert-error" id="saveFailMessage" ng-bind="error" ng-show="error"/>
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"/>
-  </span>
+  <div class="alert alert-error" id="saveFailMessage" fade-out="8000" openlmis-message="error" ng-show="error"></div>
+  <div class="alert alert-success" id="saveSuccessMsgDiv" fade-out="8000" openlmis-message="message"
+       ng-show="message"></div>
 
   <div class="period-table">
     <h2 openlmis-message="periods.header"></h2>
@@ -119,12 +123,12 @@
       </thead>
       <tbody>
       <tr ng-repeat="period in periodList">
-        <td class="col-period-name">{{period.name}}</td>
-        <td class="col-description">{{period.description}}</td>
-        <td class="col-start-date">{{period.startDate | date:'dd/MM/yyyy'}}</td>
-        <td class="col-end-date">{{period.endDate | date:'dd/MM/yyyy'}}</td>
-        <td class="col-total-days">{{calculateDays(period.startDate, period.endDate)}}</td>
-        <td class="col-number-of-months">{{period.numberOfMonths}}</td>
+        <td class="col-period-name" ng-bind="period.name"></td>
+        <td class="col-description" ng-bind="period.description"></td>
+        <td class="col-start-date" ng-bind="period.stringStartDate | date:'dd/MM/yyyy'"></td>
+        <td class="col-end-date" ng-bind="period.stringEndDate | date:'dd/MM/yyyy'"></td>
+        <td class="col-total-days" ng-bind="calculateDays(period.startDate, period.endDate)"></td>
+        <td class="col-number-of-months" ng-bind="period.numberOfMonths"></td>
         <td class="col-delete-button">
           <input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)"
                  class="btn btn-danger btn btn-mini" openlmis-message="button.delete"/>
