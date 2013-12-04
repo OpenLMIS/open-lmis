@@ -318,13 +318,17 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalanceFirstProduct);
     beginningBalanceFirstProduct.clear();
+    testWebDriver.sleep(100);
     beginningBalanceFirstProduct.sendKeys(beginningBalanceValue.toString());
+    testWebDriver.setImplicitWait(100);
   }
 
   public void enterBeginningBalanceForSecondProduct(Integer beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalanceSecondProduct);
+    testWebDriver.sleep(100);
     beginningBalanceSecondProduct.sendKeys(beginningBalanceValue.toString());
+    testWebDriver.setImplicitWait(100);
   }
 
   public void verifyBeginningBalanceForFirstProduct(String beginningBalanceValue) {
@@ -335,6 +339,7 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
     stockInHandFirstProduct.clear();
+    testWebDriver.sleep(100);
     stockInHandFirstProduct.sendKeys(stockOnHandValue.toString());
   }
 
@@ -342,6 +347,7 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
     stockInHandSecondProduct.clear();
+    testWebDriver.sleep(100);
     stockInHandSecondProduct.sendKeys(stockOnHandValue.toString());
   }
 
@@ -368,6 +374,7 @@ public class InitiateRnRPage extends RequisitionPage {
 
   public void enterQuantityReceivedForFirstProduct(Integer quantityReceivedValue) {
     testWebDriver.waitForElementToAppear(quantityReceivedFirstProduct);
+    testWebDriver.sleep(100);
     quantityReceivedFirstProduct.clear();
     quantityReceivedFirstProduct.sendKeys(quantityReceivedValue.toString());
   }

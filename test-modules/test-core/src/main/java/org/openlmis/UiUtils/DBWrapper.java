@@ -1487,4 +1487,11 @@ public class DBWrapper {
   public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {
     update("update products set "+field + "="+ fieldValue+" where code='"+productCode+ "';");
   }
+
+    public void updateCreatedDateAfterRequisitionIsInitiated(String createdDate) throws SQLException {
+        update("update requisitions set createdDate ='"+createdDate+"';");
+        update("update requisition_line_items set createdDate ='"+createdDate+"';");
+        update("update requisition_status_changes set createdDate='"+createdDate+"';");
+    }
+
 }
