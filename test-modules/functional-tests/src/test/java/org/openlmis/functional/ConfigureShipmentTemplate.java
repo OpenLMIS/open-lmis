@@ -55,10 +55,10 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureEDIPage.navigateConfigureShipmentPage();
   }
 
-  @And("^I should see include column headers as \"([^\"]*)\"$")
-  public void verifyIncludeColumnHeader(String status) throws Exception {
+  @And("^I should see include column headers unchecked$")
+  public void verifyIncludeColumnHeader() throws Exception {
     ConfigureShipmentPage configureShipmentPage = new ConfigureShipmentPage(testWebDriver);
-    assertEquals(String.valueOf(configureShipmentPage.getIncludeHeader()), status);
+    assertFalse(configureShipmentPage.getIncludeHeader());
   }
 
   @And("^I should see include checkbox for all data fields$")
@@ -217,6 +217,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     configureShipmentPage.selectValueFromShippedDateDropDown("dd/MM/yy");
     configureShipmentPage.clickSaveButton();
   }
+
   @After
   @AfterMethod(groups = "admin")
   public void tearDown() throws Exception {
