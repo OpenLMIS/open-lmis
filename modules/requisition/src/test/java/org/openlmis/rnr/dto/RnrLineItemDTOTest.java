@@ -41,6 +41,7 @@ public class RnrLineItemDTOTest {
     assertThat(lineItemDTO.getNewPatientCount(), is(lineItem.getNewPatientCount()));
     assertThat(lineItemDTO.getStockOutDays(), is(lineItem.getStockOutDays()));
     assertThat(lineItemDTO.getCalculatedOrderQuantity(), is(lineItem.getCalculatedOrderQuantity()));
+    assertThat(lineItemDTO.getSkipped(), is(lineItem.getSkipped()));
     assertThat(lineItemDTO.getRemarks(), is(lineItem.getRemarks()));
   }
 }
