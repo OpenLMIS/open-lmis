@@ -19,6 +19,6 @@ public interface BudgetFileColumnMapper {
     "WHERE name = #{name}"})
   public void update(EDIFileColumn ediFileColumn);
 
-  @Select("SELECT * FROM budget_file_columns")
+  @Select("SELECT * FROM budget_file_columns ORDER BY id")
   public List<EDIFileColumn> getAll();
 }

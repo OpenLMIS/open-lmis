@@ -29,7 +29,7 @@ public interface ShipmentFileColumnMapper {
     "WHERE name = #{name}"})
   public void update(EDIFileColumn shipmentFileColumn);
 
-  @Select("SELECT * FROM shipment_file_columns")
+  @Select("SELECT * FROM shipment_file_columns ORDER BY id")
   public List<EDIFileColumn> getAll();
 
 }
