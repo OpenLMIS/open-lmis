@@ -318,17 +318,14 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalanceFirstProduct);
     beginningBalanceFirstProduct.clear();
-    testWebDriver.sleep(100);
     beginningBalanceFirstProduct.sendKeys(beginningBalanceValue.toString());
-    testWebDriver.setImplicitWait(100);
   }
 
   public void enterBeginningBalanceForSecondProduct(Integer beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalanceSecondProduct);
-    testWebDriver.sleep(100);
+    beginningBalanceSecondProduct.clear();
     beginningBalanceSecondProduct.sendKeys(beginningBalanceValue.toString());
-    testWebDriver.setImplicitWait(100);
   }
 
   public void verifyBeginningBalanceForFirstProduct(String beginningBalanceValue) {
@@ -339,7 +336,6 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
     stockInHandFirstProduct.clear();
-    testWebDriver.sleep(100);
     stockInHandFirstProduct.sendKeys(stockOnHandValue.toString());
   }
 
@@ -347,7 +343,6 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(stockInHandFirstProduct);
     stockInHandSecondProduct.clear();
-    testWebDriver.sleep(100);
     stockInHandSecondProduct.sendKeys(stockOnHandValue.toString());
   }
 
@@ -373,14 +368,16 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterQuantityReceivedForFirstProduct(Integer quantityReceivedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityReceivedFirstProduct);
-    testWebDriver.sleep(100);
     quantityReceivedFirstProduct.clear();
     quantityReceivedFirstProduct.sendKeys(quantityReceivedValue.toString());
   }
 
   public void enterQuantityReceivedForSecondProduct(Integer quantityReceivedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityReceivedSecondProduct);
+    quantityDispensedSecondProduct.clear();
     quantityReceivedSecondProduct.sendKeys(quantityReceivedValue.toString());
   }
 
@@ -389,13 +386,16 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterQuantityDispensedForFirstProduct(Integer quantityDispensedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityDispensedFirstProduct);
     quantityDispensedFirstProduct.clear();
     quantityDispensedFirstProduct.sendKeys(quantityDispensedValue.toString());
   }
 
   public void enterQuantityDispensedForSecondProduct(Integer quantityDispensedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityDispensedSecondProduct);
+    quantityDispensedSecondProduct.clear();
     quantityDispensedSecondProduct.sendKeys(quantityDispensedValue.toString());
   }
 
@@ -470,23 +470,27 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterRequestedQuantityForFirstProduct(Integer requestedQuantityValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requestedQuantityFirstProduct);
     requestedQuantityFirstProduct.clear();
     requestedQuantityFirstProduct.sendKeys(requestedQuantityValue.toString());
   }
 
   public void enterRequestedQuantityForSecondProduct(Integer requestedQuantityValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requestedQuantitySecondProduct);
     requestedQuantitySecondProduct.clear();
     requestedQuantitySecondProduct.sendKeys(requestedQuantityValue.toString());
   }
 
   public void enterExplanationReason() {
+    testWebDriver.sleep(1000);
     requestedQuantityExplanation.sendKeys("Due to bad climate");
     testWebDriver.sleep(1000);
   }
 
   public void enterQuantities(Integer numberOfNewPatients, Integer stockOutDays) {
+    testWebDriver.sleep(1000);
     enterValuesCalculatedOrderQuantity(numberOfNewPatients, stockOutDays);
     testWebDriver.sleep(1000);
   }

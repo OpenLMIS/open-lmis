@@ -476,6 +476,7 @@ public class DBWrapper {
       "((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);\n");
   }
 
+  //TODO
   public void insertRoleAssignment(String userID, String roleName) throws SQLException, IOException {
     update("delete from role_assignments where userId='" + userID + "';");
 
