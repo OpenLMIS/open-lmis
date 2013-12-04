@@ -26,11 +26,10 @@ import static org.openqa.selenium.support.How.XPATH;
 
 public class ConfigureShipmentPage extends Page {
 
-
   @FindBy(how = ID, using = "includeHeadersCheckbox")
   private static WebElement includeHeaders = null;
 
-  @FindBy(how = ID, using = "orderNumberIncludeCheckbox")
+  @FindBy(how = ID, using = "orderIdIncludeCheckbox")
   private static WebElement orderNumberCheckBox = null;
 
   @FindBy(how = ID, using = "productCodeIncludeCheckbox")
@@ -280,7 +279,7 @@ public class ConfigureShipmentPage extends Page {
     assertTrue("productCodeCheckBox should be checked", productCodeCheckBox.isSelected());
     assertFalse("packedDateCheckBox should be checked", packedDateCheckBox.isSelected());
     assertFalse("shippedDateCheckBox should be checked", shippedDateCheckBox.isSelected());
-    assertFalse("costCheckBox should be checked", costCheckBox.isSelected());
+    assertFalse("costCheckBox should not be checked", costCheckBox.isSelected());
 
     assertFalse("orderNumberCheckBox should be disabled", orderNumberCheckBox.isEnabled());
     assertFalse("quantityShippedCheckBox should be disabled", quantityShippedCheckBox.isEnabled());
@@ -293,8 +292,8 @@ public class ConfigureShipmentPage extends Page {
 
   public void verifyDefaultPositionValues() {
     assertEquals("1", orderNumberPositionTextField.getAttribute("value"));
-    assertEquals("3", quantityShippedTextField.getAttribute("value"));
     assertEquals("2", productCodePositionTextField.getAttribute("value"));
+    assertEquals("3", quantityShippedTextField.getAttribute("value"));
     assertEquals("5", packedDatePositionTextField.getAttribute("value"));
     assertEquals("6", shippedDatePositionTextField.getAttribute("value"));
     assertEquals("4", costPositionTextField.getAttribute("value"));
