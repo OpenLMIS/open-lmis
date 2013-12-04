@@ -22,7 +22,6 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.String.format;
-import static org.openlmis.functional.PODTest.POD_URL;
 
 public class GetRequisitionDetailsAPI extends JsonUtility {
 
@@ -33,10 +32,13 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
   @BeforeMethod(groups = {"webservice"})
   public void setUp() throws Exception {
-    super.setup();
-    super.setupTestData(false);
-    super.setupDataRequisitionApprover();
-    dbWrapper.updateRestrictLogin("commTrack",true);
+      super.setup();
+      super.setupTestData(false);
+      super.setupDataRequisitionApprover();
+      createVirtualFacilityThroughApi("V10", "F10");
+      dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
+      dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+      dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -55,24 +57,21 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
   }
-/*
+
   @Test(groups = {"webservice"})
   public void testGetRequisitionDetailsWithMultipleProducts() throws Exception {
     dbWrapper.updateProductFullSupplyFlag(true, "P11");
+
+    long id= submitRnRThroughApi("V10","HIV","P10",1,10,1,0,0,2);
     HttpClient client = new HttpClient();
     client.createContext();
 
-    submitRequisition("commTrack1","HIV");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
-    Long id = (long)dbWrapper.getMaxRnrID();
-
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkRequisitionStatus("AUTHORIZED", responseEntity);
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P11\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"beginningBalance\":6"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"skipped\":true"));
     dbWrapper.updateProductFullSupplyFlag(false, "P11");
   }
-*/
+
   @Test(groups = {"webservice"})
   public void testGetRequisitionDetailsWithInvalidRequisitionID() throws Exception {
     HttpClient client = new HttpClient();
@@ -311,6 +310,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"skipped\":false"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
     assertFalse("Response entity : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("\"orderStatus\":"));
