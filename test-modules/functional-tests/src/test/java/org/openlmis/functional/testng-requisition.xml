@@ -28,6 +28,8 @@
             </class>
             <class name="org.openlmis.functional.ViewOrderPagination">
             </class>
+            <class name="org.openlmis.functional.TestCalculationsForRegularRnR">
+            </class>
         </classes>
     </test>
 </suite>
