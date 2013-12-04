@@ -16,7 +16,7 @@ describe("User", function () {
 
   describe("User Controller", function () {
 
-    var scope, httpBackend, ctrl, user, location, controller, roles, messageService;
+    var scope, httpBackend, ctrl, user, location, controller, messageService;
     var programs;
     var deliveryZones;
 
