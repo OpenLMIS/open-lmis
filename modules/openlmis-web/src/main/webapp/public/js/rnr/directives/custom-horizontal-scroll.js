@@ -11,9 +11,9 @@
 //  Description:
 //  Adding custom horizontal scroll
 
-app.directive('customHorizontalScroll',function () {
+app.directive('customHorizontalScroll', function () {
   return {
-    restrict:'A',
+    restrict: 'A',
     link: function (scope, element, attrs) {
       var myScroll = {};
       var scrollBar = $("<div class='scrollbar'><div class='scroll-handle'></div></div>");
@@ -29,33 +29,33 @@ app.directive('customHorizontalScroll',function () {
         if (myScroll.extraWidth > 0) {
           scrollBar.show();
           scrollBar.width(myScroll.containerWidth);
-          myScroll.multiplier = Math.floor(myScroll.extraWidth/myScroll.containerWidth) + 1;
+          myScroll.multiplier = Math.floor(myScroll.extraWidth / myScroll.containerWidth) + 1;
 
-          myScroll.scrollHandle.width(myScroll.containerWidth - (myScroll.extraWidth/myScroll.multiplier));
+          myScroll.scrollHandle.width(myScroll.containerWidth - (myScroll.extraWidth / myScroll.multiplier));
 
           myScroll.handleStartOffset = scrollBar.offset().left;
           myScroll.handleEndOffset = myScroll.containerWidth - myScroll.scrollHandle.width() + myScroll.handleStartOffset;
 
-          var scrollHandlePosition = element.scrollLeft()/myScroll.multiplier + myScroll.handleStartOffset;
+          var scrollHandlePosition = element.scrollLeft() / myScroll.multiplier + myScroll.handleStartOffset;
           myScroll.scrollHandle.offset({left: scrollHandlePosition});
 
-          myScroll.scrollHandle.mousedown(function(e) {
+          myScroll.scrollHandle.mousedown(function (e) {
             e.preventDefault();
             var handleLeftPosition = myScroll.scrollHandle.offset().left;
             var elementLeftPosition = element.scrollLeft();
             var initialMouseX = e.pageX;
 
-            $('body').mousemove(function(e) {
+            $('body').mousemove(function (e) {
               var finalMouseX = e.pageX;
               var diff = finalMouseX - initialMouseX;
 
-              if(myScroll.scrollHandle.offset().left >= myScroll.handleStartOffset) {
+              if (myScroll.scrollHandle.offset().left >= myScroll.handleStartOffset) {
                 myScroll.scrollHandle.offset({left: handleLeftPosition + diff });
 
-                if(myScroll.scrollHandle.offset().left < myScroll.handleStartOffset) {
+                if (myScroll.scrollHandle.offset().left < myScroll.handleStartOffset) {
                   myScroll.scrollHandle.offset({left: myScroll.handleStartOffset});
                 }
-                if(myScroll.scrollHandle.offset().left > myScroll.handleEndOffset) {
+                  if (myScroll.scrollHandle.offset().left > myScroll.handleEndOffset) {
                   myScroll.scrollHandle.offset({left: myScroll.handleEndOffset});
                 }
 
@@ -64,7 +64,7 @@ app.directive('customHorizontalScroll',function () {
             });
           });
 
-          $(document).mouseup(function(e) {
+          $(document).mouseup(function (e) {
             $('body').unbind('mousemove');
           });
 
@@ -72,7 +72,7 @@ app.directive('customHorizontalScroll',function () {
 
           $('.rnr-body').scroll(pageScrollHandler);
 
-          if(getContainerBottomOffset() > 0) {
+          if (getContainerBottomOffset() > 0) {
             scrollBar.hide();
           } else {
             scrollBar.show();
@@ -84,12 +84,12 @@ app.directive('customHorizontalScroll',function () {
       }
 
       function elementScrollHandler() {
-        var scrollHandlePosition = element.scrollLeft()/myScroll.multiplier + myScroll.handleStartOffset;
+        var scrollHandlePosition = element.scrollLeft() / myScroll.multiplier + myScroll.handleStartOffset;
         scrollBar.find('.scroll-handle').offset({left: scrollHandlePosition});
       }
 
       function pageScrollHandler() {
-        if(getContainerBottomOffset() > 0) {
+        if (getContainerBottomOffset() > 0) {
           scrollBar.hide();
         } else {
           resetScroll();
@@ -101,7 +101,7 @@ app.directive('customHorizontalScroll',function () {
         return distance;
       }
 
-      setTimeout(setupScroll);
+      setTimeout(setupScroll, 0);
 
       function resetScroll() {
         myScroll.scrollHandle.unbind();
