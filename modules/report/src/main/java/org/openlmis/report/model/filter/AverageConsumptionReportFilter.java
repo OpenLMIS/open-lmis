@@ -41,7 +41,7 @@ public class AverageConsumptionReportFilter  implements ReportData {
     private int facilityTypeId;
     private String facilityType;
     private int zoneId;
-    private int productId;
+    private String productId;
     private int productCategoryId;
     private int rgroupId;
     private String rgroup;

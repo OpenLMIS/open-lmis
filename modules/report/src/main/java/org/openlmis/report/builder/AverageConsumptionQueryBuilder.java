@@ -63,8 +63,8 @@ public class AverageConsumptionQueryBuilder {
             if(filter.getRgroupId() != 0){
                 WHERE("rgm.id = #{filterCriteria.rgroupId}");
             }
-            if(filter.getProductId() != 0){
-                WHERE("pr.id = #{filterCriteria.productId}");
+            if(filter.getProductId() != "0" && !filter.getProductId().equalsIgnoreCase("")){
+                WHERE("pr.id = ANY( #{filterCriteria.productId}::INT[] ) ");
             }
             if(filter.getProgramId() != 0){
                 WHERE("r.programid = #{filterCriteria.programId}");

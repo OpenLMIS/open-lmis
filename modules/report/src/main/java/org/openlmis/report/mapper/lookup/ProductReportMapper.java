@@ -21,11 +21,14 @@ import java.util.List;
 @Repository
 public interface ProductReportMapper {
 
-    @Select("SELECT id, primaryname as name, code, " +
-            "CASE WHEN tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
+    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, " +
+            "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
             " " +
             "   FROM " +
-            "       products order by tracer,name")
+            "       products as p " +
+      "             join product_forms as form on form.id = p.formid " +
+      "             join dosage_units as du on du.id = p.dosageunitid" +
+      "          order by p.tracer, name")
     List<Product> getAll();
 
     @Select("SELECT * " +
@@ -33,20 +36,31 @@ public interface ProductReportMapper {
             "       products")
     List<ProductList> getFullProductList();
 
-    @Select("SELECT id, primaryname as name, code, " +
-            "CASE WHEN tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer  " +
-            "FROM products " +
-            "WHERE categoryid = #{categoryId} " +
-            "order by tracer,name")
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, " +
+    "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
+    " " +
+    "   FROM " +
+    "       products as p " +
+    "             join product_forms as form on form.id = p.formid " +
+    "             join dosage_units as du on du.id = p.dosageunitid" +
+            "WHERE p.categoryid = #{categoryId} " +
+            "order by p.tracer, name")
     List<Product> getProductListByCategory(@Param("categoryId") Integer categoryId);
 
     @Select("SELECT * FROM products WHERE code = #{code}")
     Product getProductByCode(String code);
 
-  @Select("SELECT p.id, p.primaryName as name, p.code " +
-      "     from products p " +
-      "         join program_products pp on p.id = pp.productId " +
-      "     where pp.programId = #{programId} and pp.active = true order by p.primaryName")
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid" +
+    "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
+    " " +
+    "   FROM " +
+    "       products as p " +
+    "             join product_forms as form on form.id = p.formid " +
+    "             join dosage_units as du on du.id = p.dosageunitid" +
+    "         join program_products pp on p.id = pp.productId " +
+    "     where pp.programId = #{programId} and pp.active = true " +
+    " order by name "
+  )
   List<Product> getProductsForProgram(Long programId);
 
 

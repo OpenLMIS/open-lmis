@@ -22,7 +22,6 @@ public class Product {
     private Integer id;
     private String name;
     private String code;
+    private Integer categoryId;
     private String tracer;
-
-
 }

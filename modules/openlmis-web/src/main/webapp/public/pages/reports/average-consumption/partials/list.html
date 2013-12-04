@@ -32,8 +32,8 @@
                                                 <div >
                                                     <label class="labels">Program <span class="label-required">*</span></label>
                                                     <div class="form-fields">
-                                                        <select ui-select2 style="width:200px;" name="program"  ng-model="program" ng-required="true">
-                                                            <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }}</option>
+                                                        <select ui-select2 style="width:200px;" data-placeholder="-- Select Program --" name="program"  ng-model="program" ng-required="true">
+                                                            <option  ng-repeat="option in programs" value="{{ option.id }}">{{ option.name }} </option>
                                                         </select>
                                                      </div>
                                                 </div>
@@ -144,11 +144,11 @@
                                                 </div>
                                             </div>
                                             <div class="form-cell horizontalFilters" >
-                                                <label class="labels">Product</label>
+                                                <label class="labels">Product (multi-select)</label>
 
                                                 <div class="form-field">
-                                                    <select ui-select2 style="width:200px;" name="product"  ng-model="product" >
-                                                        <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.name }}</option>
+                                                    <select ui-select2="wideOption" multiple data-placeholder="-- All Products --" style="width:200px;" name="product"  ng-model="product" >
+                                                        <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                                     </select>
                                                 </div>
                                             </div>

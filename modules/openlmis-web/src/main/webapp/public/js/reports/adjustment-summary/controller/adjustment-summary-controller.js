@@ -10,8 +10,11 @@
 
 function AdjustmentSummaryReportController($scope, $filter , ngTableParams , AdjustmentSummaryReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones, AdjustmentTypes,OperationYears,Months, $http, $routeParams,$location) {
 
+
         // default to the monthly period type
         $scope.periodType = 'monthly';
+
+
 
         $scope.periodTypes = [
             {'name':'Monthly', 'value':'monthly'},

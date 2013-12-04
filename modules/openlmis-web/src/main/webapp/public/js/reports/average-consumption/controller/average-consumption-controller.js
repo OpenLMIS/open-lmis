@@ -9,7 +9,11 @@
  */
 
 function AverageConsumptionReportController($scope,$filter, $window, ngTableParams, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
-    $scope.startYears = [];
+
+  $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
+
+
+  $scope.startYears = [];
     OperationYears.get(function(data){
         $scope.startYears = $scope.endYears = data.years;
         adjustEndYears();
@@ -146,7 +150,7 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
 
     Products.get(function(data){
         $scope.products = data.productList;
-        $scope.products.unshift({'name': '-- All Products --'});
+//        $scope.products.unshift({'name': '-- All Products --'});
     });
 
     ProductCategories.get(function(data){
@@ -157,11 +161,12 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     GeographicZones.get(function(data) {
         $scope.zones = data.zones;
         $scope.zones.unshift({'name': '-- All Geographic Zones --'});
+
     });
 
     ReportPrograms.get(function(data){
         $scope.programs = data.programs;
-        $scope.programs.unshift({'name':'-- Select Programs --'});
+        $scope.programs.unshift({'name': '-- Select Program --'});
     });
 
     $scope.$watch('zone.value', function(selection){
@@ -364,8 +369,9 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     });
 
     $scope.$watch('product', function(selection){
+        console.warn($scope.product);
         if(selection !== undefined || selection === ""){
-            $scope.filterObject.productId =  selection;
+            $scope.filterObject.productId =  JSON.stringify($scope.product);
         }else{
             $scope.filterObject.productId =  0;
         }
@@ -392,7 +398,8 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         if(selection !== undefined || selection === ""){
             $scope.filterObject.programId =  selection;
         }else{
-            $scope.filterObject.programId =  0;
+            //$scope.filterObject.programId =  0;
+            return;
         }
         $scope.filterGrid();
     });

@@ -66,7 +66,7 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
 
 
           averageConsumptionReportFilter.setProductCategoryId( StringUtils.isBlank(filterCriteria.get("productCategoryId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
-          averageConsumptionReportFilter.setProductId( StringUtils.isBlank( filterCriteria.get("productId") [0] ) ? 0 : Integer.parseInt(filterCriteria.get("productId")[0])); //defaults to 0
+          averageConsumptionReportFilter.setProductId( StringUtils.isBlank( filterCriteria.get("productId") [0] ) ? "0" : (filterCriteria.get("productId")[0]).toString().replace("]","}").replace("[","{").replaceAll("\"",""));
           averageConsumptionReportFilter.setRgroupId( StringUtils.isBlank( filterCriteria.get("rgroupId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
           averageConsumptionReportFilter.setProgramId( StringUtils.isBlank( filterCriteria.get("programId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
 
