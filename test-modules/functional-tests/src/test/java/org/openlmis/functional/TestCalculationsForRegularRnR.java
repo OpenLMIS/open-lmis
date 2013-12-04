@@ -53,19 +53,14 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalanceForFirstProduct(10);
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(5);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(14);
-    initiateRnRPage.enterStockOutDaysForFirstProduct(0);
-    initiateRnRPage.enterNewPatientCountForFirstProduct(5);
-    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(155);
-    initiateRnRPage.verifyAmcForFirstProduct(155);
+    enterDetailsForFirstProduct(10,5,null,14,0,5);
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(164);
+    initiateRnRPage.verifyAmcForFirstProduct(164);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
-    verifyNormalizedConsumptionAndAmcInDatabase(155,155,"P10");
-    verifyNormalizedConsumptionAndAmcInDatabase(155,155,"P11");
+    verifyNormalizedConsumptionAndAmcInDatabase(164,164,"P10");
   }
 
   @Test(groups = "requisition")
@@ -74,38 +69,75 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("HIV","source","U","true","stockInHand");
     dbWrapper.updateConfigureTemplateValidationFlag("HIV","true");
     dbWrapper.updateProductsByField("dosesPerDispensingUnit","7","P10");
+    dbWrapper.insertProcessingPeriod("period3","feb2013","2013-01-31","2013-02-28",1,"M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalanceForFirstProduct(15);
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(5);
-    initiateRnRPage.enterStockOnHandForFirstProduct(2);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(18);
-    initiateRnRPage.enterStockOutDaysForFirstProduct(45);
-    initiateRnRPage.enterNewPatientCountForFirstProduct(11);
+    enterDetailsForFirstProduct(15,5,2,18,45,11);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(62);
     initiateRnRPage.verifyAmcForFirstProduct(62);
-    initiateRnRPage.enterBeginningBalanceForSecondProduct(8);
-    initiateRnRPage.enterQuantityReceivedForSecondProduct(5);
-    initiateRnRPage.enterStockOnHandForSecondProduct(5);
-    initiateRnRPage.enterQuantityDispensedForSecondProduct(8);
-    initiateRnRPage.enterStockOutDaysForSecondProduct(20);
-    initiateRnRPage.enterNewPatientCountForSecondProduct(10);
+    enterDetailsForSecondProduct(8,5,5,8,20,10);
     initiateRnRPage.verifyNormalizedConsumptionForSecondProduct(54);
     initiateRnRPage.verifyAmcForSecondProduct(54);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
-    verifyNormalizedConsumptionAndAmcInDatabase(62,62,"P10");
+    verifyNormalizedConsumptionAndAmcInDatabase(62, 62, "P10");
     verifyNormalizedConsumptionAndAmcInDatabase(54,54,"P11");
+
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
+    initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage.skipSingleProduct(2);
+    enterDetailsForFirstProduct(20,0,7,13,23,0);
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(56);
+    initiateRnRPage.verifyAmcForFirstProduct(59);
+    initiateRnRPage.submitRnR();
+    initiateRnRPage.clickOk();
+    initiateRnRPage.authorizeRnR();
+    initiateRnRPage.clickOk();
+    verifyNormalizedConsumptionAndAmcInDatabase(56, 59, "P10");
   }
 
   public void verifyNormalizedConsumptionAndAmcInDatabase(Integer normalizedConsumption, Integer amc, String productCode) throws IOException, SQLException {
     Long rnrId = Long.valueOf(dbWrapper.getMaxRnrID());
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId,"normalizedConsumption",productCode),normalizedConsumption.toString());
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode), amc.toString());
+  }
+
+  public void enterDetailsForFirstProduct(Integer beginningBalance, Integer quantityReceived, Integer stockOnHand,
+                                          Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
+    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    if(beginningBalance!=null)
+    initiateRnRPage.enterBeginningBalanceForFirstProduct(beginningBalance);
+    if(quantityReceived!=null)
+    initiateRnRPage.enterQuantityReceivedForFirstProduct(quantityReceived);
+    if(stockOnHand!=null)
+    initiateRnRPage.enterStockOnHandForFirstProduct(stockOnHand);
+    if(quantityDispensed!=null)
+    initiateRnRPage.enterQuantityDispensedForFirstProduct(quantityDispensed);
+    if(stockOutDays!=null)
+    initiateRnRPage.enterStockOutDaysForFirstProduct(stockOutDays);
+    if(newPatientCount!=null)
+    initiateRnRPage.enterNewPatientCountForFirstProduct(newPatientCount);
+  }
+
+  public void enterDetailsForSecondProduct(Integer beginningBalance, Integer quantityReceived, Integer stockOnHand,
+                                          Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
+    InitiateRnRPage initiateRnRPage= new InitiateRnRPage(testWebDriver);
+    if(beginningBalance!=null)
+    initiateRnRPage.enterBeginningBalanceForSecondProduct(beginningBalance);
+    if(quantityReceived!=null)
+    initiateRnRPage.enterQuantityReceivedForSecondProduct(quantityReceived);
+    if(stockOnHand!=null)
+    initiateRnRPage.enterStockOnHandForSecondProduct(stockOnHand);
+    if(quantityDispensed!=null)
+    initiateRnRPage.enterQuantityDispensedForSecondProduct(quantityDispensed);
+    if(stockOutDays!=null)
+    initiateRnRPage.enterStockOutDaysForSecondProduct(stockOutDays);
+    if(newPatientCount!=null)
+    initiateRnRPage.enterNewPatientCountForSecondProduct(newPatientCount);
   }
 
   @After
