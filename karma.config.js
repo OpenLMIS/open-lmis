@@ -71,7 +71,6 @@ module.exports = function (config) {
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
 
-
     plugins: ['karma-firefox-launcher', 'karma-jasmine'],
 
     // enable / disable watching file and executing tests whenever any file changes
@@ -87,7 +86,6 @@ module.exports = function (config) {
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: ['Firefox'],
-
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 30000,
