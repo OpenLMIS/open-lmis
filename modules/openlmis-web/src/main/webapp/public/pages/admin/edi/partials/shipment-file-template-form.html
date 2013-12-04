@@ -16,7 +16,7 @@
     <div class="app-form" tab-scroll>
       <div class="clearfix form-inline row-fluid">
         <div class="span4 include-header-form">
-          <input type="checkbox" id="includeHeadersCheckbox"
+          <input type="checkbox" id="includeHeadersCheckbox" name = "includeHeadersCheckbox"
                  ng-model="shipmentFileTemplate.configuration.headerInFile"/>
           <label for="includeHeadersCheckbox" openlmis-message="label.column.include.headers"></label>
         </div>
@@ -45,7 +45,9 @@
             <div class="row-fluid list-row" ng-repeat="shipmentFileColumn in shipmentFileTemplate.columns">
               <div class="span1">
                 <span class="first-column checkbox-column">
-                  <input id="{{shipmentFileColumn.name}}IncludeCheckbox" type="checkbox"
+                  <input id="{{shipmentFileColumn.name}}IncludeCheckbox"
+                         name="{{shipmentFileColumn.name}}IncludeCheckbox"
+                         type="checkbox"
                          ng-model="shipmentFileColumn.include"
                          ng-disabled='shipmentFileColumn.mandatory'/>
                 </span>
