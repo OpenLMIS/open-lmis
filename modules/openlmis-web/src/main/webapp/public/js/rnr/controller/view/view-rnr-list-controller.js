@@ -29,7 +29,6 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     enableColumnResize: true,
     showColumnMenu: false,
     showFilter: false,
-    rowHeight: 44,
     enableSorting: true,
     sortInfo: { fields: ['submittedDate'], directions: ['asc'] },
     columnDefs: [
