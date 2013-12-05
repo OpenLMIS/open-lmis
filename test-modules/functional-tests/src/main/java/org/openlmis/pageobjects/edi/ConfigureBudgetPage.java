@@ -29,61 +29,61 @@ public class ConfigureBudgetPage extends Page {
 
 
   @FindBy(how = ID, using = "includeHeadersCheckbox")
-  private WebElement includeHeaders = null;
+  private static WebElement includeHeaders = null;
 
   @FindBy(how = ID, using = "facilityCodeIncludeCheckbox")
-  private WebElement facilityCodeCheckbox = null;
+  private static WebElement facilityCodeCheckBox = null;
 
   @FindBy(how = ID, using = "programCodeIncludeCheckbox")
-  private WebElement programCodeCheckbox = null;
+  private static WebElement programCodeCheckBox = null;
 
   @FindBy(how = ID, using = "periodStartDateIncludeCheckbox")
-  private WebElement periodStartDateCheckbox = null;
+  private static WebElement periodStartDateCheckBox = null;
 
   @FindBy(how = ID, using = "allocatedBudgetIncludeCheckbox")
-  private WebElement allocatedBudgetCheckbox = null;
+  private static WebElement allocatedBudgetCheckBox = null;
 
   @FindBy(how = ID, using = "notesIncludeCheckbox")
-  private WebElement notesCheckbox = null;
+  private static WebElement notesCheckBox = null;
 
   @FindBy(how = ID, using = "facilityCodePosition")
-  private WebElement facilityCodePosition = null;
+  private static WebElement facilityCodePosition = null;
 
   @FindBy(how = ID, using = "programCodePosition")
-  private WebElement programCodePosition = null;
+  private static WebElement programCodePosition = null;
 
   @FindBy(how = ID, using = "periodStartDatePosition")
-  private WebElement periodStartDatePosition = null;
+  private static WebElement periodStartDatePosition = null;
 
   @FindBy(how = ID, using = "allocatedBudgetPosition")
-  private WebElement allocatedBudgetPosition = null;
+  private static WebElement allocatedBudgetPosition = null;
 
   @FindBy(how = ID, using = "notesPosition")
-  private WebElement notesTextPosition = null;
+  private static WebElement notesTextPosition = null;
 
   @FindBy(how = ID, using = "saveErrorMsgDiv")
-  private WebElement saveErrorMessageDiv = null;
+  private static WebElement saveErrorMessageDiv = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private WebElement successMessageDiv = null;
+  private static WebElement successMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Save']")
-  private WebElement saveButton = null;
+  private static WebElement saveButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Cancel')]")
-  private WebElement cancelButton = null;
+  private static WebElement cancelButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/div/input")
-  private WebElement periodStartDateSelectBoxTextField = null;
+  private static WebElement periodStartDateSelectBoxTextField = null;
 
   @FindBy(how = XPATH, using = "//div[@id='select2-drop']/ul/li[1]/div")
-  private WebElement periodStartDateSelectBoxSelectableElement = null;
+  private static WebElement periodStartDateSelectBoxSelectableElement = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/div/b")
-  private WebElement periodStartDateSelectBoxClickableLink = null;
+  private static WebElement periodStartDateSelectBoxClickableLink = null;
 
   @FindBy(how = XPATH, using = "//div[@id='s2id_autogen5']/a/span")
-  private WebElement periodStartDateSelectBoxDefaultSelected = null;
+  private static WebElement periodStartDateSelectBoxDefaultSelected = null;
 
 
   public ConfigureBudgetPage(TestWebDriver driver) throws IOException {
@@ -120,9 +120,9 @@ public class ConfigureBudgetPage extends Page {
   }
 
   public void checkNotesCheckBox() {
-    testWebDriver.waitForElementToAppear(notesCheckbox);
-    if (!notesCheckbox.isSelected())
-      notesCheckbox.click();
+    testWebDriver.waitForElementToAppear(notesCheckBox);
+    if (!notesCheckBox.isSelected())
+      notesCheckBox.click();
   }
 
   public String getAllocatedBudgetPosition() {
@@ -198,17 +198,18 @@ public class ConfigureBudgetPage extends Page {
   }
 
   public void verifyDefaultIncludeCheckboxForAllDataFields() {
-    assertTrue("facilityCodeCheckBox should be checked", facilityCodeCheckbox.isSelected());
-    assertTrue("allocatedBudgetCheckBox should be checked", allocatedBudgetCheckbox.isSelected());
-    assertTrue("programCodeCheckBox should be checked", programCodeCheckbox.isSelected());
-    assertTrue("periodStartDateCheckBox should be checked", periodStartDateCheckbox.isSelected());
-    assertFalse("notesCheckBox should not be checked", notesCheckbox.isSelected());
+    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
+    assertTrue("facilityCodeCheckBox should be checked", facilityCodeCheckBox.isSelected());
+    assertTrue("allocatedBudgetCheckBox should be checked", allocatedBudgetCheckBox.isSelected());
+    assertTrue("programCodeCheckBox should be checked", programCodeCheckBox.isSelected());
+    assertTrue("periodStartDateCheckBox should be checked", periodStartDateCheckBox.isSelected());
+    assertFalse("notesCheckBox should be checked", notesCheckBox.isSelected());
 
-    assertFalse("facilityCodeCheckBox should be disabled", facilityCodeCheckbox.isEnabled());
-    assertFalse("allocatedBudgetCheckBox should be disabled", allocatedBudgetCheckbox.isEnabled());
-    assertFalse("programCodeCheckBox should be disabled", programCodeCheckbox.isEnabled());
-    assertTrue("notesCheckBox should be enabled", notesCheckbox.isEnabled());
-    assertFalse("periodStartDateCheckBox should not be enabled", periodStartDateCheckbox.isEnabled());
+    assertFalse("facilityCodeCheckBox should be disabled", facilityCodeCheckBox.isEnabled());
+    assertFalse("allocatedBudgetCheckBox should be disabled", allocatedBudgetCheckBox.isEnabled());
+    assertFalse("programCodeCheckBox should be disabled", programCodeCheckBox.isEnabled());
+    assertTrue("notesCheckBox should be enabled", notesCheckBox.isEnabled());
+    assertFalse("periodStartDateCheckBox should be enabled", periodStartDateCheckBox.isEnabled());
 
   }
 
@@ -221,7 +222,7 @@ public class ConfigureBudgetPage extends Page {
   }
 
   public boolean isNotesChecked() {
-    testWebDriver.waitForElementToAppear(notesCheckbox);
-    return notesCheckbox.isSelected();
+    testWebDriver.waitForElementToAppear(notesCheckBox);
+    return notesCheckBox.isSelected();
   }
 }
