@@ -525,9 +525,11 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1() throws IOException, SQLException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndVerifyDefaultApprovedQuantityAndOtherFields() throws IOException, SQLException {
     String createdDate = "2013-12-03";
     dbWrapper.deleteCurrentPeriod();
+    dbWrapper.updateConfigureTemplate("HIV","source","C","false","maxStockQuantity");
+    dbWrapper.updateConfigureTemplate("HIV","source","C","false","calculatedOrderQuantity");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
     dbWrapper.updateProductsByField("dosesPerDispensingUnit", "11", "P10");
 
@@ -544,6 +546,9 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     initiateRnRPage.skipSingleProduct(2);
     submitAndAuthorizeRnR();
     verifyNormalizedConsumptionAndAmcInDatabase(8, 8, "P10");
+    dbWrapper.getRequisitionLineItemFieldValue((long)dbWrapper.getMaxRnrID(),"maxStockQuantity","24");
+    dbWrapper.getRequisitionLineItemFieldValue((long)dbWrapper.getMaxRnrID(),"calculatedOrderQuantity","14");
+    dbWrapper.getRequisitionLineItemFieldValue((long)dbWrapper.getMaxRnrID(),"quantityApproved","14");
   }
 
   @Test(groups = "requisition")
@@ -670,7 +675,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
-    enterDetailsForFirstProduct(10, 5, null, 5, 65, 1);
+    enterDetailsForFirstProduct(10, 5, null, 5, 64, 1);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(9);
     initiateRnRPage.verifyAmcForFirstProduct(9);
     initiateRnRPage.skipSingleProduct(2);
