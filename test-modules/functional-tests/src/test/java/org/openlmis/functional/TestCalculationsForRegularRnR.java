@@ -632,7 +632,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
-    enterDetailsForFirstProduct(10, 5, null, 5, 64, 1);
+    enterDetailsForFirstProduct(10, 5, null, 5, 65, 1);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(9);
     initiateRnRPage.verifyAmcForFirstProduct(9);
     initiateRnRPage.skipSingleProduct(2);
