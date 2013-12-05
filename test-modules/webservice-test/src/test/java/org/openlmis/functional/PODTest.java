@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.String.format;
+import static org.openlmis.UiUtils.HttpClient.POST;
 
 
 public class PODTest extends JsonUtility {
@@ -282,6 +283,40 @@ public class PODTest extends JsonUtility {
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"Invalid received quantity\"}");
     assertEquals("TRANSFER_FAILED", dbWrapper.getOrderStatus(id));
+  }
+
+  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  public void testShowErrorMessageForUnrecognizedFieldInAPI(String userName, String program) throws Exception {
+    dbWrapper.assignRight("store in-charge", "MANAGE_POD");
+    dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");
+
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    createOrder(userName, "RELEASED", program);
+    Long id = (long) dbWrapper.getMaxRnrID();
+
+    String wrongJson = "{\"podLineItems\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "            \"quantityReceived\": \"10\"," +
+      "            \"beginningbbbb\": \"10\"," +
+
+      "        }" +
+      "    ]" +
+      "}";
+    ResponseEntity responseEntity =
+      client.SendJSON(wrongJson,
+        "http://localhost:9091/rest-api/orders/"+id+"/pod",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    String response = responseEntity.getResponse();
+    assertEquals(400, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON: Unrecognized field"));
+
+
   }
 
   @DataProvider(name = "Data-Provider")

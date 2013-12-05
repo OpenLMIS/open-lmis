@@ -923,5 +923,32 @@ public class SubmitReportTest extends JsonUtility {
       submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
   }
 
+
+  @Test(groups = {"webservice"})
+  public void testShowErrorMessageForUnrecognizedFieldInAPI() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String wrongJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "            \"zzzzzbbbb\": \"10\"," +
+
+      "        }" +
+      "    ]" +
+      "}";
+
+    ResponseEntity responseEntity =
+      client.SendJSON(wrongJson,
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON: Unrecognized field"));
+  }
 }
 
