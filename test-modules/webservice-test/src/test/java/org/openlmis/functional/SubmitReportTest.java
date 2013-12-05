@@ -632,15 +632,47 @@ public class SubmitReportTest extends JsonUtility {
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
   }
 
-  public void testSubmitReportValidRnR() throws Exception {
+  @Test(groups = {"webservice"})
+  public void testInvalidSubmitReportRnRWithoutFillingRegimen() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
     HttpClient client = new HttpClient();
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
     reportFromJson.setAgentCode("V10");
     reportFromJson.setProgramCode("HIV");
-    reportFromJson.getProducts().get(0).setProductCode("P10000");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(10);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(10);
+    reportFromJson.getProducts().get(0).setQuantityReceived(10);
 
+    String jsonStringFor = getJsonStringFor(reportFromJson);
+    ResponseEntity responseEntity = client.SendJSON(jsonStringFor,
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "commTrack",
+      "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+  }
+
+  @Test(groups = {"webservice"})
+  public void testSubmitReportRnRWithoutFillingInactiveRegimen() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",false);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    Report reportFromJson = readObjectFromFile(FULL_JSON_TXT_FILE_NAME, Report.class);
+    reportFromJson.setAgentCode("V10");
+    reportFromJson.setProgramCode("HIV");
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setBeginningBalance(10);
+    reportFromJson.getProducts().get(0).setQuantityDispensed(10);
+    reportFromJson.getProducts().get(0).setQuantityReceived(10);
 
     String jsonStringFor = getJsonStringFor(reportFromJson);
     ResponseEntity responseEntity = client.SendJSON(jsonStringFor,
@@ -651,6 +683,130 @@ public class SubmitReportTest extends JsonUtility {
 
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testSubmitReportRnRWithRegimen() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String regimenJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "             \"beginningBalance\": \"3\","+
+      "              \"quantityDispensed\": \"1\","+
+      "               \"quantityReceived\": \"0\""+
+      "        }" +
+      "    ]," +
+      "\"regimens\" : [  "+
+      "{ "+
+      "\"code\" : \"Regimen\","+
+      "\"name\" :\"Regimen1\","+
+      "\"patientsOnTreatment\":\"111\","+
+      "\"patientsToInitiateTreatment\" :\"12\","+
+      "\"patientsStoppedTreatment\" :\"12\""+
+      "}]}";
+
+    ResponseEntity responseEntity = client.SendJSON(regimenJson,
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "commTrack",
+      "Admin123");
+
+    assertEquals(201, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testInvalidSubmitReportRnRWithExtraRegimenLineItem() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String regimenJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "             \"beginningBalance\": \"3\","+
+      "              \"quantityDispensed\": \"1\","+
+      "               \"quantityReceived\": \"0\""+
+      "        }" +
+      "    ]," +
+      "\"regimens\" : [  "+
+      "{ "+
+      "\"code\" : \"Regimen\","+
+      "\"name\" :\"Regimen1\","+
+      "\"patientsOnTreatment\":\"111\","+
+      "\"patientsToInitiateTreatment\" :\"12\","+
+      "\"patientsStoppedTreatment\" :\"12\""+
+      "}"    +
+    "],"+
+      "\"regimens\" : [  "+
+      "{ "+
+      "\"code\" : \"Regimen2\","+
+      "\"name\" :\"Regimen12\","+
+      "\"patientsOnTreatment\":\"111\","+
+      "\"patientsToInitiateTreatment\" :\"12\","+
+      "\"patientsStoppedTreatment\" :\"12\""+
+      "}"    +
+      "]"+
+  "}";
+
+    ResponseEntity responseEntity = client.SendJSON(regimenJson,
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "commTrack",
+      "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Invalid regimen found\"}", responseEntity.getResponse());
+  }
+
+  @Test(groups = {"webservice"})
+  public void testInvalidSubmitReportRnRWithLessRegimenLineItems() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen2","Regimen12",true);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String regimenJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "             \"beginningBalance\": \"3\","+
+      "              \"quantityDispensed\": \"1\","+
+      "               \"quantityReceived\": \"0\""+
+      "        }" +
+      "    ]," +
+      "\"regimens\" : [  "+
+      "{ "+
+      "\"code\" : \"Regimen\","+
+      "\"name\" :\"Regimen1\","+
+      "\"patientsOnTreatment\":\"111\","+
+      "\"patientsToInitiateTreatment\" :\"12\","+
+      "\"patientsStoppedTreatment\" :\"12\""+
+      "}]}";
+
+    ResponseEntity responseEntity = client.SendJSON(regimenJson,
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "commTrack",
+      "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", responseEntity.getResponse());
+
   }
 
   public void testBlankBeginningBalanceSubmitReport() throws Exception {
