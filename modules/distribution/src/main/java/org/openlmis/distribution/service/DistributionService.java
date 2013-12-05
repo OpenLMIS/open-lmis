@@ -12,7 +12,6 @@
 
 package org.openlmis.distribution.service;
 
-import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.repository.DistributionRepository;
@@ -30,7 +29,9 @@ public class DistributionService {
   DistributionRepository repository;
 
   public Distribution create(Distribution distribution) {
-    return repository.create(distribution);
+    Distribution savedDistribution = repository.create(distribution);
+
+    return savedDistribution;
   }
 
   public Distribution get(Distribution distribution) {

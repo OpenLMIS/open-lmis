@@ -19,6 +19,8 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 
+import java.util.List;
+
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
 
 @EqualsAndHashCode(callSuper = false)
@@ -26,10 +28,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL
 @JsonSerialize(include = NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Distribution extends BaseModel {
+
   DeliveryZone deliveryZone;
   Program program;
   ProcessingPeriod period;
   DistributionStatus status;
+  List<FacilityDistributionData> facilityDistributions;
 
   @SuppressWarnings("unused")
   public String getZpp() {

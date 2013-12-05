@@ -27,20 +27,16 @@ public class FacilityDistributionDataTest {
   @Test
   public void shouldConstructFacilityVisit() throws Exception {
     Long createdBy = 3L;
-    Long facilityId = 2L;
-    Long distributionId = 1L;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
-    facilityDistributionData.setDistributionId(distributionId);
-    facilityDistributionData.setFacilityId(facilityId);
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(1L, 2L);
     facilityDistributionData.setCreatedBy(createdBy);
     FacilityVisit facilityVisit = mock(FacilityVisit.class);
     facilityDistributionData.setFacilityVisit(facilityVisit);
     FacilityVisit expected = new FacilityVisit();
-    when(facilityVisit.construct(distributionId, facilityId, createdBy)).thenReturn(expected);
+    when(facilityVisit.construct(1L, 2L, createdBy)).thenReturn(expected);
 
     FacilityVisit actual = facilityDistributionData.constructFacilityVisit();
 
-    verify(facilityVisit).construct(distributionId, facilityId, createdBy);
+    verify(facilityVisit).construct(1L, 2L, createdBy);
     assertThat(actual, is(expected));
   }
 }

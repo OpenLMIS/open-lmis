@@ -20,14 +20,21 @@ import org.openlmis.core.domain.BaseModel;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FacilityDistributionData extends BaseModel{
+public class FacilityDistributionData extends BaseModel {
 
   private Long distributionId;
   private Long facilityId;
   private FacilityVisit facilityVisit;
+  private EpiUse epiUse;
 
+  public FacilityDistributionData(Long distributionId, Long facilityId) {
+    this.distributionId = distributionId;
+    this.facilityId = facilityId;
+  }
 
   public FacilityVisit constructFacilityVisit() {
     return this.facilityVisit.construct(distributionId, facilityId, createdBy);
   }
+
+
 }

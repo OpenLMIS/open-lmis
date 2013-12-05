@@ -130,7 +130,7 @@ public class DistributionControllerTest {
   public void shouldSyncFacilityDistributionData() {
     Long distributionId = 1l;
     Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(distributionId, facilityId);
 
     when(service.sync(facilityDistributionData)).thenReturn("Synced");
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
@@ -146,8 +146,8 @@ public class DistributionControllerTest {
   public void shouldReturnErrorIfAlreadySynced() throws Exception {
     Long distributionId = 1l;
     Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
-    String errorMessage = "some error";
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(distributionId, facilityId);
+
     when(service.sync(facilityDistributionData)).thenReturn("Failed");
 
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
