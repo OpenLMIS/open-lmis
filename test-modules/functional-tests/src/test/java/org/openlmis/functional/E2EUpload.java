@@ -219,9 +219,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Facility F10 is already assigned to Requisition Group rg1 running same program ESS_MEDS in Record No");
-    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
-    uploadPage.verifyErrorMessageOnUploadScreen();
-    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
+    //uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
+    //uploadPage.verifyErrorMessageOnUploadScreen();
+    //uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
 
   }
 
