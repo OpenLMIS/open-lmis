@@ -281,7 +281,7 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.selectByVisibleText(rnrTypeSelectBox, type);
-    testWebDriver.sleep(500);
+    testWebDriver.sleep(1000);
   }
 
   public void clickRequisitionSubMenuItem() throws IOException {
@@ -295,6 +295,7 @@ public class HomePage extends Page {
   }
 
   public InitiateRnRPage clickProceed() throws IOException {
+    testWebDriver.setImplicitWait(100);
     testWebDriver.waitForElementToAppear(proceedButton);
     proceedButton.click();
     testWebDriver.sleep(1000);

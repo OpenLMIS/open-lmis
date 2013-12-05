@@ -18,6 +18,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
+import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
@@ -209,10 +210,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I initiate and submit emergency requisition$")
   public void initiateEmergencyRnR() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-
-    homePage.navigateAndInitiateEmergencyRnr(program);
-    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    homePage.clickProceed();
+    homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
+    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.verifyRnRHeader(facilityCodePrefix, facilityNamePrefix, date_time, program, periodDetails,
       geoZone, parentGeoZone, operatedBy, facilityType);
     initiateRnRPage.submitRnR();
@@ -245,18 +244,20 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @And("^I update & verify ordered quantities$")
-  public void enterAndVerifyOrderedQuantities() throws Exception {
+public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantities(10, 10);
-    initiateRnRPage.verifyCalculatedOrderQuantity(36, 36, 108, 97);
+    int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
+    initiateRnRPage.verifyCalculatedOrderQuantity(expectedCalculatedNC, 36, 108, 97);
     initiateRnRPage.verifyPacksToShip("10");
   }
 
-  @And("^I update & verify ordered quantities for emergency RnR$")
+  @And("^I update & verify quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantities(10, 10);
-    initiateRnRPage.verifyCalculatedOrderQuantityForEmergencyRnR();
+    int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
+    initiateRnRPage.verifyCalculatedOrderQuantityForEmergencyRnR(expectedCalculatedNC);
     initiateRnRPage.verifyPacksToShip("11");
   }
 
@@ -506,6 +507,32 @@ public class E2EInitiateRnR extends TestCaseHelper {
     String[] periods = periodTopSNUser.split("-");
     String supplyFacilityName = dbWrapper.getSupplyFacilityName("N1", program);
     viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
+  }
+
+  public int CalculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays,Integer quantityDispensed) throws IOException, SQLException {
+    int expectedAdjustedTotalConsumption=0;
+    int id=dbWrapper.getMaxRnrID();
+    float res=0.0f;
+    float ans=0.0f;
+
+    String dayDifference= dbWrapper.getRequisitionLineItemFieldValue((long)id, "reportingDays", "P10");
+    Integer dayDiff=Integer.parseInt(dayDifference);
+    if(dayDiff <= stockOutDays)
+    {
+      ans=0.0f;
+      ans= (quantityDispensed + (numberOfNewPatients * (30/10)) );
+      expectedAdjustedTotalConsumption= Math.round(ans);
+    }
+    else
+    {
+
+       res=0.0f;
+       res=(float)30/(dayDiff-stockOutDays);
+       ans=((quantityDispensed * res) )+ (numberOfNewPatients * (30/10)) ;
+       expectedAdjustedTotalConsumption= Math.round(ans);
+
+    }
+    return expectedAdjustedTotalConsumption;
   }
 
   @After
