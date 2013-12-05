@@ -22,10 +22,10 @@ import static java.lang.System.getProperty;
 public class DBWrapper {
 
   public static final int DEFAULT_MAX_MONTH_OF_STOCK = 3;
-  Connection connection;
   public static final String DEFAULT_DB_URL = "jdbc:postgresql://localhost:5432/open_lmis";
   public static final String DEFAULT_DB_USERNAME = "postgres";
   public static final String DEFAULT_DB_PASSWORD = "p@ssw0rd";
+  Connection connection;
 
   public DBWrapper() throws IOException, SQLException {
     String dbUser = getProperty("dbUser", DEFAULT_DB_USERNAME);
@@ -36,7 +36,6 @@ public class DBWrapper {
 
     connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
   }
-
 
   public void closeConnection() throws SQLException {
     if (connection != null) connection.close();
@@ -68,7 +67,6 @@ public class DBWrapper {
   private ResultSet query(String sql, Object... params) throws SQLException {
     return query(format(sql, params));
   }
-
 
   public void insertUser(String userId, String userName, String password, String facilityCode, String email)
     throws SQLException, IOException {
@@ -200,7 +198,6 @@ public class DBWrapper {
     return flag;
   }
 
-
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens");
     update("update users set password = '%s', active = TRUE, verified = TRUE  where email = '%s'", password, email);
@@ -286,7 +283,6 @@ public class DBWrapper {
     }
     return userName;
   }
-
 
   public void insertFacilities(String facility1, String facility2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
@@ -412,7 +408,6 @@ public class DBWrapper {
 
   }
 
-
   public void insertRole(String role, String description) throws SQLException, IOException {
     ResultSet rs = query("Select id from roles where name='%s'", role);
 
@@ -511,7 +506,6 @@ public class DBWrapper {
     update(" update users set id='" + userId + "' where username='" + userName + "'");
   }
 
-
   public void insertProducts(String product1, String product2) throws SQLException, IOException {
 
     update("delete from facility_approved_products;");
@@ -558,7 +552,6 @@ public class DBWrapper {
   public void updateProgramToAPushType(String program, boolean flag) throws SQLException {
     update("update programs set push='" + flag + "' where code='" + program + "';");
   }
-
 
   public void insertProgramProducts(String product1, String product2, String program) throws SQLException, IOException {
     ResultSet rs = query("Select id from program_products;");
@@ -635,7 +628,6 @@ public class DBWrapper {
       "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
       "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + " 00:00:00', '" + periodEndDate + " 23:59:59', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleId + "'), (SELECT id FROM users LIMIT 1));");
   }
-
 
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
@@ -1129,7 +1121,6 @@ public class DBWrapper {
       ");");
   }
 
-
   public void insertProcessingPeriodForDistribution(int numberOfPeriodsRequired, String schedule) throws IOException, SQLException {
     for (int counter = 1; counter <= numberOfPeriodsRequired; counter++) {
       String startDate = "2013-01-0" + counter;
@@ -1486,13 +1477,17 @@ public class DBWrapper {
   }
 
   public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {
-    update("update products set "+field + "="+ fieldValue+" where code='"+productCode+ "';");
+    update("update products set " + field + "=" + fieldValue + " where code='" + productCode + "';");
   }
 
-    public void updateCreatedDateAfterRequisitionIsInitiated(String createdDate) throws SQLException {
-        update("update requisitions set createdDate ='"+createdDate+"';");
-        update("update requisition_line_items set createdDate ='"+createdDate+"';");
-        update("update requisition_status_changes set createdDate='"+createdDate+"';");
-    }
+  public void updateCreatedDateAfterRequisitionIsInitiated(String createdDate) throws SQLException {
+    update("update requisitions set createdDate ='" + createdDate + "';");
+    update("update requisition_line_items set createdDate ='" + createdDate + "';");
+    update("update requisition_status_changes set createdDate='" + createdDate + "';");
+  }
 
+  public void updateSupervisoryNodeForRequisitionGroup(String requisitionGroup, String supervisoryNodeCode) throws SQLException {
+    update("update requisition_groups set supervisoryNodeId=(select id from supervisory_nodes where code='" + supervisoryNodeCode +
+      "') where code='" + requisitionGroup + "';");
+  }
 }

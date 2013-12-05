@@ -470,30 +470,35 @@ public class HomePage extends Page {
     testWebDriver.waitForElementToAppear(myFacilityRadioButton);
   }
 
-    public boolean isHomeMenuTabDisplayed(){
-        return homeMenuItem.isDisplayed();
-    }
-
-    public boolean isRequisitionsMenuTabDisplayed(){
-        return requisitionMenuItem.isDisplayed();
-    }
-
-    public void navigateAndInitiateRnrForSupervisedFacility(String program) throws IOException {
-        navigateRnr();
-        supervisedFacilityRadioButton.click();
-        testWebDriver.sleep(1000);
-        testWebDriver.waitForElementToAppear(ProgramDropDownSupervisedFacility);
-        testWebDriver.selectByVisibleText(ProgramDropDownSupervisedFacility, program);
-        testWebDriver.sleep(1000);
-
+   public boolean isHomeMenuTabDisplayed(){
+     return homeMenuItem.isDisplayed();
    }
 
-    public String getFacilityDropDownList() {
-        return facilityDropDown.getText();
-    }
+   public boolean isRequisitionsMenuTabDisplayed(){
+     return requisitionMenuItem.isDisplayed();
+   }
 
-    public String getFacilityDropDownListForViewRequisition() {
-        return testWebDriver.findElement(By.name("selectFacility")).getText() ;
-    }
+   public void navigateAndInitiateRnrForSupervisedFacility(String program) throws IOException {
+    navigateRnr();
+    supervisedFacilityRadioButton.click();
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(ProgramDropDownSupervisedFacility);
+    testWebDriver.selectByVisibleText(ProgramDropDownSupervisedFacility, program);
+    testWebDriver.sleep(1000);
+   }
+
+  public void selectFacilityForSupervisoryNodeRnR(String facilityName){
+    testWebDriver.waitForElementToAppear(facilityDropDown);
+    testWebDriver.selectByVisibleText(facilityDropDown,facilityName);
+    testWebDriver.sleep(100);
+  }
+
+  public String getFacilityDropDownList() {
+    return facilityDropDown.getText();
+  }
+
+  public String getFacilityDropDownListForViewRequisition() {
+    return testWebDriver.findElement(By.name("selectFacility")).getText() ;
+  }
 }
 
