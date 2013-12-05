@@ -476,6 +476,7 @@ public class DBWrapper {
       "((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);\n");
   }
 
+  //TODO
   public void insertRoleAssignment(String userID, String roleName) throws SQLException, IOException {
     update("delete from role_assignments where userId='" + userID + "';");
 
@@ -1498,4 +1499,11 @@ public class DBWrapper {
   public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {
     update("update products set "+field + "="+ fieldValue+" where code='"+productCode+ "';");
   }
+
+    public void updateCreatedDateAfterRequisitionIsInitiated(String createdDate) throws SQLException {
+        update("update requisitions set createdDate ='"+createdDate+"';");
+        update("update requisition_line_items set createdDate ='"+createdDate+"';");
+        update("update requisition_status_changes set createdDate='"+createdDate+"';");
+    }
+
 }

@@ -245,7 +245,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     var rnr = {"id": $scope.rnr.id, "fullSupplyLineItems": [], "nonFullSupplyLineItems": [], "regimenLineItems": []};
     if (!$scope.page[$scope.visibleTab].length) return rnr;
 
-    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost'];
+    var nonLineItemFields = ['rnr', 'programRnrColumnList', 'numberOfMonths', 'rnrStatus', 'cost', 'productName'];
 
     function transform(copyFrom) {
       return _.map(copyFrom, function (lineItem) {

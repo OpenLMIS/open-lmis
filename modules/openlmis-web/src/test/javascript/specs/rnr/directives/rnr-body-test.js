@@ -10,7 +10,7 @@
 
 describe('Rnr body', function () {
   var elm , scope, compile, timeout;
-  var windowHeight = window.innerHeight;
+  var windowHeight = $(window).height();
 
   beforeEach(module('openlmis'));
   beforeEach(inject(function ($compile, $rootScope, $timeout) {

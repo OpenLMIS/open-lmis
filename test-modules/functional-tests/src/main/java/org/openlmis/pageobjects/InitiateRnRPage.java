@@ -324,6 +324,7 @@ public class InitiateRnRPage extends RequisitionPage {
   public void enterBeginningBalanceForSecondProduct(Integer beginningBalanceValue) {
     testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(beginningBalanceSecondProduct);
+    beginningBalanceSecondProduct.clear();
     beginningBalanceSecondProduct.sendKeys(beginningBalanceValue.toString());
   }
 
@@ -367,13 +368,16 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterQuantityReceivedForFirstProduct(Integer quantityReceivedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityReceivedFirstProduct);
     quantityReceivedFirstProduct.clear();
     quantityReceivedFirstProduct.sendKeys(quantityReceivedValue.toString());
   }
 
   public void enterQuantityReceivedForSecondProduct(Integer quantityReceivedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityReceivedSecondProduct);
+    quantityDispensedSecondProduct.clear();
     quantityReceivedSecondProduct.sendKeys(quantityReceivedValue.toString());
   }
 
@@ -382,13 +386,16 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterQuantityDispensedForFirstProduct(Integer quantityDispensedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityDispensedFirstProduct);
     quantityDispensedFirstProduct.clear();
     quantityDispensedFirstProduct.sendKeys(quantityDispensedValue.toString());
   }
 
   public void enterQuantityDispensedForSecondProduct(Integer quantityDispensedValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(quantityDispensedSecondProduct);
+    quantityDispensedSecondProduct.clear();
     quantityDispensedSecondProduct.sendKeys(quantityDispensedValue.toString());
   }
 
@@ -463,23 +470,27 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void enterRequestedQuantityForFirstProduct(Integer requestedQuantityValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requestedQuantityFirstProduct);
     requestedQuantityFirstProduct.clear();
     requestedQuantityFirstProduct.sendKeys(requestedQuantityValue.toString());
   }
 
   public void enterRequestedQuantityForSecondProduct(Integer requestedQuantityValue) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(requestedQuantitySecondProduct);
     requestedQuantitySecondProduct.clear();
     requestedQuantitySecondProduct.sendKeys(requestedQuantityValue.toString());
   }
 
   public void enterExplanationReason() {
+    testWebDriver.sleep(1000);
     requestedQuantityExplanation.sendKeys("Due to bad climate");
     testWebDriver.sleep(1000);
   }
 
   public void enterQuantities(Integer numberOfNewPatients, Integer stockOutDays) {
+    testWebDriver.sleep(1000);
     enterValuesCalculatedOrderQuantity(numberOfNewPatients, stockOutDays);
     testWebDriver.sleep(1000);
   }

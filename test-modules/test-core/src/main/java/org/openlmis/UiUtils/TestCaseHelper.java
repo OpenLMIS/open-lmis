@@ -505,6 +505,8 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+
+
 }
 
 

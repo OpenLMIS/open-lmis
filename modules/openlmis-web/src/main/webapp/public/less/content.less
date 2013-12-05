@@ -12,6 +12,8 @@
 
 @import url("mixins.less");
 @import url("calendar.less");
+@import url("custom-scrollbar.less");
+
 .home-background {
   background: url(../images/home-glow.png) no-repeat center -70px, #d6d6d6 url(../images/home-bg.png) no-repeat right 530px;
 }
@@ -2227,28 +2229,6 @@ input[placeholder].placeholder {
 
 #searchProduct.search-query {
   margin-bottom: 8px;
-}
-
-.scrollbar {
-  height: 12px;
-  padding: 0 1px;
-  position: fixed;
-  bottom: 92px;
-  z-index: 12;
-  .box-shadow(inset 0 0 4px rgba(138, 137, 137, 0.8));
-  background-color: #bebaba;
-  .scroll-handle {
-    height: 10px;
-    position: absolute;
-    top: 1px;
-    left: 0;
-    border-radius: 5px;
-    background: rgba(97, 97, 97, 0.6);
-    cursor: pointer;
-    &:hover {
-      background: rgba(53, 51, 51, 0.6);
-    }
-  }
 }
 
 .geo-zone-facility-list {

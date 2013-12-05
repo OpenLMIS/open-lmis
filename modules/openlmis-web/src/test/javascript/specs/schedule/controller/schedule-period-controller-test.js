@@ -18,42 +18,33 @@ describe("Period", function () {
     var existingPeriod = {"id": 10, "name": "name", "description": "description"};
     var schedule = {"id": scheduleId, "name": "name", "description": "description"};
 
-    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams, _messageService_) {
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
       scope = $rootScope.$new();
       routeParams = $routeParams;
       routeParams.id = scheduleId;
       $httpBackend = _$httpBackend_;
-      messageService = _messageService_;
-      spyOn(messageService, 'get');
 
-      $httpBackend.expectGET('/schedules/123.json').respond(200, {"schedule": schedule});
-      $httpBackend.expectGET('/schedules/123/periods.json').respond(200, {"periods": [existingPeriod]});
-      ctrl = $controller(SchedulePeriodController, {$scope: scope, $routeParams: routeParams, messageService: messageService});
+      ctrl = $controller(SchedulePeriodController, {$scope: scope, $routeParams: routeParams, schedule: schedule, periods: [existingPeriod]});
     }));
 
     it('should show all the periods for given schedule and the schedule for these periods', function () {
-      $httpBackend.flush();
       expect(scope.schedule).toEqual(schedule);
       expect(scope.periodList).toEqual([existingPeriod]);
     });
 
     it('should calculate no. of days', function () {
-      $httpBackend.flush();
       expect(scope.calculateDays(new Date(2011, 3, 1, 0, 0).getTime(), new Date(2011, 4, 1, 0, 0).getTime())).toEqual(30);
-      expect(scope.calculateDays(new Date(2011, 3, 1, 0, 0).getTime(), new Date(2011, 3, 1, 0, 0).getTime())).toEqual(null);
       expect(scope.calculateDays(new Date(2011, 3, 1, 23, 59, 59).getTime(), new Date(2011, 4, 1, 0, 0).getTime())).toEqual(30);
       expect(scope.calculateDays(new Date(2011, 3, 1, 23, 59, 59).getTime(), new Date(2011, 3, 2, 0, 0).getTime())).toEqual(1);
       expect(scope.calculateDays(new Date(2011, 3, 1, 0, 0, 0).getTime(), new Date(2011, 3, 2, 23, 59, 59).getTime())).toEqual(2);
     });
 
     it('should calculate no. of months', function () {
-      $httpBackend.flush();
       scope.newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 0, 0), "description": "newDescription"};
       expect(scope.calculateMonths()).toEqual(1);
     });
 
     it('should create a new period', function () {
-      $httpBackend.flush();
       var newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 0, 0), "description": "newDescription"};
       scope.newPeriod = newPeriod;
       $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"success": "success message"});
@@ -67,25 +58,13 @@ describe("Period", function () {
       expect(scope.message).toEqual("success message");
     });
 
-    it('should not create a new period if Start Date is greater than End Date', function () {
-      $httpBackend.flush();
-      scope.newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"};
-      scope.createPeriodForm = {$invalid: false};
-      scope.createPeriod();
-      expect(scope.periodList.length).toEqual(1);
-      expect(scope.periodList).toEqual([existingPeriod]);
-
-      expect(messageService.get).toHaveBeenCalledWith('error.endDate');
-      expect(scope.message).toEqual("");
-    });
-
     it('should create the first period', function () {
       scope.periodList = [
         {"id": "periodId", "name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"}
       ];
       scope.newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"};
       scope.deletePeriod("periodId");
-      expect(messageService.get).toHaveBeenCalledWith('error.period.start.date');
+
       expect(scope.message).toEqual("");
       expect(scope.periodList.length).toEqual(1);
       expect(scope.newPeriod.startDate).toEqual(new Date(2011, 3, 1, 0, 0));
@@ -97,7 +76,7 @@ describe("Period", function () {
       ];
       scope.newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"};
       scope.deletePeriod("periodId");
-      expect(messageService.get).toHaveBeenCalledWith('error.period.start.date');
+
       expect(scope.message).toEqual("");
       expect(scope.periodList.length).toEqual(1);
       expect(scope.newPeriod.startDate).toEqual(new Date(2011, 3, 1, 0, 0));
@@ -105,11 +84,12 @@ describe("Period", function () {
 
     it('should delete a period if start date is greater than current date', function () {
       scope.periodList = [
-        {"id": "periodId", "name": "newName", "startDate": new Date(9999, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"}
+        {"id": 5, "name": "newName", "startDate": new Date(9999, 3, 1, 0, 0), "endDate": new Date(2011, 2, 1, 0, 0), "description": "newDescription"}
       ];
-      $httpBackend.expectDELETE('/periods/periodId.json').respond(200, {"success": "Period deleted successfully"});
-      scope.deletePeriod("periodId");
+      $httpBackend.expectDELETE('/periods/5.json').respond(200, {"success": "Period deleted successfully"});
+      scope.deletePeriod(5);
       $httpBackend.flush();
+
       expect(scope.message).toEqual("Period deleted successfully");
       expect(scope.error).toEqual("");
       expect(scope.periodList.length).toEqual(0);
@@ -127,7 +107,6 @@ describe("Period", function () {
     });
 
     it('should reset new period after creating a period', function () {
-      $httpBackend.flush();
       var newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 23, 59, 59), "description": "newDescription"};
       scope.newPeriod = newPeriod;
       $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"success": "success message"});
@@ -153,13 +132,10 @@ describe("Period", function () {
       routeParams.id = scheduleId;
       $httpBackend = _$httpBackend_;
 
-      $httpBackend.expectGET('/schedules/456.json').respond(200, {"schedule": scheduleWithNoExistingPeriod});
-      $httpBackend.expectGET('/schedules/456/periods.json').respond(200, {"periods": []});
-      ctrl = $controller(SchedulePeriodController, {$scope: scope, $routeParams: routeParams});
+      ctrl = $controller(SchedulePeriodController, {$scope: scope, $routeParams: routeParams, schedule: scheduleWithNoExistingPeriod, periods: []});
     }));
 
     it('should create the first period', function () {
-      $httpBackend.flush();
       var newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 0, 0), "description": "newDescription"};
       scope.newPeriod = newPeriod;
       $httpBackend.expectPOST('/schedules/456/periods.json').respond(200, {"success": "success message"});

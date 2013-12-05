@@ -38,6 +38,7 @@ public class RnrLineItemDTO {
   String reasonForRequestedQuantity;
   Integer calculatedOrderQuantity;
   Integer quantityApproved;
+  Boolean skipped;
   String remarks;
 
   private static Logger logger = LoggerFactory.getLogger(RnrLineItemDTO.class);
