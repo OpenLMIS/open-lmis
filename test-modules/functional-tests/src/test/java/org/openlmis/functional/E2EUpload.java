@@ -208,7 +208,7 @@ public class E2EUpload extends TestCaseHelper {
 
   private void verifyInvalidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
-    uploadPage.verifyErrorMessageOnUploadScreen();
+    //uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
