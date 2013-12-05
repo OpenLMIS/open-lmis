@@ -150,6 +150,7 @@ Feature: Smoke Tests
     Then I should see successful message "Shipment file configuration saved successfully!"
 
   @smokeRequisition
+  @WIP
   Scenario: User should be able to configure budget file format using default format
     When I am logged in as Admin
     And I access configure budget page
