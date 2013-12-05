@@ -64,7 +64,7 @@ public class UserController extends BaseController {
 
   public static final String TOKEN_VALID = "TOKEN_VALID";
 
-  private static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
+  private static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
 
   //TODO get rid of this constructor, only used in test
   public UserController(RoleRightsService roleRightService,

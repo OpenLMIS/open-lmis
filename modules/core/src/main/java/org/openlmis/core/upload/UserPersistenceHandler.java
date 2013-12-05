@@ -26,7 +26,7 @@ public class UserPersistenceHandler extends AbstractModelPersistenceHandler {
 
   private UserService userService;
   private String baseUrl;
-  public static final String RESET_PASSWORD_PATH = "public/pages/reset-password.html#/token/";
+  public static final String RESET_PASSWORD_PATH = "/public/pages/reset-password.html#/token/";
 
   @Autowired
   public UserPersistenceHandler(UserService userService, @Value("${mail.base.url}") String baseUrl) {
