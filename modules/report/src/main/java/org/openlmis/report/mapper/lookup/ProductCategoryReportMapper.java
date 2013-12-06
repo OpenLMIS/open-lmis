@@ -10,6 +10,7 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.dto.ProductCategory;
 import org.springframework.stereotype.Repository;
@@ -19,9 +20,22 @@ import java.util.List;
 @Repository
 public interface ProductCategoryReportMapper {
 
-    @Select("SELECT id, name, code " +
-            "   FROM " +
-            "       product_categories order by name")
+  @Select("SELECT id, name, code " +
+          "   FROM " +
+          "       product_categories order by name")
 
-    List<ProductCategory> getAll();
+  List<ProductCategory> getAll();
+
+
+  @Select("SELECT distinct pc.id, pc.name, pc.code " +
+      "   FROM " +
+      "       product_categories pc " +
+      "       join products p on p.categoryid = pc.id " +
+      "       join program_products pp on pp.productid = p.id " +
+      "   WHERE pp.programid = #{programId} and pp.active = true " +
+      " order by name")
+
+  List<ProductCategory> getForProgram(@Param("programId") int programId);
+
+
 }

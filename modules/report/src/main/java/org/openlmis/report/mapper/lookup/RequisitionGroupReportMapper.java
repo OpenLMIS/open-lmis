@@ -29,7 +29,7 @@ public interface RequisitionGroupReportMapper {
             "       requisition_groups where id = #{param1} order by name")
     List<RequisitionGroup> getById(int id);
 
-    @Select("SELECT g.id, g.name, g.code " +
+    @Select("SELECT distinct g.id, g.name, g.code " +
             "   FROM " +
             "       requisition_groups g" +
             "       join requisition_group_program_schedules ps on ps.requisitiongroupid = g.id " +
@@ -39,7 +39,7 @@ public interface RequisitionGroupReportMapper {
             " order by g.name")
     List<RequisitionGroup> getByProgramAndSchedule(int program, int schedule);
 
-    @Select("SELECT g.id, g.name, g.code " +
+    @Select("SELECT distinct g.id, g.name, g.code " +
             "   FROM " +
             "       requisition_groups g" +
             "       join requisition_group_program_schedules ps on ps.requisitiongroupid = g.id " +

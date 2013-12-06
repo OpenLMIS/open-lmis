@@ -133,9 +133,16 @@ public class ReportLookupService {
         return this.rgMapper.getByProgramAndSchedule(program, schedule);
     }
 
+    public List<RequisitionGroup> getRequisitionGroupsByProgram(int program){
+      return this.rgMapper.getByProgram(program);
+    }
 
     public List<ProductCategory> getAllProductCategories(){
         return this.productCategoryMapper.getAll();
+    }
+
+    public List<ProductCategory> getCategoriesForProgram(int programId){
+      return this.productCategoryMapper.getForProgram(programId);
     }
 
     public List<AdjustmentType> getAllAdjustmentTypes(){

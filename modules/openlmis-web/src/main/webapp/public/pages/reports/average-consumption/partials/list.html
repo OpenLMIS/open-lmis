@@ -111,7 +111,7 @@
                                                 <label class="labels">Requisition Group</label>
 
                                                 <div class="form-field">
-                                                    <select ui-select2 style="width:200px;" name="requisitionGroup"  ng-model="rgroup" >
+                                                    <select ui-select2 style="width:200px;" name="requisitionGroup" data-placeholder="-- All Requisition Groups --"  ng-model="rgroup" >
                                                         <option  ng-repeat="option in requisitionGroups" value="{{ option.id }}">{{ option.name }}</option>
                                                     </select>
                                                 </div>
@@ -148,7 +148,7 @@
 
                                                 <div class="form-field">
                                                     <select ui-select2="wideOption" multiple data-placeholder="-- All Products --" style="width:200px;" name="product"  ng-model="product" >
-                                                        <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                                                        <option  ng-repeat="option in products | filter:productFilter" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                                     </select>
                                                 </div>
                                             </div>

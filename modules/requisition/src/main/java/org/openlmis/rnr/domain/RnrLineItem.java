@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +123,7 @@ public class RnrLineItem extends LineItem {
       this.remarks = null;
       this.expirationDate = null;
     }
-    quantityApproved = fullSupply ? calculatedOrderQuantity : quantityRequested;
+    quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
   }
 
   public void setBeginningBalanceWhenPreviousStockInHandAvailable(RnrLineItem previousLineItem) {
@@ -240,9 +239,9 @@ public class RnrLineItem extends LineItem {
     if(column != null){
       columnOption = column.getCalculationOption();
     }
-    if(columnOption == "CONSUMPTION_X_2"){
+    if(columnOption.equalsIgnoreCase( "CONSUMPTION_X_2")){
       maxStockQuantity = this.normalizedConsumption * 2;
-    }else if(columnOption == "DISPENSED_X_2"){
+    }else if(columnOption.equalsIgnoreCase("DISPENSED_X_2")){
       maxStockQuantity = this.quantityDispensed * 2;
     } else{
       // apply the default calculation if there was no other calculation that works here
@@ -262,12 +261,12 @@ public class RnrLineItem extends LineItem {
     if(column != null){
       columnOption = column.getCalculationOption();
     }
-    if(columnOption == "DISPENSED_PLUS_NEW_PATIENTS"){
+    if(columnOption.equalsIgnoreCase("DISPENSED_PLUS_NEW_PATIENTS")){
       // what appears to have happened is the direct translation of the column name
       // on new patient is (number of additional units required)
       // essentially wrong usage of the column.
       normalizedConsumption = quantityDispensed + newPatientCount;
-    }else if(columnOption == "DISPENSED_X_90"){
+    }else if(columnOption.equalsIgnoreCase( "DISPENSED_X_90" )){
         if(stockOutDays < 90){
           normalizedConsumption = (new BigDecimal(
                                       (90 * quantityDispensed))

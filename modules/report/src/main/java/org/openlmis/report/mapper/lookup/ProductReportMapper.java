@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public interface ProductReportMapper {
 
-    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, " +
+    @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
             "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
             " " +
             "   FROM " +
@@ -36,7 +36,7 @@ public interface ProductReportMapper {
             "       products")
     List<ProductList> getFullProductList();
 
-  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, " +
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
     " " +
     "   FROM " +
@@ -50,7 +50,7 @@ public interface ProductReportMapper {
     @Select("SELECT * FROM products WHERE code = #{code}")
     Product getProductByCode(String code);
 
-  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid" +
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
     " " +
     "   FROM " +

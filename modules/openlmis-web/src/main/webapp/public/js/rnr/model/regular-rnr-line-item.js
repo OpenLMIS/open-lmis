@@ -27,7 +27,7 @@ var RegularRnrLineItem = base2.Base.extend({
     this.reEvaluateTotalLossesAndAdjustments();
     this.fillConsumptionOrStockInHand();
     //read beginning balance column option
-    this.allowOverridingBeginningBalance = (this.getCalcOption('beginningBalance') == 'ALLOW_USER_OVERRIDE');
+    //this.allowOverridingBeginningBalance = (this.getCalcOption('beginningBalance') == 'ALLOW_USER_OVERRIDE');
   },
 
   initLossesAndAdjustments: function () {

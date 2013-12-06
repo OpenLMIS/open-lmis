@@ -26,6 +26,11 @@ services.factory('ProductCategories', function($resource){
     return $resource('/reports/productCategories.json', {}, {});
 }) ;
 
+services.factory('ProductCategoriesByProgram', function($resource){
+    return $resource('/reports/programs/:programId/productCategories.json', {}, {});
+}) ;
+
+
 services.factory('SummaryReport', function($resource){
     return $resource('/reports/reportdata/summary.json', {}, {});
 }) ;
@@ -43,6 +48,11 @@ services.factory('RequisitionGroups', function($resource){
 
 services.factory('RequisitionGroupsByProgramSchedule', function($resource){
     return $resource('/reports/reporting_groups_by_program_schedule.json', {}, {});
+});
+
+
+services.factory('RequisitionGroupsByProgram', function($resource){
+    return $resource('/reports/reporting_groups_by_program.json', {}, {});
 });
 
 services.factory('AdjustmentSummaryReport', function ($resource) {
