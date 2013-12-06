@@ -25,6 +25,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.Float.parseFloat;
@@ -520,9 +523,9 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedCalculatedOrderQuantity.toString(), actualCalculatedOrderQuantity.trim());
   }
 
-  public void verifyCalculatedOrderQuantityForEmergencyRnR() {
+  public void verifyCalculatedOrderQuantityForEmergencyRnR(int expectedCalculatedNC) {
     String actualAdjustedTotalConsumption = testWebDriver.getText(adjustedTotalConsumptionFirstProduct);
-    verifyFieldValue("44", actualAdjustedTotalConsumption);
+    assertEquals(expectedCalculatedNC, actualAdjustedTotalConsumption);
     String actualAmc = testWebDriver.getText(amcFirstProduct);
     verifyFieldValue("40", actualAmc.trim());
     String actualMaximumStockQuantity = testWebDriver.getText(maximumStockQuantity);
@@ -905,5 +908,6 @@ public class InitiateRnRPage extends RequisitionPage {
     newPatientSecondProduct.clear();
     newPatientSecondProduct.sendKeys(newPatientCount.toString());
   }
+
 
 }

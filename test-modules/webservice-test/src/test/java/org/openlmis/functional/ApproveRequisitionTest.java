@@ -22,6 +22,7 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static org.openlmis.UiUtils.HttpClient.POST;
 
 public class ApproveRequisitionTest extends JsonUtility {
 
@@ -371,6 +372,38 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(400, responseEntity.getStatus());
     assertTrue(response.contains("{\"error\":\"Products do not match with requisition\"}"));
     assertEquals("AUTHORIZED", dbWrapper.getRequisitionStatus(id));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testShowErrorMessageForUnrecognizedFieldInAPI() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    submitRequisition("commTrack1", "HIV");
+    Long id = (long) dbWrapper.getMaxRnrID();
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
+
+    String wrongJson = "{\"approverName\": \"Some Random Name\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "            \"quantityApproved\": \"10\"," +
+      "            \"beginningbbbb\": \"10\"," +
+
+      "        }" +
+      "    ]" +
+      "}";
+
+    ResponseEntity responseEntity =
+      client.SendJSON(wrongJson,
+        "http://localhost:9091/rest-api/requisitions/"+id+"/approve.json",
+        "PUT",
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON: Unrecognized field"));
+
   }
 }
 

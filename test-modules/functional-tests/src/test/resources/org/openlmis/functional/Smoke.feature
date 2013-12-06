@@ -143,7 +143,7 @@ Feature: Smoke Tests
   Scenario: User should be able to configure shipment file format using default format
     When I am logged in as Admin
     And I access configure shipment page
-    And I should see include column headers as "false"
+    And I should see include column headers unchecked
     And I should see include checkbox for all data fields
     And I should see default value of positions
     When I save shipment file format
@@ -153,7 +153,7 @@ Feature: Smoke Tests
   Scenario: User should be able to configure budget file format using default format
     When I am logged in as Admin
     And I access configure budget page
-    And I should see default include column headers as "false"
+    And I should see include column headers option unchecked
     And I verify default checkbox for all data fields
     And I verify default value of positions
     When I save budget file format

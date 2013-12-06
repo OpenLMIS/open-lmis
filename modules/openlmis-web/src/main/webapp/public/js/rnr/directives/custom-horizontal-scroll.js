@@ -11,7 +11,7 @@
 //  Description:
 //  Adding custom horizontal scroll
 
-app.directive('customHorizontalScroll', function () {
+app.directive('customHorizontalScroll', function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
@@ -101,7 +101,7 @@ app.directive('customHorizontalScroll', function () {
         return distance;
       }
 
-      setTimeout(setupScroll, 0);
+      $timeout(setupScroll);
 
       function resetScroll() {
         myScroll.scrollHandle.unbind();

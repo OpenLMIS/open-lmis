@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
@@ -59,10 +60,10 @@ public class ConfigureBudgetTemplate extends TestCaseHelper {
     configureEDIPage.navigateConfigureBudgetPage();
   }
 
-  @And("^I should see default include column headers as \"([^\"]*)\"$")
-  public void verifyIncludeColumnHeader(String status) throws Exception {
+  @And("^I should see include column headers option unchecked$")
+  public void verifyIncludeColumnHeader() throws Exception {
     ConfigureBudgetPage configureBudgetPage = new ConfigureBudgetPage(testWebDriver);
-    assertEquals(String.valueOf(configureBudgetPage.isHeaderIncluded()), status);
+    assertFalse(configureBudgetPage.isHeaderIncluded());
   }
 
   @And("^I verify default checkbox for all data fields$")

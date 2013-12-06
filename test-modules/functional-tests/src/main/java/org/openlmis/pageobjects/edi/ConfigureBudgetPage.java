@@ -31,16 +31,16 @@ public class ConfigureBudgetPage extends Page {
   @FindBy(how = ID, using = "includeHeadersCheckbox")
   private static WebElement includeHeaders = null;
 
-  @FindBy(how = ID, using = "facilityCodeIncludeCheckBox")
+  @FindBy(how = ID, using = "facilityCodeIncludeCheckbox")
   private static WebElement facilityCodeCheckBox = null;
 
   @FindBy(how = ID, using = "programCodeIncludeCheckbox")
   private static WebElement programCodeCheckBox = null;
 
-  @FindBy(how = ID, using = "periodStartDateIncludeCheckBox")
+  @FindBy(how = ID, using = "periodStartDateIncludeCheckbox")
   private static WebElement periodStartDateCheckBox = null;
 
-  @FindBy(how = ID, using = "allocatedBudgetIncludeCheckBox")
+  @FindBy(how = ID, using = "allocatedBudgetIncludeCheckbox")
   private static WebElement allocatedBudgetCheckBox = null;
 
   @FindBy(how = ID, using = "notesIncludeCheckbox")
@@ -198,6 +198,7 @@ public class ConfigureBudgetPage extends Page {
   }
 
   public void verifyDefaultIncludeCheckboxForAllDataFields() {
+    testWebDriver.waitForElementToAppear(facilityCodeCheckBox);
     assertTrue("facilityCodeCheckBox should be checked", facilityCodeCheckBox.isSelected());
     assertTrue("allocatedBudgetCheckBox should be checked", allocatedBudgetCheckBox.isSelected());
     assertTrue("programCodeCheckBox should be checked", programCodeCheckBox.isSelected());

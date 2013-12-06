@@ -74,7 +74,7 @@ public class UserControllerTest {
   @InjectMocks
   private UserController userController;
 
-  private String baseUrl = "http://localhost:9091/";
+  private String baseUrl = "http://localhost:9091";
 
   @Before
   public void setUp() {

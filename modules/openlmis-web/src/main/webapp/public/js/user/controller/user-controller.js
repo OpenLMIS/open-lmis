@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -166,7 +166,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.user.homeFacilityRoles = null;
     $scope.user.facilityId = null;
 
-    setTimeout(function () {
+    $timeout(function () {
       angular.element("#searchFacility").focus();
     });
   };
@@ -266,6 +266,10 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     clearErrorAndSetMessage("msg.user.restore.success");
     $('.form-group').find(':input').removeAttr('disabled');
   };
+
+  $timeout(function () {
+    expandCollapseToggle($('.accordion-section:first .heading'));
+  });
 }
 
 UserController.resolve = {
@@ -381,14 +385,10 @@ function expandCollapseToggle(element) {
       $(element).find('b').text('+');
     }
   });
-  var offsetTop = $(element).offset().top;
+  var offset = $(element).offset();
+  var offsetTop = offset ? offset.top : undefined;
   $('body, html').animate({
     scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
   });
 }
 
-function init() {
-  expandCollapseToggle($('.accordion-section:first .heading'));
-}
-
-setTimeout(init, 600);
