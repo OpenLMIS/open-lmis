@@ -24,14 +24,14 @@ public class QueryHelpers {
         {
             String entry = entryObject.toString();
             if(entry.startsWith("sort-") &&  (entry.endsWith("asc") || entry.endsWith("desc"))){
-                if(sortOrder == ""){
+                if(sortOrder.isEmpty()){
                     sortOrder = entry.substring(5) + " " + ((String[])params.get(entry))[0];
                 }else{
                     sortOrder += ", " + entry.substring(5) + " " + ((String[])params.get(entry))[0];
                 }
             }
         }
-        return ((sortOrder == "")? defaultColumn : sortOrder);
+        return ((sortOrder.isEmpty())? defaultColumn : sortOrder);
     }
 
 

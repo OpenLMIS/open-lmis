@@ -13,8 +13,6 @@ package org.openlmis.report.model.filter;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProductRepository;
-import org.openlmis.core.service.ProcessingPeriodService;
-import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -49,7 +47,7 @@ public class SelectedFilterHelper {
 
     if(product.isEmpty()){
       filterSummary += "\nProduct: All Products" ;
-    }else if(product == "0"){
+    }else if(product.equalsIgnoreCase("0")){
       filterSummary += "\nProduct: Indicator / Tracer Commodities" ;
     }else{
       filterSummary += "Product: " + productService.getById(Long.parseLong(product)).getFullName();
