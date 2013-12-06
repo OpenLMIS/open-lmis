@@ -126,6 +126,9 @@ public class ReportLookupService {
         return this.rgMapper.getByProgramAndSchedule(program, schedule);
     }
 
+    public List<RequisitionGroup> getRequisitionGroupsByProgram(int program){
+      return this.rgMapper.getByProgram(program);
+    }
 
     public List<ProductCategory> getAllProductCategories(){
         return this.productCategoryMapper.getAll();

@@ -102,6 +102,13 @@ public class ReportLookupController extends BaseController {
         return this.reportLookupService.getAllRequisitionGroups();
     }
 
+    @RequestMapping(value="/reporting_groups_by_program", method = GET, headers = BaseController.ACCEPT_JSON)
+    public List<RequisitionGroup> getRequisitionGroupsByProgram(
+        @RequestParam(value = "program", required = true, defaultValue = "1") int program
+    ){
+      return this.reportLookupService.getRequisitionGroupsByProgram(program);
+    }
+
     @RequestMapping(value="/reporting_groups_by_program_schedule", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<RequisitionGroup> getRequisitionGroupsByProgramSchedule(
             @RequestParam(value = "program", required = true, defaultValue = "1") int program,

@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AverageConsumptionReportController($scope,$filter, ReportProductsByProgram, ngTableParams, AverageConsumptionReport, Products , ReportPrograms, ProductCategoriesByProgram, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months) {
+function AverageConsumptionReportController($scope,$filter, ReportProductsByProgram, ngTableParams, AverageConsumptionReport, RequisitionGroupsByProgram , ReportPrograms, ProductCategoriesByProgram, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months) {
 
   // product filter customizations
   $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
@@ -18,40 +18,50 @@ function AverageConsumptionReportController($scope,$filter, ReportProductsByProg
                          };
   // end of product filter customizations
 
+  // initialize the selections that will be loaded later
+  $scope.products = [];
+  $scope.products.push({name: '-- All Products --'});
+
+  $scope.requisitionGroups = [];
+  $scope.requisitionGroups.push({name: '-- All Requisition Groups --'});
+
+  $scope.productCategories = [];
+  $scope.productCategories.push({name: '-- All Product Categories --'});
+
   $scope.startYears = [];
     OperationYears.get(function(data){
         $scope.startYears = $scope.endYears = data.years;
         adjustEndYears();
     });
 
-        // default to the monthly period type
-        $scope.periodType = 'monthly';
+    // default to the monthly period type
+    $scope.periodType = 'monthly';
 
-        $scope.periodTypes = [
-            {'name':'Monthly', 'value':'monthly'},
-            {'name':'Quarterly', 'value':'quarterly'},
-            {'name':'Semi Anual', 'value':'semi-anual'},
-            {'name':'Annual', 'value':'annual'}
-       ];
+    $scope.periodTypes = [
+        {'name':'Monthly', 'value':'monthly'},
+        {'name':'Quarterly', 'value':'quarterly'},
+        {'name':'Semi Anual', 'value':'semi-anual'},
+        {'name':'Annual', 'value':'annual'}
+   ];
 
+    $scope.startQuarters = function(){
+        return $scope.quarters;
+    };
 
-        $scope.startQuarters = function(){
-            return $scope.quarters;
-        };
+    // initialize default quarters
+    $scope.fromQuarter = $scope.toQuarter = 1;
 
-        // initialize default quarters
-        $scope.fromQuarter = $scope.toQuarter = 1;
-
-        $scope.endQuarters  = function(){
-            if($scope.startYear == $scope.endYear && $scope.startQuarter !== '' ){
-                var arr = [];
-                for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
-                    arr.push($scope.quarters[i]);
-                }
-                return arr;
+    $scope.endQuarters  = function(){
+        if($scope.startYear == $scope.endYear && $scope.startQuarter !== '' ){
+            var arr = [];
+            for(var i=$scope.startQuarter - 1; i < $scope.quarters.length;i++){
+                arr.push($scope.quarters[i]);
             }
-            return $scope.quarters;
-        };
+            return arr;
+        }
+        return $scope.quarters;
+    };
+
     Months.get(function(data){
        var months = data.months;
 
@@ -63,49 +73,45 @@ function AverageConsumptionReportController($scope,$filter, ReportProductsByProg
                $scope.endMonths.push({'name':obj.toString(), 'value': idx+1});
            });
         }
-
     });
 
-      $scope.quarters         = [
-            {'name':'One','value':'1'},
-            {'name':'Two','value':'2'},
-            {'name':'Three','value':'3'},
-            {'name':'Four','value':'4'}
-        ];
-        $scope.semiAnnuals= [
-            {'name':'First Half','value':'1'},
-            {'name':'Second Half','value':'2'}
-        ];
+  $scope.quarters         = [
+        {'name':'One','value':'1'},
+        {'name':'Two','value':'2'},
+        {'name':'Three','value':'3'},
+        {'name':'Four','value':'4'}
+    ];
+    $scope.semiAnnuals= [
+        {'name':'First Half','value':'1'},
+        {'name':'Second Half','value':'2'}
+    ];
 
-        $scope.product;
-
-        RequisitionGroups.get(function(data){
-            $scope.requisitionGroups = data.requisitionGroupList;
-            $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
-        });
-
-    // copy over the start month and end months
-        // this is just for initial loading.
-        $(function (){
-            $scope.endYears = $scope.startYears;
-            $scope.startQuarters  = $scope.quarters;
-            $scope.endQuarters  = $scope.quarters;
-            $scope.startSemiAnnuals = $scope.semiAnnuals;
-            $scope.endSemiAnnuals = $scope.semiAnnuals;
-        });
+    $scope.product;
 
 
-        $scope.isMonthly = function(){
-            return $scope.periodType == 'monthly';
-        };
 
-        $scope.isQuarterly = function(){
-            return $scope.periodType == 'quarterly';
-        };
+// copy over the start month and end months
+    // this is just for initial loading.
+    $(function (){
+        $scope.endYears = $scope.startYears;
+        $scope.startQuarters  = $scope.quarters;
+        $scope.endQuarters  = $scope.quarters;
+        $scope.startSemiAnnuals = $scope.semiAnnuals;
+        $scope.endSemiAnnuals = $scope.semiAnnuals;
+    });
 
-      $scope.isSemiAnnualy  = function(){
-          return $scope.periodType == 'semi-anual';
-      };
+
+    $scope.isMonthly = function(){
+        return $scope.periodType == 'monthly';
+    };
+
+    $scope.isQuarterly = function(){
+        return $scope.periodType == 'quarterly';
+    };
+
+    $scope.isSemiAnnualy  = function(){
+      return $scope.periodType == 'semi-anual';
+    };
 
 
     $scope.filterGrid = function (){
@@ -301,7 +307,7 @@ function AverageConsumptionReportController($scope,$filter, ReportProductsByProg
         }
     };
 
-  var adjustEndSemiAnnuals = function(){
+    var adjustEndSemiAnnuals = function(){
 
         if($scope.startYear == $scope.endYear){
             $scope.endSemiAnnuals = [];
@@ -403,6 +409,11 @@ function AverageConsumptionReportController($scope,$filter, ReportProductsByProg
 
             ReportProductsByProgram.get({programId: selection}, function(data){
                 $scope.products = data.productList;
+            });
+
+            RequisitionGroupsByProgram.get({program: selection }, function(data){
+                $scope.requisitionGroups = data.requisitionGroupList;
+                $scope.requisitionGroups.unshift({'name':'-- All Requisition Groups --'});
             });
         }else{
             //$scope.filterObject.programId =  0;
