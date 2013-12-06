@@ -23,46 +23,45 @@ app.directive('customHorizontalScroll', function ($timeout) {
       scrollBar.track.append(scrollBar.handle);
       container.append(scrollBar.track);
 
-      container.setScrollableWidth = function() {
+      container.setScrollableWidth = function () {
         container.scrollableElement.width = container.scrollableElement.is(":visible") ? container.scrollableElement.outerWidth() : 0;
         container.scrollableWidth = container.scrollableElement.width - container.outerWidth();
-      }
+      };
 
-      container.syncWithScrollBarHandle = function() {
+      container.syncWithScrollBarHandle = function () {
         var containerScrollAmount = scrollBar.handle.moveAmount * scrollBar.scrollMultiplier;
         this.scrollLeft(this.leftPosition + containerScrollAmount);
-      }
+      };
 
-      container.getBottomOffset = function() {
-        var distance = $(window).height() - (container.offset().top + container.outerHeight()) - 90;
-        return distance;
-      }
+      container.getBottomOffset = function () {
+        return $(window).height() - (container.offset().top + container.outerHeight()) - 90;
+      };
 
-      scrollBar.track.setWidth = function() {
+      scrollBar.track.setWidth = function () {
         this.width(container.outerWidth());
-      }
+      };
 
-      scrollBar.handle.setWidth = function() {
+      scrollBar.handle.setWidth = function () {
         scrollBar.scrollMultiplier = Math.floor(container.scrollableElement.width / scrollBar.track.width());
         scrollBar.track.widthToBeScrolled = container.scrollableWidth / scrollBar.scrollMultiplier;
         this.width(scrollBar.track.width() - scrollBar.track.widthToBeScrolled);
-      }
+      };
 
-      scrollBar.handle.setScrollRange = function() {
+      scrollBar.handle.setScrollRange = function () {
         this.startX = scrollBar.track.offset().left;
         this.endX = this.startX + scrollBar.track.widthToBeScrolled;
-      }
+      };
 
-      scrollBar.handle.setLeftPosition = function(leftPosition) {
+      scrollBar.handle.setLeftPosition = function (leftPosition) {
         this.offset({left: leftPosition});
-      }
+      };
 
-      scrollBar.handle.syncWithScrollableElement = function() {
+      scrollBar.handle.syncWithScrollableElement = function () {
         var handleScrollAmount = container.scrollLeft() / scrollBar.scrollMultiplier;
         scrollBar.handle.setLeftPosition(scrollBar.handle.startX + handleScrollAmount);
-      }
+      };
 
-      scrollBar.handle.moveOnScroll = function() {
+      scrollBar.handle.moveOnScroll = function () {
         if (this.offset().left >= this.startX) {
           this.setLeftPosition(this.offset().left + this.moveAmount);
 
@@ -75,7 +74,7 @@ app.directive('customHorizontalScroll', function ($timeout) {
           }
           container.syncWithScrollBarHandle();
         }
-      }
+      };
 
       function setupAndShowScrollBar() {
         scrollBar.track.setWidth();
@@ -113,7 +112,7 @@ app.directive('customHorizontalScroll', function ($timeout) {
             });
           });
 
-          $(document).mouseup(function (e) {
+          $(document).mouseup(function () {
             $('body').unbind('mousemove');
           });
 
