@@ -48,11 +48,10 @@ public class EmailServiceTest {
 
   @Test
   public void shouldSendEmailMessage() throws Exception {
-    Boolean mailSendingFlag = true;
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
 
-    EmailService service = new EmailService(mailSender, mailSendingFlag);
+    EmailService service = new EmailService(mailSender, true);
     boolean status = service.send(message).get();
     assertTrue(status);
     verify(mailSender).send(any(SimpleMailMessage.class));
@@ -60,10 +59,9 @@ public class EmailServiceTest {
 
   @Test
   public void shouldNotSendEmailIfMailSendingFlagIsFalse() throws ExecutionException, InterruptedException {
-    Boolean mailSendingFlag = false;
     SimpleMailMessage message = make(a(defaultEmailMessage,
       with(receiver, "alert.open.lmis@gmail.com")));
-    EmailService service = new EmailService(mailSender, mailSendingFlag);
+    EmailService service = new EmailService(mailSender, false);
     boolean status = service.send(message).get();
     assertTrue(status);
   }

@@ -12,6 +12,7 @@ package org.openlmis.pod.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.BaseModel;
@@ -21,6 +22,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class PODLineItem extends BaseModel {
 
   private Long podId;
@@ -31,7 +33,7 @@ public class PODLineItem extends BaseModel {
     if (StringUtils.isEmpty(productCode) || quantityReceived == null) {
       throw new DataException("error.restapi.mandatory.missing");
     }
-    if(quantityReceived < 0) {
+    if (quantityReceived < 0) {
       throw new DataException(new OpenLmisMessage("error.invalid.received.quantity"));
     }
   }

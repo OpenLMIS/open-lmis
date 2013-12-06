@@ -10,6 +10,7 @@
 package org.openlmis.restapi.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -29,6 +30,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = true)
 public class ReplenishmentDTO extends RnrDTO {
   private Long orderId;
   private String orderStatus;
