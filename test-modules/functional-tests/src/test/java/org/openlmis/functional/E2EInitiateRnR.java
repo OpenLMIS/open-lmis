@@ -18,7 +18,6 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
-import org.openlmis.UiUtils.DBWrapper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
@@ -257,7 +256,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantities(10, 10);
     int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyCalculatedOrderQuantityForEmergencyRnR(expectedCalculatedNC);
+    initiateRnRPage.verifyCalculationsForEmergencyRnR(expectedCalculatedNC, ((expectedCalculatedNC + 36) / 2), 3, 11);
     initiateRnRPage.verifyPacksToShip("11");
   }
 
@@ -527,7 +526,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     {
 
        res=0.0f;
-       res=(float)30/(dayDiff-stockOutDays);
+       res=(float)30.0/(dayDiff-stockOutDays);
        ans=((quantityDispensed * res) )+ (numberOfNewPatients * (30/10)) ;
        expectedAdjustedTotalConsumption= Math.round(ans);
 
