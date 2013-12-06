@@ -28,6 +28,7 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.openlmis.rnr.builder.RnrColumnBuilder.columnName;
@@ -98,13 +99,13 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void imageCellShouldHaveRequiredPadding() throws Exception {
-    PdfPCell cell = imageCell("modules/openlmis-web/src/main/webapp/public/images/ok-icon.png");
+    PdfPCell cell = imageCell();
     assertThat(cell.getPaddingLeft(), is(CELL_PADDING));
   }
 
   @Test
   public void imageCellShouldHaveCenterAlignment() throws Exception {
-    PdfPCell cell = imageCell("modules/openlmis-web/src/main/webapp/public/images/ok-icon.png");
+    PdfPCell cell = imageCell();
     assertThat(cell.getHorizontalAlignment(), is(Element.ALIGN_CENTER));
     assertThat(cell.getVerticalAlignment(), is(Element.ALIGN_MIDDLE));
   }
@@ -122,7 +123,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetLossesAndAdjustmentCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, LOSSES_AND_ADJUSTMENTS))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(lineItem.getTotalLossesAndAdjustments().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -132,7 +133,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetCostCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, COST))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is("$" + lineItem.calculateCost().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -141,7 +142,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetPriceCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRICE))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is("$" + lineItem.getPrice().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -150,7 +151,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetTotalCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, TOTAL))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is("13"));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
@@ -159,7 +160,7 @@ public class RequisitionCellFactoryTest {
   public void shouldGetProductCell() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, PRODUCT))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(""));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_LEFT));
   }
@@ -168,33 +169,14 @@ public class RequisitionCellFactoryTest {
   public void shouldGetBeginningBalance() throws Exception {
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, BEGINNING_BALANCE))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", "Skipped");
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(lineItem.getBeginningBalance().toString()));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_RIGHT));
   }
 
-  @Test
-  public void shouldGetSkippedAsSkippedTextIfLineItemIsSkippedAndImageIsNotFound() throws Exception {
-    RequisitionCellFactory requisitionCellFactory = new RequisitionCellFactory();
-    requisitionCellFactory.setImageBaseUrl("http://localhost:9091");
-    String skippedText = "Skipped";
-    mockStatic(Image.class);
-    List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
-    RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, true)));
-
-    when(Image.getInstance(requisitionCellFactory.getImageBaseUrl() + "/public/images/ok-icon.png")).thenThrow(new RuntimeException("Image not found"));
-
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
-
-    assertThat(cells.get(0).getPhrase().getContent(), is(skippedText));
-
-  }
 
   @Test
   public void shouldGetSkippedAsImageIfLineItemIsSkippedAndImageIsFound() throws Exception {
-    RequisitionCellFactory requisitionCellFactory = new RequisitionCellFactory();
-    requisitionCellFactory.setImageBaseUrl("http://localhost:9091");
-    String skippedText = "Skipped";
     mockStatic(Image.class);
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, true)));
@@ -202,9 +184,9 @@ public class RequisitionCellFactoryTest {
     Image image = mock(Image.class);
     PdfPCell pdfCell = new PdfPCell();
     whenNew(PdfPCell.class).withArguments(image).thenReturn(pdfCell);
-    when(Image.getInstance(requisitionCellFactory.getImageBaseUrl() + "/public/images/ok-icon.png")).thenReturn(image);
+    when(Image.getInstance(anyString())).thenReturn(image);
 
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
 
     assertThat(cells.get(0), is(pdfCell));
 
@@ -212,10 +194,9 @@ public class RequisitionCellFactoryTest {
 
   @Test
   public void shouldGetSkippedAsBlankIfLineItemIsNotSkipped() throws Exception {
-    String skippedText = "Skipped";
     List<? extends Column> rnrColumns = asList(make(a(defaultRnrColumn, with(columnName, SKIPPED))));
     RnrLineItem lineItem = make(a(defaultRnrLineItem, with(skipped, false)));
-    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$", skippedText);
+    List<PdfPCell> cells = getCells(rnrColumns, lineItem, "$");
     assertThat(cells.get(0).getPhrase().getContent(), is(""));
     assertThat(cells.get(0).getHorizontalAlignment(), is(ALIGN_LEFT));
   }

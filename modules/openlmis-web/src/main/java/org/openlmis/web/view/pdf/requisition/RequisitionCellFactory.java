@@ -12,13 +12,12 @@ package org.openlmis.web.view.pdf.requisition;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
-import lombok.Data;
 import org.apache.log4j.Logger;
 import org.openlmis.rnr.domain.Column;
 import org.openlmis.rnr.domain.ColumnType;
 import org.openlmis.rnr.domain.LineItem;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,17 +30,9 @@ public class RequisitionCellFactory {
   public static final BaseColor HEADER_BACKGROUND = new BaseColor(210, 210, 210);
   public static final Font H2_FONT = FontFactory.getFont(FontFactory.TIMES, 20f, Font.BOLD, BaseColor.BLACK);
   public static final int WIDTH_PERCENTAGE = 100;
+  private static final String OK_IMAGE = "images/ok-icon.png";
+
   public static final Logger logger = Logger.getLogger(RequisitionCellFactory.class);
-  private static String imageBaseUrl;
-
-  public String getImageBaseUrl() {
-    return imageBaseUrl;
-  }
-
-  @Autowired
-  public void setImageBaseUrl(@Value("${app.url}") String imageBaseUrl) {
-    this.imageBaseUrl = imageBaseUrl;
-  }
 
   public static PdfPCell numberCell(String value) {
     PdfPCell cell = getPdfPCell(value);
@@ -69,43 +60,42 @@ public class RequisitionCellFactory {
     return cell;
   }
 
-  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns, LineItem lineItem, String currency, String skippedText) throws NoSuchFieldException, IllegalAccessException {
+  public static List<PdfPCell> getCells(List<? extends Column> visibleColumns,
+                                        LineItem lineItem,
+                                        String currency) throws NoSuchFieldException, IllegalAccessException, IOException, BadElementException {
     List<PdfPCell> result = new ArrayList<>();
     for (Column column : visibleColumns) {
       ColumnType columnType = column.getColumnType();
       String value = lineItem.getValue(column.getName());
-      createCell(result, columnType, value, currency, skippedText);
+      createCell(result, columnType, value, currency);
     }
     return result;
   }
 
-  private static void createCell(List<PdfPCell> result, ColumnType columnType, String value, String currency, String skippedText) {
-    if (columnType.equals(ColumnType.TEXT)) {
-      result.add(textCell(value));
-    }
-    if (columnType.equals(ColumnType.NUMERIC)) {
-      result.add(numberCell(value));
-    }
-    if (columnType.equals(ColumnType.CURRENCY)) {
-      result.add(numberCell(currency + value));
-    }
-
-    if (columnType.equals(ColumnType.BOOLEAN)) {
-      if (value.equalsIgnoreCase("true")) {
-        try {
-          result.add(imageCell(imageBaseUrl + "/public/images/ok-icon.png"));
-        } catch (Exception e) {
-          result.add(textCell(skippedText));
-          logger.error("Exception in reading image", e);
-        }
-      } else {
-        result.add(textCell(""));
-      }
+  private static void createCell(List<PdfPCell> result,
+                                 ColumnType columnType,
+                                 String columnValue,
+                                 String currency) throws IOException, BadElementException {
+    switch (columnType) {
+      case TEXT:
+        result.add(textCell(columnValue));
+        break;
+      case NUMERIC:
+        result.add(numberCell(columnValue));
+        break;
+      case CURRENCY:
+        result.add(numberCell(currency + columnValue));
+        break;
+      case BOOLEAN:
+        PdfPCell pdfPCell = Boolean.valueOf(columnValue) ? imageCell() : textCell("");
+        result.add(pdfPCell);
     }
   }
 
-  public static PdfPCell imageCell(String imageUrl) throws BadElementException, IOException {
-    Image image = Image.getInstance(imageUrl);
+
+  public static PdfPCell imageCell() throws BadElementException, IOException {
+    Resource resource = new ClassPathResource(OK_IMAGE);
+    Image image = Image.getInstance(resource.getFile().getAbsolutePath());
     PdfPCell cell = new PdfPCell(image);
     cell.setPadding(CELL_PADDING);
     cell.setVerticalAlignment(Element.ALIGN_MIDDLE);

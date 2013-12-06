@@ -24,6 +24,7 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.model.PrintRnrLineItem;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,6 @@ import static org.openlmis.web.view.pdf.requisition.RequisitionCellFactory.*;
 @NoArgsConstructor
 public class RequisitionPdfModel {
   public static final String LABEL_CURRENCY_SYMBOL = "label.currency.symbol";
-  public static final String SKIPPED_PRODUCTS_TEXT = "label.skipped.products";
   private List<RequisitionStatusChange> statusChanges;
   public static final float PARAGRAPH_SPACING = 30.0f;
   public static final BaseColor ROW_GREY_BACKGROUND = new BaseColor(235, 235, 235);
@@ -70,18 +70,20 @@ public class RequisitionPdfModel {
     return new Paragraph(messageService.message("label.non.full.supply.products"), H2_FONT);
   }
 
-  public PdfPTable getFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
+  public PdfPTable getFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     return getTableFor(requisition.getFullSupplyLineItems(), true, rnrColumnList);
   }
 
-  public PdfPTable getRegimenTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
+  public PdfPTable getRegimenTable() throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     List<RegimenLineItem> regimenLineItems = requisition.getRegimenLineItems();
     if (regimenLineItems.size() == 0) return null;
 
     return getTableFor(regimenLineItems, null, regimenColumnList);
   }
 
-  private PdfPTable getTableFor(List<? extends LineItem> lineItems, Boolean fullSupply, List<? extends Column> columnList) throws DocumentException, NoSuchFieldException, IllegalAccessException {
+  private PdfPTable getTableFor(List<? extends LineItem> lineItems,
+                                Boolean fullSupply,
+                                List<? extends Column> columnList) throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     Template template = Template.getInstance(columnList);
     List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply);
 
@@ -101,7 +103,7 @@ public class RequisitionPdfModel {
         printRnrLineItem.calculate(rnrColumnList, lossesAndAdjustmentsTypes);
       }
 
-      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL), messageService.message(SKIPPED_PRODUCTS_TEXT));
+      List<PdfPCell> cells = getCells(visibleColumns, lineItem, messageService.message(LABEL_CURRENCY_SYMBOL));
       odd = !odd;
 
       for (PdfPCell cell : cells) {
@@ -146,7 +148,7 @@ public class RequisitionPdfModel {
   }
 
 
-  public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException {
+  public PdfPTable getNonFullSupplyTable() throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     if (nonFullSupplyLineItems.size() == 0) return null;
 
@@ -180,11 +182,14 @@ public class RequisitionPdfModel {
   private void addFirstLine(Facility facility, PdfPTable table) {
     String text = String.format(messageService.message("label.facility") + ": %s", facility.getName());
     insertCell(table, text, 1);
-    text = String.format(messageService.message("create.facility.operatedBy") + ": %s", facility.getOperatedBy().getText());
+    text = String.format(messageService.message("create.facility.operatedBy") + ": %s",
+      facility.getOperatedBy().getText());
     insertCell(table, text, 1);
-    text = String.format(messageService.message("label.facility.maximumStock") + ": %s", facility.getFacilityType().getNominalMaxMonth());
+    text = String.format(messageService.message("label.facility.maximumStock") + ": %s",
+      facility.getFacilityType().getNominalMaxMonth());
     insertCell(table, text, 1);
-    text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s", facility.getFacilityType().getNominalEop());
+    text = String.format(messageService.message("label.facility.emergencyOrder") + ": %s",
+      facility.getFacilityType().getNominalEop());
     insertCell(table, text, 1);
   }
 
@@ -207,9 +212,8 @@ public class RequisitionPdfModel {
     builder.append(parent.getLevel().getName()).append(": ").append(parent.getName());
     insertCell(table, builder.toString(), 1);
     builder = new StringBuilder();
-    builder.append(messageService.message("label.facility.reportingPeriod")).append(": ")
-      .append(DATE_FORMAT.format(requisition.getPeriod().getStartDate())).append(" - ")
-      .append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
+    builder.append(messageService.message("label.facility.reportingPeriod")).append(": ").append(DATE_FORMAT.format(
+      requisition.getPeriod().getStartDate())).append(" - ").append(DATE_FORMAT.format(requisition.getPeriod().getEndDate()));
 
     insertCell(table, builder.toString(), 1);
 
@@ -254,7 +258,8 @@ public class RequisitionPdfModel {
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.non.full.supply.items"))));
     summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getNonFullSupplyItemsSubmittedCost())));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost"))));
-    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + this.getTotalCost(requisition).toString())));
+    summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + this.getTotalCost(
+      requisition).toString())));
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));
@@ -269,12 +274,10 @@ public class RequisitionPdfModel {
     RequisitionStatusChange authorizedStatusChange = getStatusChangeFor(AUTHORIZED);
 
     String submittedDate = submittedStatusChange != null ? DATE_FORMAT.format(submittedStatusChange.getCreatedDate()) : "";
-    String submittedBy = submittedStatusChange != null ?
-      submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
+    String submittedBy = submittedStatusChange != null ? submittedStatusChange.getCreatedBy().getFirstName() + " " + submittedStatusChange.getCreatedBy().getLastName() : "";
 
     String authorizedDate = authorizedStatusChange != null ? DATE_FORMAT.format(authorizedStatusChange.getCreatedDate()) : "";
-    String authorizedBy = authorizedStatusChange != null ?
-      authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
+    String authorizedBy = authorizedStatusChange != null ? authorizedStatusChange.getCreatedBy().getFirstName() + " " + authorizedStatusChange.getCreatedBy().getLastName() : "";
 
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.submitted.by") + ": " + submittedBy)));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.date") + ": " + submittedDate)));
