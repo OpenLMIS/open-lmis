@@ -27,7 +27,7 @@ public class RegimenSummaryReportFilter implements ReportData {
     private int rgroupId;
     private String rgroup;
     private String regimen;
-    private String regimenId;
+    private Integer regimenId;
     private int programId;
     private String program;
     private int scheduleId;
@@ -37,6 +37,9 @@ public class RegimenSummaryReportFilter implements ReportData {
     private Integer year;
     private Integer zoneId;
     private String zone;
+    private int geographicLevelId;
+    private String geographicLevel;
+
 
     @Override
     public String toString(){
@@ -46,7 +49,8 @@ public class RegimenSummaryReportFilter implements ReportData {
                 append("Schedule : ").append(this.schedule).append("\n").
                 append("Program : ").append(this.program).append("\n").
                 append("Regimen Category : ").append(this.regimenCategory).append("\n").
-                append("Regimen : ").append(this.regimenId).append("\n").
+                append("Regimen : ").append(this.regimen).append("\n").
+                append("Geographic Level : ").append(this.geographicLevel).append("\n").
                 append("District : ").append(this.zone).append("\n");
 
 

@@ -20,26 +20,27 @@ import javax.persistence.Column;
 @NoArgsConstructor
 public class RegimenSummaryReport implements ReportData {
 
-    //@Column(name = "regimen")
+    @Column(name = "regimen")
     private String regimen;
 
-   // @Column(name="patientsontreatment")
+    @Column(name="patientsontreatment")
     private Integer patientsontreatment;
 
    // @Column( name = "regimencategory")
-    private String regimencategory;
-    private int regimenid;
-   // @Column( name = "district")
+   //private String regimencategory;
+
+   @Column( name = "district")
     private String district;
 
-    //@Column(name= "patientstoinitiatetreatment")
+    @Column(name= "patientstoinitiatetreatment")
     private Integer patientstoinitiatetreatment;
 
-   // @Column(name="patientsstoppedtreatment")
+   @Column(name="patientsstoppedtreatment")
     private Integer patientsstoppedtreatment;
 
     private Double totalpatientsToInitiateTreatmentPercentage;
     private Double totalOnTreatmentPercentage;
+    private Double stoppedTreatmentPercentage;
 
 
 }

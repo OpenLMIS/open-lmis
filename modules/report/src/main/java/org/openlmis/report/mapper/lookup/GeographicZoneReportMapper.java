@@ -23,4 +23,9 @@ public interface GeographicZoneReportMapper {
             "   FROM " +
             "       geographic_zones g left join geographic_zones p on g.parentid = p.id order by p.name, g.name")
     List<GeographicZone> getAll();
+
+    @Select("SELECT * FROM geographic_zones gz INNER JOIN geographic_levels gl ON gz.levelid = gl.id\n" +
+            "  where levelid = #{geographicLevelId} ORDER BY gz.id,gl.id")
+    List<GeographicZone>getGeographicZoneByLevel(Long id);
+
 }

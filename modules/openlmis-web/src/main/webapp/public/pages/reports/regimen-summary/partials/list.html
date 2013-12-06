@@ -25,7 +25,7 @@
                                     <label class="labels">Program <span class="label-required">*</span></label>
 
                                     <div class="form-fields">
-                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="filterObject.programId"   ng-change="ChangeSchedule()">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="program"  ng-model="filterObject.programId">
                                             <option ng-repeat="option in programs | limitTo:2" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
@@ -33,6 +33,8 @@
                                 <div class="clearfix"></div>
 
                                 <br />
+
+
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Schedule <span class="label-required">*</span></label>
 
@@ -48,7 +50,7 @@
                                     <label class="labels">Year <span class="label-required"></span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="filterObject.year">
+                                        <select ui-select2 style="width:200px;" class="input-small" ng-required="true"  name="year" id="startYear" ng-model="filterObject.yearId">
                                             <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
                                         </select>
 
@@ -66,6 +68,40 @@
                                     </div>
                                 </div>
                                 <br />
+
+                                <div class="form-cell horizontalFilters" >
+                                    <label class="labels">Geographical Levels <span class="label-required">*</span></label>
+
+                                    <div class="form-fields">
+                                        <select ui-select2 style="width:200px;" class="large-input" name="geographicLevel"  ng-model="filterObject.geographicLevelId"   ng-change="ChangeGeographicLevel()">
+                                            <option ng-repeat="option in geographicLevels" value="{{option.id}}">{{option.name}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br />
+
+                                <br/>
+                                <div class="form-cell horizontalFilters">
+                                    <label class="labels">Zone</label>
+
+                                    <div class="form-field">
+                                        <select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="filterObject.zoneId" >
+                                            <option  ng-repeat="option in zones" value="{{ option.id}}">{{ option.name }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <br />
+                                <br />
+
+
+                                <div class="clearfix"></div>
+
+                                <br />
+
+
+
+
+
                                 <div class="form-cell horizontalFilters" >
                                     <label class="labels">Regimen Category <span class="label-required">*</span></label>
 
@@ -81,29 +117,21 @@
                                     <label class="labels">Regimen<span class="label-required">*</span></label>
 
                                     <div class="form-field">
-                                        <select ui-select2 style="width:200px;" ng-required="true"  name="regimen" ng-model="regimen.value" >
-                                            <option  ng-repeat="option in regimens" value="{{ option.code }}">{{ option.name }}</option>
+                                        <select ui-select2 style="width:200px;" class="input-large" ng-required="true"  name="regimen" ng-model="filterObject.regimenId">
+                                            <option ng-repeat="option in regimens" value="{{option.id}}">{{option.name}}</option>
                                         </select>
                                     </div>
                                 </div>
-                                <br />
 
-                                <br/>
-                                <div class="form-cell horizontalFilters">
-                                    <label class="labels">Zone</label>
-
-                                    <div class="form-field">
-                                        <select ui-select2 style="width:200px;" ng-required="true"  name="zone" ng-model="zone.value" >
-                                            <option  ng-repeat="option in zones" value="{{ option.id }}">{{ option.name }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <br />
-                                <br />
 
 
                             </div>
                         </form>
+
+                        <div class="form-cell horizontalFilters" >
+                            <span class="label-required">*</span> <span id="requiredMsgDiv" ng-bind="message" ng-show="showMessage"/>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
                 <div class="content-body">
@@ -118,16 +146,31 @@
                             <br />
                         </div>
                         <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="tableParams">
+                            <thead>
+                            <tr>
+                                <th style="font-size:12px; ">#</th>
+                                <th style="font-size:12px; text-align:left">Regimen</th>
+                                <th style="font-size:12px">No. of Patients <br>On Treatment</th>
+                                <th style="font-size:12px">% Out <br>of Total</th>
+                                <th style="font-size:12px">No. of Patients To <br> Initiate treatment</th>
+                                <th style="font-size:12px">% Out <br>of Total</th>
+
+                                <th style="font-size:12px">No. of Patients <br>Stopped Treatment</th>
+                                <th style="font-size:12px">% Out <br>of Total</th>
+
+
+                            </tr>
+                            </thead>
                             <tbody>
                             <tr ng-repeat="row in datarows ">
                                 <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
-                                <td data-title="'District'" style="width:80px" sortable="district" >{{ row.district }}</td>
-                                <td data-title="'Patients On Treatment'" style="width:80px" class="number" sortable="patientsontreatment"  >{{ row.patientsontreatment | number}}</td>
-
-
-                                <td data-title="'% Total Percentage'" class="number" style="width:20px" sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number }}%</td>
-                                <td data-title="'Patients To Initiate treatment'" class="number" style="width:80px" sortable="patientstoinitiatetreatment"  >{{ row.patientstoinitiatetreatment | number }}</td>
-                                <td data-title="'% Total Percentage'" class="number" style="width:20px" sortable="totalpatientsToInitiateTreatmentPercentage " >{{ row.totalpatientsToInitiateTreatmentPercentage }}%</td>
+                                <td  style="width:40px"  >{{ row.regimen }}</td>
+                                <td style="width:20px;text-align:center" class="number"  sortable="patientsontreatment"  >{{ row.patientsontreatment | number}}</td>
+                                <td class="number" style="width:20px;text-align:center" sortable="totalOnTreatmentPercentage ">{{ row.totalOnTreatmentPercentage | number }}%</td>
+                                <td class="number" style="width:20px;text-align:center" sortable="patientstoinitiatetreatment"  >{{ row.patientstoinitiatetreatment | number }}</td>
+                                <td  class="number" style="width:20px;text-align:center" sortable="totalpatientsToInitiateTreatmentPercentage " >{{ row.totalpatientsToInitiateTreatmentPercentage }}%</td>
+                                <td style="width:20px;text-align:center" class="number" sortable="patientsstoppedtreatment"  >{{ row.patientsstoppedtreatment | number}}</td>
+                                <td class="number" style="width:20px;text-align:center" sortable="stoppedTreatmentPercentage ">{{ row.stoppedTreatmentPercentage | number }}%</td>
 
                             </tr>
                             </tbody>

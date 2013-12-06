@@ -27,6 +27,7 @@ public interface GeographicLevelReportMapper {
 
     @Select("SELECT id,code,name " +
             "   FROM " +
-            "       geographic_levels order by name")
+            "       geographic_levels order by id")
     List<GeographicLevel> getAll();
+
 }

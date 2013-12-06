@@ -73,14 +73,21 @@ public class ReportLookupController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAllRegimenCategory(){
         return OpenLmisResponse.response( "regimenCategories", this.reportLookupService.getAllRegimenCategory() ) ;
     }
+
+    @RequestMapping(value="/geographicLevels", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllGeographicLevels(){
+        return OpenLmisResponse.response( "geographicLevels", this.reportLookupService.getAllGeographicLevels() ) ;
+    }
+
+
     @RequestMapping(value="/products.json", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<Product> getProducts(){
           return this.reportLookupService.getAllProducts();
     }
 
     @RequestMapping(value = "/regiments", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getRegimentListByProgram() {
-        return OpenLmisResponse.response("regimens", this.reportLookupService.getRegimenByProgram());
+    public ResponseEntity<OpenLmisResponse> getAllRegimens() {
+        return OpenLmisResponse.response("regimens", this.reportLookupService.getAllRegimens());
     }
 
     @RequestMapping(value = "/regimenCategories/{regimenCategoryId}/regimens", method = GET, headers = ACCEPT_JSON)
@@ -89,6 +96,16 @@ public class ReportLookupController extends BaseController {
         List<Regimen> regimenList = reportLookupService.getRegimenByCategory(regimenCategoryId);
         return OpenLmisResponse.response("regimens", regimenList);
     }
+
+    @RequestMapping(value = "/geographicLevels/{geographicLevelId}/zones", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getGeographicZones(@PathVariable("geographicLevelId") Long geographicLevelId) {
+      List<GeographicZone> geographicZoneList =  reportLookupService.getGeographicLevelById(geographicLevelId);
+
+        return OpenLmisResponse.response("zones", geographicZoneList);
+    }
+
+
+
 
     @RequestMapping(value="/program-products/{programId}.json", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<Product> getProgramProducts( @PathVariable("programId") Long programId){

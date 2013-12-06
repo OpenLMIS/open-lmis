@@ -81,15 +81,22 @@ public class ReportLookupService {
         return productMapper.getAll();
     }
 
-    //Return all regimen Categories
     public List<RegimenCategory>getAllRegimenCategory(){
         return regimenCategoryReportMapper.getAll();
     }
+
+    //For created for future
     public List<RegimenCategory>getRegimenCategoryById(Long id){
         return regimenCategoryReportMapper.getById(id);
     }
     public List<Regimen>getRegimenByProgram(){
        return regimenReportMapper.getByProgram();
+    }
+    public List<Regimen>getAllRegimens(){
+      return regimenReportMapper.getAll();
+    }
+    public List<GeographicZone>getGeographicLevelById(Long geographicLevelId) {
+        return geographicZoneMapper.getGeographicZoneByLevel(geographicLevelId);
     }
 
     public List<Regimen>getRegimenByCategory(Long regimenCategoryId){

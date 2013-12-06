@@ -98,11 +98,18 @@ services.factory('ReportRegimenCategories', function ($resource) {
 services.factory('ReportRegimensByCategory',function ($resource){
     return $resource('/reports/regimenCategories/:regimenCategoryId/regimens.json', {}, {});
 });
-
-
+services.factory('ReportGeographicZonesByLevel',function ($resource){
+    return $resource('/reports/geographicLevels/:geographicLevelId/zones.json', {}, {});
+});
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
+
+
+services.factory('ReportGeographicLevels',function ($resource){
+    return $resource('/reports/geographicLevels.json', {}, {}) ;
+});
+
 
 services.factory('FacilityList', function ($resource) {
     return $resource('/reports/reportdata/facilitylist.json', {}, {});

@@ -64,11 +64,12 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
         MasterReport report = new MasterReport();
         report.details =  reportMapper.getReport(filterCriteria);
         if(filterCriteria != null){
-
-
             regimenSummaryReportFilter = new RegimenSummaryReportFilter();
-            regimenSummaryReportFilter.setRegimenId((filterCriteria.get("regimenId") == null || filterCriteria.get("regimenId")[0].equals("")) ? "All Regimens" : filterCriteria.get("regimenId")[0]);
+
+            regimenSummaryReportFilter.setRegimenId(filterCriteria.get("regimenId") == null ? 0 : Integer.parseInt(filterCriteria.get("regimenId")[0])); //defaults to 0
             regimenSummaryReportFilter.setRegimen((filterCriteria.get("regimen") == null || filterCriteria.get("regimen")[0].equals("")) ? "All Regimens" : filterCriteria.get("regimen")[0]);
+            regimenSummaryReportFilter.setGeographicLevelId(filterCriteria.get("geographicLevelId") == null ? 0 : Integer.parseInt(filterCriteria.get("geographicLevelId")[0])); //defaults to 0
+            regimenSummaryReportFilter.setGeographicLevel( (filterCriteria.get("geographicLevel") == null || filterCriteria.get("geographicLevel")[0].equals("")) ? "All Geographic Levels" : filterCriteria.get("geographicLevel")[0]);
 
             regimenSummaryReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
@@ -80,10 +81,11 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
             regimenSummaryReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
             regimenSummaryReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
 
-            if(regimenSummaryReportFilter.getProgramId() == 0 || regimenSummaryReportFilter.getProgramId() == -1)
+            if(regimenSummaryReportFilter.getProgramId() == 0 || regimenSummaryReportFilter.getProgramId() == -1){
                 regimenSummaryReportFilter.setProgram("All Programs");
-            else
+        }else   {
                 regimenSummaryReportFilter.setProgram(filterCriteria.get("program")[0]);
+            }
 
             regimenSummaryReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
             regimenSummaryReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);

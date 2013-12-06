@@ -20,68 +20,75 @@ public class RegimenSummaryQueryBuilder {
 
     RegimenSummaryReportFilter filter  = (RegimenSummaryReportFilter)params.get("filterCriteria");
 
-       String sql ="\n" +
-               "WITH temp as ( select regimen,program,district,code,programid,SUM(patientsontreatment) patientsontreatment,SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,SUM(patientsstoppedtreatment) patientsstoppedtreatment,regimencategory,\n" +
+       String sql ="WITH temp as ( select district,regimen,\n" +
                "\n" +
-               "                             period,periodid,rgroup,rgroupid, schedule,scheduleid,zoneid,regimencategorydisplayorder,status \n" +
-               "                             from vw_regimen_summary\n" +
+               "               SUM(patientsontreatment) patientsontreatment,\n" +
+               "               SUM(patientstoinitiatetreatment) patientstoinitiatetreatment,\n" +
+               "               SUM(patientsstoppedtreatment) patientsstoppedtreatment\n" +
+               "                                 \n" +
+               "                                                  from vw_regimen_summary\n" +
                writePredicates(filter)+
-               "            \n" +
-               "          group by regimen,regimencategory,program,district,code,patientsontreatment,period,periodid,zoneid\n" +
-               "  ,rgroup,regimencategory,schedule,district,programid,rgroupid,scheduleid,regimencategorydisplayorder,status\n" +
-               "                   order by regimen,district)\n" +
-               "                select distinct t.district district, t.regimen regimen,program,t.status status,\n" +
-               "             t.regimencategory regimencategory,t.code code,t.patientsontreatment patientsontreatment,\n" +
-               "              t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
-               "              t.programid,t.rgroupid rgroupid,t.zoneid zoneid,rgroup,t.schedule schedule,t.scheduleid scheduleid,t.periodid periodid,t.regimencategorydisplayorder regimencategorydisplayorder,\n" +
-               "              t.period period, \n" +
-               "                    case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),1) ELSE temp2.total END totalOnTreatmentPercentage,\n" +
-               "                          case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END totalpatientsToInitiateTreatmentPercentage  \n" +
-               "           \n" +
-               "                   from temp t\n" +
-               "            \n" +
-               "               INNER JOIN (select regimen,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2 from temp GROUP BY regimen order by regimen) temp2 ON t.regimen= temp2.regimen \n" +
-               "    ";
-      return sql;
+               "                                                   \n" +
+               "                                         group by district, regimen\n" +
+               "                 order by district,regimen \n" +
+               "                                        ) select  t.district district, t.regimen,\n" +
+               "                                     t.patientsontreatment patientsontreatment,\n" +
+               "                                     t.patientstoinitiatetreatment patientsToInitiateTreatment,\n" +
+               "                                     t.patientsstoppedtreatment patientsstoppedtreatment,\n" +
+               "               \n" +
+               "                                     COALESCE( case when temp2.total > 0 THEN round(((t.patientsontreatment*100)/temp2.total),1) ELSE temp2.total END )totalOnTreatmentPercentage,\n" +
+               "                                      \n" +
+               "                                   COALESCE( case when temp2.total2 > 0 THEN round(((t.patientstoinitiatetreatment*100)/temp2.total2),1) ELSE temp2.total2 END ) totalpatientsToInitiateTreatmentPercentage,\n" +
+               "\t\t               COALESCE( case when temp2.total3 > 0 THEN round(((t.patientsstoppedtreatment*100)/temp2.total3),1) ELSE temp2.total3 END ) stoppedTreatmentPercentage \n" +
+               "\t\t\n" +
+               "                                                from temp t\n" +
+               "               \n" +
+               "                                             INNER JOIN (select  district,SUM(patientsontreatment) total,SUM(patientstoinitiatetreatment) total2,SUM(patientsstoppedtreatment) total3 from temp GROUP BY district) temp2 ON t.district= temp2.district \n ";
+
+
+        return sql;
     }
 
-
-    private static String writePredicates(RegimenSummaryReportFilter filter){
+   private static String writePredicates(RegimenSummaryReportFilter filter){
         String predicate="";
        predicate = " WHERE status in ('APPROVED','RELEASED') ";
-        if(filter != null){
-            if (!filter.getRegimenId().equals("")) {
+     if(filter != null){
+
+            if (filter.getGeographicLevelId() !=0 ) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
-                predicate = predicate + " code = #{filterCriteria.regimenId}";
+                predicate = predicate + " geographiclevelid = #{filterCriteria.geographicLevelId}";
             }
-            if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
+
+            if (filter.getZoneId() != 0 ) {
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " zoneid = #{filterCriteria.zoneId}";
             }
-
-
-            if(filter.getRegimenCategoryId() != 0 && filter.getRegimenCategoryId()!=-1){
+            if(filter.getRegimenCategoryId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " regimencategorydisplayorder = #{filterCriteria.regimenCategoryId}";
             }
-            if(filter.getRgroupId() != 0 && filter.getRgroupId() != -1){
+            if(filter.getRgroupId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " rgroupid = #{filterCriteria.rgroupId}";
             }
-            if(filter.getPeriodId() != 0&& filter.getPeriodId() != -1){
+            if(filter.getPeriodId() != 0){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " periodid= #{filterCriteria.periodId}";
             }
-            if(filter.getScheduleId() != 0 && filter.getScheduleId() != -1){
+            if(filter.getScheduleId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
                 predicate = predicate + " scheduleid= #{filterCriteria.scheduleId}";
             }
-            if(filter.getProgramId() != 0 && filter.getProgramId() !=-1){
+            if(filter.getProgramId() != 0 ){
                 predicate = predicate.isEmpty() ?" where " : predicate +  " and ";
                 predicate = predicate + " programid = #{filterCriteria.programId}";
             }
+             if (filter.getRegimenId() !=0 ) {
+                 predicate = predicate.isEmpty() ?" where " : predicate + " and ";
+                 predicate = predicate + " regimenid = #{filterCriteria.regimenId}";
+             }
 
-        }
+     }
 
         return predicate;
     }

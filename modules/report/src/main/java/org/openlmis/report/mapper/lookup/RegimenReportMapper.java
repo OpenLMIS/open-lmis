@@ -23,6 +23,10 @@ public interface RegimenReportMapper{
 
     List<Regimen> getByProgram();
 
+    @Select("SELECT * FROM regimen ORDER BY displayOrder, name")
+    List<Regimen> getAll();
+
+
    @Select("SELECT * FROM regimens R INNER JOIN regimen_categories RC ON R.categoryId = RC.id\n" +
            "  where categoryid = #{categoryid} ORDER BY RC.displayOrder,R.displayOrder")
     List<Regimen>getRegimenByCategory(Long id);
