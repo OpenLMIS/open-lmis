@@ -508,30 +508,18 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
-  public int CalculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays,Integer quantityDispensed) throws IOException, SQLException {
-    int expectedAdjustedTotalConsumption=0;
-    int id=dbWrapper.getMaxRnrID();
-    float res=0.0f;
-    float ans=0.0f;
+  public int CalculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws IOException, SQLException {
+    int id = dbWrapper.getMaxRnrID();
 
-    String dayDifference= dbWrapper.getRequisitionLineItemFieldValue((long)id, "reportingDays", "P10");
-    Integer dayDiff=Integer.parseInt(dayDifference);
-    if(dayDiff <= stockOutDays)
-    {
-      ans=0.0f;
-      ans= (quantityDispensed + (numberOfNewPatients * (30/10)) );
-      expectedAdjustedTotalConsumption= Math.round(ans);
+    Integer dayDiff = Integer.parseInt(dbWrapper.getRequisitionLineItemFieldValue((long) id, "reportingDays", "P10"));
+    float ans;
+
+    if (dayDiff <= stockOutDays) {
+      ans = (quantityDispensed + (numberOfNewPatients * (30 / 10)));
+    } else {
+      ans = ((quantityDispensed * 30.0f / (dayDiff - stockOutDays))) + (numberOfNewPatients * (30 / 10));
     }
-    else
-    {
-
-       res=0.0f;
-       res=(float)30.0/(dayDiff-stockOutDays);
-       ans=((quantityDispensed * res) )+ (numberOfNewPatients * (30/10)) ;
-       expectedAdjustedTotalConsumption= Math.round(ans);
-
-    }
-    return expectedAdjustedTotalConsumption;
+    return Math.round(ans);
   }
 
   @After
