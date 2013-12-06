@@ -148,7 +148,7 @@
 
                                                 <div class="form-field">
                                                     <select ui-select2="wideOption" multiple data-placeholder="-- All Products --" style="width:200px;" name="product"  ng-model="product" >
-                                                        <option  ng-repeat="option in products" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
+                                                        <option  ng-repeat="option in products | filter:productFilter" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                                                     </select>
                                                 </div>
                                             </div>

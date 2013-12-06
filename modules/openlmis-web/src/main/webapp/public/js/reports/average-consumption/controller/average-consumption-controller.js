@@ -8,10 +8,15 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function AverageConsumptionReportController($scope,$filter, $window, ngTableParams, AverageConsumptionReport, Products , ReportPrograms, ProductCategories, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months, $http, $routeParams,$location) {
+function AverageConsumptionReportController($scope,$filter, ReportProductsByProgram, ngTableParams, AverageConsumptionReport, Products , ReportPrograms, ProductCategoriesByProgram, RequisitionGroups , ReportFacilityTypes, GeographicZones,OperationYears,Months) {
 
+  // product filter customizations
   $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
 
+  $scope.productFilter = function(option){
+                                    return (option.categoryId == $scope.productCategory || $scope.productCategory == '');
+                         };
+  // end of product filter customizations
 
   $scope.startYears = [];
     OperationYears.get(function(data){
@@ -148,15 +153,8 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
         $scope.facilityTypes.unshift({'name': '-- All Facility Types --'});
     });
 
-    Products.get(function(data){
-        $scope.products = data.productList;
-//        $scope.products.unshift({'name': '-- All Products --'});
-    });
 
-    ProductCategories.get(function(data){
-        $scope.productCategories = data.productCategoryList;
-        $scope.productCategories.unshift({'name': '-- All Product Categories --'});
-    });
+
 
     GeographicZones.get(function(data) {
         $scope.zones = data.zones;
@@ -397,6 +395,15 @@ function AverageConsumptionReportController($scope,$filter, $window, ngTablePara
     $scope.$watch('program', function(selection){
         if(selection !== undefined || selection === ""){
             $scope.filterObject.programId =  selection;
+            // load the program-product categories
+            ProductCategoriesByProgram.get({programId: selection}, function(data){
+                $scope.productCategories = data.productCategoryList;
+                $scope.productCategories.unshift({'name': '-- All Product Categories --'});
+            });
+
+            ReportProductsByProgram.get({programId: selection}, function(data){
+                $scope.products = data.productList;
+            });
         }else{
             //$scope.filterObject.programId =  0;
             return;

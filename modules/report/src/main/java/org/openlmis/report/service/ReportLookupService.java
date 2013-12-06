@@ -131,6 +131,10 @@ public class ReportLookupService {
         return this.productCategoryMapper.getAll();
     }
 
+    public List<ProductCategory> getCategoriesForProgram(int programId){
+      return this.productCategoryMapper.getForProgram(programId);
+    }
+
     public List<AdjustmentType> getAllAdjustmentTypes(){
         return adjustmentTypeReportMapper.getAll();
     }
