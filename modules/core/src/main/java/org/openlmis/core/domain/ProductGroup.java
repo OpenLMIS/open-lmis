@@ -11,6 +11,7 @@
 package org.openlmis.core.domain;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 public class ProductGroup extends BaseModel implements Importable {
 

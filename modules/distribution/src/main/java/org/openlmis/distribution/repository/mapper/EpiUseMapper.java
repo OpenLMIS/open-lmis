@@ -8,27 +8,25 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.service;
+package org.openlmis.distribution.repository.mapper;
 
-import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
-import org.openlmis.distribution.repository.EpiUseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
-@NoArgsConstructor
-public class EpiUseService {
+@Repository
+public interface EpiUseMapper {
 
-  @Autowired
-  private EpiUseRepository epiUseRepository;
+  @Insert({"INSERT into epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
+    "distributed, loss, stockAtEndOfMonth, expirationDate) VALUES (#{epiUseId}, #{productGroupId}, #{productGroupName}, #{stockAtFirstOfMonth},",
+    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate})"})
+  @Options(useGeneratedKeys = true)
+  public void insertLineItem(EpiUseLineItem epiUseLineItem);
 
-  public void saveLineItems(EpiUse epiUse) {
-    epiUseRepository.save(epiUse);
-    for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
-      lineItem.setEpiUseId(epiUse.getId());
-      epiUseRepository.saveLineItem(lineItem);
-    }
-  }
+  @Insert({"INSERT INTO epi_use (distributionId, facilityId) VALUES (#{distributionId}, #{facilityId})"})
+  @Options(useGeneratedKeys = true)
+  public void insert(EpiUse epiUse);
+
 }

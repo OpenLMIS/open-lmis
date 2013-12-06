@@ -18,12 +18,14 @@ import org.openlmis.core.domain.BaseModel;
 @NoArgsConstructor
 public class EpiUseLineItem extends BaseModel {
 
+  private Long epiUseId;
   private Long productGroupId;
   private String productGroupName;
   private Integer stockAtFirstOfMonth;
   private Integer stockAtEndOfMonth;
-  private Integer quantityReceived;
-  private Integer quantityDistributed;
+  private Integer received;
+  private Integer loss;
+  private Integer distributed;
   private String expirationDate;
 
   public EpiUseLineItem(Long productGroupId, String productGroupName) {

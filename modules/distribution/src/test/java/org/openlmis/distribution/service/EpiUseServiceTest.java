@@ -10,25 +10,43 @@
 
 package org.openlmis.distribution.service;
 
-import lombok.NoArgsConstructor;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.EpiUseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
-@NoArgsConstructor
-public class EpiUseService {
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
 
-  @Autowired
-  private EpiUseRepository epiUseRepository;
+@Category(UnitTests.class)
+@RunWith(MockitoJUnitRunner.class)
+public class EpiUseServiceTest {
 
-  public void saveLineItems(EpiUse epiUse) {
-    epiUseRepository.save(epiUse);
-    for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
-      lineItem.setEpiUseId(epiUse.getId());
-      epiUseRepository.saveLineItem(lineItem);
-    }
+  @Mock
+  EpiUseRepository epiUseRepository;
+
+  @InjectMocks
+  EpiUseService service;
+
+  @Test
+  public void shouldSaveEpiUseLineItem() throws Exception {
+    EpiUse epiUse = new EpiUse();
+    epiUse.setId(1L);
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    epiUse.setLineItems(asList(epiUseLineItem));
+
+    service.saveLineItems(epiUse);
+
+    verify(epiUseRepository).save(epiUse);
+    verify(epiUseRepository).saveLineItem(epiUseLineItem);
+    assertThat(epiUseLineItem.getEpiUseId(), is(epiUse.getId()));
   }
 }

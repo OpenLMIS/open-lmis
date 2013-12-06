@@ -40,7 +40,7 @@ public class OrderRowMapperTest {
   @Test
   public void shouldCreateOrderFromResultSet() throws Exception {
     when(resultSet.getString("id")).thenReturn("5");
-    when(resultSet.getString("supplylineid")).thenReturn("55");
+    when(resultSet.getString("supplyLineId")).thenReturn("55");
 
     Order order = orderRowMapper.mapRow(resultSet, 1);
 

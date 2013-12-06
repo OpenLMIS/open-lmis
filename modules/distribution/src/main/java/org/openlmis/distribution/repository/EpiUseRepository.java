@@ -8,27 +8,25 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.service;
+package org.openlmis.distribution.repository;
 
-import lombok.NoArgsConstructor;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
-import org.openlmis.distribution.repository.EpiUseRepository;
+import org.openlmis.distribution.repository.mapper.EpiUseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
-@NoArgsConstructor
-public class EpiUseService {
+@Repository
+public class EpiUseRepository {
 
   @Autowired
-  private EpiUseRepository epiUseRepository;
+  private EpiUseMapper mapper;
 
-  public void saveLineItems(EpiUse epiUse) {
-    epiUseRepository.save(epiUse);
-    for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
-      lineItem.setEpiUseId(epiUse.getId());
-      epiUseRepository.saveLineItem(lineItem);
-    }
+  public void saveLineItem(EpiUseLineItem epiUseLineItem) {
+    mapper.insertLineItem(epiUseLineItem);
+  }
+
+  public void save(EpiUse epiUse) {
+    mapper.insert(epiUse);
   }
 }
