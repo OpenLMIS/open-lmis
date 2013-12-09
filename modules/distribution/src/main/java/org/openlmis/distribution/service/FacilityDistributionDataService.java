@@ -63,8 +63,8 @@ public class FacilityDistributionDataService {
       for (FacilityProgramProduct facilityProgramProduct : programSupported.getProgramProducts()) {
         if (facilityProgramProduct.isActive() && facilityProgramProduct.getProduct().getActive()) {
           ProductGroup productGroup = facilityProgramProduct.getProduct().getProductGroup();
-          if (productGroupSet.add(productGroup)) {
-            epiUse.getLineItems().add(new EpiUseLineItem(productGroup.getId(), productGroup.getName()));
+          if (productGroup != null && productGroupSet.add(productGroup)) {
+            epiUse.getLineItems().add(new EpiUseLineItem(productGroup));
           }
         }
       }

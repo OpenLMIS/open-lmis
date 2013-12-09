@@ -20,7 +20,7 @@ import org.springframework.stereotype.Repository;
 public interface EpiUseMapper {
 
   @Insert({"INSERT into epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
-    "distributed, loss, stockAtEndOfMonth, expirationDate) VALUES (#{epiUseId}, #{productGroupId}, #{productGroupName}, #{stockAtFirstOfMonth},",
+    "distributed, loss, stockAtEndOfMonth, expirationDate) VALUES (#{epiUseId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
     " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate})"})
   @Options(useGeneratedKeys = true)
   public void insertLineItem(EpiUseLineItem epiUseLineItem);

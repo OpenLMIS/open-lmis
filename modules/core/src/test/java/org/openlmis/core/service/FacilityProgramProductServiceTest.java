@@ -19,9 +19,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +60,11 @@ public class FacilityProgramProductServiceTest {
   @Test
   public void shouldGetProductsFilledWithIsaForAFacility() throws Exception {
     long facilityId = 2l;
+
+
     final ProgramProduct programProduct = new ProgramProduct();
     programProduct.setId(1l);
+
     final ProgramProduct programProduct2 = new ProgramProduct();
     programProduct2.setId(2l);
 

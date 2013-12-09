@@ -126,11 +126,11 @@ public class EpiUseMapperIT {
     mapper.insert(epiUse);
 
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
-    epiUseLineItem.setProductGroupId(productGroup.getId());
+    epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_use_line_items WHERE id = " + epiUseLineItem.getId());
     resultSet.next();
-    assertThat(resultSet.getLong("productGroupId"), is(epiUseLineItem.getProductGroupId()));
+    assertThat(resultSet.getLong("productGroupId"), is(epiUseLineItem.getProductGroup().getId()));
   }
 }

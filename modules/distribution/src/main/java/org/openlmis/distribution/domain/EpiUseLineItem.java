@@ -13,14 +13,14 @@ package org.openlmis.distribution.domain;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.ProductGroup;
 
 @Data
 @NoArgsConstructor
 public class EpiUseLineItem extends BaseModel {
 
   private Long epiUseId;
-  private Long productGroupId;
-  private String productGroupName;
+  private ProductGroup productGroup;
   private Integer stockAtFirstOfMonth;
   private Integer stockAtEndOfMonth;
   private Integer received;
@@ -28,9 +28,8 @@ public class EpiUseLineItem extends BaseModel {
   private Integer distributed;
   private String expirationDate;
 
-  public EpiUseLineItem(Long productGroupId, String productGroupName) {
-    this.productGroupId = productGroupId;
-    this.productGroupName = productGroupName;
+  public EpiUseLineItem(ProductGroup productGroup) {
+    this.productGroup = productGroup;
   }
 
 }

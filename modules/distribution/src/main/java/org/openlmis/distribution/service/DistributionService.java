@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class DistributionService {
 
@@ -26,10 +28,17 @@ public class DistributionService {
   FacilityVisitService facilityVisitService;
 
   @Autowired
+  FacilityDistributionDataService facilityDistributionDataService;
+
+  @Autowired
   DistributionRepository repository;
 
   public Distribution create(Distribution distribution) {
     return repository.create(distribution);
+    Distribution savedDistribution = repository.create(distribution);
+    List<FacilityDistributionData> facilityDistributions = facilityDistributionDataService.getFor(distribution);
+    savedDistribution.setFacilityDistributions(facilityDistributions);
+    return savedDistribution;
   }
 
   public Distribution get(Distribution distribution) {

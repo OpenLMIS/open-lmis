@@ -24,6 +24,9 @@ import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -39,6 +42,9 @@ public class DistributionServiceTest {
   FacilityVisitService facilityVisitService;
 
   @Mock
+  FacilityDistributionDataService facilityDistributionDataService;
+
+  @Mock
   DistributionRepository repository;
 
   @Test
@@ -46,12 +52,14 @@ public class DistributionServiceTest {
     Distribution distribution = new Distribution();
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
+    List<FacilityDistributionData> facilityDistributions = new ArrayList<>();
+    when(facilityDistributionDataService.getFor(expectedDistribution)).thenReturn(facilityDistributions);
 
     Distribution initiatedDistribution = service.create(distribution);
 
     verify(repository).create(distribution);
     assertThat(initiatedDistribution, is(expectedDistribution));
-
+    assertThat(initiatedDistribution.getFacilityDistributions(), is(facilityDistributions));
   }
 
   @Test
