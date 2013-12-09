@@ -622,9 +622,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code");
 
-    //uploadPage.uploadFacilityFTPDetails("1QA_Facility_FTP_Details_Duplicate.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
-    //uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
+    uploadPage.uploadFacilityFTPDetails("1QA_Facility_FTP_Details_Duplicate.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
 
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Facility_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
