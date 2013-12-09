@@ -256,7 +256,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterQuantities(10, 10);
     int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyCalculationsForEmergencyRnR(expectedCalculatedNC, ((expectedCalculatedNC + 36) / 2), 3, 11);
+    initiateRnRPage.verifyCalculationsForEmergencyRnR(expectedCalculatedNC,Math.round (((float)(expectedCalculatedNC + 36) / 2)), 3, 11);
     initiateRnRPage.verifyPacksToShip("11");
   }
 
