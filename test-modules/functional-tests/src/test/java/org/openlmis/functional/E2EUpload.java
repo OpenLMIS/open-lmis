@@ -25,12 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 @TransactionConfiguration(defaultRollback = true)
@@ -89,7 +85,7 @@ public class E2EUpload extends TestCaseHelper {
     verifyValidFacilityUpload(uploadPage);
 
     verifyInValidFacilityFTPDetailsUpload(uploadPage);
-    verifyValidFacilityFTPDetailsUpload(uploadPage);
+    /*verifyValidFacilityFTPDetailsUpload(uploadPage);
 
     verifyInvalidFacilityTypeToProductMappingUpload(uploadPage);
     verifyValidFacilityTypeToProductMappingUpload(uploadPage);
@@ -172,6 +168,7 @@ public class E2EUpload extends TestCaseHelper {
 
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Parent_Requisition_Program_Schedule.csv");
     assertEquals(dbWrapper.getRequisitionGroupId(parentFacilityCode), dbWrapper.getRequisitionGroupId(virtualFacilityCode));
+    */
   }
 
   private void verifyValidSupplyLinesUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -624,7 +621,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilityFTPDetails("1QA_Facility_FTP_Details_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
-
+/*
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Missing_Mandatory_Field_Facility_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Missing Mandatory data in field : Facility Code of Record No");
@@ -660,6 +657,7 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilityFTPDetails("QA_Delivery_Zone_Members.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Headers in upload file");
+  */
   }
 
   private void verifyValidFacilityFTPDetailsUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -691,7 +689,7 @@ public class E2EUpload extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
+    //dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
