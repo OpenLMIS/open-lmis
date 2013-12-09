@@ -12,6 +12,7 @@ package org.openlmis.distribution.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EpiUse extends BaseModel {
 
   private Long distributionId;
