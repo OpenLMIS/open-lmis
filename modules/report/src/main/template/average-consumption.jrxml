@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
-  ~
-  ~ You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
-  -->
-
+<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="average-consumption" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
@@ -63,16 +54,15 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 			<band height="96">
 				<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				<staticText>
-					<reportElement uuid="e587f413-b748-4b6c-8a34-93bb08817a0b" mode="Opaque" x="0" y="67" width="796" height="29" forecolor="#FFFFFF" backcolor="#3D9297">
+					<reportElement mode="Opaque" x="0" y="67" width="796" height="29" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
-					<textElement/>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="a41380d3-14bd-4d3e-9c5f-143f77375523" mode="Transparent" x="130" y="67" width="140" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="130" y="67" width="140" height="29" forecolor="#000000" backcolor="#333333" uuid="a41380d3-14bd-4d3e-9c5f-143f77375523"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -80,7 +70,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Product Category]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b" mode="Transparent" x="0" y="67" width="45" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="0" y="67" width="45" height="29" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="2"/>
@@ -88,7 +78,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="f5478500-0fc0-4759-85c4-ab472097bdd7" mode="Transparent" x="620" y="67" width="176" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="620" y="67" width="176" height="29" forecolor="#000000" backcolor="#333333" uuid="f5478500-0fc0-4759-85c4-ab472097bdd7"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="3" rightIndent="2"/>
@@ -96,7 +86,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Average Monthly Consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="729f7fff-095d-4688-b327-6b0da6522653" mode="Transparent" x="270" y="67" width="350" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="270" y="67" width="350" height="29" forecolor="#000000" backcolor="#333333" uuid="729f7fff-095d-4688-b327-6b0da6522653"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -104,7 +94,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Product Description]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="fca03595-8a93-412d-9f00-c0888af0ba62" mode="Transparent" x="92" y="5" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<reportElement mode="Transparent" x="92" y="5" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="fca03595-8a93-412d-9f00-c0888af0ba62"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -112,7 +102,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<textFieldExpression><![CDATA[($F{facilityName}=="NULL"?" ":$F{facilityName})]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="9098ed58-4948-4050-8705-3cfbfa8a7be7" mode="Transparent" x="0" y="5" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="0" y="5" width="86" height="20" forecolor="#000000" backcolor="#333333" uuid="9098ed58-4948-4050-8705-3cfbfa8a7be7"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -120,7 +110,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Facility:  ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="3464a40b-2a53-4b5d-8d08-519cf79d2b33" mode="Transparent" x="0" y="25" width="86" height="20" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="0" y="25" width="86" height="20" forecolor="#000000" backcolor="#333333" uuid="3464a40b-2a53-4b5d-8d08-519cf79d2b33"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -128,7 +118,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Type:  ]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="f807daed-1465-4ff3-8bfc-d67ccc26a1d7" mode="Transparent" x="92" y="25" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+					<reportElement mode="Transparent" x="92" y="25" width="317" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f807daed-1465-4ff3-8bfc-d67ccc26a1d7"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -136,7 +126,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="e102daf7-6475-41b2-a8ab-8ba50e7b9035" mode="Transparent" x="0" y="45" width="86" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement mode="Transparent" x="0" y="45" width="86" height="20" forecolor="#000000" backcolor="#333333" uuid="e102daf7-6475-41b2-a8ab-8ba50e7b9035">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -146,7 +136,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Supplying Facility:  ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="0d752afd-8f4b-4ea5-b97b-a66b06176e83" mode="Transparent" x="509" y="5" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement mode="Transparent" x="509" y="5" width="171" height="20" forecolor="#000000" backcolor="#333333" uuid="0d752afd-8f4b-4ea5-b97b-a66b06176e83">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -156,7 +146,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Minimum Months of Stock:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="2b5a84f5-2cf1-485b-9274-b068cf1c1c86" mode="Transparent" x="509" y="25" width="169" height="20" forecolor="#000000" backcolor="#333333">
+					<reportElement mode="Transparent" x="509" y="25" width="171" height="20" forecolor="#000000" backcolor="#333333" uuid="2b5a84f5-2cf1-485b-9274-b068cf1c1c86">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -166,7 +156,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<text><![CDATA[Maximum Months of Stock:]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement uuid="5085c676-46bf-4d74-91f7-0dfe3c6ab1b5" mode="Transparent" x="92" y="45" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="92" y="45" width="145" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5085c676-46bf-4d74-91f7-0dfe3c6ab1b5">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -176,17 +166,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					<textFieldExpression><![CDATA[$F{supplyingFacility} == null?"-":$F{supplyingFacility}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="b0080e04-9a4b-4bc3-b229-92ce1614d8fd" mode="Transparent" x="678" y="5" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="5"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
-				</textField>
-				<textField pattern="" isBlankWhenNull="true">
-					<reportElement uuid="f3d6687b-e85e-4b5f-bdb4-10a4cb4a9f8a" mode="Transparent" x="678" y="25" width="118" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<reportElement mode="Transparent" x="680" y="5" width="116" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b0080e04-9a4b-4bc3-b229-92ce1614d8fd">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -195,8 +175,18 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{minMOS}]]></textFieldExpression>
 				</textField>
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="680" y="25" width="116" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f3d6687b-e85e-4b5f-bdb4-10a4cb4a9f8a">
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single" leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
+				</textField>
 				<staticText>
-					<reportElement uuid="4841d9ec-87bd-45f2-9287-e5cc9b856e4f" mode="Transparent" x="45" y="67" width="85" height="29" forecolor="#000000" backcolor="#333333"/>
+					<reportElement mode="Transparent" x="45" y="67" width="85" height="29" forecolor="#000000" backcolor="#333333" uuid="4841d9ec-87bd-45f2-9287-e5cc9b856e4f"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -212,7 +202,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 	<title>
 		<band height="79" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e" x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true">
+				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -247,7 +237,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 			<textField>
-				<reportElement uuid="0f6933a0-3253-4e45-96ec-80f3c6aab11b" x="45" y="0" width="757" height="20" forecolor="#006666">
+				<reportElement x="45" y="0" width="757" height="20" forecolor="#006666" uuid="0f6933a0-3253-4e45-96ec-80f3c6aab11b">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Top">
@@ -256,23 +246,22 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b" mode="Opaque" x="0" y="0" width="796" height="20" backcolor="#F4F4F4">
+				<reportElement mode="Opaque" x="0" y="0" width="796" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
-				<textElement/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60" x="0" y="0" width="45" height="20"/>
+				<reportElement x="0" y="0" width="45" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7" x="0" y="19" width="796" height="1" forecolor="#3D9297">
+				<reportElement x="0" y="19" width="796" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 				</reportElement>
 				<graphicElement>
@@ -280,7 +269,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 				</graphicElement>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="a720b2eb-4c11-4820-9617-aefbdc467bac" mode="Transparent" x="620" y="0" width="176" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="620" y="0" width="176" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a720b2eb-4c11-4820-9617-aefbdc467bac"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -288,7 +277,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 				<textFieldExpression><![CDATA[$F{average}.toString().toUpperCase()== "NULL"?" " :$F{average}.toString()]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d" mode="Transparent" x="130" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="130" y="0" width="140" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="1ac27f1d-893c-4baf-9d67-bcc50c886b8d"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -296,7 +285,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 				<textFieldExpression><![CDATA[($F{category}.toUpperCase()=="NULL"?" ":$F{category})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement uuid="ab6907da-4c02-445c-9699-b776060d5a36" mode="Transparent" x="270" y="0" width="350" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="270" y="0" width="350" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="ab6907da-4c02-445c-9699-b776060d5a36"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -304,7 +293,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 				<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement uuid="9e0e38a1-655b-45c6-a4f5-0e1f456c568a" mode="Transparent" x="45" y="0" width="85" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="45" y="0" width="85" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9e0e38a1-655b-45c6-a4f5-0e1f456c568a"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -315,52 +304,45 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 		<band height="20">
 			<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "XLS" && $V{REPORT_COUNT} == 1]]></printWhenExpression>
 			<staticText>
-				<reportElement uuid="36701562-1b25-44d9-af6e-75361c4787a4" x="0" y="0" width="45" height="20"/>
-				<textElement/>
+				<reportElement x="0" y="0" width="45" height="20" uuid="36701562-1b25-44d9-af6e-75361c4787a4"/>
 				<text><![CDATA[Line#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ee16dde1-e124-4f42-9a40-a0a5633cb0ea" x="45" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="45" y="0" width="100" height="20" uuid="ee16dde1-e124-4f42-9a40-a0a5633cb0ea"/>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2fc545be-05c9-4fdf-bea6-0eb88e51fa3b" x="145" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="145" y="0" width="100" height="20" uuid="2fc545be-05c9-4fdf-bea6-0eb88e51fa3b"/>
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="107bf6be-85f9-475a-8506-3105ec50e270" x="245" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="245" y="0" width="100" height="20" uuid="107bf6be-85f9-475a-8506-3105ec50e270"/>
 				<text><![CDATA[Supplying Facility]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="beed2c05-fb86-4475-965e-9d235b365f42" x="345" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="345" y="0" width="100" height="20" uuid="beed2c05-fb86-4475-965e-9d235b365f42"/>
 				<text><![CDATA[Product Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="51e84cd3-5dca-4bb3-82ab-b755f85637c3" x="445" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="445" y="0" width="100" height="20" uuid="51e84cd3-5dca-4bb3-82ab-b755f85637c3"/>
 				<text><![CDATA[Product Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="91141a44-463e-48e2-9508-a7aa675d18e0" x="545" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="545" y="0" width="100" height="20" uuid="91141a44-463e-48e2-9508-a7aa675d18e0"/>
 				<text><![CDATA[Product Category]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="936a643d-815f-4c8b-9f74-7f0df6a0be5c" x="645" y="0" width="51" height="20"/>
+				<reportElement x="645" y="0" width="51" height="20" uuid="936a643d-815f-4c8b-9f74-7f0df6a0be5c"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[AMC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4181a4ce-0a58-4be1-b1e6-0c945170f4f3" x="696" y="0" width="52" height="20"/>
+				<reportElement x="696" y="0" width="52" height="20" uuid="4181a4ce-0a58-4be1-b1e6-0c945170f4f3"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[MaxMOS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="52d30bac-0f26-4f4f-adf9-3fa5bcd460f6" x="748" y="0" width="52" height="20"/>
+				<reportElement x="748" y="0" width="52" height="20" uuid="52d30bac-0f26-4f4f-adf9-3fa5bcd460f6"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[MinMOS]]></text>
 			</staticText>
@@ -368,52 +350,45 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 		<band height="20">
 			<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "XLS"]]></printWhenExpression>
 			<textField>
-				<reportElement uuid="d9fe11dc-6916-43ab-9291-d72873945440" x="45" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="45" y="0" width="100" height="20" uuid="d9fe11dc-6916-43ab-9291-d72873945440"/>
 				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="9da75ffa-40e5-432c-a180-01fce4a59375" x="145" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="145" y="0" width="100" height="20" uuid="9da75ffa-40e5-432c-a180-01fce4a59375"/>
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="1f4119ba-944d-45c8-8390-f5fb76e78c92" x="245" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="245" y="0" width="100" height="20" uuid="1f4119ba-944d-45c8-8390-f5fb76e78c92"/>
 				<textFieldExpression><![CDATA[$F{supplyingFacility}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="0edc09f9-3442-43c8-a971-56b54805b564" x="345" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="345" y="0" width="100" height="20" uuid="0edc09f9-3442-43c8-a971-56b54805b564"/>
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="85e0996a-3abe-44f3-971d-9b5526554193" x="445" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="445" y="0" width="100" height="20" uuid="85e0996a-3abe-44f3-971d-9b5526554193"/>
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="bb2b8887-c26b-4491-b9c5-8e1e3a14dea7" x="545" y="0" width="100" height="20"/>
-				<textElement/>
+				<reportElement x="545" y="0" width="100" height="20" uuid="bb2b8887-c26b-4491-b9c5-8e1e3a14dea7"/>
 				<textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="8c9ec4ef-5323-416e-afcc-c5ab53df16b7" x="645" y="0" width="51" height="20"/>
+				<reportElement x="645" y="0" width="51" height="20" uuid="8c9ec4ef-5323-416e-afcc-c5ab53df16b7"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{average}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="1e95d843-7fbd-4c42-a6b3-ef3a0e78e46e" x="0" y="0" width="45" height="20"/>
-				<textElement/>
+				<reportElement x="0" y="0" width="45" height="20" uuid="1e95d843-7fbd-4c42-a6b3-ef3a0e78e46e"/>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="f3a48048-0928-4e3d-967b-71444dda1c70" x="696" y="0" width="52" height="20"/>
+				<reportElement x="696" y="0" width="52" height="20" uuid="f3a48048-0928-4e3d-967b-71444dda1c70"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{maxMOS}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="11c1b5bc-0dd1-46ba-bfcc-a726af15e480" x="748" y="0" width="52" height="20"/>
+				<reportElement x="748" y="0" width="52" height="20" uuid="11c1b5bc-0dd1-46ba-bfcc-a726af15e480"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{minMOS}]]></textFieldExpression>
 			</textField>
