@@ -60,15 +60,6 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="consumption"/>
-                    <property name="template" value="consumption.jasper"/>
-                    <property name="reportDataProvider" ref="consumptionReportDataProvider"/>
-                    <property name="id" value="RP-CON"/>
-                    <property name="name" value="Consumption Report"/>
-                    <property name="title" value="Consumption Report"/>
-                    <property name="version" value="1.0"/>
-                </bean>
-                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="summary"/>
                     <property name="template" value="summary-report.jasper"/>
                     <property name="reportDataProvider" ref="summaryReportDataProvider"/>
