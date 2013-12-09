@@ -76,9 +76,9 @@
                                    ui-date="{minDate:endDateOffset, dateFormat: 'dd/mm/yy', changeYear: true}"
                                    ui-date-format="yy-mm-dd"
                                    readonly
-                                   ng-model="newPeriod.stringEndDate"
+                                   ng-model="newPeriod.endDate"
                                    ng-required="true"
-                                   ng-change="blurDateFields(); updateEndDate()"
+                                   ng-change="blurDateFields();"
                                    ng-disabled="!newPeriod.startDate"/>
 
               <span class="field-error" ng-show="createPeriodForm.endDate.$error.required && showErrorForCreate"
@@ -89,14 +89,13 @@
                 <div class="form-row clearfix" ng-show="newPeriod.endDate">
                     <div class="form-cell">
                         <span openlmis-message="period.total.days">:</span>
-            <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)+1"
+            <span class="cell-text" ng-show="calculateDays(newPeriod.startDate, newPeriod.endDate)"
                   ng-bind="calculateDays(newPeriod.startDate, newPeriod.endDate)">
             </span>
                     </div>
                     <div class="form-cell">
                         <span openlmis-message="period.number.of.months"></span>
-            <span class="cell-text" ng-show="calculateMonths()" ng-model="newPeriod.numberOfMonths"
-                  ng-bind="calculateMonths()">
+            <span class="cell-text" ng-bind="calculateMonths()">
             </span>
                     </div>
                 </div>
@@ -132,7 +131,7 @@
                 <td class="col-description" ng-bind="period.description"></td>
                 <td class="col-start-date" ng-bind="period.stringStartDate | date:'dd/MM/yyyy'"></td>
                 <td class="col-end-date" ng-bind="period.stringEndDate | date:'dd/MM/yyyy'"></td>
-                <td class="col-total-days" ng-bind="calculateDays(period.startDate, period.endDate)"></td>
+                <td class="col-total-days" ng-bind="calculateDays(period.stringStartDate, period.stringEndDate)"></td>
                 <td class="col-number-of-months" ng-bind="period.numberOfMonths"></td>
                 <td class="col-delete-button">
                     <input ng-show="showDeleteButton($index)" type="button" ng-click="deletePeriod(period.id)"

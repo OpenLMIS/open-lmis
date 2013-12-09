@@ -21,12 +21,12 @@ import org.openlmis.db.categories.UnitTests;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
+import static org.openlmis.core.builder.ProcessingPeriodBuilder.endDate;
 import static org.openlmis.core.matchers.Matchers.dataExceptionMatcher;
 
 @Category(UnitTests.class)
@@ -103,6 +103,13 @@ public class ProcessingPeriodTest {
 
     assertThat(processingPeriod.getStartDate(), is(DateUtils.parseDate("01-01-12 00:00:00", new String[]{"dd-MM-yy HH:mm:ss"})));
     assertThat(processingPeriod.getEndDate(), is(DateUtils.parseDate("01-02-12 23:59:59", new String[]{"dd-MM-yy HH:mm:ss"})));
+  }
+
+  @Test
+  public void shouldGetNextPeriodStartDate() throws Exception {
+    ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod, with(endDate, DateUtils.parseDate("01-01-12 00:00:00", new String[]{"dd-MM-yy HH:mm:ss"}))));
+
+    assertThat(processingPeriod.getNextStartDate(), is("2012-01-02"));
   }
 
   private Date oneMonthPast(Date date) {

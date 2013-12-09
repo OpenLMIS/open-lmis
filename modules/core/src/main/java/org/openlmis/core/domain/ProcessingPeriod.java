@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.joda.time.DateTime;
 import org.openlmis.core.exception.DataException;
 
 import java.text.ParseException;
@@ -23,6 +24,7 @@ import java.util.Date;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Data
 @NoArgsConstructor
@@ -87,4 +89,7 @@ public class ProcessingPeriod extends BaseModel {
     return simpleDateFormat.format(this.endDate);
   }
 
+  public String getNextStartDate() {
+    return forPattern("yyyy-MM-dd").print(new DateTime(getEndDate()).plusDays(1));
+  }
 }

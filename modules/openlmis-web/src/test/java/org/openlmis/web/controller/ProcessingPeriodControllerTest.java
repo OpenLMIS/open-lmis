@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.joda.time.DateTime.now;
+import static org.joda.time.format.DateTimeFormat.forPattern;
+import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
@@ -126,6 +128,18 @@ public class ProcessingPeriodControllerTest {
     assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     assertThat(responseEntity.getBody().getSuccessMsg(), is("Period deleted successfully"));
 
+  }
+
+  @Test
+  public void shouldReturnNextStartDateWithPeriodListIfListNotEmpty() throws Exception {
+    List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>() {{
+      add(new ProcessingPeriod(2l, now().minusDays(4).toDate(), now().toDate(), 1, "blah"));
+    }};
+
+    when(service.getAllPeriods(3l)).thenReturn(periods);
+
+    ResponseEntity<OpenLmisResponse> response = controller.getAll(3l);
+    assertThat((String) response.getBody().getData().get("nextStartDate"), is(forPattern("yyyy-MM-dd").print(now().plusDays(1))));
   }
 
   @Test

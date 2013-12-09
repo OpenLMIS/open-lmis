@@ -21,7 +21,7 @@ INSERT INTO processing_periods
                                                                                                id
                                                                                              FROM users
                                                                                              LIMIT 1)),
-('Period2', 'second period', '2013-03-01', '2012-05-31 23:59:59', 2, (SELECT
+('Period2', 'second period', '2013-03-01', '2013-05-31 23:59:59', 2, (SELECT
                                                                         id
                                                                       FROM processing_schedules
                                                                       WHERE code = 'Q1stM'), (SELECT
