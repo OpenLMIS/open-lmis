@@ -19,8 +19,8 @@ import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,7 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDTO {
 
-  Date createdDate;
+  private String stringCreatedDate;
   private Long id;
   private RnrDTO rnr;
   private Boolean productsOrdered;
@@ -39,7 +39,7 @@ public class OrderDTO {
 
   public static List<OrderDTO> getOrdersForView(List<Order> orders) {
     List<OrderDTO> orderDTOs = new ArrayList<>();
-    for(Order order: orders) {
+    for (Order order : orders) {
       orderDTOs.add(getOrderForView(order));
     }
     return orderDTOs;
@@ -49,17 +49,20 @@ public class OrderDTO {
     OrderDTO orderDTO = new OrderDTO();
     orderDTO.setId(order.getId());
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
-    orderDTO.setCreatedDate(order.getCreatedDate());
+
+    String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(order.getCreatedDate());
+    orderDTO.setStringCreatedDate(createdDate);
+
     orderDTO.setStatus(order.getStatus());
     orderDTO.setFtpComment(order.getFtpComment());
     orderDTO.setSupplyLine(order.getSupplyLine());
     ShipmentFileInfo shipmentFileInfo = order.getShipmentFileInfo();
-    if(shipmentFileInfo != null) orderDTO.setShipmentError(shipmentFileInfo.isProcessingError());
-    if(order.getRnr().getFullSupplyLineItems().size() == 0 && order.getRnr().getNonFullSupplyLineItems().size() == 0) {
+    if (shipmentFileInfo != null) orderDTO.setShipmentError(shipmentFileInfo.isProcessingError());
+    if (order.getRnr().getFullSupplyLineItems().size() == 0 && order.getRnr().getNonFullSupplyLineItems().size() == 0) {
       orderDTO.setProductsOrdered(false);
     } else {
       orderDTO.setProductsOrdered(true);
     }
     return orderDTO;
   }
- }
+}

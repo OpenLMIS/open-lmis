@@ -22,16 +22,16 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, perio
     $scope.newPeriod.endDate = undefined;
   };
 
-  function resetNewPeriod(endDate) {
+  function resetNewPeriod(startDate) {
     $scope.newPeriod = {};
-    $scope.newPeriod.startDate = new Date(endDate + 1000);
-    $scope.refreshEndDateOffset($scope.newPeriod.startDate.getTime());
+    $scope.newPeriod.startDate = startDate;
+    $scope.refreshEndDateOffset($scope.newPeriod.startDate);
   }
 
   prepareNewPeriod();
 
   $scope.updateEndDate = function () {
-    $scope.newPeriod.endDate = new Date($scope.newPeriod.endDate.getTime() + $scope.oneDay - 1000);
+    $scope.newPeriod.endDate = $scope.newPeriod.stringEndDate;
   };
 
   $scope.calculateDays = function (startTime, endTime) {
@@ -49,7 +49,7 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, perio
 
   function prepareNewPeriod() {
     if ($scope.periodList.length !== 0)
-      resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
+      resetNewPeriod(new Date($scope.periodList[0].stringEndDate.split('-')).getTime() + $scope.oneDay);
     else
       $scope.newPeriod = {};
   }
@@ -68,9 +68,6 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, perio
     $scope.showErrorForCreate = false;
 
     Periods.save({scheduleId: $routeParams.id}, $scope.newPeriod, function (data) {
-      $scope.newPeriod.stringStartDate = $scope.newPeriod.startDate;
-      $scope.newPeriod.stringEndDate = $scope.newPeriod.endDate;
-
       $scope.periodList.unshift($scope.newPeriod);
       $scope.message = data.success;
       $scope.newPeriod.id = data.id;

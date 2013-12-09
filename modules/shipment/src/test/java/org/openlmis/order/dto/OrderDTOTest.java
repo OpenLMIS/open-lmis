@@ -23,6 +23,7 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public class OrderDTOTest {
 
     assertThat(orderDTOs.get(0).getRnr(), is(dtoForOrder1));
     assertThat(orderDTOs.get(1).getRnr(), is(dtoForOrder2));
-    assertThat(orderDTOs.get(0).getCreatedDate(), is(createdDate));
+    assertThat(orderDTOs.get(0).getStringCreatedDate(), is(new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(createdDate)));
     assertThat(orderDTOs.get(0).getShipmentError(), is(false));
     assertThat(orderDTOs.get(0).getSupplyLine(), is(supplyLine));
   }

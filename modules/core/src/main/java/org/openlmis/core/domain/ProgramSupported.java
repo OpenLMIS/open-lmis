@@ -20,6 +20,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -61,4 +63,9 @@ public class ProgramSupported extends BaseModel implements Importable {
     this.startDate = startDate;
   }
 
+  @SuppressWarnings("unused")
+  public String getStringStartDate() throws ParseException {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    return simpleDateFormat.format(this.startDate);
+  }
 }

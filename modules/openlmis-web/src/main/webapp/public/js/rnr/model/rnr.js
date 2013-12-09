@@ -168,9 +168,7 @@ var Rnr = function (rnr, programRnrColumns) {
 
 
   Rnr.prototype.periodDisplayName = function () {
-    var startDate = new Date(this.period.startDate);
-    var endDate = new Date(this.period.endDate);
-    return utils.getFormattedDate(startDate) + ' - ' + utils.getFormattedDate(endDate);
+    return this.period.stringStartDate + ' - ' + this.period.stringEndDate;
   };
 
   Rnr.prototype.reduceForApproval = function () {

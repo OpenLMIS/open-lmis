@@ -8,8 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location,
-                               messageService) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService) {
   $scope.facilities = facilities;
   $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
   $scope.programLabel = messageService.get("label.none.assigned");
@@ -35,10 +34,10 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
       {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
-      {field: 'periodStartDate', displayName: messageService.get("label.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'stringPeriodStartDate', displayName: messageService.get("label.period.start.date")},
+      {field: 'stringPeriodEndDate', displayName: messageService.get("label.period.end.date")},
+      {field: 'stringSubmittedDate', displayName: messageService.get("label.date.submitted")},
+      {field: 'stringModifiedDate', displayName: messageService.get("label.date.modified")},
       {field: 'requisitionStatus', displayName: messageService.get("label.status")},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>',
@@ -58,7 +57,9 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
   }
 
   function setOptions() {
-    $scope.options = ($scope.programs.length) ? [{field: "All", name: "All"}] : [];
+    $scope.options = ($scope.programs.length) ? [
+      {field: "All", name: "All"}
+    ] : [];
   }
 
   $scope.loadProgramsForFacility = function () {

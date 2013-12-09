@@ -8,8 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService,
-                                      $routeParams, $location) {
+function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrder, $dialog, messageService, $routeParams, $location) {
   $scope.message = "";
   $scope.maxNumberOfPages = 10;
   $scope.selectedItems = [];
@@ -31,20 +30,20 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
     $scope.selectedItems.length = 0;
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
     $scope.selectedSearchOption = _.findWhere($scope.searchOptions,
-        {value: $routeParams.searchType}) || $scope.searchOptions[0];
+      {value: $routeParams.searchType}) || $scope.searchOptions[0];
     $scope.query = $routeParams.searchVal;
 
     RequisitionForConvertToOrder.get({page: $scope.currentPage, searchType: $scope.selectedSearchOption.value,
-          searchVal: $scope.query, sortBy: $scope.sortOptions.fields[0], sortDirection: $scope.sortOptions.directions[0]},
-        function (data) {
-          $scope.filteredRequisitions = data.rnr_list;
+        searchVal: $scope.query, sortBy: $scope.sortOptions.fields[0], sortDirection: $scope.sortOptions.directions[0]},
+      function (data) {
+        $scope.filteredRequisitions = data.rnr_list;
 
-          $scope.numberOfPages = data.number_of_pages || 1;
-          $scope.resultCount = $scope.filteredRequisitions.length;
-          if (!$scope.resultCount) $scope.noRequisitions = true;
-        }, function () {
-          $location.search('page', 1);
-        });
+        $scope.numberOfPages = data.number_of_pages || 1;
+        $scope.resultCount = $scope.filteredRequisitions.length;
+        if (!$scope.resultCount) $scope.noRequisitions = true;
+      }, function () {
+        $location.search('page', 1);
+      });
   };
 
 
@@ -86,10 +85,10 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
       {field: 'programName', displayName: messageService.get("program.header") },
       {field: 'facilityCode', displayName: messageService.get("option.value.facility.code")},
       {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
-      {field: 'periodStartDate', displayName: messageService.get("label.period.start.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'periodEndDate', displayName: messageService.get("label.period.end.date"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'submittedDate', displayName: messageService.get("label.date.submitted"), cellFilter: "date:'dd/MM/yyyy'"},
-      {field: 'modifiedDate', displayName: messageService.get("label.date.modified"), cellFilter: "date:'dd/MM/yyyy'"},
+      {field: 'stringPeriodStartDate', displayName: messageService.get("label.period.start.date")},
+      {field: 'stringPeriodEndDate', displayName: messageService.get("label.period.end.date")},
+      {field: 'stringSubmittedDate', displayName: messageService.get("label.date.submitted")},
+      {field: 'stringModifiedDate', displayName: messageService.get("label.date.modified")},
       {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: "<div class='ngCellText checked'><i ng-class='{\"icon-ok\": row.entity.emergency}'></i></div>",

@@ -20,6 +20,8 @@ import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrLineItemDTO;
 
+import java.text.SimpleDateFormat;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
@@ -47,8 +49,10 @@ public class ReplenishmentDTOTest {
     assertThat(rnr.getFacility().getCode(), is(replenishmentDTO.getAgentCode()));
     assertThat(rnr.getProgram().getCode(), is(replenishmentDTO.getProgramCode()));
     assertThat(rnr.isEmergency(), is(replenishmentDTO.isEmergency()));
-    assertThat(rnr.getPeriod().getStartDate(), is(replenishmentDTO.getPeriodStartDate()));
-    assertThat(rnr.getPeriod().getEndDate(), is(replenishmentDTO.getPeriodEndDate()));
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    assertThat(simpleDateFormat.format(rnr.getPeriod().getStartDate()), is(replenishmentDTO.getStringPeriodStartDate()));
+    assertThat(simpleDateFormat.format(rnr.getPeriod().getEndDate()), is(replenishmentDTO.getStringPeriodEndDate()));
     assertThat(rnr.getStatus().name(), is(replenishmentDTO.getRequisitionStatus()));
     assertThat(replenishmentDTO.getProducts().size(), is(2));
     assertThat(replenishmentDTO.getOrderId(), is(order.getId()));

@@ -35,14 +35,12 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   function getFacilityWithDateObjects(facility) {
     angular.forEach(facility.supportedPrograms, function (supportedProgram) {
       if (supportedProgram.startDate) {
-        supportedProgram.startDate = new Date(supportedProgram.startDate);
+        supportedProgram.startDate = supportedProgram.stringStartDate;
       }
     });
 
-    facility.goLiveDate = new Date(facility.goLiveDate);
-    if (facility.goDownDate) {
-      facility.goDownDate = new Date(facility.goDownDate);
-    }
+    facility.goLiveDate = facility.stringGoLiveDate;
+    facility.goDownDate = facility.stringGoDownDate;
 
     return facility;
   }

@@ -15,7 +15,7 @@ describe("Period", function () {
   describe("View Schedule Periods", function () {
     var scheduleId = 123;
     var scope, $httpBackend, ctrl, routeParams, messageService;
-    var existingPeriod = {"id": 10, "name": "name", "description": "description"};
+    var existingPeriod = {"id": 10, "name": "name", "description": "description", "stringEndDate": "2013-01-14", "stringStartDate": "2013-01-01"};
     var schedule = {"id": scheduleId, "name": "name", "description": "description"};
 
     beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
@@ -45,7 +45,7 @@ describe("Period", function () {
     });
 
     it('should create a new period', function () {
-      var newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 0, 0), "description": "newDescription"};
+      var newPeriod = {"name": "newName", "startDate": "2011-04-01", "endDate": "2011-05-01", "description": "newDescription"}
       scope.newPeriod = newPeriod;
       $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"success": "success message"});
 
@@ -107,7 +107,7 @@ describe("Period", function () {
     });
 
     it('should reset new period after creating a period', function () {
-      var newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 23, 59, 59), "description": "newDescription"};
+      var newPeriod = {"name": "newName", "startDate": "2011-04-01", "endDate": "2011-05-01", "description": "newDescription"};
       scope.newPeriod = newPeriod;
       $httpBackend.expectPOST('/schedules/123/periods.json').respond(200, {"success": "success message"});
 
@@ -136,7 +136,7 @@ describe("Period", function () {
     }));
 
     it('should create the first period', function () {
-      var newPeriod = {"name": "newName", "startDate": new Date(2011, 3, 1, 0, 0), "endDate": new Date(2011, 4, 1, 0, 0), "description": "newDescription"};
+      var newPeriod = {"name": "newName", "startDate": "2011-04-01", "endDate": "2011-05-01", "description": "newDescription"};
       scope.newPeriod = newPeriod;
       $httpBackend.expectPOST('/schedules/456/periods.json').respond(200, {"success": "success message"});
 
