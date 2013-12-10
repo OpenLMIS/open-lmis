@@ -79,13 +79,13 @@ public class ProcessingPeriod extends BaseModel {
 
   @SuppressWarnings("unused")
   public String getStringStartDate() throws ParseException {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     return simpleDateFormat.format(this.startDate);
   }
 
   @SuppressWarnings("unused")
   public String getStringEndDate() throws ParseException {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     return simpleDateFormat.format(this.endDate);
   }
 

@@ -37,6 +37,12 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, Perio
   refreshPeriodList();
 
   $scope.calculateDays = function (startDate, endDate) {
+    if (startDate && angular.isString(startDate) && startDate.indexOf('/') !== -1) {
+      startDate = startDate.split("/").reverse();
+    }
+    if (endDate && angular.isString(endDate) && endDate.indexOf('/') !== -1) {
+      endDate = endDate.split("/").reverse();
+    }
     return Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / ONE_DAY) + 1;
   };
 

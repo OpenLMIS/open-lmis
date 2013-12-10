@@ -58,7 +58,7 @@ public class PeriodsPage extends Page {
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'28')]")
   private static WebElement endDateThirdCalender=null;
 
-  @FindBy(how = How.XPATH, using = "//span[@ng-model='newPeriod.numberOfMonths']")
+  @FindBy(how = How.XPATH, using = "//span[@id='numberOfMonths']")
   private static WebElement numberOfMonthsPeriods=null;
 
   @FindBy(how = How.XPATH, using = "//input[@value='Add']")
@@ -85,9 +85,9 @@ public class PeriodsPage extends Page {
   public void createAndVerifyPeriods() throws IOException {
     testWebDriver.waitForElementToAppear(namePeriod);
     testWebDriver.sleep(1000);
-    enterAndVerifyPeriodDetails("Period1", "first period", "1", 1);
+    enterAndVerifyPeriodDetails("Period1", "first period", "2", 1);
     testWebDriver.sleep(1000);
-    enterAndVerifyPeriodDetails("Period2", "second period", "1", 2);
+    enterAndVerifyPeriodDetails("Period2", "second period", "2", 2);
     testWebDriver.sleep(1000);
     enterAndVerifyPeriodDetails("Period3", "third period", "1", 3);
   }

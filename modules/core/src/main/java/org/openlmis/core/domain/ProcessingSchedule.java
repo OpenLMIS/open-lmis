@@ -15,12 +15,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProcessingSchedule extends BaseModel {
   private String code;
   private String name;
@@ -42,4 +47,11 @@ public class ProcessingSchedule extends BaseModel {
       throw new DataException("schedule.without.name");
     }
   }
+
+  @SuppressWarnings("unused")
+  public String getStringModifiedDate() throws ParseException {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    return this.modifiedDate == null ? null : simpleDateFormat.format(this.modifiedDate);
+  }
+
 }
