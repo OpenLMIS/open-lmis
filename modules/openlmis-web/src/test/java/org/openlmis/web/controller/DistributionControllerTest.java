@@ -130,28 +130,29 @@ public class DistributionControllerTest {
   public void shouldSyncFacilityDistributionData() {
     Long distributionId = 1l;
     Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(distributionId, facilityId);
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
 
     when(service.sync(facilityDistributionData)).thenReturn("Synced");
+
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((String)response.getBody().getData().get("syncStatus") , is("Synced"));
+    assertThat((String) response.getBody().getData().get("syncStatus"), is("Synced"));
     verify(service).sync(facilityDistributionData);
-    assertThat(facilityDistributionData.getFacilityId(), is(facilityId));
-    assertThat(facilityDistributionData.getDistributionId(), is(distributionId));
+    assertThat(facilityDistributionData.getFacilityVisit().getFacilityId(), is(facilityId));
+    assertThat(facilityDistributionData.getFacilityVisit().getDistributionId(), is(distributionId));
   }
 
   @Test
   public void shouldReturnErrorIfAlreadySynced() throws Exception {
     Long distributionId = 1l;
     Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(distributionId, facilityId);
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
 
     when(service.sync(facilityDistributionData)).thenReturn("Failed");
 
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
 
-    assertThat((String)response.getBody().getData().get("syncStatus") , is("Failed"));
+    assertThat((String) response.getBody().getData().get("syncStatus"), is("Failed"));
   }
 }

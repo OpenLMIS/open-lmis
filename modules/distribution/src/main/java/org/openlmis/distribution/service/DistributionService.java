@@ -29,9 +29,7 @@ public class DistributionService {
   DistributionRepository repository;
 
   public Distribution create(Distribution distribution) {
-    Distribution savedDistribution = repository.create(distribution);
-
-    return savedDistribution;
+    return repository.create(distribution);
   }
 
   public Distribution get(Distribution distribution) {
@@ -39,7 +37,8 @@ public class DistributionService {
   }
 
   @Transactional
+  //TODO return boolean or status object
   public String sync(FacilityDistributionData facilityDistributionData) {
-    return facilityVisitService.save(facilityDistributionData.constructFacilityVisit());
+    return facilityVisitService.save(facilityDistributionData.getFacilityVisit());
   }
 }

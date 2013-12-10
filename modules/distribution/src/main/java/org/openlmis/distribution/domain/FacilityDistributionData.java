@@ -16,27 +16,33 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.openlmis.core.domain.BaseModel;
 
-@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FacilityDistributionData extends BaseModel {
+@Data
+public class FacilityDistributionData {
 
-  private Long distributionId;
-  private Long facilityId;
-  private FacilityVisit facilityVisit;
-  private EpiUse epiUse;
+  private FacilityVisit facilityVisit = new FacilityVisit();
+  private EpiUse epiUse = new EpiUse();
 
-  public FacilityDistributionData(Long distributionId, Long facilityId) {
-    this.distributionId = distributionId;
-    this.facilityId = facilityId;
+  public FacilityDistributionData(EpiUse epiUse) {
+    this.epiUse = epiUse;
   }
 
-  public FacilityVisit constructFacilityVisit() {
-    return this.facilityVisit.construct(distributionId, facilityId, createdBy);
+  public void setDistributionId(Long distributionId) {
+    facilityVisit.setDistributionId(distributionId);
+    epiUse.setFacilityId(distributionId);
   }
 
+  public void setFacilityId(Long facilityId) {
+    facilityVisit.setFacilityId(facilityId);
+    epiUse.setFacilityId(facilityId);
+  }
+
+  public void setCreatedBy(Long createdBy) {
+    facilityVisit.setCreatedBy(createdBy);
+    epiUse.setCreatedBy(createdBy);
+  }
 
 }

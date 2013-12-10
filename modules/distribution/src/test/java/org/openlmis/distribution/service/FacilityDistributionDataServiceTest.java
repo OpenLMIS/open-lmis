@@ -21,6 +21,8 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.EpiUse;
+import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.domain.FacilityDistributionData;
 
 import java.util.Date;
@@ -57,10 +59,11 @@ public class FacilityDistributionDataServiceTest {
     List<Facility> facilities = asList(facility);
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
 
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(null, null);
+    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
     when(spyFacilityDistributionDataService.createDistributionData(facility, distribution)).thenReturn(facilityDistributionData);
 
     List<FacilityDistributionData> facilityDistributions = spyFacilityDistributionDataService.getFor(distribution);
+
     assertThat(facilityDistributions.get(0), is(facilityDistributionData));
   }
 
@@ -90,10 +93,11 @@ public class FacilityDistributionDataServiceTest {
 
     FacilityDistributionData distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
 
-    assertThat(distributionData.getDistributionId(), is(distribution.getId()));
-    assertThat(distributionData.getFacilityId(), is(facility.getId()));
-    assertThat(distributionData.getEpiUse().getLineItems().size(), is(2));
-    verify(epiUseService).saveLineItems(distributionData.getEpiUse());
+    EpiUse epiUse = distributionData.getEpiUse();
+    assertThat(epiUse.getDistributionId(), is(distribution.getId()));
+    assertThat(epiUse.getFacilityId(), is(facility.getId()));
+    assertThat(epiUse.getLineItems().size(), is(2));
+    verify(epiUseService).saveLineItems(epiUse);
   }
 
   @Test
@@ -122,11 +126,10 @@ public class FacilityDistributionDataServiceTest {
 
     FacilityDistributionData distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
 
-    assertThat(distributionData.getDistributionId(), is(distribution.getId()));
-    assertThat(distributionData.getFacilityId(), is(facility.getId()));
-    assertThat(distributionData.getEpiUse().getLineItems().size(), is(1));
-    assertThat(distributionData.getEpiUse().getLineItems().get(0).getProductGroupId(), is(1L));
-    assertThat(distributionData.getEpiUse().getLineItems().get(0).getProductGroupName(), is("Product Group 1"));
+    List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
+    assertThat(lineItems.size(), is(1));
+    assertThat(lineItems.get(0).getProductGroupId(), is(1L));
+    assertThat(lineItems.get(0).getProductGroupName(), is("Product Group 1"));
   }
 
   @Test
@@ -155,10 +158,9 @@ public class FacilityDistributionDataServiceTest {
 
     FacilityDistributionData distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
 
-    assertThat(distributionData.getDistributionId(), is(distribution.getId()));
-    assertThat(distributionData.getFacilityId(), is(facility.getId()));
-    assertThat(distributionData.getEpiUse().getLineItems().size(), is(1));
-    assertThat(distributionData.getEpiUse().getLineItems().get(0).getProductGroupId(), is(1L));
-    assertThat(distributionData.getEpiUse().getLineItems().get(0).getProductGroupName(), is("Product Group 1"));
+    List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
+    assertThat(lineItems.size(), is(1));
+    assertThat(lineItems.get(0).getProductGroupId(), is(1L));
+    assertThat(lineItems.get(0).getProductGroupName(), is("Product Group 1"));
   }
 }

@@ -48,9 +48,13 @@ public class FacilityDistributionDataService {
   }
 
   public FacilityDistributionData createDistributionData(Facility facility, Distribution distribution) {
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData(distribution.getId(), facility.getId());
+    EpiUse epiUse = createEpiUse(facility, distribution);
+
+    return new FacilityDistributionData(epiUse);
+  }
+
+  private EpiUse createEpiUse(Facility facility, Distribution distribution) {
     EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId());
-    facilityDistributionData.setEpiUse(epiUse);
 
     Set<ProductGroup> productGroupSet = new HashSet<>();
 
@@ -66,7 +70,6 @@ public class FacilityDistributionDataService {
       }
       epiUseService.saveLineItems(epiUse);
     }
-
-    return facilityDistributionData;
+    return epiUse;
   }
 }

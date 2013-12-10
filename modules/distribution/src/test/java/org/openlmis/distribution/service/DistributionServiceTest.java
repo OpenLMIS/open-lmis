@@ -59,12 +59,12 @@ public class DistributionServiceTest {
     FacilityVisit facilityVisit = new FacilityVisit();
 
     FacilityDistributionData facilityDistributionData = mock(FacilityDistributionData.class);
-    when(facilityDistributionData.constructFacilityVisit()).thenReturn(facilityVisit);
+    when(facilityDistributionData.getFacilityVisit()).thenReturn(facilityVisit);
     when(facilityVisitService.save(facilityVisit)).thenReturn("Synced");
     String syncStatus = service.sync(facilityDistributionData);
 
     verify(facilityVisitService).save(facilityVisit);
-    verify(facilityDistributionData).constructFacilityVisit();
+    verify(facilityDistributionData).getFacilityVisit();
     assertThat(syncStatus, is("Synced"));
   }
 
