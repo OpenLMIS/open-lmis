@@ -141,12 +141,12 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
     testWebDriver.sleep(2000);
     assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
-    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode); //---Flaky
+    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
     testWebDriver.sleep(2000);
     assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode), dbWrapper.getFacilityTypeId("warehouse"));
-    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode); //---Flaky
+    verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
@@ -208,9 +208,9 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   private void verifyInvalidRequisitionGroupMembersUpload(UploadPage uploadPage) throws FileNotFoundException {
-    //uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
-    //uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidCombination_RG_FacilityCode.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_InvalidFacilityCode.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Facility code in Record No");
@@ -220,9 +220,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_FacilityCodeAssignedToRGWithOneProgramInCommon.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Facility F10 is already assigned to Requisition Group rg1 running same program ESS_MEDS in Record No");
-    //uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
-    //uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
+    uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
 
   }
 
@@ -348,9 +348,9 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Lowest_Code.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Geographic Zone Code must be at the lowest administrative level in your hierarchy in Record No");
-    //uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Duplicate_Code.csv");
-    //uploadPage.verifyErrorMessageOnUploadScreen();
-    //uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
+    uploadPage.uploadFacilitiesInvalidScenarios("QA_facilities_Duplicate_Code.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Duplicate Facility Code in Record No");
   }
 
   private void verifyValidGeographicZoneUpload(UploadPage uploadPage) throws FileNotFoundException {
