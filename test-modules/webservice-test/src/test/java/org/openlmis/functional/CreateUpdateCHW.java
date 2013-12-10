@@ -47,14 +47,14 @@ public class CreateUpdateCHW extends JsonUtility {
   public static final String JSON_EXTENSION = ".json";
 
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -129,7 +129,7 @@ public class CreateUpdateCHW extends JsonUtility {
   }
 
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testChwFeedWithValidParentFacilityCode() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();

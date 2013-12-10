@@ -30,7 +30,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
 
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -41,13 +41,13 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testGetRequisitionDetails() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -58,7 +58,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     checkRequisitionStatus("AUTHORIZED", responseEntity);
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testGetRequisitionDetailsWithMultipleProducts() throws Exception {
     dbWrapper.updateProductFullSupplyFlag(true, "P11");
 

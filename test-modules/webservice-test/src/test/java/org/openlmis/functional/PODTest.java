@@ -32,7 +32,7 @@ public class PODTest extends JsonUtility {
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String POD_URL = "http://localhost:9091/rest-api/orders/%s/pod.json";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -40,13 +40,13 @@ public class PODTest extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
+  @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider")
   public void testValidAndDuplicatePOD(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", STORE_IN_CHARGE, "F10");

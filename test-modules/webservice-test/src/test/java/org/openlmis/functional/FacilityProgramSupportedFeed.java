@@ -35,13 +35,13 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
   public static final String PROGRAM_SUPPORTED_FEED_URL = "http://localhost:9091/feeds/programs-supported/recent";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
@@ -49,7 +49,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider-Function-Positive")
   public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
