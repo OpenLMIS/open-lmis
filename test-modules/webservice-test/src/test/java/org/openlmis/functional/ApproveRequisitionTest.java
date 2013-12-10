@@ -56,6 +56,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -91,6 +92,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
@@ -114,6 +116,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P1000");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -141,6 +144,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P11");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -168,6 +172,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -197,6 +202,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -226,6 +232,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -253,6 +260,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -278,6 +286,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + requisitionId + "/approve", "PUT",
@@ -301,6 +310,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(
@@ -309,6 +319,34 @@ public class ApproveRequisitionTest extends JsonUtility {
             "PUT",
             "commTrack",
             "Admin123");
+
+    String response = responseEntity.getResponse();
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
+  }
+
+  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  public void testApproveRequisitionBlankQuantityApproverName() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
+    submitRequisition("commTrack1", "HIV");
+    Long id = (long) dbWrapper.getMaxRnrID();
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
+
+    Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(
+        getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
     client.SendJSON("", "http://localhost:9091/", "GET", "", "");
@@ -329,6 +367,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -359,6 +398,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
     reportFromJson.getProducts().get(1).setProductCode("P11");
     reportFromJson.getProducts().get(1).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -372,6 +412,41 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(400, responseEntity.getStatus());
     assertTrue(response.contains("{\"error\":\"Products do not match with requisition\"}"));
     assertEquals("AUTHORIZED", dbWrapper.getRequisitionStatus(id));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testApproveRequisitionValidRnRWithRemarks() throws Exception {
+    HttpClient client = new HttpClient();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+    client.createContext();
+
+    submitRequisition("commTrack1", "HIV");
+    Long id = (long) dbWrapper.getMaxRnrID();
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
+    reportFromJson.getProducts().get(0).setRemarks("123");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
+
+    String response = responseEntity.getResponse();
+
+    assertEquals(200, responseEntity.getStatus());
+    assertTrue(response.contains("success\":\"R&R approved successfully!"));
+    assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+    assertEquals("some random name",dbWrapper.getApproverName(id));
+    assertEquals("123",dbWrapper.getRequisitionLineItemFieldValue(id,"remarks","P10"));
+    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
+    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":"));
+    assertTrue(responseEntity1.getResponse().contains(",\"endDate\":"));
   }
 
   @Test(groups = {"webservice"})

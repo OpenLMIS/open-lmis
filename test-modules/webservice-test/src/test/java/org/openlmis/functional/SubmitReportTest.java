@@ -913,7 +913,7 @@ public class SubmitReportTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void testMasterTemplateValidationOverrideWithCalculatedValue() throws Exception {
     long id =  submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
-    assertEquals("4", dbWrapper.getStockInHand(id));
+    assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
   }
 
 
@@ -922,7 +922,7 @@ public class SubmitReportTest extends JsonUtility {
       dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "stockInHand");
       dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "beginningBalance");
       Long id=submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
-      assertEquals("0",dbWrapper.getBeginningBalance(id));
+      assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
   }
 
 
