@@ -1490,4 +1490,16 @@ public class DBWrapper {
     update("update requisition_groups set supervisoryNodeId=(select id from supervisory_nodes where code='" + supervisoryNodeCode +
       "') where code='" + requisitionGroup + "';");
   }
+
+  public String getBeginningBalance(long requisitionId) throws IOException, SQLException {
+    String stockInHand = null;
+    ResultSet rs = query("SELECT beginningbalance FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
+
+    if (rs.next()) {
+      stockInHand = rs.getString("beginningbalance");
+    }
+    return stockInHand;
+
+  }
+
 }

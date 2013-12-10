@@ -920,7 +920,9 @@ public class SubmitReportTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void testMasterTemplateValidationIgnoreReportedValue() throws Exception {
       dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "stockInHand");
-      submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
+      dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "beginningBalance");
+      Long id=submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
+      assertEquals("0",dbWrapper.getBeginningBalance(id));
   }
 
 
