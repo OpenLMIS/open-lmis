@@ -692,8 +692,8 @@ public class RequisitionServiceTest {
     Facility facility = new Facility(1L);
     Program program = new Program(2L);
 
-    Date dateRangeStart = DateTime.parse("2013-02-01").toDate();
-    Date dateRangeEnd = DateTime.parse("2013-02-14").toDate();
+    String dateRangeStart = "01-02-2013";
+    String dateRangeEnd = "14-02-2013";
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
       with(facilityIdProperty, facility.getId()),
       with(programIdProperty, program.getId()),

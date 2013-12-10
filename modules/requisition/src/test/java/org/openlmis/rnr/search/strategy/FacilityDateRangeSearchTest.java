@@ -27,6 +27,7 @@ import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionPermissionService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +58,7 @@ public class FacilityDateRangeSearchTest {
   @Mock
   RequisitionPermissionService requisitionPermissionService;
 
-  Date dateRangeStart, dateRangeEnd;
+  String dateRangeStart, dateRangeEnd;
   Facility facility;
   Long userId;
   FacilityDateRangeSearch strategy;
@@ -65,8 +66,10 @@ public class FacilityDateRangeSearchTest {
 
   @Before
   public void setUp() throws Exception {
-    dateRangeStart = new Date();
-    dateRangeEnd = new Date();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+    dateRangeStart = dateFormat.format(new Date());
+    dateRangeEnd = dateFormat.format(new Date());
     Long facilityId = 1L, programId = null;
     facility = new Facility(facilityId);
     userId = 1L;
@@ -94,13 +97,16 @@ public class FacilityDateRangeSearchTest {
       add(program2);
     }};
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    Date startDate = dateFormat.parse(dateRangeStart);
+    Date endDate = dateFormat.parse(dateRangeEnd);
     List<Rnr> requisitions = new ArrayList<>();
     List<ProcessingPeriod> periodsForProgram1 = new ArrayList<>();
     List<ProcessingPeriod> periodsForProgram2 = new ArrayList<>();
     ArrayList<Rnr> requisitionsForProgram2 = new ArrayList<>();
     when(programService.getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION)).thenReturn(programs);
-    when(scheduleService.getAllPeriodsForDateRange(facility, program1, dateRangeStart, dateRangeEnd)).thenReturn(periodsForProgram1);
-    when(scheduleService.getAllPeriodsForDateRange(facility, program2, dateRangeStart, dateRangeEnd)).thenReturn(periodsForProgram2);
+    when(scheduleService.getAllPeriodsForDateRange(facility, program1, startDate, endDate)).thenReturn(periodsForProgram1);
+    when(scheduleService.getAllPeriodsForDateRange(facility, program2, startDate, endDate)).thenReturn(periodsForProgram2);
     when(repository.getPostSubmitRequisitions(facility, program1, periodsForProgram1)).thenReturn(requisitions);
     when(repository.getPostSubmitRequisitions(facility, program2, periodsForProgram2)).thenReturn(requisitionsForProgram2);
     when(requisitionPermissionService.hasPermission(userId, facility, program1, VIEW_REQUISITION)).thenReturn(true);
@@ -111,8 +117,8 @@ public class FacilityDateRangeSearchTest {
     requisitions.addAll(requisitionsForProgram2);
     assertThat(actualRequisitions, is(requisitions));
     verify(programService).getProgramsForUserByFacilityAndRights(1L, 1L, VIEW_REQUISITION);
-    verify(scheduleService).getAllPeriodsForDateRange(facility, program1, dateRangeStart, dateRangeEnd);
-    verify(scheduleService).getAllPeriodsForDateRange(facility, program2, dateRangeStart, dateRangeEnd);
+    verify(scheduleService).getAllPeriodsForDateRange(facility, program1, startDate, endDate);
+    verify(scheduleService).getAllPeriodsForDateRange(facility, program2, startDate, endDate);
     verify(repository).getPostSubmitRequisitions(facility, program1, periodsForProgram1);
     verify(repository).getPostSubmitRequisitions(facility, program2, periodsForProgram2);
     verify(requisitionPermissionService).hasPermission(userId, facility, program1, VIEW_REQUISITION);

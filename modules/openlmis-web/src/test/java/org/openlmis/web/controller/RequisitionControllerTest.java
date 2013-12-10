@@ -46,6 +46,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -339,11 +340,16 @@ public class RequisitionControllerTest {
 
   @Test
   public void shouldGetRequisitionsForViewWithGivenFacilityIdProgramIdAndPeriodRangeAndSetUserIdInSearchCriteria() throws Exception {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+    String stringRangeStartDate = dateFormat.format(new Date());
+    String stringDateEndDate = dateFormat.format(new Date());
+
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
         with(facilityIdProperty, 1L),
         with(programIdProperty, 1L),
-        with(startDate, new Date()),
-        with(endDate, new Date())));
+      with(startDate, stringRangeStartDate),
+      with(endDate, stringDateEndDate)));
 
     List<Rnr> requisitionsReturnedByService = new ArrayList<>();
     when(requisitionService.get(criteria)).thenReturn(requisitionsReturnedByService);

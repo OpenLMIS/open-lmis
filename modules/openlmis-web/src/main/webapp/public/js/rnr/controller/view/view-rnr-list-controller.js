@@ -99,8 +99,8 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     }
     var requisitionQueryParameters = {
       facilityId: $scope.selectedFacilityId,
-      dateRangeStart: $scope.startDate.toUTCString(),
-      dateRangeEnd: $scope.endDate.toUTCString()
+      dateRangeStart: $scope.startDate,
+      dateRangeEnd: $scope.endDate
     };
 
     if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;
@@ -117,7 +117,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
     if ($scope.endDate < $scope.startDate) {
       $scope.endDate = undefined;
     }
-    $scope.endDateOffset = Math.ceil(($scope.startDate.getTime() + oneDay - Date.now()) / oneDay);
+    $scope.endDateOffset = Math.ceil((new Date($scope.startDate.split('-')).getTime() + oneDay - Date.now()) / oneDay);
   };
 }
 

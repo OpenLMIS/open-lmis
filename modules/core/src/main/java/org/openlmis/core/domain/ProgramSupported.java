@@ -66,6 +66,6 @@ public class ProgramSupported extends BaseModel implements Importable {
   @SuppressWarnings("unused")
   public String getStringStartDate() throws ParseException {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    return simpleDateFormat.format(this.startDate);
+    return this.startDate == null ? null : simpleDateFormat.format(this.startDate);
   }
 }

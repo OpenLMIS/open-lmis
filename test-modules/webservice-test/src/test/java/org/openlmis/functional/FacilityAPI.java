@@ -31,7 +31,7 @@ public class FacilityAPI extends JsonUtility {
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
   @AfterMethod(groups = {"webservice"})
@@ -84,7 +84,7 @@ public class FacilityAPI extends JsonUtility {
     assertTrue("Response entity : " + response, response.contains("\"VACCINES\""));
     assertTrue("Response entity : " + response, response.contains("\"enabled\":true"));
 
-    assertEquals(StringUtils.countMatches(response, ":"), 35);
+    assertEquals(StringUtils.countMatches(response, ":"), 37);
 
     dbWrapper.disableFacility("Village Dispensary");
     responseEntity = client.SendJSON("", format(URL, "F10"), GET, commTrackUser, "Admin123");
