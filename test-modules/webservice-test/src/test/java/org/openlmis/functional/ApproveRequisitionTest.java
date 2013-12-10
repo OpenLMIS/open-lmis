@@ -414,14 +414,14 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testApproveRequisitionValidRnRWithRemarks() throws Exception {
+  public void testApproveRequisitionValidRnRWithRemarksAndRnaSubmissionThroughAPI() throws Exception {
     HttpClient client = new HttpClient();
-    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     client.createContext();
-
-    submitRequisition("commTrack1", "HIV");
+    createVirtualFacilityThroughApi("V100","F10");
+    dbWrapper.insertProcessingPeriod("Current", "current", "2013-05-01","2016-01-01",1,"M");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    submitRnRThroughApi("V100","HIV","P10",1,10,1,4,0,2);
     Long id = (long) dbWrapper.getMaxRnrID();
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
 
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.getProducts().get(0).setProductCode("P10");
@@ -441,11 +441,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("success\":\"R&R approved successfully!"));
     assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
-    assertEquals("some random name",dbWrapper.getApproverName(id));
     assertEquals("123",dbWrapper.getRequisitionLineItemFieldValue(id,"remarks","P10"));
-    ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
-    assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":"));
-    assertTrue(responseEntity1.getResponse().contains(",\"endDate\":"));
   }
 
   @Test(groups = {"webservice"})

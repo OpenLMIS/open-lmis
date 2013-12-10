@@ -250,7 +250,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCalculationAsReportedInAPI() throws Exception {
+  public void testValuesSavedInDatabaseAreSameAsReportedInAPI() throws Exception {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 10, 5, null, 5, null, null);
