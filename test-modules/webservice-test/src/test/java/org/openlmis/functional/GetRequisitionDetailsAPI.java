@@ -205,6 +205,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
+
   }
 
   @Test(groups = {"webservice"})
@@ -337,8 +338,6 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
       responseEntity.getResponse().contains("\"quantityRequested\":3"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":" + quantityApproved));
-    assertTrue("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"remarks\":\"1\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\":\"F10\""));
 //    TODO order status is coming as X_FAILED instead of TRANSFERRED
 //      assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":\"" + orderStatus + "\""));

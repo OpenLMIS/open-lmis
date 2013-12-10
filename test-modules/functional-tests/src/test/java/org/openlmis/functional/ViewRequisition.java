@@ -218,6 +218,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
     convertOrderPage.verifyEmergencyStatus();
+    convertOrderPage.verifyNoRequisitionSelectedMessage();
     convertOrderPage.convertToOrder();
     ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
     viewRequisitionPageOrdered.enterViewSearchCriteria();

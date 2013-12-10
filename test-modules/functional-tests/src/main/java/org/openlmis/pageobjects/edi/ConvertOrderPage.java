@@ -111,11 +111,14 @@ public class ConvertOrderPage extends RequisitionPage {
   }
 
   public void convertToOrder() throws IOException {
-    clickConvertToOrderButton();
-    verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
     clickCheckBoxConvertToOrder();
     clickConvertToOrderButton();
     clickOk();
+  }
+
+  public void verifyNoRequisitionSelectedMessage() throws IOException {
+    clickConvertToOrderButton();
+    verifyMessageOnOrderScreen("Message 'Please select at least one Requisition for Converting to Order.' is not displayed");
   }
 
   public void verifyEmergencyStatus() throws IOException {

@@ -77,7 +77,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionUnauthorizedAccess() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -101,7 +101,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(401, responseEntity.getStatus());
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProductNotAvailableInSystem() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -129,7 +129,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product codes [P1000]\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProductNotAvailableInRnR() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -157,7 +157,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product codes [P11]\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProgramProductsInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -187,7 +187,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProgramInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -217,7 +217,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateActiveStatusOfProgram("HIV", true);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProductInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -247,7 +247,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionNotVirtualFacility() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -272,7 +272,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Approval not allowed\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionInvalidRequisitionId() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -296,7 +296,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Requisition Not Found\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionBlankQuantityApproved() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -325,7 +325,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionBlankQuantityApproverName() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -353,7 +353,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionOnIncorrectRequisitionStatus() throws Exception {
     HttpClient client = new HttpClient();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
