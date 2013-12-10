@@ -174,7 +174,6 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     checkOrderStatusOnFeed("RELEASED", feedJSONList.get(1), id);
-
   }
 
 
