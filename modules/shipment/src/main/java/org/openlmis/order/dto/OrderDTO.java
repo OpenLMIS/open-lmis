@@ -21,6 +21,7 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,6 +29,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderDTO {
 
+  private Date createdDate;
   private String stringCreatedDate;
   private Long id;
   private RnrDTO rnr;
@@ -50,6 +52,7 @@ public class OrderDTO {
     orderDTO.setId(order.getId());
     orderDTO.setRnr(RnrDTO.prepareForOrderView(order.getRnr()));
 
+    orderDTO.setCreatedDate(order.getCreatedDate());
     String createdDate = order.getCreatedDate() == null ? null : new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(order.getCreatedDate());
     orderDTO.setStringCreatedDate(createdDate);
 

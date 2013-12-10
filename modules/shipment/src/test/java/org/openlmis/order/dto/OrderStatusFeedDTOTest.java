@@ -16,6 +16,8 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.rnr.domain.Rnr;
 
+import java.text.SimpleDateFormat;
+
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,6 +41,10 @@ public class OrderStatusFeedDTOTest {
     assertThat(feed.getEndDate(), is(rnr.getPeriod().getEndDate().getTime()));
     assertThat(feed.getOrderId(), is(order.getId()));
     assertThat(feed.getOrderStatus(), is(order.getStatus()));
-    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325356200000,\"endDate\":1328034600000,\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    String stringStartDate = dateFormat.format(rnr.getPeriod().getStartDate());
+    String stringEndDate = dateFormat.format(rnr.getPeriod().getEndDate());
+
+    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325356200000,\"endDate\":1328034600000,\"stringStartDate\":\"" + stringStartDate + "\",\"stringEndDate\":\"" + stringEndDate + "\",\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
   }
 }

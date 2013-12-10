@@ -22,13 +22,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 
 public class FacilityProgramSupportedFeed extends JsonUtility {
@@ -99,18 +96,12 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
 
-    ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
-    String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true";
-    assertTrue(responseEntity.getResponse().contains(expected));
+    String str_date = date_time.split("-")[0].substring(0, 6) + "25";
+    long dateLong = new SimpleDateFormat("yyyyMMdd zzz").parse(str_date + " GMT").getTime();
 
-    String programStartDate = date_time.split("-")[0].substring(0, 6) + "25";
-    String expectedDate = new SimpleDateFormat("yyyyMMdd").format(
-      new Date(Long.parseLong(
-        responseEntity.getResponse().substring(responseEntity.getResponse().indexOf("startDate"),
-          responseEntity.getResponse().indexOf("}]}]]></content>")).split(":")[1])
-      )
-    );
-    assertThat(programStartDate, is(expectedDate));
+    ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
+    String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
+    assertTrue(responseEntity.getResponse().contains(expected));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);

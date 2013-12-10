@@ -36,6 +36,10 @@ public class RnrDTO {
   private String facilityCode;
   private String agentCode;
   private boolean emergency;
+  private Date submittedDate;
+  private Date modifiedDate;
+  private Date periodStartDate;
+  private Date periodEndDate;
   private String stringSubmittedDate;
   private String stringModifiedDate;
   private String stringPeriodStartDate;
@@ -87,6 +91,11 @@ public class RnrDTO {
     rnrDTO.programName = requisition.getProgram().getName();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
+
+    rnrDTO.submittedDate = requisition.getSubmittedDate();
+    rnrDTO.modifiedDate = requisition.getModifiedDate();
+    rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
+    rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
 
     rnrDTO.stringSubmittedDate = formatDate(requisition.getSubmittedDate());
     rnrDTO.stringModifiedDate = formatDate(requisition.getModifiedDate());

@@ -36,13 +36,16 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, Perio
 
   refreshPeriodList();
 
+  function correctDateFormat(stringDate) {
+    if (stringDate && angular.isString(stringDate) && stringDate.indexOf('/') !== -1) {
+      stringDate = stringDate.split("/").reverse();
+    }
+    return stringDate;
+  }
+
   $scope.calculateDays = function (startDate, endDate) {
-    if (startDate && angular.isString(startDate) && startDate.indexOf('/') !== -1) {
-      startDate = startDate.split("/").reverse();
-    }
-    if (endDate && angular.isString(endDate) && endDate.indexOf('/') !== -1) {
-      endDate = endDate.split("/").reverse();
-    }
+    startDate = correctDateFormat(startDate);
+    endDate = correctDateFormat(endDate);
     return Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / ONE_DAY) + 1;
   };
 
