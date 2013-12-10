@@ -11,7 +11,6 @@
 package org.openlmis.pageobjects;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -22,6 +21,9 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
 
 public class PeriodsPage extends Page {
@@ -98,7 +100,7 @@ public class PeriodsPage extends Page {
 
     if (flag == 1) {
       testWebDriver.sleep(1000);
-      SeleneseTestNgHelper.assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
+      assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
       deleteButton.click();
       testWebDriver.sleep(1500);
       testWebDriver.waitForElementToAppear(endDateList);
@@ -106,7 +108,7 @@ public class PeriodsPage extends Page {
     String actualEndDateList = endDateList.getText().trim();
     String actualStartDateCalender = testWebDriver.getAttribute(startDatePeriod, "value");
     int diffInDays = compareTwoDates(actualStartDateCalender, actualEndDateList);
-    SeleneseTestNgHelper.assertEquals(String.valueOf(diffInDays), "1");
+    assertEquals(String.valueOf(diffInDays), "1");
 
   }
 
@@ -148,12 +150,10 @@ public class PeriodsPage extends Page {
 
 
     String actualNumberOfMonthsPeriods = numberOfMonthsPeriods.getText().trim();
-    SeleneseTestNgHelper.seleniumEquals(actualNumberOfMonthsPeriods, totalMonths);
+    assertEquals(actualNumberOfMonthsPeriods, totalMonths);
 
     addButton.click();
     testWebDriver.sleep(500);
-//    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-//    SeleneseTestNgHelper.assertTrue("Message Period added successfully is not getting displayed", saveSuccessMsgDiv.isDisplayed());
 
     testWebDriver.waitForElementToAppear(startDateList);
     String actualStartDateListValue = startDateList.getText().trim();
@@ -161,7 +161,7 @@ public class PeriodsPage extends Page {
     int flag = compareDateWithToday(actualStartDateListValue);
 
     if (flag == 1)
-      SeleneseTestNgHelper.assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
+      assertTrue("delete button is not getting displayed", deleteButton.isDisplayed());
   }
 
   public int compareTwoDates(String newerDateString, String olderDateString) {

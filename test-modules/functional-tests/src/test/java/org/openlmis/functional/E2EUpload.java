@@ -693,7 +693,6 @@ public class E2EUpload extends TestCaseHelper {
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
-    dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
