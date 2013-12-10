@@ -23,8 +23,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.edi.ConfigureEDIPage;
 import org.openlmis.pageobjects.edi.ConfigureShipmentPage;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -36,9 +34,6 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 @Listeners(CaptureScreenshotOnFailureListener.class)
 public class ConfigureShipmentTemplate extends TestCaseHelper {
 
@@ -224,6 +219,7 @@ public class ConfigureShipmentTemplate extends TestCaseHelper {
     if (!testWebDriver.getElementById("username").isDisplayed()) {
       HomePage homePage = new HomePage(testWebDriver);
       homePage.logout(baseUrlGlobal);
+      dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
 
