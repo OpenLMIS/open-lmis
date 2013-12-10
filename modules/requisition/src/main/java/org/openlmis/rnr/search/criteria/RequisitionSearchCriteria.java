@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static java.lang.Boolean.FALSE;
@@ -30,13 +32,33 @@ public class RequisitionSearchCriteria {
   Long programId;
   Long periodId;
   boolean withoutLineItems;
-  Date dateRangeStart;
-  Date dateRangeEnd;
+  String dateRangeStart;
+  String dateRangeEnd;
 
   @Getter(NONE)
   Boolean emergency = FALSE;
 
   public Boolean isEmergency() {
     return emergency;
+  }
+
+  public Date getRangeStart() {
+    Date rangeStartDate;
+    try {
+      rangeStartDate = new SimpleDateFormat("dd-MM-yyyy").parse(this.dateRangeStart);
+    } catch (ParseException e) {
+      rangeStartDate = null;
+    }
+    return rangeStartDate;
+  }
+
+  public Date getRangeEnd() {
+    Date rangeEndDate;
+    try {
+      rangeEndDate = new SimpleDateFormat("dd-MM-yyyy").parse(this.dateRangeEnd);
+    } catch (ParseException e) {
+      rangeEndDate = null;
+    }
+    return rangeEndDate;
   }
 }

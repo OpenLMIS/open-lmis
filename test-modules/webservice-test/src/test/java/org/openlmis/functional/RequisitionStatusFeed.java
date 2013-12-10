@@ -27,14 +27,13 @@ import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.String.format;
-import static org.openlmis.functional.PODTest.POD_URL;
 
 public class RequisitionStatusFeed extends JsonUtility {
 
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/feeds/requisition-status/";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -46,13 +45,13 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack",true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();

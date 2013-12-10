@@ -35,7 +35,7 @@ public interface FacilityMapper {
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled},COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
-    "COALESCE(#{modifiedDate}, NOW()))")
+    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
 

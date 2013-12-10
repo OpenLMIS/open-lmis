@@ -35,6 +35,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 public class ProcessingPeriodController extends BaseController {
 
   public static final String PERIODS = "periods";
+  public static final String NEXT_START_DATE = "nextStartDate";
 
   @Autowired
   private ProcessingScheduleService processingScheduleService;
@@ -43,7 +44,10 @@ public class ProcessingPeriodController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
     List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);
-    return OpenLmisResponse.response(PERIODS, periodList);
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(PERIODS, periodList);
+    if (!periodList.isEmpty())
+      response.getBody().addData(NEXT_START_DATE, periodList.get(0).getNextStartDate());
+    return response;
   }
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = POST, headers = ACCEPT_JSON)

@@ -21,26 +21,27 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 
 public class FacilityProgramSupportedFeed extends JsonUtility {
 
   public static final String PROGRAM_SUPPORTED_FEED_URL = "http://localhost:9091/feeds/programs-supported/recent";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
@@ -48,7 +49,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider-Function-Positive")
   public void testFacilityProgramSupportedFeed_Upload(String user, String program, String[] credentials) throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -97,16 +98,19 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityType, operatedBy, "");
     manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
-    String str_date = date_time.split("-")[0].substring(0, 6) + "25";
-    DateFormat formatter;
-    Date d;
-    formatter = new SimpleDateFormat("yyyyMMdd");
-    d = formatter.parse(str_date);
-    long dateLong = d.getTime();
 
     ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
-    String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
+    String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true";
     assertTrue(responseEntity.getResponse().contains(expected));
+
+    String programStartDate = date_time.split("-")[0].substring(0, 6) + "25";
+    String expectedDate = new SimpleDateFormat("yyyyMMdd").format(
+      new Date(Long.parseLong(
+        responseEntity.getResponse().substring(responseEntity.getResponse().indexOf("startDate"),
+          responseEntity.getResponse().indexOf("}]}]]></content>")).split(":")[1])
+      )
+    );
+    assertThat(programStartDate, is(expectedDate));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);

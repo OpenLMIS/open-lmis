@@ -10,6 +10,7 @@
 package org.openlmis.restapi.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -20,6 +21,7 @@ import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.dto.RnrLineItemDTO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @Data
 @NoArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = true)
 public class ReplenishmentDTO extends RnrDTO {
   private Long orderId;
   private String orderStatus;
@@ -39,11 +42,12 @@ public class ReplenishmentDTO extends RnrDTO {
     replenishmentDTO.setId(rnr.getId());
     replenishmentDTO.setAgentCode(rnr.getFacility().getCode());
     replenishmentDTO.setProgramCode(rnr.getProgram().getCode());
-    replenishmentDTO.setPeriodEndDate(rnr.getPeriod().getEndDate());
-    replenishmentDTO.setPeriodStartDate(rnr.getPeriod().getStartDate());
     replenishmentDTO.setRequisitionStatus(rnr.getStatus().name());
     replenishmentDTO.setEmergency(rnr.isEmergency());
 
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    replenishmentDTO.setStringPeriodEndDate(simpleDateFormat.format(rnr.getPeriod().getEndDate()));
+    replenishmentDTO.setStringPeriodStartDate(simpleDateFormat.format(rnr.getPeriod().getStartDate()));
 
     ArrayList<RnrLineItem> lineItems = new ArrayList<RnrLineItem>() {{
       addAll(rnr.getNonFullSupplyLineItems());
@@ -56,7 +60,7 @@ public class ReplenishmentDTO extends RnrDTO {
         return new RnrLineItemDTO((RnrLineItem) o);
       }
     }));
-    if(order != null) {
+    if (order != null) {
       replenishmentDTO.orderId = order.getId();
       replenishmentDTO.orderStatus = order.getStatus().name();
       Facility supplyingFacility = order.getSupplyingFacility();

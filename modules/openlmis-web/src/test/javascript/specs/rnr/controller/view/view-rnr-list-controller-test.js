@@ -49,19 +49,19 @@ describe('ViewRnrListController', function () {
   it('should get requisitions with program id if selected ', function () {
     scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
-    scope.startDate = new Date("01/01/2001");
-    scope.endDate = new Date("02/01/2001");
+    scope.startDate = "01-01-2001";
+    scope.endDate = "02-01-2001";
     scope.selectedProgramId = 1;
-    var expectedUrl = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
+    var expectedUrl = '/requisitions.json?dateRangeEnd=02-01-2001&dateRangeStart=01-01-2001&facilityId=1&programId=1';
     loadRequisitions(expectedUrl, rnrList);
   });
 
   it('should get requisitions without program id if all', function () {
     scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
-    scope.startDate = new Date("01/01/2001");
-    scope.endDate = new Date("02/01/2001");
-    var urlWithoutProgramId = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1';
+    scope.startDate = "01-01-2001";
+    scope.endDate = "02-01-2001";
+    var urlWithoutProgramId = '/requisitions.json?dateRangeEnd=02-01-2001&dateRangeStart=01-01-2001&facilityId=1';
     loadRequisitions(urlWithoutProgramId, rnrList);
   });
 
@@ -69,10 +69,10 @@ describe('ViewRnrListController', function () {
   it('should get requisitions with program id if selected, set requisitions and filteredRequisitions', function () {
     scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
-    scope.startDate = new Date("01/01/2001");
-    scope.endDate = new Date("02/01/2001");
+    scope.startDate = "01-01-2001";
+    scope.endDate = "02-01-2001";
     scope.selectedProgramId = 1;
-    var expectedUrl = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
+    var expectedUrl = '/requisitions.json?dateRangeEnd=02-01-2001&dateRangeStart=01-01-2001&facilityId=1&programId=1';
     loadRequisitions(expectedUrl, rnrList);
     scope.requisitions = rnrList;
     scope.filteredRequisitions = rnrList;
@@ -82,10 +82,10 @@ describe('ViewRnrListController', function () {
   it('should get requisitions with program id if selected, set requisitions and filteredRequisitions', function () {
     scope.viewRequisitionForm = {$invalid: false};
     scope.selectedFacilityId = 1;
-    scope.startDate = new Date("01/01/2001");
-    scope.endDate = new Date("02/01/2001");
+    scope.startDate = "01-01-2001";
+    scope.endDate = "02-01-2001";
     scope.selectedProgramId = 1;
-    var expectedUrl = '/requisitions.json?dateRangeEnd=Wed,+31+Jan+2001+18:30:00+GMT&dateRangeStart=Sun,+31+Dec+2000+18:30:00+GMT&facilityId=1&programId=1';
+    var expectedUrl = '/requisitions.json?dateRangeEnd=02-01-2001&dateRangeStart=01-01-2001&facilityId=1&programId=1';
     var rnrList = {'rnr_list': [
       {'id': 1}
     ]};
@@ -122,7 +122,11 @@ describe('ViewRnrListController', function () {
   });
 
   it('should set end date offset based on start date', function () {
-    scope.startDate = new Date();
+    scope.startDate = "03-01-2012";
+
+    spyOn(Date, 'now').andCallFake(function () {
+      return new Date(2012, 0, 1, 0, 0).getTime();
+    });
 
     scope.setEndDateOffset();
 
@@ -131,10 +135,13 @@ describe('ViewRnrListController', function () {
 
 
   it('should clear end date if less than start date', function () {
-    scope.startDate = new Date();
+    scope.startDate = "03-01-2012";
 
-    scope.endDate = new Date(scope.startDate);
-    scope.endDate.setDate(scope.startDate.getDate() - 1);
+    spyOn(Date, 'now').andCallFake(function () {
+      return new Date(2012, 0, 1, 0, 0).getTime();
+    });
+
+    scope.endDate = "02-01-2012";
 
     scope.setEndDateOffset();
 

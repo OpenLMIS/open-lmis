@@ -25,6 +25,7 @@ import org.openlmis.rnr.service.RequisitionPermissionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -55,13 +56,13 @@ public class RequisitionSearchStrategyFactoryTest {
   @Test
   public void shouldGetSearchStrategyForFacilityProgramAndDateRange() throws Exception {
     Long facilityId = 1L, programId = 1L;
-
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
       with(facilityIdProperty, facilityId),
       with(programIdProperty, programId),
-      with(startDate, new Date()),
-      with(endDate, new Date())));
-
+      with(startDate, dateFormat.format(new Date())),
+      with(endDate, dateFormat.format(new Date()))));
+    ;
     RequisitionSearchStrategy facilityProgramDateRangeStrategy = requisitionSearchStrategyFactory.getSearchStrategy(criteria);
 
     assertTrue(facilityProgramDateRangeStrategy instanceof FacilityProgramDateRangeSearch);
@@ -70,11 +71,12 @@ public class RequisitionSearchStrategyFactoryTest {
   @Test
   public void shouldGetSearchStrategyForFacilityAndDateRange() throws Exception {
     Long facilityId = 1L, programId = null;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
       with(facilityIdProperty, facilityId),
       with(programIdProperty, programId),
-      with(startDate, new Date()),
-      with(endDate, new Date())));
+      with(startDate, dateFormat.format(new Date())),
+      with(endDate, dateFormat.format(new Date()))));
 
     whenNew(FacilityDateRangeSearch.class)
       .withArguments(criteria, requisitionPermissionService, processingScheduleService, requisitionRepository, programService)

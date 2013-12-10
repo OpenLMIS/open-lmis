@@ -49,147 +49,147 @@ angular.module('ui.directives').directive('uiAnimate', ['ui.config', '$timeout',
 
 
 /*
-*  AngularJs Fullcalendar Wrapper for the JQuery FullCalendar
-*  API @ http://arshaw.com/fullcalendar/ 
-*  
-*  Angular Calendar Directive that takes in the [eventSources] nested array object as the ng-model and watches (eventSources.length + eventSources[i].length) for changes. 
-*       Can also take in multiple event urls as a source object(s) and feed the events per view.
-*       The calendar will watch any eventSource array and update itself when a delta is created  
-*       An equalsTracker attrs has been added for use cases that would render the overall length tracker the same even though the events have changed to force updates.
-*
-*/
+ *  AngularJs Fullcalendar Wrapper for the JQuery FullCalendar
+ *  API @ http://arshaw.com/fullcalendar/
+ *
+ *  Angular Calendar Directive that takes in the [eventSources] nested array object as the ng-model and watches (eventSources.length + eventSources[i].length) for changes.
+ *       Can also take in multiple event urls as a source object(s) and feed the events per view.
+ *       The calendar will watch any eventSource array and update itself when a delta is created
+ *       An equalsTracker attrs has been added for use cases that would render the overall length tracker the same even though the events have changed to force updates.
+ *
+ */
 
-angular.module('ui.directives').directive('uiCalendar',['ui.config', '$parse', function (uiConfig,$parse) {
-     uiConfig.uiCalendar = uiConfig.uiCalendar || {};       
-     //returns calendar     
-     return {
-        require: 'ngModel',
-        restrict: 'A',
-          link: function(scope, elm, attrs, $timeout) {
-            var sources = scope.$eval(attrs.ngModel);
-            var tracker = 0;
-            /* returns the length of all source arrays plus the length of eventSource itself */
-            var getSources = function () {
-              var equalsTracker = scope.$eval(attrs.equalsTracker);
-              tracker = 0;
-              angular.forEach(sources,function(value,key){
-                if(angular.isArray(value)){
-                  tracker += value.length;
-                }
-              });
-               if(angular.isNumber(equalsTracker)){
-                return tracker + sources.length + equalsTracker;
-               }else{
-                return tracker + sources.length;
-              }
-            };
-            /* update the calendar with the correct options */
-            function update() {
-              //calendar object exposed on scope
-              scope.calendar = elm.html('');
-              var view = scope.calendar.fullCalendar('getView');
-              if(view){
-                view = view.name; //setting the default view to be whatever the current view is. This can be overwritten. 
-              }
-              /* If the calendar has options added then render them */
-              var expression,
-                options = {
-                  defaultView : view,
-                  eventSources: sources
-                };
-              if (attrs.uiCalendar) {
-                expression = scope.$eval(attrs.uiCalendar);
-              } else {
-                expression = {};
-              }
-              angular.extend(options, uiConfig.uiCalendar, expression);
-              scope.calendar.fullCalendar(options);
-            }
-            update();
-              /* watches all eventSources */
-              scope.$watch(getSources, function( newVal, oldVal )
-              {
-                update();
-              });
-         }
-    };
+angular.module('ui.directives').directive('uiCalendar', ['ui.config', '$parse', function (uiConfig, $parse) {
+  uiConfig.uiCalendar = uiConfig.uiCalendar || {};
+  //returns calendar
+  return {
+    require: 'ngModel',
+    restrict: 'A',
+    link: function (scope, elm, attrs, $timeout) {
+      var sources = scope.$eval(attrs.ngModel);
+      var tracker = 0;
+      /* returns the length of all source arrays plus the length of eventSource itself */
+      var getSources = function () {
+        var equalsTracker = scope.$eval(attrs.equalsTracker);
+        tracker = 0;
+        angular.forEach(sources, function (value, key) {
+          if (angular.isArray(value)) {
+            tracker += value.length;
+          }
+        });
+        if (angular.isNumber(equalsTracker)) {
+          return tracker + sources.length + equalsTracker;
+        } else {
+          return tracker + sources.length;
+        }
+      };
+      /* update the calendar with the correct options */
+      function update() {
+        //calendar object exposed on scope
+        scope.calendar = elm.html('');
+        var view = scope.calendar.fullCalendar('getView');
+        if (view) {
+          view = view.name; //setting the default view to be whatever the current view is. This can be overwritten.
+        }
+        /* If the calendar has options added then render them */
+        var expression,
+          options = {
+            defaultView: view,
+            eventSources: sources
+          };
+        if (attrs.uiCalendar) {
+          expression = scope.$eval(attrs.uiCalendar);
+        } else {
+          expression = {};
+        }
+        angular.extend(options, uiConfig.uiCalendar, expression);
+        scope.calendar.fullCalendar(options);
+      }
+
+      update();
+      /* watches all eventSources */
+      scope.$watch(getSources, function (newVal, oldVal) {
+        update();
+      });
+    }
+  };
 }]);
 /*global angular, CodeMirror, Error*/
 /**
  * Binds a CodeMirror widget to a <textarea> element.
  */
 angular.module('ui.directives').directive('uiCodemirror', ['ui.config', '$timeout', function (uiConfig, $timeout) {
-	'use strict';
+  'use strict';
 
-	var events = ["cursorActivity", "viewportChange", "gutterClick", "focus", "blur", "scroll", "update"];
-	return {
-		restrict:'A',
-		require:'ngModel',
-		link:function (scope, elm, attrs, ngModel) {
-			var options, opts, onChange, deferCodeMirror, codeMirror;
+  var events = ["cursorActivity", "viewportChange", "gutterClick", "focus", "blur", "scroll", "update"];
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function (scope, elm, attrs, ngModel) {
+      var options, opts, onChange, deferCodeMirror, codeMirror;
 
-			if (elm[0].type !== 'textarea') {
-				throw new Error('uiCodemirror3 can only be applied to a textarea element');
-			}
+      if (elm[0].type !== 'textarea') {
+        throw new Error('uiCodemirror3 can only be applied to a textarea element');
+      }
 
-			options = uiConfig.codemirror || {};
-			opts = angular.extend({}, options, scope.$eval(attrs.uiCodemirror));
+      options = uiConfig.codemirror || {};
+      opts = angular.extend({}, options, scope.$eval(attrs.uiCodemirror));
 
-			onChange = function (aEvent) {
-				return function (instance, changeObj) {
-					var newValue = instance.getValue();
-					if (newValue !== ngModel.$viewValue) {
-						ngModel.$setViewValue(newValue);
-						scope.$apply();
-					}
-					if (typeof aEvent === "function")
-						aEvent(instance, changeObj);
-				};
-			};
+      onChange = function (aEvent) {
+        return function (instance, changeObj) {
+          var newValue = instance.getValue();
+          if (newValue !== ngModel.$viewValue) {
+            ngModel.$setViewValue(newValue);
+            scope.$apply();
+          }
+          if (typeof aEvent === "function")
+            aEvent(instance, changeObj);
+        };
+      };
 
-			deferCodeMirror = function () {
-				codeMirror = CodeMirror.fromTextArea(elm[0], opts);
-				codeMirror.on("change", onChange(opts.onChange));
+      deferCodeMirror = function () {
+        codeMirror = CodeMirror.fromTextArea(elm[0], opts);
+        codeMirror.on("change", onChange(opts.onChange));
 
-				for (var i = 0, n = events.length, aEvent; i < n; ++i) {
-					aEvent = opts["on" + events[i].charAt(0).toUpperCase() + events[i].slice(1)];
-					if (aEvent === void 0) continue;
-					if (typeof aEvent !== "function") continue;
-					codeMirror.on(events[i], aEvent);
-				}
+        for (var i = 0, n = events.length, aEvent; i < n; ++i) {
+          aEvent = opts["on" + events[i].charAt(0).toUpperCase() + events[i].slice(1)];
+          if (aEvent === void 0) continue;
+          if (typeof aEvent !== "function") continue;
+          codeMirror.on(events[i], aEvent);
+        }
 
-				// CodeMirror expects a string, so make sure it gets one.
-				// This does not change the model.
-				ngModel.$formatters.push(function (value) {
-					if (angular.isUndefined(value) || value === null) {
-						return '';
-					}
-					else if (angular.isObject(value) || angular.isArray(value)) {
-						throw new Error('ui-codemirror cannot use an object or an array as a model');
-					}
-					return value;
-				});
+        // CodeMirror expects a string, so make sure it gets one.
+        // This does not change the model.
+        ngModel.$formatters.push(function (value) {
+          if (angular.isUndefined(value) || value === null) {
+            return '';
+          }
+          else if (angular.isObject(value) || angular.isArray(value)) {
+            throw new Error('ui-codemirror cannot use an object or an array as a model');
+          }
+          return value;
+        });
 
-				// Override the ngModelController $render method, which is what gets called when the model is updated.
-				// This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
-				ngModel.$render = function () {
-					codeMirror.setValue(ngModel.$viewValue);
-				};
+        // Override the ngModelController $render method, which is what gets called when the model is updated.
+        // This takes care of the synchronizing the codeMirror element with the underlying model, in the case that it is changed by something else.
+        ngModel.$render = function () {
+          codeMirror.setValue(ngModel.$viewValue);
+        };
 
-				// Watch ui-refresh and refresh the directive
-				if (attrs.uiRefresh) {
-					scope.$watch(attrs.uiRefresh, function(newVal, oldVal){
-						// Skip the initial watch firing
-						if (newVal !== oldVal)
-							$timeout(codeMirror.refresh);
-					});
-				}
-			};
+        // Watch ui-refresh and refresh the directive
+        if (attrs.uiRefresh) {
+          scope.$watch(attrs.uiRefresh, function (newVal, oldVal) {
+            // Skip the initial watch firing
+            if (newVal !== oldVal)
+              $timeout(codeMirror.refresh);
+          });
+        }
+      };
 
-			$timeout(deferCodeMirror);
+      $timeout(deferCodeMirror);
 
-		}
-	};
+    }
+  };
 }]);
 
 /*
@@ -217,9 +217,9 @@ angular.module('ui.directives').directive('uiCurrency', ['ui.config', 'currencyF
       renderview = function (viewvalue) {
         var num;
         num = viewvalue * 1;
-        element.toggleClass(opts.pos, (num > 0) );
-        element.toggleClass(opts.neg, (num < 0) );
-        element.toggleClass(opts.zero, (num === 0) );
+        element.toggleClass(opts.pos, (num > 0));
+        element.toggleClass(opts.neg, (num < 0));
+        element.toggleClass(opts.zero, (num === 0));
         if (viewvalue === '') {
           element.text('');
         } else {
@@ -248,107 +248,107 @@ angular.module('ui.directives').directive('uiCurrency', ['ui.config', 'currencyF
 
 angular.module('ui.directives')
 
-.directive('uiDate', ['ui.config', function (uiConfig) {
-  'use strict';
-  var options;
-  options = {};
-  if (angular.isObject(uiConfig.date)) {
-    angular.extend(options, uiConfig.date);
-  }
-  return {
-    require:'?ngModel',
-    link:function (scope, element, attrs, controller) {
-      var getOptions = function () {
-        return angular.extend({}, uiConfig.date, scope.$eval(attrs.uiDate));
-      };
-      var initDateWidget = function () {
-        var opts = getOptions();
+  .directive('uiDate', ['ui.config', function (uiConfig) {
+    'use strict';
+    var options;
+    options = {};
+    if (angular.isObject(uiConfig.date)) {
+      angular.extend(options, uiConfig.date);
+    }
+    return {
+      require: '?ngModel',
+      link: function (scope, element, attrs, controller) {
+        var getOptions = function () {
+          return angular.extend({}, uiConfig.date, scope.$eval(attrs.uiDate));
+        };
+        var initDateWidget = function () {
+          var opts = getOptions();
 
-        // If we have a controller (i.e. ngModelController) then wire it up
-        if (controller) {
-          var updateModel = function () {
-            scope.$apply(function () {
-              var date = element.datepicker("getDate");
-              element.datepicker("setDate", element.val());
-              controller.$setViewValue(date);
-              element.blur();
-            });
-          };
-          if (opts.onSelect) {
-            // Caller has specified onSelect, so call this as well as updating the model
-            var userHandler = opts.onSelect;
-            opts.onSelect = function (value, picker) {
-              updateModel();
-              scope.$apply(function() {
-                userHandler(value, picker);
+          // If we have a controller (i.e. ngModelController) then wire it up
+          if (controller) {
+            var updateModel = function () {
+              scope.$apply(function () {
+                var date = element.datepicker("getDate");
+                element.datepicker("setDate", element.val());
+                controller.$setViewValue(date);
+                element.blur();
               });
             };
-          } else {
-            // No onSelect already specified so just update the model
-            opts.onSelect = updateModel;
-          }
-          // In case the user changes the text directly in the input box
-          element.bind('change', updateModel);
-
-          // Update the date picker when the model changes
-          controller.$render = function () {
-            var date = controller.$viewValue;
-            if ( angular.isDefined(date) && date !== null && !angular.isDate(date) ) {
-              throw new Error('ng-Model value must be a Date object - currently it is a ' + typeof date + ' - use ui-date-format to convert it from a string');
+            if (opts.onSelect) {
+              // Caller has specified onSelect, so call this as well as updating the model
+              var userHandler = opts.onSelect;
+              opts.onSelect = function (value, picker) {
+                updateModel();
+                scope.$apply(function () {
+                  userHandler(value, picker);
+                });
+              };
+            } else {
+              // No onSelect already specified so just update the model
+              opts.onSelect = updateModel;
             }
-            element.datepicker("setDate", date);
-          };
-        }
-        // If we don't destroy the old one it doesn't update properly when the config changes
-        element.datepicker('destroy');
-        // Create the new datepicker widget
-        element.datepicker(opts);
-        if ( controller ) {
-          // Force a render to override whatever is in the input text box
-          controller.$render();
-        }
-      };
-      // Watch for changes to the directives options
-      scope.$watch(getOptions, initDateWidget, true);
-    }
-  };
-}
-])
+            // In case the user changes the text directly in the input box
+            element.bind('change', updateModel);
 
-.directive('uiDateFormat', ['ui.config', function(uiConfig) {
-  var directive = {
-    require:'ngModel',
-    link: function(scope, element, attrs, modelCtrl) {
-      var dateFormat = attrs.uiDateFormat || uiConfig.dateFormat;
-      if ( dateFormat ) {
-        // Use the datepicker with the attribute value as the dateFormat string to convert to and from a string
-        modelCtrl.$formatters.push(function(value) {
-          if (angular.isString(value) ) {
-            return $.datepicker.parseDate(dateFormat, value);
+            // Update the date picker when the model changes
+            controller.$render = function () {
+              var date = controller.$viewValue;
+//            if ( angular.isDefined(date) && date !== null && !angular.isDate(date) ) {
+//              throw new Error('ng-Model value must be a Date object - currently it is a ' + typeof date + ' - use ui-date-format to convert it from a string');
+//            }
+//            element.datepicker("setDate", date);
+            };
           }
-        });
-        modelCtrl.$parsers.push(function(value){
-          if (value) {
-            return $.datepicker.formatDate(dateFormat, value);
+          // If we don't destroy the old one it doesn't update properly when the config changes
+          element.datepicker('destroy');
+          // Create the new datepicker widget
+          element.datepicker(opts);
+          if (controller) {
+            // Force a render to override whatever is in the input text box
+            controller.$render();
           }
-        });
-      } else {
-        // Default to ISO formatting
-        modelCtrl.$formatters.push(function(value) {
-          if (angular.isString(value) ) {
-            return new Date(value);
-          }
-        });
-        modelCtrl.$parsers.push(function(value){
-          if (value) {
-            return value.toISOString();
-          }
-        });
+        };
+        // Watch for changes to the directives options
+        scope.$watch(getOptions, initDateWidget, true);
       }
-    }
-  };
-  return directive;
-}]);
+    };
+  }
+  ])
+
+  .directive('uiDateFormat', ['ui.config', function (uiConfig) {
+    var directive = {
+      require: 'ngModel',
+      link: function (scope, element, attrs, modelCtrl) {
+        var dateFormat = attrs.uiDateFormat || uiConfig.dateFormat;
+        if (dateFormat) {
+          // Use the datepicker with the attribute value as the dateFormat string to convert to and from a string
+          modelCtrl.$formatters.push(function (value) {
+            if (angular.isString(value)) {
+              return $.datepicker.parseDate(dateFormat, value);
+            }
+          });
+          modelCtrl.$parsers.push(function (value) {
+            if (value) {
+              return $.datepicker.formatDate(dateFormat, value);
+            }
+          });
+        } else {
+          // Default to ISO formatting
+          modelCtrl.$formatters.push(function (value) {
+            if (angular.isString(value)) {
+              return new Date(value);
+            }
+          });
+          modelCtrl.$parsers.push(function (value) {
+            if (value) {
+              return value.toISOString();
+            }
+          });
+        }
+      }
+    };
+    return directive;
+  }]);
 
 /**
  * General-purpose Event binding. Bind any event not natively supported by Angular
@@ -394,7 +394,7 @@ angular.module('ui.directives').directive('uiIf', [function () {
 
         var childElement;
         var childScope;
- 
+
         scope.$watch(attr['uiIf'], function (newValue) {
           if (childElement) {
             childElement.remove();
@@ -458,21 +458,21 @@ angular.module('ui.directives').directive('uiJq', ['ui.config', '$timeout', func
         }
         // If change compatibility is enabled, the form input's "change" event will trigger an "input" event
         if (attrs.ngModel && elm.is('select,input,textarea')) {
-          elm.on('change', function() {
+          elm.on('change', function () {
             elm.trigger('input');
           });
         }
 
         // Call jQuery method and pass relevant options
         function callPlugin() {
-          $timeout(function() {
+          $timeout(function () {
             elm[attrs.uiJq].apply(elm, linkOptions);
           }, 0, false);
         }
 
         // If ui-refresh is used, re-fire the the method upon every change
         if (attrs.uiRefresh) {
-          scope.$watch(attrs.uiRefresh, function(newVal) {
+          scope.$watch(attrs.uiRefresh, function (newVal) {
             callPlugin();
           });
         }
@@ -482,7 +482,7 @@ angular.module('ui.directives').directive('uiJq', ['ui.config', '$timeout', func
   };
 }]);
 
-angular.module('ui.directives').factory('keypressHelper', ['$parse', function keypress($parse){
+angular.module('ui.directives').factory('keypressHelper', ['$parse', function keypress($parse) {
   var keysByCode = {
     8: 'backspace',
     9: 'tab',
@@ -505,16 +505,16 @@ angular.module('ui.directives').factory('keypressHelper', ['$parse', function ke
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  return function(mode, scope, elm, attrs) {
+  return function (mode, scope, elm, attrs) {
     var params, combinations = [];
-    params = scope.$eval(attrs['ui'+capitaliseFirstLetter(mode)]);
+    params = scope.$eval(attrs['ui' + capitaliseFirstLetter(mode)]);
 
     // Prepare combinations for simple checking
     angular.forEach(params, function (v, k) {
       var combination, expression;
       expression = $parse(v);
 
-      angular.forEach(k.split(' '), function(variation) {
+      angular.forEach(k.split(' '), function (variation) {
         combination = {
           expression: expression,
           keys: {}
@@ -550,10 +550,10 @@ angular.module('ui.directives').factory('keypressHelper', ['$parse', function ke
 
         if (
           mainKeyPressed &&
-          ( altRequired == altPressed ) &&
-          ( ctrlRequired == ctrlPressed ) &&
-          ( shiftRequired == shiftPressed )
-        ) {
+            ( altRequired == altPressed ) &&
+            ( ctrlRequired == ctrlPressed ) &&
+            ( shiftRequired == shiftPressed )
+          ) {
           // Run the function
           scope.$apply(function () {
             combination.expression(scope, { '$event': event });
@@ -569,7 +569,7 @@ angular.module('ui.directives').factory('keypressHelper', ['$parse', function ke
  * @param hash {mixed} keyBindings Can be an object or string where keybinding expression of keys or keys combinations and AngularJS Exspressions are set. Object syntax: "{ keys1: expression1 [, keys2: expression2 [ , ... ]]}". String syntax: ""expression1 on keys1 [ and expression2 on keys2 [ and ... ]]"". Expression is an AngularJS Expression, and key(s) are dash-separated combinations of keys and modifiers (one or many, if any. Order does not matter). Supported modifiers are 'ctrl', 'shift', 'alt' and key can be used either via its keyCode (13 for Return) or name. Named keys are 'backspace', 'tab', 'enter', 'esc', 'space', 'pageup', 'pagedown', 'end', 'home', 'left', 'up', 'right', 'down', 'insertProgramProductISA', 'delete'.
  * @example <input ui-keypress="{enter:'x = 1', 'ctrl-shift-space':'foo()', 'shift-13':'bar()'}" /> <input ui-keypress="foo = 2 on ctrl-13 and bar('hello') on shift-esc" />
  **/
-angular.module('ui.directives').directive('uiKeydown', ['keypressHelper', function(keypressHelper){
+angular.module('ui.directives').directive('uiKeydown', ['keypressHelper', function (keypressHelper) {
   return {
     link: function (scope, elm, attrs) {
       keypressHelper('keydown', scope, elm, attrs);
@@ -577,7 +577,7 @@ angular.module('ui.directives').directive('uiKeydown', ['keypressHelper', functi
   };
 }]);
 
-angular.module('ui.directives').directive('uiKeypress', ['keypressHelper', function(keypressHelper){
+angular.module('ui.directives').directive('uiKeypress', ['keypressHelper', function (keypressHelper) {
   return {
     link: function (scope, elm, attrs) {
       keypressHelper('keypress', scope, elm, attrs);
@@ -585,7 +585,7 @@ angular.module('ui.directives').directive('uiKeypress', ['keypressHelper', funct
   };
 }]);
 
-angular.module('ui.directives').directive('uiKeyup', ['keypressHelper', function(keypressHelper){
+angular.module('ui.directives').directive('uiKeyup', ['keypressHelper', function (keypressHelper) {
   return {
     link: function (scope, elm, attrs) {
       keypressHelper('keyup', scope, elm, attrs);
@@ -723,8 +723,8 @@ angular.module('ui.directives').directive('uiKeyup', ['keypressHelper', function
 angular.module('ui.directives').directive('uiMask', [
   function () {
     return {
-      require:'ngModel',
-      link:function ($scope, element, attrs, controller) {
+      require: 'ngModel',
+      link: function ($scope, element, attrs, controller) {
 
         /* We override the render method to run the jQuery mask plugin
          */
@@ -739,7 +739,7 @@ angular.module('ui.directives').directive('uiMask', [
         controller.$parsers.push(function (value) {
           //the second check (or) is only needed due to the fact that element.isMaskValid() will keep returning undefined
           //until there was at least one key event
-          var isValid = element.isMaskValid() || angular.isUndefined(element.isMaskValid()) && element.val().length>0;
+          var isValid = element.isMaskValid() || angular.isUndefined(element.isMaskValid()) && element.val().length > 0;
           controller.$setValidity('mask', isValid);
           return isValid ? value : undefined;
         });
@@ -762,7 +762,7 @@ angular.module('ui.directives').directive('uiMask', [
 angular.module('ui.directives').directive('uiReset', ['ui.config', function (uiConfig) {
   var resetValue = null;
   if (uiConfig.reset !== undefined)
-      resetValue = uiConfig.reset;
+    resetValue = uiConfig.reset;
   return {
     require: 'ngModel',
     link: function (scope, elm, attrs, ctrl) {
@@ -789,7 +789,7 @@ angular.module('ui.directives').directive('uiReset', ['ui.config', function (uiC
 angular.module('ui.directives').directive('uiRoute', ['$location', '$parse', function ($location, $parse) {
   return {
     restrict: 'AC',
-    compile: function(tElement, tAttrs) {
+    compile: function (tElement, tAttrs) {
       var useProperty;
       if (tAttrs.uiRoute) {
         useProperty = 'uiRoute';
@@ -813,6 +813,7 @@ angular.module('ui.directives').directive('uiRoute', ['$location', '$parse', fun
           };
           watcher();
         }
+
         // Used by uiRoute
         function regexWatcher(newVal) {
           if ((hash = newVal.indexOf('#')) > -1)
@@ -844,7 +845,7 @@ angular.module('ui.directives').directive('uiRoute', ['$location', '$parse', fun
             staticWatcher(attrs.href);
         }
 
-        $scope.$on('$routeChangeSuccess', function(){
+        $scope.$on('$routeChangeSuccess', function () {
           watcher();
         });
       }
@@ -997,7 +998,7 @@ angular.module('ui.directives').directive('uiSelect2', ['ui.config', '$timeout',
         });
 
         if (attrs.ngMultiple) {
-          scope.$watch(attrs.ngMultiple, function(newVal) {
+          scope.$watch(attrs.ngMultiple, function (newVal) {
             elm.select2(opts);
           });
         }
@@ -1026,16 +1027,16 @@ angular.module('ui.directives').directive('uiSelect2', ['ui.config', '$timeout',
  * @param expression {boolean} evaluated expression to determine if the class should be added
  */
 angular.module('ui.directives').directive('uiShow', [function () {
-  return function (scope, elm, attrs) {
-    scope.$watch(attrs.uiShow, function (newVal, oldVal) {
-      if (newVal) {
-        elm.addClass('ui-show');
-      } else {
-        elm.removeClass('ui-show');
-      }
-    });
-  };
-}])
+    return function (scope, elm, attrs) {
+      scope.$watch(attrs.uiShow, function (newVal, oldVal) {
+        if (newVal) {
+          elm.addClass('ui-show');
+        } else {
+          elm.removeClass('ui-show');
+        }
+      });
+    };
+  }])
 
 /**
  * uiHide Directive
@@ -1046,16 +1047,16 @@ angular.module('ui.directives').directive('uiShow', [function () {
  * @param expression {boolean} evaluated expression to determine if the class should be added
  */
   .directive('uiHide', [function () {
-  return function (scope, elm, attrs) {
-    scope.$watch(attrs.uiHide, function (newVal, oldVal) {
-      if (newVal) {
-        elm.addClass('ui-hide');
-      } else {
-        elm.removeClass('ui-hide');
-      }
-    });
-  };
-}])
+    return function (scope, elm, attrs) {
+      scope.$watch(attrs.uiHide, function (newVal, oldVal) {
+        if (newVal) {
+          elm.addClass('ui-hide');
+        } else {
+          elm.removeClass('ui-hide');
+        }
+      });
+    };
+  }])
 
 /**
  * uiToggle Directive
@@ -1067,63 +1068,63 @@ angular.module('ui.directives').directive('uiShow', [function () {
  * @param expression {boolean} evaluated expression to determine if the class should be added
  */
   .directive('uiToggle', [function () {
-  return function (scope, elm, attrs) {
-    scope.$watch(attrs.uiToggle, function (newVal, oldVal) {
-      if (newVal) {
-        elm.removeClass('ui-hide').addClass('ui-show');
-      } else {
-        elm.removeClass('ui-show').addClass('ui-hide');
-      }
-    });
-  };
-}]);
+    return function (scope, elm, attrs) {
+      scope.$watch(attrs.uiToggle, function (newVal, oldVal) {
+        if (newVal) {
+          elm.removeClass('ui-hide').addClass('ui-show');
+        } else {
+          elm.removeClass('ui-show').addClass('ui-hide');
+        }
+      });
+    };
+  }]);
 
 /*
  jQuery UI Sortable plugin wrapper
 
  @param [ui-sortable] {object} Options to pass to $.fn.sortable() merged onto ui.config
-*/
+ */
 angular.module('ui.directives').directive('uiSortable', [
-  'ui.config', function(uiConfig) {
+  'ui.config', function (uiConfig) {
     return {
       require: '?ngModel',
-      link: function(scope, element, attrs, ngModel) {
+      link: function (scope, element, attrs, ngModel) {
         var onReceive, onRemove, onStart, onUpdate, opts, _receive, _remove, _start, _update;
 
         opts = angular.extend({}, uiConfig.sortable, scope.$eval(attrs.uiSortable));
 
         if (ngModel) {
 
-          ngModel.$render = function() {
-            element.sortable( "refresh" );
+          ngModel.$render = function () {
+            element.sortable("refresh");
           };
 
-          onStart = function(e, ui) {
+          onStart = function (e, ui) {
             // Save position of dragged item
             ui.item.sortable = { index: ui.item.index() };
           };
 
-          onUpdate = function(e, ui) {
+          onUpdate = function (e, ui) {
             // For some reason the reference to ngModel in stop() is wrong
             ui.item.sortable.resort = ngModel;
           };
 
-          onReceive = function(e, ui) {
+          onReceive = function (e, ui) {
             ui.item.sortable.relocate = true;
             // added item to array into correct position and set up flag
             ngModel.$modelValue.splice(ui.item.index(), 0, ui.item.sortable.moved);
           };
 
-          onRemove = function(e, ui) {
+          onRemove = function (e, ui) {
             // copy data into item
             if (ngModel.$modelValue.length === 1) {
               ui.item.sortable.moved = ngModel.$modelValue.splice(0, 1)[0];
             } else {
-              ui.item.sortable.moved =  ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
+              ui.item.sortable.moved = ngModel.$modelValue.splice(ui.item.sortable.index, 1)[0];
             }
           };
 
-          onStop = function(e, ui) {
+          onStop = function (e, ui) {
             // digest all prepared changes
             if (ui.item.sortable.resort && !ui.item.sortable.relocate) {
 
@@ -1145,7 +1146,7 @@ angular.module('ui.directives').directive('uiSortable', [
 
           // If user provided 'start' callback compose it with onStart function
           _start = opts.start;
-          opts.start = function(e, ui) {
+          opts.start = function (e, ui) {
             onStart(e, ui);
             if (typeof _start === "function")
               _start(e, ui);
@@ -1153,7 +1154,7 @@ angular.module('ui.directives').directive('uiSortable', [
 
           // If user provided 'start' callback compose it with onStart function
           _stop = opts.stop;
-          opts.stop = function(e, ui) {
+          opts.stop = function (e, ui) {
             onStop(e, ui);
             if (typeof _stop === "function")
               _stop(e, ui);
@@ -1161,7 +1162,7 @@ angular.module('ui.directives').directive('uiSortable', [
 
           // If user provided 'update' callback compose it with onUpdate function
           _update = opts.update;
-          opts.update = function(e, ui) {
+          opts.update = function (e, ui) {
             onUpdate(e, ui);
             if (typeof _update === "function")
               _update(e, ui);
@@ -1169,7 +1170,7 @@ angular.module('ui.directives').directive('uiSortable', [
 
           // If user provided 'receive' callback compose it with onReceive function
           _receive = opts.receive;
-          opts.receive = function(e, ui) {
+          opts.receive = function (e, ui) {
             onReceive(e, ui);
             if (typeof _receive === "function")
               _receive(e, ui);
@@ -1177,7 +1178,7 @@ angular.module('ui.directives').directive('uiSortable', [
 
           // If user provided 'remove' callback compose it with onRemove function
           _remove = opts.remove;
-          opts.remove = function(e, ui) {
+          opts.remove = function (e, ui) {
             onRemove(e, ui);
             if (typeof _remove === "function")
               _remove(e, ui);
@@ -1278,7 +1279,7 @@ angular.module('ui.directives').directive('uiValidate', function () {
 
       angular.forEach(validateExpr, function (expression, key) {
         validateFn = function (valueToValidate) {
-          if (scope.$eval(expression, { '$value' : valueToValidate })) {
+          if (scope.$eval(expression, { '$value': valueToValidate })) {
             ctrl.$setValidity(key, true);
             return valueToValidate;
           } else {
@@ -1295,14 +1296,14 @@ angular.module('ui.directives').directive('uiValidate', function () {
       if (attrs.uiValidateWatch) {
         watch = scope.$eval(attrs.uiValidateWatch);
         if (angular.isString(watch)) {
-          scope.$watch(watch, function(){
-            angular.forEach(validators, function(validatorFn, key){
+          scope.$watch(watch, function () {
+            angular.forEach(validators, function (validatorFn, key) {
               validatorFn(ctrl.$modelValue);
             });
           });
         } else {
-          angular.forEach(watch, function(expression, key){
-            scope.$watch(expression, function(){
+          angular.forEach(watch, function (expression, key) {
+            scope.$watch(expression, function () {
               validators[key](ctrl.$modelValue);
             });
           });
@@ -1326,8 +1327,8 @@ angular.module('ui.directives').directive('uiValidate', function () {
  * @example: 'Records $0 to $1 out of $2 total'.format(['10', '20', '3000'])
  * @example: '$0 agrees to all mentions $0 makes in the event that $0 hits a tree while $0 is driving drunk'.format('Bob')
  */
-angular.module('ui.filters').filter('format', function(){
-  return function(value, replace) {
+angular.module('ui.filters').filter('format', function () {
+  return function (value, replace) {
     if (!value) {
       return value;
     }
@@ -1340,8 +1341,8 @@ angular.module('ui.filters').filter('format', function(){
     }
     token = angular.isArray(replace) && '$' || ':';
 
-    angular.forEach(replace, function(value, key){
-      target = target.split(token+key).join(value);
+    angular.forEach(replace, function (value, key) {
+      target = target.split(token + key).join(value);
     });
     return target;
   };

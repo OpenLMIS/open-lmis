@@ -26,6 +26,7 @@ import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionPermissionService;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,17 +52,22 @@ public class FacilityProgramDateRangeSearchTest {
   @Mock
   RequisitionPermissionService requisitionPermissionService;
 
-  Date dateRangeStart, dateRangeEnd;
+  String stringRangeStartDate, stringDateEndDate;
   Long facilityId, programId, userId;
-
+  Date dateRangeStart, dateRangeEnd;
   Facility facility = new Facility(facilityId);
   Program program = new Program(programId);
   FacilityProgramDateRangeSearch facilityProgramDateRangeSearch;
 
   @Before
   public void setUp() throws Exception {
-    dateRangeStart = new Date();
-    dateRangeEnd = new Date();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+    stringRangeStartDate = dateFormat.format(new Date());
+    stringDateEndDate = dateFormat.format(new Date());
+    dateRangeStart = dateFormat.parse(stringRangeStartDate);
+    dateRangeEnd = dateFormat.parse(stringDateEndDate);
+
     facilityId = 1L;
     programId = 1L;
     userId = 100L;
@@ -71,8 +77,8 @@ public class FacilityProgramDateRangeSearchTest {
     RequisitionSearchCriteria criteria = make(a(defaultSearchCriteria,
       with(facilityIdProperty, facilityId),
       with(programIdProperty, programId),
-      with(startDate, dateRangeStart),
-      with(endDate, dateRangeEnd)));
+      with(startDate, stringRangeStartDate),
+      with(endDate, stringDateEndDate)));
     criteria.setUserId(userId);
 
     facilityProgramDateRangeSearch = new FacilityProgramDateRangeSearch(criteria,

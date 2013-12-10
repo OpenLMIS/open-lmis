@@ -11,12 +11,13 @@
 package org.openlmis.order.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.EDIFileColumn;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class OrderFileColumn extends EDIFileColumn{
 
   private Boolean openLmisField;

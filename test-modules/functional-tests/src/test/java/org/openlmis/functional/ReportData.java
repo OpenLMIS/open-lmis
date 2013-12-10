@@ -16,14 +16,9 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.WebElement;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.File;
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 

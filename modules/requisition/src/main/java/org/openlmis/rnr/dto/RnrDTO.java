@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.rnr.domain.Rnr;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,10 +36,10 @@ public class RnrDTO {
   private String facilityCode;
   private String agentCode;
   private boolean emergency;
-  private Date submittedDate;
-  private Date modifiedDate;
-  private Date periodStartDate;
-  private Date periodEndDate;
+  private String stringSubmittedDate;
+  private String stringModifiedDate;
+  private String stringPeriodStartDate;
+  private String stringPeriodEndDate;
   private String periodName;
   private Long facilityId;
   private String supplyingDepotName;
@@ -86,12 +87,18 @@ public class RnrDTO {
     rnrDTO.programName = requisition.getProgram().getName();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
-    rnrDTO.submittedDate = requisition.getSubmittedDate();
-    rnrDTO.modifiedDate = requisition.getModifiedDate();
-    rnrDTO.periodStartDate = requisition.getPeriod().getStartDate();
-    rnrDTO.periodEndDate = requisition.getPeriod().getEndDate();
+
+    rnrDTO.stringSubmittedDate = formatDate(requisition.getSubmittedDate());
+    rnrDTO.stringModifiedDate = formatDate(requisition.getModifiedDate());
+    rnrDTO.stringPeriodStartDate = formatDate(requisition.getPeriod().getStartDate());
+    rnrDTO.stringPeriodEndDate = formatDate(requisition.getPeriod().getEndDate());
+
     rnrDTO.emergency = requisition.isEmergency();
     return rnrDTO;
   }
 
+  private static String formatDate(Date date) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    return date == null ? null : simpleDateFormat.format(date);
+  }
 }

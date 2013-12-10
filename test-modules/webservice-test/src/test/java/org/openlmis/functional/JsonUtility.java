@@ -73,11 +73,11 @@ public class JsonUtility extends TestCaseHelper {
     client.createContext();
 
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
-
+    reportFromJson.setApproverName("Dummy");
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(quantityApproved);
 
-    client.SendJSON(getJsonStringFor(reportFromJson),
+     client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
         "PUT",
         "commTrack",

@@ -22,14 +22,13 @@ import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static org.openlmis.UiUtils.HttpClient.POST;
 
 public class ApproveRequisitionTest extends JsonUtility {
 
   public static final String FULL_JSON_APPROVE_TXT_FILE_NAME = "ReportJsonApprove.txt";
   public static final String FULL_JSON_MULTIPLE_PRODUCTS_APPROVE_TXT_FILE_NAME = "ReportJsonMultipleProductsApprove.txt";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -37,13 +36,13 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testApproveRequisitionValidRnR() throws Exception {
     HttpClient client = new HttpClient();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
@@ -56,6 +55,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -77,7 +77,7 @@ public class ApproveRequisitionTest extends JsonUtility {
   }
 
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionUnauthorizedAccess() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -91,6 +91,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve", "PUT",
@@ -100,7 +101,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(401, responseEntity.getStatus());
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProductNotAvailableInSystem() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -114,6 +115,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P1000");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -127,7 +129,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product codes [P1000]\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProductNotAvailableInRnR() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -141,6 +143,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P11");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -154,7 +157,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Invalid product codes [P11]\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProgramProductsInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -168,6 +171,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -183,7 +187,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProgramInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -197,6 +201,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -212,7 +217,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateActiveStatusOfProgram("HIV", true);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionProductInactive() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -226,6 +231,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -241,7 +247,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionNotVirtualFacility() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -253,6 +259,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
@@ -265,7 +272,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Approval not allowed\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionInvalidRequisitionId() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -278,6 +285,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity = client.SendJSON(getJsonStringFor(reportFromJson),
         "http://localhost:9091/rest-api/requisitions/" + requisitionId + "/approve", "PUT",
@@ -288,7 +296,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Requisition Not Found\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionBlankQuantityApproved() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -301,6 +309,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(
@@ -316,7 +325,35 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
   }
 
-  @Test(groups = {"webservice"}, dependsOnMethods = {"testApproveRequisitionValidRnR"})
+  @Test(groups = {"webservice"})
+  public void testApproveRequisitionBlankQuantityApproverName() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
+
+    submitRequisition("commTrack1", "HIV");
+    Long id = (long) dbWrapper.getMaxRnrID();
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", "commTrack", "HIV");
+
+    Report reportFromJson = readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(
+        getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
+
+    String response = responseEntity.getResponse();
+    client.SendJSON("", "http://localhost:9091/", "GET", "", "");
+    assertEquals(400, responseEntity.getStatus());
+    assertEquals("{\"error\":\"Missing mandatory fields\"}", response);
+  }
+
+  @Test(groups = {"webservice"})
   public void testApproveRequisitionOnIncorrectRequisitionStatus() throws Exception {
     HttpClient client = new HttpClient();
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
@@ -329,6 +366,7 @@ public class ApproveRequisitionTest extends JsonUtility {
 
     reportFromJson.getProducts().get(0).setProductCode("P10");
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -359,6 +397,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     reportFromJson.getProducts().get(0).setQuantityApproved(65);
     reportFromJson.getProducts().get(1).setProductCode("P11");
     reportFromJson.getProducts().get(1).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
 
     ResponseEntity responseEntity =
         client.SendJSON(getJsonStringFor(reportFromJson),
@@ -372,6 +411,37 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(400, responseEntity.getStatus());
     assertTrue(response.contains("{\"error\":\"Products do not match with requisition\"}"));
     assertEquals("AUTHORIZED", dbWrapper.getRequisitionStatus(id));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testApproveRequisitionValidRnRWithRemarksAndRnaSubmissionThroughAPI() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+    createVirtualFacilityThroughApi("V100","F10");
+    dbWrapper.insertProcessingPeriod("Current", "current", "2013-05-01","2016-01-01",1,"M");
+    dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
+    submitRnRThroughApi("V100","HIV","P10",1,10,1,4,0,2);
+    Long id = (long) dbWrapper.getMaxRnrID();
+
+    Report reportFromJson = JsonUtility.readObjectFromFile(FULL_JSON_APPROVE_TXT_FILE_NAME, Report.class);
+    reportFromJson.getProducts().get(0).setProductCode("P10");
+    reportFromJson.getProducts().get(0).setQuantityApproved(65);
+    reportFromJson.setApproverName("some random name");
+    reportFromJson.getProducts().get(0).setRemarks("123");
+
+    ResponseEntity responseEntity =
+      client.SendJSON(getJsonStringFor(reportFromJson),
+        "http://localhost:9091/rest-api/requisitions/" + id + "/approve",
+        "PUT",
+        "commTrack",
+        "Admin123");
+
+    String response = responseEntity.getResponse();
+
+    assertEquals(200, responseEntity.getStatus());
+    assertTrue(response.contains("success\":\"R&R approved successfully!"));
+    assertEquals("APPROVED", dbWrapper.getRequisitionStatus(id));
+    assertEquals("123",dbWrapper.getRequisitionLineItemFieldValue(id,"remarks","P10"));
   }
 
   @Test(groups = {"webservice"})

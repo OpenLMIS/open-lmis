@@ -172,8 +172,8 @@ function InitiateRnrController($scope, $location, Requisitions, PeriodsForFacili
     showFilter: false,
     columnDefs: [
       {field: 'name', displayName: messageService.get("label.periods")},
-      {field: 'startDate', displayName: messageService.get("period.header.startDate"), cellFilter: "date:'dd/MM/yyyy'" },
-      {field: 'endDate', displayName: messageService.get("period.header.endDate"), cellFilter: "date:'dd/MM/yyyy'" },
+      {field: 'stringStartDate', displayName: messageService.get("period.header.startDate")},
+      {field: 'stringEndDate', displayName: messageService.get("period.header.endDate")},
       {field: 'rnrStatus', displayName: messageService.get("label.rnr.status") },
       {field: '', displayName: '', cellTemplate: getPeriodSpecificButton('row.entity.activeForRnr')}
     ]

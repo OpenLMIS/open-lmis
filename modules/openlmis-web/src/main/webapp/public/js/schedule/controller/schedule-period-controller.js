@@ -8,51 +8,52 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function SchedulePeriodController($scope, $routeParams, Periods, schedule, periods, Period) {
+function SchedulePeriodController($scope, $routeParams, Periods, schedule, Period) {
 
-  $scope.newPeriod = {};
-  $scope.oneDay = 1000 * 60 * 60 * 24;
-  $scope.lastPeriodId = "";
+  ONE_DAY = 1000 * 60 * 60 * 24;
   $scope.schedule = schedule;
 
-  $scope.periodList = periods;
-
-  $scope.refreshEndDateOffset = function (startDateTime) {
-    $scope.endDateOffset = Math.ceil((startDateTime + $scope.oneDay - Date.now()) / $scope.oneDay);
-    $scope.newPeriod.endDate = undefined;
-  };
-
-  function resetNewPeriod(endDate) {
-    $scope.newPeriod = {};
-    $scope.newPeriod.startDate = new Date(endDate + 1000);
-    $scope.refreshEndDateOffset($scope.newPeriod.startDate.getTime());
+  function refreshPeriodList() {
+    Periods.get({scheduleId: $routeParams.id}, function (data) {
+      angular.extend($scope, {periodList: data.periods, nextStartDate: data.nextStartDate});
+      prepareNewPeriod();
+    }, function () {
+    });
   }
 
-  prepareNewPeriod();
+  function prepareNewPeriod() {
+    if ($scope.periodList.length === 0) {
+      $scope.newPeriod = {};
+      return;
+    }
+    $scope.newPeriod = {startDate: $scope.nextStartDate};
+    $scope.refreshEndDateOffset($scope.newPeriod.startDate);
+  }
 
-  $scope.updateEndDate = function () {
-    $scope.newPeriod.endDate = new Date($scope.newPeriod.endDate.getTime() + $scope.oneDay - 1000);
+  $scope.refreshEndDateOffset = function (startDate) {
+    $scope.endDateOffset = Math.ceil((new Date(startDate.split('-')).getTime() + ONE_DAY - Date.now()) / ONE_DAY);
   };
 
-  $scope.calculateDays = function (startTime, endTime) {
-    var startDate = new Date(startTime);
-    var endDate = new Date(endTime);
-    var days = Math.ceil(((endDate.getTime() - startDate.getTime()) / $scope.oneDay));
-    return days;
+  refreshPeriodList();
+
+  $scope.calculateDays = function (startDate, endDate) {
+    if (startDate && angular.isString(startDate) && startDate.indexOf('/') !== -1) {
+      startDate = startDate.split("/").reverse();
+    }
+    if (endDate && angular.isString(endDate) && endDate.indexOf('/') !== -1) {
+      endDate = endDate.split("/").reverse();
+    }
+    return Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / ONE_DAY) + 1;
   };
 
   $scope.calculateMonths = function () {
+    if (!($scope.newPeriod && $scope.newPeriod.startDate && $scope.newPeriod.endDate))
+      return undefined;
+
     $scope.newPeriod.numberOfMonths = Math.round($scope.calculateDays($scope.newPeriod.startDate, $scope.newPeriod.endDate) / 30);
     $scope.newPeriod.numberOfMonths = Math.max($scope.newPeriod.numberOfMonths, 1);
     return $scope.newPeriod.numberOfMonths;
   };
-
-  function prepareNewPeriod() {
-    if ($scope.periodList.length !== 0)
-      resetNewPeriod(new Date($scope.periodList[0].endDate).getTime());
-    else
-      $scope.newPeriod = {};
-  }
 
   function errorCallBack(data) {
     $scope.message = '';
@@ -64,18 +65,11 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, perio
     if ($scope.createPeriodForm.$invalid) {
       return;
     }
-
-    $scope.showErrorForCreate = false;
-
     Periods.save({scheduleId: $routeParams.id}, $scope.newPeriod, function (data) {
-      $scope.newPeriod.stringStartDate = $scope.newPeriod.startDate;
-      $scope.newPeriod.stringEndDate = $scope.newPeriod.endDate;
-
-      $scope.periodList.unshift($scope.newPeriod);
+      $scope.showErrorForCreate = false;
       $scope.message = data.success;
-      $scope.newPeriod.id = data.id;
       $scope.error = '';
-      prepareNewPeriod();
+      refreshPeriodList();
     }, errorCallBack);
   };
 
@@ -86,22 +80,11 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, perio
   };
 
   $scope.deletePeriod = function (periodId) {
-    $($scope.periodList).each(function (index, periodObject) {
-      if (periodObject.id == periodId) {
-        if (isStartDateValid(periodObject)) {
-          Period.remove({id: periodId}, function (data) {
-            $scope.periodList.splice(index, 1);
-            $scope.message = data.success;
-            $scope.error = '';
-
-            prepareNewPeriod();
-          }, errorCallBack);
-        } else {
-          $scope.message = '';
-          $scope.error = 'error.period.start.date';
-        }
-      }
-    });
+    Period.remove({id: periodId}, function (data) {
+      $scope.message = data.success;
+      $scope.error = '';
+      refreshPeriodList();
+    }, errorCallBack);
   };
 
   var isStartDateValid = function (periodToDelete) {
@@ -119,19 +102,6 @@ SchedulePeriodController.resolve = {
     $timeout(function () {
       Schedule.get({id: $route.current.params.id}, function (data) {
         deferred.resolve(data.schedule);
-      }, function () {
-        $location.path("/list");
-      });
-    });
-
-    return deferred.promise;
-  },
-
-  periods: function ($q, $timeout, $route, $location, Periods) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      Periods.get({scheduleId: $route.current.params.id}, function (data) {
-        deferred.resolve(data.periods);
       }, function () {
         $location.path("/list");
       });

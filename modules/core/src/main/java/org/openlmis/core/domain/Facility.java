@@ -16,6 +16,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -183,4 +185,15 @@ public class Facility extends BaseModel implements Importable {
 
     return active && enabled && parentFacility.active && parentFacility.enabled;
   }
+
+  @SuppressWarnings("unused")
+  public String getStringGoLiveDate() throws ParseException {
+    return this.goLiveDate == null ? null : new SimpleDateFormat("yyyy-MM-dd").format(this.goLiveDate);
+  }
+
+  @SuppressWarnings("unused")
+  public String getStringGoDownDate() throws ParseException {
+    return this.goDownDate == null ? null : new SimpleDateFormat("yyyy-MM-dd").format(this.goDownDate);
+  }
+
 }

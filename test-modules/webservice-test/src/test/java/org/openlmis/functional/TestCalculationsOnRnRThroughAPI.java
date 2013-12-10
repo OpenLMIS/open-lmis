@@ -31,7 +31,7 @@ import static org.openlmis.UiUtils.HttpClient.POST;
 
 public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
@@ -42,13 +42,13 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.updateProductFullSupplyFlag(true, "P11");
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testCalculationWhenReportingDaysUndefined() throws Exception {
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 10, 5, null, null, null, null);
     assertEquals(null, dbWrapper.getRequisitionLineItemFieldValue(id, "reportingDays", "P10"));
@@ -56,7 +56,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(id, "normalizedConsumption", "P10"), dbWrapper.getRequisitionLineItemFieldValue(id, "amc", "P10"));
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testCalculationWhenReportingDaysZero() throws Exception {
     submitRnRThroughApi("V10", "HIV", "P10", 10, 5, null, null, null, null);
     Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 3, null, null, null, null);
@@ -250,7 +250,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
-  public void testCalculationAsReportedInAPI() throws Exception {
+  public void testValuesSavedInDatabaseAreSameAsReportedInAPI() throws Exception {
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     Long id = submitRnRThroughApi("V10", "HIV", "P10", 10, 5, null, 5, null, null);
@@ -277,10 +277,10 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs1() throws Exception {
-    Long id = null;
+    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
 
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
@@ -294,7 +294,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition1WhenNumberOfMonthsIs2() throws Exception {
-    Long id = null;
+    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
 
@@ -315,7 +315,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs2() throws Exception {
-    Long id = null;
+    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.deleteCurrentPeriod();
@@ -324,7 +324,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 2, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 2, "M");
 
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
 
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
@@ -357,6 +357,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs3() throws Exception {
+    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.deleteCurrentPeriod();
@@ -364,8 +365,8 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 3, "M");
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 3, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 3, "M");
-    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 10);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, null, null, null);
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
@@ -379,7 +380,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForWhenNumberOfMonthsIs3AndPODCreatedDateIsChanged() throws Exception {
-    Long id = null;
+    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.deleteCurrentPeriod();
@@ -387,7 +388,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     dbWrapper.insertProcessingPeriod("p2", "2 period", "2013-4-1", "2013-5-31", 3, "M");
     dbWrapper.insertProcessingPeriod("p3", "3 period", "2013-6-1", "2013-7-31", 3, "M");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-08-1", "2016-01-30", 3, "M");
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, null, null, null);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, null, null, null);
     convertToOrderAndUpdatePOD("commTrack", "HIV", 5);
     dbWrapper.updateCreatedDateInPODLineItems("2010-02-11", id);
@@ -461,11 +462,11 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldWhenBeginningBalanceIsHidden() throws Exception {
-    Long id = null;
+    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "false", "beginningBalance");
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, 20, null, null);
+    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, 20, null, null);
     id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, 10, null, null);
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));

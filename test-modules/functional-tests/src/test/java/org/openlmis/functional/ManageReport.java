@@ -13,20 +13,13 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
-import org.openlmis.pageobjects.*;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.Test;
-import org.testng.annotations.Listeners;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.DataProvider;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.LoginPage;
+import org.openlmis.pageobjects.ReportPage;
+import org.testng.annotations.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 

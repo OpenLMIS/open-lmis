@@ -19,7 +19,7 @@ import org.springframework.stereotype.Repository;
 public interface FacilityFtpDetailsMapper {
 
   @Insert({"INSERT INTO facility_ftp_details (facilityId, serverHost, serverPort, userName, password, localFolderPath, createdBy, modifiedBy, modifiedDate) ",
-    "VALUES (#{facility.id}, #{serverHost}, #{serverPort}, #{userName}, #{password}, #{localFolderPath}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()))"})
+    "VALUES (#{facility.id}, #{serverHost}, #{serverPort}, #{userName}, #{password}, #{localFolderPath}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityFtpDetails facilityFtpDetails);
 

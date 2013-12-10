@@ -22,8 +22,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ProgramProductISAPage;
 import org.openqa.selenium.WebElement;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -32,10 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 

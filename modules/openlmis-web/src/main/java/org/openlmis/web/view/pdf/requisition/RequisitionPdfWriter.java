@@ -19,6 +19,7 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.web.view.pdf.PdfPageEventHandler;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -32,7 +33,11 @@ public class RequisitionPdfWriter extends PdfWriter {
   private MessageService messageService;
   private ConfigurationSettingService configService;
 
-  public RequisitionPdfWriter(PdfDocument document, OutputStream stream, MessageService messageService, ConfigurationSettingService configService) throws DocumentException {
+  public RequisitionPdfWriter(PdfDocument document,
+                              OutputStream stream,
+                              MessageService messageService,
+                              ConfigurationSettingService configService
+                             ) throws DocumentException {
     super(document, stream);
     document.addWriter(this);
     setDocumentAttributes(document);
@@ -47,9 +52,8 @@ public class RequisitionPdfWriter extends PdfWriter {
     document.setMargins(LEFT_MARGIN, RIGHT_MARGIN, TOP_MARGIN, BOTTOM_MARGIN);
   }
 
-  public void buildWith(Map<String, Object> model)
-      throws DocumentException, NoSuchFieldException, IllegalAccessException {
-    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model, messageService, configService);
+  public void buildWith(Map<String, Object> model) throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
+    RequisitionPdfModel requisitionPdfModel = new RequisitionPdfModel(model, messageService,configService);
     document.open();
     document.add(requisitionPdfModel.getRequisitionHeader());
 

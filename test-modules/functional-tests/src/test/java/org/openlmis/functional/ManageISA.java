@@ -22,8 +22,6 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ManageFacilityPage;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.util.List;
@@ -31,10 +29,6 @@ import java.util.Map;
 
 import static java.lang.String.valueOf;
 import static org.openlmis.pageobjects.ManageFacilityPage.SaveButton;
-
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 

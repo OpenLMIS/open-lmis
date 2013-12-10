@@ -30,13 +30,13 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
   public static final String URL = "http://localhost:9091/feeds/program-catalog-changes/recent";
   public static final String GET = "GET";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.logout(baseUrlGlobal);
@@ -92,7 +92,7 @@ public class ProgramCatalogChangesFeed extends JsonUtility {
 
   }
 
-  @Test(groups = {"webservice"}, dataProvider = "Data-Provider-Function-Positive")
+  @Test(groups = {"webserviceSmoke"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyProgramFeedWhenProductIsActiveOrInActiveUsingCommTrackVendor(String[] credentials) throws Exception {
     String Program = "HIV";
     String ProgramSecond = "MALARIA";

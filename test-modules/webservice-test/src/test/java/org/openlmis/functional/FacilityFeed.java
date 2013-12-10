@@ -42,14 +42,14 @@ public class FacilityFeed extends JsonUtility {
   public static final String PUT = "PUT";
   public static final String FACILITY_FEED_URL = "http://localhost:9091/feeds/facilities/recent";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -221,7 +221,7 @@ public class FacilityFeed extends JsonUtility {
     homePage.logout(baseUrlGlobal);
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testFacilityFeedUsingCommTrack() throws Exception {
 
     HttpClient client = new HttpClient();
@@ -302,7 +302,7 @@ public class FacilityFeed extends JsonUtility {
 
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testFacilityFeedUsingCommTrackUsingOpenLmisVendor() throws Exception {
 
     HttpClient client = new HttpClient();

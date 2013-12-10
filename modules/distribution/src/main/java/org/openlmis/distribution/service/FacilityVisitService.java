@@ -14,6 +14,7 @@ public class FacilityVisitService {
   @Autowired
   FacilityVisitRepository repository;
 
+  //TODO return boolean
   public String save(FacilityVisit facilityVisit) {
     FacilityVisit existingFacilityVisit = repository.get(facilityVisit);
     if (existingFacilityVisit != null) {

@@ -1,10 +1,10 @@
 {
-    "approverName" : "some random name",
+    "approverName" : "",
     "products": [
         {
             "productCode": "",
             "quantityApproved": "",
-            "remarks": "1"
+            "remarks": ""
         }
     ]
 }

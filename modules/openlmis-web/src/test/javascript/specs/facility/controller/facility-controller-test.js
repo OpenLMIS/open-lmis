@@ -167,18 +167,21 @@ describe("Facility Controller", function () {
     var deferredObject;
     beforeEach(module('openlmis.services'));
 
-    beforeEach(inject(function(_$httpBackend_, $controller, _$timeout_, _$route_) {
+    beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
       $httpBackend = _$httpBackend_;
-      deferredObject = {promise: {id: 1}, resolve: function () {}};
+      deferredObject = {promise: {id: 1}, resolve: function () {
+      }};
       spyOn(deferredObject, 'resolve');
-      $q = {defer: function() {return deferredObject}};
+      $q = {defer: function () {
+        return deferredObject
+      }};
       $timeout = _$timeout_;
       ctrl = $controller;
       $route = _$route_;
     }));
 
     it('should get facility reference data', function () {
-      $httpBackend.expect('GET', '/facilities/reference-data.json').respond({facility: {'id' : '23'}});
+      $httpBackend.expect('GET', '/facilities/reference-data.json').respond({facility: {'id': '23'}});
       ctrl(FacilityController.resolve.facilityReferenceData, {$q: $q});
       $timeout.flush();
       $httpBackend.flush();
@@ -186,97 +189,98 @@ describe("Facility Controller", function () {
     });
 
     it('should get facility if edit route contains id', function () {
-      $route = {current: {params:{facilityId: 1}}};
-      $httpBackend.expect('GET', '/facilities/1.json').respond({'id' : '23'});
+      $route = {current: {params: {facilityId: 1}}};
+      $httpBackend.expect('GET', '/facilities/1.json').respond({'id': '23'});
       ctrl(FacilityController.resolve.facility, {$route: $route});
       $timeout.flush();
     });
   });
 
-    describe("Edit/Delete Facility", function () {
-      var scope, httpBackend;
+  describe("Edit/Delete Facility", function () {
+    var scope, httpBackend;
 
-      beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
-        httpBackend = _$httpBackend_;
-        scope = $rootScope.$new();
-        $rootScope.fixToolBar = function () {
-        };
-        var routeParams = $routeParams;
-        routeParams.facilityId = "1";
-        var facilityReferenceData = {"facilityTypes": [
-          {"type": "warehouse"}
-        ], "programs": [
-          {"code": "ARV", "name": "ARV", "description": "ARV", "active": true},
-          {"code": "HIV", "name": "HIV", "description": "HIV", "active": true},
-          {"code": "ABC", "name": "ABC", "description": "ABC", "active": false}
-        ],
-          "geographicZones": [
-            {"zoneId": "testId"}
-          ], "facilityOperators": [
-            {"operatorCode": "testCode"}
-          ]};
-        var facility = {"id": 1, "code": "F1756", "name": "Village Dispensary", "description": "IT department", "gln": "G7645", "mainPhone": "9876234981",
-          "fax": "fax", "address1": "A", "address2": "B", "geographicZone": {"id": 1}, "facilityType": {"code": "warehouse"}, "catchmentPopulation": 333,
-          "latitude": 22.1, "longitude": 1.2, "altitude": 3.3, "operatedBy": {"code": "NGO"}, "coldStorageGrossCapacity": 9.9, "coldStorageNetCapacity": 6.6,
-          "suppliesOthers": true, "sdp": true, "hasElectricity": true, "online": true, "hasElectronicScc": true, "hasElectronicDar": null, "active": true,
-          "goLiveDate": 1352572200000, "goDownDate": -2592106200000, "satellite": true, "satelliteParentId": null, "comment": "fc", "enabled": true,
-          "supportedPrograms": [
-            {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": 1352572200000},
-            {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": 1352572200000}
-          ], "modifiedBy": null, "modifiedDate": null};
-        $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, facility: facility});
-        scope.facilityForm = {$error: { pattern: "" }};
-      }));
+    beforeEach(inject(function ($rootScope, _$httpBackend_, $controller, $routeParams) {
+      httpBackend = _$httpBackend_;
+      scope = $rootScope.$new();
+      $rootScope.fixToolBar = function () {
+      };
+      var routeParams = $routeParams;
+      routeParams.facilityId = "1";
+      var facilityReferenceData = {"facilityTypes": [
+        {"type": "warehouse"}
+      ], "programs": [
+        {"code": "ARV", "name": "ARV", "description": "ARV", "active": true},
+        {"code": "HIV", "name": "HIV", "description": "HIV", "active": true},
+        {"code": "ABC", "name": "ABC", "description": "ABC", "active": false}
+      ],
+        "geographicZones": [
+          {"zoneId": "testId"}
+        ], "facilityOperators": [
+          {"operatorCode": "testCode"}
+        ]};
+      var facility = {"id": 1, "code": "F1756", "name": "Village Dispensary", "description": "IT department", "gln": "G7645", "mainPhone": "9876234981",
+        "fax": "fax", "address1": "A", "address2": "B", "geographicZone": {"id": 1}, "facilityType": {"code": "warehouse"}, "catchmentPopulation": 333,
+        "latitude": 22.1, "longitude": 1.2, "altitude": 3.3, "operatedBy": {"code": "NGO"}, "coldStorageGrossCapacity": 9.9, "coldStorageNetCapacity": 6.6,
+        "suppliesOthers": true, "sdp": true, "hasElectricity": true, "online": true, "hasElectronicScc": true, "hasElectronicDar": null, "active": true,
+        "goLiveDate": 1352572200000, "goDownDate": -2592106200000, "satellite": true, "satelliteParentId": null, "comment": "fc", "enabled": true,
+        "stringGoDownDate": "2013-11-21", "stringGoLiveDate": "2013-10-21",
+        "supportedPrograms": [
+          {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": 1352572200000, "stringStartDate": "2012-11-21"},
+          {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": 1352572200000, "stringStartDate": "2014-11-21"}
+        ], "modifiedBy": null, "modifiedDate": null};
+      $controller(FacilityController, {$scope: scope, $routeParams: routeParams, facilityReferenceData: facilityReferenceData, facility: facility});
+      scope.facilityForm = {$error: { pattern: "" }};
+    }));
 
-      it('should get facility if defined', function () {
-        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
-        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
-        expect(scope.facility.supportedPrograms).toEqual([
-          {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": new Date(1352572200000)},
-          {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": new Date(1352572200000)}
-        ]);
-      });
-
-      it('should disable a facility', function () {
-        httpBackend.expect('DELETE', '/facilities/1.json').respond(200, {"success": "Deleted successfully", "facility": scope.facility});
-
-        scope.disableFacilityCallBack(true);
-        httpBackend.flush();
-
-        expect(scope.message).toEqual("Deleted successfully");
-        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
-        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
-        expect(scope.originalFacilityCode).toEqual(scope.facility.code);
-        expect(scope.originalFacilityName).toEqual(scope.facility.name);
-      });
-
-      it('should not disable a facility if error occurs', function () {
-        httpBackend.expect('DELETE', '/facilities/1.json').respond(404, {"error": "something went wrong", "facility": scope.facility});
-
-        scope.disableFacilityCallBack(true);
-        httpBackend.flush();
-
-        expect(scope.error).toEqual("something went wrong");
-        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
-        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
-        expect(scope.originalFacilityCode).toEqual(scope.facility.code);
-        expect(scope.originalFacilityName).toEqual(scope.facility.name);
-      });
-
-
-      it('should enable the facility', function () {
-        httpBackend.expect('PUT', '/facilities/1/restore.json').respond(200, {"success": "Enabled successfully", "facility": scope.facility});
-
-        scope.enableFacilityCallBack(true);
-        httpBackend.flush();
-
-        expect(scope.message).toEqual("Enabled successfully");
-        expect(scope.facility.goLiveDate).toEqual(new Date(1352572200000));
-        expect(scope.facility.goDownDate).toEqual(new Date(-2592106200000));
-        expect(scope.originalFacilityCode).toEqual(scope.facility.code);
-        expect(scope.originalFacilityName).toEqual(scope.facility.name);
-      });
-
-
+    it('should get facility if defined', function () {
+      expect(scope.facility.goLiveDate).toEqual("2013-10-21");
+      expect(scope.facility.goDownDate).toEqual("2013-11-21");
+      expect(scope.facility.supportedPrograms).toEqual([
+        {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": "2012-11-21", "stringStartDate": "2012-11-21"},
+        {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": "2014-11-21", "stringStartDate": "2014-11-21"}
+      ]);
     });
+
+    it('should disable a facility', function () {
+      httpBackend.expect('DELETE', '/facilities/1.json').respond(200, {"success": "Deleted successfully", "facility": scope.facility});
+
+      scope.disableFacilityCallBack(true);
+      httpBackend.flush();
+
+      expect(scope.message).toEqual("Deleted successfully");
+      expect(scope.facility.goLiveDate).toEqual('2013-10-21');
+      expect(scope.facility.goDownDate).toEqual('2013-11-21');
+      expect(scope.originalFacilityCode).toEqual(scope.facility.code);
+      expect(scope.originalFacilityName).toEqual(scope.facility.name);
+    });
+
+    it('should not disable a facility if error occurs', function () {
+      httpBackend.expect('DELETE', '/facilities/1.json').respond(404, {"error": "something went wrong", "facility": scope.facility});
+
+      scope.disableFacilityCallBack(true);
+      httpBackend.flush();
+
+      expect(scope.error).toEqual("something went wrong");
+      expect(scope.facility.goLiveDate).toEqual('2013-10-21');
+      expect(scope.facility.goDownDate).toEqual('2013-11-21');
+      expect(scope.originalFacilityCode).toEqual(scope.facility.code);
+      expect(scope.originalFacilityName).toEqual(scope.facility.name);
+    });
+
+
+    it('should enable the facility', function () {
+      httpBackend.expect('PUT', '/facilities/1/restore.json').respond(200, {"success": "Enabled successfully", "facility": scope.facility});
+
+      scope.enableFacilityCallBack(true);
+      httpBackend.flush();
+
+      expect(scope.message).toEqual("Enabled successfully");
+      expect(scope.facility.goLiveDate).toEqual('2013-10-21');
+      expect(scope.facility.goDownDate).toEqual('2013-11-21');
+      expect(scope.originalFacilityCode).toEqual(scope.facility.code);
+      expect(scope.originalFacilityName).toEqual(scope.facility.name);
+    });
+
+
   });
+});

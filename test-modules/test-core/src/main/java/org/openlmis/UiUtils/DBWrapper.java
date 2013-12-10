@@ -302,7 +302,7 @@ public class DBWrapper {
 
   public void insertVirtualFacility(String facilityCode, String parentFacilityCode) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
-      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility,parentfacilityid) values\n" +
+      "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility,parentFacilityId) values\n" +
       "('" + facilityCode + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',5,2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/2012','TRUE','fc','TRUE', 'TRUE',(SELECT id FROM facilities WHERE code = '" + parentFacilityCode + "'))");
 
     update("insert into programs_supported(facilityId, programId, startDate, active, modifiedBy) VALUES" +
@@ -631,7 +631,7 @@ public class DBWrapper {
 
   public void configureTemplate(String program) throws SQLException, IOException {
     update("INSERT INTO program_rnr_columns\n" +
-      "(masterColumnId, programId, visible, source, formulavalidationrequired, position, label) VALUES\n" +
+      "(masterColumnId, programId, visible, source, formulaValidationRequired, position, label) VALUES\n" +
       "(1, (select id from programs where code = '" + program + "'),  true, 'U', false,1,  'Skip'),\n" +
       "(2, (select id from programs where code = '" + program + "'),  true, 'R', false,2,  'Product Code'),\n" +
       "(3, (select id from programs where code = '" + program + "'),  true, 'R', false,3,  'Product'),\n" +
@@ -643,7 +643,7 @@ public class DBWrapper {
       "(9, (select id from programs where code = '" + program + "'),  true, 'U', false,9,  'Total Losses / Adjustments'),\n" +
       "(10, (select id from programs where code = '" + program + "'),  true, 'C', true,10,  'Stock on Hand'),\n" +
       "(11, (select id from programs where code = '" + program + "'),  true, 'U', false,11, 'New Patients'),\n" +
-      "(12, (select id from programs where code = '" + program + "'), true, 'U', false,12, 'Total Stockout days'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'U', false,12, 'Total StockOut days'),\n" +
       "(13, (select id from programs where code = '" + program + "'), true, 'C', false,13, 'Adjusted Total Consumption'),\n" +
       "(14, (select id from programs where code = '" + program + "'), true, 'C', false,14, 'Average Monthly Consumption(AMC)'),\n" +
       "(15, (select id from programs where code = '" + program + "'), true, 'C', false,15, 'Maximum Stock Quantity'),\n" +
@@ -671,7 +671,7 @@ public class DBWrapper {
       "(9, (select id from programs where code = '" + program + "'),  true, 'U', 8,  'Total Losses / Adjustments'),\n" +
       "(10, (select id from programs where code = '" + program + "'),  true, 'U', 9,  'Stock on Hand'),\n" +
       "(11, (select id from programs where code = '" + program + "'),  true, 'U', 10, 'New Patients'),\n" +
-      "(12, (select id from programs where code = '" + program + "'), true, 'U', 11, 'Total Stockout days'),\n" +
+      "(12, (select id from programs where code = '" + program + "'), true, 'U', 11, 'Total StockOut days'),\n" +
       "(13, (select id from programs where code = '" + program + "'), true, 'C', 12, 'Adjusted Total Consumption'),\n" +
       "(14, (select id from programs where code = '" + program + "'), true, 'C', 13, 'Average Monthly Consumption(AMC)'),\n" +
       "(15, (select id from programs where code = '" + program + "'), true, 'C', 14, 'Maximum Stock Quantity'),\n" +
@@ -1375,7 +1375,7 @@ public class DBWrapper {
   }
 
   public void deleteSupervisoryRoleFromRoleAssignment() throws SQLException {
-    update("delete from role_assignments where supervisorynodeid is not null;");
+    update("delete from role_assignments where supervisoryNodeId is not null;");
   }
 
   public void deleteRnrTemplate() throws SQLException {
@@ -1383,8 +1383,8 @@ public class DBWrapper {
   }
 
   public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {
-    update("delete from facility_approved_products where facilitytypeid=(select typeid from facilities where code='" + facilityCode + "') " +
-      "and programproductid=(select id from program_products where programid=(select id from programs where code='" + programCode + "')" +
+    update("delete from facility_approved_products where facilityTypeId=(select typeId from facilities where code='" + facilityCode + "') " +
+      "and programproductid=(select id from program_products where programId=(select id from programs where code='" + programCode + "')" +
       "and productid=(select id from products where code='" + productCode + "'));");
   }
 
@@ -1401,36 +1401,25 @@ public class DBWrapper {
     return fullSupplyItemsSubmittedCost;
   }
 
-  public String getStockInHand(long requisitionId) throws IOException, SQLException {
-    String stockInHand = null;
-    ResultSet rs = query("SELECT stockinhand FROM requisition_line_items WHERE rnrid =" + requisitionId + ";");
-
-    if (rs.next()) {
-      stockInHand = rs.getString("stockinhand");
-    }
-    return stockInHand;
-
-  }
-
   public void updateConfigureTemplateValidationFlag(String programCode, String flag) throws SQLException {
-    update("UPDATE program_rnr_columns set formulavalidationrequired ='" + flag + "' WHERE programid=" +
+    update("UPDATE program_rnr_columns set formulaValidationRequired ='" + flag + "' WHERE programId=" +
       "(SELECT id from programs where code='" + programCode + "');");
   }
 
   public void updateConfigureTemplate(String programCode, String fieldName, String fieldValue, String visibilityFlag, String rnrColumnName) throws SQLException {
-    update("UPDATE program_rnr_columns SET visible ='" + visibilityFlag + "', " + fieldName + "='" + fieldValue + "' WHERE programid=" +
+    update("UPDATE program_rnr_columns SET visible ='" + visibilityFlag + "', " + fieldName + "='" + fieldValue + "' WHERE programId=" +
       "(SELECT id from programs where code='" + programCode + "')" +
       "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '" + rnrColumnName + "') ;");
 
   }
 
   public void deleteConfigureTemplate(String program) throws SQLException {
-    update("DELETE FROM program_rnr_columns where programid=(select id from programs where code = '" + program + "');");
+    update("DELETE FROM program_rnr_columns where programId=(select id from programs where code = '" + program + "');");
   }
 
   public String getApproverName(long requisitionId) throws IOException, SQLException {
     String name = null;
-    ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrid =" + requisitionId + " and status='APPROVED';");
+    ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrId =" + requisitionId + " and status='APPROVED';");
 
     if (rs.next()) {
       name = rs.getString("name");
@@ -1468,12 +1457,12 @@ public class DBWrapper {
       "(select id from processing_schedules where code='" + scheduleCode + "'),TRUE);");
   }
 
-  public void updateCreatedDateInRequisitionStatusChanges(String newDate, Long rnrid) throws SQLException {
-    update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrid=" + rnrid + ";");
+  public void updateCreatedDateInRequisitionStatusChanges(String newDate, Long rnrId) throws SQLException {
+    update("update requisition_status_changes SET createdDate= '" + newDate + "' WHERE rnrId=" + rnrId + ";");
   }
 
-  public void updateCreatedDateInPODLineItems(String newDate, Long rnrid) throws SQLException {
-    update("update pod SET createdDate= '" + newDate + "' WHERE orderid=" + rnrid + ";");
+  public void updateCreatedDateInPODLineItems(String newDate, Long rnrId) throws SQLException {
+    update("update pod SET createdDate= '" + newDate + "' WHERE orderId=" + rnrId + ";");
   }
 
   public void updatePeriodIdInRequisitions(Long rnrId) throws SQLException {
@@ -1501,4 +1490,5 @@ public class DBWrapper {
     update("update requisition_groups set supervisoryNodeId=(select id from supervisory_nodes where code='" + supervisoryNodeCode +
       "') where code='" + requisitionGroup + "';");
   }
+
 }

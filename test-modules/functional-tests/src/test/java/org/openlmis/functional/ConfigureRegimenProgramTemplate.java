@@ -25,8 +25,6 @@ import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.RegimenTemplateConfigPage;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -37,9 +35,6 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -449,8 +444,8 @@ public class ConfigureRegimenProgramTemplate extends TestCaseHelper {
       if (!testWebDriver.getElementById("username").isDisplayed()) {
           HomePage homePage = new HomePage(testWebDriver);
           homePage.logout(baseUrlGlobal);
-        dbWrapper.deleteData();
-        dbWrapper.closeConnection();
+          dbWrapper.deleteData();
+          dbWrapper.closeConnection();
       }
 
   }

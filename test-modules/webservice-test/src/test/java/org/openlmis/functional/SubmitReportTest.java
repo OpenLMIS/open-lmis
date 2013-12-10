@@ -32,7 +32,7 @@ public class SubmitReportTest extends JsonUtility {
   public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String PRODUCT_JSON_TXT_FILE_NAME = "ReportWithProductJson.txt";
 
-  @BeforeMethod(groups = {"webservice"})
+  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -42,19 +42,19 @@ public class SubmitReportTest extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice"})
+  @AfterMethod(groups = {"webservice","webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void testInitiateRnr() throws Exception {
     long id= submitRnRThroughApi("V10","HIV","P10",1,10,1,0,0,2);
     assertEquals("AUTHORIZED",dbWrapper.getRequisitionStatus(id));
   }
 
-  @Test(groups = {"webservice"})
+  @Test(groups = {"webserviceSmoke"})
   public void shouldReturn401StatusWhenSubmittingReportWithInvalidAPIUser() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
@@ -723,6 +723,80 @@ public class SubmitReportTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"})
+  public void testSubmitReportRnRWithRegimenHavingExtraFields() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String regimenJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "             \"beginningBalance\": \"3\","+
+      "              \"quantityDispensed\": \"1\","+
+      "               \"quantityReceived\": \"0\""+
+      "        }" +
+      "    ]," +
+      "\"regimens\" : [  "+
+      "{ "+
+      "\"code\" : \"Regimen\","+
+      "\"name\" :\"Regimen1\","+
+      "\"patientsOnTreatment\":\"111\","+
+      "\"patientsToInitiateTreatment\" :\"12\","+
+      "\"patients\" :\"12\","+
+      "\"patientsStoppedTreatment\" :\"12\""+
+      "}]}";
+
+    ResponseEntity responseEntity = client.SendJSON(regimenJson,
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "commTrack",
+      "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("Unrecognized field"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testSubmitReportRnRWithRegimenMissingMandatoryFields() throws Exception {
+    dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
+    dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
+    dbWrapper.setRegimenTemplateConfiguredForAllPrograms(true);
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String regimenJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "             \"beginningBalance\": \"3\","+
+      "              \"quantityDispensed\": \"1\","+
+      "               \"quantityReceived\": \"0\""+
+      "        }" +
+      "    ]," +
+      "\"regimens\" : [  "+
+      "{ "+
+      "\"code\" : \"Regimen\","+
+      "\"name\" :\"Regimen1\","+
+      "\"patientsOnTreatment\":\"111\","+
+      "\"patientsStoppedTreatment\" :\"12\""+
+      "}]}";
+
+    ResponseEntity responseEntity = client.SendJSON(regimenJson,
+      "http://localhost:9091/rest-api/requisitions.json",
+      POST,
+      "commTrack",
+      "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"R&R has errors, please correct them to proceed.\"}"));
+  }
+
+  @Test(groups = {"webservice"})
   public void testInvalidSubmitReportRnRWithExtraRegimenLineItem() throws Exception {
     dbWrapper.insertRegimenTemplateColumnsForProgram("HIV");
     dbWrapper.insertRegimenTemplateConfiguredForProgram("HIV","ADULTS","Regimen","Regimen1",true);
@@ -809,29 +883,6 @@ public class SubmitReportTest extends JsonUtility {
 
   }
 
-  public void testBlankBeginningBalanceSubmitReport() throws Exception {
-    HttpClient client = new HttpClient();
-    client.createContext();
-
-    Report reportFromJson = JsonUtility.readObjectFromFile(PRODUCT_JSON_TXT_FILE_NAME, Report.class);
-    reportFromJson.setProgramCode("HIV");
-    reportFromJson.getProducts().get(0).setProductCode("P10");
-
-    ResponseEntity responseEntity =
-      client.SendJSON(
-        getJsonStringFor(reportFromJson),
-        "http://localhost:9091/rest-api/requisitions.json",
-        POST,
-        "commTrack",
-        "Admin123");
-
-    String response = responseEntity.getResponse();
-
-    client.SendJSON("", "http://localhost:9091/", GET, "", "");
-    assertEquals(400, responseEntity.getStatus());
-    assertEquals("{\"error\":\"R&R has errors, please correct them to proceed.\"}", response);
-  }
-
   @Test(groups = {"webservice"})
   public void testMasterTemplateValidationMissingBothMandatoryUserInputFields() throws Exception {
     HttpClient client = new HttpClient();
@@ -913,14 +964,16 @@ public class SubmitReportTest extends JsonUtility {
   @Test(groups = {"webservice"})
   public void testMasterTemplateValidationOverrideWithCalculatedValue() throws Exception {
     long id =  submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
-    assertEquals("4", dbWrapper.getStockInHand(id));
+    assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
   }
 
 
   @Test(groups = {"webservice"})
-  public void testMasterTemplateValidationIgnoreReportedValue() throws Exception {
+  public void testMasterTemplateValidationIgnoreReportedValueWhenFieldNotVisible() throws Exception {
       dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "stockInHand");
-      submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
+      dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "beginningBalance");
+      Long id=submitRnRThroughApi("V10","HIV","P10",1,10,1,4,0,2);
+      assertEquals("0",dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
   }
 
 
@@ -935,6 +988,33 @@ public class SubmitReportTest extends JsonUtility {
       "        {" +
       "            \"productCode\": \"P10\"," +
       "            \"zzzzzbbbb\": \"10\"," +
+
+      "        }" +
+      "    ]" +
+      "}";
+
+    ResponseEntity responseEntity =
+      client.SendJSON(wrongJson,
+        "http://localhost:9091/rest-api/requisitions.json",
+        POST,
+        "commTrack",
+        "Admin123");
+
+    assertEquals(400, responseEntity.getStatus());
+    assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON: Unrecognized field"));
+  }
+
+  @Test(groups = {"webservice"})
+  public void testSubmitRnrWithReferenceData() throws Exception {
+    HttpClient client = new HttpClient();
+    client.createContext();
+
+    String wrongJson = "{\"agentCode\": \"V10\"," +
+      "    \"programCode\": \"HIV\"," +
+      "    \"products\": [" +
+      "        {" +
+      "            \"productCode\": \"P10\"," +
+      "            \"productName\": \"abc\"," +
 
       "        }" +
       "    ]" +

@@ -18,7 +18,9 @@ import org.openlmis.rnr.domain.Rnr;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -34,6 +36,7 @@ public class RnrDTOTest {
   @Test
   public void shouldPrepareRequisitionsForApproval() throws Exception {
     Rnr rnr = make(a(defaultRequisition, with(emergency, true)));
+    rnr.setModifiedDate(new Date());
     List<Rnr> rnrList = Arrays.asList(rnr);
 
     List<RnrDTO> rnrDTOs = RnrDTO.prepareForListApproval(rnrList);
@@ -46,6 +49,7 @@ public class RnrDTOTest {
   @Test
   public void shouldPrepareRequisitionsForView() throws Exception {
     Rnr rnr = make(a(defaultRequisition, with(emergency, false)));
+    rnr.setModifiedDate(new Date());
     List<Rnr> rnrList = Arrays.asList(rnr);
 
     List<RnrDTO> rnrDTOs = RnrDTO.prepareForView(rnrList);
@@ -57,16 +61,17 @@ public class RnrDTOTest {
   }
 
   private void assertRnrDTO(RnrDTO rnrDTO, Rnr rnr) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     assertThat(rnrDTO.getId(), is(rnr.getId()));
     assertThat(rnrDTO.getProgramId(), is(rnr.getProgram().getId()));
     assertThat(rnrDTO.getFacilityId(), is(rnr.getFacility().getId()));
     assertThat(rnrDTO.getProgramName(), is(rnr.getProgram().getName()));
     assertThat(rnrDTO.getFacilityCode(), is(rnr.getFacility().getCode()));
     assertThat(rnrDTO.getFacilityName(), is(rnr.getFacility().getName()));
-    assertThat(rnrDTO.getSubmittedDate(), is(rnr.getSubmittedDate()));
-    assertThat(rnrDTO.getModifiedDate(), is(rnr.getModifiedDate()));
-    assertThat(rnrDTO.getPeriodStartDate(), is(rnr.getPeriod().getStartDate()));
-    assertThat(rnrDTO.getPeriodEndDate(), is(rnr.getPeriod().getEndDate()));
+    assertThat(rnrDTO.getStringSubmittedDate(), is(simpleDateFormat.format(rnr.getSubmittedDate())));
+    assertThat(rnrDTO.getStringModifiedDate(), is(simpleDateFormat.format(rnr.getModifiedDate())));
+    assertThat(rnrDTO.getStringPeriodStartDate(), is(simpleDateFormat.format(rnr.getPeriod().getStartDate())));
+    assertThat(rnrDTO.getStringPeriodEndDate(), is(simpleDateFormat.format(rnr.getPeriod().getEndDate())));
     assertThat(rnrDTO.isEmergency(), is(rnr.isEmergency()));
   }
 

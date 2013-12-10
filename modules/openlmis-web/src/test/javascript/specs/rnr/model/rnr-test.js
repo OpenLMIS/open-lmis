@@ -11,7 +11,7 @@
 describe('R&R test', function () {
 
   function createRegularRnr(json, columnsArray) {
-    if(json == undefined)  json = {};
+    if (json == undefined)  json = {};
     json.emergency = false;
     var regularRnr = new Rnr(json, columnsArray);
     return  regularRnr;
@@ -49,7 +49,7 @@ describe('R&R test', function () {
     expect(_.pick).toHaveBeenCalledWith(rnr, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
   });
 
-  it("should set skipAll to false on rnr creation", function(){
+  it("should set skipAll to false on rnr creation", function () {
     var rnr = new Rnr({}, []);
     expect(rnr.skipAll).toBeFalsy();
   });
@@ -98,7 +98,7 @@ describe('R&R test', function () {
     expect(errorMessage).toEqual('error.rnr.validation');
   });
 
-  it("should not validate R&R full supply line items if line item is skipped", function(){
+  it("should not validate R&R full supply line items if line item is skipped", function () {
     var lineItem1 = {"lineItem": "lineItem1", skipped: true};
     var rnr = {period: {numberOfMonths: 3}, status: 'INITIATED', 'fullSupplyLineItems': [lineItem1]};
 
@@ -276,10 +276,10 @@ describe('R&R test', function () {
       expect(rnr.fullSupplyItemsSubmittedCost).toEqual('320.00');
     });
 
-    it("should not include skipped line items in total cost caluculations", function(){
+    it("should not include skipped line items in total cost caluculations", function () {
       var rnr = createRegularRnr();
 
-      var rnrLineItem1 = new RegularRnrLineItem({productCode: "p1",skipped: true}, 2, null, 'INITIATED');
+      var rnrLineItem1 = new RegularRnrLineItem({productCode: "p1", skipped: true}, 2, null, 'INITIATED');
       rnrLineItem1.cost = 100;
       rnr.fullSupplyLineItems = [rnrLineItem1];
       rnr.calculateFullSupplyItemsSubmittedCost();
@@ -413,7 +413,7 @@ describe('R&R test', function () {
   });
 
   it('should prepare period display name', function () {
-    var rnr = createRegularRnr({"id": "1", period: {"name": "Period 1", "startDate": 1358274600000, "endDate": 1367260200000}}, null)
+    var rnr = createRegularRnr({"id": "1", period: {"name": "Period 1", "stringStartDate": "16/01/2013", "stringEndDate": "30/04/2013"}}, null)
     expect(rnr.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
   });
 

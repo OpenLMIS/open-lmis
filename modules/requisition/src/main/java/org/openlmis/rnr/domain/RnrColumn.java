@@ -19,7 +19,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class RnrColumn extends Column {
 
   private int position;

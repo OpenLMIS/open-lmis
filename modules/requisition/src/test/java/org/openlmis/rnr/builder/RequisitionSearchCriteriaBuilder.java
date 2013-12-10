@@ -26,8 +26,8 @@ public class RequisitionSearchCriteriaBuilder {
   public static Property<RequisitionSearchCriteria, Long> userIdProperty = newProperty();
   public static Property<RequisitionSearchCriteria, Boolean> emergencyFlag = newProperty();
   public static Property<RequisitionSearchCriteria, Boolean> withoutLineItemFlag = newProperty();
-  public static Property<RequisitionSearchCriteria, Date> startDate = newProperty();
-  public static Property<RequisitionSearchCriteria, Date> endDate = newProperty();
+  public static Property<RequisitionSearchCriteria, String> startDate = newProperty();
+  public static Property<RequisitionSearchCriteria, String> endDate = newProperty();
 
   private static final Long DEFAULT_FACILITY_ID = null;
   private static final Long DEFAULT_PROGRAM_ID = null;
@@ -47,8 +47,8 @@ public class RequisitionSearchCriteriaBuilder {
       searchCriteria.setPeriodId(lookup.valueOf(periodIdProperty, DEFAULT_PERIOD_ID));
       searchCriteria.setEmergency(lookup.valueOf(emergencyFlag, false));
       searchCriteria.setWithoutLineItems(lookup.valueOf(withoutLineItemFlag, false));
-      searchCriteria.setDateRangeStart(lookup.valueOf(startDate, DEFAULT_START_DATE));
-      searchCriteria.setDateRangeEnd(lookup.valueOf(endDate, DEFAULT_END_DATE));
+      searchCriteria.setDateRangeStart(lookup.valueOf(startDate, String.valueOf(DEFAULT_START_DATE)));
+      searchCriteria.setDateRangeEnd(lookup.valueOf(endDate, String.valueOf(DEFAULT_END_DATE)));
 
       return searchCriteria;
     }

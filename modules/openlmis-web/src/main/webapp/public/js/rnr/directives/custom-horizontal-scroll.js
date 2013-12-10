@@ -14,104 +14,134 @@
 app.directive('customHorizontalScroll', function ($timeout) {
   return {
     restrict: 'A',
-    link: function (scope, element, attrs) {
-      var myScroll = {};
-      var scrollBar = $("<div class='scrollbar'><div class='scroll-handle'></div></div>");
-      myScroll.scrollHandle = scrollBar.find('.scroll-handle');
-      element.append(scrollBar);
+    link: function (scope, element) {
+      var scrollBar = {};
+      var container = element;
+      container.scrollableElement = container.find('.scrollable');
+      scrollBar.track = $("<div class='scrollbar'></div>");
+      scrollBar.handle = $("<div class='scroll-handle'></div>");
+      scrollBar.track.append(scrollBar.handle);
+      container.append(scrollBar.track);
 
-      function setupScroll() {
-        myScroll.containerWidth = element.outerWidth();
-        myScroll.scrollableWidth = element.find('.scrollable').css("display") != "none" ? element.find('.scrollable').first().outerWidth() : 0;
+      container.setScrollableWidth = function () {
+        container.scrollableElement.width = container.scrollableElement.is(":visible") ? container.scrollableElement.outerWidth() : 0;
+        container.scrollableWidth = container.scrollableElement.width - container.outerWidth();
+      };
 
-        myScroll.extraWidth = myScroll.scrollableWidth - myScroll.containerWidth;
+      container.syncWithScrollBarHandle = function () {
+        var containerScrollAmount = scrollBar.handle.moveAmount * scrollBar.scrollMultiplier;
+        this.scrollLeft(this.leftPosition + containerScrollAmount);
+      };
 
-        if (myScroll.extraWidth > 0) {
-          scrollBar.show();
-          scrollBar.width(myScroll.containerWidth);
-          myScroll.multiplier = Math.floor(myScroll.extraWidth / myScroll.containerWidth) + 1;
+      container.getBottomOffset = function () {
+        return $(window).height() - (container.offset().top + container.outerHeight()) - 90;
+      };
 
-          myScroll.scrollHandle.width(myScroll.containerWidth - (myScroll.extraWidth / myScroll.multiplier));
+      scrollBar.track.setWidth = function () {
+        this.width(container.outerWidth());
+      };
 
-          myScroll.handleStartOffset = scrollBar.offset().left;
-          myScroll.handleEndOffset = myScroll.containerWidth - myScroll.scrollHandle.width() + myScroll.handleStartOffset;
+      scrollBar.handle.setWidth = function () {
+        scrollBar.scrollMultiplier = Math.floor(container.scrollableElement.width / scrollBar.track.width());
+        scrollBar.track.widthToBeScrolled = container.scrollableWidth / scrollBar.scrollMultiplier;
+        this.width(scrollBar.track.width() - scrollBar.track.widthToBeScrolled);
+      };
 
-          var scrollHandlePosition = element.scrollLeft() / myScroll.multiplier + myScroll.handleStartOffset;
-          myScroll.scrollHandle.offset({left: scrollHandlePosition});
+      scrollBar.handle.setScrollRange = function () {
+        this.startX = scrollBar.track.offset().left;
+        this.endX = this.startX + scrollBar.track.widthToBeScrolled;
+      };
 
-          myScroll.scrollHandle.mousedown(function (e) {
-            e.preventDefault();
-            var handleLeftPosition = myScroll.scrollHandle.offset().left;
-            var elementLeftPosition = element.scrollLeft();
-            var initialMouseX = e.pageX;
+      scrollBar.handle.setLeftPosition = function (leftPosition) {
+        this.offset({left: leftPosition});
+      };
 
-            $('body').mousemove(function (e) {
-              var finalMouseX = e.pageX;
-              var diff = finalMouseX - initialMouseX;
+      scrollBar.handle.syncWithScrollableElement = function () {
+        var handleScrollAmount = container.scrollLeft() / scrollBar.scrollMultiplier;
+        scrollBar.handle.setLeftPosition(scrollBar.handle.startX + handleScrollAmount);
+      };
 
-              if (myScroll.scrollHandle.offset().left >= myScroll.handleStartOffset) {
-                myScroll.scrollHandle.offset({left: handleLeftPosition + diff });
+      scrollBar.handle.moveOnScroll = function () {
+        if (this.offset().left >= this.startX) {
+          this.setLeftPosition(this.offset().left + this.moveAmount);
 
-                if (myScroll.scrollHandle.offset().left < myScroll.handleStartOffset) {
-                  myScroll.scrollHandle.offset({left: myScroll.handleStartOffset});
-                }
-                  if (myScroll.scrollHandle.offset().left > myScroll.handleEndOffset) {
-                  myScroll.scrollHandle.offset({left: myScroll.handleEndOffset});
-                }
-
-                element.scrollLeft(elementLeftPosition + (diff * myScroll.multiplier));
-              }
-            });
-          });
-
-          $(document).mouseup(function (e) {
-            $('body').unbind('mousemove');
-          });
-
-          element.scroll(elementScrollHandler);
-
-          $('.rnr-body').scroll(pageScrollHandler);
-
-          if (getContainerBottomOffset() > 0) {
-            scrollBar.hide();
-          } else {
-            scrollBar.show();
+          if (this.offset().left < this.startX) {
+            this.setLeftPosition(this.startX);
           }
 
-        } else {
-          scrollBar.hide();
+          if (this.offset().left > this.endX) {
+            this.setLeftPosition(this.endX);
+          }
+          container.syncWithScrollBarHandle();
         }
-      }
+      };
 
-      function elementScrollHandler() {
-        var scrollHandlePosition = element.scrollLeft() / myScroll.multiplier + myScroll.handleStartOffset;
-        scrollBar.find('.scroll-handle').offset({left: scrollHandlePosition});
+      function setupAndShowScrollBar() {
+        scrollBar.track.setWidth();
+        scrollBar.handle.setWidth();
+        scrollBar.handle.setScrollRange();
+        scrollBar.handle.syncWithScrollableElement();
+        scrollBar.track.show();
       }
 
       function pageScrollHandler() {
-        if (getContainerBottomOffset() > 0) {
-          scrollBar.hide();
+        if (container.getBottomOffset() > 0) {
+          scrollBar.track.hide();
         } else {
           resetScroll();
         }
       }
 
-      function getContainerBottomOffset() {
-        var distance = $(window).height() - (element.offset().top + element.outerHeight()) - 90;
-        return distance;
+      function startScroll() {
+        container.setScrollableWidth();
+        if (container.scrollableWidth > 0) {
+          setupAndShowScrollBar();
+
+          container.scroll(scrollBar.handle.syncWithScrollableElement);
+
+          scrollBar.handle.mousedown(function (e) {
+            e.preventDefault();
+            scrollBar.handle.leftPosition = scrollBar.handle.offset().left;
+            container.leftPosition = container.scrollLeft();
+            var initialMouseX = e.pageX;
+
+            $('body').mousemove(function (e) {
+              var finalMouseX = e.pageX;
+              scrollBar.handle.moveAmount = finalMouseX - initialMouseX;
+              scrollBar.handle.moveOnScroll();
+            });
+          });
+
+          $(document).mouseup(function () {
+            $('body').unbind('mousemove');
+          });
+
+          $('.rnr-body').scroll(pageScrollHandler);
+
+          if (container.getBottomOffset() > 0) {
+            scrollBar.track.hide();
+          } else {
+            scrollBar.track.show();
+          }
+
+        } else {
+          scrollBar.track.hide();
+        }
       }
 
-      $timeout(setupScroll);
+      function unbindAllEvents() {
+        scrollBar.handle.unbind();
+        $(document).unbind('mouseup');
+        container.unbind("scroll", scrollBar.handle.syncWithScrollableElement);
+        $('.rnr-body').unbind("scroll", pageScrollHandler);
+      }
 
       function resetScroll() {
-        myScroll.scrollHandle.unbind();
-        $(document).unbind('mouseup');
-        element.unbind("scroll", elementScrollHandler);
-        $('.rnr-body').unbind("scroll", pageScrollHandler);
-
-        setupScroll();
+        unbindAllEvents();
+        startScroll();
       }
 
+      $timeout(startScroll);
       $(window).on('resize', resetScroll);
     }
   };
