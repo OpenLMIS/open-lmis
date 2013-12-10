@@ -128,8 +128,8 @@ public class FacilityDistributionDataServiceTest {
 
     List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
     assertThat(lineItems.size(), is(1));
-    assertThat(lineItems.get(0).getProductGroupId(), is(1L));
-    assertThat(lineItems.get(0).getProductGroupName(), is("Product Group 1"));
+    assertThat(lineItems.get(0).getProductGroup().getId(), is(1L));
+    assertThat(lineItems.get(0).getProductGroup().getName(), is("Product Group 1"));
   }
 
   @Test
@@ -160,7 +160,7 @@ public class FacilityDistributionDataServiceTest {
 
     List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
     assertThat(lineItems.size(), is(1));
-    assertThat(lineItems.get(0).getProductGroupId(), is(1L));
-    assertThat(lineItems.get(0).getProductGroupName(), is("Product Group 1"));
+    assertThat(lineItems.get(0).getProductGroup().getId(), is(1L));
+    assertThat(lineItems.get(0).getProductGroup().getName(), is("Product Group 1"));
   }
 }

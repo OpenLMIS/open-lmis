@@ -34,7 +34,6 @@ public class DistributionService {
   DistributionRepository repository;
 
   public Distribution create(Distribution distribution) {
-    return repository.create(distribution);
     Distribution savedDistribution = repository.create(distribution);
     List<FacilityDistributionData> facilityDistributions = facilityDistributionDataService.getFor(distribution);
     savedDistribution.setFacilityDistributions(facilityDistributions);
