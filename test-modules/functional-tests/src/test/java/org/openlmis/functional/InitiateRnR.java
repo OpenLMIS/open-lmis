@@ -22,8 +22,6 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -43,8 +41,6 @@ import static java.lang.Math.round;
 import static java.util.Arrays.asList;
 import static org.openlmis.UiUtils.DBWrapper.DEFAULT_MAX_MONTH_OF_STOCK;
 
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 @Listeners(CaptureScreenshotOnFailureListener.class)
 public class InitiateRnR extends TestCaseHelper {
 

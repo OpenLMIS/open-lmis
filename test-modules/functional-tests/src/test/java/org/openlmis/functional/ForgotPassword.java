@@ -22,15 +22,9 @@ import org.openlmis.pageobjects.ForgotPasswordPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openqa.selenium.NoSuchElementException;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.*;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 

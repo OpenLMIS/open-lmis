@@ -19,15 +19,9 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.AccessDeniedPage;
 import org.openlmis.pageobjects.HomePage;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.Listeners;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 

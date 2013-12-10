@@ -21,8 +21,6 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
@@ -33,9 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-
-@TransactionConfiguration(defaultRollback = true)
-@Transactional
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
