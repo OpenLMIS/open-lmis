@@ -15,11 +15,15 @@ package org.openlmis.distribution.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class FacilityVisit extends BaseModel {
 
   private Long distributionId;

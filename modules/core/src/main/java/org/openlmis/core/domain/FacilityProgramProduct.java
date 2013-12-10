@@ -17,14 +17,14 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class FacilityProgramProduct extends ProgramProduct {
 
   Long facilityId;

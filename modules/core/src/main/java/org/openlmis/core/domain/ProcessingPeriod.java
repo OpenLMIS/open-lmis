@@ -23,13 +23,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.joda.time.format.DateTimeFormat.forPattern;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProcessingPeriod extends BaseModel {
 

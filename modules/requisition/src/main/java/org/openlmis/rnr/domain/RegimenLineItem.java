@@ -21,13 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 import static org.openlmis.rnr.domain.Rnr.RNR_VALIDATION_ERROR;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class RegimenLineItem extends LineItem {
 
   public static final String ON_TREATMENT = "patientsOnTreatment";

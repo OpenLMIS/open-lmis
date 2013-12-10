@@ -21,11 +21,11 @@ import org.openlmis.core.domain.Program;
 
 import java.util.List;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Distribution extends BaseModel {
 

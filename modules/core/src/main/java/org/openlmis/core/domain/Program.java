@@ -16,13 +16,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class Program extends BaseModel {
 
   private String code;
