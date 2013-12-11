@@ -34,7 +34,7 @@ public class DriverFactory {
   private String driverType;
   private String INPUT_ZIP_FILE_IEDRIVER = null;
   private String INPUT_ZIP_FILE_CHROMEDRIVER = null;
-  //private String CHROME_FOLDER = null;
+  private String CHROME_FOLDER = null;
   private String OUTPUT_FOLDER = null;
   Unzip unZip;
 
@@ -43,7 +43,7 @@ public class DriverFactory {
     String Separator = getProperty("file.separator");
     File parentDir = new File(getProperty("user.dir"));
 
-    //CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator  + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
+    CHROME_FOLDER = parentDir.getParentFile().getParentFile().getPath() + Separator  + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     OUTPUT_FOLDER = parentDir.getPath() + Separator + "test-modules" + Separator + "test-core" + Separator + "src" + Separator + "main" + Separator + "java" + Separator + "org" + Separator + "openlmis" + Separator + "UiUtils" + Separator;
     INPUT_ZIP_FILE_IEDRIVER = OUTPUT_FOLDER + "IEDriverServer_Win32_2.33.0.zip";
     INPUT_ZIP_FILE_CHROMEDRIVER = OUTPUT_FOLDER + "chromedriver.zip";
@@ -90,7 +90,7 @@ public class DriverFactory {
             //unZip = new Unzip();
             //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
             //Thread.sleep(10000);
-            driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver");
+            driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
             driverType = getProperty("webdriver.chrome.driver");
             return createChromeDriver();
 
