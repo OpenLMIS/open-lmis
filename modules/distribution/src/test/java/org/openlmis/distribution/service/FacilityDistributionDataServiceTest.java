@@ -27,6 +27,7 @@ import org.openlmis.distribution.domain.FacilityDistributionData;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -55,16 +56,16 @@ public class FacilityDistributionDataServiceTest {
     distribution.setDeliveryZone(deliveryZone);
     distribution.setProgram(program);
     FacilityDistributionDataService spyFacilityDistributionDataService = spy(facilityDistributionDataService);
-    Facility facility = new Facility();
+    Facility facility = new Facility(1234L);
     List<Facility> facilities = asList(facility);
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
 
     FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
     when(spyFacilityDistributionDataService.createDistributionData(facility, distribution)).thenReturn(facilityDistributionData);
 
-    List<FacilityDistributionData> facilityDistributions = spyFacilityDistributionDataService.getFor(distribution);
+    Map<Long, FacilityDistributionData> facilityDistributionDataMap = spyFacilityDistributionDataService.getFor(distribution);
 
-    assertThat(facilityDistributions.get(0), is(facilityDistributionData));
+    assertThat(facilityDistributionDataMap.get(1234L), is(facilityDistributionData));
   }
 
   @Test

@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Map;
 
 @Service
 public class DistributionService {
@@ -35,7 +35,7 @@ public class DistributionService {
 
   public Distribution create(Distribution distribution) {
     Distribution savedDistribution = repository.create(distribution);
-    List<FacilityDistributionData> facilityDistributions = facilityDistributionDataService.getFor(distribution);
+    Map<Long, FacilityDistributionData> facilityDistributions = facilityDistributionDataService.getFor(distribution);
     savedDistribution.setFacilityDistributions(facilityDistributions);
     return savedDistribution;
   }

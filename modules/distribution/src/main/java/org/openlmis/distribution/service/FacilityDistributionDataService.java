@@ -23,10 +23,7 @@ import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @NoArgsConstructor
@@ -38,16 +35,21 @@ public class FacilityDistributionDataService {
   @Autowired
   EpiUseService epiUseService;
 
-  public List<FacilityDistributionData> getFor(Distribution distribution) {
-    List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId());
-    List<FacilityDistributionData> facilityDistributions = new ArrayList<>();
+  public Map<Long, FacilityDistributionData> getFor(Distribution distribution) {
+    Long deliveryZoneId = distribution.getDeliveryZone().getId();
+    Long programId = distribution.getProgram().getId();
+
+    Map<Long, FacilityDistributionData> facilityDistributions = new HashMap<>();
+
+    List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     for (Facility facility : facilities) {
-      facilityDistributions.add(createDistributionData(facility, distribution));
+      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution));
     }
     return facilityDistributions;
   }
 
   public FacilityDistributionData createDistributionData(Facility facility, Distribution distribution) {
+
     EpiUse epiUse = createEpiUse(facility, distribution);
 
     return new FacilityDistributionData(epiUse);

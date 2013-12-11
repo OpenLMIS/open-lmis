@@ -19,7 +19,7 @@ import org.openlmis.core.domain.DeliveryZone;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 
-import java.util.List;
+import java.util.Map;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -33,7 +33,7 @@ public class Distribution extends BaseModel {
   Program program;
   ProcessingPeriod period;
   DistributionStatus status;
-  List<FacilityDistributionData> facilityDistributions;
+  Map<Long, FacilityDistributionData> facilityDistributions;
 
   @SuppressWarnings("unused")
   public String getZpp() {

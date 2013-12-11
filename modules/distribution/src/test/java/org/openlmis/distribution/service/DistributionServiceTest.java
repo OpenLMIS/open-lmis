@@ -24,8 +24,8 @@ import org.openlmis.distribution.domain.FacilityDistributionData;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -52,7 +52,7 @@ public class DistributionServiceTest {
     Distribution distribution = new Distribution();
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
-    List<FacilityDistributionData> facilityDistributions = new ArrayList<>();
+    Map<Long, FacilityDistributionData> facilityDistributions = new HashMap<>();
     when(facilityDistributionDataService.getFor(expectedDistribution)).thenReturn(facilityDistributions);
 
     Distribution initiatedDistribution = service.create(distribution);
