@@ -90,7 +90,7 @@ public class DriverFactory {
             //unZip = new Unzip();
             //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
             //Thread.sleep(10000);
-            driverType = setProperty("webdriver.chrome.driver", CHROME_FOLDER + "chromedriver");
+            driverType = setProperty("webdriver.chrome.driver", OUTPUT_FOLDER + "chromedriver");
             driverType = getProperty("webdriver.chrome.driver");
             return createChromeDriver();
 
