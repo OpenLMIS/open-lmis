@@ -26,11 +26,18 @@ function ListMailinglabelsController($scope,$filter, ngTableParams, MailingLabel
 
 
     $scope.exportReport   = function (type){
-        var url = '/reports/download/mailinglabels/' + type +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId ;
-        if(type == "mailing-list"){
-            url = '/reports/download/mailinglabels/list/' + "pdf" +'?facilityCodeFilter=' +  $scope.filterObject.facilityCodeFilter + '&facilityNameFilter=' +  $scope.filterObject.facilityNameFilter + '&facilityTypeId=' +  $scope.filterObject.facilityTypeId ;
-        }
-        window.open(url);
+
+      $scope.filterObject = {
+        facilityTypeId : $scope.facilityTypeId,
+        rgroupId :  $scope.rgroupId
+      };
+      var params = jQuery.param($scope.filterObject);
+
+      var url = '/reports/download/mailinglabels/' + type +'?' + params ;
+      if(type == "mailing-list"){
+          url = '/reports/download/mailinglabels/list/' + "pdf" +'?' + params ;
+      }
+      window.open(url);
     };
 
 
