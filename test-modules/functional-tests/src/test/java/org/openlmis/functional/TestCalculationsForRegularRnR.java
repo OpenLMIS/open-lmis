@@ -35,8 +35,8 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 
 public class TestCalculationsForRegularRnR extends TestCaseHelper {
 
-  private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
   public static final int NUMBER_OF_DAYS_IN_MONTH = 30;
+  private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
   public String program = "HIV", userSIC = "storeInCharge", password = "Admin123";
   public LoginPage loginPage;
 
@@ -531,12 +531,13 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndVerifyDefaultApprovedQuantityAndOtherFields() throws IOException, SQLException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndVerifyDefaultApprovedQuantityAndOtherFields() throws IOException, SQLException, ParseException {
     String createdDate = "2013-12-03";
+    String periodStartDate = "2013-10-01";
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "maxStockQuantity");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "false", "calculatedOrderQuantity");
-    dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
     dbWrapper.updateProductsByField("dosesPerDispensingUnit", "11", "P10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -546,7 +547,8 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
-    enterDetailsForFirstProduct(10, 5, null, 5, 99, 1);
+    int stockOutDays = (int) (calculateDaysDifferenceFromTodayToPeriodStartDate(periodStartDate) + 10);
+    enterDetailsForFirstProduct(10, 5, null, 5, stockOutDays, 1);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(8);
     initiateRnRPage.verifyAmcForFirstProduct(8);
     initiateRnRPage.skipSingleProduct(2);
@@ -558,17 +560,19 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDosesPerDispensingUnitIsZero() throws IOException, SQLException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDosesPerDispensingUnitIsZero() throws IOException, SQLException, ParseException {
     String createdDate = "2013-12-03";
     dbWrapper.deleteCurrentPeriod();
-    dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
+    String periodStartDate = "2013-10-01";
+    dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
-    enterDetailsForFirstProduct(10, 5, null, 5, 99, 0);
+    int stockOutDays = (int) (calculateDaysDifferenceFromTodayToPeriodStartDate(periodStartDate) + 10);
+    enterDetailsForFirstProduct(10, 5, null, 5, stockOutDays, 0);
     initiateRnRPage.skipSingleProduct(2);
     submitAndAuthorizeRnR();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
@@ -577,9 +581,9 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     initiateRnRPage = homePage.clickProceed();
-    dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
+    dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(periodStartDate);
     testWebDriver.refresh();
-    enterDetailsForFirstProduct(10, 5, null, 5, 99, 1);
+    enterDetailsForFirstProduct(10, 5, null, 5, stockOutDays, 1);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(35);
     initiateRnRPage.verifyAmcForFirstProduct(20);
     initiateRnRPage.skipSingleProduct(2);
@@ -588,17 +592,19 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1ForMultipleProducts() throws IOException, SQLException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1ForMultipleProducts() throws IOException, SQLException, ParseException {
     String createdDate = "2013-12-03";
+    String periodStartDate = "2013-10-01";
     dbWrapper.deleteCurrentPeriod();
-    dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
+    dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
-    enterDetailsForFirstProduct(10, 5, null, 5, 99, 0);
+    int stockOutDays = (int) (calculateDaysDifferenceFromTodayToPeriodStartDate(periodStartDate) + 10);
+    enterDetailsForFirstProduct(10, 5, null, 5, stockOutDays, 0);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(5);
     initiateRnRPage.verifyAmcForFirstProduct(5);
     initiateRnRPage.skipSingleProduct(2);
@@ -611,7 +617,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
     initiateRnRPage.skipSingleProduct(1);
-    enterDetailsForSecondProduct(10, 5, null, 5, 99, 1);
+    enterDetailsForSecondProduct(10, 5, null, 5, stockOutDays, 1);
     initiateRnRPage.verifyNormalizedConsumptionForSecondProduct(8);
     initiateRnRPage.verifyAmcForSecondProduct(8);
     submitAndAuthorizeRnR();
@@ -620,7 +626,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   }
 
   @Test(groups = "requisition")
-  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDayDifferenceIsGreaterThanStockOutDays() throws IOException, SQLException {
+  public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1AndDayDifferenceIsGreaterThanStockOutDays() throws IOException, SQLException, ParseException {
     String createdDate = "2013-12-03";
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", 1, "M");
@@ -632,11 +638,12 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
     enterDetailsForFirstProduct(10, 5, null, 5, 10, 1);
-    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(6);
-    initiateRnRPage.verifyAmcForFirstProduct(6);
+    int normalizedConsumption = Math.round(5 * 30 / (calculateReportingDays("2013-10-01") - 10) + 1 * Math.round(30 / 10));
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(normalizedConsumption);
+    initiateRnRPage.verifyAmcForFirstProduct(normalizedConsumption);
     initiateRnRPage.skipSingleProduct(2);
     submitAndAuthorizeRnR();
-    verifyNormalizedConsumptionAndAmcInDatabase(6, 6, "P10");
+    verifyNormalizedConsumptionAndAmcInDatabase(normalizedConsumption, normalizedConsumption, "P10");
   }
 
   @Test(groups = "requisition")
@@ -656,7 +663,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     int beginningBalance = 10;
 
     enterDetailsForFirstProduct(beginningBalance, quantityReceived, null, quantityDispensed, reportingDays, newPatientCount);
-    int normalizedConsumption = quantityReceived + newPatientCount * Math.round(30 / 10);
+    int normalizedConsumption = quantityDispensed + newPatientCount * Math.round(30 / 10);
 
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(normalizedConsumption);
     initiateRnRPage.verifyAmcForFirstProduct(normalizedConsumption);
@@ -668,17 +675,17 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
 
   @Test(groups = "requisition")
   public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs1() throws IOException, SQLException, ParseException {
-    verifyCalculationForEmergencyForNoOfMonths(1);
+    verifyCalculationForEmergencyForGivenNumberOfMonths(1);
   }
 
   @Test(groups = "requisition")
   public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs2() throws IOException, SQLException, ParseException {
-    verifyCalculationForEmergencyForNoOfMonths(2);
+    verifyCalculationForEmergencyForGivenNumberOfMonths(2);
   }
 
   @Test(groups = "requisition")
   public void testCalculationForEmergencyRnRWhenNumberOfMonthsIs3() throws IOException, SQLException, ParseException {
-    verifyCalculationForEmergencyForNoOfMonths(3);
+    verifyCalculationForEmergencyForGivenNumberOfMonths(3);
   }
 
   public int calculateReportingDays(String periodStartString) throws ParseException {
@@ -699,7 +706,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     }
   }
 
-  private void verifyCalculationForEmergencyForNoOfMonths(int numberOfMonths) throws SQLException, IOException, ParseException {
+  private void verifyCalculationForEmergencyForGivenNumberOfMonths(int numberOfMonths) throws SQLException, IOException, ParseException {
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-10-01", "2016-01-30", numberOfMonths, "M");
@@ -740,6 +747,14 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     initiateRnRPage.skipSingleProduct(2);
     submitAndAuthorizeRnR();
     verifyNormalizedConsumptionAndAmcInDatabase(normalizedConsumptionForEmergency, amcForEmergency, "P10");
+  }
+
+  public long calculateDaysDifferenceFromTodayToPeriodStartDate(String periodStartDate) throws ParseException {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    Date formattedCreatedDate = formatter.parse(periodStartDate);
+    long timeDifference = new Date().getTime() - formattedCreatedDate.getTime();
+    long daysDifference = timeDifference / (24 * 3600 * 1000);
+    return daysDifference;
   }
 
 }
