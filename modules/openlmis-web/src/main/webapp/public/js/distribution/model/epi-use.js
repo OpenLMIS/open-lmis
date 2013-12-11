@@ -15,10 +15,9 @@ function EpiUse(epiUse) {
 
   function init() {
     $.extend(true, this, epiUse);
-    $(this.productGroups).each(function (i, group) {
-      group.reading = group.reading || {};
+    $(this.lineItems).each(function (i, lineItem) {
       $(fieldList).each(function (i, fieldName) {
-        group.reading[fieldName] = group.reading[fieldName] || {};
+        lineItem[fieldName] = lineItem[fieldName] || {};
       });
     });
   }
@@ -26,9 +25,9 @@ function EpiUse(epiUse) {
   init.call(this);
 
   EpiUse.prototype.setNotRecorded = function () {
-    $(this.productGroups).each(function (i, group) {
-      $.each(group.reading, function (key) {
-        group.reading[key].notRecorded = true;
+    $(this.lineItems).each(function (i, lineItem) {
+      $(fieldList).each(function (j, fieldName) {
+        lineItem[fieldName].notRecorded = true;
       });
     });
   };
@@ -52,17 +51,17 @@ function EpiUse(epiUse) {
       return (field != 'expirationDate') ? !isEmpty(field, obj) : (obj[field].notRecorded || DATE_REGEXP.test(obj[field].value));
     }
 
-    $(_this.productGroups).each(function (i, productGroup) {
-      if (!productGroup.reading) {
+    $(_this.lineItems).each(function (i, lineItem) {
+      if (!lineItem) {
         statusClass = empty;
         return;
       }
       $(fieldList).each(function (i, fieldName) {
-        if (isValid(fieldName, productGroup.reading) && (!statusClass || statusClass == complete)) {
+        if (isValid(fieldName, lineItem) && (!statusClass || statusClass == complete)) {
           statusClass = complete;
-        } else if (!isValid(fieldName, productGroup.reading) && (!statusClass || statusClass == empty)) {
+        } else if (!isValid(fieldName, lineItem) && (!statusClass || statusClass == empty)) {
           statusClass = empty;
-        } else if ((!isValid(fieldName, productGroup.reading) && statusClass == complete) || (isValid(fieldName, productGroup.reading) && statusClass == empty)) {
+        } else if ((!isValid(fieldName, lineItem) && statusClass == complete) || (isValid(fieldName, lineItem) && statusClass == empty)) {
           statusClass = incomplete;
           return false;
         }

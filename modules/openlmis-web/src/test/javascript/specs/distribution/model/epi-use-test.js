@@ -11,8 +11,8 @@
 describe('EPI Use', function () {
 
   it('should set status as empty if expiration date format is invalid and rest of the form is empty', function () {
-    var epiUse = new EpiUse({productGroups: [
-      {reading: {expirationDate: {value: 'sdfghjk'}}}
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {value: 'sdfghjk'}}
     ]});
 
     var status = epiUse.computeStatus();
@@ -21,8 +21,8 @@ describe('EPI Use', function () {
   });
 
   it('should set status as incomplete if expiration date format is invalid and at least one other field is filled', function () {
-    var epiUse = new EpiUse({productGroups: [
-      {reading: {expirationDate: {value: 'sdfghjk'}, stockAtFirstOfMonth: {notRecorded: true}}}
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {value: 'sdfghjk'}, stockAtFirstOfMonth: {notRecorded: true}}
     ]});
 
     var status = epiUse.computeStatus();
@@ -31,10 +31,10 @@ describe('EPI Use', function () {
   });
 
   it('should set status as incomplete if expiration date format is invalid and rest of the form is valid', function () {
-    var epiUse = new EpiUse({productGroups: [
-      {reading: {expirationDate: {value: 'sdfghjk'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {value: 'sdfghjk'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
         received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
-      }}
+      }
     ]});
 
     var status = epiUse.computeStatus();
@@ -43,10 +43,10 @@ describe('EPI Use', function () {
   });
 
   it('should set status as incomplete if expiration date is not recorded and rest of the form is valid', function () {
-    var epiUse = new EpiUse({productGroups: [
-      {reading: {expirationDate: {notRecorded: true}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {notRecorded: true}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
         received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
-      }}
+      }
     ]});
 
     var status = epiUse.computeStatus();
@@ -55,10 +55,10 @@ describe('EPI Use', function () {
   });
 
   it('should set status as complete if the form is valid', function () {
-    var epiUse = new EpiUse({productGroups: [
-      {reading: {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
         received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
-      }}
+      }
     ]});
 
     var status = epiUse.computeStatus();
@@ -67,7 +67,9 @@ describe('EPI Use', function () {
   });
 
   it('should set status as incomplete if the only last form field valid', function () {
-    var epiUse = new EpiUse({productGroups: [{reading: {expirationDate: {value: '11/2012'}}}]});
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {value: '11/2012'}}
+    ]});
 
     var status = epiUse.computeStatus();
 
@@ -75,19 +77,19 @@ describe('EPI Use', function () {
   });
 
   it('should set not recorded checkbox for epi use', function () {
-    var epiUse = new EpiUse({productGroups: [
-      {reading: {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
+    var epiUse = new EpiUse({lineItems: [
+      {expirationDate: {value: '11/2012'}, stockAtFirstOfMonth: {notRecorded: true}, distributed: {value: 100},
         received: {value: 80}, stockAtEndOfMonth: {value: 200}, loss: {value: 50}
-      }}
+      }
     ]});
 
     epiUse.setNotRecorded();
 
-    expect(epiUse.productGroups[0].reading.expirationDate.notRecorded).toBeTruthy();
-    expect(epiUse.productGroups[0].reading.stockAtEndOfMonth.notRecorded).toBeTruthy();
-    expect(epiUse.productGroups[0].reading.stockAtFirstOfMonth.notRecorded).toBeTruthy();
-    expect(epiUse.productGroups[0].reading.distributed.notRecorded).toBeTruthy();
-    expect(epiUse.productGroups[0].reading.loss.notRecorded).toBeTruthy();
-    expect(epiUse.productGroups[0].reading.expirationDate.notRecorded).toBeTruthy();
+    expect(epiUse.lineItems[0].expirationDate.notRecorded).toBeTruthy();
+    expect(epiUse.lineItems[0].stockAtEndOfMonth.notRecorded).toBeTruthy();
+    expect(epiUse.lineItems[0].stockAtFirstOfMonth.notRecorded).toBeTruthy();
+    expect(epiUse.lineItems[0].distributed.notRecorded).toBeTruthy();
+    expect(epiUse.lineItems[0].loss.notRecorded).toBeTruthy();
+    expect(epiUse.lineItems[0].expirationDate.notRecorded).toBeTruthy();
   });
 });
