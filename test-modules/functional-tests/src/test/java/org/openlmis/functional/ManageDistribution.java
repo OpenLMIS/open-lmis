@@ -182,7 +182,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I verify Distributions data is not synchronised$")
   public void verifyDistributionsInDB() throws IOException, SQLException {
-    dbWrapper.verifyRecordCountInTable("Distributions", "1");
+    assertEquals(dbWrapper.getRecordCountInTable("Distributions"), 1);
   }
 
   @And("^I initiate distribution$")
@@ -310,13 +310,18 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
   }
 
-  @When("^I view observations data in DB:$")
+  @Then("^I view observations data in DB:$")
   public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data)
-      dbWrapper.verifyFacilityVisits(map.get("observations").toString(), map.get("confirmedByName").toString(),
-        map.get("confirmedByTitle").toString(), map.get("verifiedByName").toString(),
-        map.get("verifiedByTitle").toString());
+    for (Map map : data){
+      dbWrapper.getFacilityVisitDetails();
+      HashMap m1 = dbWrapper.getFacilityVisitDetails();
+      assertEquals(m1.get("observations").toString(), map.get("observations").toString());
+      assertEquals(m1.get("confirmedByName").toString(), map.get("confirmedByName").toString());
+      assertEquals(m1.get("confirmedByTitle").toString(), map.get("confirmedByTitle").toString());
+      assertEquals(m1.get("verifiedByName").toString(), map.get("verifiedByName").toString());
+      assertEquals(m1.get("verifiedByTitle").toString(), map.get("verifiedByTitle").toString());
+    }
   }
 
   @Then("^I should see data download successfully$")

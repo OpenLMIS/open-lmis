@@ -19,6 +19,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
@@ -140,7 +141,14 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
     distributionPage.syncDistributionMessageDone();
 
-    dbWrapper.verifyFacilityVisits("Some observations", "samuel", "Doe", "Mai ka", "Laal");
+    HashMap m1 = dbWrapper.getFacilityVisitDetails();
+
+    assertEquals(m1.get("observations").toString(), "Some observations");
+    assertEquals(m1.get("confirmedByName").toString(), "samuel");
+    assertEquals(m1.get("confirmedByTitle").toString(), "Doe");
+    assertEquals(m1.get("verifiedByName").toString(), "Mai ka");
+    assertEquals(m1.get("verifiedByTitle").toString(), "Laal");
+
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");

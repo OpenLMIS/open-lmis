@@ -75,7 +75,7 @@ public class PODTest extends JsonUtility {
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
 
-    dbWrapper.verifyPODAndPODLineItems(id, "P10", 65);
+    assertEquals(65,dbWrapper.getPODLineItemQuantityReceived(id, "P10"));
 
     responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
@@ -117,7 +117,7 @@ public class PODTest extends JsonUtility {
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
     assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
 
-    dbWrapper.verifyPODAndPODLineItems(id, "P11", 650);
+      assertEquals(650,dbWrapper.getPODLineItemQuantityReceived(id, "P11"));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -187,10 +187,10 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-        format(POD_URL, 19999999),
-        "POST",
-        "commTrack",
-        "Admin123");
+              format(POD_URL, 19999999),
+              "POST",
+              "commTrack",
+              "Admin123");
 
     String response = responseEntity.getResponse();
 
