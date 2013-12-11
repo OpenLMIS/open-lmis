@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.AverageConsumptionReportFilter;
 import org.openlmis.report.util.Constants;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,8 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
   @Autowired
   private AverageConsumptionReportMapper reportMapper;
 
-  private AverageConsumptionReportFilter averageConsumptionReportFilter = null;
+  @Autowired
+  private AverageConsumptionReportFilter averageConsumptionReportFilter;
 
   @Override
   protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
@@ -55,20 +57,19 @@ public class AverageConsumptionReportDataProvider extends ReportDataProvider {
 
   public AverageConsumptionReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
       if(filterCriteria != null ){
-          averageConsumptionReportFilter = new AverageConsumptionReportFilter();
+
           Date originalStart =  new Date();
           Date originalEnd =  new Date();
 
           averageConsumptionReportFilter.setZoneId( StringUtils.isBlank(filterCriteria.get("zoneId")[0])  ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
           averageConsumptionReportFilter.setFacilityTypeId( StringUtils.isBlank( filterCriteria.get("facilityTypeId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
-          averageConsumptionReportFilter.setFacilityType( StringUtils.isBlank( filterCriteria.get("facilityType")[0] ) ? "ALL Facilities" : filterCriteria.get("facilityType")[0]);
-          averageConsumptionReportFilter.setRgroup( StringUtils.isBlank(filterCriteria.get("rgroup")[0]) ? "ALL Reporting Groups" : filterCriteria.get("rgroup")[0]);
+          averageConsumptionReportFilter.setFacilityType( StringUtils.isBlank( filterCriteria.get("facilityType")[0] ) ? "All Facility Types" : filterCriteria.get("facilityType")[0]);
 
 
           averageConsumptionReportFilter.setProductCategoryId( StringUtils.isBlank(filterCriteria.get("productCategoryId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("productCategoryId")[0])); //defaults to 0
           averageConsumptionReportFilter.setProductId( StringUtils.isBlank( filterCriteria.get("productId") [0] ) ? "0" : (filterCriteria.get("productId")[0]).toString().replace("]","}").replace("[","{").replaceAll("\"",""));
           averageConsumptionReportFilter.setRgroupId( StringUtils.isBlank( filterCriteria.get("rgroupId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-          averageConsumptionReportFilter.setProgramId( StringUtils.isBlank( filterCriteria.get("programId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
+          averageConsumptionReportFilter.setProgramId( StringUtils.isBlank( filterCriteria.get("programId")[0] ) ? 0 : Long.parseLong(filterCriteria.get("programId")[0])); //defaults to 0
 
           //monthly
           averageConsumptionReportFilter.setYearFrom( StringUtils.isBlank( filterCriteria.get("fromYear")[0] ) ? originalStart.getYear() : Integer.parseInt(filterCriteria.get("fromYear")[0])); //defaults to 0

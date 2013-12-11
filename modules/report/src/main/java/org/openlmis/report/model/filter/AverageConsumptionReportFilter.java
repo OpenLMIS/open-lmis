@@ -13,7 +13,10 @@ package org.openlmis.report.model.filter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.ReportData;
+import org.openlmis.core.service.*;
+import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.String;
 import java.text.DateFormat;
@@ -22,44 +25,116 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AverageConsumptionReportFilter  implements ReportData {
+@Component
+public class AverageConsumptionReportFilter {
 
-    //top filters
-    private int userId;
+  @Autowired
+  private ProductCategoryService productCategoryService;
 
-    // period selections
-    private String periodType;
-    private int yearFrom;
-    private int yearTo;
-    private int monthFrom;
-    private int monthTo;
-    private int quarterFrom;
-    private int quarterTo;
-    private int semiAnnualFrom;
-    private int semiAnnualTo;
+  @Autowired
+  private ProductService productService;
 
-    private int facilityTypeId;
-    private String facilityType;
-    private int zoneId;
-    private String productId;
-    private int productCategoryId;
-    private int rgroupId;
-    private String rgroup;
-    private int facilityId;
-    private int programId;
-    private int pdformat;
+  @Autowired
+  private GeographicZoneService geographicZoneService;
 
-    private Date startDate;
-    private Date endDate;
+  @Autowired
+  private RequisitionGroupService requisitionGroupService;
 
-    @Override
-    public String toString(){
+  @Autowired
+  private FacilityTypeReportMapper facilityTypeService;
 
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+  @Autowired
+  private ProgramService programService;
 
-        return "Period : "+  dateFormatter.format(this.getStartDate()) +" - "+ dateFormatter.format(this.getEndDate()) +" \n" +
-                "Facility Types : "+ this.getFacilityType() +"\n " +
-                "Reporting Groups : "+ this.getRgroup();
+  @Autowired
+  private FacilityService facilityService;
+
+
+  //top filters
+  private int userId;
+
+  // period selections
+  private String periodType;
+  private int yearFrom;
+  private int yearTo;
+  private int monthFrom;
+  private int monthTo;
+  private int quarterFrom;
+  private int quarterTo;
+  private int semiAnnualFrom;
+  private int semiAnnualTo;
+
+  private int facilityTypeId;
+  private String facilityType;
+
+  private int zoneId;
+  private String zone;
+
+  private String productNames;
+  private String productId;
+
+  private long productCategoryId;
+  private String productCategories;
+
+  private long rgroupId;
+  private String requisitionGroup;
+
+  private Long facilityId;
+  private String facility;
+
+  private Long programId;
+  private String program;
+
+  private int pdformat;
+
+  private Date startDate;
+  private Date endDate;
+
+  @Override
+  public String toString(){
+
+    DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
+
+    if(getFacilityId() == 0){
+      setFacilityType("All facility types");
+    }else{
+      //TODO: write the facility type service
+      //facilityTypeService.
+    }
+
+    if(programId != 0){
+      this.setProgram(programService.getById(programId).getName());
+    }
+
+    if(getZoneId() != 0){
+      setZone(geographicZoneService.getById( getZoneId()).getName() );
+    }  else{
+      setZone("All geographical zones");
+    }
+
+    if(getRgroupId() != 0){
+      //setRequisitionGroup(requisitionGroupService.getById(rgroupId).);
+    }else{
+      setRequisitionGroup("All requisition groups");
+    }
+
+    if(getFacilityId()!= 0){
+      setFacility(facilityService.getById(getFacilityId()).getName());
+    }else{
+      setFacility("All facilities");
+    }
+
+    //TODO: copy over the list of products here.
+
+    return "Program: " + this.getProgram() + "\n" +
+           "Period : "+  dateFormatter.format(this.getStartDate()) +" - "+ dateFormatter.format(this.getEndDate()) +" \n" +
+           "Geographic Zones: " + getZone() + "\n" +
+           "Requisition Group: " + getRequisitionGroup() + "\n" +
+           "Facility Types: "+ this.getFacilityType() +"\n" +
+           "Facility: " + this.getFacility()+ "\n" +
+           "Product Category: " + this.getProductCategories() + "\n" +
+           "Product: " + this.getProductNames();
+
 
     }
 }
