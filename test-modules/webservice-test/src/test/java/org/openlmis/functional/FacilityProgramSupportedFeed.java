@@ -58,7 +58,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_WebService.csv");
     Thread.sleep(5000);
     ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
-    String expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000}";
+    String expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000,\"stringStartDate\":\"02/02/2011\"}";
     assertTrue(responseEntity.getResponse().contains(expected));
 
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent_WebService.csv");
@@ -66,8 +66,8 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000}";
-    String expected1 = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000}";
+    expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000,\"stringStartDate\":\"02/02/2011\"}";
+    String expected1 = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000,\"stringStartDate\":\"05/05/2011\"}";
 
     assertTrue(feedJSONList.get(1).contains(expected));
     assertTrue(feedJSONList.get(2).contains(expected1));
