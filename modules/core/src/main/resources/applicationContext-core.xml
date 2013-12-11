@@ -11,9 +11,12 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int-ftp="http://www.springframework.org/schema/integration/ftp"
+       xmlns:int="http://www.springframework.org/schema/integration"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/integration/ftp http://www.springframework.org/schema/integration/ftp/spring-integration-ftp.xsd">
 
     <context:annotation-config/>
     <context:spring-configured/>
@@ -24,4 +27,60 @@
     <import resource="classpath*:applicationContext-email.xml"/>
     <import resource="classpath*:applicationContext-upload.xml"/>
     <import resource="classpath*:openLmisAtomFeedContext.xml"/>
+
+
+    <bean id="ftpSessionFactory"
+          class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
+        <property name="host" value="${budget.ftp.server.host}"/>
+        <property name="port" value="${budget.ftp.server.port}"/>
+        <property name="username" value="${budget.ftp.server.username}"/>
+        <property name="password" value="${budget.ftp.server.password}"/>
+        <property name="clientMode" value="2"/>
+        <property name="bufferSize" value="100000"/>
+    </bean>
+
+    <int-ftp:inbound-channel-adapter cache-sessions="false"
+                                     channel="ftpInputChannel"
+                                     session-factory="ftpSessionFactory"
+                                     filename-pattern="*.csv"
+                                     auto-create-local-directory="true"
+                                     delete-remote-files="true"
+                                     remote-directory="${budget.ftp.remote.directory}"
+                                     local-directory="${budget.ftp.local.directory}">
+        <int:poller fixed-rate="${budget.ftp.task.interval}" max-messages-per-poll="-1"/>
+    </int-ftp:inbound-channel-adapter>
+
+    <int:channel id="ftpErrorChannel"/>
+
+    <int-ftp:outbound-channel-adapter cache-sessions="false"
+                                      channel="ftpErrorChannel"
+                                      remote-directory="${budget.ftp.remote.error.directory}"
+                                      session-factory="ftpSessionFactory"
+                                      auto-create-directory="true"
+                                      temporary-file-suffix="temp"
+                                      remote-filename-generator-expression="'error_'+ payload.name"/>
+
+    <int:channel id="ftpArchiveOutputChannel"/>
+
+    <int-ftp:outbound-channel-adapter cache-sessions="false"
+                                      channel="ftpArchiveOutputChannel"
+                                      remote-directory="${budget.ftp.remote.archive.directory}"
+                                      session-factory="ftpSessionFactory"
+                                      auto-create-directory="true"
+                                      temporary-file-suffix="temp"
+                                      remote-filename-generator-expression="payload.name"/>
+
+
+    <int:outbound-channel-adapter channel="ftpInputChannel" ref="budgetFileProcessor" method="process"/>
+
+    <bean id="messageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5"/>
+        <property name="maxPoolSize" value="10"/>
+        <property name="queueCapacity" value="27"/>
+    </bean>
+
+    <int:channel id="ftpInputChannel">
+        <int:dispatcher task-executor="messageDispatcher"/>
+    </int:channel>
+
 </beans>

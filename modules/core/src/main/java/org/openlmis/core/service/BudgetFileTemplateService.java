@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class BudgetFileTemplateService {
   @Autowired
-  BudgetFileTemplateRepository budgetFileTemplateRepository;
+  private BudgetFileTemplateRepository budgetFileTemplateRepository;
 
   @Transactional
   public void update(EDIFileTemplate ediFileTemplate) {
