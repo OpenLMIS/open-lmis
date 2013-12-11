@@ -8,19 +8,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function FacilityDistributionData(facilityDistributionData) {
+function FacilityDistribution(facilityDistribution) {
+
   var COMPLETE = 'is-complete';
   var EMPTY = 'is-empty';
   var INCOMPLETE = 'is-incomplete';
   var SYNCED = 'is-synced';
   var DUPLICATE = 'is-duplicate';
 
+  this.epiUse = new EpiUse(facilityDistribution.epiUse);
+  this.refrigerators = new Refrigerators(facilityDistribution.refrigerators);
+  this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
+  this.status = facilityDistribution.status;
 
-  this.epiUse = new EpiUse(facilityDistributionData.epiUse);
-  this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
-  this.facilityVisit = new FacilityVisit(facilityDistributionData.facilityVisit);
-  this.status = facilityDistributionData.status;
-  FacilityDistributionData.prototype.computeStatus = function () {
+  FacilityDistribution.prototype.computeStatus = function () {
+
     var forms = [this.epiUse, this.refrigerators, this.facilityVisit];
     var overallStatus;
     if(this.status === SYNCED || this.status === DUPLICATE) {
@@ -42,9 +44,11 @@ function FacilityDistributionData(facilityDistributionData) {
 
     this.status = overallStatus;
     return overallStatus;
+
   };
 
-  FacilityDistributionData.prototype.isDisabled = function () {
+  FacilityDistribution.prototype.isDisabled = function () {
     return [SYNCED, DUPLICATE].indexOf(this.status) != -1;
   };
+
 }

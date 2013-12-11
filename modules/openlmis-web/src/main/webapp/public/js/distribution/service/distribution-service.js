@@ -13,26 +13,14 @@ distributionModule.service('distributionService', function ($dialog, messageServ
   var _this = this;
 
   function prepareDistribution(distribution, referenceData) {
-    distribution.facilityDistributionData = {};
+
     $(referenceData.facilities).each(function (index, facility) {
-
-      var productGroups = [];
-      $(facility.supportedPrograms[0].programProducts).each(function (i, programProduct) {
-        if (!programProduct.active || !programProduct.product.active) return;
-        if (!programProduct.product.productGroup) return;
-        if (_.findWhere(productGroups, {id: programProduct.product.productGroup.id})) return;
-
-        productGroups.push(programProduct.product.productGroup);
-      });
-
       var refrigeratorReadings = [];
       $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
         refrigeratorReadings.push({'refrigerator': refrigerator});
       });
 
-      distribution.facilityDistributionData[facility.id] = {};
-      distribution.facilityDistributionData[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
-      distribution.facilityDistributionData[facility.id].epiUse = {productGroups: productGroups};
+      distribution.facilityDistributions[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
     });
 
     return distribution;

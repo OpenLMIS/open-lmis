@@ -9,14 +9,15 @@
   -->
 <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 
-<div class="clearfix facility-container" ng-init="facilityData = distribution.facilityDistributionData[selectedFacilityId]">
+<div class="clearfix facility-container"
+     ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
   <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
   <div class="facility-info">
     <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
       <h3>
         <span openlmis-message="label.refrigerators"></span>
         <input type="button" class="btn btn-primary pull-right" id="addNew" ng-click="showRefrigeratorModal()"
-           openlmis-message="button.add.new"/>
+               openlmis-message="button.add.new"/>
       </h3>
 
       <div class="alert alert-info" id="noRefrigerators"
@@ -25,7 +26,7 @@
       </div>
 
       <div
-        ng-show="facilityData.refrigerators.refrigeratorReadings.length">
+          ng-show="facilityData.refrigerators.refrigeratorReadings.length">
         <div class="list-header-container">
           <div class="list-header row-fluid">
             <div class="span1"></div>

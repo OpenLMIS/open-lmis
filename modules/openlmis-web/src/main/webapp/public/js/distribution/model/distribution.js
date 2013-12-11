@@ -9,22 +9,19 @@
  */
 
 function Distribution(distributionJson) {
-  var COMPLETE = 'is-complete';
-  var EMPTY = 'is-empty';
-  var INCOMPLETE = 'is-incomplete';
 
   $.extend(true, this, distributionJson);
 
-  if (distributionJson.facilityDistributionData) {
+  if (distributionJson.facilityDistributions) {
     var _this = this;
-    this.facilityDistributionData = {};
-    $.each(distributionJson.facilityDistributionData, function (key, value) {
-      _this.facilityDistributionData[key] = new FacilityDistributionData(value);
+    this.facilityDistributions = {};
+    $.each(distributionJson.facilityDistributions, function (key, value) {
+      _this.facilityDistributions[key] = new FacilityDistribution(value);
     });
   }
 
   Distribution.prototype.setEpiNotRecorded = function (facilityId) {
-    this.facilityDistributionData[facilityId].epiUse.setNotRecorded();
+    this.facilityDistributions[facilityId].epiUse.setNotRecorded();
   };
 
   return this;

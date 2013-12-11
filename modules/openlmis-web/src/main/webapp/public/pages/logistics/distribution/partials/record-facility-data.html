@@ -11,7 +11,7 @@
 <div class="record-facility-data" ng-controller="RecordFacilityDataController">
   <div class="row-fluid facility-heading">
     <div class="span5" ng-show="facilitySelected">
-      <span ng-class="distribution.facilityDistributionData[facilitySelected.id].computeStatus()">
+      <span ng-class="distribution.facilityDistributions[facilitySelected.id].computeStatus()">
         <div id="facilityIndicator" class="status-icon pull-left position-fixing"></div>
       </span>
 
@@ -56,7 +56,7 @@
         <option value=""></option>
         <optgroup ng-repeat="zone in geographicZones | orderBy: 'code'" label="{{ zone.code }}">
           <option ng-repeat="facility in zoneFacilityMap[zone.code] | orderBy: 'name'" value="{{ facility.id }}"
-                  ng-class="distribution.facilityDistributionData[facility.id].computeStatus()">
+                  ng-class="distribution.facilityDistributions[facility.id].computeStatus()">
             {{ facility.code }} - {{ facility.name }}
           </option>
         </optgroup>
@@ -64,7 +64,7 @@
 
       <div class="span3 offset1 info-box-labels">
         <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
-        ng-bind="distribution.deliveryZone.name"></span>
+          ng-bind="distribution.deliveryZone.name"></span>
       </div>
       <div class="span3 info-box-labels">
         <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="distribution.program.name"></span>

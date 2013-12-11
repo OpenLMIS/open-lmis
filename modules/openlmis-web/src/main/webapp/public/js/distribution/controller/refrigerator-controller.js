@@ -20,8 +20,8 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     });
     $scope.edit[serialNum] = true;
     if (!isUndefined(index)) {
-      var refrigeratorEditButton = angular.element('#editReading'+index).offset().top;
-      angular.element('body,html').animate({scrollTop : refrigeratorEditButton+'px'},'slow',function(){
+      var refrigeratorEditButton = angular.element('#editReading' + index).offset().top;
+      angular.element('body,html').animate({scrollTop: refrigeratorEditButton + 'px'}, 'slow', function () {
         $('input[name^="temperature"]:visible').focus();
       });
     }
@@ -33,16 +33,16 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
   };
 
   $scope.addRefrigeratorToStore = function () {
-    var exists = _.find($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
-      function (reading) {
-        return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
-      });
+    var exists = _.find($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
+        function (reading) {
+          return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
+        });
     if (exists) {
       $scope.isDuplicateSerialNumber = true;
       return;
     }
-    $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.
-      addRefrigerator({'refrigerator': angular.copy($scope.newRefrigerator), status: "is-empty"});
+    $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.
+        addRefrigerator({'refrigerator': angular.copy($scope.newRefrigerator), status: "is-empty"});
 
     IndexedDB.put('distributions', $scope.distribution);
 
@@ -59,11 +59,11 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     var callback = function (serialNumberToDelete) {
       return function (result) {
         if (!result) return;
-        $scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings =
-          _.reject($scope.distribution.facilityDistributionData[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
-            function (refrigeratorReading) {
-              return serialNumberToDelete == refrigeratorReading.refrigerator.serialNumber;
-            });
+        $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.refrigeratorReadings =
+            _.reject($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
+                function (refrigeratorReading) {
+                  return serialNumberToDelete == refrigeratorReading.refrigerator.serialNumber;
+                });
         IndexedDB.put('distributions', $scope.distribution);
       };
     };
@@ -74,12 +74,12 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
 
 }
 
-function showProblemDivAnimation(idSent){
+function showProblemDivAnimation(idSent) {
   $('body,html').animate({
-     scrollTop : utils.parseIntWithBaseTen($('#'+idSent).offset().top)+'px'
-  },'fast');
+    scrollTop: utils.parseIntWithBaseTen($('#' + idSent).offset().top) + 'px'
+  }, 'fast');
 }
 
-function showProblemsDiv(idSent){
-  setTimeout(showProblemDivAnimation(idSent),100);
+function showProblemsDiv(idSent) {
+  setTimeout(showProblemDivAnimation(idSent), 100);
 }

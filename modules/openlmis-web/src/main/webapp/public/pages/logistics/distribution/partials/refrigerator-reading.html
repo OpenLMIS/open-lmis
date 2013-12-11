@@ -9,7 +9,7 @@
   -->
 
 <form auto-save="distribution" object-store="distributions"
-      disable-form="{{distribution.facilityDistributionData[selectedFacilityId].status === 'is-synced'}}">
+      disable-form="{{distribution.facilityDistributions[selectedFacilityId].status === 'is-synced'}}">
   <div class="row-fluid" ng-class="refrigeratorReading.computeStatus()">
     <div class="span1 status-cell">
       <span class="status-icon"></span>

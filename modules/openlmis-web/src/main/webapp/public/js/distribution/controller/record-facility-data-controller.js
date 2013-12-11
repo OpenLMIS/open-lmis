@@ -27,9 +27,9 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
   $scope.format = function (dropDownObj) {
     if (dropDownObj.element[0].value) {
       var facilityId = utils.parseIntWithBaseTen(dropDownObj.element[0].value);
-      return "<div class='" + $scope.distribution.facilityDistributionData[facilityId].computeStatus() + "'>" +
-        "<span id="+ facilityId +" class='status-icon'></span>" + dropDownObj.text +
-        "</div>";
+      return "<div class='" + $scope.distribution.facilityDistributions[facilityId].computeStatus() + "'>" +
+          "<span id=" + facilityId + " class='status-icon'></span>" + dropDownObj.text +
+          "</div>";
     } else {
       return dropDownObj.text;
     }

@@ -37,26 +37,26 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     function syncFacilities(facilities) {
       var synchronizedFacilityCount = $scope.progressValue = totalFacilityCount = 0;
 
-      $.each($scope.distributionData.facilityDistributionData, function (facilityId, facilityDistributionData) {
-        if (facilityDistributionData.status !== $scope.COMPLETE)  return;
+      $.each($scope.distributionData.facilityDistributions, function (facilityId, facilityDistribution) {
+        if (facilityDistribution.status !== $scope.COMPLETE)  return;
         ++totalFacilityCount;
 
         facilityId = utils.parseIntWithBaseTen(facilityId);
         var defer = $q.defer();
         promises.push(defer.promise);
 
-        SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistributionData,
-          function (data) {
+        SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistribution,
+            function (data) {
             if (data.syncStatus === 'Synced') {
-              facilityDistributionData.status = $scope.SYNCED;
+              facilityDistribution.status = $scope.SYNCED;
             } else if (data.syncStatus === 'AlreadySynced') {
-              facilityDistributionData.status = $scope.DUPLICATE;
+              facilityDistribution.status = $scope.DUPLICATE;
             }
-            defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistributionData: facilityDistributionData});
-            updateProgressBar();
+              defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
+              updateProgressBar();
           }, function () {
-            defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistributionData: facilityDistributionData});
-            updateProgressBar();
+              defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
+              updateProgressBar();
           });
       });
 
@@ -71,7 +71,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
         distributionService.save($scope.distributionData);
 
         $scope.syncResult = _.groupBy(resolves, function (resolve) {
-          return resolve.facilityDistributionData.status;
+          return resolve.facilityDistribution.status;
         });
       });
     }
@@ -99,8 +99,8 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
   $scope.showConfirmDistributionSync = function (distributionId) {
     $scope.distributionData = _.findWhere(SharedDistributions.distributionList, {id: distributionId});
 
-    var facilityDataToSync = _.filter($scope.distributionData.facilityDistributionData, function (facilityDistributionData) {
-      return facilityDistributionData.computeStatus() === $scope.COMPLETE;
+    var facilityDataToSync = _.filter($scope.distributionData.facilityDistributions, function (facilityDistribution) {
+      return facilityDistribution.computeStatus() === $scope.COMPLETE;
     });
 
     if (!facilityDataToSync.length) {
