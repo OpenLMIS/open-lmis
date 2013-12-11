@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="178"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgres"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -32,7 +32,7 @@ JOIN product_categories prc on prc.id = pr.categoryid
 JOIN requisition_group_members rgm on rgm.facilityid = f.id
 LEFT OUTER JOIN supply_lines sl on sl.supervisorynodeid = r.supervisorynodeid and r.programid = sl.programid
 LEFT OUTER JOIN facilities s on s.id = sl.supplyingfacilityid
-WHERE (r.status in ('APPROVED', 'RELEASED') and pp.id = 6 and sl.programid=3)
+WHERE (r.status in ('APPROVED', 'RELEASED') and sl.programid=2)
 GROUP BY li.product, li.productcategory,  f.name, ft.name, li.productcode
 ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 	</queryString>
@@ -200,9 +200,23 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="81">
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="802" height="79" uuid="8ac6e89e-242f-401b-835a-84e82925529c">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-logos-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="79">
+			<subreport>
+				<reportElement stretchType="RelativeToBandHeight" isPrintRepeatedValues="false" x="0" y="0" width="802" height="79" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -230,7 +244,7 @@ ORDER BY ft.name, f.name , li.productcategory, li.product, li.productcode]]>
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
-	</title>
+	</pageHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>

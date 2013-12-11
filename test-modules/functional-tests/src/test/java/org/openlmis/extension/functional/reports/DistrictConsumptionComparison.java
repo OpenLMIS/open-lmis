@@ -191,9 +191,7 @@ public class DistrictConsumptionComparison extends ReportTestHelper {
 
         HomePage homePageApproved = viewRequisitionPageApproved.verifyFieldsPostApproval("25.00", "1");
 
-        // dbWrapper.updateRequisition("F10");
-        ConvertOrderPage convertOrderPage = homePageApproved.navigateConvertToOrder();
-        convertOrderPage.convertToOrder();
+
         ViewRequisitionPage viewRequisitionPageOrdered = homePageApproved.navigateViewRequisition();
         viewRequisitionPageOrdered.enterViewSearchCriteria();
         viewRequisitionPageOrdered.clickSearch();
