@@ -227,6 +227,11 @@ services.factory('DeliveryZoneFacilities', function ($resource) {
 services.factory('ProgramRegimens', function ($resource) {
   return $resource('/programId/:programId/regimens.json', {}, {});
 });
+
+services.factory('RegimenCategories', function ($resource) {
+  return $resource('/regimenCategories.json', {}, {});
+});
+
 services.factory('Regimens', function ($resource) {
   return $resource('/programId/:programId/regimens.json', {}, {post: {method: 'POST', isArray: true}});
 });
