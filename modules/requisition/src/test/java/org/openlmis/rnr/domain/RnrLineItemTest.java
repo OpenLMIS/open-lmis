@@ -596,8 +596,8 @@ public class RnrLineItemTest {
     lineItem.setQuantityRequested(20);
 
     lineItem.setFieldsForApproval();
-
-    assertThat(lineItem.getQuantityApproved(), is(10));
+    // the requested quantity has a precedence over the calculated quantity, all the time.
+    assertThat(lineItem.getQuantityApproved(), is(20));
   }
 
   @Test

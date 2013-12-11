@@ -15,6 +15,7 @@ import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
+import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapperExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,11 +28,15 @@ import java.util.List;
 @NoArgsConstructor
 public class GeographicZoneRepository {
 
-  private GeographicZoneMapperExtension mapper;
+  private GeographicZoneMapper mapper;
+
+  @Autowired
+  private GeographicZoneMapperExtension mapperExtension;
+
   private GeographicLevelMapper geographicLevelMapper;
 
   @Autowired
-  public GeographicZoneRepository(GeographicZoneMapperExtension mapper, GeographicLevelMapper geographicLevelMapper) {
+  public GeographicZoneRepository(GeographicZoneMapper mapper, GeographicLevelMapper geographicLevelMapper) {
     this.mapper = mapper;
     this.geographicLevelMapper = geographicLevelMapper;
   }
@@ -43,7 +48,7 @@ public class GeographicZoneRepository {
         } catch (DuplicateKeyException exception) {
             throw new DataException("Duplicate Geographic Zone Code");
         } catch (DataIntegrityViolationException exception) {
-            throw new DataException("Incorrect Data Length");
+            throw new DataException("error.incorrect.length");
         }
     }
 
@@ -69,20 +74,8 @@ public class GeographicZoneRepository {
   }
 
   public List<GeographicZone> getAllGeographicZones() {
-    return mapper.getAllGeographicZones_Ext();
+    return mapperExtension.getAllGeographicZones_Ext();
   }
-
-//  public void save(GeographicZone zone) {
-//    try {
-//      if (zone.getId() == null) {
-//        mapper.insert(zone);
-//        return;
-//      }
-//      mapper.update(zone);
-//    } catch (DataIntegrityViolationException e) {
-//      throw new DataException("error.incorrect.length");
-//    }
-//  }
 
   public GeographicLevel getGeographicLevelByCode(String code) {
     return mapper.getGeographicLevelByCode(code);

@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.GeographicLevel;
 import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.GeographicLevelMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapper;
 import org.openlmis.core.repository.mapper.GeographicZoneMapperExtension;
@@ -43,7 +44,7 @@ public class GeographicZoneRepositoryTest {
   public ExpectedException expectedEx = ExpectedException.none();
 
   @Mock
-  private GeographicZoneMapperExtension mapper;
+  private GeographicZoneMapper mapper;
 
   @Mock
   private GeographicLevelMapper geographicLevelMapper;
@@ -74,20 +75,6 @@ public class GeographicZoneRepositoryTest {
     repository.save(geographicZone);
   }
 
-  @Test
-  public void shouldThrowErrorIfIncorrectDataLengthWhileUpdating() throws Exception {
-    geographicZone.setId(1l);
-    when(mapper.getGeographicLevelByCode(geographicZone.getLevel().getCode())).thenReturn(
-      new GeographicLevel(1L, "abc", "abc", 1));
-    when(mapper.getGeographicZoneByCode(geographicZone.getParent().getCode())).thenReturn(
-      new GeographicZone(1L, "xyz", "xyz", null, null));
-
-    expectedEx.expect(dataExceptionMatcher("error.incorrect.length"));
-
-    doThrow(new DataIntegrityViolationException("Incorrect Data Length")).when(mapper).update(geographicZone);
-
-    repository.save(geographicZone);
-  }
 
   @Test
   public void shouldGetZoneByCode() throws Exception {
