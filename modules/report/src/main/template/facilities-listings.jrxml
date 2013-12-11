@@ -15,6 +15,7 @@
 	<parameter name="REPORT_ID" class="java.lang.String"/>
 	<parameter name="LOGO" class="java.io.InputStream"/>
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
   f.code,
@@ -86,14 +87,14 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[Facility Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="95" y="0" width="161" height="20" forecolor="#000000" backcolor="#333333" uuid="1138c634-4150-46c6-a83e-b93243223977"/>
+				<reportElement mode="Transparent" x="95" y="1" width="160" height="19" forecolor="#000000" backcolor="#333333" uuid="1138c634-4150-46c6-a83e-b93243223977"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Facility Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="0" y="0" width="39" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
+				<reportElement mode="Transparent" x="0" y="0" width="38" height="20" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="2"/>
@@ -135,7 +136,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<text><![CDATA[District]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Transparent" x="731" y="0" width="70" height="20" forecolor="#000000" backcolor="#333333" uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e"/>
+				<reportElement mode="Transparent" x="731" y="0" width="71" height="20" forecolor="#000000" backcolor="#333333" uuid="ce0b6684-1b56-4d42-9e71-f519aa99b78e"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -146,6 +147,7 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
 			<textField>
 				<reportElement x="38" y="0" width="759" height="20" forecolor="#006666" uuid="bd4f6cec-7cdc-4257-90e0-8b2e7936d5f3">
 					<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
@@ -156,59 +158,75 @@ LEFT OUTER JOIN geographic_zones gz on gz.id = f.geographiczoneid
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="801" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
-					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF" && $V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="39" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+				<reportElement x="0" y="0" width="38" height="20" isRemoveLineWhenBlank="true" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="19" width="801" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7"/>
+				<reportElement x="0" y="19" width="802" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+				</reportElement>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="38" y="0" width="57" height="20" uuid="a3ad8ac2-5737-42d8-8787-d45c4555b135"/>
+				<reportElement x="38" y="0" width="57" height="20" isRemoveLineWhenBlank="true" uuid="a3ad8ac2-5737-42d8-8787-d45c4555b135"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="0" width="161" height="20" uuid="0e377173-71d5-46f7-88d7-a2b6a958fd8b"/>
+				<reportElement x="95" y="0" width="160" height="20" isRemoveLineWhenBlank="true" uuid="0e377173-71d5-46f7-88d7-a2b6a958fd8b"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="255" y="0" width="100" height="20" uuid="65d6d8a3-6d33-41b2-8991-8cd4b5f4621a"/>
+				<reportElement x="255" y="0" width="99" height="20" isRemoveLineWhenBlank="true" uuid="65d6d8a3-6d33-41b2-8991-8cd4b5f4621a"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="493" y="0" width="142" height="20" uuid="67c025da-835c-4796-9802-daffdff95172"/>
+				<reportElement x="493" y="0" width="142" height="20" isRemoveLineWhenBlank="true" uuid="67c025da-835c-4796-9802-daffdff95172"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{gpsCoordinates}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="414" y="0" width="79" height="20" uuid="722124a8-e21f-490c-a641-d047f6d2c867"/>
+				<reportElement x="413" y="0" width="80" height="20" isRemoveLineWhenBlank="true" uuid="722124a8-e21f-490c-a641-d047f6d2c867"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{owner}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="635" y="0" width="96" height="20" uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e"/>
+				<reportElement x="635" y="0" width="96" height="20" isRemoveLineWhenBlank="true" uuid="a985ef8d-9a20-42cc-8ce6-923e2c21286e"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="355" y="0" width="59" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="4010add3-b1d0-4263-9231-e180b0630895"/>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="354" y="0" width="59" height="20" isRemoveLineWhenBlank="true" forecolor="#000000" backcolor="#FFFFFF" uuid="4010add3-b1d0-4263-9231-e180b0630895"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="731" y="0" width="71" height="20" uuid="9368f837-0f29-41a6-8cad-8b296c4878c1"/>
-				<textFieldExpression><![CDATA[$F{fax} == "NULL"?"-":$F{fax}]]></textFieldExpression>
+				<reportElement x="731" y="0" width="71" height="20" isRemoveLineWhenBlank="true" uuid="9368f837-0f29-41a6-8cad-8b296c4878c1">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($F{fax} == null || $F{fax} == "null")?"-": $F{fax}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
