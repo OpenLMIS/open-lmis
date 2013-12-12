@@ -16,17 +16,44 @@ import static org.junit.Assert.assertThat;
 
 public class ShipmentLineItemDTOTest {
 
+  private String orderId = "1l";
+  private String concatenatedOrderId = "EM000001R";
+  private String facilityCode = "F001";
+  private String programCode = "EM";
+  private String productCode = "P001";
+  private String quantityOrdered = "20";
+  private String quantityShipped = "10";
+  private String cost = "100";
+  private String substitutedProductCode = "";
+  private String substitutedProductName = "";
+  private String substitutedProductQuantityShipped = "";
+  private String packSize = "";
+  private String packedDate =  "12-10-2013";
+  private String shippedDate = "14-09-2013";
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void shouldThrowErrorIfProductCodeIsMissing() throws Exception {
-    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO("1l",
-      null,
-      "2",
-      "45",
-      "12-10-2013",
-      "14-09-2013");
+
+
+    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
+       orderId,
+       concatenatedOrderId,
+       facilityCode,
+       programCode,
+       null,
+       quantityOrdered,
+       quantityShipped,
+       cost,
+       substitutedProductCode,
+       substitutedProductName,
+       substitutedProductQuantityShipped,
+       packSize,
+       packedDate,
+       shippedDate
+      );
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("mandatory.field.missing");
@@ -36,12 +63,22 @@ public class ShipmentLineItemDTOTest {
 
   @Test
   public void shouldThrowErrorIfOrderIdIsMissing() throws Exception {
-    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(null,
-      "P10",
-      "2",
-      "45",
-      "12-10-2013",
-      "14-09-2013");
+    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
+        null,
+        concatenatedOrderId,
+        facilityCode,
+        programCode,
+        productCode,
+        quantityOrdered,
+        quantityShipped,
+        cost,
+        substitutedProductCode,
+        substitutedProductName,
+        substitutedProductQuantityShipped,
+        packSize,
+        packedDate,
+        shippedDate
+    );
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("mandatory.field.missing");
@@ -51,12 +88,22 @@ public class ShipmentLineItemDTOTest {
 
   @Test
   public void shouldThrowErrorIfQuantityIsMissing() throws Exception {
-    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO("1l",
-      "P10",
-      null,
-      "45",
-      "12-10-2013",
-      "14-09-2013");
+    ShipmentLineItemDTO shipmentLineItemDTO = new ShipmentLineItemDTO(
+        orderId,
+        concatenatedOrderId,
+        null,
+        programCode,
+        productCode,
+        quantityOrdered,
+        quantityShipped,
+        cost,
+        substitutedProductCode,
+        substitutedProductName,
+        substitutedProductQuantityShipped,
+        packSize,
+        packedDate,
+        shippedDate
+    );
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("mandatory.field.missing");
