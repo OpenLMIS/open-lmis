@@ -26,6 +26,7 @@ import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
+import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -58,10 +60,11 @@ public class DistributionControllerTest {
   @Mock
   MessageService messageService;
 
+  @Mock
+  private FacilityDistributionService facilityDistributionService;
+
   private MockHttpSession session;
-
   private MockHttpServletRequest httpServletRequest;
-
 
   @InjectMocks
   DistributionController controller;
@@ -107,14 +110,15 @@ public class DistributionControllerTest {
       with(createdDate, creationTimeStamp)));
 
     when(service.get(distribution)).thenReturn(existingDistribution);
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
+    when(facilityDistributionService.getFor(distribution)).thenReturn(facilityDistributions);
 
     User user = make(a(defaultUser));
     when(userService.getById(createdById)).thenReturn(user);
 
     when(messageService.message("message.distribution.already.exists", user.getUserName(), DistributionController.DATE_FORMAT.format(creationTimeStamp))).
       thenReturn("Distribution already initiated by XYZ at 2013-05-03 12:10");
-    when(messageService.message("message.distribution.created.success", null, null, null)
-    ).thenReturn("Distribution created successfully");
+    when(messageService.message("message.distribution.created.success", null, null, null)).thenReturn("Distribution created successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
     assertThat(response.getStatusCode(), is(OK));
@@ -124,6 +128,7 @@ public class DistributionControllerTest {
       is("Distribution already initiated by XYZ at 2013-05-03 12:10"));
     assertThat((Distribution) responseData.get("distribution"), is(existingDistribution));
     assertThat((String) response.getBody().getData().get("success"), is("Distribution created successfully"));
+    assertThat(((Distribution) responseData.get("distribution")).getFacilityDistributions(), is(facilityDistributions));
   }
 
   @Test
