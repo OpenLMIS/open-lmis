@@ -45,7 +45,7 @@ public class OrderStatusFeedDTOTest {
     String stringStartDate = dateFormat.format(rnr.getPeriod().getStartDate());
     String stringEndDate = dateFormat.format(rnr.getPeriod().getEndDate());
 
-    //assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325356200000,\"endDate\":1328034600000,\"stringStartDate\":\"" + stringStartDate + "\",\"stringEndDate\":\"" + stringEndDate + "\",\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
-    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325394000000,\"endDate\":1328072400000,\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
+    assertThat(feed.getSerializedContents(), is("{\"requisitionId\":1,\"requisitionStatus\":\"INITIATED\",\"emergency\":false,\"startDate\":1325394000000,\"endDate\":1328072400000,\"stringStartDate\":\"" + stringStartDate + "\",\"stringEndDate\":\"" + stringEndDate + "\",\"orderId\":1,\"orderStatus\":\"READY_TO_PACK\"}"));
+
   }
 }
