@@ -35,6 +35,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
+import static org.openlmis.order.domain.OrderStatus.READY_TO_PACK;
 import static org.openlmis.order.domain.OrderStatus.RELEASED;
 
 @Category(UnitTests.class)
@@ -62,9 +63,9 @@ public class OrderRepositoryTest {
     List<Order> expectedOrders = new ArrayList<>();
     when(orderMapper.getOrders(3, 3, 1l, Right.VIEW_ORDER)).thenReturn(expectedOrders);
 
-    List<Order> orders = orderRepository.getOrdersForPage(2, 3,  1l, Right.VIEW_ORDER);
+    List<Order> orders = orderRepository.getOrdersForPage(2, 3, 1l, Right.VIEW_ORDER);
 
-    verify(orderMapper).getOrders(3, 3,  1l, Right.VIEW_ORDER);
+    verify(orderMapper).getOrders(3, 3, 1l, Right.VIEW_ORDER);
     assertThat(orders, is(expectedOrders));
   }
 
@@ -141,5 +142,16 @@ public class OrderRepositoryTest {
     Integer numberOfPages = orderRepository.getNumberOfPages(4);
 
     assertThat(numberOfPages, is(4));
+  }
+
+  @Test
+  public void shouldSearchOrdersByWarehouseIdsAndStatuses() throws Exception {
+    List<Order> expectedOrders = asList(new Order());
+    when(orderMapper.getByWarehouseIdsAndStatuses("{3, 6}", "{RELEASED, READY_TO_PACK}")).thenReturn(expectedOrders);
+
+    List<Order> actualOrders = orderRepository.searchByWarehousesAndStatuses(asList(3l, 6l), asList(RELEASED, READY_TO_PACK));
+
+    verify(orderMapper).getByWarehouseIdsAndStatuses("{3, 6}", "{RELEASED, READY_TO_PACK}");
+    assertThat(actualOrders, is(expectedOrders));
   }
 }

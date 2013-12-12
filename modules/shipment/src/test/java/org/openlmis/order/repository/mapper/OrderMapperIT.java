@@ -99,7 +99,7 @@ public class OrderMapperIT {
     processingPeriod = insertPeriod();
     supervisoryNode = insertSupervisoryNode();
     supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-        with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode)));
     supplyLineMapper.insert(supplyLine);
   }
 
@@ -184,9 +184,9 @@ public class OrderMapperIT {
   public void shouldGetOrderFileTemplate() throws Exception {
     List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
-        "header.quantity.approved", "label.period", "header.order.date"};
+      "header.quantity.approved", "label.period", "header.order.date"};
     String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
-        "Period", "Order date"};
+      "Period", "Order date"};
     assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
       assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
@@ -270,6 +270,30 @@ public class OrderMapperIT {
     assertThat(numberOfPages, is(2));
   }
 
+  @Test
+  public void shouldGetOrdersBySupplyingFacilityIdsAndStatuses() throws Exception {
+    insertOrderWithStatus(PACKED, 3L);
+    insertOrderWithStatus(RELEASED, 5L);
+    Long facilityId = supplyLine.getSupplyingFacility().getId();
+
+    List<Order> orders = mapper.getByWarehouseIdsAndStatuses("{"+ facilityId +"}", "{PACKED}");
+
+    assertThat(orders.size(), is(1));
+
+    List<Order> noOrders = mapper.getByWarehouseIdsAndStatuses("{"+ facilityId +"}", "{RECEIVED}");
+
+    assertThat(noOrders.size(), is(0));
+  }
+
+  private Order insertOrderWithStatus(OrderStatus status, Long programId) {
+    Rnr rnr = insertRequisition(programId);
+    Order order = new Order(rnr);
+    order.setStatus(status);
+    order.setSupplyLine(supplyLine);
+    mapper.insert(order);
+    return order;
+  }
+
   private Order insertOrder(Long programId) {
     Rnr rnr = insertRequisition(programId);
     Order order = new Order(rnr);
@@ -281,7 +305,7 @@ public class OrderMapperIT {
 
   private Rnr insertRequisition(Long programId) {
     Rnr rnr = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility),
-        with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
+      with(periodId, processingPeriod.getId()), with(program, new Program(programId))));
     requisitionMapper.insert(rnr);
     return rnr;
   }

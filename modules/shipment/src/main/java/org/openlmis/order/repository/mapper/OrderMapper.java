@@ -80,4 +80,17 @@ public interface OrderMapper {
 
   @Select("SELECT ceil(count(*)::float/#{pageSize}) FROM orders")
   Integer getNumberOfPages(int pageSize);
+
+  @Select({"SELECT O.* FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id",
+    "WHERE supplyingFacilityId = ANY(#{facilityIds}::INTEGER[]) AND status = ANY(#{statuses}::VARCHAR[])",
+    "ORDER BY O.createdDate"})
+  @Results({
+    @Result(property = "id", column = "id"),
+    @Result(property = "rnr.id", column = "id"),
+    @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+      one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+    @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+      one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  List<Order> getByWarehouseIdsAndStatuses(@Param("facilityIds") String facilityIds, @Param("statuses") String statuses);
 }

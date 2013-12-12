@@ -15,8 +15,12 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.DateFormat;
@@ -25,6 +29,7 @@ import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.service.RequisitionService;
@@ -43,8 +48,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.openlmis.core.builder.FacilityBuilder.code;
-import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
+import static org.openlmis.core.domain.Right.MANAGE_POD;
 import static org.openlmis.order.domain.DateFormat.*;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.rnr.builder.RequisitionBuilder.*;
@@ -70,6 +77,9 @@ public class OrderServiceTest {
 
   @Mock
   private SupplyLineService supplyLineService;
+
+  @Mock
+  private RoleAssignmentService roleAssignmentService;
 
   @InjectMocks
   private OrderService orderService;
@@ -205,7 +215,7 @@ public class OrderServiceTest {
   @Test
   public void shouldSetReleasedForAllOrdersIfErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
-    Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
+    Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
 
     Set<Long> orderIds = new LinkedHashSet<>();
     orderIds.add(order1.getId());
@@ -236,7 +246,7 @@ public class OrderServiceTest {
   @Test
   public void shouldSetPackedStatusForAllOrdersIfNoErrorInShipment() throws Exception {
     Order order1 = new Order(make(a(defaultRequisition, with(id, 123L))));
-    Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(facility, make(a(defaultFacility, with(code, "F3333")))))));
+    Order order2 = new Order(make(a(defaultRequisition, with(id, 456L), with(RequisitionBuilder.facility, make(a(defaultFacility, with(code, "F3333")))))));
 
     Set<Long> orderIds = new LinkedHashSet<>();
     orderIds.add(order1.getId());
@@ -314,8 +324,8 @@ public class OrderServiceTest {
   public void shouldGetAllDateFormats() throws Exception {
     List<DateFormat> dateFormats = new ArrayList<>(orderService.getAllDateFormats());
     List<DateFormat> expectedDateFormats = asList(DATE_1, DATE_2, DATE_3, DATE_4, DATE_5, DATE_6, DATE_7, DATE_8, DATE_9, DATE_10,
-        DATE_11, DATE_12, DATE_13, DATE_14, DATE_15, DATE_16, DATE_17, DATE_18, DATE_19, DATE_20,
-        DATE_21, DATE_22, DATE_23, DATE_24, DATE_25, DATE_26, DATE_27, DATE_28, DATE_29, DATE_30
+      DATE_11, DATE_12, DATE_13, DATE_14, DATE_15, DATE_16, DATE_17, DATE_18, DATE_19, DATE_20,
+      DATE_21, DATE_22, DATE_23, DATE_24, DATE_25, DATE_26, DATE_27, DATE_28, DATE_29, DATE_30
     );
 
     assertThat(dateFormats, is(expectedDateFormats));
@@ -355,10 +365,10 @@ public class OrderServiceTest {
   public void shouldReturnTrueIfOrderIsNotShippable() throws Exception {
     long orderId = 123L;
     when(orderRepository.getStatus(orderId))
-        .thenReturn(IN_ROUTE)
-        .thenReturn(PACKED)
-        .thenReturn(TRANSFER_FAILED)
-        .thenReturn(READY_TO_PACK);
+      .thenReturn(IN_ROUTE)
+      .thenReturn(PACKED)
+      .thenReturn(TRANSFER_FAILED)
+      .thenReturn(READY_TO_PACK);
 
     assertThat(orderService.isShippable(orderId), is(false));
     assertThat(orderService.isShippable(orderId), is(false));
@@ -367,6 +377,49 @@ public class OrderServiceTest {
 
     verify(orderRepository, times(4)).getStatus(123L);
 
+  }
+
+  @Test
+  public void shouldSearchOrdersByStatus() throws Exception {
+    Order order = new Order();
+    order.setRnr(new Rnr(13l));
+    List<Order> expectedOrders = asList(order);
+    when(roleAssignmentService.getFulfilmentRolesWithRight(3L, MANAGE_POD)).thenReturn(asList(new FulfillmentRoleAssignment(3L, 4l, new ArrayList<Long>())));
+    when(requisitionService.getFullRequisitionById(13L)).thenReturn(new Rnr());
+    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(expectedOrders);
+
+    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, MANAGE_POD, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+
+    assertThat(returnedOrders, is(expectedOrders));
+  }
+
+  @Test
+  public void shouldSortOrdersBasedOnSupplyingFacilityNameProgramNameAndThenCreationDate() throws Exception {
+    Rnr rnrForHIV = make(a(RequisitionBuilder.defaultRequisition, with(id, 2L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "HIV"))))));
+    Rnr rnrForTB = make(a(RequisitionBuilder.defaultRequisition, with(id, 4L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "TB"))))));
+    Rnr rnrForMalaria = make(a(RequisitionBuilder.defaultRequisition, with(id, 6L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "MALARIA"))))));
+
+    Order order1 = new Order(new Rnr(2L));
+    order1.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+
+    Order order2 = new Order(new Rnr(4L));
+    order2.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F11")))))));
+
+    Order order3 = new Order(new Rnr(6L));
+    order3.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+
+    List<Order> expectedOrders = asList(order1, order2, order3);
+    when(roleAssignmentService.getFulfilmentRolesWithRight(3L, MANAGE_POD)).thenReturn(asList(new FulfillmentRoleAssignment(3L, 4l, new ArrayList<Long>())));
+    when(requisitionService.getFullRequisitionById(2L)).thenReturn(rnrForHIV);
+    when(requisitionService.getFullRequisitionById(4L)).thenReturn(rnrForTB);
+    when(requisitionService.getFullRequisitionById(6L)).thenReturn(rnrForMalaria);
+    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(expectedOrders);
+
+    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, MANAGE_POD, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+
+    assertThat(returnedOrders.get(0).getId(), is(2L));
+    assertThat(returnedOrders.get(1).getId(), is(6L));
+    assertThat(returnedOrders.get(2).getId(), is(4L));
   }
 
   @Test

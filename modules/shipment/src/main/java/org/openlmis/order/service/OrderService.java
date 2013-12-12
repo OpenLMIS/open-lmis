@@ -11,10 +11,13 @@
 package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Transformer;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
@@ -36,6 +39,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
+import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 @Service
@@ -53,6 +58,9 @@ public class OrderService {
 
   @Autowired
   private OrderEventService orderEventService;
+
+  @Autowired
+  RoleAssignmentService roleAssignmentService;
 
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
@@ -88,6 +96,10 @@ public class OrderService {
 
   public List<Order> getOrdersForPage(int page, Long userId, Right right) {
     List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
+    return fillOrders(orders);
+  }
+
+  private List<Order> fillOrders(List<Order> orders) {
     Rnr rnr;
     for (Order order : orders) {
       rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
@@ -170,5 +182,21 @@ public class OrderService {
 
   public Integer getPageSize() {
     return pageSize;
+  }
+
+  public List<Order> searchByStatusAndRight(Long userId, Right right, List<OrderStatus> statuses) {
+    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, right);
+
+    List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
+      @Override
+      public Object transform(Object o) {
+        return ((FulfillmentRoleAssignment) o).getFacilityId();
+      }
+    }), statuses);
+
+    orders = fillOrders(orders);
+    sort(orders);
+
+    return orders;
   }
 }
