@@ -42,7 +42,7 @@ public class BudgetLineItemTransformerTest {
     SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
     Date date = dateFormat.parse("10/12/2013");
 
-    BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
+    BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, 1);
 
     assertThat(budgetLineItem.getFacilityCode(), is("F10"));
     assertThat(budgetLineItem.getProgramCode(), is("HIV"));
@@ -56,7 +56,7 @@ public class BudgetLineItemTransformerTest {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", null, "345.45", "My good notes");
     String datePattern = null;
 
-    BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
+    BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, 1);
 
     assertThat(budgetLineItem.getFacilityCode(), is("F10"));
     assertThat(budgetLineItem.getProgramCode(), is("HIV"));
@@ -69,12 +69,27 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldThrowErrorIfDateIsInInvalidFormat() {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "1234-33-44", "345.45", "My good notes");
+    int rowNumber = 1;
     String datePattern = "MM/dd/yy";
-    when(messageService.message("budget.invalid.date.format", budgetLineItemDTO.getPeriodStartDate())).thenReturn("Invalid date format");
+    when(messageService.message("budget.invalid.date.format", budgetLineItemDTO.getPeriodStartDate(), rowNumber)).thenReturn("Invalid date format");
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("Invalid date format");
 
-    budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
+    budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
   }
+
+  @Test
+  public void shouldThrowErrorIfAllocatedBudgetIsNotValid() {
+    BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "12-12-2013", "345sdsa.45", "My good notes");
+    int rowNumber = 1;
+    String datePattern = "MM-dd-yyyy";
+    when(messageService.message("budget.allocated.budget.invalid", budgetLineItemDTO.getAllocatedBudget(), rowNumber)).thenReturn("Invalid budget");
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Invalid budget");
+
+    budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
+  }
+
 }

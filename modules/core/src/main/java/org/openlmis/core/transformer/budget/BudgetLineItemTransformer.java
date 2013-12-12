@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 @Service
@@ -18,21 +19,29 @@ public class BudgetLineItemTransformer extends LineItemTransformer {
   @Autowired
   private MessageService messageService;
 
-  public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern) {
+  public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern, Integer rowNumber) {
     BudgetLineItem budgetLineItem = new BudgetLineItem();
     Date periodDate = null;
     if (datePattern != null) {
       try {
         periodDate = parseDate(datePattern, lineItemDTO.getPeriodStartDate());
       } catch (Exception e) {
-        throw new DataException(messageService.message("budget.invalid.date.format", lineItemDTO.getPeriodStartDate()));
+        throw new DataException(messageService.message("budget.invalid.date.format", lineItemDTO.getPeriodStartDate(), rowNumber));
       }
     }
 
     budgetLineItem.setFacilityCode(lineItemDTO.getFacilityCode());
     budgetLineItem.setProgramCode(lineItemDTO.getProgramCode());
     budgetLineItem.setPeriodDate(periodDate);
-    budgetLineItem.setAllocatedBudget(BigDecimal.valueOf(Double.parseDouble(lineItemDTO.getAllocatedBudget())));
+
+    String allocatedBudget = lineItemDTO.getAllocatedBudget();
+    try {
+      allocatedBudget = new DecimalFormat("#0.##").format(Double.valueOf(allocatedBudget));
+    } catch (Exception e) {
+      throw new DataException(messageService.message("budget.allocated.budget.invalid", allocatedBudget, rowNumber));
+    }
+
+    budgetLineItem.setAllocatedBudget(new BigDecimal(allocatedBudget));
     budgetLineItem.setNotes(lineItemDTO.getNotes());
 
     return budgetLineItem;

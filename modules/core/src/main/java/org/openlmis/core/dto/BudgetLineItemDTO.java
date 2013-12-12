@@ -35,7 +35,7 @@ public class BudgetLineItemDTO {
       try {
         Field field = BudgetLineItemDTO.class.getDeclaredField(name);
         field.setAccessible(true);
-        field.set(lineItemDTO, fieldsInOneRow.get(position - 1));
+        field.set(lineItemDTO, fieldsInOneRow.get(position - 1).trim());
       } catch (Exception e) {
         logger.error("Unable to set field '" + name +
           "' in BudgetLinetItemDTO, check mapping between DTO and BudgetFileColumn", e);

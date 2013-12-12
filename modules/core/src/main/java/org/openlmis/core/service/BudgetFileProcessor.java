@@ -51,6 +51,9 @@ public class BudgetFileProcessor {
   @Autowired
   private BudgetFilePostProcessHandler budgetFilePostProcessHandler;
 
+  @Autowired
+  private MessageService messageService;
+
 
   public void process(Message message) throws IOException {
 
@@ -69,36 +72,40 @@ public class BudgetFileProcessor {
     if (budgetFileTemplate.getConfiguration().isHeaderInFile()) listReader.getHeader(true);
 
     List<String> csvRow;
+    Integer rowNumber;
     while ((csvRow = listReader.read()) != null) {
       Collection<EDIFileColumn> includedColumns = budgetFileTemplate.filterIncludedColumns();
 
       BudgetLineItemDTO budgetLineItemDTO = BudgetLineItemDTO.populate(csvRow, includedColumns);
       try {
         budgetLineItemDTO.checkMandatoryFields();
-        Facility facility = validateFacility(budgetLineItemDTO.getFacilityCode());
-        Program program = validateProgram(budgetLineItemDTO.getProgramCode());
+        rowNumber = listReader.getRowNumber();
+        Facility facility = validateFacility(budgetLineItemDTO.getFacilityCode(), rowNumber);
+        Program program = validateProgram(budgetLineItemDTO.getProgramCode(), rowNumber);
 
-        BudgetLineItem budgetLineItem = getBudgetLineItem(includedColumns, budgetLineItemDTO);
+        BudgetLineItem budgetLineItem = getBudgetLineItem(includedColumns, budgetLineItemDTO, rowNumber);
 
-        ProcessingPeriod processingPeriod = validatePeriod(facility, program, budgetLineItem.getPeriodDate());
+        ProcessingPeriod processingPeriod = validatePeriod(facility, program, budgetLineItem.getPeriodDate(), rowNumber);
+
         budgetLineItem.setPeriodId(processingPeriod.getId());
-
         budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
         budgetLineItemService.save(budgetLineItem);
-
-
       } catch (Exception e) {
         processingError = true;
         logger.error(e.getMessage(), e);
         continue;
       }
-
+    }
+    Integer blankFileRows = budgetFileTemplate.getConfiguration().isHeaderInFile() ? 1 : 0;
+    if (listReader.getRowNumber() == blankFileRows) {
+      logger.error(messageService.message("error.facility.code.invalid"));
+      processingError = true;
     }
     budgetFileInfo.setProcessingError(processingError);
     budgetFilePostProcessHandler.process(budgetFileInfo, budgetFile);
   }
 
-  private BudgetLineItem getBudgetLineItem(Collection<EDIFileColumn> includedColumns, BudgetLineItemDTO budgetLineItemDTO) {
+  private BudgetLineItem getBudgetLineItem(Collection<EDIFileColumn> includedColumns, BudgetLineItemDTO budgetLineItemDTO, Integer rowNumber) {
     EDIFileColumn periodDateColumn = (EDIFileColumn) CollectionUtils.find(includedColumns, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
@@ -107,7 +114,7 @@ public class BudgetFileProcessor {
       }
     });
     String datePattern = periodDateColumn == null ? null : periodDateColumn.getDatePattern();
-    return budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
+    return budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
   }
 
   private BudgetFileInfo saveBudgetFile(File budgetFile, Boolean processingError) {
@@ -118,27 +125,27 @@ public class BudgetFileProcessor {
     return budgetFileInfo;
   }
 
-  private ProcessingPeriod validatePeriod(Facility facility, Program program, Date date) {
+  private ProcessingPeriod validatePeriod(Facility facility, Program program, Date date, Integer rowNumber) {
     ProcessingPeriod periodForDate = processingScheduleService.getPeriodForDate(facility, program, date);
     if (periodForDate == null) {
-      throw new DataException("period.invalid");
+      throw new DataException(messageService.message("budget.start.date.invalid", date, facility.getCode(), program.getCode(), rowNumber));
     }
     return periodForDate;
   }
 
-  private Program validateProgram(String programCode) {
+  private Program validateProgram(String programCode, Integer rowNumber) {
     Program program = programService.getByCode(programCode);
     if (program == null) {
-      throw new DataException("program.code.invalid");
+      throw new DataException(messageService.message("budget.program.code.invalid", programCode, rowNumber));
     }
     return program;
   }
 
-  private Facility validateFacility(String facilityCode) {
+  private Facility validateFacility(String facilityCode, Integer rowNumber) {
     Facility facility = new Facility();
     facility.setCode(facilityCode);
-    if (facilityService.getByCode(facility) == null) {
-      throw new DataException("error.facility.code.invalid");
+    if ((facility = facilityService.getByCode(facility)) == null) {
+      throw new DataException(messageService.message("budget.facility.code.invalid", facilityCode, rowNumber));
     }
     return facility;
   }

@@ -18,6 +18,7 @@ import org.supercsv.io.CsvListReader;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -57,8 +58,13 @@ public class BudgetFileProcessorTest {
 
   @Mock
   BudgetFilePostProcessHandler budgetFilePostProcessHandler;
+
+  @Mock
+  MessageService messageService;
+
   @InjectMocks
   BudgetFileProcessor budgetFileProcessor;
+
   private Message message;
   private EDIFileTemplate ediFileTemplate;
   private EDIConfiguration configuration;
@@ -98,6 +104,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldIgnoreFirstLineAsHeadersIfIncludedInTemplate() throws Exception {
     configuration.setHeaderInFile(true);
+    when(listReader.getRowNumber()).thenReturn(1);
 
     budgetFileProcessor.process(message);
 
@@ -106,6 +113,9 @@ public class BudgetFileProcessorTest {
 
   @Test
   public void shouldNotReadHeadersIfNotIncluded() throws Exception {
+    configuration.setHeaderInFile(false);
+    when(listReader.getRowNumber()).thenReturn(1);
+
     budgetFileProcessor.process(message);
 
     verify(listReader, never()).getHeader(true);
@@ -114,6 +124,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldSaveBudgetFileLineItem() throws Exception {
     configuration.setHeaderInFile(true);
+    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     String budgetFileName = "BudgetFileName";
     when(budgetFile.getName()).thenReturn(budgetFileName);
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
@@ -132,11 +143,11 @@ public class BudgetFileProcessorTest {
     BudgetLineItem budgetLineItem = mock(BudgetLineItem.class);
     ProcessingPeriod processingPeriod = mock(ProcessingPeriod.class);
     when(processingScheduleService.getPeriodForDate(facility, program, budgetLineItem.getPeriodDate())).thenReturn(processingPeriod);
-    when(transformer.transform(lineItemDTO, datePattern)).thenReturn(budgetLineItem);
+    when(transformer.transform(lineItemDTO, datePattern, 1)).thenReturn(budgetLineItem);
 
     budgetFileProcessor.process(message);
 
-    verify(transformer).transform(lineItemDTO, datePattern);
+    verify(transformer).transform(lineItemDTO, datePattern, 1);
     verify(budgetLineItem).setBudgetFileId(budgetFileInfo.getId());
     verify(budgetLineItemService).save(budgetLineItem);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
@@ -145,6 +156,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldCreateBudgetLineItemWithDateAsNullIfNotIncludedInFile() throws Exception {
     configuration.setHeaderInFile(true);
+    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
@@ -161,7 +173,7 @@ public class BudgetFileProcessorTest {
 
     budgetFileProcessor.process(message);
 
-    verify(transformer).transform(lineItemDTO, null);
+    verify(transformer).transform(lineItemDTO, null, 1);
     verify(BudgetLineItemDTO.populate(csvRow, asList(defaultEDIColumn)));
 
   }
@@ -171,6 +183,7 @@ public class BudgetFileProcessorTest {
   public void shouldNotProcessARecordIfMandatoryFieldIsMissing() throws Exception {
 
     configuration.setHeaderInFile(true);
+    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
@@ -179,13 +192,14 @@ public class BudgetFileProcessorTest {
     budgetFileProcessor.process(message);
 
     verify(lineItemDTO).checkMandatoryFields();
-    verify(transformer, never()).transform(lineItemDTO, null);
+    verify(transformer, never()).transform(lineItemDTO, null, 1);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
   }
 
   @Test
   public void shouldNotProcessTheRecordIfFacilityCodeIsInvalid() throws Exception {
     configuration.setHeaderInFile(true);
+    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
@@ -196,13 +210,14 @@ public class BudgetFileProcessorTest {
     budgetFileProcessor.process(message);
 
     verify(lineItemDTO).checkMandatoryFields();
-    verify(transformer, never()).transform(lineItemDTO, null);
+    verify(transformer, never()).transform(lineItemDTO, null, 1);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
   }
 
   @Test
   public void shouldNotProcessTheRecordIfProgramCodeIsInvalid() throws Exception {
     configuration.setHeaderInFile(true);
+    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
@@ -214,25 +229,26 @@ public class BudgetFileProcessorTest {
     budgetFileProcessor.process(message);
 
     verify(lineItemDTO).checkMandatoryFields();
-    verify(transformer, never()).transform(lineItemDTO, null);
+    verify(transformer, never()).transform(lineItemDTO, null, 1);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
   }
 
   @Test
   public void shouldNotProcessRecordIfPeriodDateDoesNotBelongToAnyPeriod() throws Exception {
     when(listReader.read()).thenReturn(csvRow).thenReturn(null);
+    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     configuration.setHeaderInFile(true);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
     Facility facility = new Facility();
     facility.setCode("F10");
-    Program program = new Program();
     when(facilityService.getByCode(facility)).thenReturn(facility);
+    Program program = new Program();
     when(programService.getByCode("HIV")).thenReturn(program);
     BudgetLineItem budgetLineItem = new BudgetLineItem();
     budgetLineItem.setPeriodDate(new Date());
-    when(transformer.transform(lineItemDTO, datePattern)).thenReturn(budgetLineItem);
+    when(transformer.transform(lineItemDTO, datePattern, 1)).thenReturn(budgetLineItem);
     when(processingScheduleService.getPeriodForDate(facility, program, budgetLineItem.getPeriodDate())).thenReturn(null);
 
     budgetFileProcessor.process(message);
@@ -244,6 +260,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldSaveBudgetFileInfo() throws Exception {
     String budgetFileName = "BudgetFileName";
+    when(listReader.getRowNumber()).thenReturn(1);
     when(budgetFile.getName()).thenReturn(budgetFileName);
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
     whenNew(BudgetFileInfo.class).withArguments(budgetFileName, false).thenReturn(budgetFileInfo);
@@ -254,5 +271,26 @@ public class BudgetFileProcessorTest {
     verify(budgetFileService).save(budgetFileInfo);
   }
 
+  @Test
+  public void shouldDisplayErrorIfFileIsBlank() throws IOException {
+    configuration.setHeaderInFile(false);
+    when(listReader.read()).thenReturn(null);
+    when(listReader.getRowNumber()).thenReturn(0);
+
+    budgetFileProcessor.process(message);
+
+    verify(messageService).message("error.facility.code.invalid");
+  }
+
+  @Test
+  public void shouldDisplayErrorIfFileIsBlankWithOnlyHeader() throws IOException {
+    configuration.setHeaderInFile(true);
+    when(listReader.read()).thenReturn(null);
+    when(listReader.getRowNumber()).thenReturn(1);
+
+    budgetFileProcessor.process(message);
+
+    verify(messageService).message("error.facility.code.invalid");
+  }
 
 }
