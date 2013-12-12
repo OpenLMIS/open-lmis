@@ -21,23 +21,28 @@ import javax.persistence.Column;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSummaryReport implements ReportData {
-    @Column(name = "product_code")
-    private String productCode;
-    @Column(name = "product_description")
-    private String description;
-    @Column(name = "packstoship")
-    private Integer unitSize;
-    @Column(name = "packstoship")
-    private Integer unitQuantity;
-    @Column(name = "packsize")
-    private Integer packQuantity;
-    @Column(name = "requisition_line_item_losses_adjustments.quantity")
-    private Integer discrepancy;
-    @Column(name = "facility_name")
-    private String facilityName;
-    @Column(name = "facility_code")
-    private String facilityCode;
-    private String region;
+  @Column(name = "product_code")
+  private String productCode;
+
+  @Column(name = "product_description")
+  private String description;
+
+  @Column(name = "packstoship")
+  private Integer packsToShip;
+
+  @Column(name = "packsize")
+  private Integer packSize;
+
+  @Column(name = "requisition_line_item_losses_adjustments.quantity")
+  private Integer discrepancy;
+
+ @Column(name = "facility_name")
+  private String facilityName;
+
+  @Column(name = "facility_code")
+  private String facilityCode;
+
+  private String region;
 
 
 }

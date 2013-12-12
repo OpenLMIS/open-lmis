@@ -4,6 +4,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="76"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgres"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -24,9 +25,9 @@
 	</parameter>
 	<parameter name="CUSTOM_REPORT_TITLE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship UnitSize,requisition_line_items.packstoship UnitQuantity, requisition_line_items.packsize PackQuantity,requisition_line_item_losses_adjustments.quantity Discrepancy
+		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship packsToShip, requisition_line_items.packSize,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders
-        INNER JOIN  requisitions on requisitions.id = orders.rnrid
+        INNER JOIN  requisitions on requisitions.id = orders.id
         INNER JOIN facilities on facilities.id = requisitions.facilityid
         INNER JOIN  requisition_line_items on requisition_line_items.rnrid = requisitions.id
         INNER JOIN  products on products.code::text = requisition_line_items.productcode::text
@@ -38,9 +39,8 @@
 	<field name="region" class="java.lang.String"/>
 	<field name="productCode" class="java.lang.String"/>
 	<field name="description" class="java.lang.String"/>
-	<field name="unitSize" class="java.lang.Integer"/>
-	<field name="unitQuantity" class="java.lang.Integer"/>
-	<field name="packQuantity" class="java.lang.Integer"/>
+	<field name="packSize" class="java.lang.Integer"/>
+	<field name="packsToShip" class="java.lang.Integer"/>
 	<field name="discrepancy" class="java.lang.Integer"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
@@ -53,11 +53,11 @@
 					<reportElement mode="Transparent" x="341" y="4" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="8b6e9e42-adf5-4b5a-bbac-ce5ef802ff50">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
-					<text><![CDATA[Reference No.]]></text>
+					<text><![CDATA[Reference No:]]></text>
 				</staticText>
 				<line>
 					<reportElement x="451" y="15" width="205" height="1" uuid="a0dbe148-d103-491c-b513-43c083d7ae9e">
@@ -71,8 +71,8 @@
 					<reportElement x="341" y="18" width="99" height="14" uuid="8fd8809b-32c8-4a05-989f-35f6123e1c3c">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Top">
-						<font size="10"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9"/>
 						<paragraph rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Consign to :]]></text>
@@ -81,8 +81,8 @@
 					<reportElement mode="Transparent" x="341" y="32" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="e9fe88f2-5aef-468a-9a56-dd33dbe089c8">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Facility Name :]]></text>
@@ -91,17 +91,17 @@
 					<reportElement mode="Transparent" x="341" y="46" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="da2976d8-b33f-4283-8ad0-5a34e1e2ae40">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
 					<text><![CDATA[Facility Code :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="341" y="60" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="5533da03-66de-4a17-942f-1a590149814f">
+					<reportElement mode="Transparent" x="242" y="74" width="99" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="5533da03-66de-4a17-942f-1a590149814f">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="3"/>
 					</textElement>
@@ -171,8 +171,8 @@
 					<reportElement x="451" y="32" width="131" height="14" uuid="b92d7349-d6d2-46b7-8f59-a0fc2e565174">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement>
-						<font size="10"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 				</textField>
@@ -180,8 +180,8 @@
 					<reportElement x="451" y="18" width="131" height="14" uuid="de4a07f1-0039-4435-85f1-b00c31f6c2d2">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement>
-						<font size="10"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 				</textField>
@@ -189,8 +189,8 @@
 					<reportElement x="451" y="46" width="131" height="14" uuid="34ad37d0-504c-4507-bd3b-813840d2b423">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
-					<textElement>
-						<font size="10"/>
+					<textElement verticalAlignment="Middle">
+						<font size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facilityCode}]]></textFieldExpression>
 				</textField>
@@ -223,7 +223,7 @@
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
 					</textElement>
-					<text><![CDATA[Unit Size]]></text>
+					<text><![CDATA[Packs To Ship]]></text>
 				</staticText>
 				<staticText>
 					<reportElement mode="Transparent" x="174" y="144" width="218" height="20" forecolor="#000000" backcolor="#333333" uuid="1138c634-4150-46c6-a83e-b93243223977"/>
@@ -242,23 +242,15 @@
 					<text><![CDATA[Line#]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="482" y="144" width="73" height="20" forecolor="#000000" backcolor="#333333" uuid="81e85722-5d3c-4cf4-9cbf-e1312d5c6e21"/>
+					<reportElement mode="Transparent" x="482" y="144" width="128" height="20" forecolor="#000000" backcolor="#333333" uuid="81e85722-5d3c-4cf4-9cbf-e1312d5c6e21"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
 					</textElement>
-					<text><![CDATA[Unit Quantity]]></text>
+					<text><![CDATA[Pack Size]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="555" y="144" width="83" height="20" forecolor="#000000" backcolor="#333333" uuid="b5beb655-83c8-405c-9b05-cc642ebfc189"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" rightIndent="5"/>
-					</textElement>
-					<text><![CDATA[Pack Quantity]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="638" y="144" width="164" height="20" forecolor="#000000" backcolor="#333333" uuid="c326ca9f-1a0d-411d-bec2-b65952aa1c52"/>
+					<reportElement mode="Transparent" x="610" y="144" width="192" height="20" forecolor="#000000" backcolor="#333333" uuid="c326ca9f-1a0d-411d-bec2-b65952aa1c52"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" leftIndent="10"/>
@@ -280,6 +272,7 @@
 					<reportElement x="0" y="2" width="272" height="20" uuid="9d59529d-daa2-434b-bb0e-ec1bd84622c5">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
+					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Explain any discrepancies or Damages]]></text>
 				</staticText>
 				<rectangle>
@@ -292,28 +285,28 @@
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[LMU Technical Officer signature and Name]]></text>
+					<text><![CDATA[Technical Officer signature and Name]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="4" y="120" width="214" height="20" uuid="e01b8a4d-d017-4f7d-bc94-4b61a6ffce9b">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[MSL Authorized  signature and Name]]></text>
+					<text><![CDATA[Authorized  signature and Name]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="415" y="100" width="205" height="20" uuid="7651950f-7427-469b-a85f-e50d03ef8065">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[MSL/Customer Driver Signature and Name]]></text>
+					<text><![CDATA[Customer Driver Signature and Name]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="415" y="120" width="205" height="20" uuid="81938a4e-7b1e-49d6-9944-5484270f77a4">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Bottom"/>
-					<text><![CDATA[MSL/Customer Vehicle Number]]></text>
+					<text><![CDATA[Customer Vehicle Number]]></text>
 				</staticText>
 				<line>
 					<reportElement x="218" y="119" width="102" height="1" uuid="969e35dc-8637-46c1-9aab-4545664ab3f4">
@@ -481,24 +474,17 @@
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10" rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{unitSize}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{packsToShip}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement x="482" y="0" width="73" height="20" uuid="64a1af0d-e57b-4949-9df8-3ca0e1ef7e4b"/>
+				<reportElement x="482" y="0" width="128" height="20" uuid="64a1af0d-e57b-4949-9df8-3ca0e1ef7e4b"/>
 				<textElement textAlignment="Right">
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{unitQuantity}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement x="555" y="0" width="83" height="20" uuid="b10898f1-30a8-4fed-86f2-5e4e42332d9c"/>
-				<textElement textAlignment="Right">
-					<paragraph rightIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{packQuantity}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{packSize}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="638" y="0" width="164" height="20" uuid="070035bb-1f40-4e3e-9224-f0bd3e76b123"/>
+				<reportElement x="610" y="0" width="192" height="20" uuid="070035bb-1f40-4e3e-9224-f0bd3e76b123"/>
 				<textElement>
 					<paragraph leftIndent="10"/>
 				</textElement>

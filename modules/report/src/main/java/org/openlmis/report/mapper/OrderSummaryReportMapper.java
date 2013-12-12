@@ -23,12 +23,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-/**
- * User: Wolde
- * Date: 7/11/13
- * Time: 11:42 PM
- */
-
 @Repository
 public interface OrderSummaryReportMapper {
     @SelectProvider(type=OrderSummaryQueryBuilder.class, method="SelectFilteredSortedPagedRecords")

@@ -20,60 +20,61 @@ import java.util.Map;
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class OrderSummaryQueryBuilder {
-    public static String SelectFilteredSortedPagedRecords(Map params){
+  public static String SelectFilteredSortedPagedRecords(Map params){
 
 
-        OrderReportFilter filter  = (OrderReportFilter)params.get("filterCriteria");
-        Map sortCriteria = (Map) params.get("sortCriteria");
-        String orderType =   filter.getOrderType() == null ? null : filter.getOrderType();
+      OrderReportFilter filter  = (OrderReportFilter)params.get("filterCriteria");
+      Map sortCriteria = (Map) params.get("sortCriteria");
+      String orderType =   filter.getOrderType() == null ? null : filter.getOrderType();
 
-        //Regular Orders
-        if(orderType == null || orderType.isEmpty() || orderType.equals("Regular")){
+      //Regular Orders
+      if(orderType == null || orderType.isEmpty() || orderType.equals("Regular")){
 
-           BEGIN();
+         BEGIN();
 
-            SELECT("facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_primaryname AS description, packstoship AS unitSize, packstoship AS unitQuantity, packsize AS packQuantity, requisition_line_item_losses_adjustments.quantity AS discrepancy");
-            FROM("vw_requisition_detail");
-            INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
-            LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
+          SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_primaryname AS description, packstoship , packsize, requisition_line_item_losses_adjustments.quantity AS discrepancy");
+          FROM("vw_requisition_detail");
+          INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
+          LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
-            writePredicates(filter);
-            ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, OrderSummaryReport.class,"facility_name asc"));
-            return SQL();
-        } else{  //Emergency orders
+          writePredicates(filter);
+          ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, OrderSummaryReport.class,"facility_name asc"));
+          return SQL();
+      } else{  //Emergency orders
 
 
-            BEGIN();
+          BEGIN();
 
-            SELECT("facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_primaryname AS description, packstoship AS unitSize, packstoship AS unitQuantity, packsize AS packQuantity, requisition_line_item_losses_adjustments.quantity AS discrepancy");
-            FROM("vw_requisition_detail");
-            INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
-            LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
+          SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product_primaryname AS description, packstoship ,  packsize, requisition_line_item_losses_adjustments.quantity AS discrepancy");
+          FROM("vw_requisition_detail");
+          INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
+          LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
-            writePredicates(filter);
-            ORDER_BY(QueryHelpers.getSortOrder(sortCriteria,OrderSummaryReport.class,"facility_name asc"));
-            return SQL();
-        }
+          writePredicates(filter);
+          ORDER_BY(QueryHelpers.getSortOrder(sortCriteria,OrderSummaryReport.class,"facility_name asc"));
+          return SQL();
+      }
+  }
+
+  private static void writePredicates(OrderReportFilter  filter){
+    WHERE("req_status = 'RELEASED'");
+    WHERE("packstoship is not null and packstoship > 0");
+
+    if(filter.getOrderId() != null){
+      WHERE("orders.id = " + filter.getOrderId());
+    } else{
+      WHERE("program_id = "+filter.getProgramId());
+      WHERE("processing_periods_id = "+filter.getPeriodId());
+
+      if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
+          WHERE("facility_id = "+filter.getFacilityId());
+      }
+
+      if (filter.getProductId() != -1 && filter.getProductId() != 0) {
+          WHERE("product_id ="+ filter.getProductId());
+      }else if(filter.getProductId()== -1){
+          WHERE("indicator_product = true");
+      }
     }
-
-    private static void writePredicates(OrderReportFilter  filter){
-        WHERE("req_status = 'RELEASED'");
-        WHERE("program_id = "+filter.getProgramId());
-        WHERE("processing_periods_id = "+filter.getPeriodId());
-
-        if (filter.getFacilityId() != 0 && filter.getFacilityId() != -1) {
-            WHERE("facility_id = "+filter.getFacilityId());
-        }
-
-        if (filter.getZoneId() != 0 && filter.getZoneId() != -1) {
-            WHERE("zone_id = "+filter.getZoneId());
-        }
-        if (filter.getProductId() != -1 && filter.getProductId() != 0) {
-            WHERE("product_id ="+ filter.getProductId());
-        }else if(filter.getProductId()== -1){
-            WHERE("indicator_product = true");
-        }
-
-
-    }
+  }
 }
