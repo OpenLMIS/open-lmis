@@ -30,16 +30,13 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 public class User extends BaseModel implements Importable {
+
   @ImportField(mandatory = true, name = "User Name")
   private String userName;
 
   @ImportField(mandatory = true, name = "Password")
   @JsonIgnore
   private String password;
-
-  private Boolean verified;
-
-  private Boolean active;
 
   @ImportField(mandatory = true, name = "First Name")
   private String firstName;
@@ -49,16 +46,22 @@ public class User extends BaseModel implements Importable {
 
   @ImportField(name = "Employee Id")
   private String employeeId;
+
   @ImportField(name = "Job Title")
   private String jobTitle;
+
   @ImportField(name = "Primary Notification Method")
   private String primaryNotificationMethod;
+
   @ImportField(name = "Office Phone")
   private String officePhone;
+
   @ImportField(name = "Cell Phone")
   private String cellPhone;
+
   @ImportField(mandatory = true, name = "Email")
   private String email;
+
   @ImportField(name = "Supervisor User Name", nested = "userName")
   private User supervisor;
 
@@ -69,11 +72,13 @@ public class User extends BaseModel implements Importable {
   private List<RoleAssignment> supervisorRoles;
   private List<RoleAssignment> homeFacilityRoles;
   private List<RoleAssignment> allocationRoles;
-
   private List<FulfillmentRoleAssignment> fulfillmentRoles;
 
   private RoleAssignment adminRole;
 
+  private Boolean verified;
+
+  private Boolean active;
 
   public User(Long id, String userName) {
     this.id = id;

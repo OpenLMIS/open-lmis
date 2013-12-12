@@ -82,8 +82,8 @@ public class UserServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
-    when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
+    when(messageService.message("account.created.email.subject")).thenReturn("Account created message");
+    when(messageService.message("forgot.password.email.subject")).thenReturn("Forgot password email subject");
 
   }
 
@@ -125,7 +125,7 @@ public class UserServiceTest {
   public void shouldSendForgotPasswordEmailIfUserEmailExists() throws Exception {
     User user = make(a(defaultUser, with(email, "random@random.com"), with(userName, "Admin")));
 
-    when(messageService.message("forgotpassword.email.subject")).thenReturn("Forgot password email subject");
+    when(messageService.message("forgot.password.email.subject")).thenReturn("Forgot password email subject");
     SimpleMailMessage emailMessage = make(a(defaultEmailMessage, with(receiver, "random@random.com"),
       with(subject, "Forgot password email subject"), with(content, "email body")));
     when(userRepository.getByEmail(user.getEmail())).thenReturn(user);
@@ -133,7 +133,7 @@ public class UserServiceTest {
     mockStatic(Encoder.class);
     when(Encoder.hash(anyString())).thenReturn("token");
 
-    when(messageService.message("passwordreset.email.body", new Object[]{defaultFirstName, defaultLastName, "Admin", FORGET_PASSWORD_LINK + "token"}))
+    when(messageService.message("password.reset.email.body", new Object[]{defaultFirstName, defaultLastName, "Admin", FORGET_PASSWORD_LINK + "token"}))
       .thenReturn("email body");
 
     userService.sendForgotPasswordEmail(user, FORGET_PASSWORD_LINK);
@@ -287,7 +287,7 @@ public class UserServiceTest {
     SimpleMailMessage emailMessage = new SimpleMailMessage();
     whenNew(SimpleMailMessage.class).withNoArguments().thenReturn(emailMessage);
 
-    when(messageService.message("accountcreated.email.subject")).thenReturn("Account created message");
+    when(messageService.message("account.created.email.subject")).thenReturn("Account created message");
 
     userService.createUser(user, "resetPasswordLink");
 

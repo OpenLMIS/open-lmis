@@ -51,18 +51,6 @@ public class UserService {
     prepareForEmailNotification(user, passwordResetLink);
   }
 
-  private void sendUserCreationEmail(User user, String resetPasswordLink) {
-    String subject = messageService.message("accountcreated.email.subject");
-    SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);
-    sendEmail(emailMessage);
-  }
-
-  private void save(User user) {
-    user.validate();
-    userRepository.create(user);
-    roleAssignmentService.saveRolesForUser(user);
-  }
-
   @Transactional
   public void update(User user) {
     user.validate();
@@ -70,54 +58,15 @@ public class UserService {
     roleAssignmentService.saveRolesForUser(user);
   }
 
-  private void sendEmail(SimpleMailMessage emailMessage) {
-    try {
-      emailService.send(emailMessage);
-    } catch (EmailException e) {
-      throw new DataException(USER_EMAIL_NOT_FOUND);
-    }
-  }
-
   public void sendForgotPasswordEmail(User user, String resetPasswordLink) {
     user = getValidatedUser(user);
 
     userRepository.deletePasswordResetTokenForUser(user.getId());
 
-    String subject = messageService.message("forgotpassword.email.subject");
+    String subject = messageService.message("forgot.password.email.subject");
     SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);
 
     sendEmail(emailMessage);
-  }
-
-  private User getValidatedUser(User user) {
-    if (user.getEmail() != null && !user.getEmail().equals("")) {
-      user = userRepository.getByEmail(user.getEmail());
-      if (user == null || !user.getActive()) throw new DataException(USER_EMAIL_INCORRECT);
-    } else {
-      user = userRepository.getByUserName(user.getUserName());
-      if (user == null || !user.getActive()) throw new DataException(USER_USERNAME_INCORRECT);
-    }
-    return user;
-  }
-
-  private SimpleMailMessage createEmailMessage(User user, String resetPasswordLink, String subject) {
-    String passwordResetToken = generateUUID();
-    String[] passwordResetLink = new String[]{user.getFirstName(),user.getLastName(),user.getUserName(), resetPasswordLink + passwordResetToken};
-    String mailBody = messageService.message("passwordreset.email.body", (Object[]) passwordResetLink);
-
-    userRepository.insertPasswordResetToken(user, passwordResetToken);
-
-    SimpleMailMessage emailMessage = new SimpleMailMessage();
-    emailMessage.setSubject(subject);
-    emailMessage.setText(mailBody);
-    emailMessage.setTo(user.getEmail());
-
-    return emailMessage;
-  }
-
-
-  private String generateUUID() {
-    return Encoder.hash(UUID.randomUUID().toString());
   }
 
   public List<User> searchUser(String userSearchParam) {
@@ -157,9 +106,8 @@ public class UserService {
     return userRepository.selectUserByUserNameAndPassword(userName, password);
   }
 
-
   private void prepareForEmailNotification(User user, String passwordResetLink) {
-    String subject = messageService.message("accountcreated.email.subject");
+    String subject = messageService.message("account.created.email.subject");
     SimpleMailMessage emailMessage = createEmailMessage(user, passwordResetLink, subject);
     userRepository.insertEmailNotification(emailMessage);
   }
@@ -172,5 +120,55 @@ public class UserService {
   public void disable(Long userId, Long modifiedBy) {
     userRepository.disable(userId, modifiedBy);
     userRepository.deletePasswordResetTokenForUser(userId);
+  }
+
+  private void sendUserCreationEmail(User user, String resetPasswordLink) {
+    String subject = messageService.message("account.created.email.subject");
+    SimpleMailMessage emailMessage = createEmailMessage(user, resetPasswordLink, subject);
+    sendEmail(emailMessage);
+  }
+
+  private void save(User user) {
+    user.validate();
+    userRepository.create(user);
+    roleAssignmentService.saveRolesForUser(user);
+  }
+
+  private void sendEmail(SimpleMailMessage emailMessage) {
+    try {
+      emailService.send(emailMessage);
+    } catch (EmailException e) {
+      throw new DataException(USER_EMAIL_NOT_FOUND);
+    }
+  }
+
+  private User getValidatedUser(User user) {
+    if (user.getEmail() != null && !user.getEmail().equals("")) {
+      user = userRepository.getByEmail(user.getEmail());
+      if (user == null || !user.getActive()) throw new DataException(USER_EMAIL_INCORRECT);
+    } else {
+      user = userRepository.getByUserName(user.getUserName());
+      if (user == null || !user.getActive()) throw new DataException(USER_USERNAME_INCORRECT);
+    }
+    return user;
+  }
+
+  private SimpleMailMessage createEmailMessage(User user, String resetPasswordLink, String subject) {
+    String passwordResetToken = generateUUID();
+    String[] passwordResetLink = new String[]{user.getFirstName(), user.getLastName(), user.getUserName(), resetPasswordLink + passwordResetToken};
+    String mailBody = messageService.message("password.reset.email.body", (Object[]) passwordResetLink);
+
+    userRepository.insertPasswordResetToken(user, passwordResetToken);
+
+    SimpleMailMessage emailMessage = new SimpleMailMessage();
+    emailMessage.setSubject(subject);
+    emailMessage.setText(mailBody);
+    emailMessage.setTo(user.getEmail());
+
+    return emailMessage;
+  }
+
+  private String generateUUID() {
+    return Encoder.hash(UUID.randomUUID().toString());
   }
 }
