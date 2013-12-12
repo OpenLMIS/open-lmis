@@ -140,9 +140,9 @@ public class DBWrapper {
     ResultSet rs = query("select count(*) from %s", tableName);
 
     if (rs.next()) {
-      return rs.getInt("count") ;
+      return rs.getInt("count");
     }
-      return -1;
+    return -1;
   }
 
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
@@ -368,6 +368,8 @@ public class DBWrapper {
     update("delete from user_password_reset_tokens");
     update("delete from comments");
     update("delete from facility_visits");
+    update("delete from epi_use_line_items");
+    update("delete from epi_use");
     update("delete from distributions");
     update("delete from users where userName not like('Admin%')");
     update("DELETE FROM requisition_line_item_losses_adjustments");
@@ -1244,11 +1246,11 @@ public class DBWrapper {
     HashMap m1 = new HashMap();
     ResultSet rs = query("select observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle from facility_visits;");
     while (rs.next()) {
-        m1.put("observations", rs.getString("observations"));
-        m1.put("confirmedByName", rs.getString("confirmedByName"));
-        m1.put("confirmedByTitle", rs.getString("confirmedByTitle"));
-        m1.put("verifiedByName", rs.getString("verifiedByName"));
-        m1.put("verifiedByTitle", rs.getString("verifiedByTitle"));
+      m1.put("observations", rs.getString("observations"));
+      m1.put("confirmedByName", rs.getString("confirmedByName"));
+      m1.put("confirmedByTitle", rs.getString("confirmedByTitle"));
+      m1.put("verifiedByName", rs.getString("verifiedByName"));
+      m1.put("verifiedByTitle", rs.getString("verifiedByTitle"));
     }
     return m1;
   }
@@ -1273,13 +1275,13 @@ public class DBWrapper {
     try (ResultSet rs1 = query("SELECT id FROM pod WHERE OrderId = %d", orderId)) {
       if (rs1.next()) {
         int podId = rs1.getInt("id");
-        ResultSet rs2 = query("SELECT quantityReceived FROM pod_line_items WHERE podId = %d and productCode='%s'", podId,productCode);
-          if (rs2.next()) {
-            return rs2.getInt("quantityReceived");
-          }
+        ResultSet rs2 = query("SELECT quantityReceived FROM pod_line_items WHERE podId = %d and productCode='%s'", podId, productCode);
+        if (rs2.next()) {
+          return rs2.getInt("quantityReceived");
+        }
       }
     }
-      return -1;
+    return -1;
   }
 
   public void setExportOrdersFlagInSupplyLinesTable(boolean flag, String facilityCode) throws SQLException {

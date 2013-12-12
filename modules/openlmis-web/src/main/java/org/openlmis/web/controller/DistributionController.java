@@ -14,8 +14,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
+import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import static org.openlmis.web.response.OpenLmisResponse.SUCCESS;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -41,7 +44,11 @@ public class DistributionController extends BaseController {
   DistributionService distributionService;
 
   @Autowired
+  private FacilityDistributionService facilityDistributionService;
+
+  @Autowired
   UserService userService;
+
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
   @RequestMapping(value = "/distributions", method = POST, headers = ACCEPT_JSON)
@@ -73,16 +80,24 @@ public class DistributionController extends BaseController {
   }
 
   private ResponseEntity<OpenLmisResponse> returnInitiatedDistribution(Distribution distribution, Distribution existingDistribution) {
+
     existingDistribution.setDeliveryZone(distribution.getDeliveryZone());
     existingDistribution.setPeriod(distribution.getPeriod());
     existingDistribution.setProgram(distribution.getProgram());
 
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getFor(distribution);
+    existingDistribution.setFacilityDistributions(facilityDistributions);
+
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", existingDistribution);
+
     User createdByUser = userService.getById(existingDistribution.getCreatedBy());
+
     openLmisResponse.addData("message", messageService.message("message.distribution.already.exists",
       createdByUser.getUserName(), DATE_FORMAT.format(existingDistribution.getCreatedDate())));
+
     openLmisResponse.addData(SUCCESS, messageService.message("message.distribution.created.success",
       distribution.getDeliveryZone().getName(), distribution.getProgram().getName(), distribution.getPeriod().getName()));
+
     return openLmisResponse.response(OK);
   }
 }

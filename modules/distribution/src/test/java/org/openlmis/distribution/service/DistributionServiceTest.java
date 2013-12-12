@@ -42,7 +42,7 @@ public class DistributionServiceTest {
   FacilityVisitService facilityVisitService;
 
   @Mock
-  FacilityDistributionDataService facilityDistributionDataService;
+  FacilityDistributionService facilityDistributionDataService;
 
   @Mock
   DistributionRepository repository;

@@ -46,7 +46,7 @@ public class FacilityDistributionServiceTest {
   EpiUseService epiUseService;
 
   @InjectMocks
-  FacilityDistributionDataService facilityDistributionDataService;
+  FacilityDistributionService facilityDistributionDataService;
 
   @Test
   public void shouldGetFacilityDistributionDataForADistribution() throws Exception {
@@ -55,7 +55,7 @@ public class FacilityDistributionServiceTest {
     Program program = new Program(3L);
     distribution.setDeliveryZone(deliveryZone);
     distribution.setProgram(program);
-    FacilityDistributionDataService spyFacilityDistributionDataService = spy(facilityDistributionDataService);
+    FacilityDistributionService spyFacilityDistributionDataService = spy(facilityDistributionDataService);
     Facility facility = new Facility(1234L);
     List<Facility> facilities = asList(facility);
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);

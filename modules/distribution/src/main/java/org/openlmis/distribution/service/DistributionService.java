@@ -28,14 +28,14 @@ public class DistributionService {
   FacilityVisitService facilityVisitService;
 
   @Autowired
-  FacilityDistributionDataService facilityDistributionDataService;
+  FacilityDistributionService facilityDistributionService;
 
   @Autowired
   DistributionRepository repository;
 
   public Distribution create(Distribution distribution) {
     Distribution savedDistribution = repository.create(distribution);
-    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionDataService.getFor(distribution);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getFor(distribution);
     savedDistribution.setFacilityDistributions(facilityDistributions);
     return savedDistribution;
   }

@@ -17,8 +17,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 
-import static java.lang.Integer.parseInt;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,11 +34,19 @@ public class EpiUseLineItemDTO {
 
   public EpiUseLineItem transform() {
     return new EpiUseLineItem(this.epiUseId, this.productGroup,
-      parseInt(stockAtFirstOfMonth.getEffectiveValue()),
-      parseInt(stockAtEndOfMonth.getEffectiveValue()),
-      parseInt(received.getEffectiveValue()),
-      parseInt(loss.getEffectiveValue()),
-      parseInt(distributed.getEffectiveValue()),
+      parseValueToInt(stockAtFirstOfMonth),
+      parseValueToInt(stockAtEndOfMonth),
+      parseValueToInt(received),
+      parseValueToInt(loss),
+      parseValueToInt(distributed),
       expirationDate.getEffectiveValue());
+  }
+
+  private Integer parseValueToInt(Reading reading) {
+    String value = reading.getEffectiveValue();
+    if (value == null) {
+      return null;
+    }
+    return Integer.parseInt(value);
   }
 }

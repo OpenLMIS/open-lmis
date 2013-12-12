@@ -27,7 +27,7 @@ import java.util.*;
 
 @Service
 @NoArgsConstructor
-public class FacilityDistributionDataService {
+public class FacilityDistributionService {
 
   @Autowired
   FacilityService facilityService;
