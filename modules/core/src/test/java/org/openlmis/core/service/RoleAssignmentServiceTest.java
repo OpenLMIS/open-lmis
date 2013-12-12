@@ -10,12 +10,13 @@
 
 package org.openlmis.core.service;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.RoleAssignmentRepository;
@@ -36,15 +37,14 @@ import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
 @Category(UnitTests.class)
 public class RoleAssignmentServiceTest {
 
-  RoleAssignmentService service;
-
   @Mock
   RoleAssignmentRepository roleAssignmentRepository;
 
-  @Before
-  public void setUp() throws Exception {
-    service = new RoleAssignmentService(roleAssignmentRepository);
-  }
+  @Mock
+  FulfillmentRoleService fulfillmentRoleService;
+
+  @InjectMocks
+  RoleAssignmentService service;
 
   @Test
   public void shouldGetSupervisorRoleAssignments() throws Exception {
@@ -124,5 +124,25 @@ public class RoleAssignmentServiceTest {
     verify(roleAssignmentRepository).insert(allocationRoles, user.getId());
     verify(roleAssignmentRepository).insert(supervisorRoles, user.getId());
     verify(roleAssignmentRepository).insert(asList(adminRole), user.getId());
+  }
+
+  @Test
+  public void shouldGetFulfilmentRolesForUser() throws Exception {
+    List<FulfillmentRoleAssignment> expectedRoleAssignments = new ArrayList<>();
+    when(fulfillmentRoleService.getRolesForUser(2l)).thenReturn(expectedRoleAssignments);
+
+    List<FulfillmentRoleAssignment> fulfilmentRoles = service.getFulfilmentRoles(2l);
+
+    assertThat(fulfilmentRoles, is(expectedRoleAssignments));
+  }
+
+  @Test
+  public void shouldSaveUserFulfilmentRoleAssignments() throws Exception {
+    User user = new User();
+    user.setFulfillmentRoles(asList(new FulfillmentRoleAssignment(2l, 3l, asList(2l, 4l))));
+
+    service.saveRolesForUser(user);
+
+    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 }

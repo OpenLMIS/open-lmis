@@ -76,9 +76,6 @@ public class UserServiceTest {
   @Mock
   private MessageService messageService;
 
-  @Mock
-  private FulfillmentRoleService fulfillmentRoleService;
-
   @InjectMocks
   private UserService userService;
 
@@ -197,7 +194,7 @@ public class UserServiceTest {
     when(roleAssignmentService.getSupervisorRoles(userId)).thenReturn(supervisorRoles);
     when(roleAssignmentService.getAllocationRoles(userId)).thenReturn(allocationRoles);
     List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = asList(new FulfillmentRoleAssignment());
-    when(fulfillmentRoleService.getRolesForUser(userId)).thenReturn(fulfillmentRoleAssignments);
+    when(roleAssignmentService.getFulfilmentRoles(userId)).thenReturn(fulfillmentRoleAssignments);
     RoleAssignment adminRole = new RoleAssignment();
     when(roleAssignmentService.getAdminRole(userId)).thenReturn(adminRole);
 
@@ -209,7 +206,6 @@ public class UserServiceTest {
     assertThat(returnedUser.getAllocationRoles(), is(allocationRoles));
     assertThat(returnedUser.getAdminRole(), is(adminRole));
     assertThat(returnedUser.getFulfillmentRoles(), is(fulfillmentRoleAssignments));
-
   }
 
   @Test
@@ -259,7 +255,6 @@ public class UserServiceTest {
 
     verify(userRepository).update(user);
     verify(roleAssignmentService).saveRolesForUser(user);
-    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test
@@ -300,7 +295,6 @@ public class UserServiceTest {
     verify(userRepository).insertEmailNotification(emailMessage);
     verify(emailService, never()).send(emailMessage);
     verify(roleAssignmentService).saveRolesForUser(user);
-    verify(fulfillmentRoleService).saveFulfillmentRoles(user);
   }
 
   @Test
