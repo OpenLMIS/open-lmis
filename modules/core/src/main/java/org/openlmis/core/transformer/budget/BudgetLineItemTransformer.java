@@ -3,25 +3,29 @@ package org.openlmis.core.transformer.budget;
 import org.openlmis.core.domain.BudgetLineItem;
 import org.openlmis.core.dto.BudgetLineItemDTO;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
+import org.openlmis.core.transformer.LineItemTransformer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
-public class BudgetLineItemTransformer {
+public class BudgetLineItemTransformer extends LineItemTransformer {
+
+
+  @Autowired
+  private MessageService messageService;
 
   public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern) {
     BudgetLineItem budgetLineItem = new BudgetLineItem();
     Date periodDate = null;
     if (datePattern != null) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
       try {
-        periodDate = dateFormat.parse(lineItemDTO.getPeriodStartDate());
-      } catch (ParseException e) {
-        throw new DataException("incorrect.date.format");
+        periodDate = parseDate(datePattern, lineItemDTO.getPeriodStartDate());
+      } catch (Exception e) {
+        throw new DataException(messageService.message("budget.invalid.date.format", lineItemDTO.getPeriodStartDate()));
       }
     }
 

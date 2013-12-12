@@ -28,26 +28,40 @@ public class BudgetFileProcessor {
   private static Logger logger = Logger.getLogger(BudgetFileProcessor.class);
 
   @Autowired
-  BudgetFileTemplateService budgetFileTemplateService;
+  private BudgetFileTemplateService budgetFileTemplateService;
 
   @Autowired
-  BudgetLineItemTransformer budgetLineItemTransformer;
+  private BudgetLineItemTransformer budgetLineItemTransformer;
 
   @Autowired
-  FacilityService facilityService;
+  private FacilityService facilityService;
 
   @Autowired
-  ProgramService programService;
+  private ProgramService programService;
+
+  @Autowired
+  private BudgetFileService budgetFileService;
+
+  @Autowired
   private ProcessingScheduleService processingScheduleService;
+
+  @Autowired
+  private BudgetLineItemService budgetLineItemService;
 
 
   public void process(Message message) throws IOException {
 
-    File file = (File) message.getPayload();
+    File budgetFile = (File) message.getPayload();
+
+    logger.debug("processing Budget File " + budgetFile.getName());
+
+    Boolean processingError = false;
+
+    BudgetFileInfo budgetFileInfo = saveBudgetFile(budgetFile, processingError);
 
     EDIFileTemplate budgetFileTemplate = budgetFileTemplateService.get();
 
-    ICsvListReader listReader = new CsvListReader(new FileReader(file), STANDARD_PREFERENCE);
+    ICsvListReader listReader = new CsvListReader(new FileReader(budgetFile), STANDARD_PREFERENCE);
 
     if (budgetFileTemplate.getConfiguration().isHeaderInFile()) listReader.getHeader(true);
 
@@ -75,14 +89,24 @@ public class BudgetFileProcessor {
         ProcessingPeriod processingPeriod = validatePeriod(facility, program, budgetLineItem.getPeriodDate());
         budgetLineItem.setPeriodId(processingPeriod.getId());
 
+        budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
+        budgetLineItemService.save(budgetLineItem);
+
 
       } catch (Exception e) {
+        processingError = true;
         logger.error(e.getMessage(), e);
         continue;
       }
     }
+  }
 
+  private BudgetFileInfo saveBudgetFile(File budgetFile, Boolean processingError) {
+    BudgetFileInfo budgetFileInfo = new BudgetFileInfo(budgetFile.getName(), processingError);
 
+    budgetFileService.save(budgetFileInfo);
+
+    return budgetFileInfo;
   }
 
   private ProcessingPeriod validatePeriod(Facility facility, Program program, Date date) {

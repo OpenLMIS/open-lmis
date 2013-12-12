@@ -53,6 +53,9 @@ public class BudgetFileProcessorTest {
   @Mock
   private ProcessingScheduleService processingScheduleService;
 
+  @Mock
+  private BudgetLineItemService budgetLineItemService;
+
   @InjectMocks
   BudgetFileProcessor budgetFileProcessor;
   private Message message;
@@ -60,8 +63,8 @@ public class BudgetFileProcessorTest {
   private EDIConfiguration configuration;
   private CsvListReader reader;
   private String datePattern;
-  private EDIFileColumn periodDateColumn;
 
+  private EDIFileColumn periodDateColumn;
   private EDIFileColumn defaultEDIColumn;
 
   @Before
@@ -100,23 +103,41 @@ public class BudgetFileProcessorTest {
   }
 
   @Test
-  public void shouldCreateBudgetFileLineItem() throws Exception {
+  public void shouldSaveBudgetFileLineItem() throws Exception {
     configuration.setHeaderInFile(true);
+    File budgetFile = mock(File.class);
+    when(message.getPayload()).thenReturn(budgetFile);
+    CsvListReader listReader = mock(CsvListReader.class);
+    FileReader fileReader = mock(FileReader.class);
+    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
+    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
+    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
+    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
+    String budgetFileName = "BudgetFileName";
+    when(budgetFile.getName()).thenReturn(budgetFileName);
+    BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
+    budgetFileInfo.setId(1L);
+    whenNew(BudgetFileInfo.class).withArguments(budgetFileName, false).thenReturn(budgetFileInfo);
     mockStatic(BudgetLineItemDTO.class);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     when(lineItemDTO.getFacilityCode()).thenReturn("F10");
     when(lineItemDTO.getProgramCode()).thenReturn("HIV");
-    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
     Facility facility = new Facility();
     facility.setCode("F10");
     when(facilityService.getByCode(facility)).thenReturn(facility);
     Program program = new Program();
     when(programService.getByCode("HIV")).thenReturn(program);
+    BudgetLineItem budgetLineItem = mock(BudgetLineItem.class);
+    ProcessingPeriod processingPeriod = mock(ProcessingPeriod.class);
+    when(processingScheduleService.getPeriodForDate(facility, program, budgetLineItem.getPeriodDate())).thenReturn(processingPeriod);
+    when(transformer.transform(lineItemDTO, datePattern)).thenReturn(budgetLineItem);
 
     budgetFileProcessor.process(message);
 
     verify(transformer).transform(lineItemDTO, datePattern);
+    verify(budgetLineItem).setBudgetFileId(budgetFileInfo.getId());
+    verify(budgetLineItemService).save(budgetLineItem);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
   }
 
@@ -252,6 +273,26 @@ public class BudgetFileProcessorTest {
 
     verify(lineItemDTO).checkMandatoryFields();
     assertThat(budgetLineItem.getPeriodId(), is(nullValue()));
-
   }
+
+  @Test
+  public void shouldSaveBudgetFileInfo() throws Exception {
+    File budgetFile = mock(File.class);
+    when(message.getPayload()).thenReturn(budgetFile);
+    String budgetFileName = "BudgetFileName";
+    when(budgetFile.getName()).thenReturn(budgetFileName);
+    BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
+    whenNew(BudgetFileInfo.class).withArguments(budgetFileName, false).thenReturn(budgetFileInfo);
+    CsvListReader listReader = mock(CsvListReader.class);
+    FileReader fileReader = mock(FileReader.class);
+    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
+    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
+    when(listReader.read()).thenReturn(null);
+
+    budgetFileProcessor.process(message);
+
+    verify(budgetFileService).save(budgetFileInfo);
+  }
+
+
 }
