@@ -24,6 +24,7 @@ import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,7 @@ import java.util.Map;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -130,29 +130,23 @@ public class DistributionControllerTest {
   public void shouldSyncFacilityDistributionData() {
     Long distributionId = 1l;
     Long facilityId = 3l;
+    FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
     FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
 
     when(service.sync(facilityDistributionData)).thenReturn("Synced");
+    doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
+    doNothing().when(facilityDistributionDTO).setCreatedBy(USER_ID);
+    doNothing().when(facilityDistributionDTO).setFacilityId(facilityId);
+    doNothing().when(facilityDistributionDTO).setDistributionId(distributionId);
 
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distributionId, facilityId, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertThat((String) response.getBody().getData().get("syncStatus"), is("Synced"));
     verify(service).sync(facilityDistributionData);
-    assertThat(facilityDistributionData.getFacilityVisit().getFacilityId(), is(facilityId));
-    assertThat(facilityDistributionData.getFacilityVisit().getDistributionId(), is(distributionId));
+    verify(facilityDistributionDTO).setCreatedBy(USER_ID);
+    verify(facilityDistributionDTO).setFacilityId(facilityId);
+    verify(facilityDistributionDTO).setDistributionId(distributionId);
   }
 
-  @Test
-  public void shouldReturnErrorIfAlreadySynced() throws Exception {
-    Long distributionId = 1l;
-    Long facilityId = 3l;
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
-
-    when(service.sync(facilityDistributionData)).thenReturn("Failed");
-
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
-
-    assertThat((String) response.getBody().getData().get("syncStatus"), is("Failed"));
-  }
 }

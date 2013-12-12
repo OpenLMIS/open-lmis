@@ -12,8 +12,10 @@ package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class Reading {
 
@@ -21,6 +23,6 @@ public class Reading {
   private Boolean notRecorded;
 
   public String getEffectiveValue() {
-    return notRecorded ? null : value;
+    return notRecorded == null || !notRecorded ? value : null;
   }
 }

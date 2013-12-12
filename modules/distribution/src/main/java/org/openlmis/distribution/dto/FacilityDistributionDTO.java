@@ -12,33 +12,35 @@ package org.openlmis.distribution.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 
 @Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistributionDTO {
 
   private FacilityVisit facilityVisit;
-  private EpiUseDTO epiUseDTO;
+  private EpiUseDTO epiUse;
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUseDTO.transform());
+    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform());
   }
 
   public void setDistributionId(Long distributionId) {
     facilityVisit.setDistributionId(distributionId);
-    epiUseDTO.setFacilityId(distributionId);
+    epiUse.setFacilityId(distributionId);
   }
 
   public void setFacilityId(Long facilityId) {
     facilityVisit.setFacilityId(facilityId);
-    epiUseDTO.setFacilityId(facilityId);
+    epiUse.setFacilityId(facilityId);
   }
 
   public void setCreatedBy(Long createdBy) {
     facilityVisit.setCreatedBy(createdBy);
-    epiUseDTO.setCreatedBy(createdBy);
+    epiUse.setCreatedBy(createdBy);
   }
 
 }

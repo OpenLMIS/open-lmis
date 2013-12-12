@@ -29,7 +29,7 @@ public class FacilityDistributionDTOTest {
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO();
     facilityDistributionDTO.setFacilityVisit(facilityVisit);
-    facilityDistributionDTO.setEpiUseDTO(epiUseDTO);
+    facilityDistributionDTO.setEpiUse(epiUseDTO);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);

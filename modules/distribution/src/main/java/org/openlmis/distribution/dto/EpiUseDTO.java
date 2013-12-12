@@ -12,6 +12,7 @@ package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.EpiUse;
@@ -22,20 +23,21 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EpiUseDTO extends BaseModel {
 
   Long facilityId;
   Long distributionId;
-  List<EpiUseLineItemDTO> epiUseLineItemDTOs;
+  List<EpiUseLineItemDTO> lineItems;
 
   public EpiUse transform() {
-    List<EpiUseLineItem> lineItems = new ArrayList<>();
+    List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
 
-    for (EpiUseLineItemDTO epiUseLineItemDTO : epiUseLineItemDTOs) {
-      lineItems.add(epiUseLineItemDTO.transform());
+    for (EpiUseLineItemDTO epiUseLineItemDTO : this.lineItems) {
+      epiUseLineItems.add(epiUseLineItemDTO.transform());
     }
 
-    return new EpiUse(facilityId, distributionId, lineItems);
+    return new EpiUse(facilityId, distributionId, epiUseLineItems);
   }
 }

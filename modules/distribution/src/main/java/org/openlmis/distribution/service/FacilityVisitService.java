@@ -15,6 +15,7 @@ public class FacilityVisitService {
   FacilityVisitRepository repository;
 
   //TODO return boolean
+  //TODO why throw exception?
   public String save(FacilityVisit facilityVisit) {
     FacilityVisit existingFacilityVisit = repository.get(facilityVisit);
     if (existingFacilityVisit != null) {

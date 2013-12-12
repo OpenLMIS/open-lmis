@@ -13,6 +13,7 @@ package org.openlmis.distribution.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 
@@ -21,6 +22,7 @@ import static java.lang.Integer.parseInt;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EpiUseLineItemDTO {
 
   private Long epiUseId;

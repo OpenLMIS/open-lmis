@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,11 +64,13 @@ public class DistributionController extends BaseController {
   }
 
   @RequestMapping(value = "/distributions/{id}/facilities/{facilityId}", method = PUT, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistribution facilityDistributionData, @PathVariable Long id,
+  public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionDTO facilityDistributionDTO, @PathVariable Long id,
                                                @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
-    return OpenLmisResponse.response("syncStatus", distributionService.sync(facilityDistributionData));
+    facilityDistributionDTO.setFacilityId(facilityId);
+    facilityDistributionDTO.setDistributionId(id);
+    facilityDistributionDTO.setCreatedBy(loggedInUserId(httpServletRequest));
+    return OpenLmisResponse.response("syncStatus", distributionService.sync(facilityDistributionDTO.transform()));
   }
-
 
   private ResponseEntity<OpenLmisResponse> returnInitiatedDistribution(Distribution distribution, Distribution existingDistribution) {
     existingDistribution.setDeliveryZone(distribution.getDeliveryZone());
