@@ -23,7 +23,7 @@ import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityDistribution;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.*;
 
 @Category(IntegrationTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class FacilityDistributionDataServiceTest {
+public class FacilityDistributionServiceTest {
 
   @Mock
   FacilityService facilityService;
@@ -60,10 +60,10 @@ public class FacilityDistributionDataServiceTest {
     List<Facility> facilities = asList(facility);
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
 
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
     when(spyFacilityDistributionDataService.createDistributionData(facility, distribution)).thenReturn(facilityDistributionData);
 
-    Map<Long, FacilityDistributionData> facilityDistributionDataMap = spyFacilityDistributionDataService.getFor(distribution);
+    Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionDataService.getFor(distribution);
 
     assertThat(facilityDistributionDataMap.get(1234L), is(facilityDistributionData));
   }
@@ -92,7 +92,7 @@ public class FacilityDistributionDataServiceTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
 
-    FacilityDistributionData distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
+    FacilityDistribution distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
 
     EpiUse epiUse = distributionData.getEpiUse();
     assertThat(epiUse.getDistributionId(), is(distribution.getId()));
@@ -125,7 +125,7 @@ public class FacilityDistributionDataServiceTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
 
-    FacilityDistributionData distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
+    FacilityDistribution distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
 
     List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
     assertThat(lineItems.size(), is(1));
@@ -157,7 +157,7 @@ public class FacilityDistributionDataServiceTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
 
-    FacilityDistributionData distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
+    FacilityDistribution distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
 
     List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
     assertThat(lineItems.size(), is(1));

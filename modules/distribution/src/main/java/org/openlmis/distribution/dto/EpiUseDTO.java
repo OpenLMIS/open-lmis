@@ -8,30 +8,34 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.distribution.domain.EpiUse;
+import org.openlmis.distribution.domain.EpiUseLineItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class EpiUseLineItem extends BaseModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class EpiUseDTO extends BaseModel {
 
-  private Long epiUseId;
-  private ProductGroup productGroup;
-  private Integer stockAtFirstOfMonth;
-  private Integer stockAtEndOfMonth;
-  private Integer received;
-  private Integer loss;
-  private Integer distributed;
-  private String expirationDate;
+  Long facilityId;
+  Long distributionId;
+  List<EpiUseLineItemDTO> epiUseLineItemDTOs;
 
-  public EpiUseLineItem(ProductGroup productGroup) {
-    this.productGroup = productGroup;
+  public EpiUse transform() {
+    List<EpiUseLineItem> lineItems = new ArrayList<>();
+
+    for (EpiUseLineItemDTO epiUseLineItemDTO : epiUseLineItemDTOs) {
+      lineItems.add(epiUseLineItemDTO.transform());
+    }
+
+    return new EpiUse(facilityId, distributionId, lineItems);
   }
-
 }

@@ -28,6 +28,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -109,7 +110,7 @@ public class EpiUseMapperIT {
 
   @Test
   public void shouldSaveEpiUse() throws Exception {
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId());
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), new ArrayList<EpiUseLineItem>());
     mapper.insert(epiUse);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_use WHERE id = " + epiUse.getId());
@@ -122,7 +123,7 @@ public class EpiUseMapperIT {
     ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
     productGroupMapper.insert(productGroup);
 
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId());
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), new ArrayList<EpiUseLineItem>());
     mapper.insert(epiUse);
 
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();

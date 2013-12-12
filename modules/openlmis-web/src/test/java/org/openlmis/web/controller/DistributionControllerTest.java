@@ -23,7 +23,7 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.service.DistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
@@ -130,7 +130,7 @@ public class DistributionControllerTest {
   public void shouldSyncFacilityDistributionData() {
     Long distributionId = 1l;
     Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
 
     when(service.sync(facilityDistributionData)).thenReturn("Synced");
 
@@ -147,7 +147,7 @@ public class DistributionControllerTest {
   public void shouldReturnErrorIfAlreadySynced() throws Exception {
     Long distributionId = 1l;
     Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
 
     when(service.sync(facilityDistributionData)).thenReturn("Failed");
 

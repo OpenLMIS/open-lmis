@@ -8,30 +8,19 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.ProductGroup;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class EpiUseLineItem extends BaseModel {
+public class Reading {
 
-  private Long epiUseId;
-  private ProductGroup productGroup;
-  private Integer stockAtFirstOfMonth;
-  private Integer stockAtEndOfMonth;
-  private Integer received;
-  private Integer loss;
-  private Integer distributed;
-  private String expirationDate;
+  private String value;
+  private Boolean notRecorded;
 
-  public EpiUseLineItem(ProductGroup productGroup) {
-    this.productGroup = productGroup;
+  public String getEffectiveValue() {
+    return notRecorded ? null : value;
   }
-
 }

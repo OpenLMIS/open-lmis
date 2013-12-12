@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
 
@@ -52,7 +52,7 @@ public class DistributionServiceTest {
     Distribution distribution = new Distribution();
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
-    Map<Long, FacilityDistributionData> facilityDistributions = new HashMap<>();
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
     when(facilityDistributionDataService.getFor(expectedDistribution)).thenReturn(facilityDistributions);
 
     Distribution initiatedDistribution = service.create(distribution);
@@ -66,7 +66,7 @@ public class DistributionServiceTest {
   public void shouldSyncFacilityDistributionDataAndReturnSyncStatus() {
     FacilityVisit facilityVisit = new FacilityVisit();
 
-    FacilityDistributionData facilityDistributionData = mock(FacilityDistributionData.class);
+    FacilityDistribution facilityDistributionData = mock(FacilityDistribution.class);
     when(facilityDistributionData.getFacilityVisit()).thenReturn(facilityVisit);
     when(facilityVisitService.save(facilityVisit)).thenReturn("Synced");
     String syncStatus = service.sync(facilityDistributionData);

@@ -10,28 +10,6 @@
 
 package org.openlmis.distribution.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.ProductGroup;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class EpiUseLineItem extends BaseModel {
-
-  private Long epiUseId;
-  private ProductGroup productGroup;
-  private Integer stockAtFirstOfMonth;
-  private Integer stockAtEndOfMonth;
-  private Integer received;
-  private Integer loss;
-  private Integer distributed;
-  private String expirationDate;
-
-  public EpiUseLineItem(ProductGroup productGroup) {
-    this.productGroup = productGroup;
-  }
+public class FacilityDistributionTest {
 
 }

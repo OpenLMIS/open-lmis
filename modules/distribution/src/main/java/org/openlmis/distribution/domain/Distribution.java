@@ -33,7 +33,7 @@ public class Distribution extends BaseModel {
   Program program;
   ProcessingPeriod period;
   DistributionStatus status;
-  Map<Long, FacilityDistributionData> facilityDistributions;
+  Map<Long, FacilityDistribution> facilityDistributions;
 
   @SuppressWarnings("unused")
   public String getZpp() {

@@ -8,30 +8,25 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.ProductGroup;
+import org.junit.Test;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class EpiUseLineItem extends BaseModel {
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
-  private Long epiUseId;
-  private ProductGroup productGroup;
-  private Integer stockAtFirstOfMonth;
-  private Integer stockAtEndOfMonth;
-  private Integer received;
-  private Integer loss;
-  private Integer distributed;
-  private String expirationDate;
+public class ReadingTest {
 
-  public EpiUseLineItem(ProductGroup productGroup) {
-    this.productGroup = productGroup;
+  @Test
+  public void shouldReturnValueIfNRisFalse() throws Exception {
+    Reading reading = new Reading("145", false);
+    assertThat(reading.getEffectiveValue(), is("145"));
   }
 
+  @Test
+  public void shouldReturnNullIfNRisTrue() throws Exception {
+    Reading reading = new Reading("", true);
+    assertThat(reading.getEffectiveValue(), is(nullValue()));
+  }
 }

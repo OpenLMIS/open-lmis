@@ -10,26 +10,22 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.domain.BaseModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EpiUse extends BaseModel {
 
   private Long distributionId;
   private Long facilityId;
-  private List<EpiUseLineItem> lineItems = new ArrayList<>();
+  private List<EpiUseLineItem> lineItems;
 
-
-  public EpiUse(Long distributionId, Long facilityId) {
-    this.distributionId = distributionId;
-    this.facilityId = facilityId;
-  }
 }

@@ -8,30 +8,37 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.FacilityVisit;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class EpiUseLineItem extends BaseModel {
+public class FacilityDistributionDTO {
 
-  private Long epiUseId;
-  private ProductGroup productGroup;
-  private Integer stockAtFirstOfMonth;
-  private Integer stockAtEndOfMonth;
-  private Integer received;
-  private Integer loss;
-  private Integer distributed;
-  private String expirationDate;
+  private FacilityVisit facilityVisit;
+  private EpiUseDTO epiUseDTO;
 
-  public EpiUseLineItem(ProductGroup productGroup) {
-    this.productGroup = productGroup;
+  public FacilityDistribution transform() {
+    return new FacilityDistribution(this.facilityVisit, this.epiUseDTO.transform());
+  }
+
+  public void setDistributionId(Long distributionId) {
+    facilityVisit.setDistributionId(distributionId);
+    epiUseDTO.setFacilityId(distributionId);
+  }
+
+  public void setFacilityId(Long facilityId) {
+    facilityVisit.setFacilityId(facilityId);
+    epiUseDTO.setFacilityId(facilityId);
+  }
+
+  public void setCreatedBy(Long createdBy) {
+    facilityVisit.setCreatedBy(createdBy);
+    epiUseDTO.setCreatedBy(createdBy);
   }
 
 }

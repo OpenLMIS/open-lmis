@@ -19,7 +19,7 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityDistribution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +35,11 @@ public class FacilityDistributionDataService {
   @Autowired
   EpiUseService epiUseService;
 
-  public Map<Long, FacilityDistributionData> getFor(Distribution distribution) {
+  public Map<Long, FacilityDistribution> getFor(Distribution distribution) {
     Long deliveryZoneId = distribution.getDeliveryZone().getId();
     Long programId = distribution.getProgram().getId();
 
-    Map<Long, FacilityDistributionData> facilityDistributions = new HashMap<>();
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
     for (Facility facility : facilities) {
@@ -48,17 +48,16 @@ public class FacilityDistributionDataService {
     return facilityDistributions;
   }
 
-  public FacilityDistributionData createDistributionData(Facility facility, Distribution distribution) {
+  public FacilityDistribution createDistributionData(Facility facility, Distribution distribution) {
 
-    EpiUse epiUse = createEpiUse(facility, distribution);
-
-    return new FacilityDistributionData(epiUse);
+    return new FacilityDistribution(null, createEpiUse(facility, distribution));
   }
 
   private EpiUse createEpiUse(Facility facility, Distribution distribution) {
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId());
-
     Set<ProductGroup> productGroupSet = new HashSet<>();
+    List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
+
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), epiUseLineItems);
 
     if (facility.getSupportedPrograms().size() != 0) {
       ProgramSupported programSupported = facility.getSupportedPrograms().get(0);
@@ -66,7 +65,7 @@ public class FacilityDistributionDataService {
         if (facilityProgramProduct.isActive() && facilityProgramProduct.getProduct().getActive()) {
           ProductGroup productGroup = facilityProgramProduct.getProduct().getProductGroup();
           if (productGroup != null && productGroupSet.add(productGroup)) {
-            epiUse.getLineItems().add(new EpiUseLineItem(productGroup));
+            epiUseLineItems.add(new EpiUseLineItem(productGroup));
           }
         }
       }

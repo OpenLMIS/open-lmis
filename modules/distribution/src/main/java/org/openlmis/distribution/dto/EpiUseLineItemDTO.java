@@ -8,30 +8,37 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProductGroup;
+import org.openlmis.distribution.domain.EpiUseLineItem;
+
+import static java.lang.Integer.parseInt;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EpiUseLineItem extends BaseModel {
+public class EpiUseLineItemDTO {
 
   private Long epiUseId;
   private ProductGroup productGroup;
-  private Integer stockAtFirstOfMonth;
-  private Integer stockAtEndOfMonth;
-  private Integer received;
-  private Integer loss;
-  private Integer distributed;
-  private String expirationDate;
+  private Reading stockAtFirstOfMonth;
+  private Reading stockAtEndOfMonth;
+  private Reading received;
+  private Reading loss;
+  private Reading distributed;
+  private Reading expirationDate;
 
-  public EpiUseLineItem(ProductGroup productGroup) {
-    this.productGroup = productGroup;
+  public EpiUseLineItem transform() {
+    return new EpiUseLineItem(this.epiUseId, this.productGroup,
+      parseInt(stockAtFirstOfMonth.getEffectiveValue()),
+      parseInt(stockAtEndOfMonth.getEffectiveValue()),
+      parseInt(received.getEffectiveValue()),
+      parseInt(loss.getEffectiveValue()),
+      parseInt(distributed.getEffectiveValue()),
+      expirationDate.getEffectiveValue());
   }
-
 }
