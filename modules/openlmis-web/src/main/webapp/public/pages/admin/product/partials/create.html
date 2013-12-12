@@ -34,7 +34,7 @@
                maxlength="50"
                ng-required="true"/>
                                             <span class="field-error"
-                                                  ng-show="createProductForm.code.$error.required && showErrorForCreate"
+                                                  ng-show="createProductForm.code.$error.required && showError"
                                                   openlmis-message="missing.value">
                                             </span>
     </div>
@@ -49,7 +49,7 @@
         <input ng-model="product.packSize" name="packSize" id="packSize" type="number"
                ng-required="true"/>
         <span class="field-error"
-              ng-show="createProductForm.packSize.$error.required && showErrorForCreate"
+              ng-show="createProductForm.packSize.$error.required && showError"
               openlmis-message="missing.value">
         </span>
     </div>
@@ -65,7 +65,7 @@
                maxlength="20"
                ng-required="true"/>
         <span class="field-error"
-              ng-show="createProductForm.primaryName.$error.required && showErrorForCreate"
+              ng-show="createProductForm.primaryName.$error.required && showError"
               openlmis-message="missing.value">
         </span>
     </div>
@@ -82,7 +82,7 @@
                maxlength="20"
                ng-required="true"/>
         <span class="field-error"
-              ng-show="createProductForm.dispensingUnit.$error.required && showErrorForCreate"
+              ng-show="createProductForm.dispensingUnit.$error.required && showError"
               openlmis-message="missing.value">
         </span>
 
@@ -100,7 +100,7 @@
                maxlength="20"
                ng-required="true"/>
             <span class="field-error"
-                  ng-show="createProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
+                  ng-show="createProductForm.dosesPerDispensingUnit.$error.required && showError"
                   openlmis-message="missing.value">
             </span>
 
@@ -117,7 +117,7 @@
                type="number"
                ng-required="true"/>
         <span class="field-error"
-              ng-show="createProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
+              ng-show="createProductForm.packRoundingThreshold.$error.required && showError"
               openlmis-message="missing.value">
         </span>
     </div>
@@ -131,7 +131,7 @@
         <input ng-model="product.strength" name="strength" id="strength" type="text"
                maxlength="50"/>
         <span class="field-error"
-              ng-show="createProductForm.strength.$error.required && showErrorForCreate"
+              ng-show="createProductForm.strength.$error.required && showError"
               openlmis-message="missing.value">
         </span>
     </div>
@@ -145,7 +145,7 @@
         <input ng-model="product.type" name="type" id="type" type="text"
                maxlength="20"/>
         <span class="field-error"
-              ng-show="createProductForm.type.$error.required && showErrorForCreate"
+              ng-show="createProductForm.type.$error.required && showError"
               openlmis-message="missing.value">
         </span>
     </div>
@@ -162,7 +162,7 @@
 
         </select>
            <span class="field-error"
-                 ng-show="createProductForm.dosageUnit.$error.required && showErrorForCreate"
+                 ng-show="createProductForm.dosageUnit.$error.required && showError"
                  openlmis-message="missing.value">
             </span>
     </div>
@@ -175,7 +175,7 @@
     <div class="form-field" style="width: 40%;">
         <input ng-model="product.displayOrder" name="displayOrder" id="displayOrder" type="number" ng-required="true" />
         <span class="field-error"
-              ng-show="createProductForm.displayOrder.$error.required && showErrorForCreate"
+              ng-show="createProductForm.displayOrder.$error.required && showError"
               openlmis-message="missing.value">
         </span>
     </div>
@@ -192,7 +192,7 @@
 
         </select>
        <span class="field-error"
-             ng-show="createProductForm.formid.$error.required && showErrorForCreate"
+             ng-show="createProductForm.formid.$error.required && showError"
              openlmis-message="missing.value">
         </span>
     </div>
@@ -210,7 +210,7 @@
 
         </select>
                                        <span class="field-error"
-                                             ng-show="createProductForm.categoryid.$error.required && showErrorForCreate"
+                                             ng-show="createProductForm.categoryid.$error.required && showError"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -227,7 +227,7 @@
 
         </select>
        <span class="field-error"
-             ng-show="createProductForm.productgroupid.$error.required && showErrorForCreate"
+             ng-show="createProductForm.productgroupid.$error.required && showError"
              openlmis-message="missing.value">
         </span>
     </div>
@@ -238,9 +238,7 @@
     <div class="form-field" style="width: 40%;">
         <table>
             <tr>
-                <td><input ng-model="product.fullSupply" checked="checked" name="fullSupply" id="fullSupply"
-                           type="checkbox"
-                           ng-required="true"/>
+                <td><input ng-model="product.fullSupply" type="checkbox"  />
                 </td>
                 <td>&nbsp;</td>
                 </td>
@@ -265,8 +263,7 @@
             </tr>
             <tr>
                 <td>
-                    <input ng-model="product.roundToZero" type="checkbox"
-                           >
+                    <input ng-model="product.roundToZero" type="checkbox" >
                 </td>
                 <td>&nbsp;</td>
                 </td>
@@ -289,7 +286,7 @@
         <tr>
             <th style="width:200px;text-align: left;">Program</th>
             <th style="width:50px"></th>
-            <th style="width:100px">R&R Display Order</th>
+            <th>R&R Display Order</th>
             <th>Category</th>
             <th style="text-align: left; width:200px;">Price Per Pack</th>
             <th style="text-align:left;width:200px">Doses Per Month</th>
@@ -297,13 +294,20 @@
         <tr ng-repeat="pg in product.programProducts">
             <td>{{ pg.programName }}</td>
             <td><input type="checkbox" ng-model="pg.active"/></td>
-            <td><input type="number" ng-model="pg.displayOrder"/></td>
-            <td>
-              <select style="width:200px;"  ng-model="pp.productCategoryId"
-                      ng-disabled="(!pp.active || !editProduct.active)"
-                      ng-options="option.id as option.name for option in productCategories">
 
+            <td>
+
+              <input type="number" ng-required="pg.active" ng-model="pg.displayOrder"/>
+              <span ng-show="(pg.active && !pg.displayOrder)" class="label-required"><- required </span>
+            </td>
+            <td>
+
+              <select style="width:200px;"  ng-model="pg.productCategoryId"
+                      ng-disabled="(!pg.active )"
+                      ng-required="(categoryPerProgramProductIsRequired && pg.active)"
+                      ng-options="option.id as option.name for option in productCategories">
               </select>
+              <span ng-show="(pg.active && categoryPerProgramProductIsRequired && !pg.productCategoryId)" class="label-required"><- required</span>
             </td>
             <td>
                 <input ng-model="pg.currentPrice"
@@ -324,7 +328,7 @@
         <a ng-click="cancelAddNewProduct()" class="btn btn-cancel cancel-button"><span
                 openlmis-message="button.cancel"></span></a>
     </div>
-    <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"/>
+    <div class="toolbar-error" id="saveErrorMsgDiv" ng-show="error" >{{ errorMessage }}</div>
 </div>
 
 </div>

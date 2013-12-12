@@ -8,74 +8,80 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProductCreateController($scope, $location, $dialog, messageService, CreateProduct, ProductGroups, ProductCategories, ReportPrograms, DosageUnits, ProductForms) {
-    $scope.creationError = '';
-    $scope.title = 'Products';
-    $scope.programProductsCost = [];
+function ProductCreateController($scope, $location,messageService, SettingsByKey, CreateProduct, ProductGroups, ProductCategories, ReportPrograms, DosageUnits, ProductForms) {
 
-    // clear the parent confirmation message if there was any
-    $scope.$parent.message = '';
+  $scope.title = 'Products';
+  $scope.programProductsCost = [];
 
-    // Programs list
-    ReportPrograms.get(function (data) {
-        $scope.product={};
+  // clear the parent confirmation message if there was any
+  $scope.$parent.message = '';
 
-        $scope.$parent.AddEditMode = true;
+  SettingsByKey.get({key: 'ALLOW_PRODUCT_CATEGORY_PER_PROGRAM'},function (data){
+    $scope.categoryPerProgramProductIsRequired = data.settings.value;
+  });
 
-        //populate the defaults
-        $scope.product.active = true;
-        $scope.product.tracer = true;
-        $scope.product.fullSupply = true;
-        $scope.product.roundToZero = true;
+  // Programs list
+  ReportPrograms.get(function (data) {
+    $scope.product={};
 
-        $scope.product.programProducts = [];
-        $scope.programs = data.programs;
+    //populate the defaults
+    $scope.product.active = true;
+    $scope.product.tracer = true;
+    $scope.product.fullSupply = true;
+    $scope.product.roundToZero = true;
 
-        for(var i = 0; i < data.programs.length; i++){
-            var program = data.programs[i];
-            $scope.product.programProducts.push({program:program , currentPrice: 0, dosesPerMonth:1, active:false, programName: program.name });
-        }
+    $scope.product.programProducts = [];
+    $scope.programs = data.programs;
 
-    });
+    for(var i = 0; i < data.programs.length; i++){
+        var program = data.programs[i];
+        $scope.product.programProducts.push({program:program , currentPrice: 0, dosesPerMonth:1, active:false, programName: program.name });
+    }
 
-    // create product
-    $scope.createProduct = function () {
-        $scope.error = "";
-        if ($scope.createProductForm.$invalid) {
-            $scope.showErrorForCreate = true;
-            return;
-        }
-        $scope.showErrorForCreate = false;
-        CreateProduct.save( $scope.product, function (data) {
-               $scope.$parent.message = 'New product created successfully';
-               $location.path('');
-               $scope.product = {};
-            },  function ( data ) {
-            $scope.message = "";
-            $scope.creationError = data.data.error;
-        });
+  });
+
+  // create product
+  $scope.createProduct = function () {
+      $scope.error = "";
+      if ($scope.createProductForm.$invalid) {
+          $scope.showError = true;
+          $scope.errorMessage = "The form you submitted is invalid. Please revise and try again.";
+          return;
+      }
+
+    var createSuccessCallback = function (data) {
+      $scope.$parent.message = 'New product created successfully';
+      $location.path('');
+      $scope.product = {};
     };
 
-    $scope.cancelAddNewProduct = function (product) {
-        $scope.$parent.newProductMode = false;
-        $location.path('');
+    var errorCallback = function(data){
+
+      $scope.errorMessage = messageService.get(data.data.error);
     };
 
-    ProductCategories.get(function (data) {
-        $scope.productCategories = data.productCategoryList;
-    });
+     $scope.error = "";
+     CreateProduct.save( $scope.product, createSuccessCallback , errorCallback );
+  };
 
-    DosageUnits.get(function (data) {
-        $scope.dosageUnits = data.dosageUnits;
-    });
+  $scope.cancelAddNewProduct = function () {
+    $location.path('#/list');
+  };
 
-    ProductForms.get(function (data) {
-        $scope.productForms = data.productForms;
-    });
+  ProductCategories.get(function (data) {
+      $scope.productCategories = data.productCategoryList;
+  });
 
-    ProductGroups.get(function (data){
-       $scope.productGroups = data.productGroups;
-    });
+  DosageUnits.get(function (data) {
+      $scope.dosageUnits = data.dosageUnits;
+  });
 
+  ProductForms.get(function (data) {
+      $scope.productForms = data.productForms;
+  });
+
+  ProductGroups.get(function (data){
+     $scope.productGroups = data.productGroups;
+  });
 
 }

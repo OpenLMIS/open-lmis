@@ -42,7 +42,7 @@ Edit Product
 
                ng-required="true"/>
             <span class="field-error"
-                  ng-show="editProductForm.code.$error.required && showErrorForCreate"
+                  ng-show="editProductForm.code.$error.required && showError"
                   openlmis-message="missing.value">
             </span>
     </div>
@@ -60,7 +60,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
             <span class="field-error"
-                  ng-show="editProductForm.packSize.$error.required && showErrorForCreate"
+                  ng-show="editProductForm.packSize.$error.required && showError"
                   openlmis-message="missing.value">
             </span>
     </div>
@@ -77,7 +77,7 @@ Edit Product
                maxlength="150"
                ng-required="true"/>
                 <span class="field-error"
-                      ng-show="editProductForm.primaryName.$error.required && showErrorForCreate"
+                      ng-show="editProductForm.primaryName.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
     </div>
@@ -96,7 +96,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
             <span class="field-error"
-                  ng-show="editProductForm.dispensingUnit.$error.required && showErrorForCreate"
+                  ng-show="editProductForm.dispensingUnit.$error.required && showError"
                   openlmis-message="missing.value">
             </span>
 
@@ -116,7 +116,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
             <span class="field-error"
-                  ng-show="editProductForm.dosesPerDispensingUnit.$error.required && showErrorForCreate"
+                  ng-show="editProductForm.dosesPerDispensingUnit.$error.required && showError"
                   openlmis-message="missing.value">
             </span>
 
@@ -136,7 +136,7 @@ Edit Product
                maxlength="20"
                ng-required="true"/>
             <span class="field-error"
-                  ng-show="editProductForm.packRoundingThreshold.$error.required && showErrorForCreate"
+                  ng-show="editProductForm.packRoundingThreshold.$error.required && showError"
                   openlmis-message="missing.value">
             </span>
     </div>
@@ -151,7 +151,7 @@ Edit Product
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="editProductForm.strength.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.strength.$error.required && showError"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -166,7 +166,7 @@ Edit Product
                ng-show="editProduct"
                maxlength="20"/>
                                         <span class="field-error"
-                                              ng-show="editProductForm.type.$error.required && showErrorForCreate"
+                                              ng-show="editProductForm.type.$error.required && showError"
                                               openlmis-message="missing.value">
                                         </span>
     </div>
@@ -185,7 +185,7 @@ Edit Product
         </select>
         <span
                 class="field-error"
-                ng-show="editProductForm.dosageUnitId.$error.required && showErrorForCreate"
+                ng-show="editProductForm.dosageUnitId.$error.required && showError"
              openlmis-message="missing.value">
         </span>
     </div>
@@ -204,7 +204,7 @@ Edit Product
                 ng-show="editProduct"
                 maxlength="20"/>
                 <span class="field-error"
-                      ng-show="editProductForm.displayOrder.$error.required && showErrorForCreate"
+                      ng-show="editProductForm.displayOrder.$error.required && showError"
                       openlmis-message="missing.value">
                 </span>
     </div>
@@ -220,7 +220,7 @@ Edit Product
                 ng-options="option.id as option.code for option in productForms">
            </select>
            <span class="field-error"
-                 ng-show="editProductForm.formid.$error.required && showErrorForCreate"
+                 ng-show="editProductForm.formid.$error.required && showError"
                  openlmis-message="missing.value">
             </span>
     </div>
@@ -239,7 +239,7 @@ Edit Product
 
         </select>
                                        <span class="field-error"
-                                             ng-show="editProductForm.categoryid.$error.required && showErrorForCreate"
+                                             ng-show="editProductForm.categoryid.$error.required && showError"
                                              openlmis-message="missing.value">
                                         </span>
     </div>
@@ -256,7 +256,7 @@ Edit Product
 
         </select>
        <span class="field-error"
-             ng-show="createProductForm.productGroupId.$error.required && showErrorForCreate"
+             ng-show="createProductForm.productGroupId.$error.required && showError"
              openlmis-message="missing.value">
         </span>
     </div>
@@ -332,15 +332,20 @@ Edit Product
                        ng-model="pp.active"/>
             </td>
             <td>
+              <span ng-show="(pp.active  && !pp.displayOrder) " class="label-required">* required -> </span>
                 <input type="number" ng-disabled="(!pp.active || !editProduct.active)"
                        ng-model="pp.displayOrder"/>
+
             </td>
             <td>
+              <span ng-show="(pp.active && categoryPerProgramProductIsRequired && !pp.productCategoryId) " class="label-required">* required -> </span>
               <select style="width:200px;"  ng-model="pp.productCategoryId"
                       ng-disabled="(!pp.active || !editProduct.active)"
+                      ng-required="(categoryPerProgramProductIsRequired && pp.active)"
                       ng-options="option.id as option.name for option in productCategories">
 
               </select>
+
             </td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.currentPrice"/></td>
             <td><input type="text" ng-disabled="(!pp.active || !editProduct.active)" ng-required="pp.active" ng-model="pp.dosesPerMonth"/></td>
@@ -354,13 +359,16 @@ Edit Product
   <div form-toolbar id="action_buttons_edit" class="action-buttons" ng-show="editProductMode">
     <div class="form-cell button-row">
         <input type="submit" class="btn btn-primary save-button" openlmis-message="button.save" ng-disabled="editProduct.active == false" />
-        <div class="alert-error" >{{errorMesssage}}</div>
-        <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-show="editProduct.active"
-           ng-click="showConfirmProductDeleteWindow(editProduct); ">Deactivate</a>
-        <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-hide="editProduct.active"
-           ng-click="showConfirmProductRestoreWindow(editProduct); ">Restore</a>
-        <a href="#list"
-           class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
+      <a href="#list"
+         class="btn btn-cancel cancel-button"><span openlmis-message="button.cancel"></span></a>
+
+      <div class="toolbar-error" >{{errorMessage}}</div>
+
+      <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-show="editProduct.active"
+         ng-click="showConfirmProductDeleteWindow(editProduct); ">Deactivate</a>
+      <a href="" class="btn btn-danger delete-button" style="margin-right: 50px;" ng-hide="editProduct.active"
+         ng-click="showConfirmProductRestoreWindow(editProduct); ">Restore</a>
+
    </div>
 </div>
 </div>

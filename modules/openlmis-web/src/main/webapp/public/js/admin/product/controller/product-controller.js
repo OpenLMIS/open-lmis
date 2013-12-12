@@ -8,9 +8,9 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function ProductController($scope, $location, $dialog, messageService, ProductDetail , ReportPrograms, ProductList, RemoveProduct, RestoreProduct, DosageUnits, ProductForms) {
+function ProductController($scope, $location, ReportPrograms, ProductList) {
 
-    $scope.title = 'Products';
+
     $scope.title = "Manage Products";
 
     // all products list
