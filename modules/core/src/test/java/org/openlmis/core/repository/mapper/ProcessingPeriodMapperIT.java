@@ -98,8 +98,8 @@ public class ProcessingPeriodMapperIT {
     Date date2 = new Date(date1.getTime() + 90 * 24 * 60 * 60 * 1000);
 
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
-        with(scheduleId, schedule.getId()),
-        with(ProcessingPeriodBuilder.startDate, date1), with(endDate, date2), with(numberOfMonths, 3)));
+      with(scheduleId, schedule.getId()),
+      with(ProcessingPeriodBuilder.startDate, date1), with(endDate, date2), with(numberOfMonths, 3)));
 
     Integer insertCount = mapper.insert(period1);
 
@@ -273,9 +273,9 @@ public class ProcessingPeriodMapperIT {
   public void shouldGetCurrentPeriodByFacilityAndProgram() {
     Date currentDate = new Date();
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
-        with(startDate, addDays(currentDate, -1)),
-        with(endDate, addDays(currentDate, 5)),
-        with(scheduleId, schedule.getId()), with(name, "Month1")));
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
 
     mapper.insert(period1);
 
@@ -288,9 +288,9 @@ public class ProcessingPeriodMapperIT {
   public void shouldGetCurrentPeriodIfProgramStartDateIsWithinCurrentPeriod() {
     Date currentDate = new Date();
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
-        with(startDate, addDays(currentDate, -1)),
-        with(endDate, addDays(currentDate, 5)),
-        with(scheduleId, schedule.getId()), with(name, "Month1")));
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
 
     mapper.insert(period1);
 
@@ -304,9 +304,9 @@ public class ProcessingPeriodMapperIT {
   public void shouldNotGetCurrentPeriodIfProgramStartDateIsAfterCurrentPeriodEndDate() {
     Date currentDate = new Date();
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
-        with(startDate, addDays(currentDate, -1)),
-        with(endDate, addDays(currentDate, 5)),
-        with(scheduleId, schedule.getId()), with(name, "Month1")));
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
 
     mapper.insert(period1);
 
@@ -320,9 +320,9 @@ public class ProcessingPeriodMapperIT {
   public void shouldReturnNullIfCurrentPeriodDoesNotExist() {
     Date currentDate = new Date();
     ProcessingPeriod period1 = make(a(defaultProcessingPeriod,
-        with(startDate, addDays(currentDate, 2)),
-        with(endDate, addDays(currentDate, 5)),
-        with(scheduleId, schedule.getId()), with(name, "Month1")));
+      with(startDate, addDays(currentDate, 2)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
 
     mapper.insert(period1);
 
@@ -348,12 +348,27 @@ public class ProcessingPeriodMapperIT {
     assertThat(nPreviousPeriods.size(), is(5));
   }
 
+  @Test
+  public void shouldGetPeriodContainingADateForASchedule() throws Exception {
+    Date currentDate = new Date();
+    ProcessingPeriod period = make(a(defaultProcessingPeriod,
+      with(startDate, addDays(currentDate, -1)),
+      with(endDate, addDays(currentDate, 5)),
+      with(scheduleId, schedule.getId()), with(name, "Month1")));
+    mapper.insert(period);
+
+    ProcessingPeriod periodForDate = mapper.getPeriodForDate(period.getScheduleId(), currentDate);
+
+    assertThat(periodForDate, is(period));
+
+  }
+
   private ProcessingPeriod insertProcessingPeriod(String name, DateTime startDate, DateTime endDate) {
     ProcessingPeriod period = make(a(defaultProcessingPeriod,
-        with(ProcessingPeriodBuilder.name, name),
-        with(scheduleId, schedule.getId()),
-        with(ProcessingPeriodBuilder.startDate, startDate.toDate()),
-        with(ProcessingPeriodBuilder.endDate, endDate.toDate())));
+      with(ProcessingPeriodBuilder.name, name),
+      with(scheduleId, schedule.getId()),
+      with(ProcessingPeriodBuilder.startDate, startDate.toDate()),
+      with(ProcessingPeriodBuilder.endDate, endDate.toDate())));
 
     mapper.insert(period);
     return period;

@@ -6,9 +6,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.EDIConfiguration;
-import org.openlmis.core.domain.EDIFileColumn;
-import org.openlmis.core.domain.EDIFileTemplate;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.BudgetLineItemDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
@@ -21,9 +19,13 @@ import org.supercsv.io.CsvListReader;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -42,15 +44,24 @@ public class BudgetFileProcessorTest {
   @Mock
   BudgetLineItemTransformer transformer;
 
+  @Mock
+  FacilityService facilityService;
+
+  @Mock
+  private ProgramService programService;
+
+  @Mock
+  private ProcessingScheduleService processingScheduleService;
+
   @InjectMocks
   BudgetFileProcessor budgetFileProcessor;
-
   private Message message;
   private EDIFileTemplate ediFileTemplate;
   private EDIConfiguration configuration;
   private CsvListReader reader;
   private String datePattern;
   private EDIFileColumn periodDateColumn;
+
   private EDIFileColumn defaultEDIColumn;
 
   @Before
@@ -91,11 +102,17 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldCreateBudgetFileLineItem() throws Exception {
     configuration.setHeaderInFile(true);
-    BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
+    BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
+    when(lineItemDTO.getFacilityCode()).thenReturn("F10");
+    when(lineItemDTO.getProgramCode()).thenReturn("HIV");
     List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
-
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    when(facilityService.getByCode(facility)).thenReturn(facility);
+    Program program = new Program();
+    when(programService.getByCode("HIV")).thenReturn(program);
 
     budgetFileProcessor.process(message);
 
@@ -110,6 +127,14 @@ public class BudgetFileProcessorTest {
     mockStatic(BudgetLineItemDTO.class);
     List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
     when(BudgetLineItemDTO.populate(csvRow, asList(defaultEDIColumn))).thenReturn(lineItemDTO);
+    when(lineItemDTO.getFacilityCode()).thenReturn("F10");
+    when(lineItemDTO.getProgramCode()).thenReturn("HIV");
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    when(facilityService.getByCode(facility)).thenReturn(facility);
+    Program program = new Program();
+    when(programService.getByCode("HIV")).thenReturn(program);
+
     periodDateColumn.setInclude(false);
 
     budgetFileProcessor.process(message);
@@ -138,12 +163,95 @@ public class BudgetFileProcessorTest {
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
     doThrow(new DataException("Missing mandatory Fields")).when(lineItemDTO).checkMandatoryFields();
 
+    budgetFileProcessor.process(message);
+
+    verify(lineItemDTO).checkMandatoryFields();
+    verify(transformer, never()).transform(lineItemDTO, null);
+    verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
+  }
+
+  @Test
+  public void shouldNotProcessTheRecordIfFacilityCodeIsInvalid() throws Exception {
+    File budgetFile = mock(File.class);
+    when(message.getPayload()).thenReturn(budgetFile);
+
+    CsvListReader listReader = mock(CsvListReader.class);
+    FileReader fileReader = mock(FileReader.class);
+    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
+    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
+    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
+    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
+    configuration.setHeaderInFile(true);
+    BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
+    mockStatic(BudgetLineItemDTO.class);
+    when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    when(facilityService.getByCode(facility)).thenThrow(new DataException("Invalid facility code"));
 
     budgetFileProcessor.process(message);
 
     verify(lineItemDTO).checkMandatoryFields();
     verify(transformer, never()).transform(lineItemDTO, null);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
+  }
+
+  @Test
+  public void shouldNotProcessTheRecordIfProgramCodeIsInvalid() throws Exception {
+    File budgetFile = mock(File.class);
+    when(message.getPayload()).thenReturn(budgetFile);
+
+    CsvListReader listReader = mock(CsvListReader.class);
+    FileReader fileReader = mock(FileReader.class);
+    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
+    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
+    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
+    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
+    configuration.setHeaderInFile(true);
+    BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
+    mockStatic(BudgetLineItemDTO.class);
+    when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    when(facilityService.getByCode(facility)).thenReturn(facility);
+    when(programService.getByCode("HIV")).thenThrow(new DataException("Invalid program code"));
+
+    budgetFileProcessor.process(message);
+
+    verify(lineItemDTO).checkMandatoryFields();
+    verify(transformer, never()).transform(lineItemDTO, null);
+    verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
+  }
+
+  @Test
+  public void shouldNotProcessRecordIfPeriodDateDoesNotBelongToAnyPeriod() throws Exception {
+    File budgetFile = mock(File.class);
+    when(message.getPayload()).thenReturn(budgetFile);
+
+    CsvListReader listReader = mock(CsvListReader.class);
+    FileReader fileReader = mock(FileReader.class);
+    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
+    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
+    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
+    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
+    configuration.setHeaderInFile(true);
+    BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
+    mockStatic(BudgetLineItemDTO.class);
+    when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
+    Facility facility = new Facility();
+    facility.setCode("F10");
+    Program program = new Program();
+    when(facilityService.getByCode(facility)).thenReturn(facility);
+    when(programService.getByCode("HIV")).thenReturn(program);
+    BudgetLineItem budgetLineItem = new BudgetLineItem();
+    budgetLineItem.setPeriodDate(new Date());
+    when(transformer.transform(lineItemDTO, datePattern)).thenReturn(budgetLineItem);
+    when(processingScheduleService.getPeriodForDate(facility, program, budgetLineItem.getPeriodDate())).thenReturn(null);
+
+    budgetFileProcessor.process(message);
+
+    verify(lineItemDTO).checkMandatoryFields();
+    assertThat(budgetLineItem.getPeriodId(), is(nullValue()));
 
   }
 }

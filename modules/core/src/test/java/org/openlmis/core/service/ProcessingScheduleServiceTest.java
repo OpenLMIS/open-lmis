@@ -247,7 +247,7 @@ public class ProcessingScheduleServiceTest {
 
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(
-        requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
+      requisitionGroup.getId(), program.getId())).thenReturn(requisitionGroupProgramSchedule);
     when(periodRepository.getAllPeriodsForDateRange(scheduleId, startDate, endDate)).thenReturn(expected);
 
     List<ProcessingPeriod> actual = service.getAllPeriodsForDateRange(facility, program, startDate, endDate);
@@ -277,7 +277,7 @@ public class ProcessingScheduleServiceTest {
     RequisitionGroup requisitionGroup = new RequisitionGroup();
     requisitionGroup.setId(5L);
     when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(new Program(2L), new Facility(1L)))
-        .thenReturn(requisitionGroup);
+      .thenReturn(requisitionGroup);
     when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(5L, 2L)).thenReturn(schedule);
     Date programStartDate = new Date();
     service.getCurrentPeriod(1L, 2L, programStartDate);
@@ -303,5 +303,29 @@ public class ProcessingScheduleServiceTest {
     Integer numberOfMonths = service.findM(currentPeriod);
 
     assertThat(numberOfMonths, is(2));
+  }
+
+  @Test
+  public void shouldGetPeriodForGivenFacilityProgramAndDate() {
+    Long programId = 1L;
+    Long requisitionGroupId = 2L;
+    Long scheduleId = 3L;
+    Program program = new Program(programId);
+    Facility facility = new Facility();
+    RequisitionGroup requisitionGroup = new RequisitionGroup();
+    requisitionGroup.setId(requisitionGroupId);
+    when(requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility)).thenReturn(requisitionGroup);
+    RequisitionGroupProgramSchedule schedule = new RequisitionGroupProgramSchedule();
+    ProcessingSchedule processingSchedule = new ProcessingSchedule(scheduleId);
+    schedule.setProcessingSchedule(processingSchedule);
+    when(requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroupId, programId)).thenReturn(schedule);
+    Date date = new Date();
+    ProcessingPeriod expectedPeriod = new ProcessingPeriod();
+    when(periodRepository.getPeriodForDate(scheduleId, date)).thenReturn(expectedPeriod);
+
+    ProcessingPeriod periodForDate = service.getPeriodForDate(facility, program, date);
+
+    verify(periodRepository).getPeriodForDate(scheduleId, date);
+    assertThat(periodForDate, is(expectedPeriod));
   }
 }
