@@ -12,7 +12,11 @@ public class BudgetFileService {
   BudgetFileRepository repository;
 
   public void save(BudgetFileInfo budgetFileInfo) {
-    repository.save(budgetFileInfo);
+    if (budgetFileInfo.getId() != null) {
+      repository.update(budgetFileInfo);
+    } else {
+      repository.insert(budgetFileInfo);
+    }
   }
 
 }

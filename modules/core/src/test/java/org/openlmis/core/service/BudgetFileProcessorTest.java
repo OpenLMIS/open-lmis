@@ -13,7 +13,6 @@ import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.integration.Message;
 import org.supercsv.io.CsvListReader;
 
@@ -56,23 +55,34 @@ public class BudgetFileProcessorTest {
   @Mock
   private BudgetLineItemService budgetLineItemService;
 
+  @Mock
+  BudgetFilePostProcessHandler budgetFilePostProcessHandler;
   @InjectMocks
   BudgetFileProcessor budgetFileProcessor;
   private Message message;
   private EDIFileTemplate ediFileTemplate;
   private EDIConfiguration configuration;
-  private CsvListReader reader;
   private String datePattern;
 
   private EDIFileColumn periodDateColumn;
   private EDIFileColumn defaultEDIColumn;
+  private List<String> csvRow;
+  private File budgetFile;
+  private CsvListReader listReader;
 
   @Before
   public void setUp() throws Exception {
-    File budgetFile = new ClassPathResource("valid_budget_file.csv").getFile();
+    budgetFile = mock(File.class);
 
     message = mock(Message.class);
     when(message.getPayload()).thenReturn(budgetFile);
+    listReader = mock(CsvListReader.class);
+    FileReader fileReader = mock(FileReader.class);
+    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
+    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
+    csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
+    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
+
     ediFileTemplate = new EDIFileTemplate();
     datePattern = "mm/dd/yy";
     periodDateColumn = new EDIFileColumn("periodStartDate", "label.date", true, true, 2, datePattern);
@@ -82,8 +92,7 @@ public class BudgetFileProcessorTest {
     ediFileTemplate.setConfiguration(configuration);
     when(budgetFileTemplateService.get()).thenReturn(ediFileTemplate);
 
-    reader = spy(new CsvListReader(new FileReader(budgetFile), STANDARD_PREFERENCE));
-    whenNew(CsvListReader.class).withAnyArguments().thenReturn(reader);
+
   }
 
   @Test
@@ -92,27 +101,19 @@ public class BudgetFileProcessorTest {
 
     budgetFileProcessor.process(message);
 
-    verify(reader).getHeader(true);
+    verify(listReader).getHeader(true);
   }
 
   @Test
   public void shouldNotReadHeadersIfNotIncluded() throws Exception {
     budgetFileProcessor.process(message);
 
-    verify(reader, never()).getHeader(true);
+    verify(listReader, never()).getHeader(true);
   }
 
   @Test
   public void shouldSaveBudgetFileLineItem() throws Exception {
     configuration.setHeaderInFile(true);
-    File budgetFile = mock(File.class);
-    when(message.getPayload()).thenReturn(budgetFile);
-    CsvListReader listReader = mock(CsvListReader.class);
-    FileReader fileReader = mock(FileReader.class);
-    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
-    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
-    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
-    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
     String budgetFileName = "BudgetFileName";
     when(budgetFile.getName()).thenReturn(budgetFileName);
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
@@ -169,15 +170,6 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldNotProcessARecordIfMandatoryFieldIsMissing() throws Exception {
 
-    File budgetFile = mock(File.class);
-    when(message.getPayload()).thenReturn(budgetFile);
-
-    CsvListReader listReader = mock(CsvListReader.class);
-    FileReader fileReader = mock(FileReader.class);
-    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
-    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
-    List<String> csvRow = asList("", "HIV", "2013-12-10", "345.45", "My good notes");
-    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
     configuration.setHeaderInFile(true);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
@@ -193,15 +185,6 @@ public class BudgetFileProcessorTest {
 
   @Test
   public void shouldNotProcessTheRecordIfFacilityCodeIsInvalid() throws Exception {
-    File budgetFile = mock(File.class);
-    when(message.getPayload()).thenReturn(budgetFile);
-
-    CsvListReader listReader = mock(CsvListReader.class);
-    FileReader fileReader = mock(FileReader.class);
-    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
-    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
-    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
-    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
     configuration.setHeaderInFile(true);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
@@ -219,15 +202,6 @@ public class BudgetFileProcessorTest {
 
   @Test
   public void shouldNotProcessTheRecordIfProgramCodeIsInvalid() throws Exception {
-    File budgetFile = mock(File.class);
-    when(message.getPayload()).thenReturn(budgetFile);
-
-    CsvListReader listReader = mock(CsvListReader.class);
-    FileReader fileReader = mock(FileReader.class);
-    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
-    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
-    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
-    when(listReader.read()).thenReturn(csvRow).thenReturn(null);
     configuration.setHeaderInFile(true);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
@@ -246,14 +220,6 @@ public class BudgetFileProcessorTest {
 
   @Test
   public void shouldNotProcessRecordIfPeriodDateDoesNotBelongToAnyPeriod() throws Exception {
-    File budgetFile = mock(File.class);
-    when(message.getPayload()).thenReturn(budgetFile);
-
-    CsvListReader listReader = mock(CsvListReader.class);
-    FileReader fileReader = mock(FileReader.class);
-    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
-    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
-    List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
     when(listReader.read()).thenReturn(csvRow).thenReturn(null);
     configuration.setHeaderInFile(true);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
@@ -277,16 +243,10 @@ public class BudgetFileProcessorTest {
 
   @Test
   public void shouldSaveBudgetFileInfo() throws Exception {
-    File budgetFile = mock(File.class);
-    when(message.getPayload()).thenReturn(budgetFile);
     String budgetFileName = "BudgetFileName";
     when(budgetFile.getName()).thenReturn(budgetFileName);
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
     whenNew(BudgetFileInfo.class).withArguments(budgetFileName, false).thenReturn(budgetFileInfo);
-    CsvListReader listReader = mock(CsvListReader.class);
-    FileReader fileReader = mock(FileReader.class);
-    whenNew(FileReader.class).withArguments(budgetFile).thenReturn(fileReader);
-    whenNew(CsvListReader.class).withArguments(fileReader, STANDARD_PREFERENCE).thenReturn(listReader);
     when(listReader.read()).thenReturn(null);
 
     budgetFileProcessor.process(message);

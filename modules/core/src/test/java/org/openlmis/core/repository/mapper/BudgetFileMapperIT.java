@@ -13,6 +13,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -34,7 +35,7 @@ public class BudgetFileMapperIT {
 
 
   @Test
-  public void shouldSaveBudgetFileInfo() throws Exception {
+  public void shouldInsertBudgetFileInfo() throws SQLException {
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo("BudgetFile", false);
 
     budgetFileMapper.insert(budgetFileInfo);
@@ -44,5 +45,23 @@ public class BudgetFileMapperIT {
     ResultSet resultSet = queryExecutor.execute("SELECT fileName FROM budget_file_info WHERE id = " + budgetFileInfo.getId());
     assertTrue(resultSet.next());
     assertThat(resultSet.getString("fileName"), is("BudgetFile"));
+  }
+
+  @Test
+  public void shouldUpdateBudgetFileInfo() throws SQLException {
+    BudgetFileInfo budgetFileInfo = new BudgetFileInfo("BudgetFile", false);
+
+    budgetFileMapper.insert(budgetFileInfo);
+
+    budgetFileInfo.setProcessingError(true);
+
+    budgetFileMapper.update(budgetFileInfo);
+
+
+    ResultSet resultSet = queryExecutor.execute("SELECT processingError FROM budget_file_info WHERE id = " + budgetFileInfo.getId());
+    assertTrue(resultSet.next());
+    assertThat(resultSet.getBoolean("processingError"), is(true));
+
+
   }
 }

@@ -29,7 +29,7 @@
     <import resource="classpath*:openLmisAtomFeedContext.xml"/>
 
 
-    <bean id="ftpSessionFactory"
+    <bean id="budgetFtpSessionFactory"
           class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
         <property name="host" value="${budget.ftp.server.host}"/>
         <property name="port" value="${budget.ftp.server.port}"/>
@@ -40,8 +40,8 @@
     </bean>
 
     <int-ftp:inbound-channel-adapter cache-sessions="false"
-                                     channel="ftpInputChannel"
-                                     session-factory="ftpSessionFactory"
+                                     channel="budgetFtpInputChannel"
+                                     session-factory="budgetFtpSessionFactory"
                                      filename-pattern="*.csv"
                                      auto-create-local-directory="true"
                                      delete-remote-files="true"
@@ -50,28 +50,28 @@
         <int:poller fixed-rate="${budget.ftp.task.interval}" max-messages-per-poll="-1"/>
     </int-ftp:inbound-channel-adapter>
 
-    <int:channel id="ftpErrorChannel"/>
+    <int:channel id="budgetFtpErrorChannel"/>
 
     <int-ftp:outbound-channel-adapter cache-sessions="false"
-                                      channel="ftpErrorChannel"
+                                      channel="budgetFtpErrorChannel"
                                       remote-directory="${budget.ftp.remote.error.directory}"
-                                      session-factory="ftpSessionFactory"
+                                      session-factory="budgetFtpSessionFactory"
                                       auto-create-directory="true"
                                       temporary-file-suffix="temp"
                                       remote-filename-generator-expression="'error_'+ payload.name"/>
 
-    <int:channel id="ftpArchiveOutputChannel"/>
+    <int:channel id="budgetFtpArchiveOutputChannel"/>
 
     <int-ftp:outbound-channel-adapter cache-sessions="false"
-                                      channel="ftpArchiveOutputChannel"
+                                      channel="budgetFtpArchiveOutputChannel"
                                       remote-directory="${budget.ftp.remote.archive.directory}"
-                                      session-factory="ftpSessionFactory"
+                                      session-factory="budgetFtpSessionFactory"
                                       auto-create-directory="true"
                                       temporary-file-suffix="temp"
                                       remote-filename-generator-expression="payload.name"/>
 
 
-    <int:outbound-channel-adapter channel="ftpInputChannel" ref="budgetFileProcessor" method="process"/>
+    <int:outbound-channel-adapter channel="budgetFtpInputChannel" ref="budgetFileProcessor" method="process"/>
 
     <bean id="messageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <property name="corePoolSize" value="5"/>
@@ -79,7 +79,7 @@
         <property name="queueCapacity" value="27"/>
     </bean>
 
-    <int:channel id="ftpInputChannel">
+    <int:channel id="budgetFtpInputChannel">
         <int:dispatcher task-executor="messageDispatcher"/>
     </int:channel>
 

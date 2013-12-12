@@ -11,7 +11,11 @@ public class BudgetFileRepository {
   @Autowired
   BudgetFileMapper mapper;
 
-  public void save(BudgetFileInfo budgetFileInfo) {
+  public void insert(BudgetFileInfo budgetFileInfo) {
     mapper.insert(budgetFileInfo);
+  }
+
+  public void update(BudgetFileInfo budgetFileInfo) {
+    mapper.update(budgetFileInfo);
   }
 }

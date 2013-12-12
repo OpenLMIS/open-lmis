@@ -48,6 +48,9 @@ public class BudgetFileProcessor {
   @Autowired
   private BudgetLineItemService budgetLineItemService;
 
+  @Autowired
+  private BudgetFilePostProcessHandler budgetFilePostProcessHandler;
+
 
   public void process(Message message) throws IOException {
 
@@ -75,16 +78,7 @@ public class BudgetFileProcessor {
         Facility facility = validateFacility(budgetLineItemDTO.getFacilityCode());
         Program program = validateProgram(budgetLineItemDTO.getProgramCode());
 
-
-        EDIFileColumn periodDateColumn = (EDIFileColumn) CollectionUtils.find(includedColumns, new Predicate() {
-          @Override
-          public boolean evaluate(Object o) {
-            EDIFileColumn periodDateColumn = (EDIFileColumn) o;
-            return periodDateColumn.getName().equals("periodStartDate") && periodDateColumn.getInclude();
-          }
-        });
-        String datePattern = periodDateColumn == null ? null : periodDateColumn.getDatePattern();
-        BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
+        BudgetLineItem budgetLineItem = getBudgetLineItem(includedColumns, budgetLineItemDTO);
 
         ProcessingPeriod processingPeriod = validatePeriod(facility, program, budgetLineItem.getPeriodDate());
         budgetLineItem.setPeriodId(processingPeriod.getId());
@@ -98,7 +92,22 @@ public class BudgetFileProcessor {
         logger.error(e.getMessage(), e);
         continue;
       }
+
     }
+    budgetFileInfo.setProcessingError(processingError);
+    budgetFilePostProcessHandler.process(budgetFileInfo, budgetFile);
+  }
+
+  private BudgetLineItem getBudgetLineItem(Collection<EDIFileColumn> includedColumns, BudgetLineItemDTO budgetLineItemDTO) {
+    EDIFileColumn periodDateColumn = (EDIFileColumn) CollectionUtils.find(includedColumns, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        EDIFileColumn periodDateColumn = (EDIFileColumn) o;
+        return periodDateColumn.getName().equals("periodStartDate") && periodDateColumn.getInclude();
+      }
+    });
+    String datePattern = periodDateColumn == null ? null : periodDateColumn.getDatePattern();
+    return budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
   }
 
   private BudgetFileInfo saveBudgetFile(File budgetFile, Boolean processingError) {
