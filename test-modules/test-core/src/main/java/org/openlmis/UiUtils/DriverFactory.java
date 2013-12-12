@@ -87,6 +87,7 @@ public class DriverFactory {
         return createChromeDriver();
 
         case "chromeM":
+            //ToDO: To run offline test on Jenkins change CHROME_FOLDER to OUTPUT_FOLDER
             //unZip = new Unzip();
             //unZip.unZipIt(INPUT_ZIP_FILE_CHROMEDRIVER_MAC, CHROME_FOLDER);
             //Thread.sleep(10000);
