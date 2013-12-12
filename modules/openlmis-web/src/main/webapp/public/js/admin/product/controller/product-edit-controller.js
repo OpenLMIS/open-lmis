@@ -149,12 +149,10 @@ function ProductEditController($scope, $route, $location, $dialog, messageServic
           return;
       }
 
-      UpdateProduct.update($scope.editProduct
-        , function (data) {
+      UpdateProduct.update($scope.editProduct , function (data) {
           $location.path('');
           $scope.$parent.message = "The product record was successfully updated.";
-        }
-        , function (data) {
+        }, function (data) {
           $scope.errorMessage = messageService.get(data.data.error);
           alert( messageService.get(data.data.error ));
       });
