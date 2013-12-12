@@ -188,12 +188,12 @@ public class Facility extends BaseModel implements Importable {
 
   @SuppressWarnings("unused")
   public String getStringGoLiveDate() throws ParseException {
-    return this.goLiveDate == null ? null : new SimpleDateFormat("yyyy-MM-dd").format(this.goLiveDate);
+    return this.goLiveDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.goLiveDate);
   }
 
   @SuppressWarnings("unused")
   public String getStringGoDownDate() throws ParseException {
-    return this.goDownDate == null ? null : new SimpleDateFormat("yyyy-MM-dd").format(this.goDownDate);
+    return this.goDownDate == null ? null : new SimpleDateFormat("dd-MM-yyyy").format(this.goDownDate);
   }
 
 }

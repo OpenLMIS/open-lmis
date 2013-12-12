@@ -127,7 +127,7 @@ public class DriverFactory {
 
   private WebDriver createChromeDriver() {
     DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-      Map<String, String> prefs = new Hashtable<String, String>();
+      Map<String, String> prefs = new Hashtable<>();
       prefs.put("download.prompt_for_download", "false");
       prefs.put("download.default_directory", "C:\\Users\\openlmis\\Downloads");
 

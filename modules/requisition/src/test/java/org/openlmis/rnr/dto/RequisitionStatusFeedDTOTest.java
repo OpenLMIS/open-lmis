@@ -16,6 +16,8 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.rnr.domain.Rnr;
 
+import java.text.SimpleDateFormat;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.lang.String.format;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,6 +33,9 @@ public class RequisitionStatusFeedDTOTest {
     Rnr rnr = make(a(defaultRequisition));
     long startDate = rnr.getPeriod().getStartDate().getTime();
     long endDate = rnr.getPeriod().getEndDate().getTime();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    String stringStartDate = dateFormat.format(startDate);
+    String stringEndDate = dateFormat.format(endDate);
 
     RequisitionStatusFeedDTO feed = new RequisitionStatusFeedDTO(rnr);
 
@@ -39,8 +44,8 @@ public class RequisitionStatusFeedDTOTest {
     assertThat(feed.isEmergency(), is(rnr.isEmergency()));
     assertThat(feed.getStartDate(), is(startDate));
     assertThat(feed.getEndDate(), is(endDate));
-    String serializedContent = format("{\"requisitionId\":%d,\"requisitionStatus\":\"%s\",\"emergency\":%s,\"startDate\":%d,\"endDate\":%d}",
-        rnr.getId(), rnr.getStatus(), rnr.isEmergency(), startDate, endDate);
+    String serializedContent = format("{\"requisitionId\":%d,\"requisitionStatus\":\"%s\",\"emergency\":%s,\"startDate\":%d,\"endDate\":%d,\"stringStartDate\":\"%s\",\"stringEndDate\":\"%s\"}",
+      rnr.getId(), rnr.getStatus(), rnr.isEmergency(), startDate, endDate, stringStartDate, stringEndDate);
     assertThat(feed.getSerializedContents(), is(serializedContent));
   }
 

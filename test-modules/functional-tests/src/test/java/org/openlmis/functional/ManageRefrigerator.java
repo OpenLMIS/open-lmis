@@ -92,7 +92,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify Refrigerator data is not synchronised")
   public void verifyRefrigeratorsInDB() throws IOException, SQLException {
-    dbWrapper.verifyRecordCountInTable("Refrigerators", "0");
+    assertEquals(dbWrapper.getRecordCountInTable("Refrigerators"),0);
   }
 
   @And("^I delete refrigerator")

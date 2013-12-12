@@ -45,6 +45,9 @@ public class ReplenishmentDTO extends RnrDTO {
     replenishmentDTO.setRequisitionStatus(rnr.getStatus().name());
     replenishmentDTO.setEmergency(rnr.isEmergency());
 
+    replenishmentDTO.setPeriodEndDate(rnr.getPeriod().getEndDate());
+    replenishmentDTO.setPeriodStartDate(rnr.getPeriod().getStartDate());
+
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
     replenishmentDTO.setStringPeriodEndDate(simpleDateFormat.format(rnr.getPeriod().getEndDate()));
     replenishmentDTO.setStringPeriodStartDate(simpleDateFormat.format(rnr.getPeriod().getStartDate()));

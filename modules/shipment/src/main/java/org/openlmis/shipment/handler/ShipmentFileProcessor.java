@@ -11,7 +11,7 @@
 package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.Predicate;
+import org.apache.log4j.Logger;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
 import org.openlmis.core.exception.DataException;
@@ -21,8 +21,6 @@ import org.openlmis.shipment.ShipmentLineItemTransformer;
 import org.openlmis.shipment.domain.ShipmentLineItem;
 import org.openlmis.shipment.service.ShipmentFileTemplateService;
 import org.openlmis.shipment.service.ShipmentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
@@ -35,7 +33,6 @@ import org.supercsv.io.ICsvListReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,14 +40,13 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 import static java.lang.Long.parseLong;
-import static org.apache.commons.collections.CollectionUtils.select;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @Component
 @MessageEndpoint
 @NoArgsConstructor
 public class ShipmentFileProcessor {
-  private static Logger logger = LoggerFactory.getLogger(ShipmentFileProcessor.class);
+  private static Logger logger = Logger.getLogger(ShipmentFileProcessor.class);
 
   @Autowired
   private ShipmentFilePostProcessHandler shipmentFilePostProcessHandler;
@@ -101,20 +97,20 @@ public class ShipmentFileProcessor {
 
   @Transactional
   public void processShipmentLineItem(ICsvListReader listReader,
-                                      EDIFileTemplate shipmentFileTemplate, Set<Long> orderSet, Date creationDate) throws Exception {
+                                      EDIFileTemplate shipmentFileTemplate,
+                                      Set<Long> orderSet,
+                                      Date creationDate) throws Exception {
     boolean status = true;
 
-    List<EDIFileColumn> shipmentFileColumns = shipmentFileTemplate.getColumns();
+    Collection<EDIFileColumn> includedColumns = shipmentFileTemplate.filterIncludedColumns();
 
-    Collection<EDIFileColumn> includedColumns = filterIncludedColumns(shipmentFileColumns);
-
-    String packedDateFormat = getFormatForField("packedDate", shipmentFileColumns);
-    String shippedDateFormat = getFormatForField("shippedDate", shipmentFileColumns);
+    String packedDateFormat = getFormatForField("packedDate", includedColumns);
+    String shippedDateFormat = getFormatForField("shippedDate", includedColumns);
 
     List<String> fieldsInOneRow;
     while ((fieldsInOneRow = listReader.read()) != null) {
 
-      ShipmentLineItemDTO dto = populateDTO(fieldsInOneRow, includedColumns);
+      ShipmentLineItemDTO dto = ShipmentLineItemDTO.populate(fieldsInOneRow, includedColumns);
 
       // parse concatinated columns
       parseConcatenatedOrderId( dto );
@@ -166,7 +162,8 @@ public class ShipmentFileProcessor {
 
   private boolean saveLineItem(ShipmentLineItemDTO dto,
                                String packedDateFormat,
-                               String shippedDateFormat, Date creationDate) {
+                               String shippedDateFormat,
+                               Date creationDate) {
     boolean savedSuccessfully = true;
     try {
       ShipmentLineItem lineItem = transformer.transform(dto, packedDateFormat, shippedDateFormat, creationDate);
@@ -179,35 +176,6 @@ public class ShipmentFileProcessor {
     return savedSuccessfully;
   }
 
-
-  private Collection<EDIFileColumn> filterIncludedColumns(List<EDIFileColumn> shipmentFileColumns) {
-    return select(shipmentFileColumns, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        return ((EDIFileColumn) o).getInclude();
-      }
-    });
-  }
-
-  private ShipmentLineItemDTO populateDTO(List<String> fieldsInOneRow, Collection<EDIFileColumn> shipmentFileColumns) {
-    ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
-
-    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
-      Integer position = shipmentFileColumn.getPosition();
-      String name = shipmentFileColumn.getName();
-      try {
-        Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(dto, fieldsInOneRow.get(position - 1));
-      } catch (Exception e) {
-        logger.error("Unable to set field '" + name +
-            "' in ShipmentLinetItemDTO, check mapping between DTO and ShipmentFileColumn", e);
-      }
-    }
-
-    return dto;
-  }
-
   private void ignoreFirstLineIfHeadersArePresent(EDIFileTemplate shipmentFileTemplate,
                                                   ICsvListReader listReader) throws IOException {
     if (shipmentFileTemplate.getConfiguration().isHeaderInFile()) {
@@ -215,7 +183,7 @@ public class ShipmentFileProcessor {
     }
   }
 
-  private String getFormatForField(String fieldName, List<EDIFileColumn> shipmentFileColumns) {
+  private String getFormatForField(String fieldName, Collection<EDIFileColumn> shipmentFileColumns) {
     for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
       if (shipmentFileColumn.getName().equals(fieldName)) {
         return shipmentFileColumn.getDatePattern();

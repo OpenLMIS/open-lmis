@@ -52,9 +52,9 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.submitRnR();
     initiateRnRPage.verifyAuthorizeButtonNotPresent();
 
-    initiateRnRPage.verifyBeginningBalanceForFirstProduct("10");
-    initiateRnRPage.verifyQuantityReceivedForFirstProduct("10");
-    initiateRnRPage.verifyQuantityDispensedForFirstProduct("10");
+    initiateRnRPage.verifyBeginningBalanceForFirstProduct(10);
+    initiateRnRPage.verifyQuantityReceivedForFirstProduct(10);
+    initiateRnRPage.verifyQuantityDispensedForFirstProduct(10);
   }
 
 

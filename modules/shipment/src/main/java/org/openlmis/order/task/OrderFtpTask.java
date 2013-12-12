@@ -55,7 +55,7 @@ public class OrderFtpTask {
   @Autowired
   private OrderFtpSender ftpSender;
 
-  @Value("${ftp.order.local.directory}")
+  @Value("${order.ftp.local.directory}")
   String localFileDirectory;
 
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);

@@ -19,6 +19,7 @@ import org.joda.time.DateTime;
 import org.openlmis.core.domain.ProgramSupported;
 
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,8 +43,9 @@ public class ProgramSupportedEventDTO extends BaseFeedDTO {
     this.facilityCode = facilityCode;
 
     for (ProgramSupported ps : programSupportedList) {
-      ProgramSupportedDTO psDTO = new ProgramSupportedDTO(ps.getProgram().getCode(), ps.getProgram().getName(),
-        ps.getActive(), ps.getStartDate());
+      SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+      String stringStartDate = (ps.getStartDate() == null ? null : dateFormat.format(ps.getStartDate()));
+      ProgramSupportedDTO psDTO = new ProgramSupportedDTO(ps.getProgram().getCode(), ps.getProgram().getName(), ps.getActive(), ps.getStartDate(), stringStartDate);
 
       programsSupported.add(psDTO);
     }
@@ -57,6 +59,7 @@ public class ProgramSupportedEventDTO extends BaseFeedDTO {
     private String name;
     private Boolean active;
     private Date startDate;
+    private String stringStartDate;
   }
 
   public Event createEvent() throws URISyntaxException {

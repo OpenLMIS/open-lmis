@@ -13,9 +13,9 @@ package org.openlmis.UiUtils;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 
@@ -136,12 +136,13 @@ public class DBWrapper {
     update("update products set active='%s' where code='%s'", active, productCode);
   }
 
-  public void verifyRecordCountInTable(String tableName, String recordCount) throws SQLException {
+  public int getRecordCountInTable(String tableName) throws SQLException {
     ResultSet rs = query("select count(*) from %s", tableName);
 
     if (rs.next()) {
-      assertEquals(recordCount, rs.getString("count"));
+      return rs.getInt("count") ;
     }
+      return -1;
   }
 
   public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
@@ -1250,16 +1251,17 @@ public class DBWrapper {
 
   }
 
-  public void verifyFacilityVisits(String observations, String confirmedByName, String confirmedByTitle,
-                                   String verifiedByName, String verifiedByTitle) throws SQLException {
-    ResultSet rs = query("select * from facility_visits;");
+  public HashMap getFacilityVisitDetails() throws SQLException {
+    HashMap m1 = new HashMap();
+    ResultSet rs = query("select observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle from facility_visits;");
     while (rs.next()) {
-      assertEquals(rs.getString("observations"), observations);
-      assertEquals(rs.getString("confirmedByName"), confirmedByName);
-      assertEquals(rs.getString("confirmedByTitle"), confirmedByTitle);
-      assertEquals(rs.getString("verifiedByName"), verifiedByName);
-      assertEquals(rs.getString("verifiedByTitle"), verifiedByTitle);
+        m1.put("observations", rs.getString("observations"));
+        m1.put("confirmedByName", rs.getString("confirmedByName"));
+        m1.put("confirmedByTitle", rs.getString("confirmedByTitle"));
+        m1.put("verifiedByName", rs.getString("verifiedByName"));
+        m1.put("verifiedByTitle", rs.getString("verifiedByTitle"));
     }
+    return m1;
   }
 
   public String getWarehouse1Name(String facilityCode) throws SQLException {
@@ -1278,18 +1280,17 @@ public class DBWrapper {
     update("UPDATE facilities SET enabled='true' WHERE name='" + warehouseName + "';");
   }
 
-  public void verifyPODAndPODLineItems(long orderId, String productCode, Integer quantityReceived) throws Exception {
+  public int getPODLineItemQuantityReceived(long orderId, String productCode) throws Exception {
     try (ResultSet rs1 = query("SELECT id FROM pod WHERE OrderId = %d", orderId)) {
       if (rs1.next()) {
         int podId = rs1.getInt("id");
-        try (ResultSet rs2 = query("SELECT productCode, quantityReceived FROM pod_line_items WHERE podId = %d", podId)) {
+        ResultSet rs2 = query("SELECT quantityReceived FROM pod_line_items WHERE podId = %d and productCode='%s'", podId,productCode);
           if (rs2.next()) {
-            assertEquals(productCode, rs2.getString(1));
-            assertEquals(quantityReceived, rs2.getInt(2));
+            return rs2.getInt("quantityReceived");
           }
-        }
       }
     }
+      return -1;
   }
 
   public void setExportOrdersFlagInSupplyLinesTable(boolean flag, String facilityCode) throws SQLException {

@@ -14,15 +14,22 @@ package org.openlmis.order.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.log4j.Logger;
+import org.openlmis.core.domain.EDIFileColumn;
+import org.openlmis.core.exception.DataException;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShipmentLineItemDTO {
 
+  private static Logger logger = Logger.getLogger(ShipmentLineItemDTO.class);
   private String orderId;
   private String concatenatedOrderId;
   private String facilityCode;
@@ -38,4 +45,32 @@ public class ShipmentLineItemDTO {
   private String packedDate;
   private String shippedDate;
 
+  public void checkMandatoryFields() {
+    if (isBlank(this.productCode) ||
+      isBlank(this.orderId) ||
+      isBlank(this.quantityShipped)) {
+
+      throw new DataException("mandatory.field.missing");
+    }
+  }
+
+  public static ShipmentLineItemDTO populate(List<String> fieldsInOneRow,
+                                             Collection<EDIFileColumn> shipmentFileColumns) {
+    ShipmentLineItemDTO dto = new ShipmentLineItemDTO();
+
+    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
+      Integer position = shipmentFileColumn.getPosition();
+      String name = shipmentFileColumn.getName();
+      try {
+        Field field = ShipmentLineItemDTO.class.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(dto, fieldsInOneRow.get(position - 1));
+      } catch (Exception e) {
+        logger.error("Unable to set field '" + name +
+          "' in ShipmentLinetItemDTO, check mapping between DTO and ShipmentFileColumn", e);
+      }
+    }
+
+    return dto;
+  }
 }

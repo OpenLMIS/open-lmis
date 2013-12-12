@@ -22,13 +22,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 
 public class FacilityProgramSupportedFeed extends JsonUtility {
@@ -61,7 +58,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_WebService.csv");
     Thread.sleep(5000);
     ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
-    String expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000}";
+    String expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000,\"stringStartDate\":\"02/02/2011\"}";
     assertTrue(responseEntity.getResponse().contains(expected));
 
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent_WebService.csv");
@@ -69,8 +66,8 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
-    expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000}";
-    String expected1 = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000}";
+    expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":false,\"startDate\":1296585000000,\"stringStartDate\":\"02/02/2011\"}";
+    String expected1 = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1304533800000,\"stringStartDate\":\"05/05/2011\"}";
 
     assertTrue(feedJSONList.get(1).contains(expected));
     assertTrue(feedJSONList.get(2).contains(expected1));
@@ -99,18 +96,12 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
 
 
-    ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
-    String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true";
-    assertTrue(responseEntity.getResponse().contains(expected));
+    String str_date = date_time.split("-")[0].substring(0, 6) + "25";
+    long dateLong = new SimpleDateFormat("yyyyMMdd zzz").parse(str_date + " GMT").getTime();
 
-    String programStartDate = date_time.split("-")[0].substring(0, 6) + "25";
-    String expectedDate = new SimpleDateFormat("yyyyMMdd").format(
-      new Date(Long.parseLong(
-        responseEntity.getResponse().substring(responseEntity.getResponse().indexOf("startDate"),
-          responseEntity.getResponse().indexOf("}]}]]></content>")).split(":")[1])
-      )
-    );
-    assertThat(programStartDate, is(expectedDate));
+    ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
+    String expected = "\"facilityCode\":\"" + facilityCodePrefix + date_time + "\",\"programsSupported\":[{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":" + dateLong;
+    assertTrue(responseEntity.getResponse().contains(expected));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);

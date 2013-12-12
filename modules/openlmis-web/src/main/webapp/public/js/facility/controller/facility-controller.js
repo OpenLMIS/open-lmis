@@ -32,6 +32,13 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.facilityProgramProductsList = [];
   }
 
+  function convertStringToCorrectDateFormat(stringDate) {
+    if (stringDate) {
+      return stringDate.split("-").reverse().join("-");
+    }
+    return null;
+  }
+
   function getFacilityWithDateObjects(facility) {
     angular.forEach(facility.supportedPrograms, function (supportedProgram) {
       if (supportedProgram.startDate) {
@@ -39,8 +46,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
       }
     });
 
-    facility.goLiveDate = facility.stringGoLiveDate;
-    facility.goDownDate = facility.stringGoDownDate;
+    facility.goLiveDate = convertStringToCorrectDateFormat(facility.stringGoLiveDate);
+    facility.goDownDate = convertStringToCorrectDateFormat(facility.stringGoDownDate);
 
     return facility;
   }

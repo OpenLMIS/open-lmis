@@ -16,6 +16,9 @@ import org.openlmis.core.dto.BaseFeedDTO;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class RequisitionStatusFeedDTO extends BaseFeedDTO {
@@ -24,6 +27,8 @@ public class RequisitionStatusFeedDTO extends BaseFeedDTO {
   protected boolean emergency;
   protected Long startDate;
   protected Long endDate;
+  protected String stringStartDate;
+  protected String stringEndDate;
 
   public RequisitionStatusFeedDTO(Rnr rnr) {
     this.requisitionId = rnr.getId();
@@ -33,6 +38,10 @@ public class RequisitionStatusFeedDTO extends BaseFeedDTO {
     if (rnr.getPeriod() != null) {
       this.startDate = rnr.getPeriod().getStartDate().getTime();
       this.endDate = rnr.getPeriod().getEndDate().getTime();
+
+      SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+      this.stringStartDate = dateFormat.format(new Date(startDate));
+      this.stringEndDate = dateFormat.format(new Date(endDate));
     }
   }
 }

@@ -13,10 +13,10 @@ apply plugin: 'cobertura'
 dependencies {
 
     compile "postgresql:postgresql:9.1-901.jdbc4",
-            'org.springframework:spring-core:3.1.1.RELEASE',
             'org.springframework:spring-webmvc:3.1.1.RELEASE',
             'org.springframework:spring-web:3.1.1.RELEASE',
             'org.springframework:spring-aspects:3.1.1.RELEASE',
+            'org.springframework.integration:spring-integration-ftp:2.2.3.RELEASE',
             'org.aspectj:aspectjrt:1.7.0',
             'org.projectlombok:lombok:0.11.0',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.11',

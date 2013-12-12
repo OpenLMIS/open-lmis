@@ -31,15 +31,17 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class FacilityFeedDTO extends BaseFeedDTO {
   private interface ExcludedDelegates {
     public GeographicZone getGeographicZone();
+
     public FacilityType getFacilityType();
+
     public FacilityOperator getOperatedBy();
+
     public List<ProgramSupported> getSupportedPrograms();
   }
 
   @Delegate(excludes = ExcludedDelegates.class)
   @Getter(NONE)
   private Facility facility;
-
   private String geographicZone;
   private String facilityType;
   private String parentFacility;

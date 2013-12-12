@@ -331,8 +331,8 @@ public class InitiateRnRPage extends RequisitionPage {
     beginningBalanceSecondProduct.sendKeys(beginningBalanceValue.toString());
   }
 
-  public void verifyBeginningBalanceForFirstProduct(String beginningBalanceValue) {
-    verifyFieldValue(testWebDriver.getAttribute(beginningBalanceFirstProduct, "value"), beginningBalanceValue);
+  public void verifyBeginningBalanceForFirstProduct(Integer beginningBalanceValue) {
+    verifyFieldValue(testWebDriver.getAttribute(beginningBalanceFirstProduct, "value"), beginningBalanceValue.toString());
   }
 
   public void enterStockOnHandForFirstProduct(Integer stockOnHandValue) {
@@ -384,8 +384,8 @@ public class InitiateRnRPage extends RequisitionPage {
     quantityReceivedSecondProduct.sendKeys(quantityReceivedValue.toString());
   }
 
-  public void verifyQuantityReceivedForFirstProduct(String quantityReceivedValue) {
-    verifyFieldValue(testWebDriver.getAttribute(quantityReceivedFirstProduct, "value"), quantityReceivedValue);
+  public void verifyQuantityReceivedForFirstProduct(Integer quantityReceivedValue) {
+    verifyFieldValue(testWebDriver.getAttribute(quantityReceivedFirstProduct, "value"), quantityReceivedValue.toString());
   }
 
   public void enterQuantityDispensedForFirstProduct(Integer quantityDispensedValue) {
@@ -402,8 +402,8 @@ public class InitiateRnRPage extends RequisitionPage {
     quantityDispensedSecondProduct.sendKeys(quantityDispensedValue.toString());
   }
 
-  public void verifyQuantityDispensedForFirstProduct(String quantityDispensedValue) {
-    verifyFieldValue(testWebDriver.getAttribute(quantityDispensedFirstProduct, "value"), quantityDispensedValue);
+  public void verifyQuantityDispensedForFirstProduct(Integer quantityDispensedValue) {
+    verifyFieldValue(testWebDriver.getAttribute(quantityDispensedFirstProduct, "value"), quantityDispensedValue.toString());
   }
 
   public void enterLossesAndAdjustments(String adj) {

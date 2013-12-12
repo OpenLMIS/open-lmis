@@ -53,7 +53,7 @@ describe("Facility Controller", function () {
     });
 
     it('should give success message if save successful', function () {
-      facility = {"code": "code", supportedPrograms: []};
+      facility = {"code": "code", "stringGoLiveDate": "21-10-2013", "stringGoDownDate": "21-11-2013", supportedPrograms: []};
       $httpBackend.expectPOST('/facilities.json').respond(200, {"success": "Saved successfully", "facility": facility});
       scope.saveFacility();
       $httpBackend.flush();
@@ -233,8 +233,8 @@ describe("Facility Controller", function () {
     }));
 
     it('should get facility if defined', function () {
-      expect(scope.facility.goLiveDate).toEqual("2013-10-21");
-      expect(scope.facility.goDownDate).toEqual("2013-11-21");
+      expect(scope.facility.goLiveDate).toEqual("21-10-2013");
+      expect(scope.facility.goDownDate).toEqual("21-11-2013");
       expect(scope.facility.supportedPrograms).toEqual([
         {"code": "ARV", "name": "ARV", "description": "ARV", "active": true, "program": {"id": 1}, "startDate": "2012-11-21", "stringStartDate": "2012-11-21"},
         {"code": "HIV", "name": "HIV", "description": "HIV", "active": true, "program": {"id": 1}, "startDate": "2014-11-21", "stringStartDate": "2014-11-21"}
@@ -248,8 +248,8 @@ describe("Facility Controller", function () {
       httpBackend.flush();
 
       expect(scope.message).toEqual("Deleted successfully");
-      expect(scope.facility.goLiveDate).toEqual('2013-10-21');
-      expect(scope.facility.goDownDate).toEqual('2013-11-21');
+      expect(scope.facility.goLiveDate).toEqual('21-10-2013');
+      expect(scope.facility.goDownDate).toEqual('21-11-2013');
       expect(scope.originalFacilityCode).toEqual(scope.facility.code);
       expect(scope.originalFacilityName).toEqual(scope.facility.name);
     });
@@ -261,8 +261,8 @@ describe("Facility Controller", function () {
       httpBackend.flush();
 
       expect(scope.error).toEqual("something went wrong");
-      expect(scope.facility.goLiveDate).toEqual('2013-10-21');
-      expect(scope.facility.goDownDate).toEqual('2013-11-21');
+      expect(scope.facility.goLiveDate).toEqual('21-10-2013');
+      expect(scope.facility.goDownDate).toEqual('21-11-2013');
       expect(scope.originalFacilityCode).toEqual(scope.facility.code);
       expect(scope.originalFacilityName).toEqual(scope.facility.name);
     });
@@ -275,8 +275,8 @@ describe("Facility Controller", function () {
       httpBackend.flush();
 
       expect(scope.message).toEqual("Enabled successfully");
-      expect(scope.facility.goLiveDate).toEqual('2013-10-21');
-      expect(scope.facility.goDownDate).toEqual('2013-11-21');
+      expect(scope.facility.goLiveDate).toEqual('21-10-2013');
+      expect(scope.facility.goDownDate).toEqual('21-11-2013');
       expect(scope.originalFacilityCode).toEqual(scope.facility.code);
       expect(scope.originalFacilityName).toEqual(scope.facility.name);
     });
