@@ -95,7 +95,7 @@ public class ReportManager {
 
        // Read the report template from file.
        InputStream reportInputStream =  this.getClass().getClassLoader().getResourceAsStream(report.getTemplate()) ;
-       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getUserName(), outputOption.name(), params ) ;
+       HashMap<String, Object> extraParams = getReportExtraParams(report, currentUser.getFirstName() + " " + currentUser.getLastName(), outputOption.name(), params ) ;
 
         //Setup message for a report when there is no data found
         if(dataSource != null && dataSource.size() == 0){
