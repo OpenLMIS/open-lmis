@@ -25,10 +25,8 @@ import static java.lang.String.format;
 
 public class GetRequisitionDetailsAPI extends JsonUtility {
 
-  public static final String FULL_JSON_TXT_FILE_NAME = "ReportFullJson.txt";
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
-
 
   @BeforeMethod(groups = {"webservice","webserviceSmoke"})
   public void setUp() throws Exception {
@@ -56,6 +54,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
   }
 
   @Test(groups = {"webserviceSmoke"})
@@ -167,6 +166,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
   }
 
   @Test(groups = {"webservice"})
@@ -195,6 +195,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
@@ -204,7 +205,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
+    checkRequisitionStatus("RELEASED",responseEntity);
+    checkOrderStatus(65, "READY_TO_PACK", responseEntity);
 
   }
 
@@ -217,6 +219,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
@@ -226,7 +229,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
-    checkOrderStatus("RELEASED", 65, "TRANSFER_FAILED", responseEntity);
+    checkRequisitionStatus("RELEASED",responseEntity);
+    checkOrderStatus(65, "TRANSFER_FAILED", responseEntity);
   }
 
   @Test(groups = {"webservice"})
@@ -239,6 +243,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
 
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
@@ -250,8 +255,9 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
 
-    //responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
-    //checkOrderStatus("RELEASED", 65, "RELEASED", responseEntity);
+    responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
+    checkRequisitionStatus("RELEASED",responseEntity);
+    checkOrderStatus(65, "RELEASED", responseEntity);
   }
 
   @Test(groups = {"webservice"})
@@ -264,6 +270,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
+    checkOrderDetailsNotPresent(responseEntity);
 
     dbWrapper.updateVirtualPropertyOfFacility("F10", "true");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
@@ -273,7 +280,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkOrderStatus("RELEASED", 65, "READY_TO_PACK", responseEntity);
+    checkRequisitionStatus("RELEASED",responseEntity);
+    checkOrderStatus(65, "READY_TO_PACK", responseEntity);
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
 
@@ -288,7 +296,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
       "Admin123");
 
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkOrderStatus("RELEASED", 65, "RECEIVED", responseEntity);
+    checkRequisitionStatus("RELEASED",responseEntity);
+    checkOrderStatus(65, "RECEIVED", responseEntity);
   }
 
   private void checkRequisitionStatus(String requisitionStatus, ResponseEntity responseEntity) {
@@ -307,40 +316,26 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockInHand\":10"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"newPatientCount\":0"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockOutDays\":0"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"skipped\":false"));
+    assertEquals(200, responseEntity.getStatus());
+  }
+
+  private void checkOrderDetailsNotPresent(ResponseEntity responseEntity){
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityRequested\":3"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"skipped\":false"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
-    assertFalse("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"orderStatus\":"));
-    assertFalse("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
-    assertEquals(200, responseEntity.getStatus());
+    assertFalse("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"orderStatus\":"));
+    assertFalse("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
+
   }
 
-  private void checkOrderStatus(String requisitionStatus, int quantityApproved, String orderStatus, ResponseEntity responseEntity) throws Exception {
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"programCode\":\"HIV\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"agentCode\":\"F10\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringPeriodStartDate\":\"01/12/2012\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"stringPeriodEndDate\":\"01/12/2015\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"productCode\":\"P10\""));
-    assertTrue("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"beginningBalance\":0"));
-    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stockInHand\":10"));
-    assertFalse("Response entity : " + responseEntity.getResponse(),
-      responseEntity.getResponse().contains("\"quantityRequested\":3"));
+  private void checkOrderStatus(int quantityApproved, String orderStatus, ResponseEntity responseEntity) throws Exception {
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":" + quantityApproved));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\":\"F10\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":\"" + orderStatus + "\""));
-    assertEquals(200, responseEntity.getStatus());
   }
 
   private ResponseEntity waitUntilOrderStatusUpdatedOrTimeOut(long id, String expected) throws Exception {
