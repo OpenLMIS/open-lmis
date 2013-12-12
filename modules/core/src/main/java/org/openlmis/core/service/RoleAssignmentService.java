@@ -70,4 +70,8 @@ public class RoleAssignmentService {
   public List<FulfillmentRoleAssignment> getFulfilmentRoles(Long userId) {
     return fulfillmentRoleService.getRolesForUser(userId);
   }
+
+  public List<FulfillmentRoleAssignment> getFulfilmentRolesWithRight(Long userId, Right right) {
+    return fulfillmentRoleService.getRolesWithRight(userId, right);
+  }
 }

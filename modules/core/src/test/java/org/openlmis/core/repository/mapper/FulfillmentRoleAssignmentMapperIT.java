@@ -19,8 +19,8 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.core.builder.UserBuilder;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
+import org.openlmis.core.domain.Role;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
@@ -34,9 +34,12 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
+import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.core.domain.Right.VIEW_ORDER;
 
 @Category(IntegrationTests.class)
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -82,7 +85,7 @@ public class FulfillmentRoleAssignmentMapperIT {
     assertThat(fulfillmentRoleAssignment.getFacilityId(), is(facility.getId()));
     assertThat(fulfillmentRoleAssignment.getCreatedBy(), is(user.getCreatedBy()));
     assertThat(fulfillmentRoleAssignment.getModifiedBy(), is(user.getModifiedBy()));
-    }
+  }
 
 
   @Test
@@ -97,8 +100,8 @@ public class FulfillmentRoleAssignmentMapperIT {
     roleRightsMapper.insertRole(role);
 
     queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId, facilityId,roleId, " +
-            "createdBy, modifiedBy) values (?,?,?, ?, ?)",
-            user.getId(), facility.getId(), role.getId(), user.getModifiedBy(), user.getModifiedBy());
+      "createdBy, modifiedBy) values (?,?,?, ?, ?)",
+      user.getId(), facility.getId(), role.getId(), user.getModifiedBy(), user.getModifiedBy());
 
     fulfillmentRoleAssignmentMapper.deleteAllFulfillmentRoles(user);
 
@@ -123,10 +126,41 @@ public class FulfillmentRoleAssignmentMapperIT {
 
     fulfillmentRoleAssignmentMapper.insertFulfillmentRole(user, fulfillmentRoleAssignment.getFacilityId(), fulfillmentRoleAssignment.getRoleIds().get(0));
 
-    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());;
+    List<FulfillmentRoleAssignment> expectedFulfillmentRoleAssignments = fulfillmentRoleAssignmentMapper.getFulfillmentRolesForUser(user.getId());
 
     assertThat(expectedFulfillmentRoleAssignments.get(0).getUserId(), is(user.getId()));
     assertThat(expectedFulfillmentRoleAssignments.get(0).getRoleIds().get(0), is(role.getId()));
     assertThat(expectedFulfillmentRoleAssignments.get(0).getFacilityId(), is(facility.getId()));
-    }
+  }
+
+  @Test
+  public void shouldGetFulfilmentRolesForUserWithSpecificRight() throws Exception {
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    User user = make(a(UserBuilder.defaultUser, with(UserBuilder.facilityId, facility.getId())));
+    userMapper.insert(user);
+
+    Role managePODRole = new Role("r1", "random description");
+    roleRightsMapper.insertRole(managePODRole);
+    roleRightsMapper.createRoleRight(managePODRole, MANAGE_POD);
+
+    Role nonPODRole = new Role("Non POD", "non POD description");
+    roleRightsMapper.insertRole(nonPODRole);
+    roleRightsMapper.createRoleRight(managePODRole, VIEW_ORDER);
+
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId, facilityId,roleId, " +
+      "createdBy, modifiedBy) values (?,?,?, ?, ?)",
+      user.getId(), facility.getId(), managePODRole.getId(), user.getModifiedBy(), user.getModifiedBy());
+
+    queryExecutor.executeUpdate("INSERT INTO fulfillment_role_assignments (userId, facilityId,roleId, " +
+      "createdBy, modifiedBy) values (?,?,?, ?, ?)",
+      user.getId(), facility.getId(), nonPODRole.getId(), user.getModifiedBy(), user.getModifiedBy());
+
+    List<FulfillmentRoleAssignment> managePodRoles = fulfillmentRoleAssignmentMapper.getRolesWithRight(user.getId(), MANAGE_POD);
+
+    assertThat(managePodRoles.size(), is(1));
+    assertThat(managePodRoles.get(0).getRoleIds(), hasItem(managePODRole.getId()));
+    assertThat(managePodRoles.get(0).getFacilityId(), is(facility.getId()));
+  }
 }

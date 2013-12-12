@@ -30,8 +30,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.openlmis.core.domain.Right.AUTHORIZE_REQUISITION;
-import static org.openlmis.core.domain.Right.CREATE_REQUISITION;
+import static org.openlmis.core.domain.Right.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -134,6 +133,16 @@ public class RoleAssignmentServiceTest {
     List<FulfillmentRoleAssignment> fulfilmentRoles = service.getFulfilmentRoles(2l);
 
     assertThat(fulfilmentRoles, is(expectedRoleAssignments));
+  }
+
+  @Test
+  public void shouldGetFulfilmentRolesForUserWithRight() throws Exception {
+    List<FulfillmentRoleAssignment> expectedRoles = asList(new FulfillmentRoleAssignment(3l, 4l, asList(4l)));
+    when(fulfillmentRoleService.getRolesWithRight(3l, MANAGE_POD)).thenReturn(expectedRoles);
+
+    List<FulfillmentRoleAssignment> actualRoles = service.getFulfilmentRolesWithRight(3l, MANAGE_POD);
+
+    assertThat(expectedRoles, is(actualRoles));
   }
 
   @Test
