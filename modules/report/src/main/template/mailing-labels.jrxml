@@ -280,7 +280,7 @@ ORDER BY F.code asc, F.typeid asc]]>
 		<band height="50">
 			<subreport>
 				<reportElement x="0" y="0" width="801" height="50" uuid="4a6a4cd9-a23f-4d55-a8fe-fc5e12879bb6">
-					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 2]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} >= 1]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="REPORT_ID">
 					<subreportParameterExpression><![CDATA[$P{REPORT_ID}]]></subreportParameterExpression>

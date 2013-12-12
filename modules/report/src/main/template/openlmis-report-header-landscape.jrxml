@@ -17,7 +17,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="80" splitType="Stretch">
+		<band height="54" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="200" y="30" width="348" height="20" isRemoveLineWhenBlank="true" uuid="51974f2d-08d1-44d1-bbce-2b8ba24425bb"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -26,55 +26,26 @@
 				<textFieldExpression><![CDATA[$P{REPORT_SUB_TITLE}.toUpperCase()=="NULL"?"":$P{REPORT_SUB_TITLE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="584" y="48" width="100" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<reportElement x="650" y="30" width="90" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
 				<text><![CDATA[Page:]]></text>
 			</staticText>
-			<textField pattern="dd-MMM-yy">
-				<reportElement x="684" y="10" width="68" height="19" forecolor="#000000" uuid="cd9cbfeb-5ca8-48f1-a17c-3240c53fc0be"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="10" isBold="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="684" y="48" width="68" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2"/>
+				<reportElement x="740" y="30" width="18" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PAGE_NO}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="584" y="29" width="100" height="19" uuid="c66da6e4-b79c-446e-827a-238b656b8bf5"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[Run Time:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="584" y="10" width="100" height="19" uuid="9bd105bd-db7e-4882-be3e-9df0ca70f276"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[Run Date:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="7" y="30" width="193" height="20" uuid="ce1e06b8-6c60-4c59-97a0-58adbf54c0f2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<text><![CDATA[Generated from e-LMIS]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="7" y="49" width="342" height="20" isRemoveLineWhenBlank="true" uuid="828612ae-f65b-4fa4-b46d-8317145288cc"/>
+				<reportElement x="10" y="30" width="342" height="20" isRemoveLineWhenBlank="true" uuid="828612ae-f65b-4fa4-b46d-8317145288cc"/>
 				<textElement textAlignment="Left" markup="none">
-					<font size="9"/>
-					<paragraph lineSpacing="1_1_2"/>
+					<font size="8"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></textFieldExpression>
-			</textField>
-			<textField pattern="h.mm a">
-				<reportElement x="684" y="29" width="68" height="19" forecolor="#000000" uuid="c033f006-f182-445a-ae5f-6f08fc94c761"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="10" isBold="false"/>
-					<paragraph leftIndent="2"/>
-				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="200" y="9" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741"/>
