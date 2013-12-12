@@ -34,13 +34,14 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   @Autowired
   private ConfigurationSettingService configurationService;
 
+  @Autowired
+  private ReportLookupService reportLookupService;
+
   private OrderReportFilter orderReportFilter;
 
   @Override
   protected List<? extends ReportData> getBeanCollectionReportData(Map<String, String[]> filterCriteria) {
-
       return getReportDataByFilterCriteriaAndPagingAndSorting(filterCriteria,filterCriteria,RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-     // return reportMapper.getReportData(filterCriteria);
   }
 
   @Override
@@ -57,7 +58,16 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
   public OrderReportFilter getReportFilterData(Map<String, String[]> filterCriteria) {
 
     if(filterCriteria != null ){
-        orderReportFilter = new OrderReportFilter();
+      orderReportFilter = new OrderReportFilter();
+
+      if(filterCriteria.containsKey("orderId")){
+        orderReportFilter.setOrderId( Long.parseLong(filterCriteria.get("orderId")[0]) );
+
+        orderReportFilter.setFacility(reportLookupService.getFacilityNameForRnrId(orderReportFilter.getOrderId()));
+        orderReportFilter.setPeriod(reportLookupService.getPeriodTextForRnrId(orderReportFilter.getOrderId()));
+        orderReportFilter.setProgram(reportLookupService.getProgramNameForRnrId(orderReportFilter.getOrderId()));
+        orderReportFilter.setProduct("All products");
+      }else{
 
         orderReportFilter.setFacilityTypeId(filterCriteria.get("facilityTypeId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityTypeId")[0])); //defaults to 0
         orderReportFilter.setFacilityId(filterCriteria.get("facilityId") == null ? 0 : Integer.parseInt(filterCriteria.get("facilityId")[0])); //defaults to 0
@@ -78,6 +88,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         orderReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0])); //defaults to 0
         orderReportFilter.setProgram(filterCriteria.get("program")[0]);
       }
+    }
       return orderReportFilter;
   }
 
