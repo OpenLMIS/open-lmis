@@ -73,4 +73,5 @@ public class RequisitionGroupRepository {
   public void removeRequisitionGroup(Long id){
       mapper.removeRequisitionGroup(id);
   }
+
 }

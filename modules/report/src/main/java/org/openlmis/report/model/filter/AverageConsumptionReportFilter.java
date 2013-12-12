@@ -15,12 +15,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.service.*;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
+import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.ProductList;
+import org.openlmis.report.service.ReportLookupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.String;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -32,7 +36,7 @@ public class AverageConsumptionReportFilter {
   private ProductCategoryService productCategoryService;
 
   @Autowired
-  private ProductService productService;
+  private ReportLookupService reportLookupService;
 
   @Autowired
   private GeographicZoneService geographicZoneService;
@@ -76,7 +80,7 @@ public class AverageConsumptionReportFilter {
   private long productCategoryId;
   private String productCategories;
 
-  private long rgroupId;
+  private Long rgroupId;
   private String requisitionGroup;
 
   private Long facilityId;
@@ -95,7 +99,7 @@ public class AverageConsumptionReportFilter {
 
     DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT);
 
-    if(getFacilityId() == 0){
+    if(facilityTypeId == 0){
       setFacilityType("All facility types");
     }else{
       //TODO: write the facility type service
@@ -106,25 +110,40 @@ public class AverageConsumptionReportFilter {
       this.setProgram(programService.getById(programId).getName());
     }
 
-    if(getZoneId() != 0){
+    if(zoneId != 0){
       setZone(geographicZoneService.getById( getZoneId()).getName() );
     }  else{
       setZone("All geographical zones");
     }
 
-    if(getRgroupId() != 0){
-      //setRequisitionGroup(requisitionGroupService.getById(rgroupId).);
+    if(rgroupId != 0 && rgroupId != null){
+      setRequisitionGroup(requisitionGroupService.getById(rgroupId).getName());
     }else{
       setRequisitionGroup("All requisition groups");
     }
 
-    if(getFacilityId()!= 0){
+    if(facilityId != null && facilityId != 0){
       setFacility(facilityService.getById(getFacilityId()).getName());
     }else{
       setFacility("All facilities");
     }
 
-    //TODO: copy over the list of products here.
+    if(productCategoryId != 0){
+       setProductCategories(productCategoryService.getById(productCategoryId).getName());
+    } else{
+      setProductCategories("All Product Categories");
+    }
+
+    if(productId.equals("{}") ){
+       setProductNames("All products");
+    }else{
+      String productNames = "";
+      List<Product>  products = reportLookupService.getListOfProducts(productId);
+      for(Product p : products){
+        productNames = productNames + ((productNames.isEmpty()) ?"": ", ") + p.getName();
+      }
+      setProductNames(productNames);
+    }
 
     return "Program: " + this.getProgram() + "\n" +
            "Period : "+  dateFormatter.format(this.getStartDate()) +" - "+ dateFormatter.format(this.getEndDate()) +" \n" +

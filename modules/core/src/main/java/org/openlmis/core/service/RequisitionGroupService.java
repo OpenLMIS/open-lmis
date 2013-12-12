@@ -74,5 +74,8 @@ public class RequisitionGroupService {
       return requisitionGroupRepository.getRequisitionGroupsBySupervisoryNodeId(supervisoryNodeId);
   }
 
+  public RequisitionGroup getById(Long requisitionGroupId){
+    return requisitionGroupRepository.loadRequisitionGroupById( requisitionGroupId );
+  }
 
 }

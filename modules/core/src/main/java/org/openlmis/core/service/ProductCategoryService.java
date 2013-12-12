@@ -48,4 +48,8 @@ public class ProductCategoryService {
     return productCategoryRepository.getExisting(productCategory);
   }
 
+  public ProductCategory getById(Long id){
+    return productCategoryRepository.getById(id);
+  }
+
 }

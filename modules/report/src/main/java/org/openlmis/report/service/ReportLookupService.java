@@ -247,4 +247,8 @@ public class ReportLookupService {
     public List<ProductForm> getAllProductForm(){
         return productFormReportMapper.getAll();
     }
+
+  public List<Product> getListOfProducts(String productIds) {
+    return productMapper.getSelectedProducts(productIds);
+  }
 }

@@ -63,4 +63,8 @@ public class ProductCategoryRepository {
   public ProductCategory getByCode(String code) {
     return categoryMapper.getProductCategoryByCode(code);
   }
+
+  public ProductCategory getById(Long id){
+    return categoryMapper.getProductCategoryById(id);
+  }
 }

@@ -63,5 +63,16 @@ public interface ProductReportMapper {
   )
   List<Product> getProductsForProgram(Long programId);
 
+  @Select("SELECT p.id, (p.primaryname || ' ' || form.code || ' ' || p.strength || ' ' || du.code) as name, p.code, p.categoryid, " +
+    "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
+    " " +
+    "   FROM " +
+    "       products as p " +
+    "             join product_forms as form on form.id = p.formid " +
+    "             join dosage_units as du on du.id = p.dosageunitid" +
+    "     where p.id = ANY( #{productIds}::INT[] )   " +
+    " order by name "
+  )
+  List<Product> getSelectedProducts(@Param("productIds") String productIds);
 
 }
