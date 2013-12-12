@@ -12,6 +12,7 @@
 
 package org.openlmis.functional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pod.domain.POD;
@@ -26,6 +27,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.lang.String.format;
 
 public class RequisitionStatusFeed extends JsonUtility {
@@ -60,7 +62,7 @@ public class RequisitionStatusFeed extends JsonUtility {
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
-
+    assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"), 41);
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     checkRequisitionStatusOnFeed("INITIATED", feedJSONList.get(0), id);
     checkRequisitionStatusOnFeed("SUBMITTED", feedJSONList.get(1), id);
@@ -185,6 +187,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringStartDate\":\"30-01-2013\""));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringEndDate\":\"30-01-2016\""));
     assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":"));
     assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderID\""));
   }
@@ -195,6 +199,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringStartDate\":\"30-01-2013\""));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringEndDate\":\"30-01-2016\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":\"" + orderStatus + "\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderId\":" + id));
   }

@@ -10,6 +10,7 @@
 
 package org.openlmis.functional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pod.domain.POD;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.lang.String.format;
 
 public class GetRequisitionDetailsAPI extends JsonUtility {
@@ -55,6 +57,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     ResponseEntity responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
     checkRequisitionStatus("AUTHORIZED", responseEntity);
     checkOrderDetailsNotPresent(responseEntity);
+    assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"), 20);
   }
 
   @Test(groups = {"webserviceSmoke"})
@@ -306,6 +309,8 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"emergency\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringPeriodStartDate\":\"01/12/2012\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringPeriodEndDate\":\"01/12/2015\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodStartDate\":"));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"periodEndDate\":"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"requisitionStatus\":\"" + requisitionStatus + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"products\":[{"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"productCode\":\"P10\""));
@@ -325,6 +330,13 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
+    assertFalse("Response entity : " + responseEntity.getResponse(),
+            responseEntity.getResponse().contains("\"quantityRequested\":3"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
+    assertTrue("Response entity : " + responseEntity.getResponse(),
+            responseEntity.getResponse().contains("\"skipped\":false"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
     assertFalse("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"orderStatus\":"));
     assertFalse("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
@@ -332,7 +344,6 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   }
 
   private void checkOrderStatus(int quantityApproved, String orderStatus, ResponseEntity responseEntity) throws Exception {
-    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":" + quantityApproved));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\":\"F10\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":\"" + orderStatus + "\""));

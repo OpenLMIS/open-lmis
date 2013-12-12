@@ -73,6 +73,8 @@ public class FacilityAPI extends JsonUtility {
     assertTrue("Response entity : " + response, response.contains("\"active\":true"));
     assertTrue("Response entity : " + response, response.contains("\"goLiveDate\":1352572200000"));
     assertTrue("Response entity : " + response, response.contains("\"goDownDate\":-2592106200000"));
+    assertTrue("Response entity : " + response, response.contains("\"stringGoLiveDate\":\"11-11-2012\""));
+    assertTrue("Response entity : " + response, response.contains("\"stringGoDownDate\":\"11-11-1887\""));
     assertTrue("Response entity : " + response, response.contains("\"satellite\":true"));
     assertTrue("Response entity : " + response, response.contains("\"virtualFacility\":false"));
     assertFalse("Response entity : " + response, response.contains("\"parentFacility\""));
