@@ -117,12 +117,12 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
         }
         else{
             angular.forEach($scope.allFacilities,function(facility){
-                if($scope.facilityType !== null){
+                if($scope.facilityType){
                     if(facility.facilityType.id == $scope.facilityType.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }
-                else if($scope.geographicZone !== null){
+                else if($scope.geographicZone){
                     if(facility.geographicZone.id == $scope.geographicZone.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
