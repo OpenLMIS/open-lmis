@@ -23,10 +23,16 @@ public class EpiUseRepository {
   private EpiUseMapper mapper;
 
   public void saveLineItem(EpiUseLineItem epiUseLineItem) {
-    mapper.insertLineItem(epiUseLineItem);
+    if (mapper.getLineItemById(epiUseLineItem) == null) {
+      mapper.insertLineItem(epiUseLineItem);
+      return;
+    }
+    mapper.updateLineItem(epiUseLineItem);
   }
 
   public void save(EpiUse epiUse) {
-    mapper.insert(epiUse);
+    if (mapper.getById(epiUse) == null) {
+      mapper.insert(epiUse);
+    }
   }
 }

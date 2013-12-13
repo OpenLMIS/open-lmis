@@ -28,7 +28,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -96,7 +95,6 @@ public class EpiUseMapperIT {
     programMapper.insert(program1);
     periodMapper.insert(processingPeriod);
 
-
     distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
@@ -105,12 +103,11 @@ public class EpiUseMapperIT {
     distributionMapper.insert(distribution);
 
     facilityMapper.insert(facility);
-
   }
 
   @Test
   public void shouldSaveEpiUse() throws Exception {
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), new ArrayList<EpiUseLineItem>());
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
     mapper.insert(epiUse);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_use WHERE id = " + epiUse.getId());
@@ -119,14 +116,25 @@ public class EpiUseMapperIT {
   }
 
   @Test
+  public void shouldReturnEpiUse() throws Exception {
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    mapper.insert(epiUse);
+
+    EpiUse epiUseFromDB = mapper.getById(epiUse);
+
+    assertThat(epiUse, is(epiUseFromDB));
+  }
+
+  @Test
   public void shouldSaveEpiUseLineItem() throws Exception {
     ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
     productGroupMapper.insert(productGroup);
 
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), new ArrayList<EpiUseLineItem>());
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
     mapper.insert(epiUse);
 
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    epiUseLineItem.setEpiUseId(epiUse.getId());
     epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
@@ -134,4 +142,54 @@ public class EpiUseMapperIT {
     resultSet.next();
     assertThat(resultSet.getLong("productGroupId"), is(epiUseLineItem.getProductGroup().getId()));
   }
+
+  @Test
+  public void shouldReturnEpiUseLineItem() throws Exception {
+    ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
+    productGroupMapper.insert(productGroup);
+
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    mapper.insert(epiUse);
+
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    epiUseLineItem.setEpiUseId(epiUse.getId());
+    epiUseLineItem.setProductGroup(productGroup);
+    mapper.insertLineItem(epiUseLineItem);
+
+    EpiUseLineItem epiUseLineItemFromDB = mapper.getLineItemById(epiUseLineItem);
+
+    assertThat(epiUseLineItem.getEpiUseId(), is(epiUseLineItemFromDB.getEpiUseId()));
+    assertThat(epiUseLineItem.getProductGroup().getName(), is(epiUseLineItemFromDB.getProductGroup().getName()));
+    assertThat(epiUseLineItem.getProductGroup().getId(), is(epiUseLineItemFromDB.getProductGroup().getId()));
+  }
+
+  @Test
+  public void shouldUpdateEpiUseLineItem() throws Exception {
+    ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
+    productGroupMapper.insert(productGroup);
+    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    mapper.insert(epiUse);
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    epiUseLineItem.setEpiUseId(epiUse.getId());
+    epiUseLineItem.setProductGroup(productGroup);
+    mapper.insertLineItem(epiUseLineItem);
+
+    epiUseLineItem.setReceived(10);
+    epiUseLineItem.setDistributed(11);
+    epiUseLineItem.setLoss(12);
+    epiUseLineItem.setStockAtFirstOfMonth(13);
+    epiUseLineItem.setStockAtEndOfMonth(14);
+    epiUseLineItem.setExpirationDate("12/2010");
+    mapper.updateLineItem(epiUseLineItem);
+
+    EpiUseLineItem epiUseLineItemFromDB = mapper.getLineItemById(epiUseLineItem);
+
+    assertThat(epiUseLineItem.getReceived(), is(epiUseLineItemFromDB.getReceived()));
+    assertThat(epiUseLineItem.getLoss(), is(epiUseLineItemFromDB.getLoss()));
+    assertThat(epiUseLineItem.getDistributed(), is(epiUseLineItemFromDB.getDistributed()));
+    assertThat(epiUseLineItem.getStockAtEndOfMonth(), is(epiUseLineItemFromDB.getStockAtEndOfMonth()));
+    assertThat(epiUseLineItem.getStockAtFirstOfMonth(), is(epiUseLineItemFromDB.getStockAtFirstOfMonth()));
+    assertThat(epiUseLineItem.getExpirationDate(), is(epiUseLineItemFromDB.getExpirationDate()));
+  }
+
 }

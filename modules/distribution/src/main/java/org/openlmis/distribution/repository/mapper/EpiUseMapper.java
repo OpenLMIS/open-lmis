@@ -10,8 +10,7 @@
 
 package org.openlmis.distribution.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EpiUseMapper {
 
-  @Insert({"INSERT into epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
+  @Insert({"INSERT INTO epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
     "distributed, loss, stockAtEndOfMonth, expirationDate) VALUES (#{epiUseId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
     " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate})"})
   @Options(useGeneratedKeys = true)
@@ -29,4 +28,17 @@ public interface EpiUseMapper {
   @Options(useGeneratedKeys = true)
   public void insert(EpiUse epiUse);
 
+  @Select({"SELECT * FROM epi_use WHERE id = #{id}"})
+  public EpiUse getById(EpiUse epiUse);
+
+  @Select({"SELECT * FROM epi_use_line_items WHERE id = #{id}"})
+  @Results(value = {
+    @Result(property = "productGroup.id", column = "productGroupId"),
+    @Result(property = "productGroup.name", column = "productGroupName")
+  })
+  public EpiUseLineItem getLineItemById(EpiUseLineItem epiUseLineItem);
+
+  @Update({"UPDATE epi_use_line_items SET received = #{received}, distributed = #{distributed}, loss = #{loss}," +
+    "stockAtFirstOfMonth = #{stockAtFirstOfMonth}, stockAtEndOfMonth = #{stockAtEndOfMonth}, expirationDate = #{expirationDate}"})
+  public void updateLineItem(EpiUseLineItem epiUseLineItem);
 }
