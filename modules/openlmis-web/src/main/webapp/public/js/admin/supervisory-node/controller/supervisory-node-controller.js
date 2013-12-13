@@ -32,8 +32,8 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     });
 
     GetFacilityCompleteList.get(function(data){
-        $scope.allFacilities = $scope.allFacilitiesFiltered = data.facilities;
-        $scope.facilitiesLoaded = true;
+      $scope.allFacilities = $scope.allFacilitiesFiltered = data.allFacilities;
+      $scope.facilitiesLoaded = true;
     });
 
     $scope.facilityTypes = ReportFacilityTypes.get(function(data){
@@ -85,32 +85,34 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
     };
 
     $scope.closeModal=function(){
-        $scope.geographicZone = null;
-        $scope.supervisoryNodeMember = null;
-        $scope.facilityType = null;
-        $scope.allFacilitiesFiltered = null;
         $scope.supervisoryNodeMemberModal = false;
     };
 
     $scope.filterFacilityList=function(){
-        $scope.allFacilitiesFiltered=[];
-        if($scope.facilityType === null && $scope.geographicZone === null){
-            $scope.allFacilitiesFiltered = $scope.allFacilities;
-        }
-        else{
-            angular.forEach($scope.allFacilities,function(facility){
-                if($scope.facilityType){
-                    if(facility.facilityType.id == $scope.facilityType.id){
-                        $scope.allFacilitiesFiltered.push(facility);
-                    }
-                }
-                else if($scope.geographicZone){
-                    if(facility.geographicZone.id === $scope.geographicZone.id){
-                        $scope.allFacilitiesFiltered.push(facility);
-                    }
-                }
-            });
-        }
+      $scope.allFacilitiesFiltered = [];
+      if(!$scope.facilityType && !$scope.geographicZone){
+        $scope.allFacilitiesFiltered = $scope.allFacilities;
+      }
+      else{
+        angular.forEach($scope.allFacilities,function(facility){
+          //if both facility type and geographic zone are selected
+          if($scope.facilityType && $scope.geographicZone ){
+            if(facility.typeId == $scope.facilityType.id && facility.geographicZoneId == $scope.geographicZone.id){
+              $scope.allFacilitiesFiltered.push(facility);
+            }
+          }
+          else if($scope.facilityType){
+            if(facility.typeId == $scope.facilityType.id){
+              $scope.allFacilitiesFiltered.push(facility);
+            }
+          }
+          else if($scope.geographicZone){
+            if(facility.geographicZoneId == $scope.geographicZone.id){
+              $scope.allFacilitiesFiltered.push(facility);
+            }
+          }
+        });
+      }
     };
 
     $scope.showRemoveSupervisoryNodeMemberConfirmDialog = function () {
