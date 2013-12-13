@@ -202,24 +202,18 @@ public class FacilityController extends BaseController {
       return OpenLmisResponse.response("facilities",facilityService.getCompleteListInRequisitionGroups(requisitionGroups));
   }
 
-  @RequestMapping(value="/facilities/getFacilityCompleteList",method= GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_REQUISITION_GROUP')")
-  public ResponseEntity<OpenLmisResponse> getAllFacilityDetail(HttpServletRequest request){
-      return OpenLmisResponse.response("facilities",facilityService.getFacilitiesCompleteList());
+  @RequestMapping(value = "/facilities/facilityType/{facilityTypeId}", method = GET, headers = ACCEPT_JSON)
+  //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> getFacilityListForAFacilityType(@PathVariable("facilityTypeId") Long facilityTypeId) {
+
+    return OpenLmisResponse.response("facilities",facilityService.getFacilitiesListForAFacilityType(facilityTypeId));
+
   }
 
-    @RequestMapping(value = "/facilities/facilityType/{facilityTypeId}", method = GET, headers = ACCEPT_JSON)
-    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-    public ResponseEntity<OpenLmisResponse> getFacilityListForAFacilityType(@PathVariable("facilityTypeId") Long facilityTypeId) {
-
-      return OpenLmisResponse.response("facilities",facilityService.getFacilitiesListForAFacilityType(facilityTypeId));
-
-    }
-
-    @RequestMapping(value = "/facility/supplyingFacilities", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
-    public ResponseEntity<OpenLmisResponse> getSupplyingFacilitiesCompleteList() {
-        return OpenLmisResponse.response("facilities",facilityService.getSupplyingFacilitiesCompleteList());
-    }
+  @RequestMapping(value = "/facility/supplyingFacilities", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY')")
+  public ResponseEntity<OpenLmisResponse> getSupplyingFacilitiesCompleteList() {
+      return OpenLmisResponse.response("facilities",facilityService.getSupplyingFacilitiesCompleteList());
+  }
 
 }

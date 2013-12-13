@@ -213,8 +213,9 @@ services.factory('FacilityCompleteListInRequisitionGroup',function($resource){
     return $resource('/facilities/getListInRequisitionGroup/:id.json',{},{});
 });
 
+//deprecated: use "AllFacilities" service instead
 services.factory('GetFacilityCompleteList',function($resource){
-    return $resource('/facilities/getFacilityCompleteList.json',{},{});
+    return $resource('/report/allFacilities.json',{},{});
 });
 
 services.factory('GetFacilityByFacilityType',function($resource){

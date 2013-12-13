@@ -20,7 +20,7 @@ import java.util.List;
 @Repository
 public interface FacilityLookupReportMapper {
 
-    @Select("SELECT id, code, name" +
+    @Select("SELECT id, code, name, geographicZoneId, typeId" +
             "   FROM " +
             "       facilities order by name")
     List<Facility> getAll();

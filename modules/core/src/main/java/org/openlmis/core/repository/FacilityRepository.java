@@ -45,15 +45,11 @@ public class FacilityRepository {
       return mapper.getAllFacilitiesDetail();
   }
 
-  public List<Facility> getFacilitiesCompleteList(){
-      return mapper.getFacilitiesCompleteList();
+  public List<Facility> getFacilitiesForAFacilityType(Long facilityTypeId){
+      if(facilityTypeId == null || facilityTypeId == 0 || facilityTypeId == -1)
+          return mapper.getAll();
+      return mapper.getFacilitiesListForAFacilityType(facilityTypeId);
   }
-
-    public List<Facility> getFacilitiesForAFacilityType(Long facilityTypeId){
-        if(facilityTypeId == null || facilityTypeId == 0 || facilityTypeId == -1)
-            return mapper.getAll();
-        return mapper.getFacilitiesListForAFacilityType(facilityTypeId);
-    }
 
   public List<Facility> getMailingLabels(){
       return mapper.getMailingLabels();
