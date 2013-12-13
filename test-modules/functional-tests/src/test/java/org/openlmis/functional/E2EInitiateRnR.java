@@ -27,6 +27,7 @@ import org.testng.annotations.Listeners;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -91,8 +92,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     String[] roleRights = rightsList.split(",");
     List<String> userRoleListStoreInCharge = new ArrayList<>();
-    for (int i = 0; i < roleRights.length; i++)
-      userRoleListStoreInCharge.add(roleRights[i]);
+    Collections.addAll(userRoleListStoreInCharge, roleRights);
     createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, roleType);
   }
 
@@ -219,7 +219,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I access proceed$")
   public void accessProceed() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
 
   }
 
@@ -240,25 +240,27 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I update & verify ordered quantities$")
 public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantities(10, 10);
+    initiateRnRPage.enterValue(10, "newPatientFirstProduct");
+    initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyCalculatedOrderQuantity(expectedCalculatedNC, 36, 108, 97);
+    initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, 36, 3, 11);
     initiateRnRPage.verifyPacksToShip("10");
   }
 
   @And("^I update & verify quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantities(10, 10);
+    initiateRnRPage.enterValue(10, "newPatientFirstProduct");
+    initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyCalculationsForEmergencyRnR(expectedCalculatedNC,Math.round (((float)(expectedCalculatedNC + 36) / 2)), 3, 11);
+    initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, Math.round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
     initiateRnRPage.verifyPacksToShip("11");
   }
 
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterRequestedQuantityForFirstProduct(10);
+    initiateRnRPage.enterValue(10, "requestedQuantityFirstProduct");
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
     initiateRnRPage.verifyPacksToShip("1");
@@ -284,7 +286,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
 
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\" for product \"([^\"]*)\" in Database$")
   public void verifyNormalisedConsumptionAndAmcInDatabase(String normalizedConsumption, String amc, String productCode) throws Exception {
-    Long rnrId = Long.valueOf(dbWrapper.getMaxRnrID());
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "normalizedConsumption", productCode), normalizedConsumption);
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode), amc);
   }
@@ -305,7 +307,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   }
 
   @When("^I access requisition on approval page$")
-  public void nevigateRequisitionApprovalPage() throws Exception {
+  public void navigateRequisitionApprovalPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ApprovePage approvePage = homePage.navigateToApprove();
     periodTopSNUser = approvePage.ClickRequisitionPresentForApproval();
@@ -435,13 +437,13 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   }
 
   @When("^I access view orders page$")
-  public void nevigateViewOrdersPage() throws Exception {
+  public void navigateViewOrdersPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateViewOrders();
   }
 
   @Then("^I should see ordered list with download link$")
-  public void verifyOrderListWithdDownloadLink() throws Exception {
+  public void verifyOrderListWithDownloadLink() throws Exception {
     verifyOrderedList(true);
   }
 
@@ -451,7 +453,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   }
 
   @Then("^I should see ordered list without download link$")
-  public void verifyOrderListWithoutdDownloadLink() throws Exception {
+  public void verifyOrderListWithoutDownloadLink() throws Exception {
     verifyOrderedList(false);
   }
 

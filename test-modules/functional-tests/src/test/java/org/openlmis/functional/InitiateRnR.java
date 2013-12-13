@@ -143,13 +143,13 @@ public class InitiateRnR extends TestCaseHelper {
   @When("^I enter quantity received \"([^\"]*)\"$")
   public void enterQuantityReceived(String quantityReceived) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(valueOf(quantityReceived));
+    initiateRnRPage.enterValue(valueOf(quantityReceived), "quantityReceivedFirstProduct");
   }
 
   @When("^I enter quantity dispensed \"([^\"]*)\"$")
   public void enterQuantityDispensed(String quantityDispensed) throws IOException, SQLException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(valueOf(quantityDispensed));
+    initiateRnRPage.enterValue(valueOf(quantityDispensed), "quantityDispensedFirstProduct");
   }
 
   @Then("^I validate beginning balance \"([^\"]*)\"$")
@@ -501,16 +501,16 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(100);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(100);
+    initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     verifyRnRsInGrid("current Period", "Not yet started", "1");
     verifyRnRsInGrid("current Period", "INITIATED", "2");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
     initiateRnRPage1.enterValue(100, "beginningBalanceFirstProduct");
-    initiateRnRPage1.enterQuantityReceivedForFirstProduct(100);
-    initiateRnRPage1.enterQuantityDispensedForFirstProduct(100);
+    initiateRnRPage.enterValue(100, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
 
@@ -597,8 +597,8 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
     initiateRnRPage1.enterValue(beginningBalance, "beginningBalanceFirstProduct");
-    initiateRnRPage1.enterQuantityReceivedForFirstProduct(quantityReceived);
-    initiateRnRPage1.enterQuantityDispensedForFirstProduct(quantityDispensed);
+    initiateRnRPage1.enterValue(quantityReceived, "quantityReceivedFirstProduct");
+    initiateRnRPage1.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
     initiateRnRPage1.clickSubmitButton();
     initiateRnRPage1.clickOk();
     initiateRnRPage1.verifyBeginningBalanceForFirstProduct(beginningBalance);
@@ -680,8 +680,8 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(1000);
+    initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(1000, "quantityDispensedFirstProduct");
     verifyStockOnHandErrorMessage();
 
   }
@@ -706,8 +706,8 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
-    initiateRnRPage.enterStockOnHandForFirstProduct(1000);
+    initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(1000, "stockInHandFirstProduct");
     verifyTotalQuantityConsumedErrorMessage();
     initiateRnRPage.verifyStockOnHandForFirstProduct("1000");
   }
@@ -730,8 +730,8 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(100);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(100);
+    initiateRnRPage.enterValue(100, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifySubmitRnrSuccessMsg();
@@ -880,7 +880,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterRequestedQuantityForFirstProduct(100);
+    initiateRnRPage.enterValue(100, "requestedQuantityFirstProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
 
@@ -901,13 +901,13 @@ public class InitiateRnR extends TestCaseHelper {
 
     initiateRnRPage.unSkipAllProduct();
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
+    initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(0, "quantityDispensedFirstProduct");
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
-    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
-    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
-    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
+    initiateRnRPage.enterValue(10, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityDispensedSecondProduct");
+    initiateRnRPage.enterValue(100, "requestedQuantitySecondProduct");
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -931,13 +931,12 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
+    initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(0, "quantityDispensedFirstProduct");
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
-    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
-    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
-    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
+    initiateRnRPage.enterValue(10, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValue(100, "requestedQuantitySecondProduct");
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
@@ -982,13 +981,13 @@ public class InitiateRnR extends TestCaseHelper {
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(0);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(0);
+    initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(0, "quantityDispensedFirstProduct");
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
-    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
-    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
-    initiateRnRPage.enterRequestedQuantityForSecondProduct(100);
+    initiateRnRPage.enterValue(10, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityDispensedSecondProduct");
+    initiateRnRPage.enterValue(100, "requestedQuantitySecondProduct");
     initiateRnRPage.skipSingleProduct(2);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
