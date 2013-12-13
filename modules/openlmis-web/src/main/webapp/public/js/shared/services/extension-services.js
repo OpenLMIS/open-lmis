@@ -115,11 +115,14 @@ services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
 
-
 services.factory('ReportGeographicLevels',function ($resource){
     return $resource('/reports/geographicLevels.json', {}, {}) ;
 });
 
+//deprecated: use "AllFacilities" service instead
+services.factory('GetFacilityCompleteList',function($resource){
+  return $resource('/reports/allFacilities.json',{},{});
+});
 
 services.factory('FacilityList', function ($resource) {
     return $resource('/reports/reportdata/facilitylist.json', {}, {});
@@ -213,10 +216,7 @@ services.factory('FacilityCompleteListInRequisitionGroup',function($resource){
     return $resource('/facilities/getListInRequisitionGroup/:id.json',{},{});
 });
 
-//deprecated: use "AllFacilities" service instead
-services.factory('GetFacilityCompleteList',function($resource){
-    return $resource('/report/allFacilities.json',{},{});
-});
+
 
 services.factory('GetFacilityByFacilityType',function($resource){
     return $resource('/facilities/facilityType/:facilityTypeId.json',{},{});

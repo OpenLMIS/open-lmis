@@ -162,7 +162,7 @@
                         <div class="span4">
                             <select style="width:200px;" ng-required="true" size="7" name="facilityValue"
                                     id="facilityValue" ng-model="requisitionGroupMember.facility"
-                                    ng-options="option as option.code.concat('-').concat.(option.name) for option in allFacilitiesFiltered">
+                                    ng-options="option as option.name.concat(' - ').concat.(option.code) for option in allFacilitiesFiltered">
                             </select>
                         </div>
                     </div>

@@ -16,7 +16,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     $scope.message={};
     $scope.facilitiesLoaded = false;
 
-    var loadMemberFacilities = function(){
+    $scope.loadMemberFacilities = function(){
         FacilityCompleteListInRequisitionGroup.get({id:$routeParams.requisitionGroupId},function(data){
             $scope.facilities = data.facilities;
         });
@@ -28,7 +28,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
             $scope.requisitionGroup = data.requisitionGroup;
         }, {});
 
-        loadMemberFacilities();
+        $scope.loadMemberFacilities();
     }
 
 
@@ -41,7 +41,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     });
 
     GetFacilityCompleteList.get(function(data){
-        $scope.allFacilities = $scope.allFacilitiesFiltered = data.facilities;
+        $scope.allFacilities = $scope.allFacilitiesFiltered = data.allFacilities;
         $scope.facilitiesLoaded = true;
     });
 
@@ -61,7 +61,7 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
 
         var errorHandler = function (response) {
             $scope.showError = true;
-            $scope.error = response.data.error;
+            $scope.error = messageService.get(response.data.error);
         };
 
         SaveRequisitionGroup.save($scope.requisitionGroup,successHandler,errorHandler);
@@ -72,58 +72,58 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     $scope.saveRequisitionGroupMember = function(){
 
         var successHandler = function (response) {
-            $scope.requisitionGroupMember = response.requisitionGroupMember;
-            $scope.showError = false;
-            $scope.error = "";
-            $scope.message = response.success;
-            $scope.requisitionGroupMemberId = $scope.requisitionGroupMember.id;
+          $scope.requisitionGroupMember = response.requisitionGroupMember;
+          $scope.showError = false;
+          $scope.error = "";
+          $scope.message = response.success;
+          $scope.loadMemberFacilities();
         };
 
         var errorHandler = function (response) {
             $scope.showError = true;
-            $scope.error = response.data.error;
+            $scope.error = messageService.get(response.data.error);
         };
 
         $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;
 
         SaveRequisitionGroupMember.save($scope.requisitionGroupMember,successHandler,errorHandler);
-        $scope.facilities.push($scope.requisitionGroupMember.facility);
         $scope.closeModal();
-
         return true;
     };
 
     $scope.validateRequisitionGroupName = function () {
-        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null || typeof ($scope.requisitionGroup.name) === "undefined";
+        $scope.requisitionGroupNameInvalid = $scope.requisitionGroup.name === null || $scope.requisitionGroup.name === "undefined";
     };
 
-    $scope.addNewMemberFacility=function(){
-        $scope.allFacilitiesFiltered = $scope.allFacilities;
+    $scope.addNewMemberFacility = function(){
         $scope.requisitionGroupMemberModal = true;
+        $scope.requisitionGroupMember.facility = null;
     };
 
     $scope.closeModal=function(){
-        $scope.geographicZone = null;
-        $scope.requisitionGroupMember = null;
-        $scope.facilityType = null;
-        $scope.allFacilitiesFiltered = null;
         $scope.requisitionGroupMemberModal = false;
     };
 
-    $scope.filterFacilityList=function(){
+    $scope.filterFacilityList = function(){
         $scope.allFacilitiesFiltered = [];
         if(!$scope.facilityType && !$scope.geographicZone){
             $scope.allFacilitiesFiltered = $scope.allFacilities;
         }
         else{
             angular.forEach($scope.allFacilities,function(facility){
-                if($scope.facilityType){
-                    if(facility.facilityType.id == $scope.facilityType.id){
+                //if both facility type and geographic zone are selected
+                if($scope.facilityType && $scope.geographicZone ){
+                  if(facility.typeId == $scope.facilityType.id && facility.geographicZoneId == $scope.geographicZone.id){
+                    $scope.allFacilitiesFiltered.push(facility);
+                  }
+                }
+                else if($scope.facilityType){
+                    if(facility.typeId == $scope.facilityType.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }
                 else if($scope.geographicZone){
-                    if(facility.geographicZone.id == $scope.geographicZone.id){
+                    if(facility.geographicZoneId == $scope.geographicZone.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }
@@ -152,8 +152,6 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     };
 
     $scope.removeMemberFacility = function(){
-        /*$scope.requisitionGroupMember.facility = facility;
-         $scope.requisitionGroupMember.requisitionGroup = $scope.requisitionGroup;*/
         RemoveRequisitionGroupMember.get({rgId: $scope.requisitionGroup.id, facId: $scope.selectedFacility.id});
     };
 
@@ -161,13 +159,13 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     $scope.showRemoveRequisitionGroupConfirmDialog = function () {
         if($scope.facilities.length > 0) {
             $scope.showError = true;
-            $scope.error = "Requisition group is associated with facilities.  Please first remove the associated facilities!";
+            $scope.error = "Requisition group is associated with facilities.  Please remove the associated facilities first!";
             return false;
         }
 
         if(sharedSpace.getCountOfPrograms() > 0){
             $scope.showError = true;
-            $scope.error = "Requisition group is associated with programs.  Please first remove the associated programs!";
+            $scope.error = "Requisition group is associated with programs.  Please remove the associated programs first!";
             return false;
         }
 
@@ -193,9 +191,6 @@ function RequisitionGroupController($scope,sharedSpace, ReportFacilityTypes, $ro
     $scope.removeRequisitionGroup = function(id){
         RemoveRequisitionGroup.get({id: id});
     };
-
-
-
 
 }
 
