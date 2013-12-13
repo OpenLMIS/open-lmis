@@ -71,7 +71,7 @@ public abstract class AbstractModelPersistenceHandler implements RecordHandler<I
 
   private void throwExceptionIfProcessedInCurrentUpload(AuditFields auditFields, BaseModel existing) {
     if (existing != null) {
-      if (existing.getModifiedDate().equals(auditFields.getCurrentTimestamp())) {
+      if (auditFields.getCurrentTimestamp().equals(existing.getModifiedDate())) {
         throw new DataException(getMessageKey());
       }
     }
