@@ -84,15 +84,32 @@
 
                   <div class="submenu">
                       <ul>
+                          <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
+                              <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
+                          </li>
                           <li ng-show="hasPermission('VIEW_AVERAGE_CONSUMPTION_REPORT')">
                               <a href="/public/pages/reports/average-consumption/index.html">Consumption Average by Product</a>
                           </li>
                           <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
                               <a href="/public/pages/reports/district-consumption/index.html">District Consumption Comparison</a>
                           </li>
-                          <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
-                              <a href="/public/pages/reports/summary/index.html">Summary Report</a>
+                          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
+                              <a href="/public/pages/reports/order-fill-rate/index.html">Order Fill Rate Report by Facility</a>
                           </li>
+                          <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
+                              <a href="/public/pages/reports/order/index.html">Order Report</a>
+                          </li>
+
+                          <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
+                              <a href="/public/pages/reports/regimen-summary/index.html">Regimen Summary</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
+                              <a href="/public/pages/reports/rnr-feedback/index.html">Report and Requisition Feedback</a>
+                          </li>
+                          <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
+                              <a href="/public/pages/reports/reporting-rate/index.html">Reporting Rate</a>
+                          </li>
+
                           <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
                               <a href="/public/pages/reports/supply-status/index.html">Supply Status by Facility</a>
                           </li>
@@ -102,24 +119,10 @@
                           <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
                               <a href="/public/pages/reports/stock-imbalance/index.html">Stock Imbalance by Facility</a>
                           </li>
-                          <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
-                              <a href="/public/pages/reports/adjustment-summary/index.html">Adjustment Summary</a>
+                          <li ng-show="hasPermission('VIEW_SUMMARY_REPORT')">
+                              <a href="/public/pages/reports/summary/index.html">Summary Report</a>
                           </li>
-                          <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
-                              <a href="/public/pages/reports/order/index.html">Order Report</a>
-                          </li>
-                          <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
-                              <a href="/public/pages/reports/rnr-feedback/index.html">Report and Requisition Feedback</a>
-                          </li>
-                          <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
-                              <a href="/public/pages/reports/reporting-rate/index.html">Reporting Rate</a>
-                          </li>
-                          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
-                              <a href="/public/pages/reports/order-fill-rate/index.html">Order Fill Rate Report by Facility</a>
-                          </li>
-                          <li ng-show="hasPermission('VIEW_REGIMEN_SUMMARY_REPORT')">
-                              <a href="/public/pages/reports/regimen-summary/index.html">Regimen Summary</a>
-                          </li>
+
                           <li class="beak"></li>
                       </ul>
                   </div>
