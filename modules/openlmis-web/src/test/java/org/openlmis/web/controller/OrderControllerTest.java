@@ -41,10 +41,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.web.controller.OrderController.*;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -136,8 +139,8 @@ public class OrderControllerTest {
     Long orderId = 1L;
     Order expectedOrder = new Order();
     when(orderService.getOrder(orderId)).thenReturn(expectedOrder);
-    OrderFileTemplateDTO expectedOrderFileTemplateDTO =
-      new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(new OrderConfiguration(),
+      new ArrayList<OrderFileColumn>());
     when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
     ModelAndView modelAndView = orderController.downloadOrderCsv(orderId);
     Order order = (Order) modelAndView.getModel().get(ORDER);
@@ -150,17 +153,19 @@ public class OrderControllerTest {
 
   @Test
   public void shouldGetOrderFileTemplateDTO() throws Exception {
-    OrderFileTemplateDTO expectedOrderFileTemplateDTO =
-      new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
+    OrderFileTemplateDTO expectedOrderFileTemplateDTO = new OrderFileTemplateDTO(new OrderConfiguration(),
+      new ArrayList<OrderFileColumn>());
     when(orderService.getOrderFileTemplateDTO()).thenReturn(expectedOrderFileTemplateDTO);
     ResponseEntity<OpenLmisResponse> fetchedTemplate = orderController.getOrderFileTemplateDTO();
     verify(orderService).getOrderFileTemplateDTO();
-    assertThat((OrderFileTemplateDTO) fetchedTemplate.getBody().getData().get(ORDER_FILE_TEMPLATE), is(expectedOrderFileTemplateDTO));
+    assertThat((OrderFileTemplateDTO) fetchedTemplate.getBody().getData().get(ORDER_FILE_TEMPLATE),
+      is(expectedOrderFileTemplateDTO));
   }
 
   @Test
   public void shouldSaveOrderFileTemplateDTO() throws Exception {
-    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(new OrderConfiguration(), new ArrayList<OrderFileColumn>());
+    OrderFileTemplateDTO orderFileTemplateDTO = new OrderFileTemplateDTO(new OrderConfiguration(),
+      new ArrayList<OrderFileColumn>());
     ResponseEntity<OpenLmisResponse> response = orderController.saveOrderFileTemplateDTO(orderFileTemplateDTO, request);
     verify(orderService).saveOrderFileTemplate(orderFileTemplateDTO, 1L);
     assertThat(response.getBody().getSuccessMsg(), is("order.file.template.saved.success"));
@@ -173,5 +178,23 @@ public class OrderControllerTest {
     ResponseEntity<OpenLmisResponse> response = orderController.getAllDateFormats();
     verify(orderService).getAllDateFormats();
     assertThat((Set<DateFormat>) response.getBody().getData().get(DATE_FORMATS), is(dateFormats));
+  }
+
+  @Test
+  public void shouldGetAllOrdersForPOD() {
+    List<Order> ordersForPOD = null;
+    when(orderService.searchByStatusAndRight(USER_ID,
+      MANAGE_POD,
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK))).thenReturn(ordersForPOD);
+    mockStatic(OrderDTO.class);
+    List<OrderDTO> orderDTOs = new ArrayList<>();
+    when(OrderDTO.getOrdersForView(ordersForPOD)).thenReturn(orderDTOs);
+
+    ResponseEntity<OpenLmisResponse> response = orderController.getOrdersForPOD(request);
+
+    assertThat((List<OrderDTO>) response.getBody().getData().get(ORDERS_FOR_POD), is(orderDTOs));
+    verify(orderService).searchByStatusAndRight(USER_ID,
+      MANAGE_POD,
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
   }
 }
