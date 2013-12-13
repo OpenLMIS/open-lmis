@@ -262,16 +262,12 @@ public class HomePage extends Page {
 
   public String navigateAndInitiateRnr(String program) throws IOException {
     navigateRnr();
-    String periodDetails;
     myFacilityRadioButton.click();
     testWebDriver.sleep(2000);
     testWebDriver.waitForElementToAppear(programDropDown);
     testWebDriver.selectByVisibleText(programDropDown, program);
     testWebDriver.waitForElementToAppear(startDate);
-    periodDetails = startDate.getText().trim() + " - " + endDate.getText().trim();
-
-    return periodDetails;
-
+    return (startDate.getText().trim() + " - " + endDate.getText().trim());
   }
 
   public void navigateInitiateRnRScreenAndSelectingRequiredFields(String program, String type) throws IOException {

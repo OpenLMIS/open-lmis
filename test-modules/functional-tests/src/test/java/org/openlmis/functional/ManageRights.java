@@ -18,8 +18,9 @@ import org.openlmis.pageobjects.InitiateRnRPage;
 import org.openlmis.pageobjects.LoginPage;
 import org.testng.annotations.*;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -30,22 +31,20 @@ public class ManageRights extends TestCaseHelper {
     super.setup();
   }
 
-
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void testOnlyCreateRight(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION");
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
     String[] expectedMenuItem = {"Create / Authorize", "View"};
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
     homePage.clickRequisitionSubMenuItem();
     homePage.verifySubMenuItems(expectedMenuItem);
     homePage.navigateAndInitiateRnr(program);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
 
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "beginningBalanceFirstProduct");
     initiateRnRPage.enterQuantityDispensedForFirstProduct(10);
     initiateRnRPage.enterQuantityReceivedForFirstProduct(10);
@@ -57,7 +56,6 @@ public class ManageRights extends TestCaseHelper {
     initiateRnRPage.verifyQuantityDispensedForFirstProduct(10);
   }
 
-
   @AfterMethod(groups = {"admin"})
   public void tearDown() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
@@ -66,13 +64,11 @@ public class ManageRights extends TestCaseHelper {
     dbWrapper.closeConnection();
   }
 
-
   @DataProvider(name = "Data-Provider-Function-Positive")
   public Object[][] parameterIntTestProviderPositive() {
     return new Object[][]{
       {"HIV", "storeIncharge", "Admin123"}
     };
-
   }
 }
 

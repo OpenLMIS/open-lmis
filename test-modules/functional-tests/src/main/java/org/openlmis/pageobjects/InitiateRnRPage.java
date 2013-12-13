@@ -18,7 +18,6 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -225,7 +224,7 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//input[@name='nonFullSupplyProductQuantityRequested0']")
   private static WebElement nonFullSupplyProductQuantityRequested = null;
 
-  @FindBy(how = How.XPATH, using = "//div[@id='nonFullSupplyProductCodeAndName']/label")
+  @FindBy(how = XPATH, using = "//div[@id='nonFullSupplyProductCodeAndName']/label")
   private static WebElement nonFullSupplyProductCodeAndName = null;
 
   @FindBy(how = XPATH, using = "//div[@id='nonFullSupplyProductReasonForRequestedQuantity']/input")

@@ -919,18 +919,14 @@ public class InitiateRnR extends TestCaseHelper {
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testSkipProductRnRAuthorizeApproveForRegularRnR(String program, String userSIC, String password) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add(CREATE_REQUISITION);
-    rightsList.add(VIEW_REQUISITION);
-    rightsList.add(AUTHORIZE_REQUISITION);
-    rightsList.add(APPROVE_REQUISITION);
+    List<String> rightsList = asList(CREATE_REQUISITION, VIEW_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     dbWrapper.UpdateProductFullSupplyStatus("P11", true);
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
