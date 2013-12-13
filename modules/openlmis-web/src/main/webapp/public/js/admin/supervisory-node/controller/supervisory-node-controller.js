@@ -90,7 +90,6 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
         $scope.facilityType = null;
         $scope.allFacilitiesFiltered = null;
         $scope.supervisoryNodeMemberModal = false;
-        $scope.validateSupervisoryNodeFacility();
     };
 
     $scope.filterFacilityList=function(){
@@ -100,12 +99,12 @@ function SupervisoryNodeController($scope,$dialog,messageService, ReportFacility
         }
         else{
             angular.forEach($scope.allFacilities,function(facility){
-                if($scope.facilityType !== null){
+                if($scope.facilityType){
                     if(facility.facilityType.id == $scope.facilityType.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
                 }
-                else if($scope.geographicZone !== null){
+                else if($scope.geographicZone){
                     if(facility.geographicZone.id === $scope.geographicZone.id){
                         $scope.allFacilitiesFiltered.push(facility);
                     }
