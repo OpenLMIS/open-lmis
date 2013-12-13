@@ -22,7 +22,6 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
   $scope.sharedDistributions = SharedDistributions;
 
-
   $scope.syncDistribution = function (distributionId) {
     $scope.syncMessage = null;
     $scope.syncResult = {};
@@ -47,17 +46,17 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
         SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistribution,
             function (data) {
-            if (data.syncStatus === 'Synced') {
-              facilityDistribution.status = $scope.SYNCED;
-            } else if (data.syncStatus === 'AlreadySynced') {
-              facilityDistribution.status = $scope.DUPLICATE;
-            }
+              if (data.syncStatus) {
+                facilityDistribution.status = $scope.SYNCED;
+              } else {
+                facilityDistribution.status = $scope.DUPLICATE;
+              }
               defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
               updateProgressBar();
-          }, function () {
+            }, function () {
               defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
               updateProgressBar();
-          });
+            });
       });
 
       function updateProgressBar() {

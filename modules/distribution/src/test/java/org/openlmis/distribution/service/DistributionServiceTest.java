@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -68,12 +69,12 @@ public class DistributionServiceTest {
 
     FacilityDistribution facilityDistributionData = mock(FacilityDistribution.class);
     when(facilityDistributionData.getFacilityVisit()).thenReturn(facilityVisit);
-    when(facilityVisitService.save(facilityVisit)).thenReturn("Synced");
-    String syncStatus = service.sync(facilityDistributionData);
+    when(facilityVisitService.save(facilityVisit)).thenReturn(true);
+    boolean syncStatus = service.sync(facilityDistributionData);
 
     verify(facilityVisitService).save(facilityVisit);
     verify(facilityDistributionData).getFacilityVisit();
-    assertThat(syncStatus, is("Synced"));
+    assertTrue(syncStatus);
   }
 
   @Test

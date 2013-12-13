@@ -117,7 +117,7 @@ describe('DistributionListController', function () {
 
   it('should sync facility data if any complete', function () {
 
-    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: 'Synced'});
+    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: true});
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
 
@@ -164,9 +164,9 @@ describe('DistributionListController', function () {
   it('should populate synced, already synced, failed to sync facilities ', function () {
     var distribution = {facilityDistributions: {44: {status: 'is-complete'}, 46: {status: 'is-complete'}, 45: {status: 'is-complete'}}}
 
-    $httpBackend.when('PUT', '/distributions/1/facilities/44.json', distribution.facilityDistributions[44]).respond(200, {syncStatus: 'AlreadySynced'});
+    $httpBackend.when('PUT', '/distributions/1/facilities/44.json', distribution.facilityDistributions[44]).respond(200, {syncStatus: false});
     $httpBackend.when('PUT', '/distributions/1/facilities/46.json', distribution.facilityDistributions[46]).respond(500);
-    $httpBackend.when('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: 'Synced'});
+    $httpBackend.when('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: true});
 
     scope.distributionData = distribution;
 
@@ -203,7 +203,7 @@ describe('DistributionListController', function () {
 
   it('should mark facility data as duplicate if already synced', function () {
 
-    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: 'AlreadySynced'});
+    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: false});
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
     syncFacilitiesFunction({facilities: [

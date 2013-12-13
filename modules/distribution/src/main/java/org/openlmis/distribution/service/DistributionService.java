@@ -45,8 +45,7 @@ public class DistributionService {
   }
 
   @Transactional
-  //TODO return boolean or status object
-  public String sync(FacilityDistribution facilityDistributionData) {
+  public boolean sync(FacilityDistribution facilityDistributionData) {
     return facilityVisitService.save(facilityDistributionData.getFacilityVisit());
   }
 }

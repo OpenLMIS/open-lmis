@@ -40,6 +40,7 @@ import java.util.Map;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
@@ -138,7 +139,7 @@ public class DistributionControllerTest {
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
     FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
 
-    when(service.sync(facilityDistributionData)).thenReturn("Synced");
+    when(service.sync(facilityDistributionData)).thenReturn(true);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
     doNothing().when(facilityDistributionDTO).setCreatedBy(USER_ID);
     doNothing().when(facilityDistributionDTO).setFacilityId(facilityId);
@@ -147,7 +148,7 @@ public class DistributionControllerTest {
     ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distributionId, facilityId, httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((String) response.getBody().getData().get("syncStatus"), is("Synced"));
+    assertTrue((boolean) response.getBody().getData().get("syncStatus"));
     verify(service).sync(facilityDistributionData);
     verify(facilityDistributionDTO).setCreatedBy(USER_ID);
     verify(facilityDistributionDTO).setFacilityId(facilityId);

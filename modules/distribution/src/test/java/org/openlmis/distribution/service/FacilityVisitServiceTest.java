@@ -12,8 +12,8 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.FacilityVisitRepository;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
@@ -34,24 +34,25 @@ public class FacilityVisitServiceTest {
   @Test
   public void shouldInsertFacilityVisit() {
     FacilityVisit facilityVisit = new FacilityVisit();
-    String syncStatus = facilityVisitService.save(facilityVisit);
+
+    boolean syncStatus = facilityVisitService.save(facilityVisit);
 
     verify(facilityVisitRepository).insert(facilityVisit);
-    assertThat(syncStatus, is("Synced"));
-
+    assertTrue(syncStatus);
   }
 
   @Test
-  public void shouldReturnAlreadySyncedStatusIfFacilityVisitAlreadyExists(){
+  public void shouldReturnAlreadySyncedStatusIfFacilityVisitAlreadyExists() {
     FacilityVisit facilityVisit = new FacilityVisit();
     when(facilityVisitRepository.get(facilityVisit)).thenReturn(facilityVisit);
-    String syncStatus = facilityVisitService.save(facilityVisit);
 
-    assertThat(syncStatus, is("AlreadySynced"));
+    boolean syncStatus = facilityVisitService.save(facilityVisit);
 
+    assertFalse(syncStatus);
   }
+
   @Test
-  public void shouldReturnFailedStatusIfInsertFails() throws Exception{
+  public void shouldReturnFailedStatusIfInsertFails() throws Exception {
     FacilityVisit facilityVisit = new FacilityVisit();
 
     doThrow(Exception.class).when(facilityVisitRepository).insert(facilityVisit);
@@ -59,5 +60,4 @@ public class FacilityVisitServiceTest {
     expectedException.expect(Exception.class);
     facilityVisitService.save(facilityVisit);
   }
-
 }
