@@ -43,7 +43,7 @@ public class EpiUseServiceTest {
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
     epiUse.setLineItems(asList(epiUseLineItem));
 
-    service.saveLineItems(epiUse);
+    service.save(epiUse);
 
     verify(epiUseRepository).save(epiUse);
     verify(epiUseRepository).saveLineItem(epiUseLineItem);

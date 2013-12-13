@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.EpiUse;
@@ -35,6 +34,9 @@ public class FacilityDistributionService {
   @Autowired
   EpiUseService epiUseService;
 
+  @Autowired
+  FacilityVisitService facilityVisitService;
+
   public Map<Long, FacilityDistribution> getFor(Distribution distribution) {
     Long deliveryZoneId = distribution.getDeliveryZone().getId();
     Long programId = distribution.getProgram().getId();
@@ -45,6 +47,7 @@ public class FacilityDistributionService {
     for (Facility facility : facilities) {
       facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution));
     }
+
     return facilityDistributions;
   }
 
@@ -53,24 +56,38 @@ public class FacilityDistributionService {
     return new FacilityDistribution(null, createEpiUse(facility, distribution));
   }
 
-  private EpiUse createEpiUse(Facility facility, Distribution distribution) {
-    Set<ProductGroup> productGroupSet = new HashSet<>();
-    List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
+  public boolean save(FacilityDistribution facilityDistribution) {
 
+    epiUseService.save(facilityDistribution.getEpiUse());
+
+    return facilityVisitService.save(facilityDistribution.getFacilityVisit());
+  }
+
+  private EpiUse createEpiUse(Facility facility, Distribution distribution) {
+    List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
     EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), epiUseLineItems);
 
     if (facility.getSupportedPrograms().size() != 0) {
-      ProgramSupported programSupported = facility.getSupportedPrograms().get(0);
-      for (FacilityProgramProduct facilityProgramProduct : programSupported.getProgramProducts()) {
-        if (facilityProgramProduct.isActive() && facilityProgramProduct.getProduct().getActive()) {
-          ProductGroup productGroup = facilityProgramProduct.getProduct().getProductGroup();
-          if (productGroup != null && productGroupSet.add(productGroup)) {
-            epiUseLineItems.add(new EpiUseLineItem(productGroup));
-          }
-        }
-      }
-      epiUseService.saveLineItems(epiUse);
+      List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
+      populateEpiUseLineItems(programProducts, epiUseLineItems);
     }
+
+    epiUse.setLineItems(epiUseLineItems);
+    epiUseService.save(epiUse);
+
     return epiUse;
+  }
+
+  private List<EpiUseLineItem> populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, List<EpiUseLineItem> epiUseLineItems) {
+    Set<ProductGroup> productGroupSet = new HashSet<>();
+
+    for (FacilityProgramProduct facilityProgramProduct : programProducts) {
+      ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
+      if (productGroup != null && productGroupSet.add(productGroup)) {
+        epiUseLineItems.add(new EpiUseLineItem(productGroup));
+      }
+    }
+
+    return epiUseLineItems;
   }
 }

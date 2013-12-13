@@ -24,7 +24,7 @@ public class EpiUseService {
   @Autowired
   private EpiUseRepository epiUseRepository;
 
-  public void saveLineItems(EpiUse epiUse) {
+  public void save(EpiUse epiUse) {
     epiUseRepository.save(epiUse);
     for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
       lineItem.setEpiUseId(epiUse.getId());

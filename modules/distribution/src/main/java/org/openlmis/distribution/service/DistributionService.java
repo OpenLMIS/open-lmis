@@ -25,9 +25,6 @@ import java.util.Map;
 public class DistributionService {
 
   @Autowired
-  FacilityVisitService facilityVisitService;
-
-  @Autowired
   FacilityDistributionService facilityDistributionService;
 
   @Autowired
@@ -45,7 +42,7 @@ public class DistributionService {
   }
 
   @Transactional
-  public boolean sync(FacilityDistribution facilityDistributionData) {
-    return facilityVisitService.save(facilityDistributionData.getFacilityVisit());
+  public boolean sync(FacilityDistribution facilityDistribution) {
+    return facilityDistributionService.save(facilityDistribution);
   }
 }

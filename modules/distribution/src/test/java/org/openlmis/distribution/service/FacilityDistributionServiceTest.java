@@ -16,24 +16,19 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.EpiUse;
-import org.openlmis.distribution.domain.EpiUseLineItem;
-import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @Category(IntegrationTests.class)
@@ -42,11 +37,15 @@ public class FacilityDistributionServiceTest {
 
   @Mock
   FacilityService facilityService;
+
   @Mock
   EpiUseService epiUseService;
 
+  @Mock
+  FacilityVisitService facilityVisitService;
+
   @InjectMocks
-  FacilityDistributionService facilityDistributionDataService;
+  FacilityDistributionService facilityDistributionService;
 
   @Test
   public void shouldGetFacilityDistributionDataForADistribution() throws Exception {
@@ -55,17 +54,17 @@ public class FacilityDistributionServiceTest {
     Program program = new Program(3L);
     distribution.setDeliveryZone(deliveryZone);
     distribution.setProgram(program);
-    FacilityDistributionService spyFacilityDistributionDataService = spy(facilityDistributionDataService);
+    FacilityDistributionService spyFacilityDistributionService = spy(facilityDistributionService);
     Facility facility = new Facility(1234L);
     List<Facility> facilities = asList(facility);
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
 
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
-    when(spyFacilityDistributionDataService.createDistributionData(facility, distribution)).thenReturn(facilityDistributionData);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(null, null);
+    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution);
 
-    Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionDataService.getFor(distribution);
+    Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionService.getFor(distribution);
 
-    assertThat(facilityDistributionDataMap.get(1234L), is(facilityDistributionData));
+    assertThat(facilityDistributionDataMap.get(1234L), is(facilityDistribution));
   }
 
   @Test
@@ -73,32 +72,26 @@ public class FacilityDistributionServiceTest {
     Facility facility = new Facility(2L);
     ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
 
-    ProgramProduct programProduct1 = new ProgramProduct();
-    Product product1 = make(a(ProductBuilder.defaultProduct));
-    programProduct1.setProduct(product1);
-    programProduct1.setActive(true);
+    FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
+    FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
 
-    ProgramProduct programProduct2 = new ProgramProduct();
-    Product product2 = make(a(ProductBuilder.defaultProduct));
-    product2.getProductGroup().setCode("PG2");
-    programProduct2.setProduct(product2);
-    programProduct2.setActive(true);
+    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
+    when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(new ProductGroup("PG2", "PG2"));
 
-    FacilityProgramProduct facilityProgramProduct1 = new FacilityProgramProduct(programProduct1, 2L, null);
-    FacilityProgramProduct facilityProgramProduct2 = new FacilityProgramProduct(programProduct2, 2L, null);
     programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
     facility.setSupportedPrograms(asList(programSupported));
 
     Distribution distribution = new Distribution();
     distribution.setId(1L);
 
-    FacilityDistribution distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
+    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution);
 
     EpiUse epiUse = distributionData.getEpiUse();
+
     assertThat(epiUse.getDistributionId(), is(distribution.getId()));
     assertThat(epiUse.getFacilityId(), is(facility.getId()));
     assertThat(epiUse.getLineItems().size(), is(2));
-    verify(epiUseService).saveLineItems(epiUse);
+    verify(epiUseService).save(epiUse);
   }
 
   @Test
@@ -106,62 +99,37 @@ public class FacilityDistributionServiceTest {
     Facility facility = new Facility(2L);
     ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
 
-    ProgramProduct programProduct1 = new ProgramProduct();
-    Product product1 = make(a(ProductBuilder.defaultProduct));
-    programProduct1.setProduct(product1);
-    programProduct1.setActive(true);
+    FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
+    FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
 
-    ProgramProduct programProduct2 = new ProgramProduct();
-    Product product2 = make(a(ProductBuilder.defaultProduct));
-    product2.getProductGroup().setCode("PG2");
-    product2.setActive(false);
-    programProduct2.setProduct(product2);
+    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
+    when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(null);
 
-    FacilityProgramProduct facilityProgramProduct1 = new FacilityProgramProduct(programProduct1, 2L, null);
-    FacilityProgramProduct facilityProgramProduct2 = new FacilityProgramProduct(programProduct2, 2L, null);
     programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
     facility.setSupportedPrograms(asList(programSupported));
 
     Distribution distribution = new Distribution();
     distribution.setId(1L);
 
-    FacilityDistribution distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
+    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution);
 
     List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
     assertThat(lineItems.size(), is(1));
-    assertThat(lineItems.get(0).getProductGroup().getId(), is(1L));
-    assertThat(lineItems.get(0).getProductGroup().getName(), is("Product Group 1"));
+    assertThat(lineItems.get(0).getProductGroup().getCode(), is("PG1"));
+    assertThat(lineItems.get(0).getProductGroup().getName(), is("PG1"));
   }
 
   @Test
-  public void shouldNotGetProductGroupForAllInactiveProgramProducts() throws Exception {
-    Facility facility = new Facility(2L);
-    ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
+  public void shouldSaveFacilityVisitAndEpiUse() throws Exception {
+    EpiUse epiUse = new EpiUse();
+    FacilityVisit facilityVisit = new FacilityVisit();
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse);
 
-    ProgramProduct programProduct1 = new ProgramProduct();
-    Product product1 = make(a(ProductBuilder.defaultProduct));
-    programProduct1.setProduct(product1);
-    programProduct1.setActive(true);
+    when(facilityVisitService.save(facilityVisit)).thenReturn(true);
+    boolean saveStatus = facilityDistributionService.save(facilityDistribution);
 
-    ProgramProduct programProduct2 = new ProgramProduct();
-    Product product2 = make(a(ProductBuilder.defaultProduct));
-    product2.getProductGroup().setCode("PG2");
-    programProduct2.setProduct(product2);
-    programProduct2.setActive(false);
-
-    FacilityProgramProduct facilityProgramProduct1 = new FacilityProgramProduct(programProduct1, 2L, null);
-    FacilityProgramProduct facilityProgramProduct2 = new FacilityProgramProduct(programProduct2, 2L, null);
-    programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
-    facility.setSupportedPrograms(asList(programSupported));
-
-    Distribution distribution = new Distribution();
-    distribution.setId(1L);
-
-    FacilityDistribution distributionData = facilityDistributionDataService.createDistributionData(facility, distribution);
-
-    List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
-    assertThat(lineItems.size(), is(1));
-    assertThat(lineItems.get(0).getProductGroup().getId(), is(1L));
-    assertThat(lineItems.get(0).getProductGroup().getName(), is("Product Group 1"));
+    verify(facilityVisitService).save(facilityVisit);
+    verify(epiUseService).save(epiUse);
+    assertTrue(saveStatus);
   }
 }

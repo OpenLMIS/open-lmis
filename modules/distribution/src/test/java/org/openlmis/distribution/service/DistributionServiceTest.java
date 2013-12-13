@@ -40,10 +40,7 @@ public class DistributionServiceTest {
   DistributionService service;
 
   @Mock
-  FacilityVisitService facilityVisitService;
-
-  @Mock
-  FacilityDistributionService facilityDistributionDataService;
+  FacilityDistributionService facilityDistributionService;
 
   @Mock
   DistributionRepository repository;
@@ -54,7 +51,7 @@ public class DistributionServiceTest {
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
-    when(facilityDistributionDataService.getFor(expectedDistribution)).thenReturn(facilityDistributions);
+    when(facilityDistributionService.getFor(expectedDistribution)).thenReturn(facilityDistributions);
 
     Distribution initiatedDistribution = service.create(distribution);
 
@@ -67,20 +64,21 @@ public class DistributionServiceTest {
   public void shouldSyncFacilityDistributionDataAndReturnSyncStatus() {
     FacilityVisit facilityVisit = new FacilityVisit();
 
-    FacilityDistribution facilityDistributionData = mock(FacilityDistribution.class);
-    when(facilityDistributionData.getFacilityVisit()).thenReturn(facilityVisit);
-    when(facilityVisitService.save(facilityVisit)).thenReturn(true);
-    boolean syncStatus = service.sync(facilityDistributionData);
+    FacilityDistribution facilityDistribution = mock(FacilityDistribution.class);
+    when(facilityDistribution.getFacilityVisit()).thenReturn(facilityVisit);
+    when(facilityDistributionService.save(facilityDistribution)).thenReturn(true);
+    boolean syncStatus = service.sync(facilityDistribution);
 
-    verify(facilityVisitService).save(facilityVisit);
-    verify(facilityDistributionData).getFacilityVisit();
+    verify(facilityDistributionService).save(facilityDistribution);
     assertTrue(syncStatus);
   }
 
   @Test
   public void shouldGetDistributionIfExists() throws Exception {
-    service.get(new Distribution());
+    Distribution distribution = new Distribution();
 
-    verify(repository).get(new Distribution());
+    service.get(distribution);
+
+    verify(repository).get(distribution);
   }
 }

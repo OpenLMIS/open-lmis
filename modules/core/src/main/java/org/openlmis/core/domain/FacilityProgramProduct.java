@@ -36,4 +36,11 @@ public class FacilityProgramProduct extends ProgramProduct {
     this.facilityId = facilityId;
     this.overriddenIsa = overriddenIsa;
   }
+
+  public ProductGroup getActiveProductGroup() {
+    if (this.isActive() && this.getProduct().getActive()) {
+      return this.getProduct().getProductGroup();
+    }
+    return null;
+  }
 }
