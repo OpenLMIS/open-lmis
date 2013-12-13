@@ -38,4 +38,13 @@ public interface ProductCategoryReportMapper {
   List<ProductCategory> getForProgram(@Param("programId") int programId);
 
 
+  @Select("SELECT distinct pc.id, pc.name, pc.code " +
+    "   FROM " +
+    "       product_categories pc " +
+    "       join program_products pp on pp.productcategoryid = pc.id  " +
+    "   WHERE pp.programid = #{programId} and pp.active = true " +
+    " order by name")
+  List<ProductCategory> getForProgramUsingProgramProductCategory(@Param("programId") int programId);
+
+
 }

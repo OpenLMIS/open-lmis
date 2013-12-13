@@ -148,6 +148,9 @@ public class ReportLookupService {
   }
 
   public List<ProductCategory> getCategoriesForProgram(int programId){
+    if(configurationService.getBoolValue("")){
+      return this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
+    }
     return this.productCategoryMapper.getForProgram(programId);
   }
 
