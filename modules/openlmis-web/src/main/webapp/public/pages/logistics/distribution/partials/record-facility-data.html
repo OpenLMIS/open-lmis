@@ -22,7 +22,7 @@
       </h2>
     </div>
 
-    <div class="span5" ng-show="!facilitySelected">
+    <div class="span5" id="noFacilitySelected" ng-show="!facilitySelected">
       <h2 openlmis-message="message.no.facility.selected"></h2>
     </div>
     <div id="legend" class="pull-right distribution-legend">
@@ -64,7 +64,7 @@
 
       <div class="span3 offset1 info-box-labels">
         <strong openlmis-message="label.delivery.zone"> </strong> :&nbsp;<span
-          ng-bind="distribution.deliveryZone.name"></span>
+        ng-bind="distribution.deliveryZone.name"></span>
       </div>
       <div class="span3 info-box-labels">
         <strong openlmis-message="label.program"></strong> :&nbsp;<span ng-bind="distribution.program.name"></span>
