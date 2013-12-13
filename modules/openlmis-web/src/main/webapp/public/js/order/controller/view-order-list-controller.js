@@ -48,7 +48,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
-      {cellTemplate: "<div class='ngCellText'><span ng-show=\"row.entity.productsOrdered\"><a  ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a> | <a ng-show=\"row.entity.productsOrdered\" ng-href='/reports/download/order_summary/PDF?orderId={{row.entity.id}}'>Print</a> </span>" +
+      {cellTemplate: "<div class='ngCellText'><span ng-show=\"row.entity.productsOrdered\"><a  ng-href='/orders/{{row.entity.id}}/download.csv' openlmis-message='link.download.csv'></a> | <a ng-show=\"row.entity.productsOrdered\" ng-href='/reports/download/order_summary/PDF?orderId={{row.entity.id}}' target='_BLANK'>Print</a> </span>" +
         "<span ng-show=\"!row.entity.productsOrdered\" openlmis-message='msg.no.product.in.order' ng-cell-text></span></div>", width: 180}
     ]
   };
