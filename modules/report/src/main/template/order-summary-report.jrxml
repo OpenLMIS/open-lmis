@@ -218,15 +218,15 @@
 					<text><![CDATA[Product Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="392" y="144" width="90" height="20" forecolor="#000000" backcolor="#333333" uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe"/>
+					<reportElement mode="Transparent" x="610" y="144" width="192" height="20" forecolor="#000000" backcolor="#333333" uuid="6f22b5e8-59ea-4512-b209-ce093fe70dbe"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single" rightIndent="5"/>
 					</textElement>
-					<text><![CDATA[Packs To Ship]]></text>
+					<text><![CDATA[Quantity Ordered]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="174" y="144" width="218" height="20" forecolor="#000000" backcolor="#333333" uuid="1138c634-4150-46c6-a83e-b93243223977"/>
+					<reportElement mode="Transparent" x="174" y="144" width="308" height="20" forecolor="#000000" backcolor="#333333" uuid="1138c634-4150-46c6-a83e-b93243223977"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -248,14 +248,6 @@
 						<paragraph lineSpacing="Single" rightIndent="5"/>
 					</textElement>
 					<text><![CDATA[Pack Size]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Transparent" x="610" y="144" width="192" height="20" forecolor="#000000" backcolor="#333333" uuid="c326ca9f-1a0d-411d-bec2-b65952aa1c52"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single" leftIndent="10"/>
-					</textElement>
-					<text><![CDATA[Discrepancies or Damages]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="10" y="0" width="220" height="110" uuid="04e65a67-2f47-4f8f-b9b1-c99a77b31e4b"/>
@@ -466,11 +458,11 @@
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="174" y="0" width="218" height="20" uuid="70960fb2-c1cc-4194-8a7a-dd3e8fb30c7d"/>
+				<reportElement x="174" y="0" width="308" height="20" uuid="70960fb2-c1cc-4194-8a7a-dd3e8fb30c7d"/>
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement x="392" y="0" width="90" height="20" uuid="d3eac902-fedc-487a-a65a-f86f8399af4d"/>
+				<reportElement x="610" y="0" width="192" height="20" uuid="d3eac902-fedc-487a-a65a-f86f8399af4d"/>
 				<textElement textAlignment="Right">
 					<paragraph leftIndent="10" rightIndent="5"/>
 				</textElement>
@@ -482,13 +474,6 @@
 					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packSize}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="610" y="0" width="192" height="20" uuid="070035bb-1f40-4e3e-9224-f0bd3e76b123"/>
-				<textElement>
-					<paragraph leftIndent="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{discrepancy}== null ? " " : $F{discrepancy}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
