@@ -39,7 +39,6 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
   public static final int NUMBER_OF_DAYS_IN_MONTH = 30;
   private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
   public String program = "HIV", userSIC = "storeInCharge", password = "Admin123";
-  public LoginPage loginPage;
 
   @BeforeMethod(groups = "requisition")
   public void setUp() throws Exception {
@@ -531,38 +530,26 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     assertEquals(amc.toString(), dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode));
   }
 
-  public void enterDetailsForFirstProduct(Integer beginningBalance, Integer quantityReceived, Integer stockOnHand,
+  public void enterDetailsForFirstProduct(Integer beginningBalance, Integer quantityReceived, Integer stockInHand,
                                           Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    if (beginningBalance != null)
-      initiateRnRPage.enterBeginningBalanceForFirstProduct(beginningBalance);
-    if (quantityReceived != null)
-      initiateRnRPage.enterQuantityReceivedForFirstProduct(quantityReceived);
-    if (stockOnHand != null)
-      initiateRnRPage.enterStockOnHandForFirstProduct(stockOnHand);
-    if (quantityDispensed != null)
-      initiateRnRPage.enterQuantityDispensedForFirstProduct(quantityDispensed);
-    if (stockOutDays != null)
-      initiateRnRPage.enterStockOutDaysForFirstProduct(stockOutDays);
-    if (newPatientCount != null)
-      initiateRnRPage.enterNewPatientCountForFirstProduct(newPatientCount);
+    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(stockInHand, "stockInHandFirstProduct");
+    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValue(stockOutDays, "totalStockOutDaysFirstProduct");
+    initiateRnRPage.enterValue(newPatientCount, "newPatientFirstProduct");
   }
 
-  public void enterDetailsForSecondProduct(Integer beginningBalance, Integer quantityReceived, Integer stockOnHand,
+  public void enterDetailsForSecondProduct(Integer beginningBalance, Integer quantityReceived, Integer stockInHand,
                                            Integer quantityDispensed, Integer stockOutDays, Integer newPatientCount) throws IOException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    if (beginningBalance != null)
-      initiateRnRPage.enterBeginningBalanceForSecondProduct(beginningBalance);
-    if (quantityReceived != null)
-      initiateRnRPage.enterQuantityReceivedForSecondProduct(quantityReceived);
-    if (stockOnHand != null)
-      initiateRnRPage.enterStockOnHandForSecondProduct(stockOnHand);
-    if (quantityDispensed != null)
-      initiateRnRPage.enterQuantityDispensedForSecondProduct(quantityDispensed);
-    if (stockOutDays != null)
-      initiateRnRPage.enterStockOutDaysForSecondProduct(stockOutDays);
-    if (newPatientCount != null)
-      initiateRnRPage.enterNewPatientCountForSecondProduct(newPatientCount);
+    initiateRnRPage.enterValue(beginningBalance, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValue(quantityReceived, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValue(stockInHand, "stockInHandSecondProduct");
+    initiateRnRPage.enterValue(quantityDispensed, "quantityDispensedSecondProduct");
+    initiateRnRPage.enterValue(stockOutDays, "totalStockOutDaysSecondProduct");
+    initiateRnRPage.enterValue(newPatientCount, "newPatientSecondProduct");
   }
 
   public void submitAndAuthorizeRnR() throws IOException {
@@ -582,8 +569,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
     dbWrapper.updateProductsByField("dosesPerDispensingUnit", "11", "P10");
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
@@ -607,8 +593,9 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.deleteCurrentPeriod();
     String periodStartDate = "2013-10-01";
     dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Regular");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
@@ -638,12 +625,15 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     String periodStartDate = "2013-10-01";
     dbWrapper.deleteCurrentPeriod();
     dbWrapper.insertProcessingPeriod("current", "current period", periodStartDate, "2016-01-30", 1, "M");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
+
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
+
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
+
     int stockOutDays = calculateReportingDays(periodStartDate) + 10;
     enterDetailsForFirstProduct(10, 5, null, 5, stockOutDays, 0);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(5);
@@ -655,8 +645,10 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     initiateRnRPage = homePage.clickProceed();
+
     dbWrapper.updateCreatedDateAfterRequisitionIsInitiated(createdDate);
     testWebDriver.refresh();
+
     initiateRnRPage.skipSingleProduct(1);
     enterDetailsForSecondProduct(10, 5, null, 5, stockOutDays, 1);
     initiateRnRPage.verifyNormalizedConsumptionForSecondProduct(8);
