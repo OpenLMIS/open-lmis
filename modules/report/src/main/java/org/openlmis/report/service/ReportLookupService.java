@@ -109,6 +109,9 @@ public class ReportLookupService {
     return regimenReportMapper.getRegimenByCategory(regimenCategoryId);
   }
   public List<Product> getProductsActiveUnderProgram(Long programId){
+      if(configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
+        return productMapper.getProductsForProgramPickCategoryFromProgramProduct(programId);
+      }
       return productMapper.getProductsForProgram(programId);
   }
 
@@ -148,7 +151,7 @@ public class ReportLookupService {
   }
 
   public List<ProductCategory> getCategoriesForProgram(int programId){
-    if(configurationService.getBoolValue("")){
+    if(configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
       return this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
     }
     return this.productCategoryMapper.getForProgram(programId);
