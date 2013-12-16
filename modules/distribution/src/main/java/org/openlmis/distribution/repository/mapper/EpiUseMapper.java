@@ -19,12 +19,12 @@ import org.springframework.stereotype.Repository;
 public interface EpiUseMapper {
 
   @Insert({"INSERT INTO epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
-    "distributed, loss, stockAtEndOfMonth, expirationDate) VALUES (#{epiUseId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
-    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate})"})
+    "distributed, loss, stockAtEndOfMonth, expirationDate, createdBy) VALUES (#{epiUseId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
+    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public void insertLineItem(EpiUseLineItem epiUseLineItem);
 
-  @Insert({"INSERT INTO epi_use (distributionId, facilityId) VALUES (#{distributionId}, #{facilityId})"})
+  @Insert({"INSERT INTO epi_use (distributionId, facilityId, createdBy) VALUES (#{distributionId}, #{facilityId}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(EpiUse epiUse);
 
@@ -38,7 +38,8 @@ public interface EpiUseMapper {
   })
   public EpiUseLineItem getLineItemById(EpiUseLineItem epiUseLineItem);
 
-  @Update({"UPDATE epi_use_line_items SET received = #{received}, distributed = #{distributed}, loss = #{loss}," +
-    "stockAtFirstOfMonth = #{stockAtFirstOfMonth}, stockAtEndOfMonth = #{stockAtEndOfMonth}, expirationDate = #{expirationDate}"})
+  @Update({"UPDATE epi_use_line_items SET received = #{received}, distributed = #{distributed}, loss = #{loss},",
+    "stockAtFirstOfMonth = #{stockAtFirstOfMonth}, stockAtEndOfMonth = #{stockAtEndOfMonth}, expirationDate = #{expirationDate},",
+    "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
   public void updateLineItem(EpiUseLineItem epiUseLineItem);
 }

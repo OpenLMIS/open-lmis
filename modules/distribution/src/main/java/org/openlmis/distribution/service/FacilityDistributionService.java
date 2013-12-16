@@ -66,10 +66,11 @@ public class FacilityDistributionService {
   private EpiUse createEpiUse(Facility facility, Distribution distribution) {
     List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
     EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), epiUseLineItems);
+    epiUse.setCreatedBy(distribution.getCreatedBy());
 
     if (facility.getSupportedPrograms().size() != 0) {
       List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
-      populateEpiUseLineItems(programProducts, epiUseLineItems);
+      populateEpiUseLineItems(programProducts, epiUseLineItems, distribution.getCreatedBy());
     }
 
     epiUse.setLineItems(epiUseLineItems);
@@ -78,13 +79,13 @@ public class FacilityDistributionService {
     return epiUse;
   }
 
-  private List<EpiUseLineItem> populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, List<EpiUseLineItem> epiUseLineItems) {
+  private List<EpiUseLineItem> populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, List<EpiUseLineItem> epiUseLineItems, Long createdBy) {
     Set<ProductGroup> productGroupSet = new HashSet<>();
 
     for (FacilityProgramProduct facilityProgramProduct : programProducts) {
       ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
       if (productGroup != null && productGroupSet.add(productGroup)) {
-        epiUseLineItems.add(new EpiUseLineItem(productGroup));
+        epiUseLineItems.add(new EpiUseLineItem(productGroup, createdBy));
       }
     }
 

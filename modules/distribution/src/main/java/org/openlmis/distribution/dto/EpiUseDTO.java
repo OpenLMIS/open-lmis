@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
@@ -21,10 +22,13 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class EpiUseDTO extends BaseModel {
 
   Long facilityId;
@@ -35,9 +39,12 @@ public class EpiUseDTO extends BaseModel {
     List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
 
     for (EpiUseLineItemDTO epiUseLineItemDTO : this.lineItems) {
+      epiUseLineItemDTO.setModifiedBy(this.modifiedBy);
       epiUseLineItems.add(epiUseLineItemDTO.transform());
     }
 
-    return new EpiUse(facilityId, distributionId, epiUseLineItems);
+    EpiUse epiUse = new EpiUse(facilityId, distributionId, epiUseLineItems);
+    epiUse.setId(this.id);
+    return epiUse;
   }
 }

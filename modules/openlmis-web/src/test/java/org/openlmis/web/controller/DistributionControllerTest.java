@@ -141,7 +141,7 @@ public class DistributionControllerTest {
 
     when(service.sync(facilityDistributionData)).thenReturn(true);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
-    doNothing().when(facilityDistributionDTO).setCreatedBy(USER_ID);
+    doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
     doNothing().when(facilityDistributionDTO).setFacilityId(facilityId);
     doNothing().when(facilityDistributionDTO).setDistributionId(distributionId);
 
@@ -150,7 +150,7 @@ public class DistributionControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertTrue((boolean) response.getBody().getData().get("syncStatus"));
     verify(service).sync(facilityDistributionData);
-    verify(facilityDistributionDTO).setCreatedBy(USER_ID);
+    verify(facilityDistributionDTO).setModifiedBy(USER_ID);
     verify(facilityDistributionDTO).setFacilityId(facilityId);
     verify(facilityDistributionDTO).setDistributionId(distributionId);
   }

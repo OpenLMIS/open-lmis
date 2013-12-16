@@ -14,14 +14,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.distribution.domain.EpiUseLineItem;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EpiUseLineItemDTO {
+@JsonSerialize(include = NON_EMPTY)
+public class EpiUseLineItemDTO extends BaseModel {
 
   private Long epiUseId;
   private ProductGroup productGroup;
@@ -33,20 +38,17 @@ public class EpiUseLineItemDTO {
   private Reading expirationDate;
 
   public EpiUseLineItem transform() {
-    return new EpiUseLineItem(this.epiUseId, this.productGroup,
-      parseValueToInt(stockAtFirstOfMonth),
-      parseValueToInt(stockAtEndOfMonth),
-      parseValueToInt(received),
-      parseValueToInt(loss),
-      parseValueToInt(distributed),
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(this.epiUseId, this.productGroup,
+      stockAtFirstOfMonth.parseInt(),
+      stockAtEndOfMonth.parseInt(),
+      received.parseInt(),
+      loss.parseInt(),
+      distributed.parseInt(),
       expirationDate.getEffectiveValue());
+
+    epiUseLineItem.setId(this.id);
+    epiUseLineItem.setModifiedBy(this.modifiedBy);
+    return epiUseLineItem;
   }
 
-  private Integer parseValueToInt(Reading reading) {
-    String value = reading.getEffectiveValue();
-    if (value == null) {
-      return null;
-    }
-    return Integer.parseInt(value);
-  }
 }

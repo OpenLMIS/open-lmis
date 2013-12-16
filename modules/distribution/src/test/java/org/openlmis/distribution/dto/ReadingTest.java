@@ -10,13 +10,22 @@
 
 package org.openlmis.distribution.dto;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+@Category(UnitTests.class)
 public class ReadingTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Test
   public void shouldReturnValueIfNRisFalse() throws Exception {
@@ -28,5 +37,38 @@ public class ReadingTest {
   public void shouldReturnNullIfNRisTrue() throws Exception {
     Reading reading = new Reading("", true);
     assertThat(reading.getEffectiveValue(), is(nullValue()));
+  }
+
+  @Test
+  public void shouldThrowErrorIfValueIsNullAndNRIsFalse() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.reading.value");
+
+    new Reading(null, false);
+  }
+
+  @Test
+  public void shouldThrowErrorIfValueIsEmptyAndNRIsFalse() throws Exception {
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.invalid.reading.value");
+
+    new Reading("", false);
+  }
+
+  @Test
+  public void shouldParseStringToInteger() throws Exception {
+    Reading reading = new Reading("345", false);
+
+    assertThat(reading.parseInt(), is(345));
+  }
+
+  @Test
+  public void shouldThrowErrorIfValueIsNegative() throws Exception {
+    Reading reading = new Reading("-345", false);
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("error.epi.use.line.item.invalid");
+
+    reading.parseInt();
   }
 }

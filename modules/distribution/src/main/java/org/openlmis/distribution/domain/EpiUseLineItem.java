@@ -13,12 +13,16 @@ package org.openlmis.distribution.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProductGroup;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
 public class EpiUseLineItem extends BaseModel {
 
   private Long epiUseId;
@@ -30,12 +34,8 @@ public class EpiUseLineItem extends BaseModel {
   private Integer distributed;
   private String expirationDate;
 
-  public EpiUseLineItem(ProductGroup productGroup) {
+  public EpiUseLineItem(ProductGroup productGroup, Long createdBy) {
     this.productGroup = productGroup;
+    this.createdBy = createdBy;
   }
-
-  public boolean isValid() {
-    return !(this.stockAtFirstOfMonth < 0 || this.stockAtEndOfMonth < 0 || this.received < 0 || this.loss < 0 || this.distributed < 0);
-  }
-
 }

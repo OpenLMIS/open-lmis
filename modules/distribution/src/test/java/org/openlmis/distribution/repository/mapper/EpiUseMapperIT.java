@@ -133,7 +133,7 @@ public class EpiUseMapperIT {
     EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
     mapper.insert(epiUse);
 
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(productGroup, 1L);
     epiUseLineItem.setEpiUseId(epiUse.getId());
     epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
@@ -151,7 +151,7 @@ public class EpiUseMapperIT {
     EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
     mapper.insert(epiUse);
 
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(productGroup, 1L);
     epiUseLineItem.setEpiUseId(epiUse.getId());
     epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
@@ -169,7 +169,7 @@ public class EpiUseMapperIT {
     productGroupMapper.insert(productGroup);
     EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
     mapper.insert(epiUse);
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(productGroup, 1L);
     epiUseLineItem.setEpiUseId(epiUse.getId());
     epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);

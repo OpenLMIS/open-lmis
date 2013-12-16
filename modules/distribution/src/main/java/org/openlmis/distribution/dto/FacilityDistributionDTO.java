@@ -13,12 +13,16 @@ package org.openlmis.distribution.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class FacilityDistributionDTO {
 
   private FacilityVisit facilityVisit;
@@ -38,9 +42,9 @@ public class FacilityDistributionDTO {
     epiUse.setFacilityId(facilityId);
   }
 
-  public void setCreatedBy(Long createdBy) {
-    facilityVisit.setCreatedBy(createdBy);
-    epiUse.setCreatedBy(createdBy);
+  public void setModifiedBy(Long modifiedBy) {
+    facilityVisit.setCreatedBy(modifiedBy);
+    epiUse.setModifiedBy(modifiedBy);
   }
 
 }

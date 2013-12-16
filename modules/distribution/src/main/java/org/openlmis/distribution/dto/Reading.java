@@ -10,16 +10,19 @@
 
 package org.openlmis.distribution.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.serializer.ReadingDeSerializer;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonDeserialize(using = ReadingDeSerializer.class)
+@JsonSerialize(include = NON_EMPTY)
 public class Reading {
 
   private String value;
@@ -27,5 +30,26 @@ public class Reading {
 
   public String getEffectiveValue() {
     return notRecorded == null || !notRecorded ? value : null;
+  }
+
+  public Integer parseInt() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    int intValue = Integer.parseInt(stringValue);
+    if (intValue < 0) {
+      throw new DataException("error.epi.use.line.item.invalid");
+    }
+    return intValue;
+  }
+
+  public Reading(String value, Boolean notRecorded) {
+    if ((value == null || value.equals("")) && (!notRecorded)) {
+      throw new DataException("error.invalid.reading.value");
+    }
+    this.value = value;
+    this.notRecorded = notRecorded;
   }
 }

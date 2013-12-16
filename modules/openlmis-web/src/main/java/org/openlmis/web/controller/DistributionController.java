@@ -75,7 +75,7 @@ public class DistributionController extends BaseController {
                                                @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
     facilityDistributionDTO.setFacilityId(facilityId);
     facilityDistributionDTO.setDistributionId(id);
-    facilityDistributionDTO.setCreatedBy(loggedInUserId(httpServletRequest));
+    facilityDistributionDTO.setModifiedBy(loggedInUserId(httpServletRequest));
     return OpenLmisResponse.response("syncStatus", distributionService.sync(facilityDistributionDTO.transform()));
   }
 
