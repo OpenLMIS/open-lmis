@@ -13,6 +13,7 @@ import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
 import org.supercsv.io.CsvListReader;
 
@@ -64,6 +65,9 @@ public class BudgetFileProcessorTest {
   @InjectMocks
   BudgetFileProcessor budgetFileProcessor;
 
+  @Mock
+  ApplicationContext applicationContext;
+
   private Message message;
   private EDIFileTemplate ediFileTemplate;
   private EDIConfiguration configuration;
@@ -96,8 +100,7 @@ public class BudgetFileProcessorTest {
     configuration = new EDIConfiguration(false);
     ediFileTemplate.setConfiguration(configuration);
     when(budgetFileTemplateService.get()).thenReturn(ediFileTemplate);
-
-
+    when(applicationContext.getBean(BudgetFileProcessor.class)).thenReturn(budgetFileProcessor);
   }
 
   @Test

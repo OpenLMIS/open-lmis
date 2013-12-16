@@ -1,5 +1,6 @@
 package org.openlmis.core.service;
 
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
@@ -8,6 +9,7 @@ import org.openlmis.core.dto.BudgetLineItemDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @Component
 @MessageEndpoint
+@NoArgsConstructor
 public class BudgetFileProcessor {
 
   private static Logger logger = Logger.getLogger(BudgetFileProcessor.class);
@@ -53,19 +56,38 @@ public class BudgetFileProcessor {
   @Autowired
   private BudgetFilePostProcessHandler budgetFilePostProcessHandler;
 
-  @Autowired
-  private MessageService messageService;
 
-  @Transactional
+  private MessageService messageService = MessageService.getRequestInstance();
+
+  @Autowired
+  private ApplicationContext applicationContext;
+
+  private BudgetFileProcessor getSpringProxy() {
+    return applicationContext.getBean(this.getClass());
+  }
+
   public void process(Message message) throws Exception {
     File budgetFile = (File) message.getPayload();
 
     logger.debug("processing Budget File " + budgetFile.getName());
 
+    BudgetFileInfo budgetFileInfo = saveBudgetFile(budgetFile, false);
+
     Boolean processingError = false;
+    try {
+      getSpringProxy().processBudgetFile(budgetFile, budgetFileInfo);
+    } catch (Exception e) {
+      processingError = true;
+    }
 
-    BudgetFileInfo budgetFileInfo = saveBudgetFile(budgetFile, processingError);
+    budgetFileInfo.setProcessingError(processingError);
+    budgetFilePostProcessHandler.process(budgetFileInfo, budgetFile);
+  }
 
+  @Transactional
+  public void processBudgetFile(File budgetFile, BudgetFileInfo budgetFileInfo) throws Exception {
+
+    Boolean processingError = false;
     EDIFileTemplate budgetFileTemplate = budgetFileTemplateService.get();
 
     ICsvListReader listReader = new CsvListReader(new FileReader(budgetFile), STANDARD_PREFERENCE);
@@ -102,8 +124,9 @@ public class BudgetFileProcessor {
       logger.error(messageService.message("error.facility.code.invalid"));
       processingError = true;
     }
-    budgetFileInfo.setProcessingError(processingError);
-    budgetFilePostProcessHandler.process(budgetFileInfo, budgetFile);
+    if (processingError) {
+      throw new DataException("error.processing.budget.file");
+    }
   }
 
   private BudgetLineItem getBudgetLineItem(Collection<EDIFileColumn> includedColumns, BudgetLineItemDTO budgetLineItemDTO, Integer rowNumber) {
