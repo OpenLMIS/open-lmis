@@ -1483,4 +1483,11 @@ public class DBWrapper {
       "') where code='" + requisitionGroup + "';");
   }
 
+  public void updateOrderStatus(String status, String username, String program) throws IOException, SQLException {
+      update("update orders set status='RECEIVED'");
+  }
+
+  public void updateRequisitionToEmergency() throws IOException, SQLException {
+      update("update requisitions set Emergency=true");
+  }
 }

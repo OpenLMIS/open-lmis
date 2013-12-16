@@ -178,6 +178,12 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//select[@id='programListMyFacility']")
   private static WebElement programDropDown = null;
 
+  @FindBy(how = XPATH, using = "//a[contains(text(),'Manage POD')]")
+  private static WebElement viewManagePODMenuItem = null;
+
+  @FindBy(how = XPATH, using = "//h2[contains(text(),'Manage Proof of Delivery')]")
+  private static WebElement viewManagePODHeader = null;
+
   public HomePage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -496,6 +502,16 @@ public class HomePage extends Page {
 
   public String getFacilityDropDownListForViewRequisition() {
     return testWebDriver.findElement(By.name("selectFacility")).getText();
+  }
+
+  public ManagePodPage  navigateManagePOD() throws IOException {
+    testWebDriver.sleep(1000);
+    testWebDriver.waitForElementToAppear(ordersMenuItem);
+    testWebDriver.keyPress(ordersMenuItem);
+    testWebDriver.waitForElementToAppear(viewManagePODMenuItem);
+    testWebDriver.keyPress(viewManagePODMenuItem);
+    testWebDriver.waitForElementToAppear(viewManagePODHeader);
+    return new ManagePodPage(testWebDriver);
   }
 }
 
