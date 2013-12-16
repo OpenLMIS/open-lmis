@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import static org.openlmis.core.dto.BudgetLineItemDTO.populate;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
 @Component
@@ -99,7 +100,7 @@ public class BudgetFileProcessor {
     while ((csvRow = listReader.read()) != null) {
       Collection<EDIFileColumn> includedColumns = budgetFileTemplate.filterIncludedColumns();
 
-      BudgetLineItemDTO budgetLineItemDTO = BudgetLineItemDTO.populate(csvRow, includedColumns);
+      BudgetLineItemDTO budgetLineItemDTO = populate(csvRow, includedColumns);
       try {
         budgetLineItemDTO.checkMandatoryFields();
         rowNumber = budgetFileTemplate.getConfiguration().isHeaderInFile() ? listReader.getRowNumber() - 1 : listReader.getRowNumber();
@@ -115,7 +116,7 @@ public class BudgetFileProcessor {
         budgetLineItemService.save(budgetLineItem);
       } catch (DataException e) {
         processingError = true;
-        logger.error(e.getMessage(), e);
+        logger.error(e, e);
         continue;
       }
     }
