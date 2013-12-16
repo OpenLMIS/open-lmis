@@ -47,9 +47,24 @@ module.exports = function (config) {
     // list of files to exclude
     exclude: [],
 
+    plugins: [
+      'karma-jasmine',
+      'karma-coverage',
+      'karma-firefox-launcher'
+    ],
+
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+
+    coverageReporter: {
+      type: 'html',
+      dir: '../../../test/coverage/'
+    },
+
+    preprocessors: {
+      'js/**/*.js': ['coverage']
+    },
 
     // web server port
     port: 9876,
@@ -60,8 +75,6 @@ module.exports = function (config) {
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
     logLevel: config.LOG_INFO,
-
-    plugins: ['karma-firefox-launcher', 'karma-jasmine'],
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
