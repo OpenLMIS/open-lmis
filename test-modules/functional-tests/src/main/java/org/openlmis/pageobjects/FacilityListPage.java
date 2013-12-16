@@ -188,7 +188,7 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(legendNotStartedIcon.getCssValue("background-color"), "rgba(203, 64, 64, 1)");
     assertEquals(legendPartiallyCompletedIcon.getCssValue("background-color"), "rgba(240, 165, 19, 1)");
     assertEquals(legendCompletedIcon.getCssValue("background-color"), "rgba(69, 182, 0, 1)");
-    assertEquals(legendSynchronizedIcon.getCssValue("background-color"), "rgba(22,131, 230, 1)");
+    assertEquals(legendSynchronizedIcon.getCssValue("background-color"), "rgba(22, 131, 230, 1)");
     assertEquals(legendCannotSynchronizedIcon.getCssValue("background-color"), "rgba(124, 124, 124, 1)");
   }
 }
