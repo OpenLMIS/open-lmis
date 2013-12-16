@@ -37,7 +37,7 @@ abstract public class DistributionTab extends Page {
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";
     else if (color.toLowerCase().equals("GREEN".toLowerCase()))
-      color = "rgba(82, 168, 30, 1)";
+      color = "rgba(69, 182, 0, 1)";
     else if (color.toLowerCase().equals("AMBER".toLowerCase()))
       color = "rgba(240, 165, 19, 1)";
 
