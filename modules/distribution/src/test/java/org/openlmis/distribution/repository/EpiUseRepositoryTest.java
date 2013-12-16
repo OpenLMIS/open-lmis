@@ -22,7 +22,6 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.mapper.EpiUseMapper;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -37,9 +36,8 @@ public class EpiUseRepositoryTest {
   @Test
   public void shouldInsertEpiUse() throws Exception {
     EpiUse epiUse = new EpiUse();
-    when(mapper.getById(epiUse)).thenReturn(null);
 
-    repository.save(epiUse);
+    repository.insert(epiUse);
 
     verify(mapper).insert(epiUse);
   }
@@ -47,7 +45,6 @@ public class EpiUseRepositoryTest {
   @Test
   public void shouldInsertEpiUseLineItem() throws Exception {
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
-    when(mapper.getLineItemById(epiUseLineItem)).thenReturn(null);
 
     repository.saveLineItem(epiUseLineItem);
 
@@ -57,7 +54,7 @@ public class EpiUseRepositoryTest {
   @Test
   public void shouldUpdateEpiUseLineItem() throws Exception {
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
-    when(mapper.getLineItemById(epiUseLineItem)).thenReturn(epiUseLineItem);
+    epiUseLineItem.setId(3L);
 
     repository.saveLineItem(epiUseLineItem);
 

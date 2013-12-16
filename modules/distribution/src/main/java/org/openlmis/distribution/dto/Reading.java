@@ -13,10 +13,13 @@ package org.openlmis.distribution.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.openlmis.distribution.serializer.ReadingDeSerializer;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonDeserialize(using = ReadingDeSerializer.class)
 public class Reading {
 
   private String value;

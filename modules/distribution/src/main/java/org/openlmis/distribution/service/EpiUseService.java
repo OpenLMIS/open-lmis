@@ -11,6 +11,7 @@
 package org.openlmis.distribution.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.EpiUseRepository;
@@ -25,8 +26,13 @@ public class EpiUseService {
   private EpiUseRepository epiUseRepository;
 
   public void save(EpiUse epiUse) {
-    epiUseRepository.save(epiUse);
+    if (epiUse.getId() == null) {
+      epiUseRepository.insert(epiUse);
+    }
     for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
+      if (!lineItem.isValid()) {
+        throw new DataException("error.epi.use.line.item.invalid");
+      }
       lineItem.setEpiUseId(epiUse.getId());
       epiUseRepository.saveLineItem(lineItem);
     }

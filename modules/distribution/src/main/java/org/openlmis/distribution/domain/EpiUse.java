@@ -27,5 +27,4 @@ public class EpiUse extends BaseModel {
   private Long distributionId;
   private Long facilityId;
   private List<EpiUseLineItem> lineItems;
-
 }

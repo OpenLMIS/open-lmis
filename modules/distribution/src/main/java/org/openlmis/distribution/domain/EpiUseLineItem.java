@@ -34,4 +34,8 @@ public class EpiUseLineItem extends BaseModel {
     this.productGroup = productGroup;
   }
 
+  public boolean isValid() {
+    return !(this.stockAtFirstOfMonth < 0 || this.stockAtEndOfMonth < 0 || this.received < 0 || this.loss < 0 || this.distributed < 0);
+  }
+
 }
