@@ -25,99 +25,99 @@ import static org.openqa.selenium.support.How.*;
 public class RefrigeratorPage extends Page {
 
   @FindBy(how = ID, using = "addNew")
-  private static WebElement addNewButton=null;
+  private static WebElement addNewButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Show')]")
-  public static WebElement showButton=null;
+  public static WebElement showButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Delete']")
-  private static WebElement deleteButton=null;
+  private static WebElement deleteButton = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
-  private static WebElement doneButton=null;
+  private static WebElement doneButton = null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Refrigerators')]")
-  private static WebElement refrigeratorTab=null;
+  private static WebElement refrigeratorTab = null;
 
   @FindBy(how = NAME, using = "temperature0")
-  public static WebElement refrigeratorTemperatureTextField=null;
+  public static WebElement refrigeratorTemperatureTextField = null;
 
   @FindBy(how = NAME, using = "lowAlarmEvent0")
-  private static WebElement lowAlarmEventsTextField=null;
+  private static WebElement lowAlarmEventsTextField = null;
 
   @FindBy(how = NAME, using = "highAlarmEvent0")
-  private static WebElement highAlarmEventsTextField=null;
+  private static WebElement highAlarmEventsTextField = null;
 
   @FindBy(how = ID, using = "temperature0")
-  private static WebElement refrigeratorTemperatureNR=null;
+  private static WebElement refrigeratorTemperatureNR = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyYes0")
-  private static WebElement functioningCorrectlyYesRadio=null;
+  private static WebElement functioningCorrectlyYesRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyNo0")
-  private static WebElement functioningCorrectlyNoRadio=null;
+  private static WebElement functioningCorrectlyNoRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectlyDontKnow0")
-  private static WebElement functioningCorrectlyDontKnowRadio=null;
+  private static WebElement functioningCorrectlyDontKnowRadio = null;
 
   @FindBy(how = ID, using = "functioningCorrectly0")
-  private static WebElement functioningCorrectlyNR=null;
+  private static WebElement functioningCorrectlyNR = null;
 
   @FindBy(how = ID, using = "lowAlarmEvent0")
-  private static WebElement lowAlarmEventNR=null;
+  private static WebElement lowAlarmEventNR = null;
 
   @FindBy(how = ID, using = "highAlarmEvent0")
-  private static WebElement highAlarmEventNR=null;
+  private static WebElement highAlarmEventNR = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitYes0")
-  private static WebElement problemSinceLastVisitYesRadio=null;
+  private static WebElement problemSinceLastVisitYesRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitNo0")
-  private static WebElement problemSinceLastVisitNoRadio=null;
+  private static WebElement problemSinceLastVisitNoRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisitDontKnow0")
-  private static WebElement problemSinceLastVisitDontKnowRadio=null;
+  private static WebElement problemSinceLastVisitDontKnowRadio = null;
 
   @FindBy(how = ID, using = "problemSinceLastVisit0")
-  private static WebElement problemSinceLastVisitNR=null;
+  private static WebElement problemSinceLastVisitNR = null;
 
   @FindBy(how = ID, using = "notes")
-  private static WebElement notesTextArea=null;
+  private static WebElement notesTextArea = null;
 
   @FindBy(how = XPATH, using = "//h3/span[contains(text(),'Refrigerators')]")
-  private static WebElement refrigeratorsHeader=null;
+  private static WebElement refrigeratorsHeader = null;
 
   @FindBy(how = ID, using = "brand")
-  private static WebElement brandTextField=null;
+  private static WebElement brandTextField = null;
 
   @FindBy(how = ID, using = "model")
-  private static WebElement modelTextField=null;
+  private static WebElement modelTextField = null;
 
   @FindBy(how = ID, using = "manufacturerSerialNumber")
-  private static WebElement manufacturerSerialNumberTextField=null;
+  private static WebElement manufacturerSerialNumberTextField = null;
 
   @FindBy(how = ID, using = "done-button")
-  private static WebElement doneButtonOnModal=null;
+  private static WebElement doneButtonOnModal = null;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'New Refrigerator')]")
-  public static WebElement newRefrigeratorHeaderOnModal=null;
+  public static WebElement newRefrigeratorHeaderOnModal = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'OK')]")
-  public static WebElement OKButton=null;
+  public static WebElement OKButton = null;
 
   @FindBy(how = XPATH, using = "//h3[contains(text(),'Delete Refrigerator')]")
-  public static WebElement deletePopUpHeader=null;
+  public static WebElement deletePopUpHeader = null;
 
   @FindBy(how = XPATH, using = "//form/div[1]/div[1]/span[@class='status-icon']")
-  public static WebElement individualRefrigeratorIcon=null;
+  public static WebElement individualRefrigeratorIcon = null;
 
   @FindBy(how = XPATH, using = "//ng-include/div/ul/li[2]/a/span[@class='status-icon']")
-  public static WebElement overallRefrigeratorIcon=null;
+  public static WebElement overallRefrigeratorIcon = null;
 
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
-  public static WebElement duplicateRefrigeratorMessage=null;
+  public static WebElement duplicateRefrigeratorMessage = null;
 
-    public RefrigeratorPage(TestWebDriver driver) {
+  public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
@@ -281,20 +281,20 @@ public class RefrigeratorPage extends Page {
     return testWebDriver.getAttribute(notesTextArea, "value");
   }
 
-    public void verifyIndividualRefrigeratorColor(String whichIcon, String color) {
-        testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
-        if(color.toLowerCase().equals("RED".toLowerCase()))
-            color="rgba(203, 64, 64, 1)";
-        else if(color.toLowerCase().equals("GREEN".toLowerCase()))
-            color="rgba(82, 168, 30, 1)";
-        else if(color.toLowerCase().equals("AMBER".toLowerCase()))
-            color="rgba(240, 165, 19, 1)";
+  public void verifyIndividualRefrigeratorColor(String whichIcon, String color) {
+    testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
+    if (color.toLowerCase().equals("RED".toLowerCase()))
+      color = "rgba(203, 64, 64, 1)";
+    else if (color.toLowerCase().equals("GREEN".toLowerCase()))
+      color = "rgba(69, 182, 0, 1)";
+    else if (color.toLowerCase().equals("AMBER".toLowerCase()))
+      color = "rgba(240, 165, 19, 1)";
 
-        if(whichIcon.toLowerCase().equals("Overall".toLowerCase()))
-            assertEquals(color,overallRefrigeratorIcon.getCssValue("background-color"));
-        else if(whichIcon.toLowerCase().equals("Individual".toLowerCase()))
-            assertEquals(color,individualRefrigeratorIcon.getCssValue("background-color"));
-    }
+    if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
+      assertEquals(color, overallRefrigeratorIcon.getCssValue("background-color"));
+    else if (whichIcon.toLowerCase().equals("Individual".toLowerCase()))
+      assertEquals(color, individualRefrigeratorIcon.getCssValue("background-color"));
+  }
 
   public void onRefrigeratorScreen() {
     testWebDriver.sleep(500);
@@ -318,9 +318,9 @@ public class RefrigeratorPage extends Page {
   }
 
 
-    public void verifyDuplicateErrorMessage(String message) {
-        testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
-        assertEquals(duplicateRefrigeratorMessage.getText(), message);
-    }
+  public void verifyDuplicateErrorMessage(String message) {
+    testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
+    assertEquals(duplicateRefrigeratorMessage.getText(), message);
+  }
 
 }
