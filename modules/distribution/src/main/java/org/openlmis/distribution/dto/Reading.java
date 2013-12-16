@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.distribution.serializer.ReadingDeSerializer;
+import org.openlmis.distribution.serializer.DistributionReadingDeSerializer;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
-@JsonDeserialize(using = ReadingDeSerializer.class)
+@JsonDeserialize(using = DistributionReadingDeSerializer.class)
 @JsonSerialize(include = NON_EMPTY)
 public class Reading {
 

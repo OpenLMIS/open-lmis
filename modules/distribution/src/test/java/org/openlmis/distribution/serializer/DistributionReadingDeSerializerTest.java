@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
-public class ReadingDeSerializerTest {
+public class DistributionReadingDeSerializerTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -51,7 +51,7 @@ public class ReadingDeSerializerTest {
     when(jsonNode.get("value")).thenReturn(valueNode);
     when(jsonNode.get("notRecorded")).thenReturn(null);
 
-    Reading reading = new ReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
+    Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
     assertThat(reading.getValue(), is("55"));
   }
 
@@ -65,7 +65,7 @@ public class ReadingDeSerializerTest {
     when(jsonNode.get("notRecorded")).thenReturn(notRecordedNode);
     when(notRecordedNode.getBooleanValue()).thenReturn(false);
 
-    Reading reading = new ReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
+    Reading reading = new DistributionReadingDeSerializer().deserialize(jp, mock(DeserializationContext.class));
     assertThat(reading.getValue(), is("55"));
     assertThat(reading.getNotRecorded(), is(false));
   }

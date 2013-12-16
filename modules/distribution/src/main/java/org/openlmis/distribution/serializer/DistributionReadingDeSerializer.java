@@ -19,7 +19,7 @@ import org.openlmis.distribution.dto.Reading;
 
 import java.io.IOException;
 
-public class ReadingDeSerializer extends JsonDeserializer<Reading> {
+public class DistributionReadingDeSerializer extends JsonDeserializer<Reading> {
   @Override
   public Reading deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
     ObjectCodec objectCodec = jp.getCodec();
