@@ -24,6 +24,10 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<parameter name="CUSTOM_REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="SHOW_DISCREPANCY_SECTION" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["FALSE"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship packsToShip, requisition_line_items.packSize,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders
@@ -32,7 +36,8 @@
         INNER JOIN  requisition_line_items on requisition_line_items.rnrid = requisitions.id
         INNER JOIN  products on products.code::text = requisition_line_items.productcode::text
         LEFT OUTER JOIN  requisition_line_item_losses_adjustments on requisition_line_item_losses_adjustments.requisitionlineitemid = requisition_line_items.id
-        LEFT OUTER JOIN geographic_zones  on geographic_zones.id = facilities.geographiczoneid]]>
+        LEFT OUTER JOIN geographic_zones  on geographic_zones.id = facilities.geographiczoneid 
+        WHERE requisition_line_items.packsToShip > 0]]>
 	</queryString>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="facilityCode" class="java.lang.String"/>
@@ -261,15 +266,15 @@
 		<groupFooter>
 			<band height="153">
 				<staticText>
-					<reportElement x="0" y="2" width="272" height="20" uuid="9d59529d-daa2-434b-bb0e-ec1bd84622c5">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="2" width="272" height="20" uuid="9d59529d-daa2-434b-bb0e-ec1bd84622c5">
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS" && $P{SHOW_DISCREPANCY_SECTION}.toUpperCase().equals("TRUE")]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Explain any discrepancies or Damages]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="0" y="22" width="802" height="65" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
-						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="22" width="802" height="65" uuid="e6c64017-5880-40ea-b9b7-6e6a2b84acc9">
+						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS" && $P{SHOW_DISCREPANCY_SECTION}.toUpperCase().equals("TRUE")]]></printWhenExpression>
 					</reportElement>
 				</rectangle>
 				<staticText>
