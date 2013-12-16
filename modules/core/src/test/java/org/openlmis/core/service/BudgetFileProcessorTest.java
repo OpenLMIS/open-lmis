@@ -18,7 +18,6 @@ import org.supercsv.io.CsvListReader;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -124,7 +123,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldSaveBudgetFileLineItem() throws Exception {
     configuration.setHeaderInFile(true);
-    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
+    when(listReader.getRowNumber()).thenReturn(2).thenReturn(3);
     String budgetFileName = "BudgetFileName";
     when(budgetFile.getName()).thenReturn(budgetFileName);
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
@@ -156,7 +155,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldCreateBudgetLineItemWithDateAsNullIfNotIncludedInFile() throws Exception {
     configuration.setHeaderInFile(true);
-    when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
+    when(listReader.getRowNumber()).thenReturn(2).thenReturn(3);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
@@ -168,7 +167,12 @@ public class BudgetFileProcessorTest {
     when(facilityService.getByCode(facility)).thenReturn(facility);
     Program program = new Program();
     when(programService.getByCode("HIV")).thenReturn(program);
-
+    BudgetLineItem budgetLineItem = new BudgetLineItem();
+    Date date = new Date();
+    budgetLineItem.setPeriodDate(date);
+    when(transformer.transform(lineItemDTO, null, 1)).thenReturn(budgetLineItem);
+    ProcessingPeriod processingPeriod = new ProcessingPeriod();
+    when(processingScheduleService.getPeriodForDate(facility, program, date)).thenReturn(processingPeriod);
     periodDateColumn.setInclude(false);
 
     budgetFileProcessor.process(message);
@@ -272,7 +276,7 @@ public class BudgetFileProcessorTest {
   }
 
   @Test
-  public void shouldDisplayErrorIfFileIsBlank() throws IOException {
+  public void shouldDisplayErrorIfFileIsBlank() throws Exception {
     configuration.setHeaderInFile(false);
     when(listReader.read()).thenReturn(null);
     when(listReader.getRowNumber()).thenReturn(0);
@@ -283,7 +287,7 @@ public class BudgetFileProcessorTest {
   }
 
   @Test
-  public void shouldDisplayErrorIfFileIsBlankWithOnlyHeader() throws IOException {
+  public void shouldDisplayErrorIfFileIsBlankWithOnlyHeader() throws Exception {
     configuration.setHeaderInFile(true);
     when(listReader.read()).thenReturn(null);
     when(listReader.getRowNumber()).thenReturn(1);

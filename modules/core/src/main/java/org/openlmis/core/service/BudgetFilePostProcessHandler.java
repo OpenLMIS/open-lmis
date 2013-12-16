@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
 import org.springframework.integration.MessageChannel;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 
@@ -40,7 +39,6 @@ public class BudgetFilePostProcessHandler {
   private static final Logger logger = Logger.getLogger(BudgetFilePostProcessHandler.class);
 
 
-  @Transactional
   public void process(BudgetFileInfo budgetFileInfo, File budgetFile) {
     budgetFileService.save(budgetFileInfo);
 

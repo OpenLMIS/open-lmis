@@ -5,7 +5,6 @@ import org.openlmis.core.dto.BudgetLineItemDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.transformer.LineItemTransformer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,8 +15,7 @@ import java.util.Date;
 public class BudgetLineItemTransformer extends LineItemTransformer {
 
 
-  @Autowired
-  private MessageService messageService;
+  private MessageService messageService = MessageService.getRequestInstance();
 
   public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern, Integer rowNumber) {
     BudgetLineItem budgetLineItem = new BudgetLineItem();

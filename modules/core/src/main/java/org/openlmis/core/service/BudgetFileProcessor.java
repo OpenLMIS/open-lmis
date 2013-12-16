@@ -9,20 +9,22 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.Message;
-import org.springframework.stereotype.Service;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
-@Service
+@Component
+@MessageEndpoint
 public class BudgetFileProcessor {
 
   private static Logger logger = Logger.getLogger(BudgetFileProcessor.class);
@@ -54,9 +56,8 @@ public class BudgetFileProcessor {
   @Autowired
   private MessageService messageService;
 
-
-  public void process(Message message) throws IOException {
-
+  @Transactional
+  public void process(Message message) throws Exception {
     File budgetFile = (File) message.getPayload();
 
     logger.debug("processing Budget File " + budgetFile.getName());
@@ -79,7 +80,7 @@ public class BudgetFileProcessor {
       BudgetLineItemDTO budgetLineItemDTO = BudgetLineItemDTO.populate(csvRow, includedColumns);
       try {
         budgetLineItemDTO.checkMandatoryFields();
-        rowNumber = listReader.getRowNumber();
+        rowNumber = budgetFileTemplate.getConfiguration().isHeaderInFile() ? listReader.getRowNumber() - 1 : listReader.getRowNumber();
         Facility facility = validateFacility(budgetLineItemDTO.getFacilityCode(), rowNumber);
         Program program = validateProgram(budgetLineItemDTO.getProgramCode(), rowNumber);
 
@@ -90,7 +91,7 @@ public class BudgetFileProcessor {
         budgetLineItem.setPeriodId(processingPeriod.getId());
         budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
         budgetLineItemService.save(budgetLineItem);
-      } catch (Exception e) {
+      } catch (DataException e) {
         processingError = true;
         logger.error(e.getMessage(), e);
         continue;
