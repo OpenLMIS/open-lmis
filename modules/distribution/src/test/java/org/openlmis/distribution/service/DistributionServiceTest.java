@@ -51,7 +51,7 @@ public class DistributionServiceTest {
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
-    when(facilityDistributionService.getFor(expectedDistribution)).thenReturn(facilityDistributions);
+    when(facilityDistributionService.createFor(expectedDistribution)).thenReturn(facilityDistributions);
 
     Distribution initiatedDistribution = service.create(distribution);
 

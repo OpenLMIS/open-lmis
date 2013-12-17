@@ -12,15 +12,23 @@ package org.openlmis.distribution.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.core.domain.ProductGroup;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,4 +39,25 @@ public class EpiUse extends BaseModel {
   private Long distributionId;
   private Long facilityId;
   private List<EpiUseLineItem> lineItems;
+
+  public EpiUse(Facility facility, Distribution distribution) {
+    this(distribution.getId(), facility.getId(), new ArrayList<EpiUseLineItem>());
+    this.setCreatedBy(distribution.getCreatedBy());
+
+    if (facility.getSupportedPrograms().size() != 0) {
+      List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
+      this.populateEpiUseLineItems(programProducts, distribution.getCreatedBy());
+    }
+  }
+
+  private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy) {
+    Set<ProductGroup> productGroupSet = new HashSet<>();
+
+    for (FacilityProgramProduct facilityProgramProduct : programProducts) {
+      ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
+      if (productGroup != null && productGroupSet.add(productGroup)) {
+        this.lineItems.add(new EpiUseLineItem(productGroup, createdBy));
+      }
+    }
+  }
 }

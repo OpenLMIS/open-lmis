@@ -62,7 +62,7 @@ public class FacilityDistributionServiceTest {
     FacilityDistribution facilityDistribution = new FacilityDistribution(null, null);
     doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution);
 
-    Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionService.getFor(distribution);
+    Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionService.createFor(distribution);
 
     assertThat(facilityDistributionDataMap.get(1234L), is(facilityDistribution));
   }

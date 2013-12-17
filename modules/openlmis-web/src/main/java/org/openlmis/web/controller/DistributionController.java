@@ -85,12 +85,11 @@ public class DistributionController extends BaseController {
     existingDistribution.setPeriod(distribution.getPeriod());
     existingDistribution.setProgram(distribution.getProgram());
 
-    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getFor(distribution);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.createFor(existingDistribution);
     existingDistribution.setFacilityDistributions(facilityDistributions);
 
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", existingDistribution);
 
-//    TODO do we need to populate whole user just to get username?
     User createdByUser = userService.getById(existingDistribution.getCreatedBy());
 
     openLmisResponse.addData("message", messageService.message("message.distribution.already.exists",

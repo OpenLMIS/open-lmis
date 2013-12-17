@@ -112,7 +112,7 @@ public class DistributionControllerTest {
 
     when(service.get(distribution)).thenReturn(existingDistribution);
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
-    when(facilityDistributionService.getFor(distribution)).thenReturn(facilityDistributions);
+    when(facilityDistributionService.createFor(distribution)).thenReturn(facilityDistributions);
 
     User user = make(a(defaultUser));
     when(userService.getById(createdById)).thenReturn(user);

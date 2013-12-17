@@ -12,17 +12,16 @@ package org.openlmis.distribution.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.EpiUse;
-import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @NoArgsConstructor
@@ -37,7 +36,7 @@ public class FacilityDistributionService {
   @Autowired
   FacilityVisitService facilityVisitService;
 
-  public Map<Long, FacilityDistribution> getFor(Distribution distribution) {
+  public Map<Long, FacilityDistribution> createFor(Distribution distribution) {
     Long deliveryZoneId = distribution.getDeliveryZone().getId();
     Long programId = distribution.getProgram().getId();
 
@@ -51,44 +50,15 @@ public class FacilityDistributionService {
     return facilityDistributions;
   }
 
-  public FacilityDistribution createDistributionData(Facility facility, Distribution distribution) {
-
-    return new FacilityDistribution(null, createEpiUse(facility, distribution));
+  FacilityDistribution createDistributionData(Facility facility, Distribution distribution) {
+    EpiUse epiUse = new EpiUse(facility, distribution);
+    epiUseService.save(epiUse);
+    return new FacilityDistribution(null, epiUse);
   }
 
   public boolean save(FacilityDistribution facilityDistribution) {
-
     epiUseService.save(facilityDistribution.getEpiUse());
 
     return facilityVisitService.save(facilityDistribution.getFacilityVisit());
-  }
-
-  private EpiUse createEpiUse(Facility facility, Distribution distribution) {
-    List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), epiUseLineItems);
-    epiUse.setCreatedBy(distribution.getCreatedBy());
-
-    if (facility.getSupportedPrograms().size() != 0) {
-      List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
-      populateEpiUseLineItems(programProducts, epiUseLineItems, distribution.getCreatedBy());
-    }
-
-    epiUse.setLineItems(epiUseLineItems);
-    epiUseService.save(epiUse);
-
-    return epiUse;
-  }
-
-  private List<EpiUseLineItem> populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, List<EpiUseLineItem> epiUseLineItems, Long createdBy) {
-    Set<ProductGroup> productGroupSet = new HashSet<>();
-
-    for (FacilityProgramProduct facilityProgramProduct : programProducts) {
-      ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
-      if (productGroup != null && productGroupSet.add(productGroup)) {
-        epiUseLineItems.add(new EpiUseLineItem(productGroup, createdBy));
-      }
-    }
-
-    return epiUseLineItems;
   }
 }

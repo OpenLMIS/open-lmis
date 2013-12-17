@@ -30,19 +30,20 @@ public class DistributionService {
   @Autowired
   DistributionRepository repository;
 
+  @Transactional
   public Distribution create(Distribution distribution) {
     Distribution savedDistribution = repository.create(distribution);
-    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.getFor(distribution);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.createFor(distribution);
     savedDistribution.setFacilityDistributions(facilityDistributions);
     return savedDistribution;
-  }
-
-  public Distribution get(Distribution distribution) {
-    return repository.get(distribution);
   }
 
   @Transactional
   public boolean sync(FacilityDistribution facilityDistribution) {
     return facilityDistributionService.save(facilityDistribution);
+  }
+
+  public Distribution get(Distribution distribution) {
+    return repository.get(distribution);
   }
 }
