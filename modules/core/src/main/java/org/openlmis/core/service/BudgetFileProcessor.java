@@ -74,19 +74,14 @@ public class BudgetFileProcessor {
 
     BudgetFileInfo budgetFileInfo = saveBudgetFile(budgetFile, false);
 
-    Boolean processingError = false;
-    try {
-      getSpringProxy().processBudgetFile(budgetFile, budgetFileInfo);
-    } catch (Exception e) {
-      processingError = true;
-    }
+    Boolean processingError = getSpringProxy().processBudgetFile(budgetFile, budgetFileInfo);
 
     budgetFileInfo.setProcessingError(processingError);
     budgetFilePostProcessHandler.process(budgetFileInfo, budgetFile);
   }
 
   @Transactional
-  public void processBudgetFile(File budgetFile, BudgetFileInfo budgetFileInfo) throws Exception {
+  public Boolean processBudgetFile(File budgetFile, BudgetFileInfo budgetFileInfo) throws Exception {
 
     Boolean processingError = false;
     EDIFileTemplate budgetFileTemplate = budgetFileTemplateService.get();
@@ -125,9 +120,7 @@ public class BudgetFileProcessor {
       logger.error(messageService.message("error.facility.code.invalid"));
       processingError = true;
     }
-    if (processingError) {
-      throw new DataException("error.processing.budget.file");
-    }
+    return processingError;
   }
 
   private BudgetLineItem getBudgetLineItem(Collection<EDIFileColumn> includedColumns, BudgetLineItemDTO budgetLineItemDTO, Integer rowNumber) {

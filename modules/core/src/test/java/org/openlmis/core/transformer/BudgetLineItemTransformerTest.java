@@ -92,4 +92,17 @@ public class BudgetLineItemTransformerTest {
     budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
   }
 
+  @Test
+  public void shouldThrowErrorIfAllocatedBudgetIsNegative() {
+    BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "12-12-2013", "-345.45", "My good notes");
+    int rowNumber = 1;
+    String datePattern = "MM-dd-yyyy";
+    when(messageService.message("budget.allocated.budget.invalid", budgetLineItemDTO.getAllocatedBudget(), rowNumber)).thenReturn("Invalid budget");
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("Invalid budget");
+
+    budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
+  }
+
 }

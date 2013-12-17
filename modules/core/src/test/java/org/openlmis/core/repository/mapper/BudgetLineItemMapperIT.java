@@ -28,7 +28,6 @@ import static org.openlmis.core.builder.FacilityBuilder.code;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
-import static org.openlmis.core.builder.ProcessingScheduleBuilder.SCHEDULE_CODE;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
 
 @Category(IntegrationTests.class)
@@ -115,9 +114,31 @@ public class BudgetLineItemMapperIT {
       BigDecimal.valueOf(145.45),
       "My updated good notes");
 
+
+    duplicatedBudgetLineItem.setId(budgetLineItem.getId());
+
     mapper.update(duplicatedBudgetLineItem);
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM budget_line_items WHERE budgetFileId = " + budgetFileInfo.getId());
     assertTrue(resultSet.next());
     assertThat(resultSet.getString("notes"), is("My updated good notes"));
+  }
+
+  @Test
+  public void shouldGetBudgetLineItemByFacilityCodeProgramCodeAndPeriodId() {
+    mapper.insert(budgetLineItem);
+
+    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facilityCode,
+      "HIV",
+      period.getId(),
+      budgetFileInfo.getId(),
+      new Date(),
+      BigDecimal.valueOf(145.45),
+      "My updated good notes");
+
+    BudgetLineItem savedLineItem = mapper.getBy(duplicatedBudgetLineItem);
+
+    assertThat(savedLineItem.getId(), is(budgetLineItem.getId()));
+    assertThat(savedLineItem.getFacilityCode(), is(budgetLineItem.getFacilityCode()));
+    assertThat(savedLineItem.getProgramCode(), is(budgetLineItem.getProgramCode()));
   }
 }

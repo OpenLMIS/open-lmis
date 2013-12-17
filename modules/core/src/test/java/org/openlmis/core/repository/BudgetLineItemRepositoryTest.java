@@ -7,12 +7,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.BudgetLineItem;
 import org.openlmis.core.repository.mapper.BudgetLineItemMapper;
-import org.springframework.dao.DuplicateKeyException;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,13 +35,17 @@ public class BudgetLineItemRepositoryTest {
 
   @Test
   public void shouldUpdateBudgetLineItemIfAlreadyExists() throws Exception {
-    BudgetLineItem budgetLineItem = new BudgetLineItem("F10", "HIV", 1l, 1l, new Date(), BigDecimal.valueOf(345.45), "My good notes");
+    String facilityCode = "F10";
+    String programCode = "HIV";
+    Long periodId = 1l;
+    BudgetLineItem budgetLineItem = new BudgetLineItem(facilityCode, programCode, periodId, 1l, new Date(), BigDecimal.valueOf(345.45), "My good notes");
 
-    doThrow(DuplicateKeyException.class).when(mapper).insert(budgetLineItem);
+    BudgetLineItem savedBudgetLineItem = new BudgetLineItem();
+    when(mapper.getBy(budgetLineItem)).thenReturn(savedBudgetLineItem);
 
     repository.save(budgetLineItem);
 
-    verify(mapper).insert(budgetLineItem);
+    verify(mapper).getBy(budgetLineItem);
     verify(mapper).update(budgetLineItem);
 
   }

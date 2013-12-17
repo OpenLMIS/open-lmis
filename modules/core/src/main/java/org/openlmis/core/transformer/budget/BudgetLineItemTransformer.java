@@ -34,7 +34,11 @@ public class BudgetLineItemTransformer extends LineItemTransformer {
 
     String allocatedBudget = lineItemDTO.getAllocatedBudget();
     try {
-      allocatedBudget = new DecimalFormat("#0.##").format(Double.valueOf(allocatedBudget));
+      Double budget = Double.valueOf(allocatedBudget);
+      if (budget < 0) {
+        throw new DataException("Negative budget");
+      }
+      allocatedBudget = new DecimalFormat("#0.##").format(budget);
     } catch (Exception e) {
       throw new DataException(messageService.message("budget.allocated.budget.invalid", allocatedBudget, rowNumber));
     }
