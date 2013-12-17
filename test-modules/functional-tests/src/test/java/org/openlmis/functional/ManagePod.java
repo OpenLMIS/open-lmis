@@ -13,6 +13,7 @@ import org.testng.annotations.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 
@@ -54,6 +55,29 @@ public class ManagePod extends TestCaseHelper {
     verifyHeadersOnManagePODScreen(managePodPage);
     verifyValuesOnManagePODScreen(managePodPage);
   }
+
+
+  @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
+  public void testVerifyManagePODWhenSupplyLineMissing(String program, String userSIC, String password) throws Exception {
+    setUpData(program, userSIC);
+    dbWrapper.insertRequisitions(1, "MALARIA", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
+    dbWrapper.deleteSupplyLine();
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
+    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.clickConvertToOrderButton();
+    convertOrderPage.clickOk();
+    ManagePodPage managePodPage = homePage.navigateManagePOD();
+    managePodPage.verifyMessageOnManagePodScreen();
+    Integer id=dbWrapper.getMaxRnrID();
+    assertEquals("TRANSFER_FAILED",dbWrapper.getOrderStatus((long)id));
+    assertTrue(dbWrapper.getOrderFtpComment((long)id).contains("supplyline.missing"));
+   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {

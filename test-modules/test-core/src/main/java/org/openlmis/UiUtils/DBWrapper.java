@@ -1490,4 +1490,20 @@ public class DBWrapper {
   public void updateRequisitionToEmergency() throws IOException, SQLException {
       update("update requisitions set Emergency=true");
   }
+
+  public void deleteSupplyLine() throws IOException, SQLException {
+    update("delete from supply_lines where description='supplying node for MALARIA'");
+  }
+
+  public String getOrderFtpComment(Long orderId) throws IOException, SQLException {
+    String orderFtpcomment = null;
+    ResultSet rs = query("SELECT ftpComment from orders where id=" + orderId);
+
+    if (rs.next()) {
+      orderFtpcomment = rs.getString("ftpComment");
+    }
+    return orderFtpcomment;
+
+  }
+
 }
