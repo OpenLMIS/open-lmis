@@ -21,6 +21,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
+import org.openqa.selenium.By;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
@@ -33,6 +34,7 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.Math.*;
+import static org.junit.Assert.assertTrue;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -468,6 +470,27 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void verifyEmergencyRnRText() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     assertEquals(initiateRnRPage.getEmergencyLabelText(), "Emergency");
+  }
+
+  @When("^I access Manage POD page$")
+  public void navigateManagePodPage() throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateManagePOD();
+  }
+
+  @Then("^I should see list of orders to manage POD for \"([^\"]*)\" Rnr$")
+  public void verifyListOfOrdersOnPodScreen(String rnrType) throws Exception {
+    ManagePodPage managePodPage = new ManagePodPage(testWebDriver);
+    testWebDriver.sleep(1000);
+    assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
+    assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
+    assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
+    assertEquals("Period1 (01/11/2013 - 02/01/2014)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1 (01/11/2013 - 02/01/2014)')]")).getText());
+    assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
+    // assertEquals(facility_code,testWebDriver.findElement(By.xpath("//div[@class='ngCellText ng-scope']")).getText());
+    if (rnrType == "Emergency") {
+      assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
+    }
   }
 
   private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,

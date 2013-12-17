@@ -115,6 +115,9 @@ public class RolesPage extends Page {
   @FindBy(how = How.XPATH, using = "//input[@id='FACILITY_FILL_SHIPMENT']")
   private static WebElement rightFillShipment=null;
 
+  @FindBy(how = How.ID, using = "MANAGE_POD")
+  private static WebElement rightManagePOD=null;
+
   public RolesPage(TestWebDriver driver) throws IOException {
     super(driver);
 
@@ -133,6 +136,7 @@ public class RolesPage extends Page {
     webElementMap.put("Convert To Order Requisition", rightConvertToOrderRequisition);
     webElementMap.put("View Orders Requisition", rightViewOrders);
     webElementMap.put("Manage Distribution", rightManageDistribution);
+    webElementMap.put("Manage POD", rightManagePOD);
   }
 
   public Map<String, WebElement> getWebElementMap() {
