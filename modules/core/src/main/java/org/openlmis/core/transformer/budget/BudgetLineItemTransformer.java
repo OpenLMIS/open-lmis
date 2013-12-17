@@ -17,35 +17,42 @@ public class BudgetLineItemTransformer extends LineItemTransformer {
 
   public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern, Integer rowNumber) {
     BudgetLineItem budgetLineItem = new BudgetLineItem();
-    Date periodDate = null;
-    if (datePattern != null) {
-      try {
-        periodDate = parseDate(datePattern, lineItemDTO.getPeriodStartDate());
-      } catch (Exception e) {
-        throw new DataException("budget.invalid.date.format", lineItemDTO.getPeriodStartDate(), rowNumber);
-      }
-    }
 
-    budgetLineItem.setFacilityCode(lineItemDTO.getFacilityCode());
-    budgetLineItem.setProgramCode(lineItemDTO.getProgramCode());
+    Date periodDate = getValidatedPeriodDate(lineItemDTO.getPeriodStartDate(), datePattern, rowNumber);
+
+    BigDecimal allocatedBudget = getAllocatedBudget(rowNumber, lineItemDTO.getAllocatedBudget());
+
     budgetLineItem.setPeriodDate(periodDate);
+    budgetLineItem.setAllocatedBudget(allocatedBudget);
+    budgetLineItem.setNotes(lineItemDTO.getNotes());
 
-    String allocatedBudget = lineItemDTO.getAllocatedBudget();
+    return budgetLineItem;
+  }
+
+  private BigDecimal getAllocatedBudget(Integer rowNumber, String allocatedBudget) {
     try {
       Double budget = Double.valueOf(allocatedBudget);
       if (budget < 0) {
-        throw new DataException("Negative budget");
+        throw new DataException("budget.allocated.negative");
       }
       DecimalFormat decimalFormat = new DecimalFormat("#0.##");
       decimalFormat.setRoundingMode(FLOOR);
       allocatedBudget = decimalFormat.format(budget);
     } catch (Exception e) {
-      throw new DataException("budget.allocated.budget.invalid", allocatedBudget, rowNumber);
+      throw new DataException("budget.allocated.invalid", allocatedBudget, rowNumber);
     }
+    return new BigDecimal(allocatedBudget);
+  }
 
-    budgetLineItem.setAllocatedBudget(new BigDecimal(allocatedBudget));
-    budgetLineItem.setNotes(lineItemDTO.getNotes());
-
-    return budgetLineItem;
+  private Date getValidatedPeriodDate(String periodStartDate, String datePattern, Integer rowNumber) {
+    Date periodDate = null;
+    if (datePattern != null) {
+      try {
+        periodDate = parseDate(datePattern, periodStartDate);
+      } catch (Exception e) {
+        throw new DataException("budget.invalid.date.format", periodStartDate, rowNumber);
+      }
+    }
+    return periodDate;
   }
 }

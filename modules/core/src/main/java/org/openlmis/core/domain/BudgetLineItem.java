@@ -12,9 +12,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class BudgetLineItem extends BaseModel {
 
-  private String facilityCode;
+  private Long facilityId;
 
-  private String programCode;
+  private Long programId;
 
   private Long periodId;
 

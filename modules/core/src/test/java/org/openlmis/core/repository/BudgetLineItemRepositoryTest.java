@@ -26,7 +26,7 @@ public class BudgetLineItemRepositoryTest {
   @Test
   public void shouldInsertBudgetLineItemIfDoesNotExistsAlready() throws Exception {
 
-    BudgetLineItem budgetLineItem = new BudgetLineItem("F10", "HIV", 1l, 1l, new Date(), BigDecimal.valueOf(345.45), "My good notes");
+    BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, 1L, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes");
 
     repository.save(budgetLineItem);
 
@@ -35,10 +35,8 @@ public class BudgetLineItemRepositoryTest {
 
   @Test
   public void shouldUpdateBudgetLineItemIfAlreadyExists() throws Exception {
-    String facilityCode = "F10";
-    String programCode = "HIV";
     Long periodId = 1l;
-    BudgetLineItem budgetLineItem = new BudgetLineItem(facilityCode, programCode, periodId, 1l, new Date(), BigDecimal.valueOf(345.45), "My good notes");
+    BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, periodId, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes");
 
     BudgetLineItem savedBudgetLineItem = new BudgetLineItem();
     when(mapper.getBy(budgetLineItem)).thenReturn(savedBudgetLineItem);
@@ -47,6 +45,5 @@ public class BudgetLineItemRepositoryTest {
 
     verify(mapper).getBy(budgetLineItem);
     verify(mapper).update(budgetLineItem);
-
   }
 }

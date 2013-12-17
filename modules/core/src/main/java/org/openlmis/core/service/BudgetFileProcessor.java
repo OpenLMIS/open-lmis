@@ -98,6 +98,7 @@ public class BudgetFileProcessor {
       try {
         budgetLineItemDTO.checkMandatoryFields();
         rowNumber = budgetFileTemplate.getConfiguration().isHeaderInFile() ? listReader.getRowNumber() - 1 : listReader.getRowNumber();
+
         Facility facility = validateFacility(budgetLineItemDTO.getFacilityCode(), rowNumber);
         Program program = validateProgram(budgetLineItemDTO.getProgramCode(), rowNumber);
 
@@ -107,7 +108,9 @@ public class BudgetFileProcessor {
 
         budgetLineItem.setPeriodId(processingPeriod.getId());
         budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
+
         budgetLineItemService.save(budgetLineItem);
+
       } catch (DataException e) {
         processingError = true;
         String errorMessage = messageService.message(e.getOpenLmisMessage());

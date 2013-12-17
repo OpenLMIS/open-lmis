@@ -39,8 +39,6 @@ public class BudgetLineItemTransformerTest {
 
     BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, 1);
 
-    assertThat(budgetLineItem.getFacilityCode(), is("F10"));
-    assertThat(budgetLineItem.getProgramCode(), is("HIV"));
     assertThat(budgetLineItem.getPeriodDate(), is(date));
     assertThat(budgetLineItem.getAllocatedBudget(), is(valueOf(345.45)));
     assertThat(budgetLineItem.getNotes(), is("My good notes"));
@@ -52,8 +50,6 @@ public class BudgetLineItemTransformerTest {
 
     BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, null, 1);
 
-    assertThat(budgetLineItem.getFacilityCode(), is("F10"));
-    assertThat(budgetLineItem.getProgramCode(), is("HIV"));
     assertThat(budgetLineItem.getPeriodDate(), is(nullValue()));
     assertThat(budgetLineItem.getAllocatedBudget(), is(valueOf(345.45)));
     assertThat(budgetLineItem.getNotes(), is("My good notes"));
@@ -74,12 +70,12 @@ public class BudgetLineItemTransformerTest {
 
   @Test
   public void shouldThrowErrorIfAllocatedBudgetIsNotValid() {
-    BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "12-12-2013", "345sdsa.45", "My good notes");
+    BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "12-12-2013", "345Word.45", "My good notes");
     int rowNumber = 1;
     String datePattern = "MM-dd-yyyy";
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(format("code: budget.allocated.budget.invalid, params: { %s; %d }", budgetLineItemDTO.getAllocatedBudget(), rowNumber));
+    expectedException.expectMessage(format("code: budget.allocated.invalid, params: { %s; %d }", budgetLineItemDTO.getAllocatedBudget(), rowNumber));
 
     budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
   }
@@ -91,7 +87,7 @@ public class BudgetLineItemTransformerTest {
     String datePattern = "MM-dd-yyyy";
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage(format("code: budget.allocated.budget.invalid, params: { %s; %d }", budgetLineItemDTO.getAllocatedBudget(), rowNumber));
+    expectedException.expectMessage(format("code: budget.allocated.invalid, params: { %s; %d }", budgetLineItemDTO.getAllocatedBudget(), rowNumber));
 
     budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
   }

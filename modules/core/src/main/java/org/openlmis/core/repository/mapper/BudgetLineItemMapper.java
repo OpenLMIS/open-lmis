@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 public interface BudgetLineItemMapper {
 
   @Insert({
-    "INSERT INTO budget_line_items (facilityCode, programCode, budgetFileId, periodId, periodDate, allocatedBudget, notes) ",
-    "VALUES (#{facilityCode}, #{programCode}, #{budgetFileId}, #{periodId}, #{periodDate}, #{allocatedBudget}, #{notes})"
+    "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes) ",
+    "VALUES (#{facilityId}, #{programId}, #{budgetFileId}, #{periodId}, #{periodDate}, #{allocatedBudget}, #{notes})"
   })
   @Options(useGeneratedKeys = true)
   void insert(BudgetLineItem budgetLineItem);
@@ -24,7 +24,7 @@ public interface BudgetLineItemMapper {
   void update(BudgetLineItem budgetLineItem);
 
   @Select({
-    "SELECT * FROM budget_line_items WHERE facilityCode = #{facilityCode} AND programCode = #{programCode} AND periodId = #{periodId}"
+    "SELECT * FROM budget_line_items WHERE facilityId = #{facilityId} AND programId = #{programId} AND periodId = #{periodId}"
   })
   BudgetLineItem getBy(BudgetLineItem budgetLineItem);
 }

@@ -63,6 +63,8 @@ public class BudgetLineItemMapperIT {
 
   private ProcessingPeriod period;
 
+  private Facility facility;
+
   @Before
   public void setUp() throws Exception {
 
@@ -78,18 +80,10 @@ public class BudgetLineItemMapperIT {
     budgetFileMapper.insert(budgetFileInfo);
 
     facilityCode = "F1011";
-    Facility facility = make(a(defaultFacility, with(code, facilityCode)));
+    facility = make(a(defaultFacility, with(code, facilityCode)));
     facilityMapper.insert(facility);
 
-    budgetLineItem = new BudgetLineItem(facilityCode,
-      "HIV",
-      period.getId(),
-      budgetFileInfo.getId(),
-      new Date(),
-      BigDecimal.valueOf(345.45),
-      "My good notes");
-
-
+    budgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My good notes");
   }
 
   @Test
@@ -106,14 +100,7 @@ public class BudgetLineItemMapperIT {
   public void shouldUpdateBudgetLineItem() throws Exception {
     mapper.insert(budgetLineItem);
 
-    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facilityCode,
-      "HIV",
-      period.getId(),
-      budgetFileInfo.getId(),
-      new Date(),
-      BigDecimal.valueOf(145.45),
-      "My updated good notes");
-
+    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My updated good notes");
 
     duplicatedBudgetLineItem.setId(budgetLineItem.getId());
 
@@ -127,18 +114,10 @@ public class BudgetLineItemMapperIT {
   public void shouldGetBudgetLineItemByFacilityCodeProgramCodeAndPeriodId() {
     mapper.insert(budgetLineItem);
 
-    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facilityCode,
-      "HIV",
-      period.getId(),
-      budgetFileInfo.getId(),
-      new Date(),
-      BigDecimal.valueOf(145.45),
-      "My updated good notes");
+    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My good notes");
 
     BudgetLineItem savedLineItem = mapper.getBy(duplicatedBudgetLineItem);
 
     assertThat(savedLineItem.getId(), is(budgetLineItem.getId()));
-    assertThat(savedLineItem.getFacilityCode(), is(budgetLineItem.getFacilityCode()));
-    assertThat(savedLineItem.getProgramCode(), is(budgetLineItem.getProgramCode()));
   }
 }
