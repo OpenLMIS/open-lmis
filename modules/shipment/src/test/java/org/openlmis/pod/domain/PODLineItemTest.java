@@ -24,7 +24,7 @@ public class PODLineItemTest {
     PODLineItem podLineItem = new PODLineItem(1l, null, 100);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     podLineItem.validate();
   }
@@ -34,7 +34,7 @@ public class PODLineItemTest {
     PODLineItem podLineItem = new PODLineItem(1l, "P100", null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     podLineItem.validate();
   }

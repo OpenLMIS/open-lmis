@@ -169,7 +169,7 @@ public class ShipmentLineItemTransformerTest {
     dto.setProductCode(null);
 
     expectException.expect(DataException.class);
-    expectException.expectMessage("mandatory.field.missing");
+    expectException.expectMessage("error.mandatory.fields.missing");
     transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
@@ -179,7 +179,7 @@ public class ShipmentLineItemTransformerTest {
     dto.setOrderId(null);
 
     expectException.expect(DataException.class);
-    expectException.expectMessage("mandatory.field.missing");
+    expectException.expectMessage("error.mandatory.fields.missing");
     transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 
@@ -189,7 +189,7 @@ public class ShipmentLineItemTransformerTest {
     dto.setQuantityShipped(null);
 
     expectException.expect(DataException.class);
-    expectException.expectMessage("mandatory.field.missing");
+    expectException.expectMessage("error.mandatory.fields.missing");
     transformer.transform(dto, SIMPLE_DATE_FORMAT, SIMPLE_DATE_FORMAT, new Date());
   }
 

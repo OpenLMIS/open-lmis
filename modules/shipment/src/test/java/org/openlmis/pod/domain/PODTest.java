@@ -45,7 +45,7 @@ public class PODTest {
     pod.setPodLineItems(podLineItems);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     pod.validate();
   }
@@ -69,7 +69,7 @@ public class PODTest {
     pod.setPodLineItems(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     pod.validate();
   }
@@ -82,7 +82,7 @@ public class PODTest {
     pod.setPodLineItems(podLineItems);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     pod.validate();
   }

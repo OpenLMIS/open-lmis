@@ -44,7 +44,7 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, nullString)));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validate();
   }
@@ -54,7 +54,7 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.agentCode, "")));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validate();
   }
@@ -64,7 +64,7 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programCode, nullString)));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validate();
   }
@@ -74,7 +74,7 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport, with(ReportBuilder.programCode, "")));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validate();
   }
@@ -98,7 +98,7 @@ public class ReportTest {
     Report report = make(a(ReportBuilder.defaultReport, with(products, rnrLineItems)));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validateForApproval();
   }
@@ -110,7 +110,7 @@ public class ReportTest {
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.productCode, productCode)))));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validateForApproval();
   }
@@ -122,7 +122,7 @@ public class ReportTest {
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem))));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validateForApproval();
   }
@@ -134,7 +134,7 @@ public class ReportTest {
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem, with(RnrLineItemBuilder.quantityApproved, quantityApproved)))));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validateForApproval();
   }
@@ -158,7 +158,7 @@ public class ReportTest {
     report.setProducts(asList(make(a(RnrLineItemBuilder.defaultRnrLineItem))));
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     report.validateForApproval();
   }

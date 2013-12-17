@@ -35,7 +35,7 @@ public class Report {
 
   public void validate() {
     if (isEmpty(agentCode) || isEmpty(programCode)) {
-      throw new DataException("error.restapi.mandatory.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
   }
 
@@ -50,11 +50,11 @@ public class Report {
 
   public void validateForApproval() {
     if (products == null || isEmpty(approverName)) {
-      throw new DataException("error.restapi.mandatory.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
     for (RnrLineItem rnrLineItem : products) {
       if (isEmpty(rnrLineItem.getProductCode()) || rnrLineItem.getQuantityApproved() == null)
-        throw new DataException("error.restapi.mandatory.missing");
+        throw new DataException("error.mandatory.fields.missing");
       if (rnrLineItem.getQuantityApproved() < 0)
         throw new DataException("error.restapi.quantity.approved.negative");
     }

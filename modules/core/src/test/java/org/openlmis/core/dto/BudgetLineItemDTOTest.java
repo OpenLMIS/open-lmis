@@ -38,7 +38,7 @@ public class BudgetLineItemDTOTest {
   public void shouldThrowErrorIfFacilityCodeIsMissing() throws Exception {
     BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("", "P10", "10-12-2013", "32.67", "Notes");
     exception.expect(DataException.class);
-    exception.expectMessage("mandatory.field.missing");
+    exception.expectMessage("error.mandatory.fields.missing");
 
     lineItemDTO.checkMandatoryFields();
   }
@@ -47,7 +47,7 @@ public class BudgetLineItemDTOTest {
   public void shouldThrowErrorIfProgramCodeIsMissing() throws Exception {
     BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("F10", "", "10-12-2013", "32.67", "Notes");
     exception.expect(DataException.class);
-    exception.expectMessage("mandatory.field.missing");
+    exception.expectMessage("error.mandatory.fields.missing");
 
     lineItemDTO.checkMandatoryFields();
   }
@@ -56,7 +56,7 @@ public class BudgetLineItemDTOTest {
   public void shouldThrowErrorIfAllocatedBudgetIsMissing() throws Exception {
     BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("F10", "P10", "10-12-2013", "", "Notes");
     exception.expect(DataException.class);
-    exception.expectMessage("mandatory.field.missing");
+    exception.expectMessage("error.mandatory.fields.missing");
 
     lineItemDTO.checkMandatoryFields();
   }
@@ -65,7 +65,7 @@ public class BudgetLineItemDTOTest {
   public void shouldThrowErrorIfPeriodDateIsMissing() throws Exception {
     BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("F10", "P10", "", "32.67", "Notes");
     exception.expect(DataException.class);
-    exception.expectMessage("mandatory.field.missing");
+    exception.expectMessage("error.mandatory.fields.missing");
 
     lineItemDTO.checkMandatoryFields();
   }

@@ -122,7 +122,7 @@ public class ShipmentFileProcessor {
       throw new DataException("shipment.file.error");
     }
     if (orderSet.size() == 0) {
-      throw new DataException("mandatory.field.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
   }
 

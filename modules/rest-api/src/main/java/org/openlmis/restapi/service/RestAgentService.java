@@ -68,7 +68,7 @@ public class RestAgentService {
 
   public void update(Agent agent, Long userId) {
     if (agent.getActive() == null) {
-      throw new DataException("error.restapi.mandatory.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
     agent.validate();
 

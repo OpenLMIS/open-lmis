@@ -110,8 +110,8 @@ public class BudgetFileProcessor {
         budgetLineItemService.save(budgetLineItem);
       } catch (DataException e) {
         processingError = true;
-        logger.error(e, e);
-        continue;
+        String errorMessage = messageService.message(e.getOpenLmisMessage());
+        logger.error(errorMessage, e);
       }
     }
     Integer blankFileRows = budgetFileTemplate.getConfiguration().isHeaderInFile() ? 1 : 0;

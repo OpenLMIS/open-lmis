@@ -31,7 +31,7 @@ public class PODLineItem extends BaseModel {
 
   public void validate() {
     if (StringUtils.isEmpty(productCode) || quantityReceived == null) {
-      throw new DataException("error.restapi.mandatory.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
     if (quantityReceived < 0) {
       throw new DataException(new OpenLmisMessage("error.invalid.received.quantity"));

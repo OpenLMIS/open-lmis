@@ -29,7 +29,7 @@ public class ShipmentLineItemDTOTest {
       "14-09-2013");
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("mandatory.field.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     shipmentLineItemDTO.checkMandatoryFields();
   }
@@ -44,7 +44,7 @@ public class ShipmentLineItemDTOTest {
       "14-09-2013");
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("mandatory.field.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     shipmentLineItemDTO.checkMandatoryFields();
   }
@@ -59,7 +59,7 @@ public class ShipmentLineItemDTOTest {
       "14-09-2013");
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("mandatory.field.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     shipmentLineItemDTO.checkMandatoryFields();
   }
