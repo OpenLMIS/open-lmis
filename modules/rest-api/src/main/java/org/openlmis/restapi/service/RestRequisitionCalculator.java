@@ -14,7 +14,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.pod.domain.PODLineItem;
 import org.openlmis.pod.service.PODService;
@@ -34,9 +33,6 @@ public class RestRequisitionCalculator {
 
   @Autowired
   private RequisitionService requisitionService;
-
-  @Autowired
-  private MessageService messageService;
 
   @Autowired
   private PODService podService;
@@ -72,7 +68,7 @@ public class RestRequisitionCalculator {
       }
     }
     if (invalidProductCodes.size() != 0) {
-      throw new DataException(messageService.message("invalid.product.codes", invalidProductCodes.toString()));
+      throw new DataException("invalid.product.codes", invalidProductCodes.toString());
     }
   }
 

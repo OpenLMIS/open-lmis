@@ -20,7 +20,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
@@ -66,18 +65,13 @@ public class PODServiceTest {
   private RequisitionService requisitionService;
 
   @Mock
-  private MessageService messageService;
-
-  @Mock
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @InjectMocks
   private PODService podService;
 
-
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
-
 
   private Long podId;
   private Long orderId;
@@ -137,6 +131,7 @@ public class PODServiceTest {
     pod.setPodLineItems(lineItems);
     when(productService.getIdForCode(productCode)).thenReturn(null);
     whenNew(ArrayList.class).withNoArguments().thenReturn(invalidProducts);
+    when(invalidProducts.toString()).thenReturn("[invalid product list]");
     when(invalidProducts.size()).thenReturn(1);
     Order order = mock(Order.class);
     when(orderService.getOrder(orderId)).thenReturn(order);
@@ -145,16 +140,15 @@ public class PODServiceTest {
     supplyLine.setSupplyingFacility(supplyingFacility);
     order.setSupplyLine(supplyLine);
     when(order.getSupplyLine()).thenReturn(supplyLine);
-    when(messageService.message("error.invalid.product.code", invalidProducts.toString())).thenReturn("Invalid Product");
-    when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
+
     Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
+    when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
     when(requisitionService.getLWById(pod.getOrderId())).thenReturn(requisition);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("Invalid Product");
+    expectedException.expectMessage("code: error.invalid.product.code, params: { [invalid product list] }");
 
     podService.updatePOD(pod);
-
   }
 
   @Test

@@ -22,7 +22,6 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.pod.domain.PODLineItem;
@@ -56,8 +55,6 @@ public class RestRequisitionCalculatorTest {
 
   @Mock
   private RequisitionService requisitionService;
-  @Mock
-  private MessageService messageService;
 
   @Mock
   private ProcessingScheduleService processingScheduleService;
@@ -155,10 +152,9 @@ public class RestRequisitionCalculatorTest {
     Rnr savedRequisition = mock(Rnr.class);
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem1)).thenReturn(rnrLineItem1);
     when(savedRequisition.findCorrespondingLineItem(rnrLineItem2)).thenReturn(null);
-    when(messageService.message("invalid.product.codes", "[P12]")).thenReturn("invalid products [P12]");
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("invalid products [P12]");
+    expectedException.expectMessage("code: invalid.product.codes, params: { [P12] }");
 
     restRequisitionCalculator.validateProducts(report.getProducts(), savedRequisition);
 

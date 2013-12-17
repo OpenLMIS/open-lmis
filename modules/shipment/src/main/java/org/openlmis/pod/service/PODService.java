@@ -13,7 +13,6 @@
 package org.openlmis.pod.service;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.Order;
@@ -50,9 +49,6 @@ public class PODService {
   RequisitionService requisitionService;
 
   @Autowired
-  private MessageService messageService;
-
-  @Autowired
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Transactional
@@ -64,7 +60,7 @@ public class PODService {
     if (pod.getPodLineItems() == null) return;
     List<String> invalidProductCodes = getInvalidProductCodes(pod.getPodLineItems());
     if (invalidProductCodes.size() > 0) {
-      throw new DataException(messageService.message("error.invalid.product.code", invalidProductCodes.toString()));
+      throw new DataException("error.invalid.product.code", invalidProductCodes.toString());
     }
     for (PODLineItem podLineItem : pod.getPodLineItems()) {
       podLineItem.setPodId(pod.getId());

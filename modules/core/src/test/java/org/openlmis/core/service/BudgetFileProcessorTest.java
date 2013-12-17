@@ -182,13 +182,10 @@ public class BudgetFileProcessorTest {
 
     verify(transformer).transform(lineItemDTO, null, 1);
     verify(BudgetLineItemDTO.populate(csvRow, asList(defaultEDIColumn)));
-
   }
-
 
   @Test
   public void shouldNotProcessARecordIfMandatoryFieldIsMissing() throws Exception {
-
     configuration.setHeaderInFile(true);
     when(listReader.getRowNumber()).thenReturn(1).thenReturn(2);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
@@ -210,9 +207,10 @@ public class BudgetFileProcessorTest {
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
+    when(lineItemDTO.getFacilityCode()).thenReturn("F899");
     Facility facility = new Facility();
-    facility.setCode("F10");
-    when(facilityService.getByCode(facility)).thenThrow(new DataException("Invalid facility code"));
+    facility.setCode("F899");
+    when(facilityService.getByCode(facility)).thenReturn(null);
 
     budgetFileProcessor.process(message);
 
@@ -228,10 +226,12 @@ public class BudgetFileProcessorTest {
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
+    when(lineItemDTO.getProgramCode()).thenReturn("P12345");
+    when(lineItemDTO.getFacilityCode()).thenReturn("F11");
     Facility facility = new Facility();
-    facility.setCode("F10");
+    facility.setCode("F11");
     when(facilityService.getByCode(facility)).thenReturn(facility);
-    when(programService.getByCode("HIV")).thenThrow(new DataException("Invalid program code"));
+    when(programService.getByCode("P12345")).thenReturn(null);
 
     budgetFileProcessor.process(message);
 
@@ -250,6 +250,7 @@ public class BudgetFileProcessorTest {
     when(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns())).thenReturn(lineItemDTO);
     Facility facility = new Facility();
     facility.setCode("F10");
+    when(lineItemDTO.getFacilityCode()).thenReturn("F10'");
     when(facilityService.getByCode(facility)).thenReturn(facility);
     Program program = new Program();
     when(programService.getByCode("HIV")).thenReturn(program);
