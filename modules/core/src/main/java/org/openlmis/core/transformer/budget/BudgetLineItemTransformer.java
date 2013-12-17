@@ -11,6 +11,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import static java.math.RoundingMode.FLOOR;
+
 @Service
 public class BudgetLineItemTransformer extends LineItemTransformer {
 
@@ -38,7 +40,9 @@ public class BudgetLineItemTransformer extends LineItemTransformer {
       if (budget < 0) {
         throw new DataException("Negative budget");
       }
-      allocatedBudget = new DecimalFormat("#0.##").format(budget);
+      DecimalFormat decimalFormat = new DecimalFormat("#0.##");
+      decimalFormat.setRoundingMode(FLOOR);
+      allocatedBudget = decimalFormat.format(budget);
     } catch (Exception e) {
       throw new DataException(messageService.message("budget.allocated.budget.invalid", allocatedBudget, rowNumber));
     }

@@ -13,10 +13,10 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static java.math.BigDecimal.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -47,7 +47,7 @@ public class BudgetLineItemTransformerTest {
     assertThat(budgetLineItem.getFacilityCode(), is("F10"));
     assertThat(budgetLineItem.getProgramCode(), is("HIV"));
     assertThat(budgetLineItem.getPeriodDate(), is(date));
-    assertThat(budgetLineItem.getAllocatedBudget(), is(BigDecimal.valueOf(345.45)));
+    assertThat(budgetLineItem.getAllocatedBudget(), is(valueOf(345.45)));
     assertThat(budgetLineItem.getNotes(), is("My good notes"));
   }
 
@@ -61,7 +61,7 @@ public class BudgetLineItemTransformerTest {
     assertThat(budgetLineItem.getFacilityCode(), is("F10"));
     assertThat(budgetLineItem.getProgramCode(), is("HIV"));
     assertThat(budgetLineItem.getPeriodDate(), is(nullValue()));
-    assertThat(budgetLineItem.getAllocatedBudget(), is(BigDecimal.valueOf(345.45)));
+    assertThat(budgetLineItem.getAllocatedBudget(), is(valueOf(345.45)));
     assertThat(budgetLineItem.getNotes(), is("My good notes"));
 
   }
@@ -103,6 +103,16 @@ public class BudgetLineItemTransformerTest {
     expectedException.expectMessage("Invalid budget");
 
     budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
+  }
+
+  @Test
+  public void shouldFloorAllocatedBudgetIs() {
+    BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", null, "345.466", "My good notes");
+    String datePattern = null;
+
+    BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, 1);
+
+    assertThat(budgetLineItem.getAllocatedBudget(), is(valueOf(345.46)));
   }
 
 }
