@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.Math.*;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -183,12 +184,12 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void enterValuesInRnR(String beginningBalance, String quantityDispensed, String quantityReceived, String totalAdjustmentAndLoses) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.calculateAndVerifyStockOnHand(Integer.parseInt(beginningBalance), Integer.parseInt(quantityDispensed),
-                                                   Integer.parseInt(quantityReceived), Integer.parseInt(totalAdjustmentAndLoses));
+      Integer.parseInt(quantityReceived), Integer.parseInt(totalAdjustmentAndLoses));
     initiateRnRPage.verifyTotalField();
   }
 
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\"$")
-   public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
+  public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(Integer.parseInt(normalisedConsumption));
     initiateRnRPage.verifyAmcForFirstProduct(Integer.parseInt(amc));
@@ -220,7 +221,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void accessProceed() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.clickProceed();
-
   }
 
   @And("^I add comments$")
@@ -238,11 +238,11 @@ public class E2EInitiateRnR extends TestCaseHelper {
   }
 
   @And("^I update & verify ordered quantities$")
-public void enterAndVerifyOrderedQuantities() throws Exception {
+  public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "newPatientFirstProduct");
     initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
-    int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
+    int expectedCalculatedNC = CalculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, 36, 3, 11);
     initiateRnRPage.verifyPacksToShip("10");
   }
@@ -252,9 +252,10 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "newPatientFirstProduct");
     initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
-    int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, Math.round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
-    initiateRnRPage.verifyPacksToShip("11");
+    int expectedCalculatedNC = CalculatedExpectedNC(10, 10, 10);
+    initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
+    // TODO: remove hard coded value
+    initiateRnRPage.verifyPacksToShip("10");
   }
 
   @And("^I update & verify requested quantities$")
@@ -516,7 +517,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     } else {
       ans = ((quantityDispensed * 30.0f / (dayDiff - stockOutDays))) + (numberOfNewPatients * (30 / 10));
     }
-    return Math.round(ans);
+    return round(ans);
   }
 
   @After
