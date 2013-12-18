@@ -15,19 +15,28 @@ package org.openlmis.distribution.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.Facility;
+
+import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 public class FacilityDistribution {
-
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
+  private Refrigerators refrigerators;
 
+  public FacilityDistribution(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
+    this.epiUse = new EpiUse(facility, distribution);
+    this.refrigerators = new Refrigerators(readings);
+  }
 }

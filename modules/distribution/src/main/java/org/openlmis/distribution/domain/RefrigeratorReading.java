@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Refrigerator;
 
 import java.util.List;
 
@@ -25,16 +26,27 @@ import java.util.List;
 @AllArgsConstructor
 public class RefrigeratorReading extends BaseModel {
 
+  //Meta data
+  Long refrigeratorId;
+  String notes;
+  String brand;
+  String model;
+  String serialNumber;
+
+  //Readings
   Float temperature;
   RadioOptions functioningCorrectly;
   Integer lowAlarmEvents;
   Integer highAlarmEvents;
   RadioOptions problemSinceLastTime;
   List<String> problems;
-  String notes;
-  String refrigeratorSerialNumber;
-  Long facilityId;
-  Long distributionId;
+
+  public RefrigeratorReading(Refrigerator refrigerator) {
+    this.refrigeratorId = refrigerator.getId();
+    this.brand = refrigerator.getBrand();
+    this.model = refrigerator.getModel();
+    this.serialNumber = refrigerator.getSerialNumber();
+  }
 }
 
 enum RadioOptions {

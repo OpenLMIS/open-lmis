@@ -15,11 +15,13 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.*;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Date;
 import java.util.List;
@@ -29,10 +31,12 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(IntegrationTests.class)
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(FacilityDistributionService.class)
 public class FacilityDistributionServiceTest {
 
   @Mock
@@ -43,6 +47,9 @@ public class FacilityDistributionServiceTest {
 
   @Mock
   FacilityVisitService facilityVisitService;
+
+  @Mock
+  RefrigeratorService refrigeratorService;
 
   @InjectMocks
   FacilityDistributionService facilityDistributionService;
@@ -57,10 +64,15 @@ public class FacilityDistributionServiceTest {
     FacilityDistributionService spyFacilityDistributionService = spy(facilityDistributionService);
     Facility facility = new Facility(1234L);
     List<Facility> facilities = asList(facility);
-    when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(null, new EpiUse(), null);
 
-    FacilityDistribution facilityDistribution = new FacilityDistribution(null, null);
-    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution);
+    Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L);
+    List<Refrigerator> refrigerators = asList(refrigerator);
+
+    when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
+    when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(1L, 3L)).thenReturn(refrigerators);
+
+    doReturn(facilityDistribution).when(spyFacilityDistributionService).createDistributionData(facility, distribution, refrigerators);
 
     Map<Long, FacilityDistribution> facilityDistributionDataMap = spyFacilityDistributionService.createFor(distribution);
 
@@ -78,13 +90,17 @@ public class FacilityDistributionServiceTest {
     when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
     when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(new ProductGroup("PG2", "PG2"));
 
+
+    Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L);
+    List<Refrigerator> refrigerators = asList(refrigerator);
+
     programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
     facility.setSupportedPrograms(asList(programSupported));
 
     Distribution distribution = new Distribution();
     distribution.setId(1L);
 
-    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution);
+    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
 
     EpiUse epiUse = distributionData.getEpiUse();
 
@@ -95,35 +111,53 @@ public class FacilityDistributionServiceTest {
   }
 
   @Test
-  public void shouldNotGetProductGroupForAllInactiveProducts() throws Exception {
-    Facility facility = new Facility(2L);
-    ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
-
-    FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
-    FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
-
-    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
-    when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(null);
-
-    programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
-    facility.setSupportedPrograms(asList(programSupported));
-
+  public void shouldFetchAllRefrigeratorsAndPopulateInFacilities() throws Exception {
     Distribution distribution = new Distribution();
-    distribution.setId(1L);
+    distribution.setDeliveryZone(new DeliveryZone(4L));
+    distribution.setProgram(new Program(16L));
+    List<Refrigerator> refrigerators = asList(new Refrigerator(), new Refrigerator());
+    Facility facility1 = new Facility(9l);
+    Facility facility2 = new Facility(12L);
+    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null);
+    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null);
+    FacilityDistributionService service = spy(facilityDistributionService);
 
-    FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution);
+    when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(4L, 16L)).thenReturn(refrigerators);
+    when(facilityService.getAllForDeliveryZoneAndProgram(4L, 16L)).thenReturn(asList(facility1, facility2));
+    doReturn(facilityDistribution1).when(service).createDistributionData(facility1, distribution, refrigerators);
+    doReturn(facilityDistribution2).when(service).createDistributionData(facility2, distribution, refrigerators);
 
-    List<EpiUseLineItem> lineItems = distributionData.getEpiUse().getLineItems();
-    assertThat(lineItems.size(), is(1));
-    assertThat(lineItems.get(0).getProductGroup().getCode(), is("PG1"));
-    assertThat(lineItems.get(0).getProductGroup().getName(), is("PG1"));
+    Map<Long, FacilityDistribution> facilityDistributions = service.createFor(distribution);
+
+    assertThat(facilityDistributions.get(9L), is(facilityDistribution1));
+    assertThat(facilityDistributions.get(12L), is(facilityDistribution2));
+  }
+
+  @Test
+  public void shouldFilterListOfRefrigeratorsForAFacilityAndPopulateFacilityDistributionsWithThem() throws Exception {
+    Facility facility = new Facility(5L);
+    Distribution distribution = new Distribution();
+    Refrigerator nonFacilityRefrigerator = new Refrigerator();
+    nonFacilityRefrigerator.setFacilityId(54L);
+    Refrigerator facilityRefrigerator = new Refrigerator();
+    facilityRefrigerator.setFacilityId(5L);
+    RefrigeratorReading facilityRefReading = new RefrigeratorReading(facilityRefrigerator);
+    List<Refrigerator> refrigerators = asList(nonFacilityRefrigerator, facilityRefrigerator);
+    FacilityDistribution expectedFacilityDistribution = new FacilityDistribution();
+    expectedFacilityDistribution.setEpiUse(new EpiUse());
+    whenNew(FacilityDistribution.class).withArguments(facility, distribution, asList(facilityRefReading)).thenReturn(expectedFacilityDistribution);
+
+    FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
+
+    verifyNew(FacilityDistribution.class).withArguments(facility, distribution, asList(facilityRefReading));
+    assertThat(facilityDistribution, is(expectedFacilityDistribution));
   }
 
   @Test
   public void shouldSaveFacilityVisitAndEpiUse() throws Exception {
     EpiUse epiUse = new EpiUse();
     FacilityVisit facilityVisit = new FacilityVisit();
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, null);
 
     when(facilityVisitService.save(facilityVisit)).thenReturn(true);
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);

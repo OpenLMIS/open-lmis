@@ -29,7 +29,7 @@ public class FacilityDistributionDTO {
   private EpiUseDTO epiUse;
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform());
+    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), null);
   }
 
   public void setDistributionId(Long distributionId) {

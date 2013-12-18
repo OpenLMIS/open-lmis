@@ -137,7 +137,7 @@ public class DistributionControllerTest {
     Long distributionId = 1l;
     Long facilityId = 3l;
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
-    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null);
+    FacilityDistribution facilityDistributionData = new FacilityDistribution();
 
     when(service.sync(facilityDistributionData)).thenReturn(true);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();

@@ -11,11 +11,15 @@
 package org.openlmis.distribution.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +27,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.collections.CollectionUtils.collect;
+import static org.apache.commons.collections.CollectionUtils.select;
+
 @Service
 @NoArgsConstructor
 public class FacilityDistributionService {
 
   @Autowired
   FacilityService facilityService;
+
+  @Autowired
+  RefrigeratorService refrigeratorService;
 
   @Autowired
   EpiUseService epiUseService;
@@ -43,17 +53,31 @@ public class FacilityDistributionService {
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
     List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
+    List<Refrigerator> distributionRefrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
+
     for (Facility facility : facilities) {
-      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution));
+      facilityDistributions.put(facility.getId(), createDistributionData(facility, distribution, distributionRefrigerators));
     }
 
     return facilityDistributions;
   }
 
-  FacilityDistribution createDistributionData(Facility facility, Distribution distribution) {
-    EpiUse epiUse = new EpiUse(facility, distribution);
-    epiUseService.save(epiUse);
-    return new FacilityDistribution(null, epiUse);
+  FacilityDistribution createDistributionData(final Facility facility, Distribution distribution, List<Refrigerator> refrigerators) {
+    List<RefrigeratorReading> refrigeratorReadings = (List) collect(select(refrigerators, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        return ((Refrigerator) o).getFacilityId().equals(facility.getId());
+      }
+    }), new Transformer() {
+      @Override
+      public Object transform(Object o) {
+        return new RefrigeratorReading((Refrigerator) o);
+      }
+    });
+
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facility, distribution, refrigeratorReadings);
+    epiUseService.save(facilityDistribution.getEpiUse());
+    return facilityDistribution;
   }
 
   public boolean save(FacilityDistribution facilityDistribution) {
