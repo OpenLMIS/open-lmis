@@ -39,6 +39,18 @@ public class EPIUse extends DistributionTab {
   @FindBy(how = ID, using = "button_Cancel")
   private static WebElement cancelButton=null;
 
+  @FindBy(how = ID, using = "stockAtFirstOfMonth0")
+  private static WebElement NRForStockFirstOfMonth0 =null;
+
+  @FindBy(how = ID, using = "received0")
+  private static WebElement NRForReceived0=null;
+
+  @FindBy(how = ID, using = "distributed0")
+  private static WebElement NRForDistributed0 =null;
+
+  @FindBy(how = ID, using = "loss0")
+  private static WebElement NRForLoss0=null;
+
   public EPIUse(TestWebDriver driver) {
     super(driver);
   }
@@ -81,69 +93,69 @@ public class EPIUse extends DistributionTab {
     assertFalse("applyNRToAllFieldsCheckbox NR enabled.", applyNRToAllFieldsCheckbox.isEnabled());
   }
 
-  public void enterValueInStockAtFirstOfMonth(String value, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtFirstOfMonth = testWebDriver.getElementByName("stockAtFirstOfMonth" + rownumber);
+  public void enterValueInStockAtFirstOfMonth(String value, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtFirstOfMonth = testWebDriver.getElementByName("stockAtFirstOfMonth" + rowNumber);
     sendKeys(stockAtFirstOfMonth, value);
     stockAtFirstOfMonth.sendKeys(Keys.TAB);
   }
 
-  public void enterValueInReceived(String value, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement received = testWebDriver.getElementByName("received" + rownumber);
+  public void enterValueInReceived(String value, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement received = testWebDriver.getElementByName("received" + rowNumber);
     sendKeys(received, value);
     received.sendKeys(Keys.TAB);
   }
 
-  public void enterValueInDistributed(String value, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement distributed = testWebDriver.getElementByName("distributed" + rownumber);
+  public void enterValueInDistributed(String value, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement distributed = testWebDriver.getElementByName("distributed" + rowNumber);
     sendKeys(distributed, value);
     distributed.sendKeys(Keys.TAB);
   }
 
-  public void enterValueInLoss(String value, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement loss = testWebDriver.getElementByName("loss" + rownumber);
+  public void enterValueInLoss(String value, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement loss = testWebDriver.getElementByName("loss" + rowNumber);
     sendKeys(loss, value);
     loss.sendKeys(Keys.TAB);
   }
 
-  public void enterValueInStockAtEndOfMonth(String value, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtEndOfMonth = testWebDriver.getElementByName("stockAtEndOfMonth" + rownumber);
+  public void enterValueInStockAtEndOfMonth(String value, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtEndOfMonth = testWebDriver.getElementByName("stockAtEndOfMonth" + rowNumber);
     sendKeys(stockAtEndOfMonth, value);
     stockAtEndOfMonth.sendKeys(Keys.TAB);
   }
 
-  public void enterValueInExpirationDate(String value, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement expirationDate = testWebDriver.getElementByName("expirationDate" + rownumber);
+  public void enterValueInExpirationDate(String value, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement expirationDate = testWebDriver.getElementByName("expirationDate" + rowNumber);
     sendKeys(expirationDate, value);
     expirationDate.sendKeys(Keys.TAB);
   }
 
-  public void checkUncheckStockAtFirstOfMonthNotRecorded(int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtFirstOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtFirstOfMonth" + rownumber);
+  public void checkUncheckStockAtFirstOfMonthNotRecorded(int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtFirstOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtFirstOfMonth" + rowNumber);
     stockAtFirstOfMonthNotRecordedCheckBox.click();
   }
 
-  public void checkUncheckReceivedNotRecorded(int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement receivedNotRecordedCheckBox = testWebDriver.getElementById("received" + rownumber);
+  public void checkUncheckReceivedNotRecorded(int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement receivedNotRecordedCheckBox = testWebDriver.getElementById("received" + rowNumber);
     receivedNotRecordedCheckBox.click();
   }
 
-  public void checkUncheckDistributedNotRecorded(int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement distributedNotRecordedCheckBox = testWebDriver.getElementById("distributed" + rownumber);
+  public void checkUncheckDistributedNotRecorded(int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement distributedNotRecordedCheckBox = testWebDriver.getElementById("distributed" + rowNumber);
     distributedNotRecordedCheckBox.click();
   }
 
-  public void checkUncheckLossNotRecorded(int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement lossNotRecordedCheckBox = testWebDriver.getElementById("loss" + rownumber);
+  public void checkUncheckLossNotRecorded(int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement lossNotRecordedCheckBox = testWebDriver.getElementById("loss" + rowNumber);
     lossNotRecordedCheckBox.click();
   }
 
@@ -155,116 +167,132 @@ public class EPIUse extends DistributionTab {
       cancelButton.click();
   }
 
-  public void checkUncheckStockAtEndOfMonthNotRecorded(int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtEndOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtEndOfMonth" + rownumber);
+  public void checkApplyNRToStockAtFirstOfMonth0() {
+    NRForStockFirstOfMonth0.click();
+  }
+
+  public void checkApplyNRToDistributed0() {
+    NRForDistributed0.click();
+  }
+
+  public void checkApplyNRToLoss0() {
+    NRForLoss0.click();
+  }
+
+  public void checkApplyNRToReceived0() {
+    NRForReceived0.click();
+  }
+
+  public void checkUncheckStockAtEndOfMonthNotRecorded(int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtEndOfMonthNotRecordedCheckBox = testWebDriver.getElementById("stockAtEndOfMonth" + rowNumber);
     stockAtEndOfMonthNotRecordedCheckBox.click();
   }
 
-  public void checkUncheckExpirationDateNotRecorded(int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement expirationDateNotRecordedCheckBox = testWebDriver.getElementById("expirationDate" + rownumber);
+  public void checkUncheckExpirationDateNotRecorded(int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement expirationDateNotRecordedCheckBox = testWebDriver.getElementById("expirationDate" + rowNumber);
     expirationDateNotRecordedCheckBox.click();
   }
 
-  public void verifyProductGroup(String productGroup, int rownumber) {
-    WebElement productGroupLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rownumber + "]/td[1]/span");
+  public void verifyProductGroup(String productGroup, int rowNumber) {
+    WebElement productGroupLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rowNumber + "]/td[1]/span");
     testWebDriver.waitForElementToAppear(productGroupLbl);
     assertEquals(productGroup, productGroupLbl.getText());
   }
 
-  public void verifyStockAtFirstOfMonth(String stockAtFirstOfMonth, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtFirstOfMonthTxt = testWebDriver.getElementByName("stockAtFirstOfMonth" + rownumber);
+  public void verifyStockAtFirstOfMonth(String stockAtFirstOfMonth, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtFirstOfMonthTxt = testWebDriver.getElementByName("stockAtFirstOfMonth" + rowNumber);
     assertEquals(stockAtFirstOfMonth, stockAtFirstOfMonthTxt.getAttribute("value"));
   }
 
-  public void verifyReceived(String received, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement receivedTxt = testWebDriver.getElementByName("received" + rownumber);
+  public void verifyReceived(String received, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement receivedTxt = testWebDriver.getElementByName("received" + rowNumber);
     assertEquals(received, receivedTxt.getAttribute("value"));
   }
 
-  public void verifyDistributed(String distributed, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement distributedTxt = testWebDriver.getElementByName("distributed" + rownumber);
+  public void verifyDistributed(String distributed, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement distributedTxt = testWebDriver.getElementByName("distributed" + rowNumber);
     assertEquals(distributed, distributedTxt.getAttribute("value"));
   }
 
-  public void verifyLoss(String loss, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement lossTxt = testWebDriver.getElementByName("loss" + rownumber);
+  public void verifyLoss(String loss, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement lossTxt = testWebDriver.getElementByName("loss" + rowNumber);
     assertEquals(loss, lossTxt.getAttribute("value"));
   }
 
-  public void verifyStockAtEndOfMonth(String stockAtEndOfMonth, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtEndOfMonthTxt = testWebDriver.getElementByName("stockAtEndOfMonth" + rownumber);
+  public void verifyStockAtEndOfMonth(String stockAtEndOfMonth, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtEndOfMonthTxt = testWebDriver.getElementByName("stockAtEndOfMonth" + rowNumber);
     assertEquals(stockAtEndOfMonth, stockAtEndOfMonthTxt.getAttribute("value"));
   }
 
-  public void verifyExpirationDate(String expirationDate, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement expirationDateTxt = testWebDriver.getElementByName("expirationDate" + rownumber);
+  public void verifyExpirationDate(String expirationDate, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement expirationDateTxt = testWebDriver.getElementByName("expirationDate" + rowNumber);
     assertEquals(expirationDate, expirationDateTxt.getAttribute("value"));
   }
 
-  public void verifyStockAtFirstOfMonthStatus(boolean status, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtFirstOfMonthTxt = testWebDriver.getElementByName("stockAtFirstOfMonth" + rownumber);
+  public void verifyStockAtFirstOfMonthStatus(boolean status, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtFirstOfMonthTxt = testWebDriver.getElementByName("stockAtFirstOfMonth" + rowNumber);
     if (status)
       assertTrue("Stock At First Of Month Disabled.", stockAtFirstOfMonthTxt.isEnabled());
     else
       assertFalse("Stock At First Of Month Enabled.", stockAtFirstOfMonthTxt.isEnabled());
   }
 
-  public void verifyReceivedStatus(boolean status, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement receivedTxt = testWebDriver.getElementByName("received" + rownumber);
+  public void verifyReceivedStatus(boolean status, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement receivedTxt = testWebDriver.getElementByName("received" + rowNumber);
     if (status)
       assertTrue("Received Disabled.", receivedTxt.isEnabled());
     else
       assertFalse("Received Enabled.", receivedTxt.isEnabled());
   }
 
-  public void verifyDistributedStatus(boolean status, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement distributedTxt = testWebDriver.getElementByName("distributed" + rownumber);
+  public void verifyDistributedStatus(boolean status, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement distributedTxt = testWebDriver.getElementByName("distributed" + rowNumber);
     if (status)
       assertTrue("Distributed Disabled.", distributedTxt.isEnabled());
     else
       assertFalse("Distributed Enabled.", distributedTxt.isEnabled());
   }
 
-  public void verifyLossStatus(boolean status, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement lossTxt = testWebDriver.getElementByName("loss" + rownumber);
+  public void verifyLossStatus(boolean status, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement lossTxt = testWebDriver.getElementByName("loss" + rowNumber);
     if (status)
       assertTrue("Loss Disabled.", lossTxt.isEnabled());
     else
       assertFalse("Loss Enabled.", lossTxt.isEnabled());
   }
 
-  public void verifyStockAtEndOfMonthStatus(boolean status, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement stockAtEndOfMonthTxt = testWebDriver.getElementByName("stockAtEndOfMonth" + rownumber);
+  public void verifyStockAtEndOfMonthStatus(boolean status, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement stockAtEndOfMonthTxt = testWebDriver.getElementByName("stockAtEndOfMonth" + rowNumber);
     if (status)
       assertTrue("Stock At End Of Month Disabled.", stockAtEndOfMonthTxt.isEnabled());
     else
       assertFalse("Stock At End Of Month Enabled.", stockAtEndOfMonthTxt.isEnabled());
   }
 
-  public void verifyExpirationDateStatus(boolean status, int rownumber) {
-    rownumber = rownumber - 1;
-    WebElement expirationDateTxt = testWebDriver.getElementByName("expirationDate" + rownumber);
+  public void verifyExpirationDateStatus(boolean status, int rowNumber) {
+    rowNumber = rowNumber - 1;
+    WebElement expirationDateTxt = testWebDriver.getElementByName("expirationDate" + rowNumber);
     if (status)
       assertTrue("Expiration Date Disabled.", expirationDateTxt.isEnabled());
     else
       assertFalse("Expiration Date Enabled.", expirationDateTxt.isEnabled());
   }
 
-  public void verifyTotal(String total, int rownumber) {
-    WebElement totalLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rownumber + "]/td[4]/span");
+  public void verifyTotal(String total, int rowNumber) {
+    WebElement totalLbl = testWebDriver.getElementByXpath(".//*[@id='epiUseTable']/form/table/tbody/tr[" + rowNumber + "]/td[4]/span");
     assertEquals(total, totalLbl.getText());
   }
 

@@ -26,6 +26,8 @@
         </class>
       <class name="org.openlmis.functional.DistributionSyncTest">
         </class>
+      <class name="org.openlmis.functional.DistributionEpiUseSyncTest">
+        </class>
     </classes>
   </test>
 </suite>

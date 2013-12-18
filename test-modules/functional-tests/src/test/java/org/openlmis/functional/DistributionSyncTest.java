@@ -53,8 +53,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
-    dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
-    dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
 
@@ -90,8 +90,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     generalObservationPage.setObservations("Some observations");
     generalObservationPage.setConfirmedByName("samuel");
     generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Mai ka");
-    generalObservationPage.setVerifiedByTitle("Laal");
+    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByTitle("XYZ");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -123,8 +123,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     generalObservationPage.setObservations("Some observations");
     generalObservationPage.setConfirmedByName("samuel");
     generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Mai ka");
-    generalObservationPage.setVerifiedByTitle("Laal");
+    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByTitle("X Y Z");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -146,8 +146,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(m1.get("observations").toString(), "Some observations");
     assertEquals(m1.get("confirmedByName").toString(), "samuel");
     assertEquals(m1.get("confirmedByTitle").toString(), "Doe");
-    assertEquals(m1.get("verifiedByName").toString(), "Mai ka");
-    assertEquals(m1.get("verifiedByTitle").toString(), "Laal");
+    assertEquals(m1.get("verifiedByName").toString(), "Verifier");
+    assertEquals(m1.get("verifiedByTitle").toString(), "XYZ");
 
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
@@ -192,8 +192,8 @@ public class DistributionSyncTest extends TestCaseHelper {
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
         dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
         dbWrapper.insertProductGroup("PG1");
-        dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
-        dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
+        dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
+        dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
         dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
         dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
 
@@ -217,8 +217,8 @@ public class DistributionSyncTest extends TestCaseHelper {
         generalObservationPage.setObservations("Some observations");
         generalObservationPage.setConfirmedByName("samuel");
         generalObservationPage.setConfirmedByTitle("Doe");
-        generalObservationPage.setVerifiedByName("Mai ka");
-        generalObservationPage.setVerifiedByTitle("Laal");
+        generalObservationPage.setVerifiedByName("Verifier");
+        generalObservationPage.setVerifiedByTitle("XYZ");
 
         homePage.navigateHomePage();
         homePage.navigatePlanDistribution();
@@ -243,8 +243,8 @@ public class DistributionSyncTest extends TestCaseHelper {
         generalObservationPage.setObservations("Some observations");
         generalObservationPage.setConfirmedByName("samuel");
         generalObservationPage.setConfirmedByTitle("Doe");
-        generalObservationPage.setVerifiedByName("Mai ka");
-        generalObservationPage.setVerifiedByTitle("Laal");
+        generalObservationPage.setVerifiedByName("Verifier");
+        generalObservationPage.setVerifiedByTitle("XYZ");
 
         facilityListPage.selectFacility("F11");
         epiUse.navigate();
@@ -254,8 +254,8 @@ public class DistributionSyncTest extends TestCaseHelper {
         generalObservationPage.setObservations("Some observations");
         generalObservationPage.setConfirmedByName("samuel");
         generalObservationPage.setConfirmedByTitle("Doe");
-        generalObservationPage.setVerifiedByName("Mai ka");
-        generalObservationPage.setVerifiedByTitle("Laal");
+        generalObservationPage.setVerifiedByName("Verifier");
+        generalObservationPage.setVerifiedByTitle("XYZ");
 
         homePage.navigateHomePage();
         homePage.navigatePlanDistribution();

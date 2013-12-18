@@ -15,6 +15,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
@@ -64,6 +65,22 @@ public class DBWrapper {
     return connection.createStatement().executeQuery(sql);
   }
 
+  private List<Map<String, String>> select(String sql, Object... params) throws SQLException {
+    ResultSet rs = query(sql, params);
+    ResultSetMetaData md = rs.getMetaData();
+    int columns = md.getColumnCount();
+    List<Map<String, String>> list = new ArrayList<>();
+    while (rs.next()) {
+      Map<String, String> row = new HashMap<>();
+      for (int i = 1; i <= columns; ++i) {
+        row.put(md.getColumnName(i), rs.getString(i));
+      }
+      list.add(row);
+    }
+
+    return list;
+  }
+
   private ResultSet query(String sql, Object... params) throws SQLException {
     return query(format(sql, params));
   }
@@ -82,7 +99,7 @@ public class DBWrapper {
     insertProcessingPeriod(period, period, "2013-09-29", "2020-09-30", 66, schedule);
   }
 
-  public void DeleteProcessingPeriods() throws SQLException, IOException {
+  public void deleteProcessingPeriods() throws SQLException, IOException {
     update("delete from processing_periods");
   }
 
@@ -1484,11 +1501,11 @@ public class DBWrapper {
   }
 
   public void updateOrderStatus(String status, String username, String program) throws IOException, SQLException {
-      update("update orders set status='RECEIVED'");
+    update("update orders set status='RECEIVED'");
   }
 
   public void updateRequisitionToEmergency() throws IOException, SQLException {
-      update("update requisitions set Emergency=true");
+    update("update requisitions set Emergency=true");
   }
 
   public void deleteSupplyLine() throws IOException, SQLException {
@@ -1506,4 +1523,10 @@ public class DBWrapper {
 
   }
 
+  public Map<String, String> getEpiUseDetails(String productGroupCode, String facilityCode) throws SQLException {
+    return select("SELECT * FROM epi_use_line_items WHERE productGroupName = " +
+      "(SELECT name FROM product_groups where code = '%s') AND epiUseId=(Select id from epi_use where facilityId=" +
+      "(Select id from facilities where code ='%s'));", productGroupCode,facilityCode).get(0);
+  }
 }
+

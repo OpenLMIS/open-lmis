@@ -819,7 +819,7 @@ public class InitiateRnR extends TestCaseHelper {
     rightsList.add(CREATE_REQUISITION);
     rightsList.add(VIEW_REQUISITION);
     setupTestDataToInitiateRnR(true, program, userSIC, "200", rightsList);
-    dbWrapper.DeleteProcessingPeriods();
+    dbWrapper.deleteProcessingPeriods();
     dbWrapper.insertProcessingPeriod("Period1", "first period", "2012-12-01", "2013-01-15", 1, "M");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
