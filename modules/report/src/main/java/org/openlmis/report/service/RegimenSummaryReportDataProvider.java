@@ -11,13 +11,12 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.report.mapper.RegimenSummaryReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.filter.RegimenSummaryReportFilter;
-import org.openlmis.report.model.report.MasterReport;
-import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,38 +59,34 @@ public class RegimenSummaryReportDataProvider extends ReportDataProvider {
 
     public ReportData getReportFilterData(Map<String, String[]> filterCriteria) {
         RegimenSummaryReportFilter regimenSummaryReportFilter = null;
-        List<MasterReport> reportList = new ArrayList<MasterReport>();
-        MasterReport report = new MasterReport();
-        report.details =  reportMapper.getReport(filterCriteria);
+
         if(filterCriteria != null){
             regimenSummaryReportFilter = new RegimenSummaryReportFilter();
 
-            regimenSummaryReportFilter.setRegimenId(filterCriteria.get("regimenId") == null ? 0 : Integer.parseInt(filterCriteria.get("regimenId")[0])); //defaults to 0
-            regimenSummaryReportFilter.setRegimen((filterCriteria.get("regimen") == null || filterCriteria.get("regimen")[0].equals("")) ? "All Regimens" : filterCriteria.get("regimen")[0]);
-            regimenSummaryReportFilter.setGeographicLevelId(filterCriteria.get("geographicLevelId") == null ? 0 : Integer.parseInt(filterCriteria.get("geographicLevelId")[0])); //defaults to 0
-            regimenSummaryReportFilter.setGeographicLevel( (filterCriteria.get("geographicLevel") == null || filterCriteria.get("geographicLevel")[0].equals("")) ? "All Geographic Levels" : filterCriteria.get("geographicLevel")[0]);
-
+            regimenSummaryReportFilter.setZoneId( StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0]));  //defaults to 0
+            regimenSummaryReportFilter.setZone( StringUtils.isBlank( filterCriteria.get("zone")[0] ) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
+            regimenSummaryReportFilter.setRegimen( StringUtils.isBlank( filterCriteria.get("regimen")[0] ) ? "All Regimens" : filterCriteria.get("regimen")[0]);
+            regimenSummaryReportFilter.setRegimenId( StringUtils.isBlank(filterCriteria.get("regimenId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("regimenId")[0]));  //defaults to 0
+            regimenSummaryReportFilter.setGeographicLevelId( StringUtils.isBlank(filterCriteria.get("geographicLevelId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("geographicLevelId")[0]));  //defaults to 0
+            regimenSummaryReportFilter.setGeographicLevel( StringUtils.isBlank( filterCriteria.get("geographicLevel")[0] ) ? "All Geographic Levels" : filterCriteria.get("geographicLevel")[0]);
+            regimenSummaryReportFilter.setRegimenCategoryId( StringUtils.isBlank(filterCriteria.get("regimenCategoryId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("regimenCategoryId")[0]));  //defaults to 0
+            regimenSummaryReportFilter.setRegimenCategory( StringUtils.isBlank( filterCriteria.get("regimenCategory")[0] ) ? "All Regimen Categories" : filterCriteria.get("regimenCategory")[0]);
             regimenSummaryReportFilter.setRgroup( (filterCriteria.get("rgroup") == null || filterCriteria.get("rgroup")[0].equals("")) ? "All Reporting Groups" : filterCriteria.get("rgroup")[0]);
 
-            regimenSummaryReportFilter.setRegimenCategoryId(filterCriteria.get("regimenCategoryId") == null ? 0 : Integer.parseInt(filterCriteria.get("regimenCategoryId")[0])); //defaults to 0
-            regimenSummaryReportFilter.setRegimenCategory( (filterCriteria.get("regimenCategory") == null || filterCriteria.get("regimenCategory")[0].equals("")) ? "All Regimen Categories" : filterCriteria.get("regimenCategory")[0]);
-            regimenSummaryReportFilter.setZoneId(filterCriteria.get("zoneId") == null ? 0 : Integer.parseInt(filterCriteria.get("zoneId")[0])); //defaults to 0
-            regimenSummaryReportFilter.setZone( (filterCriteria.get("zone") == null || filterCriteria.get("zone")[0].equals("")) ? "All Geographic Zones" : filterCriteria.get("zone")[0]);
-
             regimenSummaryReportFilter.setRgroupId(filterCriteria.get("rgroupId") == null ? 0 : Integer.parseInt(filterCriteria.get("rgroupId")[0])); //defaults to 0
-            regimenSummaryReportFilter.setProgramId(filterCriteria.get("programId") == null ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));
-
-            if(regimenSummaryReportFilter.getProgramId() == 0 || regimenSummaryReportFilter.getProgramId() == -1){
+            regimenSummaryReportFilter.setProgramId( StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Integer.parseInt(filterCriteria.get("programId")[0]));  //defaults to 0
+            if(regimenSummaryReportFilter.getProgramId() == 0 || regimenSummaryReportFilter.getProgramId() == -1)
                 regimenSummaryReportFilter.setProgram("All Programs");
-        }else   {
+            else
                 regimenSummaryReportFilter.setProgram(filterCriteria.get("program")[0]);
-            }
 
-            regimenSummaryReportFilter.setScheduleId(filterCriteria.get("scheduleId") == null ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0]));
-            regimenSummaryReportFilter.setSchedule(filterCriteria.get("schedule") == null ? "" : filterCriteria.get("schedule")[0]);
-            regimenSummaryReportFilter.setPeriod(filterCriteria.get("period") == null ? "" : filterCriteria.get("period")[0]);
-            regimenSummaryReportFilter.setPeriodId(filterCriteria.get("periodId") == null ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0]));
+            regimenSummaryReportFilter.setScheduleId( StringUtils.isBlank(filterCriteria.get("scheduleId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("scheduleId")[0])); //defaults to 0
+            regimenSummaryReportFilter.setSchedule( StringUtils.isBlank( filterCriteria.get("schedule")[0] ) ? "All Schedules" : filterCriteria.get("schedule")[0]);
+            regimenSummaryReportFilter.setPeriodId( StringUtils.isBlank(filterCriteria.get("periodId")[0] ) ? 0 : Integer.parseInt(filterCriteria.get("periodId")[0])); //defaults to 0
+            regimenSummaryReportFilter.setPeriod( StringUtils.isBlank( filterCriteria.get("period")[0] ) ? "All Periods" : filterCriteria.get("period")[0]);
+
             regimenSummaryReportFilter.setYear(filterCriteria.get("year") == null ? 0 : Integer.parseInt(filterCriteria.get("year")[0]));
+
         }
         return regimenSummaryReportFilter;
     }
