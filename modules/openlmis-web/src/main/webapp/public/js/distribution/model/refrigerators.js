@@ -14,16 +14,16 @@ function Refrigerators(refrigerators) {
 
   var _this = this;
 
-  $(this.refrigeratorReadings).each(function (i, value) {
-    _this.refrigeratorReadings[i] = new RefrigeratorReading(value);
+  $(this.readings).each(function (i, value) {
+    _this.readings[i] = new RefrigeratorReading(value);
   });
 
   Refrigerators.prototype.computeStatus = function () {
-    if (_.findWhere(this.refrigeratorReadings, {status: 'is-incomplete'})) {
+    if (_.findWhere(this.readings, {status: 'is-incomplete'})) {
       return 'is-incomplete';
     }
-    if (_.findWhere(this.refrigeratorReadings, {status: 'is-empty'})) {
-      if (_.findWhere(this.refrigeratorReadings, {status: 'is-complete'})) {
+    if (_.findWhere(this.readings, {status: 'is-empty'})) {
+      if (_.findWhere(this.readings, {status: 'is-complete'})) {
         return 'is-incomplete';
       }
       return 'is-empty';
@@ -32,6 +32,6 @@ function Refrigerators(refrigerators) {
   };
 
   Refrigerators.prototype.addRefrigerator = function (reading) {
-    this.refrigeratorReadings.push(new RefrigeratorReading(reading));
+    this.readings.push(new RefrigeratorReading(reading));
   };
 }

@@ -14,22 +14,22 @@
     <div class="span1 status-cell">
       <span class="status-icon"></span>
     </div>
-    <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
-    <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
-    <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
+    <div class="span2" ng-bind="refrigeratorReading.brand"></div>
+    <div class="span3" ng-bind="refrigeratorReading.model"></div>
+    <div class="span3" ng-bind="refrigeratorReading.serialNumber"></div>
     <div class="span3">
       <span class="pull-right">
         <a id="editReading{{$index}}" href="" class="btn btn-small btn-primary"
-           ng-click="setEdit(refrigeratorReading.refrigerator.serialNumber, {{$index}})"
-           ng-hide="edit[refrigeratorReading.refrigerator.serialNumber]"
+           ng-click="setEdit(refrigeratorReading.serialNumber, {{$index}})"
+           ng-hide="edit[refrigeratorReading.serialNumber]"
            openlmis-message="button.show"></a>
         <input type="button" class="btn btn-small btn-danger" openlmis-message="button.delete"
-               ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.refrigerator.serialNumber)"/>
+               ng-click="showDeleteRefrigeratorConfirmationModel(refrigeratorReading.serialNumber)"/>
       </span>
     </div>
   </div>
 
-  <div ng-show="edit[refrigeratorReading.refrigerator.serialNumber]" class="row-fluid">
+  <div ng-show="edit[refrigeratorReading.serialNumber]" class="row-fluid">
     <div class="row-fluid">
       <div class="span1"></div>
       <div class="span11">
@@ -198,7 +198,7 @@
       <div class="span1"></div>
       <div class="span2">
         <a href="" id="refrigeratorReadingDone" class="btn btn-small btn-primary"
-           ng-click="edit[refrigeratorReading.refrigerator.serialNumber] = false;"
+           ng-click="edit[refrigeratorReading.serialNumber] = false;"
            openlmis-message="button.done"></a>
       </div>
     </div>

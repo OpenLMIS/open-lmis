@@ -31,7 +31,7 @@ describe("Refrigerators", function () {
   });
 
   it('should set status indicator to empty if all refrigeratorReadings are empty', function () {
-    refrigerators.refrigeratorReadings = [
+    refrigerators.readings = [
       {status: 'is-empty'},
       {status: 'is-empty'}
     ];
@@ -40,16 +40,15 @@ describe("Refrigerators", function () {
   });
 
   it('should set status indicator to incomplete if at least one refrigeratorReading is incomplete', function () {
-    refrigerators.refrigeratorReadings = [
+    refrigerators.readings = [
       {status: 'is-incomplete'}
     ];
 
     expect(refrigerators.computeStatus()).toEqual('is-incomplete');
   });
 
-  it('should set status indicator to incomplete if at least one refrigeratorReading is complete and rest are empty',
-    function () {
-      refrigerators.refrigeratorReadings = [
+  it('should set status indicator to incomplete if at least one refrigeratorReading is complete and rest are empty', function () {
+      refrigerators.readings = [
         {status: 'is-complete'},
         {status: 'is-complete'},
         {status: 'is-empty'}

@@ -31,9 +31,9 @@ describe('RefrigeratorController', function () {
     distribution = new Distribution({
       facilityDistributions: {
         1: { refrigerators: {
-          refrigeratorReadings: [
-            {refrigerator: {serialNumber: "abc"}},
-            {refrigerator: {serialNumber: "XYZ"}}
+          readings: [
+            {serialNumber: "abc"},
+            {serialNumber: "XYZ"}
           ]
         }
         }
@@ -76,7 +76,7 @@ describe('RefrigeratorController', function () {
     expect(scope.addRefrigeratorModal).toBeUndefined();
     expect(scope.isDuplicateSerialNumber).toBeUndefined();
     expect(scope.isDuplicateSerialNumber).toBeFalsy();
-    expect(scope.distribution.facilityDistributions[1].refrigerators.refrigeratorReadings.length).toEqual(3);
+    expect(scope.distribution.facilityDistributions[1].refrigerators.readings.length).toEqual(3);
     expect(IndexedDB.put).toHaveBeenCalledWith('distributions', scope.distribution);
   });
 

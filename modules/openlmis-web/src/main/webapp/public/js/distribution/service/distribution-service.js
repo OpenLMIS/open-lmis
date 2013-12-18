@@ -12,20 +12,6 @@ distributionModule.service('distributionService', function ($dialog, messageServ
 
   var _this = this;
 
-  function prepareDistribution(distribution, referenceData) {
-
-    $(referenceData.facilities).each(function (index, facility) {
-      var refrigeratorReadings = [];
-      $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
-        refrigeratorReadings.push({'refrigerator': refrigerator});
-      });
-
-      distribution.facilityDistributions[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
-    });
-
-    return distribution;
-  }
-
   this.applyNR = function (applyFunc) {
     var dialogOpts = {
       id: "distributionInitiated",
@@ -58,8 +44,6 @@ distributionModule.service('distributionService', function ($dialog, messageServ
   };
 
   this.put = function (distribution, referenceData) {
-    distribution = prepareDistribution(distribution, referenceData);
-
     IndexedDB.put('distributions', distribution, function () {
     }, {}, function () {
       SharedDistributions.update();

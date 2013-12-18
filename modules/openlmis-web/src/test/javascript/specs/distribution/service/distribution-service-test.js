@@ -66,7 +66,7 @@ describe('Distribution Service', function () {
 
     distributionService.put(distribution, referenceData);
 
-    expect(distribution.facilityDistributions).toEqual({ 44: { refrigerators: { refrigeratorReadings: []}}});
+    expect(distribution.facilityDistributions).toEqual({ "44": {"refrigerators": {}}});
     expect(indexedDB.put.calls[0].args).toEqual(['distributions', distribution, jasmine.any(Function), {}, jasmine.any(Function)]);
     expect(indexedDB.put.calls[1].args).toEqual(['distributionReferenceData', referenceData, jasmine.any(Function), {}]);
   });

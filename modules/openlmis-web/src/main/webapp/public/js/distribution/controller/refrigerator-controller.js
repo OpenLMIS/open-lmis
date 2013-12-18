@@ -33,16 +33,15 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
   };
 
   $scope.addRefrigeratorToStore = function () {
-    var exists = _.find($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
+    var exists = _.find($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings,
         function (reading) {
-          return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
+          return reading.serialNumber.toLowerCase() === $scope.newRefrigerator.serialNumber.toLowerCase();
         });
     if (exists) {
       $scope.isDuplicateSerialNumber = true;
       return;
     }
-    $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.
-        addRefrigerator({'refrigerator': angular.copy($scope.newRefrigerator), status: "is-empty"});
+    $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.addRefrigerator(angular.copy($scope.newRefrigerator));
 
     IndexedDB.put('distributions', $scope.distribution);
 
