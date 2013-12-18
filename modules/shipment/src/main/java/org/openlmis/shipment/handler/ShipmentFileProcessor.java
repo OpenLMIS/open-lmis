@@ -95,6 +95,7 @@ public class ShipmentFileProcessor {
     shipmentFilePostProcessHandler.process(orderIds, shipmentFile, successfullyProcessed);
   }
 
+  //  TODO: important add unit test fot this method
   @Transactional
   public void processShipmentLineItem(ICsvListReader listReader,
                                       EDIFileTemplate shipmentFileTemplate,
@@ -104,10 +105,11 @@ public class ShipmentFileProcessor {
 
     Collection<EDIFileColumn> includedColumns = shipmentFileTemplate.filterIncludedColumns();
 
-    String packedDateFormat = getFormatForField("packedDate", includedColumns);
-    String shippedDateFormat = getFormatForField("shippedDate", includedColumns);
+    String packedDateFormat = shipmentFileTemplate.getDateFormatForColumn("packedDate");
+    String shippedDateFormat = shipmentFileTemplate.getDateFormatForColumn("shippedDate");
 
     List<String> fieldsInOneRow;
+
     while ((fieldsInOneRow = listReader.read()) != null) {
 
       ShipmentLineItemDTO dto = ShipmentLineItemDTO.populate(fieldsInOneRow, includedColumns);
@@ -168,14 +170,4 @@ public class ShipmentFileProcessor {
       listReader.getHeader(true);
     }
   }
-
-  private String getFormatForField(String fieldName, Collection<EDIFileColumn> shipmentFileColumns) {
-    for (EDIFileColumn shipmentFileColumn : shipmentFileColumns) {
-      if (shipmentFileColumn.getName().equals(fieldName)) {
-        return shipmentFileColumn.getDatePattern();
-      }
-    }
-    return null;
-  }
-
 }

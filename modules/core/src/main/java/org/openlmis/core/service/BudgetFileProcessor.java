@@ -1,8 +1,6 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.BudgetLineItemDTO;
@@ -87,24 +85,29 @@ public class BudgetFileProcessor {
 
     ICsvListReader listReader = new CsvListReader(new FileReader(budgetFile), STANDARD_PREFERENCE);
 
-    if (budgetFileTemplate.getConfiguration().isHeaderInFile()) listReader.getHeader(true);
+    if (budgetFileTemplate.getConfiguration().isHeaderInFile()) {
+      listReader.getHeader(true);
+    }
 
     List<String> csvRow;
     Integer rowNumber;
+    Collection<EDIFileColumn> includedColumns = budgetFileTemplate.filterIncludedColumns();
+
     while ((csvRow = listReader.read()) != null) {
-      Collection<EDIFileColumn> includedColumns = budgetFileTemplate.filterIncludedColumns();
 
       BudgetLineItemDTO budgetLineItemDTO = populate(csvRow, includedColumns);
       try {
+
         budgetLineItemDTO.checkMandatoryFields();
-        rowNumber = budgetFileTemplate.getConfiguration().isHeaderInFile() ? listReader.getRowNumber() - 1 : listReader.getRowNumber();
+        rowNumber = listReader.getRowNumber() - budgetFileTemplate.getRowOffset();
 
-        Facility facility = validateFacility(budgetLineItemDTO.getFacilityCode(), rowNumber);
-        Program program = validateProgram(budgetLineItemDTO.getProgramCode(), rowNumber);
+        Facility facility = getValidatedFacility(budgetLineItemDTO.getFacilityCode(), rowNumber);
+        Program program = getValidatedProgram(budgetLineItemDTO.getProgramCode(), rowNumber);
 
-        BudgetLineItem budgetLineItem = getBudgetLineItem(includedColumns, budgetLineItemDTO, rowNumber);
+        String dateFormat = budgetFileTemplate.getDateFormatForColumn("periodStartDate");
+        BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, dateFormat, rowNumber);
 
-        ProcessingPeriod processingPeriod = validatePeriod(facility, program, budgetLineItem.getPeriodDate(), rowNumber);
+        ProcessingPeriod processingPeriod = getValidatedPeriod(facility, program, budgetLineItem.getPeriodDate(), rowNumber);
 
         budgetLineItem.setPeriodId(processingPeriod.getId());
         budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
@@ -117,35 +120,23 @@ public class BudgetFileProcessor {
         logger.error(errorMessage, e);
       }
     }
-    Integer blankFileRows = budgetFileTemplate.getConfiguration().isHeaderInFile() ? 1 : 0;
-    if (listReader.getRowNumber() == blankFileRows) {
+
+    if (listReader.getRowNumber() == budgetFileTemplate.getRowOffset()) {
       logger.error(messageService.message("error.facility.code.invalid"));
       processingError = true;
     }
     return processingError;
   }
 
-  private BudgetLineItem getBudgetLineItem(Collection<EDIFileColumn> includedColumns, BudgetLineItemDTO budgetLineItemDTO, Integer rowNumber) {
-    EDIFileColumn periodDateColumn = (EDIFileColumn) CollectionUtils.find(includedColumns, new Predicate() {
-      @Override
-      public boolean evaluate(Object o) {
-        EDIFileColumn periodDateColumn = (EDIFileColumn) o;
-        return periodDateColumn.getName().equals("periodStartDate") && periodDateColumn.getInclude();
-      }
-    });
-    String datePattern = periodDateColumn == null ? null : periodDateColumn.getDatePattern();
-    return budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern, rowNumber);
-  }
-
   private BudgetFileInfo saveBudgetFile(File budgetFile, Boolean processingError) {
-    BudgetFileInfo budgetFileInfo = new BudgetFileInfo(budgetFile.getName(), processingError);
 
+    BudgetFileInfo budgetFileInfo = new BudgetFileInfo(budgetFile.getName(), processingError);
     budgetFileService.save(budgetFileInfo);
 
     return budgetFileInfo;
   }
 
-  private ProcessingPeriod validatePeriod(Facility facility, Program program, Date date, Integer rowNumber) {
+  private ProcessingPeriod getValidatedPeriod(Facility facility, Program program, Date date, Integer rowNumber) {
     ProcessingPeriod periodForDate = processingScheduleService.getPeriodForDate(facility, program, date);
     if (periodForDate == null) {
       throw new DataException("budget.start.date.invalid", date, facility.getCode(), program.getCode(), rowNumber);
@@ -153,7 +144,7 @@ public class BudgetFileProcessor {
     return periodForDate;
   }
 
-  private Program validateProgram(String programCode, Integer rowNumber) {
+  private Program getValidatedProgram(String programCode, Integer rowNumber) {
     Program program = programService.getByCode(programCode);
     if (program == null) {
       throw new DataException("budget.program.code.invalid", programCode, rowNumber);
@@ -161,7 +152,7 @@ public class BudgetFileProcessor {
     return program;
   }
 
-  private Facility validateFacility(String facilityCode, Integer rowNumber) {
+  private Facility getValidatedFacility(String facilityCode, Integer rowNumber) {
     Facility facility = new Facility();
     facility.setCode(facilityCode);
     if ((facility = facilityService.getByCode(facility)) == null) {

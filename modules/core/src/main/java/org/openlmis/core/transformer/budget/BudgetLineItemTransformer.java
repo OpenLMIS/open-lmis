@@ -15,10 +15,10 @@ import static java.math.RoundingMode.FLOOR;
 @Service
 public class BudgetLineItemTransformer extends LineItemTransformer {
 
-  public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern, Integer rowNumber) {
-    BudgetLineItem budgetLineItem = new BudgetLineItem();
+  public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String dateFormat, Integer rowNumber) {
 
-    Date periodDate = getValidatedPeriodDate(lineItemDTO.getPeriodStartDate(), datePattern, rowNumber);
+    BudgetLineItem budgetLineItem = new BudgetLineItem();
+    Date periodDate = getValidatedPeriodDate(lineItemDTO.getPeriodStartDate(), dateFormat, rowNumber);
 
     BigDecimal allocatedBudget = getAllocatedBudget(rowNumber, lineItemDTO.getAllocatedBudget());
 
@@ -44,11 +44,11 @@ public class BudgetLineItemTransformer extends LineItemTransformer {
     return new BigDecimal(allocatedBudget);
   }
 
-  private Date getValidatedPeriodDate(String periodStartDate, String datePattern, Integer rowNumber) {
+  private Date getValidatedPeriodDate(String periodStartDate, String dateFormat, Integer rowNumber) {
     Date periodDate = null;
-    if (datePattern != null) {
+    if (dateFormat != null) {
       try {
-        periodDate = parseDate(datePattern, periodStartDate);
+        periodDate = parseDate(dateFormat, periodStartDate);
       } catch (Exception e) {
         throw new DataException("budget.invalid.date.format", periodStartDate, rowNumber);
       }

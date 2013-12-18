@@ -71,7 +71,7 @@ public class BudgetFileProcessorTest {
   private Message message;
   private EDIFileTemplate ediFileTemplate;
   private EDIConfiguration configuration;
-  private String datePattern;
+  private String dateFormat;
 
   private EDIFileColumn periodDateColumn;
   private EDIFileColumn defaultEDIColumn;
@@ -79,10 +79,11 @@ public class BudgetFileProcessorTest {
   private File budgetFile;
   private CsvListReader listReader;
 
+  //TODO: refactor these unit tests to include mocks instead of real objects
+
   @Before
   public void setUp() throws Exception {
     budgetFile = mock(File.class);
-
     message = mock(Message.class);
     when(message.getPayload()).thenReturn(budgetFile);
     listReader = mock(CsvListReader.class);
@@ -93,8 +94,8 @@ public class BudgetFileProcessorTest {
     when(listReader.read()).thenReturn(csvRow).thenReturn(null);
 
     ediFileTemplate = new EDIFileTemplate();
-    datePattern = "mm/dd/yy";
-    periodDateColumn = new EDIFileColumn("periodStartDate", "label.date", true, true, 2, datePattern);
+    dateFormat = "mm/dd/yy";
+    periodDateColumn = new EDIFileColumn("periodStartDate", "label.date", true, true, 2, dateFormat);
     defaultEDIColumn = new EDIFileColumn("facilityCode", "label.facility.code", true, true, 1, "");
     ediFileTemplate.setColumns(asList(defaultEDIColumn, periodDateColumn));
     configuration = new EDIConfiguration(false);
@@ -126,7 +127,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldSaveBudgetFileLineItem() throws Exception {
     configuration.setHeaderInFile(true);
-    when(listReader.getRowNumber()).thenReturn(2).thenReturn(3);
+    when(listReader.getRowNumber()).thenReturn(2, 3);
     String budgetFileName = "BudgetFileName";
     when(budgetFile.getName()).thenReturn(budgetFileName);
     BudgetFileInfo budgetFileInfo = new BudgetFileInfo();
@@ -145,11 +146,11 @@ public class BudgetFileProcessorTest {
     BudgetLineItem budgetLineItem = mock(BudgetLineItem.class);
     ProcessingPeriod processingPeriod = mock(ProcessingPeriod.class);
     when(processingScheduleService.getPeriodForDate(facility, program, budgetLineItem.getPeriodDate())).thenReturn(processingPeriod);
-    when(transformer.transform(lineItemDTO, datePattern, 1)).thenReturn(budgetLineItem);
+    when(transformer.transform(lineItemDTO, dateFormat, 1)).thenReturn(budgetLineItem);
 
     budgetFileProcessor.process(message);
 
-    verify(transformer).transform(lineItemDTO, datePattern, 1);
+    verify(transformer).transform(lineItemDTO, dateFormat, 1);
     verify(budgetLineItem).setBudgetFileId(budgetFileInfo.getId());
     verify(budgetLineItemService).save(budgetLineItem);
     verify(BudgetLineItemDTO.populate(csvRow, ediFileTemplate.getColumns()));
@@ -158,7 +159,7 @@ public class BudgetFileProcessorTest {
   @Test
   public void shouldCreateBudgetLineItemWithDateAsNullIfNotIncludedInFile() throws Exception {
     configuration.setHeaderInFile(true);
-    when(listReader.getRowNumber()).thenReturn(2).thenReturn(3);
+    when(listReader.getRowNumber()).thenReturn(2, 3);
     BudgetLineItemDTO lineItemDTO = mock(BudgetLineItemDTO.class);
     mockStatic(BudgetLineItemDTO.class);
     List<String> csvRow = asList("F10", "HIV", "2013-12-10", "345.45", "My good notes");
@@ -256,7 +257,7 @@ public class BudgetFileProcessorTest {
     when(programService.getByCode("HIV")).thenReturn(program);
     BudgetLineItem budgetLineItem = new BudgetLineItem();
     budgetLineItem.setPeriodDate(new Date());
-    when(transformer.transform(lineItemDTO, datePattern, 1)).thenReturn(budgetLineItem);
+    when(transformer.transform(lineItemDTO, dateFormat, 1)).thenReturn(budgetLineItem);
     when(processingScheduleService.getPeriodForDate(facility, program, budgetLineItem.getPeriodDate())).thenReturn(null);
 
     budgetFileProcessor.process(message);
