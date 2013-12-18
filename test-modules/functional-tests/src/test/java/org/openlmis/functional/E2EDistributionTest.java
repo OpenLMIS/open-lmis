@@ -71,7 +71,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     waitForAppCacheComplete();
     switchOffNetwork();
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(3000);
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
     assertFalse("Delivery Zone selectbox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
@@ -145,8 +145,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     generalObservationPage.setObservations("Some observations");
     generalObservationPage.setConfirmedByName("samuel");
     generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Mai ka");
-    generalObservationPage.setVerifiedByTitle("Laal");
+    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByTitle("XYZ");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -168,7 +168,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyStockAtFirstOfMonth("10", 1);
     epiUse.verifyReceived("20", 1);
     epiUse.verifyDistributed("30", 1);
-    epiUse.verifyLoss("40", 1);
+    epiUse.checkApplyNRToLoss0();
     epiUse.verifyStockAtEndOfMonth("50", 1);
     epiUse.verifyExpirationDate("10/2011", 1);
 
@@ -188,8 +188,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(m1.get("observations").toString(), "Some observations");
     assertEquals(m1.get("confirmedByName").toString(), "samuel");
     assertEquals(m1.get("confirmedByTitle").toString(), "Doe");
-    assertEquals(m1.get("verifiedByName").toString(), "Mai ka");
-    assertEquals(m1.get("verifiedByTitle").toString(), "Laal");
+    assertEquals(m1.get("verifiedByName").toString(), "Verifier");
+    assertEquals(m1.get("verifiedByTitle").toString(), "XYZ");
 
     distributionPage.syncDistributionMessageDone();
     distributionPage.clickRecordData();
@@ -204,6 +204,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.navigateToRefrigeratorTab();
     refrigeratorPage.clickShow();
     refrigeratorPage.verifyAllFieldsDisabled();
+
+    DistributionEpiUseSyncTest distributionEpiUseSyncTest=new DistributionEpiUseSyncTest();
+    distributionEpiUseSyncTest.verifyEpiUseDateInDatabase(10,20,30,null,50,"10/2011","PG1");
   }
 
   @AfterMethod(groups = {"offline"})

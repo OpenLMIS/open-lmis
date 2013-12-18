@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.util.Collections.addAll;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -321,6 +322,20 @@ public class ManageDistribution extends TestCaseHelper {
       assertEquals(m1.get("confirmedByTitle").toString(), map.get("confirmedByTitle").toString());
       assertEquals(m1.get("verifiedByName").toString(), map.get("verifiedByName").toString());
       assertEquals(m1.get("verifiedByTitle").toString(), map.get("verifiedByTitle").toString());
+    }
+  }
+
+  @Then("^I view epi use data in DB for facility \"([^\"]*)\" and product group \"([^\"]*)\":$")
+  public void verifyEpiUseDataInDB(String facilityCode, String productGroupCode, DataTable tableData) throws SQLException {
+    List<Map<String, String>> data = tableData.asMaps();
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,facilityCode);
+    for (Map map : data){
+      assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
+      assertEquals(map.get("received").toString(), epiDetails.get("received"));
+      assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
+      assertEquals(map.get("loss").toString(), epiDetails.get("loss"));
+      assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
+      assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
     }
   }
 

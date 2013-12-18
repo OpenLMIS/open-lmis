@@ -465,11 +465,11 @@ Feature: Smoke Tests
     Then Verify "general observation" indicator should be "AMBER"
     When I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier         | X YZ             |
     Then Verify "general observation" indicator should be "GREEN"
     And I verify saved "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier         | X YZ             |
 
   @smokeDistribution
   Scenario: User should fill EPI use data
@@ -547,7 +547,7 @@ Feature: Smoke Tests
     And I navigate to general observations tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier         | XYZ             |
 
     And Navigate to EPI tab
     And I Enter "epi use" values:
@@ -563,7 +563,10 @@ Feature: Smoke Tests
     When I done sync message
     And I view observations data in DB:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier         | XYZ             |
+    And I view epi use data in DB for facility "F10" and product group "penta":
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
     When I record data
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
