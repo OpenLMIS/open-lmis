@@ -15,7 +15,7 @@ public class BudgetLineItemService {
     repository.save(budgetLineItem);
   }
 
-  public void get(Long facilityId, Long programId, Long periodId) {
-    repository.get(facilityId, programId, periodId);
+  public BudgetLineItem get(Long facilityId, Long programId, Long periodId) {
+    return repository.get(facilityId, programId, periodId);
   }
 }

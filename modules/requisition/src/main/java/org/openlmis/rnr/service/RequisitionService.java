@@ -82,6 +82,8 @@ public class RequisitionService {
   private CalculationService calculationService;
   @Autowired
   private DbMapper dbMapper;
+  @Autowired
+  private BudgetLineItemService budgetLineItemService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -112,6 +114,7 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
+    requisition.setAllocatedBudget(budgetLineItemService.get(facility.getId(), program.getId(), period.getId()).getAllocatedBudget());
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
