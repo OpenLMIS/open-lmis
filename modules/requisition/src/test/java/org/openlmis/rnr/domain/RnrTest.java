@@ -30,10 +30,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
@@ -469,5 +468,46 @@ public class RnrTest {
     rnr.setRegimenLineItems(regimenLineItems);
     rnr.validateRegimenLineItems(regimenTemplate);
     verify(regimenLineItem).validate(regimenTemplate);
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsFalseIfEmergencyRnr() throws Exception {
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(true);
+
+    assertFalse(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsFalseIfNotApplicableToProgram() throws Exception {
+    Program program = mock(Program.class);
+    when(program.getBudgetingApplies()).thenReturn(false);
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(false);
+    rnr.setProgram(program);
+
+    assertFalse(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsTrueIBudgetingApplicableToProgram() throws Exception {
+    Program program = mock(Program.class);
+    when(program.getBudgetingApplies()).thenReturn(true);
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(false);
+    rnr.setProgram(program);
+
+    assertTrue(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsFalseIBudgetingApplicableToProgramAndRnrIsEmergency() throws Exception {
+    Program program = mock(Program.class);
+    when(program.getBudgetingApplies()).thenReturn(true);
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(true);
+    rnr.setProgram(program);
+
+    assertFalse(rnr.isBudgetingApplicable());
   }
 }

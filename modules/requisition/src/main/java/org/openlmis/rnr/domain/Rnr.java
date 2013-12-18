@@ -356,5 +356,11 @@ public class Rnr extends BaseModel {
       }
     }
   }
+
+  @JsonIgnore
+  public boolean isBudgetingApplicable() {
+    return !this.emergency && this.program.getBudgetingApplies();
+  }
+
 }
 

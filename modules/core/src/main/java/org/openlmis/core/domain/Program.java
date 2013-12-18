@@ -29,6 +29,7 @@ public class Program extends BaseModel {
   private String name;
   private String description;
   private Boolean active;
+  private Boolean budgetingApplies;
   private boolean templateConfigured;
   private boolean regimenTemplateConfigured;
   private boolean push;
