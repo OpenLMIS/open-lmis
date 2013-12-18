@@ -109,6 +109,8 @@ public class BudgetFileProcessor {
 
         ProcessingPeriod processingPeriod = getValidatedPeriod(facility, program, budgetLineItem.getPeriodDate(), rowNumber);
 
+        budgetLineItem.setFacilityId(facility.getId());
+        budgetLineItem.setProgramId(program.getId());
         budgetLineItem.setPeriodId(processingPeriod.getId());
         budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
 

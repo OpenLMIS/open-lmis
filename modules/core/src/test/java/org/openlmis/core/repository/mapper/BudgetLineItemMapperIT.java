@@ -59,8 +59,6 @@ public class BudgetLineItemMapperIT {
 
   private BudgetFileInfo budgetFileInfo;
 
-  private String facilityCode;
-
   private ProcessingPeriod period;
 
   private Facility facility;
@@ -79,7 +77,7 @@ public class BudgetLineItemMapperIT {
     budgetFileInfo = new BudgetFileInfo("Budget File", false);
     budgetFileMapper.insert(budgetFileInfo);
 
-    facilityCode = "F1011";
+    String facilityCode = "F1011";
     facility = make(a(defaultFacility, with(code, facilityCode)));
     facilityMapper.insert(facility);
 
@@ -111,12 +109,10 @@ public class BudgetLineItemMapperIT {
   }
 
   @Test
-  public void shouldGetBudgetLineItemByFacilityCodeProgramCodeAndPeriodId() {
+  public void shouldGetBudgetLineItemByFacilityIdProgramIdAndPeriodId() {
     mapper.insert(budgetLineItem);
 
-    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My good notes");
-
-    BudgetLineItem savedLineItem = mapper.getBy(duplicatedBudgetLineItem);
+    BudgetLineItem savedLineItem = mapper.get(facility.getId(), 1L, period.getId());
 
     assertThat(savedLineItem.getId(), is(budgetLineItem.getId()));
   }

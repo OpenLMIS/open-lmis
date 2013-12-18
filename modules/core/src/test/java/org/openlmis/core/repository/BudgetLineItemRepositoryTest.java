@@ -7,12 +7,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.BudgetLineItem;
 import org.openlmis.core.repository.mapper.BudgetLineItemMapper;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BudgetLineItemRepositoryTest {
@@ -38,12 +38,12 @@ public class BudgetLineItemRepositoryTest {
     Long periodId = 1l;
     BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, periodId, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes");
 
-    BudgetLineItem savedBudgetLineItem = new BudgetLineItem();
-    when(mapper.getBy(budgetLineItem)).thenReturn(savedBudgetLineItem);
+    doThrow(DuplicateKeyException.class).when(mapper).insert(budgetLineItem);
 
     repository.save(budgetLineItem);
 
-    verify(mapper).getBy(budgetLineItem);
+    verify(mapper, never()).get(1L, 2L, periodId);
+    verify(mapper).insert(budgetLineItem);
     verify(mapper).update(budgetLineItem);
   }
 }

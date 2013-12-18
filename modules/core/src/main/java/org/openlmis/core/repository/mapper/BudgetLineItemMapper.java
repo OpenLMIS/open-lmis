@@ -1,9 +1,6 @@
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.BudgetLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -26,5 +23,5 @@ public interface BudgetLineItemMapper {
   @Select({
     "SELECT * FROM budget_line_items WHERE facilityId = #{facilityId} AND programId = #{programId} AND periodId = #{periodId}"
   })
-  BudgetLineItem getBy(BudgetLineItem budgetLineItem);
+  BudgetLineItem get(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("periodId") Long periodId);
 }

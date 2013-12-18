@@ -13,3 +13,5 @@ DROP COLUMN facilityCode,
 DROP COLUMN programCode,
 ADD COLUMN facilityId INTEGER NOT NULL REFERENCES facilities (id),
 ADD COLUMN programId INTEGER NOT NULL REFERENCES programs (id);
+
+CREATE UNIQUE INDEX uc_budget_line_items_facilityId_programId_periodId ON budget_line_items (facilityId, programId, periodId);
