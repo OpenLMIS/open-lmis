@@ -29,6 +29,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -103,7 +105,6 @@ public class RequisitionMapperIT {
   RequisitionStatusChangeMapper requisitionStatusChangeMapper;
 
   private SupervisoryNode supervisoryNode;
-  private SupplyLine supplyLine;
   private Role role;
   private Date modifiedDate;
 
@@ -136,7 +137,12 @@ public class RequisitionMapperIT {
 
   @Test
   public void shouldGetRequisitionById() {
-    Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
+    Rnr requisition = new Rnr(new Facility(facility.getId()), new Program(program.getId()), processingPeriod1, false, MODIFIED_BY, 1L);
+    requisition.setAllocatedBudget(new BigDecimal(123.45));
+    requisition.setStatus(INITIATED);
+
+    mapper.insert(requisition);
+
     Product product = insertProduct(true, "P1");
     RnrLineItem fullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, true), with(productCode, product.getCode())));
     RnrLineItem nonFullSupplyLineItem = make(a(defaultRnrLineItem, with(fullSupply, false), with(productCode, product.getCode())));
@@ -161,6 +167,7 @@ public class RequisitionMapperIT {
     assertThat(fetchedRequisition.getStatus(), is(equalTo(INITIATED)));
     assertThat(fetchedRequisition.getFullSupplyLineItems().size(), is(1));
     assertThat(fetchedRequisition.getNonFullSupplyLineItems().size(), is(1));
+    assertThat(fetchedRequisition.getAllocatedBudget(), is(new BigDecimal(123.45).setScale(2, RoundingMode.FLOOR)));
   }
 
   @Test
@@ -850,8 +857,8 @@ public class RequisitionMapperIT {
   }
 
   private void insertSupplyLine(Facility facility, SupervisoryNode supervisoryNode) {
-    supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
-        with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
+    SupplyLine supplyLine = make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, facility),
+      with(SupplyLineBuilder.supervisoryNode, supervisoryNode), with(defaultProgram, program)));
     supplyLineMapper.insert(supplyLine);
   }
 
