@@ -385,3 +385,7 @@ services.factory('OrderFillRateReport', function ($resource) {
 services.factory('RegimenSummaryReport', function ($resource) {
     return $resource('/reports/reportdata/regimenSummary.json', {}, {});
 });
+//It populate all programs with regimens
+services.factory('ReportRegimenPrograms', function ($resource) {
+    return $resource('/reports/regimenPrograms.json', {}, {});
+});
