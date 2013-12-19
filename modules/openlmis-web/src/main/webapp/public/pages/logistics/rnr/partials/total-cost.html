@@ -9,25 +9,22 @@
   -->
 
 <div class="total-cost-container">
-    <div class="cost-values">
-        <small>
-            <span openlmis-message="label.total.cost.full.supply"></span>
-            <strong>
-                <span id="fullSupplyItemsCost" class="cell-text"
-                      ng-bind="rnr.fullSupplyItemsSubmittedCost | currency:currency"></span>
-            </strong>
-            &nbsp;|&nbsp;
-            <span openlmis-message="label.total.cost.non.full.supply"></span>
-            <strong>
-                <span id="nonFullSupplyItemsCost" class="cell-text"
-                      ng-bind="rnr.nonFullSupplyItemsSubmittedCost | currency:currency"></span>
-            </strong>
-        </small>
-        &nbsp;|&nbsp;
-        <strong>
-            <span openlmis-message="label.total.rnr.cost"></span>
+  <div class="cost-values">
+    <strong ng-show="rnr.allocatedBudget">
+      <span openlmis-message="label.allocated.budget"></span>
+            <span id="allocatedBudget" class="cell-text"
+                  ng-bind="rnr.allocatedBudget | currency:currency"></span>
+      &nbsp;|&nbsp;
+    </strong>
+    <strong>
+      <span openlmis-message="label.total.rnr.cost"></span>
             <span id="totalCost" class="cell-text"
                   ng-bind="rnr.calculateTotalLineItemCost() | currency:currency"></span>
-        </strong>
-    </div>
+    </strong>
+    <span ng-click="showCost=!showCost" class="list-icon-container" ng-class="{'is-icon-ul-selected': showCost}">
+      <i class="icon-list-ul"></i>
+    </span>
+    <display-cost show="showCost" full-supply-cost="rnr.fullSupplyItemsSubmittedCost"
+                  non-full-supply-cost="rnr.nonFullSupplyItemsSubmittedCost"></display-cost>
+  </div>
 </div>
