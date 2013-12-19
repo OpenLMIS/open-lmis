@@ -8,11 +8,10 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DELETE FROM programs;
-INSERT INTO programs (code, name, description, active, templateConfigured, regimenTemplateConfigured, budgetingApplies, usesDar, push)
-  VALUES
-  ('HIV', 'HIV', 'HIV', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE),
-  ('ESS_MEDS', 'ESSENTIAL MEDICINES', 'ESSENTIAL MEDICINES', TRUE, FALSE, TRUE, TRUE, FALSE, FALSE),
-  ('TB', 'TB', 'TB', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE),
-    ('MALARIA', 'MALARIA', 'MALARIA', TRUE, FALSE, FALSE, TRUE, FALSE, FALSE),
-    ('VACCINES', 'VACCINES', 'VACCINES', TRUE, FALSE, FALSE, FALSE, FALSE, TRUE);
+INSERT INTO budget_file_info (filename, processingError) VALUES ('abc.csv', false);
+
+INSERT INTO budget_line_items (periodId, budgetFileId, facilityId, programId, periodDate, allocatedBudget) VALUES (
+  (SELECT id FROM processing_periods WHERE name = 'Dec2012'),
+  (SELECT id FROM budget_file_info WHERE id = 1),
+  (SELECT id FROM facilities WHERE code = 'F10'),
+  (SELECT id FROM programs WHERE code = 'MALARIA'), now(), 123);

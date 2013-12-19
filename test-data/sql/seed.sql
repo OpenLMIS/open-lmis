@@ -18,3 +18,4 @@
 
 \i ../../test-data/sql/delivery_zones.sql
 \i ../../test-data/sql/allocation_users.sql
+\i ../../test-data/sql/budget.sql
