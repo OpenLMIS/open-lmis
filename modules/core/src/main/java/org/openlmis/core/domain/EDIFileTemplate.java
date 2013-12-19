@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 
 import java.util.Collection;
@@ -17,6 +19,7 @@ import static org.apache.commons.collections.CollectionUtils.select;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EDIFileTemplate {
 
   protected EDIConfiguration configuration;
@@ -52,10 +55,12 @@ public class EDIFileTemplate {
     }
   }
 
+  @JsonIgnore
   public Integer getRowOffset() {
     return this.configuration.isHeaderInFile() ? 1 : 0;
   }
 
+  @JsonIgnore
   public String getDateFormatForColumn(final String columnName) {
     EDIFileColumn column = (EDIFileColumn) CollectionUtils.find(this.columns, new Predicate() {
       @Override
