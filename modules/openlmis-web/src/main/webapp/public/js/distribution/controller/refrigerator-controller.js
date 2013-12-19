@@ -58,10 +58,10 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
     var callback = function (serialNumberToDelete) {
       return function (result) {
         if (!result) return;
-        $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.refrigeratorReadings =
-            _.reject($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.refrigeratorReadings,
+        $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings =
+            _.reject($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings,
                 function (refrigeratorReading) {
-                  return serialNumberToDelete == refrigeratorReading.refrigerator.serialNumber;
+                  return serialNumberToDelete == refrigeratorReading.serialNumber;
                 });
         IndexedDB.put('distributions', $scope.distribution);
       };
