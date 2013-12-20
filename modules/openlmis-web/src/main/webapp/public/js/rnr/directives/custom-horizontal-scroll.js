@@ -34,7 +34,7 @@ app.directive('customHorizontalScroll', function ($timeout) {
       };
 
       container.getBottomOffset = function () {
-        return $(window).height() - (container.offset().top + container.outerHeight()) - 90;
+        return $(window).height() - (container.offset().top + container.outerHeight() - $(window).scrollTop()) - 90;
       };
 
       scrollBar.track.setWidth = function () {
@@ -116,7 +116,7 @@ app.directive('customHorizontalScroll', function ($timeout) {
             $('body').unbind('mousemove');
           });
 
-          $('.rnr-body').scroll(pageScrollHandler);
+          $(window).scroll(pageScrollHandler);
 
           if (container.getBottomOffset() > 0) {
             scrollBar.track.hide();
@@ -133,7 +133,7 @@ app.directive('customHorizontalScroll', function ($timeout) {
         scrollBar.handle.unbind();
         $(document).unbind('mouseup');
         container.unbind("scroll", scrollBar.handle.syncWithScrollableElement);
-        $('.rnr-body').unbind("scroll", pageScrollHandler);
+        $(window).unbind("scroll", pageScrollHandler);
       }
 
       function resetScroll() {

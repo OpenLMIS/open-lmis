@@ -22,7 +22,7 @@ describe('Full screen', function () {
     element = angular.element('<a full-screen href="" class="btn"><i class="icon-resize-full"></i></a>');
     div = angular.element('<div class="toggleFullScreen"></div>');
     printElement = angular.element('<div class="print-button"></div>');
-    rnrBody = angular.element('<div class="rnr-body"></div>')
+    rnrBody = angular.element('<div></div>')
 
     compile = $compile;
     scope = $rootScope.$new();

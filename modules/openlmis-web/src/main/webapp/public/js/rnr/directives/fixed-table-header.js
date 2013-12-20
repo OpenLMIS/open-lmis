@@ -11,10 +11,11 @@
 //  Description:
 //  Freezing the top header of R&R products table upon scroll
 
-app.directive('fixedTableHeader', function () {
+app.directive('fixedTableHeader', function ($timeout) {
   return {
     restrict: 'EA',
     link: function (scope, element) {
+      var windowElement = angular.element(window);
       var fixedHeader = $("<div class='header-fixed'></div>");
       var previousWidth = 0, previousHeight = 0;
       fixedHeader.hide();
@@ -30,7 +31,7 @@ app.directive('fixedTableHeader', function () {
         fixedHeader.find('a').parent().remove();
       };
 
-      setTimeout(function () {
+      $timeout(function () {
         cloneAndAppendTableHeader();
         removeLinksFromFixedHeader();
         element.parent().scroll(function () {
@@ -53,16 +54,22 @@ app.directive('fixedTableHeader', function () {
         }
       }
 
-      angular.element('.rnr-body').scroll(function () {
-        if (element.offset().top < 0 && element.is(':visible')) {
-          if (fixedHeader.is(':hidden')) {
-            setWidthAndHeightFromParent();
-            fixedHeader.show();
-            fixedHeader.scrollLeft(element.parent().scrollLeft());
-          }
+      var fixedHeaderHidden = true;
+      windowElement.scroll(function () {
+        if (element.is(':hidden'))
+          return;
+        if ((element.offset().top - windowElement.scrollTop()) < 0) {
+          if (!fixedHeaderHidden)
+            return;
+          setWidthAndHeightFromParent();
+          fixedHeader.show();
+          fixedHeader.scrollLeft(element.parent().scrollLeft());
+          fixedHeaderHidden = false;
+          return;
         }
-        else {
+        if (!fixedHeaderHidden) {
           fixedHeader.hide();
+          fixedHeaderHidden = true;
         }
       });
 

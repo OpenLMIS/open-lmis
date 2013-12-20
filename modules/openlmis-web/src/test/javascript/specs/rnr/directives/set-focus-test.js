@@ -14,7 +14,7 @@ describe('set focus', function () {
 
   beforeEach(module('rnr'));
   beforeEach(inject(function ($compile, $rootScope, $timeout) {
-    element = angular.element('<div id="rnr-body" set-focus></div>');
+    element = angular.element('<div set-focus></div>');
     inputVisibleEnable = angular.element('<input type="text">');
     inputInvisible = angular.element('<input type="text" style="display: none">');
     inputDisable = angular.element('<input type="text" disabled>');

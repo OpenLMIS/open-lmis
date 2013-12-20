@@ -15,7 +15,7 @@ describe('custom horizontal scroll', function () {
   beforeEach(module('rnr'));
 
   beforeEach(inject(function ($compile, $rootScope, $timeout) {
-    element = angular.element('<div id="scrollContainer" class="rnr-body" custom-horizontal-scroll style="width: 100%; overflow: auto"></div>');
+    element = angular.element('<div id="scrollContainer" custom-horizontal-scroll style="width: 100%; overflow: auto"></div>');
     scrollElement = angular.element('<div id="itemToBeScrolled" class="scrollable"></div>');
     element.append(scrollElement);
     scope = $rootScope.$new();
