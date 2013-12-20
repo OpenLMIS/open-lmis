@@ -435,6 +435,7 @@ public class ManageFacilityPage extends Page {
   }
 
   private void verifyDisableAlert(String expectedMessageOnAlert) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(disableMessageOnAlert);
 
     String disableMessageOnAlertValue = disableMessageOnAlert.getText();
