@@ -123,10 +123,10 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "price_0")
   private static WebElement pricePerPackNonFullSupply = null;
 
-  @FindBy(how = XPATH, using = "//span[@id='fullSupplyItemsCost']")
+  @FindBy(how = ID, using = "fullSupplyItemsCost")
   private static WebElement totalCostFullSupplyFooter = null;
 
-  @FindBy(how = XPATH, using = "//span[@id='nonFullSupplyItemsCost']")
+  @FindBy(how = ID, using = "nonFullSupplyItemsCost")
   private static WebElement totalCostNonFullSupplyFooter = null;
 
   @FindBy(how = XPATH, using = "//span[@id='totalCost']")
@@ -146,6 +146,9 @@ public class InitiateRnRPage extends RequisitionPage {
 
   @FindBy(how = ID, using = "stockOutDays_1")
   private static WebElement totalStockOutDaysSecondProduct = null;
+
+  @FindBy(how = ID, using = "dividedCost")
+  private static WebElement showRnrCostDetailsIcon = null;
 
   @FindBy(how = XPATH, using = "//a[@class='rnr-adjustment']")
   private static WebElement addDescription = null;
@@ -500,9 +503,9 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public void verifyCostOnFooter() {
-    testWebDriver.waitForElementToAppear(totalCostFullSupplyFooter);
+    testWebDriver.waitForElementToAppear(showRnrCostDetailsIcon);
+    showRnrCostDetailsIcon.click();
     String totalCostFullSupplyFooterValue = testWebDriver.getText(totalCostFullSupplyFooter);
-    testWebDriver.waitForElementToAppear(totalCostNonFullSupplyFooter);
     String totalCostNonFullSupplyFooterValue = testWebDriver.getText(totalCostNonFullSupplyFooter);
     BigDecimal actualTotalCost = new BigDecimal(parseFloat(totalCostFullSupplyFooterValue.trim().substring(1)) + parseFloat(totalCostNonFullSupplyFooterValue.trim().substring(1))).setScale(2, BigDecimal.ROUND_HALF_UP);
     assertEquals(actualTotalCost.toString(), totalCostFooter.getText().trim().substring(1));
@@ -512,6 +515,7 @@ public class InitiateRnRPage extends RequisitionPage {
     assertEquals(totalCostFooter.getText().trim().substring(1),
       new BigDecimal(actualTotalCostFullSupply + actualTotalCostNonFullSupply).setScale(2,
         BigDecimal.ROUND_HALF_UP).toString());
+    showRnrCostDetailsIcon.click();
     testWebDriver.sleep(500);
   }
 
@@ -521,8 +525,12 @@ public class InitiateRnRPage extends RequisitionPage {
   }
 
   public String getFullySupplyCostFooter() {
+    testWebDriver.waitForElementToAppear(showRnrCostDetailsIcon);
+    showRnrCostDetailsIcon.click();
     testWebDriver.waitForElementToAppear(totalCostFullSupplyFooter);
-    return totalCostFullSupplyFooter.getText().trim().substring(1);
+    String fullSupplyTotalCost = totalCostFullSupplyFooter.getText().trim().substring(1);
+    showRnrCostDetailsIcon.click();
+    return fullSupplyTotalCost;
   }
 
   public void addNonFullSupplyLineItems(String requestedQuantityValue, String requestedQuantityExplanationValue,

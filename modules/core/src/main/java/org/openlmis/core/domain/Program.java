@@ -54,6 +54,8 @@ public class Program extends BaseModel {
   }
 
   public Program basicInformation() {
-    return new Program(id, name, code);
+    Program program = new Program(id, name, code);
+    program.setBudgetingApplies(budgetingApplies);
+    return program;
   }
 }

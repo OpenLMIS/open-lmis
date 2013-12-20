@@ -880,6 +880,7 @@ public class InitiateRnR extends TestCaseHelper {
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
     InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "requestedQuantityFirstProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
