@@ -16,8 +16,6 @@
       </run>
     </groups>
     <classes preserver-order="true">
-      <class name="org.openlmis.functional.RecordEPIUse">
-      </class>
       <class name="org.openlmis.functional.ManageDistribution">
       </class>
       <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
@@ -27,6 +25,8 @@
       <class name="org.openlmis.functional.DistributionSyncTest">
         </class>
       <class name="org.openlmis.functional.DistributionEpiUseSyncTest">
+        </class>
+        <class name="org.openlmis.functional.DistributionRefrigeratorSyncTest">
         </class>
     </classes>
   </test>

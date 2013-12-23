@@ -20,6 +20,7 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends Page {
@@ -117,6 +118,9 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
   public static WebElement duplicateRefrigeratorMessage = null;
 
+  @FindBy(how = ID, using = "other0")
+  private static WebElement problemOther= null;
+
   public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -132,6 +136,11 @@ public class RefrigeratorPage extends Page {
   public void clickProblemSinceLastVisitYesRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitYesRadio);
     problemSinceLastVisitYesRadio.click();
+  }
+
+  public void selectOtherProblem() {
+    testWebDriver.waitForElementToAppear(problemOther);
+    problemOther.click();
   }
 
   public void clickOKButton() {
@@ -321,6 +330,45 @@ public class RefrigeratorPage extends Page {
   public void verifyDuplicateErrorMessage(String message) {
     testWebDriver.waitForElementToAppear(duplicateRefrigeratorMessage);
     assertEquals(duplicateRefrigeratorMessage.getText(), message);
+  }
+
+  public void applyNRToRefrigeratorTemperature() {
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
+    refrigeratorTemperatureNR.click();
+  }
+
+  public void applyNRToLowAlarmEvent() {
+    testWebDriver.waitForElementToAppear(lowAlarmEventNR);
+    lowAlarmEventNR.click();
+  }
+
+  public void applyNRToHighAlarmEvent() {
+    testWebDriver.waitForElementToAppear(highAlarmEventNR);
+    highAlarmEventNR.click();
+  }
+
+  public void verifyFieldsDisabledWhenAllNRSelected() {
+    assertFalse("refrigeratorTemperatureTextField enabled.", refrigeratorTemperatureTextField.isEnabled());
+    assertTrue("refrigeratorTemperatureNR enabled.", refrigeratorTemperatureNR.isEnabled());
+
+    assertFalse("functioningCorrectlyDontKnowRadio enabled.", functioningCorrectlyDontKnowRadio.isEnabled());
+    assertFalse("functioningCorrectlyNoRadio enabled.", functioningCorrectlyNoRadio.isEnabled());
+    assertTrue("functioningCorrectlyNR enabled.", functioningCorrectlyNR.isEnabled());
+    assertFalse("functioningCorrectlyYesRadio enabled.", functioningCorrectlyYesRadio.isEnabled());
+
+    assertFalse("lowAlarmEventsTextField enabled.", lowAlarmEventsTextField.isEnabled());
+    assertTrue("lowAlarmEventNR enabled.", lowAlarmEventNR.isEnabled());
+
+    assertFalse("highAlarmEventsTextField enabled.", highAlarmEventsTextField.isEnabled());
+    assertTrue("highAlarmEventNR enabled.", highAlarmEventNR.isEnabled());
+
+    assertFalse("problemSinceLastVisitDontKnowRadio enabled.", problemSinceLastVisitDontKnowRadio.isEnabled());
+    assertFalse("problemSinceLastVisitNoRadio enabled.", problemSinceLastVisitNoRadio.isEnabled());
+    assertTrue("problemSinceLastVisitNR enabled.", problemSinceLastVisitNR.isEnabled());
+    assertFalse("problemSinceLastVisitYesRadio enabled.", problemSinceLastVisitYesRadio.isEnabled());
+
+    assertTrue("notesTextArea enabled.", notesTextArea.isEnabled());
+
   }
 
 }

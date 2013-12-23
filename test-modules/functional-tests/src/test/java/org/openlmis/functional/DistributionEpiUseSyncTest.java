@@ -98,6 +98,99 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
+  public void testEpiUseEditSync() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
+
+    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.verifyIndicator("RED");
+
+    enterDataInEpiUsePage(10,20,30,40,50,"10/2011",1);
+
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.navigateToRefrigeratorTab();
+    epiUse.navigate();
+
+    epiUse.verifyTotal("30", 1);
+    epiUse.verifyStockAtFirstOfMonth("10", 1);
+    epiUse.verifyReceived("20", 1);
+    epiUse.verifyDistributed("30", 1);
+    epiUse.verifyLoss("40", 1);
+    epiUse.verifyStockAtEndOfMonth("50", 1);
+    epiUse.verifyExpirationDate("10/2011", 1);
+
+    epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(1);
+    epiUse.checkUncheckReceivedNotRecorded(1);
+    epiUse.checkUncheckDistributedNotRecorded(1);
+    epiUse.checkUncheckLossNotRecorded(1);
+    epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
+    epiUse.checkUncheckExpirationDateNotRecorded(1);
+
+    refrigeratorPage.navigateToRefrigeratorTab();
+    epiUse.navigate();
+
+    epiUse.verifyStockAtFirstOfMonthStatus(false, 1);
+    epiUse.verifyReceivedStatus(false, 1);
+    epiUse.verifyDistributedStatus(false, 1);
+    epiUse.verifyLossStatus(false, 1);
+    epiUse.verifyStockAtEndOfMonthStatus(false, 1);
+    epiUse.verifyExpirationDateStatus(false, 1);
+
+    epiUse.checkUncheckStockAtFirstOfMonthNotRecorded(1);
+    epiUse.checkUncheckReceivedNotRecorded(1);
+    epiUse.checkUncheckDistributedNotRecorded(1);
+    epiUse.checkUncheckLossNotRecorded(1);
+    epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
+    epiUse.checkUncheckExpirationDateNotRecorded(1);
+
+    enterDataInEpiUsePage(20,30,40,50,60,"11/2012",1);
+
+    refrigeratorPage.navigateToRefrigeratorTab();
+    epiUse.navigate();
+    epiUse.checkApplyNRToAllFields(false);
+    epiUse.verifyTotal("50", 1);
+
+    epiUse.verifyStockAtFirstOfMonth("20", 1);
+    epiUse.verifyReceived("30", 1);
+    epiUse.verifyDistributed("40", 1);
+    epiUse.verifyLoss("50", 1);
+    epiUse.verifyStockAtEndOfMonth("60", 1);
+    epiUse.verifyExpirationDate("11/2012", 1);
+
+    epiUse.verifyStockAtFirstOfMonthStatus(true, 1);
+    epiUse.verifyReceivedStatus(true, 1);
+    epiUse.verifyDistributedStatus(true, 1);
+    epiUse.verifyLossStatus(true, 1);
+    epiUse.verifyStockAtEndOfMonthStatus(true, 1);
+    epiUse.verifyExpirationDateStatus(true, 1);
+    epiUse.verifyIndicator("GREEN");
+    epiUse.verifyStockAtFirstOfMonthStatus(true, 1);
+    epiUse.verifyReceivedStatus(true, 1);
+    epiUse.verifyDistributedStatus(true, 1);
+    epiUse.verifyLossStatus(true, 1);
+    epiUse.verifyStockAtEndOfMonthStatus(true, 1);
+    epiUse.verifyExpirationDateStatus(true, 1);
+    epiUse.verifyIndicator("GREEN");
+
+    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+
+    distributionPage.syncDistribution();
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyEpiUseDataInDatabase(20, 30, 40, 50, 60, "11/2012", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+  }
+
+  @Test(groups = {"distribution"})
   public void testEpiUsePageSyncWhenAllProductsInactiveAfterCaching() throws Exception {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -337,8 +430,17 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.verifyProductGroup("PG1-Name", 1);
 
     epiUse.verifyIndicator("RED");
+    enterDataInEpiUsePage(10,20,30,40,50,"10/2011",1);
+    epiUse.verifyIndicator("GREEN");
+
     epiUse.checkApplyNRToAllFields(true);
     epiUse.verifyIndicator("GREEN");
+    epiUse.verifyStockAtFirstOfMonthStatus(false, 1);
+    epiUse.verifyReceivedStatus(false, 1);
+    epiUse.verifyDistributedStatus(false, 1);
+    epiUse.verifyLossStatus(false, 1);
+    epiUse.verifyStockAtEndOfMonthStatus(false, 1);
+    epiUse.verifyExpirationDateStatus(false, 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
 

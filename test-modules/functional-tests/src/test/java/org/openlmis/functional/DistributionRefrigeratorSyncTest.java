@@ -76,7 +76,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testEpiUsePageSync() throws Exception {
+  public void testRefrigeratorPageSync() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
 
@@ -92,11 +92,6 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.enterValueInModelModal("800 LITRES");
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
-
-    String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
-    for (int i = 0; i < refrigeratorDetails.length; i++) {
-      SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
-    }
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
@@ -128,6 +123,113 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution();
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
+
+    verifyRefrigeratorDataInDatabase();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testRefrigeratorSyncWhenRefrigeratorHasProblemAndDefaultValueOfNotes() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
+
+    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.onRefrigeratorScreen();
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.enterValueInBrandModal("LG");
+    refrigeratorPage.enterValueInModelModal("800 LITRES");
+    refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
+    refrigeratorPage.clickDoneOnModal();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
+    refrigeratorPage.clickShow();
+    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
+
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "AMBER");
+
+    refrigeratorPage.clickFunctioningCorrectlyNoRadio();
+    refrigeratorPage.enterValueInLowAlarmEvents("1");
+    refrigeratorPage.enterValueInHighAlarmEvents("0");
+    refrigeratorPage.clickProblemSinceLastVisitYesRadio();
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall","AMBER");
+    refrigeratorPage.selectOtherProblem();
+
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.clickDone();
+
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+
+    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+
+    distributionPage.syncDistribution();
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyRefrigeratorDataInDatabase();
+  }
+
+  @Test(groups = {"distribution"})
+  public void testRefrigeratorSyncWhenProblemIsSelectedAndAppliedNRBeforeSync() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
+
+    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
+
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.onRefrigeratorScreen();
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.enterValueInBrandModal("LG");
+    refrigeratorPage.enterValueInModelModal("800 LITRES");
+    refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
+    refrigeratorPage.clickDoneOnModal();
+
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
+    refrigeratorPage.clickShow();
+    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
+
+    refrigeratorPage.applyNRToRefrigeratorTemperature();
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "AMBER");
+
+    refrigeratorPage.clickFunctioningCorrectlyNR();
+    refrigeratorPage.applyNRToLowAlarmEvent();
+    refrigeratorPage.applyNRToHighAlarmEvent();
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall","AMBER");
+    refrigeratorPage.clickProblemSinceLastVisitNR();
+
+    refrigeratorPage.verifyFieldsDisabledWhenAllNRSelected();
+
+    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.clickDone();
+
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+
+    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+
+    distributionPage.syncDistribution();
+    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyRefrigeratorDataInDatabase();
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,

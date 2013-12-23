@@ -519,6 +519,10 @@ public class TestCaseHelper {
     assertEquals(expirationDate, epiDetails.get("expirationdate"));
   }
 
+  public void verifyRefrigeratorDataInDatabase(){
+    //TODO
+  }
+
 }
 
 
