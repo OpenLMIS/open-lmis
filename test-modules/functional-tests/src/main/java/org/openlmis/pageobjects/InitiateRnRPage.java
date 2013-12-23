@@ -271,6 +271,12 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "selectNone")
   private static WebElement skipNoneLink = null;
 
+  @FindBy(how = ID, using = "//span/[@id='allocatedBudgetAmount']")
+  private static WebElement allocatedBudgetAmount = null;
+
+  @FindBy(how = XPATH, using = "//span[@openlmis-message='label.allocated.budget']")
+  private static WebElement allocateBudget = null;
+
   Float actualTotalCostFullSupply = 0.0f;
   Float actualTotalCostNonFullSupply = 0.0f;
   private Map<String, WebElement> elementsMap = new HashMap<String, WebElement>() {{
@@ -289,6 +295,7 @@ public class InitiateRnRPage extends RequisitionPage {
     put("quantityDispensedSecondProduct", quantityDispensedSecondProduct);
     put("totalStockOutDaysSecondProduct", totalStockOutDaysSecondProduct);
     put("requestedQuantitySecondProduct", requestedQuantitySecondProduct);
+    put("allocatedBudgetAmount",  allocatedBudgetAmount);
   }};
 
   public InitiateRnRPage(TestWebDriver driver) throws IOException {
@@ -799,5 +806,10 @@ public class InitiateRnRPage extends RequisitionPage {
   public void verifyAmcForSecondProduct(Integer expectedValue) {
     testWebDriver.sleep(1000);
     verifyFieldValue(expectedValue.toString(), amcSecondProduct.getText());
+  }
+
+  public void verifyBudgetInfoOnFooter() {
+    assertEquals("$2,000.00",testWebDriver.getElementById("allocatedBudgetAmount").getText());
+    assertTrue(allocateBudget.getText().contains("Allocated Budget:"));
   }
 }

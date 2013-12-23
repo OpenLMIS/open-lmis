@@ -371,6 +371,8 @@ public class DBWrapper {
   }
 
   public void deleteData() throws SQLException, IOException {
+    update("delete from budget_line_items");
+    update("delete from budget_file_info");
     update("delete from role_rights where roleId not in(1)");
     update("delete from role_assignments where userId not in (1)");
     update("delete from fulfillment_role_assignments");
@@ -1528,5 +1530,18 @@ public class DBWrapper {
       "(SELECT name FROM product_groups where code = '%s') AND epiUseId=(Select id from epi_use where facilityId=" +
       "(Select id from facilities where code ='%s'));", productGroupCode,facilityCode).get(0);
   }
+
+
+  public void updateBudgetFlag(String ProgramName,Boolean Flag) throws IOException, SQLException {
+    update("update programs set budgetingapplies ='"+Flag+"' where name ='"+ProgramName+"';");
+  }
+
+
+  public void insertBudgetData() throws IOException, SQLException {
+    update("INSERT INTO budget_file_info VALUES (1,'abc.csv','f',200,'12/12/13',200,'12/12/13');");
+    update("INSERT INTO budget_line_items VALUES (1,(select id from processing_periods where name='current Period'),1,'01/01/2013',2000,'hjhj',200,'12/12/2013',200,'12/12/2013',(select id from facilities where code='F10'),1);");
+
+  }
+
 }
 
