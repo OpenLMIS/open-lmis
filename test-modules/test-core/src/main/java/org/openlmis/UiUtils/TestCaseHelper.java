@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -505,7 +506,18 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+  public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
+                                         Integer loss, Integer stockAtEndOfMonth, String expirationDate, String productGroupCode,
+                                         String facilityCode) throws SQLException {
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,facilityCode);
 
+    assertEquals(stockAtFirstOfMonth, epiDetails.get("stockatfirstofmonth"));
+    assertEquals(receivedValue, epiDetails.get("received"));
+    assertEquals(distributedValue, epiDetails.get("distributed"));
+    assertEquals(loss, epiDetails.get("loss"));
+    assertEquals(stockAtEndOfMonth, epiDetails.get("stockatendofmonth"));
+    assertEquals(expirationDate, epiDetails.get("expirationdate"));
+  }
 
 }
 

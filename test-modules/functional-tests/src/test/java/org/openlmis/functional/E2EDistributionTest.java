@@ -54,8 +54,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
-    dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
-    dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
     dbWrapper.deleteDeliveryZoneMembers("F11");
@@ -74,9 +74,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(3000);
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
-    assertFalse("Delivery Zone selectbox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
-    assertFalse("Period selectbox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
-    assertFalse("Program selectbox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
+    assertFalse("Delivery Zone selectBox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
+    assertFalse("Period selectBox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
+    assertFalse("Program selectBox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
 
     distributionPage.clickRecordData();
@@ -134,7 +134,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyIndicator("AMBER");
     epiUse.enterValueInReceived("20", 1);
     epiUse.enterValueInDistributed("30", 1);
-    epiUse.enterValueInLoss("40", 1);
+    epiUse.checkApplyNRToLoss0();
     epiUse.enterValueInStockAtEndOfMonth("50", 1);
     epiUse.enterValueInExpirationDate("10/2011", 1);
     epiUse.verifyIndicator("GREEN");
@@ -168,7 +168,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyStockAtFirstOfMonth("10", 1);
     epiUse.verifyReceived("20", 1);
     epiUse.verifyDistributed("30", 1);
-    epiUse.checkApplyNRToLoss0();
+    epiUse.verifyLoss(null,1);
+    epiUse.verifyLossStatus(false,1);
     epiUse.verifyStockAtEndOfMonth("50", 1);
     epiUse.verifyExpirationDate("10/2011", 1);
 
@@ -205,8 +206,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.clickShow();
     refrigeratorPage.verifyAllFieldsDisabled();
 
-    DistributionEpiUseSyncTest distributionEpiUseSyncTest=new DistributionEpiUseSyncTest();
-    distributionEpiUseSyncTest.verifyEpiUseDateInDatabase(10,20,30,null,50,"10/2011","PG1");
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1","F10");
   }
 
   @AfterMethod(groups = {"offline"})

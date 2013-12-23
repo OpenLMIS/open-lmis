@@ -94,7 +94,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -121,7 +121,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     dbWrapper.updateActiveStatusOfProduct("Product6", "true");
@@ -152,7 +152,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -179,7 +179,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateActiveStatusOfFacility("F10", "true");
   }
@@ -208,7 +208,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
   }
@@ -235,7 +235,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
@@ -262,7 +262,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -288,7 +288,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011",epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -316,7 +316,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    verifyEpiUseDateInDatabase(null,null,null,null,null,null,epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -352,7 +352,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
 
-    verifyEpiUseDateInDatabase(null,null,null,null,null,null,epiUseData.get(PRODUCT_GROUP_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -387,8 +387,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDateInDatabase(null, null, null, null, 4, "12/2031",epiUseData.get(PRODUCT_GROUP_CODE));
-    verifyEpiUseDateInDatabase(10, 20, 30, 40, 50, "10/2011","PG2");
+    verifyEpiUseDataInDatabase(null, null, null, null, 4, "12/2031", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG2",epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -418,18 +418,6 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickRecordData();
-  }
-
-  public void verifyEpiUseDateInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
-                                         Integer loss, Integer stockAtEndOfMonth, String expirationDate, String productGroupCode) throws SQLException {
-    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,epiUseData.get(FIRST_FACILITY_CODE));
-
-    assertEquals(stockAtFirstOfMonth, epiDetails.get("stockatfirstofmonth"));
-    assertEquals(receivedValue, epiDetails.get("received"));
-    assertEquals(distributedValue, epiDetails.get("distributed"));
-    assertEquals(loss, epiDetails.get("loss"));
-    assertEquals(stockAtEndOfMonth, epiDetails.get("stockatendofmonth"));
-    assertEquals(expirationDate, epiDetails.get("expirationdate"));
   }
 
   public void enterDataInGeneralObservationsPage(String observation, String confirmName, String confirmTitle, String verifierName,
