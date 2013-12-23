@@ -10,10 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Refrigerator;
 import org.springframework.stereotype.Repository;
 
@@ -39,4 +36,6 @@ public interface RefrigeratorMapper {
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   List<Refrigerator> getRefrigeratorsForADeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
+  @Update({"UPDATE refrigerators SET brand = #{brand}, model = #{model} WHERE id = #{id}"})
+  void update(Refrigerator refrigerator);
 }

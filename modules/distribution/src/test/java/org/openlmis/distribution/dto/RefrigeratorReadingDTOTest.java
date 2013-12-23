@@ -27,7 +27,7 @@ public class RefrigeratorReadingDTOTest {
     Reading lowAlarmEvents = new Reading("2", false);
     Reading highAlarmEvents = new Reading("", true);
     Reading problemSinceLastTime = new Reading("Y", false);
-    RefrigeratorProblem problems = new RefrigeratorProblem(false, true, false, false, false, false, null);
+    RefrigeratorProblem problems = new RefrigeratorProblem(3L, false, true, false, false, false, false, null);
     String notes = "Notes";
     Long facilityId = 2L;
 

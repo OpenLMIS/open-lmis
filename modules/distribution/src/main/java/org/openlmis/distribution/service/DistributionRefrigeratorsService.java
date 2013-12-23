@@ -10,7 +10,9 @@
 
 package org.openlmis.distribution.service;
 
+import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,18 @@ public class DistributionRefrigeratorsService {
   @Autowired
   private DistributionRefrigeratorsRepository repository;
 
+  @Autowired
+  private RefrigeratorService refrigeratorService;
+
   public void save(DistributionRefrigerators distributionRefrigerators) {
     repository.save(distributionRefrigerators);
+
+    for (RefrigeratorReading reading : distributionRefrigerators.getReadings()) {
+
+      reading.setDistributionRefrigeratorsId(distributionRefrigerators.getId());
+      repository.saveReading(reading);
+
+      refrigeratorService.update(reading.getRefrigerator());
+    }
   }
 }

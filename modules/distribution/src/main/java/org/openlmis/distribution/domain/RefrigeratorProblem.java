@@ -22,12 +22,13 @@ import org.openlmis.core.domain.BaseModel;
 @EqualsAndHashCode(callSuper = false)
 public class RefrigeratorProblem extends BaseModel {
 
-  boolean operatorError;
-  boolean burnerProblem;
-  boolean gasLeakage;
-  boolean egpFault;
-  boolean thermostatSetting;
-  boolean other;
+  Long readingId;
+  Boolean operatorError;
+  Boolean burnerProblem;
+  Boolean gasLeakage;
+  Boolean egpFault;
+  Boolean thermostatSetting;
+  Boolean other;
   String otherProblemExplanation;
 
 }

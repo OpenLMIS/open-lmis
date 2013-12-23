@@ -17,13 +17,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.mapper.DistributionRefrigeratorsMapper;
 
-import static java.util.Arrays.asList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -36,16 +34,18 @@ public class DistributionRefrigeratorsRepositoryTest {
   private DistributionRefrigeratorsMapper mapper;
 
   @Test
-  public void shouldSave() throws Exception {
+  public void shouldSaveReading() throws Exception {
 
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
+    Long readingId = 3L;
     RefrigeratorReading refrigeratorReading = mock(RefrigeratorReading.class);
-    distributionRefrigerators.setReadings(asList(refrigeratorReading));
+    RefrigeratorProblem refrigeratorProblem = mock(RefrigeratorProblem.class);
 
-    repository.save(distributionRefrigerators);
+    when(refrigeratorReading.getProblem()).thenReturn(refrigeratorProblem);
+    when(refrigeratorReading.getId()).thenReturn(readingId);
+    repository.saveReading(refrigeratorReading);
 
-    verify(mapper).insert(distributionRefrigerators);
-    verify(refrigeratorReading).setDistributionRefrigeratorsId(distributionRefrigerators.getId());
     verify(mapper).insertReading(refrigeratorReading);
+    verify(refrigeratorProblem).setReadingId(readingId);
+    verify(mapper).insertProblems(refrigeratorReading.getProblem());
   }
 }

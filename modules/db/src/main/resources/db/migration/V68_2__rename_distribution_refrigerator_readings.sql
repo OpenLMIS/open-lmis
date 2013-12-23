@@ -8,10 +8,5 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-ALTER TABLE refrigerator_readings
-
-ADD COLUMN brand VARCHAR(20),
-ADD COLUMN model VARCHAR(20),
-ADD COLUMN serialNumber VARCHAR(30),
-ADD COLUMN problemId INTEGER REFERENCES refrigerator_problems (id),
-ADD COLUMN refrigeratorsId INTEGER REFERENCES refrigerators (id);
+ALTER TABLE distribution_refrigerator_readings
+RENAME TO refrigerator_readings;

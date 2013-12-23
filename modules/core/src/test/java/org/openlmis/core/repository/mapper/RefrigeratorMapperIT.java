@@ -10,6 +10,7 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -78,25 +79,31 @@ public class RefrigeratorMapperIT {
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;
 
+  ProcessingSchedule processingSchedule;
+  Program program;
+  DeliveryZone deliveryZone;
+  Facility facility;
 
-  @Test
-  public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
-    ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+  @Before
+  public void setUp() throws Exception {
+    processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
     processingScheduleMapper.insert(processingSchedule);
 
-    Program program = make(a(ProgramBuilder.defaultProgram));
+    program = make(a(ProgramBuilder.defaultProgram));
     programMapper.insert(program);
 
-    DeliveryZone deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
+    deliveryZone = make(a(DeliveryZoneBuilder.defaultDeliveryZone));
     deliveryZoneMapper.insert(deliveryZone);
 
     deliveryZoneProgramScheduleMapper.insert(new DeliveryZoneProgramSchedule(deliveryZone.getId(),
       program.getId(), processingSchedule.getId()));
 
-    Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
+    facility = insertMemberFacility(deliveryZone, program, "F10A", "facility", 10l, true);
+  }
 
-
-    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility1.getId());
+  @Test
+  public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
+    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId());
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
 
@@ -108,6 +115,22 @@ public class RefrigeratorMapperIT {
     List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
 
     assertThat(refrigerators.get(0).getSerialNumber(), is(refrigerator.getSerialNumber()));
+  }
+
+  @Test
+  public void shouldUpdateRefrigerator() throws Exception {
+    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId());
+    refrigerator.setCreatedBy(1L);
+    refrigerator.setModifiedBy(1L);
+
+    mapper.insert(refrigerator);
+
+    refrigerator.setBrand("LG");
+    mapper.update(refrigerator);
+
+    List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
+
+    assertThat(refrigerators.get(0).getBrand(), is(refrigerator.getBrand()));
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
@@ -123,6 +146,4 @@ public class RefrigeratorMapperIT {
     deliveryZoneMemberMapper.insert(member1);
     return facility;
   }
-
-
 }

@@ -27,4 +27,8 @@ public class RefrigeratorRepository {
   public List<Refrigerator> getRefrigeratorsForADeliveryZoneAndProgram(Long deliveryZoneId, Long programId) {
     return mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
   }
+
+  public void update(Refrigerator refrigerator) {
+    mapper.update(refrigerator);
+  }
 }

@@ -8,17 +8,10 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-CREATE TABLE refrigerator_problems (
-  id                      SERIAL PRIMARY KEY,
-  operatorError           BOOLEAN NOT NULL,
-  burnerProblem           BOOLEAN NOT NULL,
-  gasLeakage              BOOLEAN NOT NULL,
-  egpFault                BOOLEAN NOT NULL,
-  thermostatSetting       BOOLEAN NOT NULL,
-  other                   BOOLEAN NOT NULL,
-  otherProblemExplanation VARCHAR(255),
-  createdBy               INTEGER,
-  createdDate             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy              INTEGER,
-  modifiedDate            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE distribution_refrigerators (
+  id             SERIAL PRIMARY KEY,
+  facilityId     INTEGER REFERENCES facilities (id),
+  distributionId INTEGER REFERENCES distributions (id)
 );
+
+CREATE UNIQUE INDEX uc_distribution_refrigerators_facilityId_distributionId ON distribution_refrigerators (facilityId, distributionId);

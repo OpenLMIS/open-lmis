@@ -27,4 +27,7 @@ public class RefrigeratorService {
     return repository.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
   }
 
+  public void update(Refrigerator refrigerator) {
+    repository.update(refrigerator);
+  }
 }

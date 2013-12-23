@@ -11,6 +11,8 @@
 package org.openlmis.distribution.repository;
 
 import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.RefrigeratorProblem;
+import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.mapper.DistributionRefrigeratorsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,5 +25,13 @@ public class DistributionRefrigeratorsRepository {
 
   public void save(DistributionRefrigerators distributionRefrigerators) {
     mapper.insert(distributionRefrigerators);
+  }
+
+  public void saveReading(RefrigeratorReading reading) {
+    mapper.insertReading(reading);
+
+    RefrigeratorProblem problem = reading.getProblem();
+    problem.setReadingId(reading.getId());
+    mapper.insertProblems(problem);
   }
 }

@@ -8,14 +8,18 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-ALTER TABLE distribution_refrigerator_readings
-DROP COLUMN refrigeratorSerialNumber,
-DROP COLUMN facilityId,
-DROP COLUMN distributionId,
-ADD COLUMN distributionRefrigeratorsId INTEGER REFERENCES distribution_refrigerators (id),
-ALTER COLUMN functioningCorrectly TYPE VARCHAR(1),
-ALTER COLUMN problemSinceLastTime TYPE VARCHAR(1),
-ALTER COLUMN createdBy DROP NOT NULL,
-ALTER COLUMN modifiedBy DROP NOT NULL;
-
-DROP TYPE radio_options;
+CREATE TABLE refrigerator_problems (
+  id                      SERIAL PRIMARY KEY,
+  readingId INTEGER REFERENCES refrigerator_readings (id),
+  operatorError           BOOLEAN NOT NULL,
+  burnerProblem           BOOLEAN NOT NULL,
+  gasLeakage              BOOLEAN NOT NULL,
+  egpFault                BOOLEAN NOT NULL,
+  thermostatSetting       BOOLEAN NOT NULL,
+  other                   BOOLEAN NOT NULL,
+  otherProblemExplanation VARCHAR(255),
+  createdBy               INTEGER,
+  createdDate             TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  modifiedBy              INTEGER,
+  modifiedDate            TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

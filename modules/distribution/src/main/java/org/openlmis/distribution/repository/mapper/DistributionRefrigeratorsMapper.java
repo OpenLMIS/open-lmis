@@ -10,15 +10,31 @@
 
 package org.openlmis.distribution.repository.mapper;
 
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DistributionRefrigeratorsMapper {
 
-
+  @Insert({"INSERT INTO distribution_refrigerators (facilityId, distributionId) VALUES (#{facilityId}, #{distributionId})"})
+  @Options(useGeneratedKeys = true)
   void insert(DistributionRefrigerators distributionRefrigerators);
 
+  @Insert({"INSERT INTO refrigerator_readings",
+    "(temperature, functioningCorrectly, lowAlarmEvents, highAlarmEvents, ",
+    "problemSinceLastTime, notes, distributionRefrigeratorsId, createdBy, modifiedBy)",
+    "VALUES",
+    "(#{temperature}, #{functioningCorrectly}, #{lowAlarmEvents}, #{highAlarmEvents}, ",
+    "#{problemSinceLastTime}, #{notes}, #{distributionRefrigeratorsId}, #{createdBy}, #{modifiedBy})"})
+  @Options(useGeneratedKeys = true)
   void insertReading(RefrigeratorReading refrigeratorReading);
+
+  @Insert({"INSERT INTO refrigerator_problems(readingId, operatorError, burnerProblem, gasLeakage, egpFault, thermostatSetting, other, otherProblemExplanation) ",
+    "VALUES (#{readingId}, #{operatorError}, #{burnerProblem}, #{gasLeakage}, #{egpFault}, #{thermostatSetting}, #{other}, #{otherProblemExplanation})"})
+  @Options(useGeneratedKeys = true)
+  void insertProblems(RefrigeratorProblem problem);
 }
