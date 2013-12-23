@@ -34,10 +34,7 @@ public class RefrigeratorReadingDTOTest {
     RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId), 1L, 32.4F,
       "Y", 2, null, "Y", problems, notes);
 
-    RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(1L,
-      "brand",
-      "model",
-      "serial number",
+    RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", 1L),
       temperature,
       functioningCorrectly,
       lowAlarmEvents,
@@ -46,7 +43,7 @@ public class RefrigeratorReadingDTOTest {
       problems,
       notes);
 
-    RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform(facilityId);
+    RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
 
     assertThat(refrigeratorReading, is(expectedReading));
   }

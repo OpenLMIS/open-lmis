@@ -44,6 +44,6 @@ public class FacilityDistributionDTOTest {
 
     assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
     assertThat(facilityDistribution.getEpiUse(), is(epiUse));
-    assertThat(facilityDistribution.getDistributionRefrigerators(), is(distributionRefrigerators));
+    assertThat(facilityDistribution.getRefrigerators(), is(distributionRefrigerators));
   }
 }

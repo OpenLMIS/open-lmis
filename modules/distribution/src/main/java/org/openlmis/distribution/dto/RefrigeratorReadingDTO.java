@@ -11,19 +11,25 @@
 package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class RefrigeratorReadingDTO extends BaseModel {
 
-  Long refrigeratorId;
-  String brand;
-  String model;
-  String serialNumber;
-
+  Refrigerator refrigerator;
   //Readings
   Reading temperature;
   Reading functioningCorrectly;
@@ -33,10 +39,7 @@ public class RefrigeratorReadingDTO extends BaseModel {
   RefrigeratorProblem problems;
   String notes;
 
-  public RefrigeratorReading transform(Long facilityId) {
-    Refrigerator refrigerator = new Refrigerator(brand, serialNumber, model, facilityId);
-    refrigerator.setId(refrigeratorId);
-
+  public RefrigeratorReading transform() {
     return new RefrigeratorReading(refrigerator, null,
       temperature.parseFloat(),
       functioningCorrectly.getEffectiveValue(),

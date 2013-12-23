@@ -85,7 +85,7 @@ public class FacilityDistributionService {
 
   public boolean save(FacilityDistribution facilityDistribution) {
     epiUseService.save(facilityDistribution.getEpiUse());
-    distributionRefrigeratorsService.save(facilityDistribution.getDistributionRefrigerators());
+    distributionRefrigeratorsService.save(facilityDistribution.getRefrigerators());
     return facilityVisitService.save(facilityDistribution.getFacilityVisit());
   }
 }

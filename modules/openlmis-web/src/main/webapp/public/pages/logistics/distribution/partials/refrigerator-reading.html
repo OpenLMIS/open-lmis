@@ -14,9 +14,9 @@
     <div class="span1 status-cell">
       <span class="status-icon"></span>
     </div>
-    <div class="span2" ng-bind="refrigeratorReading.brand"></div>
-    <div class="span3" ng-bind="refrigeratorReading.model"></div>
-    <div class="span3" ng-bind="refrigeratorReading.serialNumber"></div>
+    <div class="span2" ng-bind="refrigeratorReading.refrigerator.brand"></div>
+    <div class="span3" ng-bind="refrigeratorReading.refrigerator.model"></div>
+    <div class="span3" ng-bind="refrigeratorReading.refrigerator.serialNumber"></div>
     <div class="span3">
       <span class="pull-right">
         <a id="editReading{{$index}}" href="" class="btn btn-small btn-primary"
@@ -145,42 +145,42 @@
                 </div>
                 <div class="form-row clearfix">
                   <input id="operatorError{{ $index }}" type="checkbox"
-                         ng-model="refrigeratorReading.problems.problemMap.operatorError"/>
+                         ng-model="refrigeratorReading.problems.operatorError"/>
                   <label class="checkbox-label" for="operatorError{{ $index }}"
                          openlmis-message="label.operator.error"></label>
                 </div>
                 <div class="form-row clearfix">
                   <input id="burnerProblem{{ $index }}" type="checkbox"
-                         ng-model="refrigeratorReading.problems.problemMap.burnerProblem"/>
+                         ng-model="refrigeratorReading.problems.burnerProblem"/>
                   <label class="checkbox-label" for="burnerProblem{{ $index }}"
                          openlmis-message="label.burner.problem"></label>
                 </div>
                 <div class="form-row clearfix">
                   <input id="gasLeakage{{ $index }}" type="checkbox"
-                         ng-model="refrigeratorReading.problems.problemMap.gasLeakage"/>
+                         ng-model="refrigeratorReading.problems.gasLeakage"/>
                   <label class="checkbox-label" for="gasLeakage{{ $index }}"
                          openlmis-message="label.gas.problem"></label>
                 </div>
                 <div class="form-row clearfix">
                   <input id="egpFault{{ $index }}" type="checkbox"
-                         ng-model="refrigeratorReading.problems.problemMap.egpFault"/>
+                         ng-model="refrigeratorReading.problems.egpFault"/>
                   <label class="checkbox-label" for="egpFault{{ $index }}" openlmis-message="label.egp.fault"></label>
                 </div>
                 <div class="form-row clearfix">
                   <input id="thermostatSetting{{ $index }}" type="checkbox"
-                         ng-model="refrigeratorReading.problems.problemMap.thermostatSetting"/>
+                         ng-model="refrigeratorReading.problems.thermostatSetting"/>
                   <label class="checkbox-label" for="thermostatSetting{{ $index }}"
                          openlmis-message="label.thermostat.setting"></label>
                 </div>
                 <div class="form-row clearfix">
                   <input id="other{{ $index }}" type="checkbox"
-                         ng-click="refrigeratorReading.problems.other = refrigeratorReading.problems.problemMap.other ? refrigeratorReading.problems.other : undefined"
-                         ng-model="refrigeratorReading.problems.problemMap.other"/>
+                         ng-click="refrigeratorReading.problems.otherProblemExplanation = refrigeratorReading.problems.other ? refrigeratorReading.problems.otherProblemExplanation : undefined"
+                         ng-model="refrigeratorReading.problems.other"/>
                   <label class="checkbox-label" for="other{{ $index }}" openlmis-message="label.other"></label>
 
                   <div class="form-row clearfix">
-                    <textarea id="otherTextbox" ng-show="refrigeratorReading.problems.problemMap.other"
-                              ng-model="refrigeratorReading.problems.other"
+                    <textarea id="otherTextbox" ng-show="refrigeratorReading.problems.other"
+                              ng-model="refrigeratorReading.problems.otherProblemExplanation"
                               maxlength="255"></textarea>
                   </div>
                 </div>

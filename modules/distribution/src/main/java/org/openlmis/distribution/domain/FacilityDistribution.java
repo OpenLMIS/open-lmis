@@ -34,10 +34,10 @@ public class FacilityDistribution {
 
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
-  private DistributionRefrigerators distributionRefrigerators;
+  private DistributionRefrigerators refrigerators;
 
   public FacilityDistribution(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.epiUse = new EpiUse(facility, distribution);
-    this.distributionRefrigerators = new DistributionRefrigerators(facility, distribution, readings);
+    this.refrigerators = new DistributionRefrigerators(facility, distribution, readings);
   }
 }

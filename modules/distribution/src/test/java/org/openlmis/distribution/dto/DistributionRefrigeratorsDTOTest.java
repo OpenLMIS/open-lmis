@@ -31,7 +31,7 @@ public class DistributionRefrigeratorsDTOTest {
 
     refrigeratorsDTO.transform();
 
-    verify(refrigeratorReadingDTO1).transform(facilityId);
-    verify(refrigeratorReadingDTO2).transform(facilityId);
+    verify(refrigeratorReadingDTO1).transform();
+    verify(refrigeratorReadingDTO2).transform();
   }
 }

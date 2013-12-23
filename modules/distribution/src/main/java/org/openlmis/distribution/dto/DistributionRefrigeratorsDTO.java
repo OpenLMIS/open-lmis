@@ -11,7 +11,11 @@
 package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.collections.Transformer;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorReading;
@@ -19,8 +23,13 @@ import org.openlmis.distribution.domain.RefrigeratorReading;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.collect;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class DistributionRefrigeratorsDTO extends BaseModel {
 
   Long facilityId;
@@ -31,7 +40,7 @@ public class DistributionRefrigeratorsDTO extends BaseModel {
     List<RefrigeratorReading> refrigeratorReadings = (List) collect(readings, new Transformer() {
       @Override
       public Object transform(Object o) {
-        RefrigeratorReading reading = ((RefrigeratorReadingDTO) o).transform(facilityId);
+        RefrigeratorReading reading = ((RefrigeratorReadingDTO) o).transform();
         return reading;
       }
     });
