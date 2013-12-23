@@ -53,6 +53,8 @@ public class ManageBudget extends TestCaseHelper{
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyBudgetInfoOnFooter();
+    initiateRnRPage.clickNonFullSupplyTab();
+    initiateRnRPage.verifyBudgetInfoOnFooter();
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
     homePage.navigateToApprove();
@@ -61,13 +63,19 @@ public class ManageBudget extends TestCaseHelper{
     initiateRnRPage.verifyBudgetInfoOnFooter();
     approvePage.clickApproveButton();
     approvePage.clickOk();
+    ViewRequisitionPage viewRequisitionPage=new ViewRequisitionPage(testWebDriver);
+    homePage.navigateViewRequisition();
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.clickRnRList();
+    initiateRnRPage.verifyBudgetInfoOnFooter();
 
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyBudgetWhenRegularRnRIsCreatedAndBudgetFlagIsTrueAndDoNotContainsBudgetInformation(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.updateBudgetFlag(program,true);
+    dbWrapper.updateBudgetFlag(program, true);
     dbWrapper.deleteProcessingPeriods();
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -79,10 +87,13 @@ public class ManageBudget extends TestCaseHelper{
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(100, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(50, "quantityDispensedFirstProduct");
-    assertEquals("Not allocated",testWebDriver.getElementById("allocatedBudgetNotApplicable").getText());
+    assertEquals("Not allocated", testWebDriver.getElementById("allocatedBudgetNotApplicable").getText());
     assertTrue(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
+    assertEquals("Not allocated",testWebDriver.getElementById("allocatedBudgetNotApplicable").getText());
+    assertTrue(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
+    initiateRnRPage.clickNonFullSupplyTab();
     assertEquals("Not allocated",testWebDriver.getElementById("allocatedBudgetNotApplicable").getText());
     assertTrue(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     initiateRnRPage.authorizeRnR();
@@ -91,8 +102,16 @@ public class ManageBudget extends TestCaseHelper{
     ApprovePage approvePage = new ApprovePage(testWebDriver);
     approvePage.ClickRequisitionPresentForApproval();
     assertEquals("Not allocated",testWebDriver.getElementById("allocatedBudgetNotApplicable").getText());
-    assertTrue(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());    approvePage.clickApproveButton();
+    assertTrue(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
+    approvePage.clickApproveButton();
     approvePage.clickOk();
+    ViewRequisitionPage viewRequisitionPage=new ViewRequisitionPage(testWebDriver);
+    homePage.navigateViewRequisition();
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.clickRnRList();
+    assertEquals("Not allocated",testWebDriver.getElementById("allocatedBudgetNotApplicable").getText());
+    assertTrue(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
 
   }
 
@@ -118,6 +137,9 @@ public class ManageBudget extends TestCaseHelper{
     initiateRnRPage.clickOk();
     assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
     assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
+    initiateRnRPage.clickNonFullSupplyTab();
+    assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
+    assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     initiateRnRPage.authorizeRnR();
     initiateRnRPage.clickOk();
     homePage.navigateToApprove();
@@ -127,6 +149,13 @@ public class ManageBudget extends TestCaseHelper{
     assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     approvePage.clickApproveButton();
     approvePage.clickOk();
+    ViewRequisitionPage viewRequisitionPage=new ViewRequisitionPage(testWebDriver);
+    homePage.navigateViewRequisition();
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.clickRnRList();
+    assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
+    assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
   }
 
 
@@ -145,11 +174,14 @@ public class ManageBudget extends TestCaseHelper{
     InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(100, "quantityReceivedFirstProduct");
-    initiateRnRPage.enterValue(50,  "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValue(50, "quantityDispensedFirstProduct");
     assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
     assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     initiateRnRPage.clickSubmitButton();
     initiateRnRPage.clickOk();
+    assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
+    assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
+    initiateRnRPage.clickNonFullSupplyTab();
     assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
     assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     initiateRnRPage.authorizeRnR();
@@ -161,6 +193,13 @@ public class ManageBudget extends TestCaseHelper{
     assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
     approvePage.clickApproveButton();
     approvePage.clickOk();
+    ViewRequisitionPage viewRequisitionPage=new ViewRequisitionPage(testWebDriver);
+    homePage.navigateViewRequisition();
+    viewRequisitionPage.enterViewSearchCriteria();
+    viewRequisitionPage.clickSearch();
+    viewRequisitionPage.clickRnRList();
+    assertFalse(testWebDriver.getElementById("allocatedBudgetAmount").isDisplayed());
+    assertFalse(testWebDriver.getElementByXpath("//span[@openlmis-message='label.allocated.budget']").isDisplayed());
   }
 
 
