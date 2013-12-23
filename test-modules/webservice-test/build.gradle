@@ -12,10 +12,10 @@ apply plugin: 'jetty'
 
 
 dependencies {
-    compile 'org.seleniumhq.selenium:selenium-java:2.38.0',
-            'org.seleniumhq.selenium:selenium-firefox-driver:2.38.0',
-            'org.seleniumhq.selenium:selenium-ie-driver:2.38.0',
-            'org.seleniumhq.selenium:selenium-chrome-driver:2.38.0',
+    compile 'org.seleniumhq.selenium:selenium-java:2.35.0',
+            'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0',
+            'org.seleniumhq.selenium:selenium-ie-driver:2.33.0',
+            'org.seleniumhq.selenium:selenium-chrome-driver:2.33.0',
             'net.sf.json-lib:json-lib:0.9',
             'postgresql:postgresql:9.0-801.jdbc4',
             'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
