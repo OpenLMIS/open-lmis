@@ -175,8 +175,6 @@ dependencies {
     'org.powermock:powermock-api-mockito:1.4.12',
     'org.powermock:powermock-module-junit4:1.4.12',
     'org.codehaus.jackson:jackson-mapper-asl:1.9.9',
-    'org.seleniumhq.selenium:selenium-java:2.38.0',
-    'org.seleniumhq.selenium:selenium-firefox-driver:2.38.0',
     'cglib:cglib:2.2.2',
     project(path: ':modules:core', configuration: 'testFixtures'),
     project(path: ':modules:rest-api', configuration: 'testFixtures'),
