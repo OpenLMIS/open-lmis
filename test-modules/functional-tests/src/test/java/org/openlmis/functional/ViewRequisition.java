@@ -277,7 +277,8 @@ public class ViewRequisition extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+   InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(1, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(1, "quantityDispensedFirstProduct");
     initiateRnRPage.enterValue(2, "quantityReceivedFirstProduct");
