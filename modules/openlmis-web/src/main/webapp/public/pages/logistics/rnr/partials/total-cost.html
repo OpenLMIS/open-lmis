@@ -10,8 +10,15 @@
 
 <div class="total-cost-container">
   <div class="cost-values">
-    <strong ng-show="rnr.program.budgetingApplies">
-      <span openlmis-message="label.allocated.budget"></span>
+    <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
+          class="budget-exceeds-detailed">
+      <strong>
+        <span class="icon-warning-sign budget-exceeded-icon"></span>
+        <span id="budgetWarningExtra" openlmis-message="msg.cost.exceeds.budget"></span>
+      </strong>
+    </span>
+    <strong ng-show="rnr.program.budgetingApplies && !rnr.emergency">
+    <span openlmis-message="label.allocated.budget"></span>
           <span id="allocatedBudgetAmount" class="cell-text" ng-bind="rnr.allocatedBudget | currency:currency"
                 ng-show="rnr.allocatedBudget"></span>
           <span id="allocatedBudgetNotApplicable" class="cell-text" openlmis-message="msg.budget.not.allocated"
