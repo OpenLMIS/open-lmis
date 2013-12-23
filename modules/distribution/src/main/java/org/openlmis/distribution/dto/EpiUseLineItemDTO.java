@@ -39,11 +39,11 @@ public class EpiUseLineItemDTO extends BaseModel {
 
   public EpiUseLineItem transform() {
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(this.epiUseId, this.productGroup,
-      stockAtFirstOfMonth.parseInt(),
-      stockAtEndOfMonth.parseInt(),
-      received.parseInt(),
-      loss.parseInt(),
-      distributed.parseInt(),
+      stockAtFirstOfMonth.parsePositiveInt(),
+      stockAtEndOfMonth.parsePositiveInt(),
+      received.parsePositiveInt(),
+      loss.parsePositiveInt(),
+      distributed.parsePositiveInt(),
       expirationDate.getEffectiveValue());
 
     epiUseLineItem.setId(this.id);

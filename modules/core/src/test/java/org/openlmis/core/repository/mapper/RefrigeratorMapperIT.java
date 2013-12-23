@@ -2,10 +2,10 @@
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.core.repository.mapper;
@@ -19,7 +19,6 @@ import org.openlmis.core.builder.ProcessingScheduleBuilder;
 import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.core.domain.Refrigerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -73,30 +72,12 @@ public class RefrigeratorMapperIT {
   @Autowired
   DeliveryZoneMemberMapper deliveryZoneMemberMapper;
 
-
   @Autowired
   DeliveryZoneProgramScheduleMapper deliveryZoneProgramScheduleMapper;
 
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;
 
-
-  @Test
-  public void shouldReturnListOfRefrigeratorForAFacility() throws Exception {
-    Facility facility = make(a(FacilityBuilder.defaultFacility));
-    facilityMapper.insert(facility);
-
-    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility.getId());
-    refrigerator.setCreatedBy(1L);
-    refrigerator.setModifiedBy(1L);
-
-    mapper.insert(refrigerator);
-
-    List<Refrigerator> refrigerators = mapper.getRefrigerators(facility.getId());
-
-    assertThat(refrigerators.size(),is(1));
-    assertThat(refrigerators.get(0),is(refrigerator));
-  }
 
   @Test
   public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
@@ -115,7 +96,7 @@ public class RefrigeratorMapperIT {
     Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
 
 
-    Refrigerator refrigerator = new Refrigerator("SAM","AUO","SAM1",facility1.getId());
+    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility1.getId());
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
 
@@ -126,7 +107,7 @@ public class RefrigeratorMapperIT {
 
     List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
 
-    assertThat(refrigerators.get(0).getSerialNumber(),is(refrigerator.getSerialNumber()));
+    assertThat(refrigerators.get(0).getSerialNumber(), is(refrigerator.getSerialNumber()));
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,

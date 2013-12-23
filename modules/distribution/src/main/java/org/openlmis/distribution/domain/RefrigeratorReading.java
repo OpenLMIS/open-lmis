@@ -20,8 +20,6 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Refrigerator;
 
-import java.util.List;
-
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -32,31 +30,20 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RefrigeratorReading extends BaseModel {
 
-  //Meta data
-  Long refrigeratorId;
-  String notes;
-  String brand;
-  String model;
-  String serialNumber;
+  private Refrigerator refrigerator;
 
   //Readings
-  Float temperature;
-  RadioOptions functioningCorrectly;
-  Integer lowAlarmEvents;
-  Integer highAlarmEvents;
-  RadioOptions problemSinceLastTime;
-  List<String> problems;
+  private Long distributionRefrigeratorsId;
+  private Float temperature;
+  private String functioningCorrectly;
+  private Integer lowAlarmEvents;
+  private Integer highAlarmEvents;
+  private String problemSinceLastTime;
+  private RefrigeratorProblem problem;
+  private String notes;
 
   public RefrigeratorReading(Refrigerator refrigerator) {
-    this.refrigeratorId = refrigerator.getId();
-    this.brand = refrigerator.getBrand();
-    this.model = refrigerator.getModel();
-    this.serialNumber = refrigerator.getSerialNumber();
+    this.refrigerator = refrigerator;
   }
 }
 
-enum RadioOptions {
-  Y,
-  N,
-  D
-}

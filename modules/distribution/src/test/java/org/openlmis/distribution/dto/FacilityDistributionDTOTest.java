@@ -11,6 +11,7 @@
 package org.openlmis.distribution.dto;
 
 import org.junit.Test;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
@@ -24,19 +25,25 @@ public class FacilityDistributionDTOTest {
 
   @Test
   public void shouldTransformDTOIntoRealObject() throws Exception {
-
     FacilityVisit facilityVisit = new FacilityVisit();
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
+    DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
+
     FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO();
     facilityDistributionDTO.setFacilityVisit(facilityVisit);
     facilityDistributionDTO.setEpiUse(epiUseDTO);
+    facilityDistributionDTO.setRefrigerators(distributionRefrigeratorsDTO);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);
+
+    DistributionRefrigerators distributionRefrigerators = mock(DistributionRefrigerators.class);
+    when(distributionRefrigeratorsDTO.transform()).thenReturn(distributionRefrigerators);
 
     FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
 
     assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
     assertThat(facilityDistribution.getEpiUse(), is(epiUse));
+    assertThat(facilityDistribution.getDistributionRefrigerators(), is(distributionRefrigerators));
   }
 }

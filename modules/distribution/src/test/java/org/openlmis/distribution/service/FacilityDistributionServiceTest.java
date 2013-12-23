@@ -40,16 +40,19 @@ import static org.powermock.api.mockito.PowerMockito.*;
 public class FacilityDistributionServiceTest {
 
   @Mock
-  FacilityService facilityService;
+  private FacilityService facilityService;
 
   @Mock
-  EpiUseService epiUseService;
+  private EpiUseService epiUseService;
 
   @Mock
-  FacilityVisitService facilityVisitService;
+  private FacilityVisitService facilityVisitService;
 
   @Mock
-  RefrigeratorService refrigeratorService;
+  private DistributionRefrigeratorsService distributionRefrigeratorsService;
+
+  @Mock
+  private RefrigeratorService refrigeratorService;
 
   @InjectMocks
   FacilityDistributionService facilityDistributionService;
@@ -157,12 +160,14 @@ public class FacilityDistributionServiceTest {
   public void shouldSaveFacilityVisitAndEpiUse() throws Exception {
     EpiUse epiUse = new EpiUse();
     FacilityVisit facilityVisit = new FacilityVisit();
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, null);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators);
 
     when(facilityVisitService.save(facilityVisit)).thenReturn(true);
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);
 
     verify(facilityVisitService).save(facilityVisit);
+    verify(distributionRefrigeratorsService).save(distributionRefrigerators);
     verify(epiUseService).save(epiUse);
     assertTrue(saveStatus);
   }

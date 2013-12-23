@@ -29,10 +29,10 @@ public class Reading {
   private Boolean notRecorded;
 
   public String getEffectiveValue() {
-    return notRecorded == null || !notRecorded ? value : null;
+    return (notRecorded == null || !notRecorded) ? value : null;
   }
 
-  public Integer parseInt() {
+  public Integer parsePositiveInt() {
     String stringValue = getEffectiveValue();
     if (stringValue == null) {
       return null;
@@ -51,5 +51,23 @@ public class Reading {
     }
     this.value = value;
     this.notRecorded = notRecorded;
+  }
+
+  public Integer parseInt() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    return Integer.parseInt(stringValue);
+  }
+
+  public Float parseFloat() {
+    String stringValue = getEffectiveValue();
+    if (stringValue == null) {
+      return null;
+    }
+
+    return Float.parseFloat(stringValue);
   }
 }

@@ -35,16 +35,19 @@ import static org.apache.commons.collections.CollectionUtils.select;
 public class FacilityDistributionService {
 
   @Autowired
-  FacilityService facilityService;
+  private FacilityService facilityService;
 
   @Autowired
-  RefrigeratorService refrigeratorService;
+  private RefrigeratorService refrigeratorService;
 
   @Autowired
-  EpiUseService epiUseService;
+  private EpiUseService epiUseService;
 
   @Autowired
-  FacilityVisitService facilityVisitService;
+  private FacilityVisitService facilityVisitService;
+
+  @Autowired
+  private DistributionRefrigeratorsService distributionRefrigeratorsService;
 
   public Map<Long, FacilityDistribution> createFor(Distribution distribution) {
     Long deliveryZoneId = distribution.getDeliveryZone().getId();
@@ -82,7 +85,7 @@ public class FacilityDistributionService {
 
   public boolean save(FacilityDistribution facilityDistribution) {
     epiUseService.save(facilityDistribution.getEpiUse());
-
+    distributionRefrigeratorsService.save(facilityDistribution.getDistributionRefrigerators());
     return facilityVisitService.save(facilityDistribution.getFacilityVisit());
   }
 }

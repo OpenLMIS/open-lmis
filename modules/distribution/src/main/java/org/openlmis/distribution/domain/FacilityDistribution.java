@@ -31,12 +31,13 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 public class FacilityDistribution {
+
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
-  private Refrigerators refrigerators;
+  private DistributionRefrigerators distributionRefrigerators;
 
   public FacilityDistribution(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.epiUse = new EpiUse(facility, distribution);
-    this.refrigerators = new Refrigerators(readings);
+    this.distributionRefrigerators = new DistributionRefrigerators(facility, distribution, readings);
   }
 }

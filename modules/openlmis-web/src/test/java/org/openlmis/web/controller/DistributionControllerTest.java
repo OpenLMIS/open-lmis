@@ -18,11 +18,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -134,25 +137,26 @@ public class DistributionControllerTest {
 
   @Test
   public void shouldSyncFacilityDistributionData() {
-    Long distributionId = 1l;
-    Long facilityId = 3l;
+    Facility facility = new Facility(3L);
+    Distribution distribution = new Distribution();
+    distribution.setId(1L);
     FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
-    FacilityDistribution facilityDistributionData = new FacilityDistribution();
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(facility, distribution, EMPTY_LIST));
 
     when(service.sync(facilityDistributionData)).thenReturn(true);
     doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
     doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
-    doNothing().when(facilityDistributionDTO).setFacilityId(facilityId);
-    doNothing().when(facilityDistributionDTO).setDistributionId(distributionId);
+    doNothing().when(facilityDistributionDTO).setFacilityId(facility.getId());
+    doNothing().when(facilityDistributionDTO).setDistributionId(distribution.getId());
 
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distributionId, facilityId, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distribution.getId(), facility.getId(), httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
     assertTrue((boolean) response.getBody().getData().get("syncStatus"));
     verify(service).sync(facilityDistributionData);
     verify(facilityDistributionDTO).setModifiedBy(USER_ID);
-    verify(facilityDistributionDTO).setFacilityId(facilityId);
-    verify(facilityDistributionDTO).setDistributionId(distributionId);
+    verify(facilityDistributionDTO).setFacilityId(facility.getId());
+    verify(facilityDistributionDTO).setDistributionId(distribution.getId());
   }
 
 }

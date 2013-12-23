@@ -59,7 +59,7 @@ public class ReadingTest {
   public void shouldParseStringToInteger() throws Exception {
     Reading reading = new Reading("345", false);
 
-    assertThat(reading.parseInt(), is(345));
+    assertThat(reading.parsePositiveInt(), is(345));
   }
 
   @Test
@@ -69,6 +69,6 @@ public class ReadingTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.epi.use.line.item.invalid");
 
-    reading.parseInt();
+    reading.parsePositiveInt();
   }
 }
