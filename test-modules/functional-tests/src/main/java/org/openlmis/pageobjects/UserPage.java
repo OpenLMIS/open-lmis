@@ -198,6 +198,9 @@ public class UserPage extends Page {
   @FindBy(how = How.XPATH, using = "//div[@class='form-field radio-group']/input[2]")
   private static WebElement restrictLoginNoOption = null;
 
+  @FindBy(how = How.ID, using = "resetPasswordOk")
+  private static WebElement resetPasswordOkButton = null;
+
   public UserPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
@@ -218,9 +221,7 @@ public class UserPage extends Page {
 
   public void focusOnFirstUserLink() {
     testWebDriver.waitForElementToAppear(firstUserLink);
-    searchUserTextField.click();
-    searchUserTextField.sendKeys(Keys.TAB);
-
+    testWebDriver.moveToElement(firstUserLink);
     testWebDriver.waitForElementToAppear(selectFirstEditUser);
   }
 
@@ -248,6 +249,7 @@ public class UserPage extends Page {
     newPasswordField.sendKeys(newPassword);
     confirmPasswordField.sendKeys(confirmPassword);
     resetPasswordDone.click();
+    resetPasswordOkButton.click();
   }
 
   public void enterUserDetails(String userName, String email, String firstName, String lastName)

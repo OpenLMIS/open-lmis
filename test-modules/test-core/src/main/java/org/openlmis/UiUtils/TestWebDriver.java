@@ -237,4 +237,9 @@ public class TestWebDriver {
       element.sendKeys(Keys.RETURN);
     }
   }
+
+  public void moveToElement(WebElement element) {
+    new Actions(this.driver).moveToElement(element).perform();
+    return;
+  }
 }
