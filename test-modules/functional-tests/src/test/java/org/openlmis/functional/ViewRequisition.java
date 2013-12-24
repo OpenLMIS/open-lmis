@@ -192,7 +192,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
     approvePageTopSNUser.verifyEmergencyStatus();
-    approvePageTopSNUser.ClickRequisitionPresentForApproval();
+    approvePageTopSNUser.clickRequisitionPresentForApproval();
     approvePageTopSNUser.editFullSupplyApproveQuantity("20");
     approvePageTopSNUser.VerifyTotalCostViewRequisition("20");
     approvePageTopSNUser.addComments("Dummy Comments");

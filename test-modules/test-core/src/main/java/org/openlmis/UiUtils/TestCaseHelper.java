@@ -277,7 +277,7 @@ public class TestCaseHelper {
     locator.sendKeys(value);
   }
 
-  public String IsaProgramProduct(String program, String product, String population) throws IOException, SQLException {
+  public String isAProgramProduct(String program, String product, String population) throws IOException, SQLException {
     String[] isaParams = dbWrapper.getProgramProductISA(program, product);
     return calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population);
   }

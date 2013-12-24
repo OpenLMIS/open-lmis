@@ -271,11 +271,26 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "selectNone")
   private static WebElement skipNoneLink = null;
 
-  @FindBy(how = ID, using = "//span/[@id='allocatedBudgetAmount']")
+  @FindBy(how = ID, using = "allocatedBudgetAmount")
   private static WebElement allocatedBudgetAmount = null;
 
   @FindBy(how = XPATH, using = "//span[@openlmis-message='label.allocated.budget']")
-  private static WebElement allocateBudget = null;
+  private static WebElement allocatedBudgetLabel = null;
+
+  @FindBy(how = ID, using = "allocatedBudgetNotApplicable")
+  private static WebElement budgetNotAllocated = null;
+
+  @FindBy(how = ID, using = "budgetWarningIcon")
+  private static WebElement budgetWarningIcon = null;
+
+  @FindBy(how = ID, using = "budgetWarningMessage")
+  private static WebElement budgetWarningMessage = null;
+
+  @FindBy(how = ID, using = "budgetWarningExtra")
+  private static WebElement budgetWarningMessageOnFooter = null;
+
+  @FindBy(how = XPATH, using = "//*[@id=\"action_buttons\"]/ng-include/div/div/span[1]/strong/span[1]")
+  private static WebElement budgetWarningIconOnFooter = null;
 
   Float actualTotalCostFullSupply = 0.0f;
   Float actualTotalCostNonFullSupply = 0.0f;
@@ -808,8 +823,59 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(expectedValue.toString(), amcSecondProduct.getText());
   }
 
-  public void verifyBudgetInfoOnFooter() {
-    assertEquals("$2,000.00",testWebDriver.getElementById("allocatedBudgetAmount").getText());
-    assertTrue(allocateBudget.getText().contains("Allocated Budget:"));
+  public boolean isAllocatedBudgetLabelDisplayed() {
+    return allocatedBudgetLabel.isDisplayed();
+  }
+
+  public String getAllocatedBudgetLabel(){
+    return allocatedBudgetLabel.getText();
+  }
+
+  public boolean isAllocatedBudgetAmountDisplayed() {
+    return allocatedBudgetAmount.isDisplayed();
+  }
+
+  public String getAllocatedBudgetAmount(){
+    return allocatedBudgetAmount.getText();
+  }
+
+  public boolean isBudgetNotAllocatedDisplayed() {
+    return budgetNotAllocated.isDisplayed();
+  }
+
+  public String getBudgetNotAllocatedText(){
+    return budgetNotAllocated.getText();
+  }
+
+  public boolean isBudgetWarningIconDisplayed(){
+    return budgetWarningIcon.isDisplayed();
+  }
+
+  public boolean isBudgetWarningMessageDisplayed(){
+    if(isBudgetWarningIconDisplayed()){
+    testWebDriver.moveToElement(budgetWarningIcon);
+    return budgetWarningMessage.isDisplayed();
+    }
+    else
+      return budgetWarningMessage.isDisplayed();
+  }
+
+  public boolean isBudgetWarningIconOnFooterDisplayed(){
+    return budgetWarningIconOnFooter.isDisplayed();
+  }
+
+  public boolean isBudgetWarningMessageOnFooterDisplayed(){
+    return budgetWarningMessageOnFooter.isDisplayed();
+  }
+
+  public String getBudgetWarningMessage(){
+    testWebDriver.waitForElementToAppear(budgetWarningIcon);
+    testWebDriver.moveToElement(budgetWarningIcon);
+    return budgetWarningMessage.getText();
+  }
+
+  public String getBudgetWarningMessageOnFooter(){
+    testWebDriver.waitForElementToAppear(budgetWarningMessageOnFooter);
+    return budgetWarningMessageOnFooter.getText();
   }
 }

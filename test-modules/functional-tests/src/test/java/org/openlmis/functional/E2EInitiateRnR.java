@@ -313,7 +313,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public void navigateRequisitionApprovalPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ApprovePage approvePage = homePage.navigateToApprove();
-    periodTopSNUser = approvePage.ClickRequisitionPresentForApproval();
+    periodTopSNUser = approvePage.clickRequisitionPresentForApproval();
   }
 
   @Then("I access non full supply tab$")

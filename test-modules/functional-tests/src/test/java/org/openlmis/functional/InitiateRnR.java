@@ -297,7 +297,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.ClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.clickRequisitionPresentForApproval();
     approvePageLowerSNUser.clickRegimenTab();
     verifyValuesOnRegimenScreen(initiateRnRPage, "100", "200", "300", "testing");
     approvePageLowerSNUser.clickSaveButton();
@@ -331,7 +331,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus(AUTHORIZED, userSIC, "HIV");
 
     ApprovePage approvePageLowerSNUser = homePage.navigateToApprove();
-    approvePageLowerSNUser.ClickRequisitionPresentForApproval();
+    approvePageLowerSNUser.clickRequisitionPresentForApproval();
     approvePageLowerSNUser.editFullSupplyApproveQuantity("");
     approvePageLowerSNUser.clickApproveButton();
     approvePageLowerSNUser.editFullSupplyApproveQuantity("100");
@@ -619,7 +619,7 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage2 = loginPage.loginAs("lmu", password);
     ApprovePage approvePage = homePage2.navigateToApprove();
     approvePage.verifyEmergencyStatus();
-    approvePage.ClickRequisitionPresentForApproval();
+    approvePage.clickRequisitionPresentForApproval();
 
     int reportingDays = calculateReportingDays(periodStartDate);
     int stockOutDays = 0;
@@ -955,7 +955,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     ApprovePage approvePage = homePage.navigateToApprove();
-    approvePage.ClickRequisitionPresentForApproval();
+    approvePage.clickRequisitionPresentForApproval();
     assertTrue(approvePage.approveQuantityVisible(1));
     approvePage.editFullSupplyApproveQuantity("5");
     assertFalse(approvePage.approveQuantityVisible(2));
@@ -1006,7 +1006,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.clickOk();
     initiateRnRPage.verifyAuthorizeRnrSuccessMsg();
     ApprovePage approvePage = homePage.navigateToApprove();
-    approvePage.ClickRequisitionPresentForApproval();
+    approvePage.clickRequisitionPresentForApproval();
     assertTrue(approvePage.approveQuantityVisible(1));
     approvePage.editFullSupplyApproveQuantity("5");
     assertFalse(approvePage.approveQuantityVisible(2));
@@ -1079,6 +1079,49 @@ public class InitiateRnR extends TestCaseHelper {
   private void clickProceed(int row) {
     testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]"));
     testWebDriver.getElementByXpath("(//input[@value='Proceed'])[" + row + "]").click();
+  }
+
+  public void verifyBudgetAmountPresentOnFooter(String budgetAmount) throws IOException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
+    assertEquals("Allocated Budget:", initiateRnRPage.getAllocatedBudgetLabel());
+    assertTrue(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
+    assertEquals(budgetAmount, initiateRnRPage.getAllocatedBudgetAmount());
+    assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
+  }
+
+  public void verifyBudgetAmountNotAllocated() throws IOException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
+    assertEquals("Allocated Budget:", initiateRnRPage.getAllocatedBudgetLabel());
+    assertTrue(initiateRnRPage.isBudgetNotAllocatedDisplayed());
+    assertEquals("Not allocated", initiateRnRPage.getBudgetNotAllocatedText());
+    assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
+  }
+
+  public void verifyBudgetNotDisplayed() throws IOException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    assertFalse(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
+    assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
+    assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
+  }
+
+  public void checkWhetherBudgetExceedWarningPresent(boolean isWarningPresentFlag) throws IOException {
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    if (isWarningPresentFlag){
+      assertEquals("The total cost exceeds the allocated budget",initiateRnRPage.getBudgetWarningMessage());
+      assertEquals("The total cost exceeds the allocated budget",initiateRnRPage.getBudgetWarningMessageOnFooter());
+      assertTrue(initiateRnRPage.isBudgetWarningIconDisplayed());
+      assertTrue(initiateRnRPage.isBudgetWarningMessageDisplayed());
+      assertTrue(initiateRnRPage.isBudgetWarningIconOnFooterDisplayed());
+      assertTrue(initiateRnRPage.isBudgetWarningMessageOnFooterDisplayed());
+    }
+    else {
+      assertFalse(initiateRnRPage.isBudgetWarningIconDisplayed());
+      assertFalse(initiateRnRPage.isBudgetWarningMessageDisplayed());
+      assertFalse(initiateRnRPage.isBudgetWarningIconOnFooterDisplayed());
+      assertFalse(initiateRnRPage.isBudgetWarningMessageOnFooterDisplayed());
+    }
   }
 
   @AfterMethod(groups = "requisition")

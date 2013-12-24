@@ -525,7 +525,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     verifyNormalizedConsumptionAndAmcInDatabase(54, 54, "P10");
 
     ApprovePage approvePage = homePage.navigateToApprove();
-    approvePage.ClickRequisitionPresentForApproval();
+    approvePage.clickRequisitionPresentForApproval();
     approvePage.clickApproveButton();
     approvePage.clickOk();
 

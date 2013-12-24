@@ -30,6 +30,8 @@
             </class>
             <class name="org.openlmis.functional.TestCalculationsForRegularRnR">
             </class>
+            <class name="org.openlmis.functional.ManageBudget">
+            </class>
         </classes>
     </test>
 </suite>
