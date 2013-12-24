@@ -32,13 +32,14 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
         facility.catchmentPopulation = "--";
       }
       totalForGeoZone.totalPopulation = totalPopulation;
-      $(facility.supportedPrograms[0].programProducts).each(function (j, product) {
-        if (isUndefined(product.programProductIsa) && isUndefined(product.overriddenIsa)) {
-          product.isaAmount = "--";
+      $(facility.supportedPrograms[0].programProducts).each(function (j, programProduct) {
+        if (isUndefined(programProduct.programProductIsa) && isUndefined(programProduct.overriddenIsa)) {
+          programProduct.isaAmount = "--";
         } else {
-          product.programProductIsa = new ProgramProductISA(product.programProductIsa);
-          product.isaAmount = product.overriddenIsa ? product.overriddenIsa : product.programProductIsa.calculate(facility.catchmentPopulation);
-          product.isaAmount = product.isaAmount ? product.isaAmount * period.numberOfMonths : 0;
+          programProduct.programProductIsa = new ProgramProductISA(programProduct.programProductIsa);
+          programProduct.isaAmount = programProduct.overriddenIsa ? programProduct.overriddenIsa : programProduct.programProductIsa.calculate(facility.catchmentPopulation);
+//          TODO important need validation on packSize to be more than 0
+          programProduct.isaAmount = programProduct.isaAmount ? Math.ceil(programProduct.isaAmount / programProduct.product.packSize) * period.numberOfMonths : 0;
         }
       });
       facility.supportedPrograms[0].programProductMap = _.groupBy(facility.supportedPrograms[0].programProducts, function (programProduct) {
