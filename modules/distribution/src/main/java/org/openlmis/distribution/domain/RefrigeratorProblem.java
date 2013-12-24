@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.exception.DataException;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -37,4 +38,9 @@ public class RefrigeratorProblem extends BaseModel {
   Boolean other;
   String otherProblemExplanation;
 
+  public void validate() {
+    if (!(operatorError || burnerProblem || gasLeakage || egpFault || thermostatSetting || other)) {
+      throw new DataException("error.invalid.reading.value");
+    }
+  }
 }

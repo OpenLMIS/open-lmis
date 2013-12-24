@@ -16,7 +16,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -32,4 +34,9 @@ public class Refrigerator extends BaseModel {
   String model;
   Long facilityId;
 
+  public void validate() {
+    if (isBlank(brand) || isBlank(serialNumber) || isBlank(model)) {
+      throw new DataException("error.invalid.reading.value");
+    }
+  }
 }

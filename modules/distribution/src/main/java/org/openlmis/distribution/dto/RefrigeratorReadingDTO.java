@@ -40,6 +40,9 @@ public class RefrigeratorReadingDTO extends BaseModel {
   String notes;
 
   public RefrigeratorReading transform() {
+    refrigerator.validate();
+    problems.validate();
+
     return new RefrigeratorReading(refrigerator, null,
       temperature.parseFloat(),
       functioningCorrectly.getEffectiveValue(),
