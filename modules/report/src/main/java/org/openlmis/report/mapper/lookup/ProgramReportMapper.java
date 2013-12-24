@@ -26,4 +26,11 @@ public interface ProgramReportMapper {
 
     @Select("SELECT * FROM Programs where code = #{code}")
     Program getProgramByCode(String code);
+
+    @Select("SELECT p.id id, p.name as name, p.description description,p.code code \n" +
+            "             FROM programs p\n" +
+            "   INNER JOIN regimens rg on rg.programid = p.id \n" +
+            "   GROUP BY p.name,p.id,p.description,p.code\n" +
+            "        ORDER BY name\n" )
+    List<Program>getAllRegimenPrograms();
 }

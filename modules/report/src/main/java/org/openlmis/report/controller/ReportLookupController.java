@@ -57,6 +57,12 @@ public class ReportLookupController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getPrograms(){
       return OpenLmisResponse.response( "programs", this.reportLookupService.getAllPrograms() );
   }
+  //It Get only programs with regimens
+  @RequestMapping(value="/regimenPrograms", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getRegimenPrograms(){
+      return OpenLmisResponse.response( "regimenPrograms", this.reportLookupService.getAllRegimenPrograms());
+  }
+
 
   @RequestMapping(value="/schedules", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getSchedules(){

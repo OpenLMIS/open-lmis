@@ -199,7 +199,13 @@ public class ReportLookupService {
       return programMapper.getProgramByCode(code);
   }
 
-  public List<Schedule> getAllSchedules(){
+  //It return all programs only with regimen
+  public List<Program> getAllRegimenPrograms(){
+      return  programMapper.getAllRegimenPrograms();
+  }
+
+
+    public List<Schedule> getAllSchedules(){
       return scheduleMapper.getAll();
   }
 
