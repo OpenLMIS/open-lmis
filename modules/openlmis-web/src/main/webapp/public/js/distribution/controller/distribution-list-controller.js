@@ -84,14 +84,13 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
       body: messageService.get('label.confirm.delete.distribution')
     };
 
-    var callback = function () {
-      return function (result) {
-        if (!result) return;
+    var callback = function (result) {
+      if (result) {
         distributionService.deleteDistribution(id);
-      };
+      }
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, callback, $dialog, messageService);
   };
 
 
