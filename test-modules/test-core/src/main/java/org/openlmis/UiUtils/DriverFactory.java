@@ -109,6 +109,7 @@ public class DriverFactory {
   }
 
   private WebDriver createFirefoxDriver(boolean enableJavascript) {
+    boolean headless = Boolean.parseBoolean(getProperty("headless", "false"));
     FirefoxProfile profile = new FirefoxProfile();
     profile.setAcceptUntrustedCertificates(true);
     profile.setPreference("signed.applets.codebase_principal_support", true);
@@ -119,7 +120,7 @@ public class DriverFactory {
     profile.setPreference("dom.storage.enabled", true);
     profile.setPreference("device.storage.enabled", true);
     //profile.setPreference("network.manage-offline-status", true);
-    if (getProperty("os.name").toLowerCase().indexOf("mac") >= 0){
+    if ((getProperty("os.name").toLowerCase().indexOf("mac") >= 0) && headless){
         File binaryFile = new File(LOCAL_FIREFOX_X11_PATH);
         FirefoxBinary binary = new FirefoxBinary(binaryFile);
         binary.setEnvironmentProperty("DISPLAY", LOCAL_X11_DISPLAY);
