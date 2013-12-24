@@ -28,10 +28,10 @@ public interface DistributionRefrigeratorsMapper {
 
   @Insert({"INSERT INTO refrigerator_readings",
     "(temperature, functioningCorrectly, lowAlarmEvents, highAlarmEvents, ",
-    "problemSinceLastTime, notes, distributionRefrigeratorsId, createdBy, modifiedBy)",
+    "problemSinceLastTime, notes, distributionRefrigeratorsId, refrigeratorId)",
     "VALUES",
     "(#{temperature}, #{functioningCorrectly}, #{lowAlarmEvents}, #{highAlarmEvents}, ",
-    "#{problemSinceLastTime}, #{notes}, #{distributionRefrigeratorsId}, #{createdBy}, #{modifiedBy})"})
+    "#{problemSinceLastTime}, #{notes}, #{distributionRefrigeratorsId}, #{refrigerator.id})"})
   @Options(useGeneratedKeys = true)
   void insertReading(RefrigeratorReading refrigeratorReading);
 

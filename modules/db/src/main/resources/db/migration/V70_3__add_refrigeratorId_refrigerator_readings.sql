@@ -9,9 +9,4 @@
 --
 
 ALTER TABLE refrigerator_readings
-DROP COLUMN createdBy,
-DROP COLUMN createdDate,
-DROP COLUMN modifiedBy,
-DROP COLUMN modifiedDate,
-
-ALTER COLUMN temperature TYPE NUMERIC(4, 1);
+ADD COLUMN refrigeratorId INTEGER REFERENCES refrigerators (id) NOT NULL;
