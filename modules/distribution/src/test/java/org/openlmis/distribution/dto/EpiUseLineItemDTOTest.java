@@ -11,11 +11,14 @@
 package org.openlmis.distribution.dto;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+@Category(UnitTests.class)
 public class EpiUseLineItemDTOTest {
 
   @Test

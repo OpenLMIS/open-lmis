@@ -18,7 +18,6 @@ import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
-
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityVisitServiceTest {
 

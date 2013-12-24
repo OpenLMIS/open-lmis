@@ -18,7 +18,7 @@ import org.mockito.Mock;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RefrigeratorService;
-import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.*;
 
-@Category(IntegrationTests.class)
+@Category(UnitTests.class)
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FacilityDistributionService.class)
 public class FacilityDistributionServiceTest {

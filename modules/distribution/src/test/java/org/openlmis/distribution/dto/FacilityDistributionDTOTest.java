@@ -11,6 +11,8 @@
 package org.openlmis.distribution.dto;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.FacilityDistribution;
@@ -21,6 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@Category(UnitTests.class)
 public class FacilityDistributionDTOTest {
 
   @Test
