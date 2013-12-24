@@ -207,6 +207,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.verifyAllFieldsDisabled();
 
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", "F10");
+    verifyRefrigeratorReadingDataInDatabase("GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
+    verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV");
   }
 
   @AfterMethod(groups = {"offline"})

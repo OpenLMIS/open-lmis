@@ -28,13 +28,16 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.fail;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Collections.addAll;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -61,7 +64,6 @@ public class ManageDistribution extends TestCaseHelper {
       put("general observation", new GeneralObservationPage(testWebDriver));
     }};
   }
-
 
   @Given("^I have the following data for distribution:$")
   public void theFollowingDataExist(DataTable tableData) throws Exception {
@@ -273,7 +275,6 @@ public class ManageDistribution extends TestCaseHelper {
     facilityListPage.verifyHeaderElements(deliveryZone, program, period);
   }
 
-
   @And("^I click view load amount$")
   public void clickViewLoadAmount() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
@@ -336,6 +337,25 @@ public class ManageDistribution extends TestCaseHelper {
       assertEquals(map.get("endOfMonth").toString(), epiDetails.get("stockatendofmonth"));
       assertEquals(map.get("expirationDate").toString(), epiDetails.get("expirationdate"));
     }
+  }
+
+  @And("^I view refrigerator readings in DB for refrigerator serial number \"([^\"]*)\":$")
+  public void verifyRefrigeratorReadingDataInDB(String refrigeratorSerialNumber, DataTable tableData) throws SQLException {
+    List<Map<String, String>> data = tableData.asMaps();
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    for (Map map : data) {
+      assertEquals(map.get("temperature"), resultSet.getString("temperature"));
+      assertEquals(map.get("functioningCorrectly"), resultSet.getString("functioningCorrectly"));
+      assertEquals(map.get("lowAlarmEvents"), resultSet.getString("lowAlarmEvents"));
+      assertEquals(map.get("highAlarmEvents"), resultSet.getString("highAlarmEvents"));
+      assertEquals(map.get("problemSinceLastTime"), resultSet.getString("problemSinceLastTime"));
+      assertEquals(map.get("notes"), resultSet.getString("notes"));
+    }
+}
+
+  @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\"$")
+  public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber) throws SQLException {
+    verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber);
   }
 
   @Then("^I should see data download successfully$")
@@ -449,7 +469,6 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.clickInitiateDistribution();
     distributionPage.verifyDataAlreadyCachedMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
-
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void testManageDistribution(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -683,14 +702,12 @@ public class ManageDistribution extends TestCaseHelper {
 
   }
 
-
   private void verifyElementsPresent(DistributionPage distributionPage) {
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
     assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
     assertTrue("selectPeriodSelectBox should be present", distributionPage.IsDisplayedSelectPeriodSelectBox());
     assertTrue("proceedButton should be present", distributionPage.IsDisplayedViewLoadAmountButton());
   }
-
 
   private void verifyAllSelectFieldValues(List<String> valuesToBeVerified, List<WebElement> valuesPresentInDropDown) {
     String collectionOfValuesPresentINDropDown = "";
@@ -710,7 +727,6 @@ public class ManageDistribution extends TestCaseHelper {
 
   }
 
-
   private void verifySelectFieldValueNotPresent(String valueToBeVerified, List<WebElement> valuesPresentInDropDown) {
     boolean flag = false;
     for (WebElement webElement : valuesPresentInDropDown) {
@@ -721,7 +737,6 @@ public class ManageDistribution extends TestCaseHelper {
     }
     assertTrue(valueToBeVerified + " should not exist in period drop down", !flag);
   }
-
 
   private void verifySelectedOptionFromSelectField(String valuesToBeVerified, WebElement actualSelectFieldElement) {
     testWebDriver.sleep(200);
@@ -741,7 +756,6 @@ public class ManageDistribution extends TestCaseHelper {
     }
     ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis')");
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
