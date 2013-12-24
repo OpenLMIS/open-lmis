@@ -18,10 +18,12 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.junit.Assert;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
+import org.openqa.selenium.By;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -230,7 +232,16 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     assertEquals(homePage.getErrorMessage(), errorMsg);
   }
-
+  @Then("^I should see list of orders to manage POD for Rnr$")
+  public void verifyListOfOrdersOnPodScreen() throws Exception {
+    ManagePodPage managePodPage = new ManagePodPage(testWebDriver);
+    testWebDriver.sleep(1000);
+    assertEquals("Village Dispensary", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Village Dispensary')]")).getText());
+    assertEquals("MALARIA", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'MALARIA')]")).getText());
+    assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
+    assertEquals("PeriodName1 (01/12/2012 - 01/12/2015)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'PeriodName1 (01/12/2012 - 01/12/2015)')]")).getText());
+    assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
+  }
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void testSubmitAndAuthorizeRegimen(String program, String userSIC, String categoryCode, String password,
                                             String regimenCode, String regimenName, String regimenCode2,

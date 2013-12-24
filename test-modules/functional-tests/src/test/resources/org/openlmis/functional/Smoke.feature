@@ -253,6 +253,16 @@ Feature: Smoke Tests
     And I access convert to order
     Then "1" requisition converted to order
 
+  @smokeRequisition
+  Scenario: User should able to see list of orders to update POD
+    Given I have "storeIncharge" user with "MANAGE_POD" rights
+    And I have "5" requisitions for convert to order
+    And I am logged in as "storeIncharge"
+    And I access convert to order page
+    And I select "1" requisition on page "1"
+    And I access convert to order
+    When I access Manage POD page
+    Then I should see list of orders to manage POD for Rnr
 
 # DISTRIBUTION SMOKE TESTS
 
@@ -506,7 +516,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
-  @smokeDistribution - uncomment when refrigerator sync2 is done
+  #@smokeDistribution - uncomment when refrigerator sync2 is done
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
