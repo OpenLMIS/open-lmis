@@ -27,6 +27,10 @@ public class DistributionRefrigeratorsService {
   private RefrigeratorService refrigeratorService;
 
   public void save(DistributionRefrigerators distributionRefrigerators) {
+    if (repository.getBy(distributionRefrigerators.getFacilityId(), distributionRefrigerators.getDistributionId()) != null) {
+      return;
+    }
+
     repository.save(distributionRefrigerators);
 
     for (RefrigeratorReading reading : distributionRefrigerators.getReadings()) {

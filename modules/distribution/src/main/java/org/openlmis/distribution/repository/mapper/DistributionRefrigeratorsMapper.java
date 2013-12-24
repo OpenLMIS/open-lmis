@@ -12,6 +12,8 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
@@ -37,4 +39,7 @@ public interface DistributionRefrigeratorsMapper {
     "VALUES (#{readingId}, #{operatorError}, #{burnerProblem}, #{gasLeakage}, #{egpFault}, #{thermostatSetting}, #{other}, #{otherProblemExplanation})"})
   @Options(useGeneratedKeys = true)
   void insertProblems(RefrigeratorProblem problem);
+
+  @Select({"SELECT * FROM distribution_refrigerators WHERE facilityId = #{facilityId} AND distributionId = #{distributionId}"})
+  DistributionRefrigerators getBy(@Param("facilityId") Long facilityId, @Param("distributionId") Long distributionId);
 }

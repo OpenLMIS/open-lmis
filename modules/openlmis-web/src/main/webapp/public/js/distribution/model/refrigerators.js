@@ -31,7 +31,10 @@ function Refrigerators(refrigerators) {
     return 'is-complete';
   };
 
-  Refrigerators.prototype.addRefrigerator = function (reading) {
+  Refrigerators.prototype.addReading = function (reading) {
+    if (!this.readings) {
+      this.readings = [];
+    }
     this.readings.push(new RefrigeratorReading(reading));
   };
 }

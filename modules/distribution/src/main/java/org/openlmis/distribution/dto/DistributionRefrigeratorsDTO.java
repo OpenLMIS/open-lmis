@@ -20,6 +20,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.collections.CollectionUtils.collect;
@@ -37,14 +38,16 @@ public class DistributionRefrigeratorsDTO extends BaseModel {
   List<RefrigeratorReadingDTO> readings;
 
   public DistributionRefrigerators transform() {
-    List<RefrigeratorReading> refrigeratorReadings = (List) collect(readings, new Transformer() {
-      @Override
-      public Object transform(Object o) {
-        RefrigeratorReading reading = ((RefrigeratorReadingDTO) o).transform();
-        return reading;
-      }
-    });
-
+    List<RefrigeratorReading> refrigeratorReadings = new ArrayList<>();
+    if (readings != null) {
+      refrigeratorReadings = (List) collect(readings, new Transformer() {
+        @Override
+        public Object transform(Object o) {
+          RefrigeratorReading reading = ((RefrigeratorReadingDTO) o).transform();
+          return reading;
+        }
+      });
+    }
     return new DistributionRefrigerators(facilityId, distributionId, refrigeratorReadings);
   }
 }

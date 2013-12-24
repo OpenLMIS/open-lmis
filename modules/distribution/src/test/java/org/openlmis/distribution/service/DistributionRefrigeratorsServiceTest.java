@@ -24,8 +24,7 @@ import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 
 import static java.util.Arrays.asList;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -55,5 +54,25 @@ public class DistributionRefrigeratorsServiceTest {
     verify(repository).save(distributionRefrigerators);
     verify(spyRefrigeratorReading).setDistributionRefrigeratorsId(distributionRefrigerators.getId());
     verify(refrigeratorService).update(refrigerator);
+  }
+
+  @Test
+  public void shouldNotSaveDistributionRefrigeratorsIfAlreadyExists() throws Exception {
+    Long facilityId = 1L;
+    Long distributionId = 2L;
+    Refrigerator refrigerator = new Refrigerator();
+    RefrigeratorReading refrigeratorReading = new RefrigeratorReading();
+    refrigeratorReading.setRefrigerator(refrigerator);
+    RefrigeratorReading spyRefrigeratorReading = spy(refrigeratorReading);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(spyRefrigeratorReading));
+    when(repository.getBy(facilityId, distributionId)).thenReturn(distributionRefrigerators);
+
+    service.save(distributionRefrigerators);
+
+    verify(repository, never()).saveReading(spyRefrigeratorReading);
+    verify(repository, never()).save(distributionRefrigerators);
+    verify(refrigeratorService, never()).update(refrigerator);
+
+    verify(repository).getBy(facilityId, distributionId);
   }
 }

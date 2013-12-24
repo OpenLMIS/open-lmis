@@ -48,10 +48,10 @@ function RefrigeratorReading(refrigeratorReading) {
     if (statusClass === complete && _this.problemSinceLastTime && _this.problemSinceLastTime.value === 'Y') {
       if (!_this.problems) statusClass = incomplete;
       else {
-        var hasAtLeastOneProblem = _.filter(_.values(_this.problems),
-            function (problem) {
-            return problem;
-          }).length;
+        var hasAtLeastOneProblem = _.find(_.values(_this.problems),
+            function (problemValue) {
+              return problemValue === true;
+            });
 
         if (!_this.problems || !hasAtLeastOneProblem)
           statusClass = incomplete;

@@ -155,4 +155,17 @@ public class DistributionRefrigeratorsMapperIT {
     assertTrue(resultSet.next());
     assertThat(resultSet.getBoolean("gasLeakage"), is(problem.getGasLeakage()));
   }
+
+  @Test
+  public void shouldGetDistributionRefrigeratorsByFacilityIdAndDistributionId() throws Exception {
+    RefrigeratorReading reading = new RefrigeratorReading();
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+
+    mapper.insert(distributionRefrigerators);
+
+    DistributionRefrigerators savedDistributionRefrigerators = mapper.getBy(distributionRefrigerators.getFacilityId(), distributionRefrigerators.getDistributionId());
+
+    assertThat(savedDistributionRefrigerators.getFacilityId(), is(distributionRefrigerators.getFacilityId()));
+    assertThat(savedDistributionRefrigerators.getDistributionId(), is(distributionRefrigerators.getDistributionId()));
+  }
 }

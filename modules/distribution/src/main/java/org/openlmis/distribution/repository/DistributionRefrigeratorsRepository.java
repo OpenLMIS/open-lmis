@@ -34,4 +34,8 @@ public class DistributionRefrigeratorsRepository {
     problem.setReadingId(reading.getId());
     mapper.insertProblems(problem);
   }
+
+  public DistributionRefrigerators getBy(Long facilityId, Long distributionId) {
+    return mapper.getBy(facilityId, distributionId);
+  }
 }

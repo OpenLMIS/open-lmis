@@ -389,6 +389,10 @@ public class DBWrapper {
     update("delete from facility_visits");
     update("delete from epi_use_line_items");
     update("delete from epi_use");
+    update("delete from refrigerator_problems");
+    update("delete from refrigerator_readings");
+    update("delete from distribution_refrigerators");
+
     update("delete from distributions");
     update("delete from users where userName not like('Admin%')");
     update("DELETE FROM requisition_line_item_losses_adjustments");
@@ -1528,12 +1532,12 @@ public class DBWrapper {
   public Map<String, String> getEpiUseDetails(String productGroupCode, String facilityCode) throws SQLException {
     return select("SELECT * FROM epi_use_line_items WHERE productGroupName = " +
       "(SELECT name FROM product_groups where code = '%s') AND epiUseId=(Select id from epi_use where facilityId=" +
-      "(Select id from facilities where code ='%s'));", productGroupCode,facilityCode).get(0);
+      "(Select id from facilities where code ='%s'));", productGroupCode, facilityCode).get(0);
   }
 
 
-  public void updateBudgetFlag(String ProgramName,Boolean Flag) throws IOException, SQLException {
-    update("update programs set budgetingapplies ='"+Flag+"' where name ='"+ProgramName+"';");
+  public void updateBudgetFlag(String ProgramName, Boolean Flag) throws IOException, SQLException {
+    update("update programs set budgetingapplies ='" + Flag + "' where name ='" + ProgramName + "';");
   }
 
 

@@ -21,13 +21,13 @@
       <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
       </class>
       <class name="org.openlmis.functional.ManageRefrigerator">
-        </class>
+      </class>
       <class name="org.openlmis.functional.DistributionSyncTest">
-        </class>
+      </class>
       <class name="org.openlmis.functional.DistributionEpiUseSyncTest">
-        </class>
-        <class name="org.openlmis.functional.DistributionRefrigeratorSyncTest">
-        </class>
+      </class>
+      <class name="org.openlmis.functional.DistributionRefrigeratorSyncTest">
+      </class>
     </classes>
   </test>
 </suite>

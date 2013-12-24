@@ -143,11 +143,11 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     HashMap m1 = dbWrapper.getFacilityVisitDetails();
 
-    assertEquals(m1.get("observations").toString(), "Some observations");
-    assertEquals(m1.get("confirmedByName").toString(), "samuel");
-    assertEquals(m1.get("confirmedByTitle").toString(), "Doe");
-    assertEquals(m1.get("verifiedByName").toString(), "Verifier");
-    assertEquals(m1.get("verifiedByTitle").toString(), "XYZ");
+    assertEquals("Some observations", m1.get("observations").toString());
+    assertEquals("samuel", m1.get("confirmedByName").toString());
+    assertEquals("Doe", m1.get("confirmedByTitle").toString());
+    assertEquals("Verifier", m1.get("verifiedByName").toString());
+    assertEquals("XYZ", m1.get("verifiedByTitle").toString());
 
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");

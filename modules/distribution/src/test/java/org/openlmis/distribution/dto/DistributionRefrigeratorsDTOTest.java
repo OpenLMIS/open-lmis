@@ -11,10 +11,15 @@
 package org.openlmis.distribution.dto;
 
 import org.junit.Test;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.RefrigeratorReading;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -33,5 +38,19 @@ public class DistributionRefrigeratorsDTOTest {
 
     verify(refrigeratorReadingDTO1).transform();
     verify(refrigeratorReadingDTO2).transform();
+  }
+
+  @Test
+  public void shouldTransformRefrigeratorsDTOIntoRefrigeratorsWithBlankReadingsIfNotProvided() throws Exception {
+    Long facilityId = 3L;
+    Long distributionId = 6L;
+    List<RefrigeratorReading> refrigeratorReadings = new ArrayList<>();
+    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityId, distributionId, null);
+
+    DistributionRefrigerators distributionRefrigerators = refrigeratorsDTO.transform();
+
+    assertThat(distributionRefrigerators.getReadings(), is(refrigeratorReadings));
+    assertThat(distributionRefrigerators.getFacilityId(), is(facilityId));
+    assertThat(distributionRefrigerators.getDistributionId(), is(distributionId));
   }
 }
