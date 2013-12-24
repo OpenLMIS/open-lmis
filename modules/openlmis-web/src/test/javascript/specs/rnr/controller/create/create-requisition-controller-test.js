@@ -297,16 +297,17 @@ describe('CreateRequisitionController', function () {
 
   it('should submit valid rnr', function () {
     scope.rnr = new Rnr({"id": "rnrId", "status": 'INITIATED', "fullSupplyLineItems": []});
+    scope.saveRnrForm = jasmine.createSpyObj('form', ['$setPristine']);
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function () {
-    }};
-    spyOn(scope.saveRnrForm, '$setPristine');
     spyOn(OpenLmisDialog, 'newDialog');
-
-    scope.callBack(true);
-
     httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond(200, {success: "R&R submitted successfully!"});
+
+    scope.submitRnr();
+    rootScope.$apply();
+    var confirmCallback = OpenLmisDialog.newDialog.calls[0].args[1];
+    confirmCallback(true);
+
     httpBackend.flush();
 
     expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
@@ -326,18 +327,23 @@ describe('CreateRequisitionController', function () {
     httpBackend.flush();
   });
 
-  it('should submit Rnr if ok is clicked on the confirm modal', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "status": "INITIATED", "fullSupplyLineItems": []});
+  it('should not submit Rnr if not confirmed', function () {
+    scope.rnr = new Rnr({"id": "rnrId", "status": "ORIGINAL", "fullSupplyLineItems": []});
+    scope.saveRnrForm = jasmine.createSpyObj('form', ['$setPristine']);
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function () {
-    }};
-    spyOn(scope.saveRnrForm, '$setPristine');
-    httpBackend.expect('PUT', '/requisitions/rnrId/submit.json').respond({'success': "R&R submitted successfully!"});
-    scope.callBack(true);
-    httpBackend.flush();
-    expect(scope.submitMessage).toEqual("R&R submitted successfully!");
-    expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
+    spyOn(OpenLmisDialog, 'newDialog');
+
+    scope.submitRnr();
+    rootScope.$apply();
+    var confirmCallback = OpenLmisDialog.newDialog.calls[0].args[1];
+    confirmCallback(false);
+
+    httpBackend.verifyNoOutstandingRequest();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(scope.submitMessage).toEqual("");
+    expect(scope.saveRnrForm.$setPristine).not.toHaveBeenCalled();
+    expect(scope.rnr.status).toEqual('ORIGINAL');
   });
 
   it('should return cell error class', function () {
@@ -563,15 +569,17 @@ describe('CreateRequisitionController', function () {
 
   it('should authorize valid rnr', function () {
     scope.rnr = new Rnr({"id": "rnrId", "status": 'SUBMITTED', "fullSupplyLineItems": []});
+    scope.saveRnrForm = jasmine.createSpyObj('form', ['$setPristine']);
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function () {
-    }};
-    spyOn(scope.saveRnrForm, '$setPristine');
-
+    spyOn(OpenLmisDialog, 'newDialog');
     httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond(200, {success: "R&R authorized successfully!"});
 
-    scope.callBack(true);
+    scope.authorizeRnr();
+    rootScope.$apply();
+    var confirmCallback = OpenLmisDialog.newDialog.calls[0].args[1];
+    confirmCallback(true);
+
     httpBackend.flush();
 
     expect(scope.submitMessage).toEqual("R&R authorized successfully!");
@@ -589,19 +597,23 @@ describe('CreateRequisitionController', function () {
     httpBackend.flush();
   });
 
-  it('should authorized Rnr if ok is clicked on the confirm modal', function () {
-    scope.rnr = new Rnr({"id": "rnrId", "status": "SUBMITTED", "fullSupplyLineItems": []});
+  it('should not authorize Rnr if cancel is clicked on the confirm modal', function () {
+    scope.rnr = new Rnr({"id": "rnrId", "status": "ORIGINAL", "fullSupplyLineItems": []});
+    scope.saveRnrForm = jasmine.createSpyObj('form', ['$setPristine']);
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    scope.saveRnrForm = {$setPristine: function () {
-    }};
-    spyOn(scope.saveRnrForm, '$setPristine');
+    spyOn(OpenLmisDialog, 'newDialog');
 
-    httpBackend.expect('PUT', '/requisitions/rnrId/authorize.json').respond({'success': "R&R authorized successfully!"});
-    scope.callBack(true);
-    httpBackend.flush();
-    expect(scope.submitMessage).toEqual("R&R authorized successfully!");
-    expect(scope.saveRnrForm.$setPristine).toHaveBeenCalled();
+    scope.authorizeRnr();
+    rootScope.$apply();
+    var confirmCallback = OpenLmisDialog.newDialog.calls[0].args[1];
+    confirmCallback(false);
+
+    httpBackend.verifyNoOutstandingRequest();
+    httpBackend.verifyNoOutstandingExpectation();
+    expect(scope.submitMessage).toEqual("");
+    expect(scope.saveRnrForm.$setPristine).not.toHaveBeenCalled();
+    expect(scope.rnr.status).toEqual('ORIGINAL');
   });
 
   it('should return true if error on full supply page', function () {

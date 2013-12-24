@@ -8,9 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes,
-                                     facilityApprovedProducts, requisitionRights, regimenTemplate, $location,
-                                     Requisitions, $routeParams, $dialog, messageService, requisitionService, $q) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -109,28 +107,25 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return deferred.promise;
   };
 
-  $scope.submitRnr = function () {
+  function promoteRnr(promoteFunction) {
     resetFlags();
     requisitionService.resetErrorPages($scope);
-    var saveRnrPromise = $scope.saveRnr(true);
-    saveRnrPromise.then(function () {
-      if (!setError()) {
-        showConfirmModal();
-      }
-    })
-  };
 
-
-  $scope.authorizeRnr = function () {
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
     var saveRnrPromise = $scope.saveRnr(true);
 
     saveRnrPromise.then(function () {
       if (!setError()) {
-        showConfirmModal();
+        confirm(promoteFunction);
       }
     });
+  }
+
+  $scope.submitRnr = function () {
+    promoteRnr(submitValidatedRnr);
+  };
+
+  $scope.authorizeRnr = function () {
+    promoteRnr(authorizeValidatedRnr);
   };
 
   function setError() {
@@ -180,25 +175,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       });
   };
 
-  $scope.callBack = function (result) {
-    if (!result) return;
-
-    if ($scope.rnr.status === 'INITIATED') {
-      submitValidatedRnr();
-    }
-    if ($scope.rnr.status === 'SUBMITTED') {
-      authorizeValidatedRnr();
-    }
-  };
-
-  var showConfirmModal = function () {
-    var options = {
-      id: "confirmDialog",
-      header: messageService.get("label.confirm.action"),
-      body: messageService.get("msg.question.confirmation")
-    };
-    OpenLmisDialog.newDialog(options, $scope.callBack, $dialog, messageService);
-  };
 
   var authorizeValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "authorize"}, {}, function (data) {
@@ -210,6 +186,20 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     }, function (data) {
       $scope.submitError = data.data.error;
     });
+  };
+
+  var confirm = function (promoteFunction) {
+    var callBack = function (result) {
+      if (result) promoteFunction();
+    };
+
+    var options = {
+      id: "confirmDialog",
+      header: messageService.get("label.confirm.action"),
+      body: messageService.get("msg.question.confirmation")
+    };
+
+    OpenLmisDialog.newDialog(options, callBack, $dialog, messageService);
   };
 
   $scope.highlightRequiredFieldInModal = function (value) {
