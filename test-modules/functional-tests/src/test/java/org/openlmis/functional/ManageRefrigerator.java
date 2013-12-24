@@ -104,7 +104,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   @And("^I edit refrigerator")
   public void clickEdit() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
   }
 
   @When("^I confirm delete$")
@@ -168,7 +168,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I should see Edit button$")
   public void shouldSeeEditButton() throws IOException, SQLException {
-    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).showButton.isDisplayed());
+    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).showButtonForRefrigerator1.isDisplayed());
   }
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")

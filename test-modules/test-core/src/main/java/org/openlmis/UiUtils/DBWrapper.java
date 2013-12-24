@@ -1551,6 +1551,11 @@ public class DBWrapper {
     update("UPDATE budget_line_items SET "+field+" ='"+ newValue +"';");
   }
 
+  public void addRefrigeratorToFacility(String brand, String model, String serialNumber, String facilityCode) throws SQLException {
+    update("INSERT INTO refrigerators(brand, model, serialNumber, facilityId, createdBy , modifiedBy) VALUES" +
+      "('"+brand+"','"+model+"','"+serialNumber+"',(SELECT id FROM facilities WHERE code = '"+facilityCode+"'),1,1);");
+  }
+
 
 }
 

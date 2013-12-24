@@ -107,7 +107,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -153,7 +153,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
 
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
     assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), "1");
     assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), "0");
@@ -168,7 +168,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyStockAtFirstOfMonth("10", 1);
     epiUse.verifyReceived("20", 1);
     epiUse.verifyDistributed("30", 1);
-    epiUse.verifyLoss(null,1);
+    epiUse.verifyLoss(null, 1);
     epiUse.verifyLossStatus(false,1);
     epiUse.verifyStockAtEndOfMonth("50", 1);
     epiUse.verifyExpirationDate("10/2011", 1);
@@ -203,10 +203,10 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyAllFieldsDisabled();
 
     refrigeratorPage.navigateToRefrigeratorTab();
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1","F10");
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", "F10");
   }
 
   @AfterMethod(groups = {"offline"})

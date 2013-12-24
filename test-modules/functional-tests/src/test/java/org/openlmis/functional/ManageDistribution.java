@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.util.Collections.addAll;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -225,7 +224,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I access show$")
   public void accessShow() throws IOException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
   }
 
   @Then("^I see general observations fields disabled$")

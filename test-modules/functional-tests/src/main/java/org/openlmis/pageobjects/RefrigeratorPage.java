@@ -18,9 +18,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends Page {
@@ -28,8 +26,11 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Show')]")
-  public static WebElement showButton = null;
+  @FindBy(how = ID, using = "editReading0")
+  public static WebElement showButtonForRefrigerator1 = null;
+
+  @FindBy(how = ID, using = "editReading1")
+  public static WebElement showButtonForRefrigerator2 = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton = null;
@@ -258,9 +259,15 @@ public class RefrigeratorPage extends Page {
     testWebDriver.waitForElementToAppear(newRefrigeratorHeaderOnModal);
   }
 
-  public void clickShow() {
-    testWebDriver.waitForElementToAppear(showButton);
-    showButton.click();
+  public void clickShowForRefrigerator1() {
+    testWebDriver.waitForElementToAppear(showButtonForRefrigerator1);
+    showButtonForRefrigerator1.click();
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
+  }
+
+  public void clickShowForRefrigerator2() {
+    testWebDriver.waitForElementToAppear(showButtonForRefrigerator2);
+    showButtonForRefrigerator2.click();
     testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
   }
 

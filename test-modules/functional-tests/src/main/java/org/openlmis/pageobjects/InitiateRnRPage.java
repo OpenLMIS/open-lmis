@@ -150,6 +150,9 @@ public class InitiateRnRPage extends RequisitionPage {
   @FindBy(how = ID, using = "dividedCost")
   private static WebElement showRnrCostDetailsIcon = null;
 
+  @FindBy(how = ID, using = "totalCostPopupClose")
+  private static WebElement closeRnrCostDetailsIcon = null;
+
   @FindBy(how = XPATH, using = "//a[@class='rnr-adjustment']")
   private static WebElement addDescription = null;
 
@@ -552,6 +555,9 @@ public class InitiateRnRPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(totalCostFullSupplyFooter);
     String fullSupplyTotalCost = totalCostFullSupplyFooter.getText().trim().substring(1);
     showRnrCostDetailsIcon.click();
+    showRnrCostDetailsIcon.click();
+    closeRnrCostDetailsIcon.click();
+    assertFalse(totalCostFullSupplyFooter.isDisplayed());
     return fullSupplyTotalCost;
   }
 

@@ -8,14 +8,15 @@ import org.openlmis.pageobjects.ManagePodPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 public class ManagePod extends TestCaseHelper {
 
@@ -39,11 +40,6 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForRegularRnR(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -60,12 +56,8 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODWhenSupplyLineMissing(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
     dbWrapper.deleteSupplyLine();
+
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
@@ -82,12 +74,7 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true);
     dbWrapper.updateRequisitionToEmergency();
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -104,11 +91,6 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testManagePODWhenRequisitionNotConvertedToOrder(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -119,11 +101,6 @@ public class ManagePod extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testManagePODWhenPodAlreadySubmitted(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(1, "MALARIA", true);
-    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
-    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
-    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
@@ -198,6 +175,11 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
+    dbWrapper.insertRequisitions(1, "MALARIA", true);
+    dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
+    dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
+    dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
   }
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
