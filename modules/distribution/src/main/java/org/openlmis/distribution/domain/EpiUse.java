@@ -36,12 +36,12 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class EpiUse extends BaseModel {
 
-  private Long distributionId;
   private Long facilityId;
+  private Long distributionId;
   private List<EpiUseLineItem> lineItems;
 
   public EpiUse(Facility facility, Distribution distribution) {
-    this(distribution.getId(), facility.getId(), new ArrayList<EpiUseLineItem>());
+    this(facility.getId(), distribution.getId(), new ArrayList<EpiUseLineItem>());
     this.setCreatedBy(distribution.getCreatedBy());
 
     if (facility.getSupportedPrograms().size() != 0) {

@@ -107,7 +107,7 @@ public class EpiUseMapperIT {
 
   @Test
   public void shouldSaveEpiUse() throws Exception {
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    EpiUse epiUse = new EpiUse(facility.getId(), distribution.getId(), null);
     mapper.insert(epiUse);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_use WHERE id = " + epiUse.getId());
@@ -117,7 +117,7 @@ public class EpiUseMapperIT {
 
   @Test
   public void shouldReturnEpiUse() throws Exception {
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    EpiUse epiUse = new EpiUse(facility.getId(), distribution.getId(), null);
     mapper.insert(epiUse);
 
     EpiUse epiUseFromDB = mapper.getById(epiUse);
@@ -130,7 +130,7 @@ public class EpiUseMapperIT {
     ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
     productGroupMapper.insert(productGroup);
 
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    EpiUse epiUse = new EpiUse(facility.getId(), distribution.getId(), null);
     mapper.insert(epiUse);
 
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(productGroup, 1L);
@@ -148,7 +148,7 @@ public class EpiUseMapperIT {
     ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
     productGroupMapper.insert(productGroup);
 
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    EpiUse epiUse = new EpiUse(facility.getId(), distribution.getId(), null);
     mapper.insert(epiUse);
 
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(productGroup, 1L);
@@ -167,7 +167,7 @@ public class EpiUseMapperIT {
   public void shouldUpdateEpiUseLineItem() throws Exception {
     ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
     productGroupMapper.insert(productGroup);
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId(), null);
+    EpiUse epiUse = new EpiUse(facility.getId(), distribution.getId(), null);
     mapper.insert(epiUse);
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(productGroup, 1L);
     epiUseLineItem.setEpiUseId(epiUse.getId());
