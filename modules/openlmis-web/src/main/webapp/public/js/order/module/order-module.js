@@ -11,5 +11,6 @@
 angular.module('order', ['openlmis', 'ngGrid', 'ui.bootstrap']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/view-orders', {controller:ViewOrderListController, templateUrl:'partials/view-order.html', resolve:ViewOrderListController.resolve, reloadOnSearch: false}).
+    when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'partials/manage-pod.html'}).
     otherwise({redirectTo:'/view-orders'});
 }]);
