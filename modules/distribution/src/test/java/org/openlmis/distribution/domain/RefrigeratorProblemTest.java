@@ -32,4 +32,11 @@ public class RefrigeratorProblemTest {
 
     refrigeratorProblem.validate();
   }
+
+  @Test
+  public void shouldNotThrowErrorIfAnyOneProblemTrue() throws Exception {
+    RefrigeratorProblem refrigeratorProblem = new RefrigeratorProblem(null, true, null, null, null, null, null, null);
+
+    refrigeratorProblem.validate();
+  }
 }

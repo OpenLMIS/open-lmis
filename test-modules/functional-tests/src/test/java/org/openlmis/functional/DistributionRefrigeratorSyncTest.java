@@ -13,7 +13,6 @@
 package org.openlmis.functional;
 
 
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
@@ -23,13 +22,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.String.valueOf;
 
@@ -96,7 +93,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -148,7 +145,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
@@ -200,7 +197,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
     refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.applyNRToRefrigeratorTemperature();

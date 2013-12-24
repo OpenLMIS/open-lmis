@@ -35,7 +35,6 @@ public class DistributionRefrigeratorsRepositoryTest {
 
   @Test
   public void shouldSaveReading() throws Exception {
-
     Long readingId = 3L;
     RefrigeratorReading refrigeratorReading = mock(RefrigeratorReading.class);
     RefrigeratorProblem refrigeratorProblem = mock(RefrigeratorProblem.class);
@@ -47,5 +46,18 @@ public class DistributionRefrigeratorsRepositoryTest {
     verify(mapper).insertReading(refrigeratorReading);
     verify(refrigeratorProblem).setReadingId(readingId);
     verify(mapper).insertProblems(refrigeratorReading.getProblem());
+  }
+
+  @Test
+  public void shouldNotSaveProblemIfNotAny() throws Exception {
+    Long readingId = 3L;
+    RefrigeratorReading refrigeratorReading = mock(RefrigeratorReading.class);
+
+    when(refrigeratorReading.getProblem()).thenReturn(null);
+    when(refrigeratorReading.getId()).thenReturn(readingId);
+    repository.saveReading(refrigeratorReading);
+
+    verify(mapper).insertReading(refrigeratorReading);
+    verify(mapper, never()).insertProblems(refrigeratorReading.getProblem());
   }
 }

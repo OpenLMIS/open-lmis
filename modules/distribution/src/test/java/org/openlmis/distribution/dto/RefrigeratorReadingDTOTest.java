@@ -18,7 +18,10 @@ import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
 public class RefrigeratorReadingDTOTest {
@@ -49,5 +52,63 @@ public class RefrigeratorReadingDTOTest {
     RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
 
     assertThat(refrigeratorReading, is(expectedReading));
+  }
+
+  @Test
+  public void shouldValidateRefrigeratorProblemsIfProblemSinceLastVisitIsTrue() throws Exception {
+    Reading temperature = new Reading("32.4", false);
+    Reading functioningCorrectly = new Reading("Y", false);
+    Reading lowAlarmEvents = new Reading("2", false);
+    Reading highAlarmEvents = new Reading("", true);
+    Reading problemSinceLastTime = new Reading("Y", false);
+    RefrigeratorProblem problems = mock(RefrigeratorProblem.class);
+    String notes = "Notes";
+    Long facilityId = 2L;
+
+    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId), null, 32.4F,
+      "Y", 2, null, "Y", problems, notes);
+
+    RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId),
+      temperature,
+      functioningCorrectly,
+      lowAlarmEvents,
+      highAlarmEvents,
+      problemSinceLastTime,
+      problems,
+      notes);
+
+    RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
+
+    assertThat(refrigeratorReading, is(expectedReading));
+    verify(problems).validate();
+  }
+
+  @Test
+  public void shouldSetProblemsToNullIfProblemSinceLastVisitIsFalse() throws Exception {
+    Reading temperature = new Reading("32.4", false);
+    Reading functioningCorrectly = new Reading("Y", false);
+    Reading lowAlarmEvents = new Reading("2", false);
+    Reading highAlarmEvents = new Reading("", true);
+    Reading problemSinceLastTime = new Reading("N", false);
+    RefrigeratorProblem problems = new RefrigeratorProblem();
+    String notes = "Notes";
+    Long facilityId = 2L;
+
+    RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId),
+      temperature,
+      functioningCorrectly,
+      lowAlarmEvents,
+      highAlarmEvents,
+      problemSinceLastTime,
+      problems,
+      notes);
+
+    RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
+
+    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId), null, 32.4F,
+      "Y", 2, null, "N", null, notes);
+
+    assertThat(refrigeratorReading, is(expectedReading));
+    assertThat(refrigeratorReading.getProblem(), is(nullValue()));
   }
 }

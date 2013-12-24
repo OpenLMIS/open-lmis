@@ -8,19 +8,8 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DROP TABLE IF EXISTS facility_visits;
-CREATE TABLE facility_visits (
-  id               SERIAL PRIMARY KEY,
-  distributionId   INTEGER REFERENCES distributions (id),
-  facilityId       INTEGER REFERENCES facilities (id),
-  confirmedByName  VARCHAR(50),
-  confirmedByTitle VARCHAR(50),
-  verifiedByName   VARCHAR(50),
-  verifiedByTitle  VARCHAR(50),
-  observations     TEXT,
-  createdBy        INTEGER,
-  createdDate      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  UNIQUE (distributionId, facilityId)
-);
-
+ALTER TABLE refrigerator_problems
+DROP COLUMN createdBy,
+DROP COLUMN createdDate,
+DROP COLUMN modifiedBy,
+DROP COLUMN modifiedDate;

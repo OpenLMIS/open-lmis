@@ -31,8 +31,10 @@ public class DistributionRefrigeratorsRepository {
     mapper.insertReading(reading);
 
     RefrigeratorProblem problem = reading.getProblem();
-    problem.setReadingId(reading.getId());
-    mapper.insertProblems(problem);
+    if (problem != null) {
+      problem.setReadingId(reading.getId());
+      mapper.insertProblems(problem);
+    }
   }
 
   public DistributionRefrigerators getBy(Long facilityId, Long distributionId) {

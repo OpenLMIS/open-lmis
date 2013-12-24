@@ -41,7 +41,11 @@ public class RefrigeratorReadingDTO extends BaseModel {
 
   public RefrigeratorReading transform() {
     refrigerator.validate();
-    problems.validate();
+    if ("Y".equalsIgnoreCase(problemSinceLastTime.getEffectiveValue())) {
+      problems.validate();
+    } else {
+      problems = null;
+    }
 
     return new RefrigeratorReading(refrigerator, null,
       temperature.parseFloat(),

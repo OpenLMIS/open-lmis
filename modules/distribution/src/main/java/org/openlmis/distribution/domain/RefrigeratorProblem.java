@@ -19,6 +19,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 
+import static org.apache.commons.lang3.BooleanUtils.isTrue;
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -39,7 +40,7 @@ public class RefrigeratorProblem extends BaseModel {
   String otherProblemExplanation;
 
   public void validate() {
-    if (!(operatorError || burnerProblem || gasLeakage || egpFault || thermostatSetting || other)) {
+    if (!(isTrue(operatorError) || isTrue(burnerProblem) || isTrue(gasLeakage) || isTrue(egpFault) || isTrue(thermostatSetting) || isTrue(other))) {
       throw new DataException("error.invalid.reading.value");
     }
   }
