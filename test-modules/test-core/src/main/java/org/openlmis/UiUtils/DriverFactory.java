@@ -14,6 +14,7 @@ package org.openlmis.UiUtils;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -36,6 +37,9 @@ public class DriverFactory {
   private String INPUT_ZIP_FILE_CHROMEDRIVER = null;
   private String CHROME_FOLDER = null;
   private String OUTPUT_FOLDER = null;
+
+  private String LOCAL_FIREFOX_X11_PATH = "/opt/local/bin/firefox-x11";
+  private String LOCAL_X11_DISPLAY = ":5";
   Unzip unZip;
 
   public WebDriver loadDriver(String browser) throws InterruptedException, IOException {
@@ -115,7 +119,14 @@ public class DriverFactory {
     profile.setPreference("dom.storage.enabled", true);
     profile.setPreference("device.storage.enabled", true);
     //profile.setPreference("network.manage-offline-status", true);
-    return new FirefoxDriver(profile);
+    if (getProperty("os.name").toLowerCase().indexOf("mac") >= 0){
+        File binaryFile = new File(LOCAL_FIREFOX_X11_PATH);
+        FirefoxBinary binary = new FirefoxBinary(binaryFile);
+        binary.setEnvironmentProperty("DISPLAY", LOCAL_X11_DISPLAY);
+        return new FirefoxDriver(binary, profile);
+    }
+    else
+        return new FirefoxDriver(profile);
   }
 
   private WebDriver createInternetExplorerDriver() throws IOException {
