@@ -8,7 +8,9 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService, requisitionService) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes,
+                                     facilityApprovedProducts, requisitionRights, regimenTemplate, $location,
+                                     Requisitions, $routeParams, $dialog, messageService, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -78,12 +80,15 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   });
 
   $scope.saveRnr = function (preventMessage) {
+    var deferred = $q.defer();
     if (!$scope.saveRnrForm || !$scope.saveRnrForm.$dirty) {
-      return;
+      deferred.resolve();
+      return deferred.promise;
     }
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"}, rnr, function (data) {
+      deferred.resolve();
       if (preventMessage) return;
       $scope.message = data.success;
       setTimeout(function () {
@@ -95,37 +100,45 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       }, 3000);
       $scope.saveRnrForm.$setPristine();
     }, function (data) {
-      if (!preventMessage)
+      deferred.reject();
+      if (!preventMessage) {
         $scope.error = data.data.error;
+      }
     });
+
+    return deferred.promise;
   };
 
-  function validateAndSetErrorClass() {
-    $scope.inputClass = true;
+  function setError() {
+    $scope.showError = true;
     var fullSupplyError = $scope.rnr.validateFullSupply();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupply();
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
-    if ($scope.rnr.regimenLineItems) validateRegimenLineItems();
+    if ($scope.rnr.regimenLineItems)
+      validateRegimenLineItems();
     var regimenError;
     if ($scope.regimenLineItemInValid) {
       regimenError = messageService.get("error.rnr.validation");
     }
-    return fullSupplyError || nonFullSupplyError || regimenError;
+    var errorMessage = fullSupplyError || nonFullSupplyError || regimenError;
+    if (errorMessage) {
+      requisitionService.setErrorPages($scope);
+      $scope.submitError = errorMessage;
+    }
+    return !!errorMessage;
   }
 
   $scope.submitRnr = function () {
     resetFlags();
     requisitionService.resetErrorPages($scope);
-    $scope.saveRnr(true);
-    var errorMessage = validateAndSetErrorClass();
-    if (errorMessage) {
-      requisitionService.setErrorPages($scope);
-      $scope.submitError = errorMessage;
-      return;
-    }
-    showConfirmModal();
+    var saveRnrPromise = $scope.saveRnr(true);
+    saveRnrPromise.then(function () {
+      if (!setError()) {
+        showConfirmModal();
+      }
+    })
   };
 
   function validateRegimenLineItems() {
@@ -154,10 +167,12 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.callBack = function (result) {
-    if (result && $scope.rnr.status === 'INITIATED') {
+    if (!result) return;
+
+    if ($scope.rnr.status === 'INITIATED') {
       submitValidatedRnr();
     }
-    if (result && $scope.rnr.status === 'SUBMITTED') {
+    if ($scope.rnr.status === 'SUBMITTED') {
       authorizeValidatedRnr();
     }
   };
@@ -174,14 +189,13 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   $scope.authorizeRnr = function () {
     resetFlags();
     requisitionService.resetErrorPages($scope);
-    $scope.saveRnr(true);
-    var errorMessage = validateAndSetErrorClass();
-    if (errorMessage) {
-      requisitionService.setErrorPages($scope);
-      $scope.submitError = errorMessage;
-      return;
-    }
-    showConfirmModal();
+    var saveRnrPromise = $scope.saveRnr(true);
+
+    saveRnrPromise.then(function () {
+      if (!setError()) {
+        showConfirmModal();
+      }
+    });
   };
 
   var authorizeValidatedRnr = function () {
@@ -202,7 +216,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.highlightWarning = function (value) {
-    if ($scope.inputClass && (isUndefined(value) || value === false)) {
+    if ($scope.showError && (isUndefined(value) || value === false)) {
       return "warning-error";
     }
     return null;

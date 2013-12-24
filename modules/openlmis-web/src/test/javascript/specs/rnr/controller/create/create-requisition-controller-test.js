@@ -11,18 +11,21 @@
 describe('CreateRequisitionController', function () {
 
   var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
-      lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList;
+    lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList, requisitions;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
 
   beforeEach(module('ui.bootstrap.dialog'));
 
-  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_, _requisitionService_) {
+  beforeEach(inject(function ($httpBackend, $rootScope, $location, $controller, $routeParams, _localStorageService_, _messageService_, _requisitionService_, Requisitions) {
     scope = $rootScope.$new();
     rootScope = $rootScope;
     requisitionService = _requisitionService_;
     $rootScope.hasPermission = function () {
     };
+
+    requisitions = Requisitions;
+    spyOn(Requisitions, 'update').andCallThrough();
     location = $location;
     controller = $controller;
     httpBackend = $httpBackend;
@@ -100,6 +103,7 @@ describe('CreateRequisitionController', function () {
     ];
 
     var pageSize = "2";
+
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition,
       rnrColumns: rnrColumns, regimenTemplate: regimenTemplate, currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes,
       facilityApprovedProducts: facilityApprovedProducts, requisitionRights: requisitionRights, $routeParams: routeParams,
@@ -164,29 +168,49 @@ describe('CreateRequisitionController', function () {
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({'success': "R&R saved successfully!"});
 
     scope.saveRnr();
+
     httpBackend.flush();
     expect(scope.message).toEqual("R&R saved successfully!");
     expect(scope.saveRnrForm.pristine).toBeTruthy();
   });
+
+  it("should not save if form not dirty", function () {
+    scope.saveRnrForm.$dirty = false;
+
+    scope.saveRnr();
+
+    expect(requisitions.update.calls.length).toEqual(0);
+  });
+
+  it("should save if form dirty", function () {
+    scope.rnr = {"id": "rnrId"};
+    scope.saveRnrForm = {
+      $dirty: true,
+      $setPristine: function () {
+      }
+    };
+    httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond({});
+
+    scope.saveRnr();
+
+    httpBackend.flush();
+    expect(requisitions.update).toHaveBeenCalled();
+  });
+
   it('should get Currency from service', function () {
     expect(scope.currency).toEqual("$");
   });
 
-  it('should not save rnr if the form is not dirty on submit', function () {
+  it('should show confirmation for submit if no error', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.saveRnrForm.$dirty = false;
 
-    spyOn(scope.rnr, 'validateFullSupply').andReturn('');
-    spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
+    var deferredCallback = jasmine.createSpyObj('promise', ['then']);
+    spyOn(scope, 'saveRnr').andReturn(deferredCallback);
 
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
     scope.submitRnr();
-    httpBackend.flush();
 
-    httpBackend.verifyNoOutstandingRequest();
-    expect(scope.rnr.validateFullSupply).toHaveBeenCalled();
-    expect(scope.rnr.validateNonFullSupply.calls.length).toEqual(1);
-    expect(scope.submitError).toEqual("");
+    expect(deferredCallback.then).toHaveBeenCalled();
   });
 
   it('should save rnr on submit if the form is dirty', function () {
@@ -243,22 +267,30 @@ describe('CreateRequisitionController', function () {
 
   it('should set non full supply tab error class if non full supply line items have error', function () {
     scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": []});
+    var deferredCallback = jasmine.createSpyObj('promise', ['then']);
+    spyOn(scope, 'saveRnr').andReturn(deferredCallback);
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('error.rnr.required.fields.missing');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
 
     scope.submitRnr();
+    var saveSuccessCallback = deferredCallback.then.calls[0].args[0];
+    saveSuccessCallback();
 
     expect(scope.nonFullSupplyTabError).toBeTruthy();
   });
 
-  it('should set non full supply tab error class if non full supply line items have error', function () {
+  it('should set full supply tab error class if full supply line items have error', function () {
     scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": []});
+    var deferredCallback = jasmine.createSpyObj('promise', ['then']);
+    spyOn(scope, 'saveRnr').andReturn(deferredCallback);
     spyOn(scope.rnr, 'validateFullSupply').andReturn('error.rnr.required.fields.missing');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200);
 
     scope.submitRnr();
+    var saveSuccessCallback = deferredCallback.then.calls[0].args[0];
+    saveSuccessCallback();
 
     expect(scope.fullSupplyTabError).toBeTruthy();
   });
@@ -282,13 +314,16 @@ describe('CreateRequisitionController', function () {
     expect(scope.rnr.status).toEqual("SUBMITTED");
   });
 
+
   it('should display confirm modal if submit button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    spyOn(OpenLmisDialog, 'newDialog');
+    httpBackend.expect('GET', '/public/pages/partials/dialogbox.html').respond(200);
+
     scope.submitRnr();
-    httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
+
+    rootScope.$apply();
+    httpBackend.flush();
   });
 
   it('should submit Rnr if ok is clicked on the confirm modal', function () {
@@ -412,7 +447,9 @@ describe('CreateRequisitionController', function () {
     scope.pageLineItems = [rnrLineItem];
     scope.saveRnrForm.$dirty = true;
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200, {'success': "success message"});
+
     scope.saveRnr(true);
+
     httpBackend.flush();
     expect(scope.message).toEqual('');
   });
@@ -429,12 +466,14 @@ describe('CreateRequisitionController', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
+
     scope.submitRnr();
 
+    rootScope.$apply();
     expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
   });
 
-  it('should calculate pages which have errors on approve', function () {
+  it('should calculate pages which have errors on authorize', function () {
     scope.rnr = new Rnr({"id": "1", "fullSupplyLineItems": [
       {id: 1},
       {id: 2},
@@ -446,8 +485,10 @@ describe('CreateRequisitionController', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn("some error");
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
+
     scope.authorizeRnr();
 
+    rootScope.$apply();
     expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
     expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);
   });
@@ -541,10 +582,11 @@ describe('CreateRequisitionController', function () {
   it('should display confirm modal if authorize button is clicked and rnr valid', function () {
     spyOn(scope.rnr, 'validateFullSupply').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupply').andReturn('');
-    spyOn(OpenLmisDialog, 'newDialog');
-    scope.authorizeRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
+
+    scope.authorizeRnr();
+
+    httpBackend.flush();
   });
 
   it('should authorized Rnr if ok is clicked on the confirm modal', function () {
@@ -608,11 +650,11 @@ describe('CreateRequisitionController', function () {
       {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
         "category": {"name": "Adults", "displayOrder": 1}}
     ];
-    var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
-    scope.rnr = rnr;
+    scope.rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
 
     scope.submitRnr();
 
+    rootScope.$apply();
     expect(scope.regimenLineItemInValid).toBeTruthy();
     expect(scope.submitError).toEqual('some message');
   });
@@ -624,8 +666,7 @@ describe('CreateRequisitionController', function () {
       {"id": 7, "rnrId": 2, "code": "002", "name": "REGIMEN2", "patientsOnTreatment": 1, "patientsToInitiateTreatment": 7, "patientsStoppedTreatment": 4,
         "category": {"name": "Adults", "displayOrder": 1}}
     ];
-    var rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
-    scope.rnr = rnr;
+    scope.rnr = new Rnr({"id": "1", "regimenLineItems": regimenLineItems});
 
     scope.submitRnr();
 
