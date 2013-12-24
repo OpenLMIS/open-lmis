@@ -109,6 +109,30 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return deferred.promise;
   };
 
+  $scope.submitRnr = function () {
+    resetFlags();
+    requisitionService.resetErrorPages($scope);
+    var saveRnrPromise = $scope.saveRnr(true);
+    saveRnrPromise.then(function () {
+      if (!setError()) {
+        showConfirmModal();
+      }
+    })
+  };
+
+
+  $scope.authorizeRnr = function () {
+    resetFlags();
+    requisitionService.resetErrorPages($scope);
+    var saveRnrPromise = $scope.saveRnr(true);
+
+    saveRnrPromise.then(function () {
+      if (!setError()) {
+        showConfirmModal();
+      }
+    });
+  };
+
   function setError() {
     $scope.showError = true;
     var fullSupplyError = $scope.rnr.validateFullSupply();
@@ -130,16 +154,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
     return !!errorMessage;
   }
 
-  $scope.submitRnr = function () {
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
-    var saveRnrPromise = $scope.saveRnr(true);
-    saveRnrPromise.then(function () {
-      if (!setError()) {
-        showConfirmModal();
-      }
-    })
-  };
 
   function validateRegimenLineItems() {
     var setError = false;
@@ -184,18 +198,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       body: messageService.get("msg.question.confirmation")
     };
     OpenLmisDialog.newDialog(options, $scope.callBack, $dialog, messageService);
-  };
-
-  $scope.authorizeRnr = function () {
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
-    var saveRnrPromise = $scope.saveRnr(true);
-
-    saveRnrPromise.then(function () {
-      if (!setError()) {
-        showConfirmModal();
-      }
-    });
   };
 
   var authorizeValidatedRnr = function () {
