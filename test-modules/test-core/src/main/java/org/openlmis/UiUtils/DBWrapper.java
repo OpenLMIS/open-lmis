@@ -77,7 +77,6 @@ public class DBWrapper {
       }
       list.add(row);
     }
-
     return list;
   }
 
@@ -1535,11 +1534,9 @@ public class DBWrapper {
       "(Select id from facilities where code ='%s'));", productGroupCode, facilityCode).get(0);
   }
 
-
   public void updateBudgetFlag(String ProgramName, Boolean Flag) throws IOException, SQLException {
     update("update programs set budgetingapplies ='" + Flag + "' where name ='" + ProgramName + "';");
   }
-
 
   public void insertBudgetData() throws IOException, SQLException {
     update("INSERT INTO budget_file_info VALUES (1,'abc.csv','f',200,'12/12/13',200,'12/12/13');");
@@ -1547,15 +1544,25 @@ public class DBWrapper {
 
   }
 
-  public void updateBudgetLineItemsByField(String field, String newValue ) throws SQLException {
-    update("UPDATE budget_line_items SET "+field+" ='"+ newValue +"';");
+  public void updateBudgetLineItemsByField(String field, String newValue) throws SQLException {
+    update("UPDATE budget_line_items SET " + field + " ='" + newValue + "';");
   }
 
   public void addRefrigeratorToFacility(String brand, String model, String serialNumber, String facilityCode) throws SQLException {
     update("INSERT INTO refrigerators(brand, model, serialNumber, facilityId, createdBy , modifiedBy) VALUES" +
-      "('"+brand+"','"+model+"','"+serialNumber+"',(SELECT id FROM facilities WHERE code = '"+facilityCode+"'),1,1);");
+      "('" + brand + "','" + model + "','" + serialNumber + "',(SELECT id FROM facilities WHERE code = '" + facilityCode + "'),1,1);");
   }
 
+  public ResultSet getRefrigeratorReadings(String refrigeratorSerialNumber) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM refrigerator_readings WHERE refrigeratorId = " +
+      "(SELECT id FROM refrigerators WHERE serialNumber = '%s');", refrigeratorSerialNumber);
+    resultSet.next();
+    return resultSet;
+  }
 
+  public ResultSet getRefrigeratorProblems(Long readingId) throws SQLException {
+    ResultSet resultSet = query("SELECT * FROM refrigerator_problems WHERE readingId = %d", readingId);
+    return resultSet;
+  }
 }
 

@@ -35,7 +35,7 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='Delete']")
   private static WebElement deleteButton = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Done')]")
+  @FindBy(how = ID, using = "refrigeratorReadingDone")
   private static WebElement doneButton = null;
 
   @FindBy(how = XPATH, using = "//span[contains(text(),'Refrigerators')]")
@@ -83,6 +83,48 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "problemSinceLastVisit0")
   private static WebElement problemSinceLastVisitNR = null;
 
+  @FindBy(how = NAME, using = "temperature1")
+  public static WebElement refrigeratorTemperatureTextFieldForSecondRefrigerator = null;
+
+  @FindBy(how = NAME, using = "lowAlarmEvent1")
+  private static WebElement lowAlarmEventsTextFieldForSecondRefrigerator = null;
+
+  @FindBy(how = NAME, using = "highAlarmEvent1")
+  private static WebElement highAlarmEventsTextFieldForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "temperature1")
+  private static WebElement refrigeratorTemperatureNRForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "functioningCorrectlyYes1")
+  private static WebElement functioningCorrectlyYesRadioForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "functioningCorrectlyNo1")
+  private static WebElement functioningCorrectlyNoRadioForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "functioningCorrectlyDontKnow1")
+  private static WebElement functioningCorrectlyDontKnowRadioForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "functioningCorrectly1")
+  private static WebElement functioningCorrectlyNRForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "lowAlarmEvent1")
+  private static WebElement lowAlarmEventNRForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "highAlarmEvent1")
+  private static WebElement highAlarmEventNRForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "problemSinceLastVisitYes1")
+  private static WebElement problemSinceLastVisitYesRadioForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "problemSinceLastVisitNo1")
+  private static WebElement problemSinceLastVisitNoRadioForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "problemSinceLastVisitDontKnow1")
+  private static WebElement problemSinceLastVisitDontKnowRadioForSecondRefrigerator = null;
+
+  @FindBy(how = ID, using = "problemSinceLastVisit1")
+  private static WebElement problemSinceLastVisitNRForSecondRefrigerator = null;
+
   @FindBy(how = ID, using = "notes")
   private static WebElement notesTextArea = null;
 
@@ -119,8 +161,14 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = XPATH, using = "//div[@id='addRefrigeratorModal']/div[2]/div[3]/div/div")
   public static WebElement duplicateRefrigeratorMessage = null;
 
+  @FindBy(how = ID, using = "gasLeakage0")
+  private static WebElement problemGasLeak= null;
+
   @FindBy(how = ID, using = "other0")
   private static WebElement problemOther= null;
+
+  @FindBy(how = ID, using = "otherTextbox")
+  private static WebElement problemOtherTextBox= null;
 
   public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
@@ -134,6 +182,12 @@ public class RefrigeratorPage extends Page {
     refrigeratorTemperatureTextField.sendKeys(Keys.TAB);
   }
 
+  public void enterValueInRefrigeratorTemperatureForSecondRefrigerator(String value) {
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureTextFieldForSecondRefrigerator);
+    sendKeys(refrigeratorTemperatureTextFieldForSecondRefrigerator, value);
+    refrigeratorTemperatureTextFieldForSecondRefrigerator.sendKeys(Keys.TAB);
+  }
+
   public void clickProblemSinceLastVisitYesRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitYesRadio);
     problemSinceLastVisitYesRadio.click();
@@ -142,6 +196,17 @@ public class RefrigeratorPage extends Page {
   public void selectOtherProblem() {
     testWebDriver.waitForElementToAppear(problemOther);
     problemOther.click();
+  }
+
+  public void enterTextInOtherProblemTextBox(String value) {
+    testWebDriver.waitForElementToAppear(problemOtherTextBox);
+    sendKeys(problemOtherTextBox, value);
+    problemOtherTextBox.sendKeys(Keys.TAB);
+  }
+
+  public void selectGasLeakProblem() {
+    testWebDriver.waitForElementToAppear(problemGasLeak);
+    problemGasLeak.click();
   }
 
   public void clickOKButton() {
@@ -183,6 +248,11 @@ public class RefrigeratorPage extends Page {
     problemSinceLastVisitNoRadio.click();
   }
 
+  public void clickProblemSinceLastVisitNoRadioForSecondRefrigerator() {
+    testWebDriver.waitForElementToAppear(problemSinceLastVisitNoRadioForSecondRefrigerator);
+    problemSinceLastVisitNoRadioForSecondRefrigerator.click();
+  }
+
   public void clickProblemSinceLastVisitDontKnowRadio() {
     testWebDriver.waitForElementToAppear(problemSinceLastVisitDontKnowRadio);
     problemSinceLastVisitDontKnowRadio.click();
@@ -198,6 +268,12 @@ public class RefrigeratorPage extends Page {
     testWebDriver.waitForElementToAppear(lowAlarmEventsTextField);
     sendKeys(lowAlarmEventsTextField, value);
     lowAlarmEventsTextField.sendKeys(Keys.TAB);
+  }
+
+  public void enterValueInLowAlarmEventsForSecondRefrigerator(String value) {
+    testWebDriver.waitForElementToAppear(lowAlarmEventsTextFieldForSecondRefrigerator);
+    sendKeys(lowAlarmEventsTextFieldForSecondRefrigerator, value);
+    lowAlarmEventsTextFieldForSecondRefrigerator.sendKeys(Keys.TAB);
   }
 
   public void enterValueInBrandModal(String value) {
@@ -221,6 +297,12 @@ public class RefrigeratorPage extends Page {
     highAlarmEventsTextField.sendKeys(Keys.TAB);
   }
 
+  public void enterValueInHighAlarmEventsForSecondRefrigerator(String value) {
+    testWebDriver.waitForElementToAppear(highAlarmEventsTextFieldForSecondRefrigerator);
+    sendKeys(highAlarmEventsTextFieldForSecondRefrigerator, value);
+    highAlarmEventsTextFieldForSecondRefrigerator.sendKeys(Keys.TAB);
+  }
+
   public void enterValueInNotesTextArea(String value) {
     testWebDriver.waitForElementToAppear(notesTextArea);
     sendKeys(notesTextArea, value);
@@ -241,6 +323,11 @@ public class RefrigeratorPage extends Page {
   public void clickFunctioningCorrectlyNoRadio() {
     testWebDriver.waitForElementToAppear(functioningCorrectlyNoRadio);
     functioningCorrectlyNoRadio.click();
+  }
+
+  public void clickFunctioningCorrectlyNoRadioForSecondRefrigerator() {
+    testWebDriver.waitForElementToAppear(functioningCorrectlyNoRadioForSecondRefrigerator);
+    functioningCorrectlyNoRadioForSecondRefrigerator.click();
   }
 
   public void clickFunctioningCorrectlyDontKnowRadio() {
@@ -268,7 +355,7 @@ public class RefrigeratorPage extends Page {
   public void clickShowForRefrigerator2() {
     testWebDriver.waitForElementToAppear(showButtonForRefrigerator2);
     showButtonForRefrigerator2.click();
-    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNR);
+    testWebDriver.waitForElementToAppear(refrigeratorTemperatureNRForSecondRefrigerator);
   }
 
   public void clickDelete() {

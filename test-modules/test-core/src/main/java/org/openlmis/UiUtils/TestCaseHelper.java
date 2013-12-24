@@ -17,6 +17,7 @@ import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +27,18 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
+import static org.testng.Assert.assertNull;
 
 public class TestCaseHelper {
 
+  public static final String DEFAULT_BROWSER = "firefox";
+  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static DBWrapper dbWrapper;
   protected static String baseUrlGlobal;
   protected static String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
-  public static final String DEFAULT_BROWSER = "firefox";
-  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
-
 
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
@@ -75,7 +76,6 @@ public class TestCaseHelper {
     }
   }
 
-
   protected void addTearDownShutDownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
@@ -85,7 +85,6 @@ public class TestCaseHelper {
       }
     });
   }
-
 
   protected void loadDriver(String browser) throws InterruptedException, IOException {
 
@@ -228,7 +227,6 @@ public class TestCaseHelper {
       dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
   }
 
-
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
                                                                                                String facilityCodeThird,
                                                                                                String facilityCodeFourth, String geoZone1, String geoZone2, String parentGeoZone) throws IOException, SQLException {
@@ -261,7 +259,6 @@ public class TestCaseHelper {
     dbWrapper.insertProductGroup(productGroup);
     dbWrapper.updateProductToHaveGroup(product, productGroup);
   }
-
 
   public void sendKeys(String locator, String value) {
     int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
@@ -509,7 +506,7 @@ public class TestCaseHelper {
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
                                          Integer loss, Integer stockAtEndOfMonth, String expirationDate, String productGroupCode,
                                          String facilityCode) throws SQLException {
-    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,facilityCode);
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
 
     assertEquals(stockAtFirstOfMonth, epiDetails.get("stockatfirstofmonth"));
     assertEquals(receivedValue, epiDetails.get("received"));
@@ -519,8 +516,37 @@ public class TestCaseHelper {
     assertEquals(expirationDate, epiDetails.get("expirationdate"));
   }
 
-  public void verifyRefrigeratorDataInDatabase(){
-    //TODO
+  public void verifyRefrigeratorReadingDataInDatabase(String refrigeratorSerialNumber, Float temperature, String functioningCorrectly, Integer lowAlarmEvents,
+                                                      Integer highAlarmEvents, String problemSinceLastTime, String notes) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    assertEquals(temperature, resultSet.getString("temperature"));
+    assertEquals(functioningCorrectly, resultSet.getString("functioningCorrectly"));
+    assertEquals(lowAlarmEvents, resultSet.getString("lowAlarmEvents"));
+    assertEquals(highAlarmEvents, resultSet.getString("highAlarmEvents"));
+    assertEquals(problemSinceLastTime, resultSet.getString("problemSinceLastTime"));
+    assertEquals(notes, resultSet.getString("notes"));
+  }
+
+  public void verifyRefrigeratorProblemDataNullInDatabase(String refrigeratorSerialNumber) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    Long readingId = resultSet.getLong("id");
+    resultSet = dbWrapper.getRefrigeratorProblems(readingId);
+    assertFalse(resultSet.next());
+  }
+
+  public void verifyRefrigeratorProblemDataInDatabase(String refrigeratorSerialNumber, Boolean operatorError, Boolean burnerProblem, Boolean gasLeakage,
+                                                      Boolean egpFault, Boolean thermostatSetting, Boolean other, String otherProblemExplanation) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    Long readingId = resultSet.getLong("id");
+    resultSet = dbWrapper.getRefrigeratorProblems(readingId);
+    resultSet.next();
+    assertEquals(operatorError, resultSet.getBoolean("operatorError"));
+    assertEquals(burnerProblem, resultSet.getBoolean("burnerProblem"));
+    assertEquals(gasLeakage, resultSet.getBoolean("gasLeakage"));
+    assertEquals(egpFault, resultSet.getBoolean("egpFault"));
+    assertEquals(thermostatSetting, resultSet.getBoolean("thermostatSetting"));
+    assertEquals(other, resultSet.getBoolean("other"));
+    assertEquals(otherProblemExplanation, resultSet.getString("otherProblemExplanation"));
   }
 
 }

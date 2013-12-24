@@ -20,18 +20,15 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 
 public class ManagePod extends TestCaseHelper {
 
-  public static final String APPROVE_REQUISITION = "APPROVE_REQUISITION";
   public static final String CONVERT_TO_ORDER = "CONVERT_TO_ORDER";
   public static final String CREATE_REQUISITION = "CREATE_REQUISITION";
   public static final String AUTHORIZED = "AUTHORIZED";
-  public static final String AUTHORIZE_REQUISITION = "AUTHORIZE_REQUISITION";
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public static final String VIEW_ORDER = "VIEW_ORDER";
   public static final String MANAGE_POD = "MANAGE_POD";
   public LoginPage loginPage;
 
   @BeforeMethod(groups = "requisition")
-  @cucumber.api.java.Before
   public void setUp() throws Exception {
     super.setup();
     dbWrapper.deleteData();
