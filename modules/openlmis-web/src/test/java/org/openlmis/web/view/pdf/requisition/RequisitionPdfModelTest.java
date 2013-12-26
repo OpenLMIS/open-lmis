@@ -10,6 +10,7 @@
 
 package org.openlmis.web.view.pdf.requisition;
 
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.db.categories.UnitTests;
@@ -29,6 +31,7 @@ import org.openlmis.rnr.builder.RnrLineItemBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.web.controller.RequisitionController;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
@@ -59,7 +62,7 @@ public class RequisitionPdfModelTest {
   @Before
   public void setUp() throws Exception {
     Facility f1 = make(a(FacilityBuilder.defaultFacility, with(FacilityBuilder.name, "F1")));
-    requisition = spy(make(a(rnrWithRegimens, with(facility, f1),with(emergency,Boolean.TRUE))));
+    requisition = spy(make(a(rnrWithRegimens, with(facility, f1), with(emergency, Boolean.TRUE))));
     model = new HashMap<>();
     model.put(RequisitionController.CURRENCY, "$");
     model.put(RequisitionController.RNR, requisition);
@@ -109,7 +112,7 @@ public class RequisitionPdfModelTest {
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012","Requisition Type: Emergency");
+    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Emergency");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -123,7 +126,7 @@ public class RequisitionPdfModelTest {
     PdfPTable header = requisitionPdfModel.getRequisitionHeader();
     assertRowValues(header.getRow(0), "Report and Requisition for: Yellow Fever (Central Warehouse)");
     assertRowValues(header.getRow(1), "Facility: F1", "Operated By: MOH", "Maximum Stock level: 100", "Emergency Order Point: 50.5");
-    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012","Requisition Type: Regular");
+    assertRowValues(header.getRow(2), "levelName: Lusaka", "parentLevelName: Zambia", "Reporting Period: 01/01/2012 - 01/02/2012", "Requisition Type: Regular");
     assertThat(header.getSpacingAfter(), is(RequisitionPdfModel.PARAGRAPH_SPACING));
   }
 
@@ -218,6 +221,78 @@ public class RequisitionPdfModelTest {
     assertRowValues(regimenTable.getRow(1), " ");
     assertRowValues(regimenTable.getRow(2), "Category Name");
     assertRowValues(regimenTable.getRow(3), "Regimen", "R01", "3", "3", "3", "remarks");
+  }
+
+  @Test
+  public void shouldShowAllocatedBudgetIfBudgetAppliesForRegularRnr() throws DocumentException {
+    when(messageService.message("label.summary")).thenReturn("Summary");
+    when(messageService.message("label.total.cost.full.supply.items")).thenReturn("Total Cost For Full Supply Items");
+    when(messageService.message("label.total.cost.non.full.supply.items")).thenReturn("Total Cost For Non Full Supply Items");
+    when(messageService.message("label.total.cost")).thenReturn("Total Cost");
+    when(messageService.message("label.submitted.by")).thenReturn("Submitted By");
+    when(messageService.message("label.authorized.by")).thenReturn("Authorized By");
+    when(messageService.message("label.date")).thenReturn("Date");
+    when(messageService.message("label.currency.symbol")).thenReturn("$");
+    when(messageService.message("label.allocated.budget")).thenReturn("Allocated Budget");
+    when(messageService.message("msg.cost.exceeds.budget")).thenReturn("The total cost exceeds the allocated budget");
+
+
+    Program requisitionProgram = mock(Program.class);
+    when(requisition.getProgram()).thenReturn(requisitionProgram);
+    when(requisition.isEmergency()).thenReturn(false);
+    when(requisitionProgram.getBudgetingApplies()).thenReturn(true);
+    when(requisition.getAllocatedBudget()).thenReturn(new BigDecimal(7));
+
+    PdfPTable summary = requisitionPdfModel.getSummary();
+
+
+    assertRowValues(summary.getRow(0), "Summary");
+    assertRowValues(summary.getRow(1), "Allocated Budget", "$7.00");
+    assertRowValues(summary.getRow(2), "Total Cost For Full Supply Items", "$8.00");
+    assertRowValues(summary.getRow(3), "Total Cost For Non Full Supply Items", "$0.00");
+    assertRowValues(summary.getRow(4), "Total Cost", "$8.00");
+    assertRowValues(summary.getRow(5), "The total cost exceeds the allocated budget", " ");
+    assertRowValues(summary.getRow(6), " ", " ");
+    assertRowValues(summary.getRow(7), " ", " ");
+    assertRowValues(summary.getRow(8), "Submitted By: submit-firstName submit-lastName", "Date: " + DATE_FORMAT.format(currentDate.getTime()));
+    assertRowValues(summary.getRow(9), " ", " ");
+    assertRowValues(summary.getRow(10), "Authorized By: auth-firstName auth-lastName", "Date: " + DATE_FORMAT.format(authorizedDate.getTime()));
+  }
+
+  @Test
+  public void shouldShowAllocatedBudgetAsNotAllocatedIfBudgetAppliesForRegularRnrAndNotProvided() throws DocumentException {
+    when(messageService.message("label.summary")).thenReturn("Summary");
+    when(messageService.message("label.total.cost.full.supply.items")).thenReturn("Total Cost For Full Supply Items");
+    when(messageService.message("label.total.cost.non.full.supply.items")).thenReturn("Total Cost For Non Full Supply Items");
+    when(messageService.message("label.total.cost")).thenReturn("Total Cost");
+    when(messageService.message("label.submitted.by")).thenReturn("Submitted By");
+    when(messageService.message("label.authorized.by")).thenReturn("Authorized By");
+    when(messageService.message("label.date")).thenReturn("Date");
+    when(messageService.message("label.currency.symbol")).thenReturn("$");
+    when(messageService.message("label.allocated.budget")).thenReturn("Allocated Budget");
+    when(messageService.message("msg.cost.exceeds.budget")).thenReturn("The total cost exceeds the allocated budget");
+    when(messageService.message("msg.budget.not.allocated")).thenReturn("Not Allocated");
+
+
+    Program requisitionProgram = mock(Program.class);
+    when(requisition.getProgram()).thenReturn(requisitionProgram);
+    when(requisition.isEmergency()).thenReturn(false);
+    when(requisitionProgram.getBudgetingApplies()).thenReturn(true);
+    when(requisition.getAllocatedBudget()).thenReturn(null);
+
+    PdfPTable summary = requisitionPdfModel.getSummary();
+
+
+    assertRowValues(summary.getRow(0), "Summary");
+    assertRowValues(summary.getRow(1), "Allocated Budget", "Not Allocated");
+    assertRowValues(summary.getRow(2), "Total Cost For Full Supply Items", "$8.00");
+    assertRowValues(summary.getRow(3), "Total Cost For Non Full Supply Items", "$0.00");
+    assertRowValues(summary.getRow(4), "Total Cost", "$8.00");
+    assertRowValues(summary.getRow(5), " ", " ");
+    assertRowValues(summary.getRow(6), " ", " ");
+    assertRowValues(summary.getRow(7), "Submitted By: submit-firstName submit-lastName", "Date: " + DATE_FORMAT.format(currentDate.getTime()));
+    assertRowValues(summary.getRow(8), " ", " ");
+    assertRowValues(summary.getRow(9), "Authorized By: auth-firstName auth-lastName", "Date: " + DATE_FORMAT.format(authorizedDate.getTime()));
   }
 
   private void assertRowValues(PdfPRow row, String... cellTexts) {

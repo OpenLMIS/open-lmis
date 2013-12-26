@@ -253,6 +253,13 @@ public class RequisitionPdfModel {
     summaryHeaderCell.setBorder(0);
     summaryTable.addCell(summaryHeaderCell);
 
+    boolean showBudget = !requisition.isEmergency() && requisition.getProgram().getBudgetingApplies();
+    if (showBudget) {
+      summaryTable.addCell(summaryCell(textCell(messageService.message("label.allocated.budget"))));
+      PdfPCell allocatedBudgetCell = requisition.getAllocatedBudget() != null ? numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + new Money(requisition.getAllocatedBudget().toString())) :
+        numberCell(messageService.message("msg.budget.not.allocated"));
+      summaryTable.addCell(summaryCell(allocatedBudgetCell));
+    }
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.full.supply.items"))));
     summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + requisition.getFullSupplyItemsSubmittedCost())));
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost.non.full.supply.items"))));
@@ -260,6 +267,11 @@ public class RequisitionPdfModel {
     summaryTable.addCell(summaryCell(textCell(messageService.message("label.total.cost"))));
     summaryTable.addCell(summaryCell(numberCell(messageService.message(LABEL_CURRENCY_SYMBOL) + this.getTotalCost(
       requisition).toString())));
+    if (showBudget && requisition.getAllocatedBudget() != null && (requisition.getAllocatedBudget().compareTo(this.getTotalCost(requisition).getValue()) == -1)) {
+      summaryTable.addCell(summaryCell(textCell(messageService.message("msg.cost.exceeds.budget"))));
+      summaryTable.addCell(summaryCell(textCell(" ")));
+    }
+
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));
     summaryTable.addCell(summaryCell(textCell(" ")));

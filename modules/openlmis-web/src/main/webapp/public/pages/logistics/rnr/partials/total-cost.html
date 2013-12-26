@@ -18,11 +18,11 @@
       </strong>
     </span>
     <strong ng-show="rnr.program.budgetingApplies && !rnr.emergency">
-    <span openlmis-message="label.allocated.budget"></span>
-          <span id="allocatedBudgetAmount" class="cell-text" ng-bind="rnr.allocatedBudget | currency:currency"
-                ng-show="rnr.allocatedBudget"></span>
-          <span id="allocatedBudgetNotApplicable" class="cell-text" openlmis-message="msg.budget.not.allocated"
-                ng-hide="rnr.allocatedBudget"></span>
+      <span openlmis-message="label.allocated.budget"></span><span>:</span>
+      <span id="allocatedBudgetAmount" class="cell-text" ng-bind="rnr.allocatedBudget | currency:currency"
+            ng-show="rnr.allocatedBudget"></span>
+      <span id="allocatedBudgetNotApplicable" class="cell-text" openlmis-message="msg.budget.not.allocated"
+            ng-hide="rnr.allocatedBudget"></span>
       &nbsp;|&nbsp;
     </strong>
     <span id="budgetWarningIcon" ng-show="rnr.costExceedsBudget" class="icon-warning-sign budget-exceeded-icon">
@@ -33,8 +33,8 @@
 
     <strong>
       <span openlmis-message="label.total.rnr.cost"></span>
-            <span id="totalCost" class="cell-text"
-                  ng-bind="rnr.calculateTotalLineItemCost() | currency:currency"></span>
+      <span id="totalCost" class="cell-text"
+            ng-bind="rnr.calculateTotalLineItemCost() | currency:currency"></span>
     </strong>
     <span id="dividedCost" ng-click="showCost=!showCost" class="list-icon-container"
           ng-class="{'is-icon-ul-selected': showCost}">
