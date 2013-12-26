@@ -10,7 +10,7 @@
 
 
 describe('ViewRnrController', function () {
-  var scope, httpBackend, controller, routeParams, requisition, location, messageService, requisitionService;
+  var scope, httpBackend, controller, routeParams, requisition, location, messageService, requisitionService, pageSize;
   var columns = [
     {"id": 1, "name": "productCode", "position": 1, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product Code", "formula": "", "indicator": "O", "used": true, "visible": true, "mandatory": true, "description": "Unique identifier for each commodity", "formulaValidationRequired": true},
     {"id": 2, "name": "product", "position": 2, "source": {"description": "Reference Data", "name": "REFERENCE", "code": "R"}, "sourceConfigurable": false, "label": "Product", "formula": "", "indicator": "R", "used": true, "visible": true, "mandatory": true, "description": "Primary name of the product", "formulaValidationRequired": true},
@@ -32,7 +32,7 @@ describe('ViewRnrController', function () {
     controller = $controller;
     location = $location;
     requisition = {lineItems: [], nonFullSupplyLineItems: [], regimenLineItems: [], period: {numberOfMonths: 3}};
-    scope.pageSize = 2;
+    pageSize = 2;
     routeParams.page = 1;
     messageService = _messageService_;
   }));

@@ -10,7 +10,7 @@
 
 describe('CreateRequisitionController', function () {
 
-  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList,
+  var scope, rootScope, ctrl, httpBackend, location, routeParams, controller, localStorageService, mockedRequisition, rnrColumns, regimenColumnList, pageSize,
     lossesAndAdjustmentTypes, facilityApprovedProducts, requisitionRights, rnrLineItem, messageService, regimenTemplate, requisitionService, categoryList, requisitions;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
@@ -102,7 +102,7 @@ describe('CreateRequisitionController', function () {
       {right: 'AUTHORIZE_REQUISITION'}
     ];
 
-    var pageSize = "2";
+    pageSize = "2";
 
     ctrl = controller(CreateRequisitionController, {$scope: scope, $location: location, requisition: mockedRequisition,
       rnrColumns: rnrColumns, regimenTemplate: regimenTemplate, currency: '$', lossesAndAdjustmentsTypes: lossesAndAdjustmentTypes,

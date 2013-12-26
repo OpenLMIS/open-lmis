@@ -11,7 +11,7 @@
 describe('Approve Requisition controller', function () {
 
   var scope, ctrl, httpBackend, location, routeParams, controller, requisition, regimenTemplate,
-    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns, requisitionService;
+    programRnrColumnList, nonFullSupplyLineItems, lineItems, regimenLineItems, dialog, rnrLineItem, regimenColumns, requisitionService, pageSize;
   beforeEach(module('openlmis.services'));
   beforeEach(module('openlmis.localStorage'));
   beforeEach(module('ui.bootstrap.dialog'));
@@ -48,7 +48,7 @@ describe('Approve Requisition controller', function () {
     regimenTemplate = {regimenColumns: regimenColumns};
     rnrLineItem = new RegularRnrLineItem({"fullSupply": true});
     ctrl = controller(ApproveRnrController, {$scope: scope, requisition: requisition, rnrColumns: programRnrColumnList,
-      regimenTemplate: regimenTemplate, currency: '$', pageSize: pageSize, $location: location, $routeParams: routeParams, requisitionService: requisitionService});
+      regimenTemplate: regimenTemplate, pageSize: pageSize, $location: location, $routeParams: routeParams, requisitionService: requisitionService});
   }));
 
   it('should set rnr in scope', function () {
@@ -78,10 +78,15 @@ describe('Approve Requisition controller', function () {
 
   it('should not approve and set error class if any full supply line item has empty approved quantity but should save', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
+    scope.approvalForm.$dirty = true;
     scope.pageLineItems = [rnrLineItem];
+
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('some error');
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
+
     scope.approveRnr();
+    httpBackend.flush();
+
     expect(scope.fullSupplyTabError).toBeTruthy();
     expect(scope.error).toEqual("some error");
   });
@@ -89,10 +94,15 @@ describe('Approve Requisition controller', function () {
   it('should not approve if any non full supply line item has empty approved quantity but should save', function () {
     scope.rnr = new Rnr({"id": "rnrId"});
     scope.pageLineItems = [rnrLineItem];
+    scope.approvalForm.$dirty = true;
+
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('some error');
     httpBackend.expect('PUT', '/requisitions/rnrId/save.json').respond(200);
+
     scope.approveRnr();
+    httpBackend.flush();
+
     expect(scope.nonFullSupplyTabError).toBeTruthy();
     expect(scope.error).toEqual("some error");
   });
@@ -144,12 +154,13 @@ describe('Approve Requisition controller', function () {
   it('should display confirm modal if approve button is clicked on valid Rnr', function () {
     scope.rnr = new Rnr({"id": "rnrId"}, []);
     scope.pageLineItems = [rnrLineItem];
+
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn('');
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn('');
-    spyOn(OpenLmisDialog, 'newDialog');
-    scope.approveRnr();
     httpBackend.expectGET('/public/pages/partials/dialogbox.html').respond(200);
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalled();
+
+    scope.approveRnr();
+    httpBackend.flush();
   });
 
   it('should approve Rnr if ok is clicked on the confirm modal', function () {
@@ -285,13 +296,17 @@ describe('Approve Requisition controller', function () {
       {id: 3}
     ], period: {numberOfMonths: 7}}, null);
     scope.pageLineItems = [rnrLineItem];
-
     scope.pageSize = 5;
+    scope.approvalForm.$dirty = true;
+
     spyOn(scope.rnr, 'getErrorPages').andReturn({nonFullSupply: [1, 2], fullSupply: [2, 4]});
     spyOn(scope.rnr, 'validateFullSupplyForApproval').andReturn("");
     spyOn(scope.rnr, 'validateNonFullSupplyForApproval').andReturn("some error");
+
     httpBackend.expect('PUT', '/requisitions/1/save.json').respond(200, {'success': "success message"});
+
     scope.approveRnr();
+    httpBackend.flush();
 
     expect(scope.errorPages).toEqual({nonFullSupply: [1, 2], fullSupply: [2, 4]});
     expect(scope.rnr.getErrorPages).toHaveBeenCalledWith(5);

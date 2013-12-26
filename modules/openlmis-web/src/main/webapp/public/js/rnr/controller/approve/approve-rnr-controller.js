@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService, requisitionService) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService, requisitionService, $q) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
@@ -25,22 +25,28 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.saveRnr = function (preventMessage) {
-    if (isUndefined($scope.approvalForm) || !$scope.approvalForm.$dirty) {
-      return;
+    var deferred = $q.defer();
+    if (!$scope.approvalForm || !$scope.approvalForm.$dirty) {
+      deferred.resolve();
+      return deferred.promise;
     }
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
       rnr, function (data) {
+        deferred.resolve();
         if (preventMessage === true) return;
         $scope.message = data.success;
         $scope.error = "";
         setTimeout(fadeSaveMessage, 3000);
+        $scope.approvalForm.$setPristine();
       }, function (data) {
+        deferred.reject();
         $scope.error = data.data.error;
         $scope.message = "";
       });
-    $scope.approvalForm.$setPristine();
+
+    return deferred.promise;
   };
 
   $scope.$on('$routeUpdate', function () {
@@ -109,15 +115,17 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     $scope.approvedQuantityRequiredFlag = true;
     resetFlags();
     requisitionService.resetErrorPages($scope);
-    $scope.saveRnr(true);
-    var error = validateAndSetErrorClass();
-    if (error) {
-      requisitionService.setErrorPages($scope);
-      $scope.error = error;
-      $scope.message = '';
-      return;
-    }
-    showConfirmModal();
+    var saveRnrPromise = $scope.saveRnr(true);
+    saveRnrPromise.then(function () {
+      var error = validateAndSetErrorClass();
+      if (error) {
+        requisitionService.setErrorPages($scope);
+        $scope.error = error;
+        $scope.message = '';
+        return;
+      }
+      showConfirmModal();
+    });
   };
 
   function resetFlags() {
