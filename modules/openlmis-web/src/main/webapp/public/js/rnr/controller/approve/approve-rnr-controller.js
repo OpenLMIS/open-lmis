@@ -82,27 +82,35 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     });
   };
 
-  function validateAndSetErrorClass() {
+  $scope.approveRnr = function () {
+    $scope.approvedQuantityRequiredFlag = true;
+    resetFlags();
+    requisitionService.resetErrorPages($scope);
+    var saveRnrPromise = $scope.saveRnr(true);
+
+    saveRnrPromise.then(function () {
+      if (!setError()) confirm();
+    });
+  };
+
+  function setError() {
     var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
-    return fullSupplyError || nonFullSupplyError;
+    var error = fullSupplyError || nonFullSupplyError;
+
+    if (error) {
+      requisitionService.setErrorPages($scope);
+      $scope.error = error;
+      $scope.message = '';
+    }
+
+    return !!error;
   }
 
-  $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab === NON_FULL_SUPPLY ?
-      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
-  };
-
-  $scope.dialogCloseCallback = function (result) {
-    if (result) {
-      approveValidatedRnr();
-    }
-  };
-
-  var showConfirmModal = function () {
+  var confirm = function () {
     var options = {
       id: "confirmDialog",
       header: messageService.get("label.confirm.action"),
@@ -111,27 +119,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
   };
 
-  $scope.approveRnr = function () {
-    $scope.approvedQuantityRequiredFlag = true;
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
-    var saveRnrPromise = $scope.saveRnr(true);
-    saveRnrPromise.then(function () {
-      var error = validateAndSetErrorClass();
-      if (error) {
-        requisitionService.setErrorPages($scope);
-        $scope.error = error;
-        $scope.message = '';
-        return;
-      }
-      showConfirmModal();
-    });
+  $scope.dialogCloseCallback = function (result) {
+    if (result)
+      approveValidatedRnr();
   };
-
-  function resetFlags() {
-    $scope.error = "";
-    $scope.message = "";
-  }
 
   var approveValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "approve"}, {}, function (data) {
@@ -143,6 +134,16 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
       $scope.message = "";
     });
   };
+
+  $scope.checkErrorOnPage = function (page) {
+    return $scope.visibleTab === NON_FULL_SUPPLY ?
+      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+  };
+
+  function resetFlags() {
+    $scope.error = "";
+    $scope.message = "";
+  }
 
 }
 
