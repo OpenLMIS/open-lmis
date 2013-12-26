@@ -56,6 +56,7 @@ public class InitiateRnR extends TestCaseHelper {
   public static final String VIEW_REQUISITION = "VIEW_REQUISITION";
   public static final String VIEW_ORDER = "VIEW_ORDER";
   private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
+  public final String ALLOCATED_BUDGET="Allocated Budget";
   public String program, userSIC, categoryCode, password, regimenCode, regimenName, regimenCode2, regimenName2;
 
   public LoginPage loginPage;
@@ -1098,7 +1099,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void verifyBudgetAmountPresentOnFooter(String budgetAmount) throws IOException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
-    assertEquals("Allocated Budget:", initiateRnRPage.getAllocatedBudgetLabel());
+    assertEquals(ALLOCATED_BUDGET, initiateRnRPage.getAllocatedBudgetLabel());
     assertTrue(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
     assertEquals(budgetAmount, initiateRnRPage.getAllocatedBudgetAmount());
     assertFalse(initiateRnRPage.isBudgetNotAllocatedDisplayed());
@@ -1107,7 +1108,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void verifyBudgetAmountNotAllocated() throws IOException {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     assertTrue(initiateRnRPage.isAllocatedBudgetLabelDisplayed());
-    assertEquals("Allocated Budget:", initiateRnRPage.getAllocatedBudgetLabel());
+    assertEquals(ALLOCATED_BUDGET, initiateRnRPage.getAllocatedBudgetLabel());
     assertTrue(initiateRnRPage.isBudgetNotAllocatedDisplayed());
     assertEquals("Not allocated", initiateRnRPage.getBudgetNotAllocatedText());
     assertFalse(initiateRnRPage.isAllocatedBudgetAmountDisplayed());
