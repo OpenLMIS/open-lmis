@@ -89,13 +89,6 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       deferred.resolve();
       if (preventMessage) return;
       $scope.message = data.success;
-      setTimeout(function () {
-        $scope.$apply(function () {
-          angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-            $scope.message = '';
-          });
-        });
-      }, 3000);
       $scope.saveRnrForm.$setPristine();
     }, function (data) {
       deferred.reject();

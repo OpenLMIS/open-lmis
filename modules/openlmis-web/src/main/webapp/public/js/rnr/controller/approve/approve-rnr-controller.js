@@ -38,7 +38,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
         if (preventMessage === true) return;
         $scope.message = data.success;
         $scope.error = "";
-        setTimeout(fadeSaveMessage, 3000);
         $scope.approvalForm.$setPristine();
       }, function (data) {
         deferred.reject();
@@ -73,14 +72,6 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
 
     return rnr;
   }
-
-  var fadeSaveMessage = function () {
-    $scope.$apply(function () {
-      angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-        $scope.message = '';
-      });
-    });
-  };
 
   $scope.approveRnr = function () {
     $scope.approvedQuantityRequiredFlag = true;
