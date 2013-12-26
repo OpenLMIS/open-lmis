@@ -126,13 +126,12 @@ public class DistributionRefrigeratorsMapperIT {
     Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId());
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
-    RefrigeratorReading reading = new RefrigeratorReading();
+    RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
     reading.setTemperature(98.6F);
     reading.setFunctioningCorrectly("Y");
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
 
     refrigeratorMapper.insert(refrigerator);
-    reading.setRefrigerator(refrigerator);
     mapper.insert(distributionRefrigerators);
 
     reading.setDistributionRefrigeratorsId(distributionRefrigerators.getId());
@@ -141,6 +140,9 @@ public class DistributionRefrigeratorsMapperIT {
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM refrigerator_readings WHERE distributionRefrigeratorsId = " + distributionRefrigerators.getId());
     assertTrue(resultSet.next());
     assertThat(resultSet.getFloat("temperature"), is(reading.getTemperature()));
+    assertThat(resultSet.getString("refrigeratorSerialNumber"), is(reading.getRefrigerator().getSerialNumber()));
+    assertThat(resultSet.getString("refrigeratorBrand"), is(reading.getRefrigerator().getBrand()));
+    assertThat(resultSet.getString("refrigeratorModel"), is(reading.getRefrigerator().getModel()));
   }
 
   @Test
@@ -148,13 +150,12 @@ public class DistributionRefrigeratorsMapperIT {
     Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId());
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
-    RefrigeratorReading reading = new RefrigeratorReading();
+    RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
     reading.setTemperature(98.6F);
     reading.setFunctioningCorrectly("Y");
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
 
     refrigeratorMapper.insert(refrigerator);
-    reading.setRefrigerator(refrigerator);
     mapper.insert(distributionRefrigerators);
 
     reading.setDistributionRefrigeratorsId(distributionRefrigerators.getId());
