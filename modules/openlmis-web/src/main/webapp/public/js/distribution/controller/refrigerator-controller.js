@@ -34,9 +34,9 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
 
   $scope.addRefrigeratorToStore = function () {
     var exists = _.find($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings,
-        function (reading) {
-          return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigeratorReading.refrigerator.serialNumber.toLowerCase();
-        });
+      function (reading) {
+        return reading.refrigerator.serialNumber.toLowerCase() === $scope.newRefrigeratorReading.refrigerator.serialNumber.toLowerCase();
+      });
     if (exists) {
       $scope.isDuplicateSerialNumber = true;
       return;
@@ -59,10 +59,10 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
       return function (result) {
         if (!result) return;
         $scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings =
-            _.reject($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings,
-                function (refrigeratorReading) {
-                  return serialNumberToDelete == refrigeratorReading.serialNumber;
-                });
+          _.reject($scope.distribution.facilityDistributions[$scope.selectedFacilityId].refrigerators.readings,
+            function (refrigeratorReading) {
+              return serialNumberToDelete == refrigeratorReading.refrigerator.serialNumber;
+            });
         IndexedDB.put('distributions', $scope.distribution);
       };
     };
