@@ -122,7 +122,8 @@ public class InitiateRnR extends TestCaseHelper {
   public void clickOnProceed() throws IOException {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
-    initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
     testWebDriver.sleep(2000);
   }
 
@@ -840,7 +841,8 @@ public class InitiateRnR extends TestCaseHelper {
 
     dbWrapper.insertValuesInRequisition(false);
     homePage.navigateAndInitiateRnr(program);
-    initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
     initiateRnRPage.submitRnR();
     initiateRnRPage.clickOk();
     dbWrapper.updateRequisitionStatus("AUTHORIZED", "storeIncharge", "HIV");
