@@ -30,7 +30,7 @@ public class FacilityDistributionDTO {
   private DistributionRefrigeratorsDTO refrigerators;
 
   public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform());
+    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), null);
   }
 
   public void setDistributionId(Long distributionId) {

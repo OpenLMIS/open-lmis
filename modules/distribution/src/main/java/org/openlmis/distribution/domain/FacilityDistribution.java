@@ -35,6 +35,7 @@ public class FacilityDistribution {
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
   private DistributionRefrigerators refrigerators;
+  private EpiInventory epiInventory;
 
   public FacilityDistribution(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.epiUse = new EpiUse(facility, distribution);

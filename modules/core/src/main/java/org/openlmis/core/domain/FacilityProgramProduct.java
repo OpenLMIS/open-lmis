@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -37,10 +38,15 @@ public class FacilityProgramProduct extends ProgramProduct {
     this.overriddenIsa = overriddenIsa;
   }
 
+  @JsonIgnore
   public ProductGroup getActiveProductGroup() {
     if (this.isActive() && this.getProduct().getActive()) {
       return this.getProduct().getProductGroup();
     }
     return null;
+  }
+
+  public Integer calculateIsa(Long population) {
+    return this.getOverriddenIsa() != null ? this.getOverriddenIsa() : this.getProgramProductIsa().calculate(population);
   }
 }

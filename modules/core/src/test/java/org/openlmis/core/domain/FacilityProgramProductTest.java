@@ -17,6 +17,8 @@ import org.openlmis.db.categories.UnitTests;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 public class FacilityProgramProductTest {
@@ -78,5 +80,26 @@ public class FacilityProgramProductTest {
     facilityProgramProduct.setProduct(product);
 
     assertNull(facilityProgramProduct.getActiveProductGroup());
+  }
+
+  @Test
+  public void shouldCalculateIsaIfOverriddenISAIsNull() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+    ProgramProductISA programProductIsa = mock(ProgramProductISA.class);
+    programProduct.setProgramProductIsa(programProductIsa);
+
+    when(programProductIsa.calculate(420L)).thenReturn(108);
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
+
+    assertThat(facilityProgramProduct.calculateIsa(420L), is(108));
+  }
+
+  @Test
+  public void shouldReturnOverriddenIsaIfOverriddenISANotNull() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, 98);
+
+    assertThat(facilityProgramProduct.calculateIsa(420L), is(98));
   }
 }
