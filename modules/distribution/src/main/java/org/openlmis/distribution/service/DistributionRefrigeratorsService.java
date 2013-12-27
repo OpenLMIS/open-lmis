@@ -10,12 +10,17 @@
 
 package org.openlmis.distribution.service;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
+import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DistributionRefrigeratorsService {
@@ -27,18 +32,33 @@ public class DistributionRefrigeratorsService {
   private RefrigeratorService refrigeratorService;
 
   public void save(DistributionRefrigerators distributionRefrigerators) {
-    if (repository.getBy(distributionRefrigerators.getFacilityId(), distributionRefrigerators.getDistributionId()) != null) {
+    Long facilityId = distributionRefrigerators.getFacilityId();
+    if (repository.getBy(facilityId, distributionRefrigerators.getDistributionId()) != null) {
       return;
     }
 
     repository.save(distributionRefrigerators);
+    refrigeratorService.disableAllFor(facilityId);
+    List<Refrigerator> refrigeratorsForFacility = refrigeratorService.getAllBy(facilityId);
 
     for (RefrigeratorReading reading : distributionRefrigerators.getReadings()) {
 
+      final Refrigerator refrigerator = reading.getRefrigerator();
+      Refrigerator existingRefrigerator = (Refrigerator) CollectionUtils.find(refrigeratorsForFacility, new Predicate() {
+        @Override
+        public boolean evaluate(Object o) {
+          return ((Refrigerator) o).getSerialNumber().equals(refrigerator.getSerialNumber());
+        }
+      });
+
+      refrigerator.setEnabled(true);
+      if (existingRefrigerator != null) {
+        refrigerator.setId(existingRefrigerator.getId());
+      }
+      refrigeratorService.save(refrigerator);
+
       reading.setDistributionRefrigeratorsId(distributionRefrigerators.getId());
       repository.saveReading(reading);
-
-      refrigeratorService.update(reading.getRefrigerator());
     }
   }
 }

@@ -69,7 +69,7 @@ public class FacilityDistributionServiceTest {
     List<Facility> facilities = asList(facility);
     FacilityDistribution facilityDistribution = new FacilityDistribution(null, new EpiUse(), null, null);
 
-    Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L);
+    Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L, true);
     List<Refrigerator> refrigerators = asList(refrigerator);
 
     when(facilityService.getAllForDeliveryZoneAndProgram(1L, 3L)).thenReturn(facilities);
@@ -94,7 +94,7 @@ public class FacilityDistributionServiceTest {
     when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(new ProductGroup("PG2", "PG2"));
 
 
-    Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L);
+    Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L, true);
     List<Refrigerator> refrigerators = asList(refrigerator);
 
     programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));

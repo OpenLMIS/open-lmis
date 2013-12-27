@@ -123,7 +123,7 @@ public class DistributionRefrigeratorsMapperIT {
 
   @Test
   public void shouldInsertReadingForADistributionRefrigerator() throws SQLException {
-    Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId());
+    Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId(), true);
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
     RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
@@ -147,7 +147,7 @@ public class DistributionRefrigeratorsMapperIT {
 
   @Test
   public void shouldInsertRefrigeratorProblems() throws Exception {
-    Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId());
+    Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId(), true);
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
     RefrigeratorReading reading = new RefrigeratorReading(refrigerator);

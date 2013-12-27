@@ -29,14 +29,19 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class Refrigerator extends BaseModel {
 
-  String brand;
-  String serialNumber;
-  String model;
-  Long facilityId;
+  private String brand;
+  private String serialNumber;
+  private String model;
+  private Long facilityId;
+  private Boolean enabled;
 
   public void validate() {
     if (isBlank(brand) || isBlank(serialNumber) || isBlank(model)) {
       throw new DataException("error.invalid.reading.value");
     }
+  }
+
+  public Refrigerator(String serialNumber) {
+    this.serialNumber = serialNumber;
   }
 }

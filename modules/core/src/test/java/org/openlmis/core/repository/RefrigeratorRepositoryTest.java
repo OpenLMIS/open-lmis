@@ -17,9 +17,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.db.categories.UnitTests;
 import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.repository.mapper.RefrigeratorMapper;
+import org.openlmis.db.categories.UnitTests;
 
 import java.util.ArrayList;
 import java.util.List;

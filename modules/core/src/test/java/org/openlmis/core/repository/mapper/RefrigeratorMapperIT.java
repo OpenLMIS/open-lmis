@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.*;
@@ -103,34 +104,70 @@ public class RefrigeratorMapperIT {
 
   @Test
   public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
-    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId());
-    refrigerator.setCreatedBy(1L);
-    refrigerator.setModifiedBy(1L);
+    Refrigerator disabledRefrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId(), false);
+    disabledRefrigerator.setCreatedBy(1L);
+    disabledRefrigerator.setModifiedBy(1L);
 
-    mapper.insert(refrigerator);
+    mapper.insert(disabledRefrigerator);
+
+    Refrigerator enabledRefrigerator = new Refrigerator("SAM2", "AUO2", "SAM2", facility.getId(), true);
+    enabledRefrigerator.setCreatedBy(1L);
+    enabledRefrigerator.setModifiedBy(1L);
+
+    mapper.insert(enabledRefrigerator);
 
     Program unsupportedProgram = new Program();
     unsupportedProgram.setId(2l);
 
     List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
 
-    assertThat(refrigerators.get(0).getSerialNumber(), is(refrigerator.getSerialNumber()));
+    assertThat(refrigerators.size(), is(1));
+    assertThat(refrigerators.get(0).getSerialNumber(), is(enabledRefrigerator.getSerialNumber()));
+    assertThat(refrigerators.get(0).getEnabled(), is(true));
   }
 
   @Test
   public void shouldUpdateRefrigerator() throws Exception {
-    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId());
+    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId(), true);
     refrigerator.setCreatedBy(1L);
     refrigerator.setModifiedBy(1L);
 
     mapper.insert(refrigerator);
 
     refrigerator.setBrand("LG");
+    refrigerator.setEnabled(false);
     mapper.update(refrigerator);
 
-    List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
+    List<Refrigerator> refrigerators = mapper.getAllBy(facility.getId());
 
     assertThat(refrigerators.get(0).getBrand(), is(refrigerator.getBrand()));
+    assertThat(refrigerators.get(0).getEnabled(), is(false));
+  }
+
+  @Test
+  public void shouldGetRefrigeratorsByFacilityId() {
+    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId(), true);
+    refrigerator.setCreatedBy(1L);
+    refrigerator.setModifiedBy(1L);
+
+    mapper.insert(refrigerator);
+
+    List<Refrigerator> refrigeratorsForFacility = mapper.getAllBy(facility.getId());
+
+    assertThat(refrigeratorsForFacility, is(asList(refrigerator)));
+  }
+
+  @Test
+  public void shouldDisableAllRefrigeratorsForAFacility() throws Exception {
+    Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId(), true);
+    refrigerator.setCreatedBy(1L);
+    refrigerator.setModifiedBy(1L);
+    mapper.insert(refrigerator);
+
+    mapper.disableAllFor(facility.getId());
+
+    List<Refrigerator> refrigeratorsForFacility = mapper.getAllBy(facility.getId());
+    assertThat(refrigeratorsForFacility.get(0).getEnabled(), is(false));
   }
 
   private Facility insertMemberFacility(DeliveryZone zone, Program program, String facilityCode, String facilityName,
