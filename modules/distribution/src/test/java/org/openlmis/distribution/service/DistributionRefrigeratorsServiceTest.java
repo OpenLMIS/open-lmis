@@ -115,17 +115,21 @@ public class DistributionRefrigeratorsServiceTest {
     Long facilityId = 1L;
     Long distributionId = 2L;
     Long refrigeratorId = 3L;
+    Long createdBy = 4L;
     Refrigerator refrigerator = new Refrigerator("serialNumber");
     Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
     existingRefrigerator.setId(refrigeratorId);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(refrigeratorReading));
+    distributionRefrigerators.setCreatedBy(createdBy);
     when(repository.getBy(facilityId, distributionId)).thenReturn(null);
     when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
     service.save(distributionRefrigerators);
 
     assertThat(refrigerator.getId(), is(refrigeratorId));
+    assertThat(refrigerator.getModifiedBy(), is(createdBy));
+    assertThat(refrigerator.getCreatedBy(), is(nullValue()));
     verify(refrigeratorService).save(refrigerator);
   }
 
@@ -134,18 +138,22 @@ public class DistributionRefrigeratorsServiceTest {
     Long facilityId = 1L;
     Long distributionId = 2L;
     Long refrigeratorId = 3L;
+    Long createdBy = 4L;
     Refrigerator refrigerator = new Refrigerator("serialNumberNew");
     Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
     existingRefrigerator.setId(refrigeratorId);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(refrigeratorReading));
+    distributionRefrigerators.setCreatedBy(createdBy);
     when(repository.getBy(facilityId, distributionId)).thenReturn(null);
     when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
     service.save(distributionRefrigerators);
 
     assertThat(refrigerator.getId(), is(nullValue()));
+    assertThat(refrigerator.getFacilityId(), is(facilityId));
+    assertThat(refrigerator.getCreatedBy(), is(createdBy));
     verify(refrigeratorService).save(refrigerator);
-
   }
+
 }

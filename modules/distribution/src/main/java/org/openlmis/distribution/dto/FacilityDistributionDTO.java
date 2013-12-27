@@ -46,6 +46,7 @@ public class FacilityDistributionDTO {
   public void setModifiedBy(Long modifiedBy) {
     facilityVisit.setCreatedBy(modifiedBy);
     epiUse.setModifiedBy(modifiedBy);
+    refrigerators.setCreatedBy(modifiedBy);
   }
 
 }

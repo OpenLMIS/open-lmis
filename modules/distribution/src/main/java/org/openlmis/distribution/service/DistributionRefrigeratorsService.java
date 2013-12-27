@@ -52,8 +52,13 @@ public class DistributionRefrigeratorsService {
       });
 
       refrigerator.setEnabled(true);
+      refrigerator.setModifiedBy(distributionRefrigerators.getCreatedBy());
       if (existingRefrigerator != null) {
         refrigerator.setId(existingRefrigerator.getId());
+        refrigerator.setModifiedBy(distributionRefrigerators.getCreatedBy());
+      } else {
+        refrigerator.setFacilityId(facilityId);
+        refrigerator.setCreatedBy(distributionRefrigerators.getCreatedBy());
       }
       refrigeratorService.save(refrigerator);
 

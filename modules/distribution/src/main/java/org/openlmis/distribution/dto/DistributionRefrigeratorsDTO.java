@@ -48,6 +48,8 @@ public class DistributionRefrigeratorsDTO extends BaseModel {
         }
       });
     }
-    return new DistributionRefrigerators(facilityId, distributionId, refrigeratorReadings);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, refrigeratorReadings);
+    distributionRefrigerators.setCreatedBy(this.createdBy);
+    return distributionRefrigerators;
   }
 }
