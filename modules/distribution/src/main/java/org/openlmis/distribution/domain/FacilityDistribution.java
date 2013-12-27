@@ -40,5 +40,6 @@ public class FacilityDistribution {
   public FacilityDistribution(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.epiUse = new EpiUse(facility, distribution);
     this.refrigerators = new DistributionRefrigerators(facility, distribution, readings);
+    this.epiInventory = new EpiInventory(facility, distribution);
   }
 }

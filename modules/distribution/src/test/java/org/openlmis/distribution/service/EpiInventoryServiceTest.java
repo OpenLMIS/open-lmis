@@ -8,38 +8,36 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.distribution.domain.EpiInventory;
+import org.openlmis.distribution.repository.EpiInventoryRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
-public class EpiInventoryLineItemTest {
+public class EpiInventoryServiceTest {
+
+  @InjectMocks
+  EpiInventoryService service;
+
+  @Mock
+  EpiInventoryRepository repository;
 
   @Test
-  public void shouldCreateEpiInventoryLineItemFromFacilityProgramProduct() throws Exception {
-    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(new ProgramProduct(), 4L, 567);
-    Product product = new Product();
-    product.setPrimaryName("Primary Name");
-    facilityProgramProduct.setProduct(product);
-    FacilityProgramProduct spyFPP = spy(facilityProgramProduct);
-    doReturn(567).when(spyFPP).calculateIsa(420L);
+  public void shouldSaveEpiInventory() throws Exception {
+    EpiInventory epiInventory = new EpiInventory();
 
-    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(spyFPP, 420L);
+    service.save(epiInventory);
 
-    assertThat(lineItem.getIdealQuantity(), is(567));
-    assertThat(lineItem.getProductName(), is("Primary Name"));
+    verify(repository).save(epiInventory);
   }
 }

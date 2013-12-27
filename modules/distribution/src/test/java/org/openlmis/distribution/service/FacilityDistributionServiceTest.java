@@ -23,6 +23,7 @@ import org.openlmis.distribution.domain.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 @Category(UnitTests.class)
@@ -44,6 +46,9 @@ public class FacilityDistributionServiceTest {
 
   @Mock
   private EpiUseService epiUseService;
+
+  @Mock
+  private EpiInventoryService epiInventoryService;
 
   @Mock
   private FacilityVisitService facilityVisitService;
@@ -85,6 +90,7 @@ public class FacilityDistributionServiceTest {
   @Test
   public void shouldGetFacilityDistributionDataForAFacilityAndDistribution() throws Exception {
     Facility facility = new Facility(2L);
+
     ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
 
     FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
@@ -111,6 +117,22 @@ public class FacilityDistributionServiceTest {
     assertThat(epiUse.getFacilityId(), is(facility.getId()));
     assertThat(epiUse.getLineItems().size(), is(2));
     verify(epiUseService).save(epiUse);
+  }
+
+  @Test
+  public void shouldSaveInventoryDataForAFDD() throws Exception {
+    Facility facility = new Facility();
+    Distribution distribution = new Distribution();
+    EpiInventory epiInventory = new EpiInventory();
+    List<Refrigerator> refrigerators = Collections.emptyList();
+    FacilityDistribution distributionData = mock(FacilityDistribution.class);
+
+    whenNew(FacilityDistribution.class).withArguments(facility, distribution, refrigerators).thenReturn(distributionData);
+    when(distributionData.getEpiInventory()).thenReturn(epiInventory);
+
+    facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
+
+    verify(epiInventoryService).save(epiInventory);
   }
 
   @Test
@@ -161,7 +183,8 @@ public class FacilityDistributionServiceTest {
     EpiUse epiUse = new EpiUse();
     FacilityVisit facilityVisit = new FacilityVisit();
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, null);
+    EpiInventory epiInventory = new EpiInventory();
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory);
 
     when(facilityVisitService.save(facilityVisit)).thenReturn(true);
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);

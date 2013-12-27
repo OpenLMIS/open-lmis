@@ -49,6 +49,9 @@ public class FacilityDistributionService {
   @Autowired
   private DistributionRefrigeratorsService distributionRefrigeratorsService;
 
+  @Autowired
+  private EpiInventoryService epiInventoryService;
+
   public Map<Long, FacilityDistribution> createFor(Distribution distribution) {
     Long deliveryZoneId = distribution.getDeliveryZone().getId();
     Long programId = distribution.getProgram().getId();
@@ -80,6 +83,7 @@ public class FacilityDistributionService {
 
     FacilityDistribution facilityDistribution = new FacilityDistribution(facility, distribution, refrigeratorReadings);
     epiUseService.save(facilityDistribution.getEpiUse());
+    epiInventoryService.save(facilityDistribution.getEpiInventory());
     return facilityDistribution;
   }
 

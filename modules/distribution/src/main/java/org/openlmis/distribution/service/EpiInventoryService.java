@@ -8,25 +8,20 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.service;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.distribution.domain.EpiInventory;
+import org.openlmis.distribution.repository.EpiInventoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
-public class EpiInventoryLineItem extends BaseModel {
+@Service
+public class EpiInventoryService {
 
-  private Long epiInventoryId;
-  private Integer idealQuantity;
-  private String productName;
+  @Autowired
+  private EpiInventoryRepository repository;
 
-  public EpiInventoryLineItem(FacilityProgramProduct facilityProgramProduct, Long population) {
-    this.idealQuantity = facilityProgramProduct.calculateIsa(population);
-    this.productName = facilityProgramProduct.getProduct().getPrimaryName();
+  public void save(EpiInventory epiInventory) {
+    repository.save(epiInventory);
   }
 }

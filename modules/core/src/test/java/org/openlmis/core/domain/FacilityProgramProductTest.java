@@ -15,6 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
@@ -101,5 +102,25 @@ public class FacilityProgramProductTest {
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, 98);
 
     assertThat(facilityProgramProduct.calculateIsa(420L), is(98));
+  }
+
+  @Test
+  public void shouldSetIdealQuantityAsNullIfNoISADefined() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
+
+    assertThat(facilityProgramProduct.calculateIsa(420L), is(nullValue()));
+
+  }
+
+  @Test
+  public void shouldSetIdealQuantityAsNullIfNoPopulationDefined() throws Exception {
+    ProgramProduct programProduct = new ProgramProduct();
+
+    FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
+
+    assertThat(facilityProgramProduct.calculateIsa(null), is(nullValue()));
+
   }
 }

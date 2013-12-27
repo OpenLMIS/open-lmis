@@ -47,6 +47,11 @@ public class FacilityProgramProduct extends ProgramProduct {
   }
 
   public Integer calculateIsa(Long population) {
-    return this.getOverriddenIsa() != null ? this.getOverriddenIsa() : this.getProgramProductIsa().calculate(population);
+    if (this.getOverriddenIsa() != null)
+      return this.getOverriddenIsa();
+    if (this.getProgramProductIsa() == null || population == null)
+      return null;
+
+    return this.getProgramProductIsa().calculate(population);
   }
 }

@@ -8,25 +8,25 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.domain;
+package org.openlmis.distribution.repository;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.distribution.domain.EpiInventory;
+import org.openlmis.distribution.domain.EpiInventoryLineItem;
+import org.openlmis.distribution.repository.mapper.EpiInventoryMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-@Data
-@EqualsAndHashCode(callSuper = false)
-@NoArgsConstructor
-public class EpiInventoryLineItem extends BaseModel {
+@Repository
+public class EpiInventoryRepository {
 
-  private Long epiInventoryId;
-  private Integer idealQuantity;
-  private String productName;
+  @Autowired
+  private EpiInventoryMapper mapper;
 
-  public EpiInventoryLineItem(FacilityProgramProduct facilityProgramProduct, Long population) {
-    this.idealQuantity = facilityProgramProduct.calculateIsa(population);
-    this.productName = facilityProgramProduct.getProduct().getPrimaryName();
+  public void save(EpiInventory epiInventory) {
+    mapper.save(epiInventory);
+    for (EpiInventoryLineItem lineItem : epiInventory.getLineItems()) {
+      lineItem.setEpiInventoryId(epiInventory.getId());
+      mapper.saveLineItem(lineItem);
+    }
   }
 }
