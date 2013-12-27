@@ -123,8 +123,7 @@ public class InitiateRnR extends TestCaseHelper {
   public void clickOnProceed() throws IOException {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateAndInitiateRnr(program);
-    homePage.clickProceed();
-    InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
+    initiateRnRPage = homePage.clickProceed();
     testWebDriver.sleep(2000);
   }
 
