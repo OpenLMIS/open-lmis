@@ -739,7 +739,10 @@ public class DBWrapper {
       "where facilityId = '" + getFacilityID(facilityCode) + "' and programProductId = " +
       "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
     if (rs.next()) {
-      overriddenIsa = rs.getInt("overriddenIsa")/getPackSize("P11");
+      if(rs.getInt("overriddenIsa")%getPackSize("P11")>0)
+        overriddenIsa = rs.getInt("overriddenIsa")/getPackSize("P11")+1;
+      else
+        overriddenIsa = rs.getInt("overriddenIsa")/getPackSize("P11");
     }
     return overriddenIsa;
   }
