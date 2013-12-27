@@ -8,5 +8,22 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-ALTER TABLE refrigerators ALTER COLUMN serialnumber DROP NOT NULL;
-ALTER TABLE refrigerators ADD CONSTRAINT uc_serialNumber_facilityId_refrigerators UNIQUE (serialnumber, facilityId);
+ALTER TABLE refrigerators DROP CONSTRAINT refrigerators_serialnumber_key;
+ALTER TABLE refrigerators ADD CONSTRAINT uc_serialNumber_facilityId_refrigerators UNIQUE (serialNumber, facilityId);
+
+ALTER TABLE refrigerator_readings ALTER COLUMN notes TYPE VARCHAR(255);
+
+ALTER TABLE refrigerator_problems
+ALTER COLUMN operatorError SET DEFAULT FALSE,
+ALTER COLUMN burnerProblem SET DEFAULT FALSE,
+ALTER COLUMN gasLeakage SET DEFAULT FALSE,
+ALTER COLUMN egpFault SET DEFAULT FALSE,
+ALTER COLUMN thermostatSetting SET DEFAULT FALSE,
+ALTER COLUMN other SET DEFAULT FALSE;
+
+
+
+
+
+
+
