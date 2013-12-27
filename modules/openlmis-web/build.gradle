@@ -217,17 +217,7 @@ task deployOpenLmis(type: GradleBuild) {
   tasks = ['cargoRedeployRemote']
 }
 
-task phantomRun(type: Exec) {
-  description = 'Runs Jasmine specs in PhantomJS'
-  commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
-}
-
 compileJava.dependsOn less
-
-task runJsCover(type: Exec) {
-  description = 'Generates a JS code coverage report for Jasmine specs'
-  commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
-}
 
 cobertura {
   coverageFormats << 'xml'
