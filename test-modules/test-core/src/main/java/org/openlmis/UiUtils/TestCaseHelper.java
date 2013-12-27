@@ -300,7 +300,7 @@ public class TestCaseHelper {
 
     Integer adjustment = Integer.parseInt(adjustmentValue);
 
-    calculatedISA =( ((((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment)/dbWrapper.getPackSize("P10")) * 1;
+    calculatedISA =( ((((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment)/10) * 1;
 
     if (calculatedISA <= minimum && minimum != 0.0)
       return (minimumValue);

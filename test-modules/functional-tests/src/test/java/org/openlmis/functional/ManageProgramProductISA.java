@@ -25,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
     public void verifyCalculatedISA(String population,String ratio, String dosesPerYear, String wastage, String bufferPercentage,
                                     String adjustmentValue, String minimumValue, String maximumValue) throws IOException, SQLException {
         String actualISA = programProductISAPage.fillPopulation(population);
+        double calcISA =Math.ceil((Double.parseDouble(actualISA)/10) * 1);
+        actualISA=Integer.toString((int)(calcISA));
         String expectedISA = calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue, population);
         assertEquals(expectedISA, actualISA);
     }
