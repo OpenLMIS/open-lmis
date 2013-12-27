@@ -731,14 +731,13 @@ public class DBWrapper {
     return population;
   }
 
-  public String getOverriddenIsa(String facilityCode, String program, String product) throws IOException, SQLException {
-    String overriddenIsa = null;
+  public Integer getOverriddenIsa(String facilityCode, String program, String product) throws IOException, SQLException {
+    Integer overriddenIsa = 0;
     ResultSet rs = query("select overriddenIsa from facility_program_products " +
       "where facilityId = '" + getFacilityID(facilityCode) + "' and programProductId = " +
       "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
-
     if (rs.next()) {
-      overriddenIsa = rs.getString("overriddenIsa");
+      overriddenIsa = rs.getInt("overriddenIsa")/getPackSize("P11");
     }
     return overriddenIsa;
   }
@@ -1563,6 +1562,15 @@ public class DBWrapper {
   public ResultSet getRefrigeratorProblems(Long readingId) throws SQLException {
     ResultSet resultSet = query("SELECT * FROM refrigerator_problems WHERE readingId = %d", readingId);
     return resultSet;
+  }
+
+  public Integer getPackSize(String programCode) throws SQLException {
+    Integer packSize=0;
+    ResultSet rs = query("SELECT packsize FROM products WHERE code='"+programCode+"';");
+    if (rs.next()) {
+      packSize = rs.getInt("packSize");
+    }
+    return packSize;
   }
 }
 

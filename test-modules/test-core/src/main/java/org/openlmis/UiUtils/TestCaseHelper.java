@@ -280,7 +280,7 @@ public class TestCaseHelper {
   }
 
   public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                             String minimumValue, String maximumValue, String populationValue) {
+                             String minimumValue, String maximumValue, String populationValue) throws SQLException {
     Float calculatedISA;
     Float minimum = 0.0F;
     Float maximum = 0.0F;
@@ -300,7 +300,7 @@ public class TestCaseHelper {
 
     Integer adjustment = Integer.parseInt(adjustmentValue);
 
-    calculatedISA = (((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+    calculatedISA =( ((((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment)/dbWrapper.getPackSize("P10")) * 1;
 
     if (calculatedISA <= minimum && minimum != 0.0)
       return (minimumValue);

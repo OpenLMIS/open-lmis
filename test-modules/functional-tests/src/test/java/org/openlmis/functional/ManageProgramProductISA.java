@@ -67,7 +67,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
 
     @Then("^I verify calculated ISA value having population \"([^\"]*)\" ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
     public void verifyCalculatedISA(String population,String ratio, String dosesPerYear, String wastage, String bufferPercentage,
-                                    String adjustmentValue, String minimumValue, String maximumValue) throws IOException {
+                                    String adjustmentValue, String minimumValue, String maximumValue) throws IOException, SQLException {
         String actualISA = programProductISAPage.fillPopulation(population);
         String expectedISA = calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue, population);
         assertEquals(expectedISA, actualISA);
