@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 describe('Facility Distribution data', function() {
-  var facilityDistributions, epiUse, refrigerators, facilityVisit;
+  var facilityDistributions, epiUse, refrigerators, facilityVisit, epiInventory;
   var COMPLETE = 'is-complete';
   var INCOMPLETE = 'is-incomplete';
   var EMPTY = 'is-empty';
@@ -18,6 +18,7 @@ describe('Facility Distribution data', function() {
     epiUse = facilityDistributions.epiUse;
     refrigerators = facilityDistributions.refrigerators;
     facilityVisit = facilityDistributions.facilityVisit;
+    epiInventory = facilityDistributions.epiInventory;
   });
 
   it("should compute status as complete when all the forms for the facility are COMPLETE",function(){

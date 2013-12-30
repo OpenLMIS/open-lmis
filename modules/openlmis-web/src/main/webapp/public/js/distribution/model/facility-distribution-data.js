@@ -17,6 +17,7 @@ function FacilityDistribution(facilityDistribution) {
   var DUPLICATE = 'is-duplicate';
 
   this.epiUse = new EpiUse(facilityDistribution.epiUse);
+  this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);
   this.refrigerators = new Refrigerators(facilityDistribution.refrigerators);
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
   this.status = facilityDistribution.status;

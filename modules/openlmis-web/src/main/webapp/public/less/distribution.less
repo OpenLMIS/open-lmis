@@ -83,7 +83,7 @@
 
 .select2-results {
   ul.select2-result-sub {
-    &> li {
+    & > li {
       .select2-result-label {
         padding-left: 12px;
       }
@@ -241,7 +241,7 @@
   background: #f9f9f9;
 }
 
-#epiUseTable {
+#epiUseTable, #epiInventoryTable {
   overflow: auto;
   table {
     min-width: 800px;
@@ -276,7 +276,7 @@
       bottom: 25px;
     }
   }
-  .col-doses {
+  .col-doses, .col-vials {
     min-width: 100px;
     max-width: 250px;
     word-wrap: break-word;
@@ -284,7 +284,7 @@
   .col-total {
     min-width: 70px;
   }
-  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-expiration-date {
+  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-expiration-date, .col-ideal-quantity, .col-existing-quantity, .col-spoiled-quantity, .col-delivered-quantity {
     max-width: 100px;
     min-width: 70px;
   }

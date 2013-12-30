@@ -63,6 +63,7 @@
   <script src="/public/js/distribution/model/distribution.js"></script>
   <script src="/public/js/distribution/model/refrigerator-reading.js"></script>
   <script src="/public/js/distribution/model/epi-use.js"></script>
+  <script src="/public/js/distribution/model/epi-inventory.js"></script>
   <script src="/public/js/distribution/model/refrigerators.js"></script>
   <script src="/public/js/distribution/model/facility-visit.js"></script>
   <script src="/public/js/distribution/model/facility-distribution-data.js"></script>
@@ -74,6 +75,7 @@
   <script src="/public/js/distribution/controller/refrigerator-controller.js"></script>
   <script src="/public/js/distribution/controller/record-facility-menu-controller.js"></script>
   <script src="/public/js/distribution/controller/epi-use-controller.js"></script>
+  <script src="/public/js/distribution/controller/epi-inventory-controller.js"></script>
   <script src="/public/js/distribution/controller/facility-visit-controller.js"></script>
 
 
@@ -90,20 +92,20 @@
 </head>
 <!-- TODO: onunload clears cache for safari. It is a hack. Find better alternative -->
 <body onunload="">
-  <ng-include src="'/public/pages/header.html'"></ng-include>
-  <ng-include src="'/public/pages/navigation.html'"></ng-include>
+<ng-include src="'/public/pages/header.html'"></ng-include>
+<ng-include src="'/public/pages/navigation.html'"></ng-include>
 
-  <div class="content">
-    <div ng-view></div>
-  </div>
+<div class="content">
+  <div ng-view></div>
+</div>
 <script type="text/javascript">
-  function attachEvent(){
-  $('input[type="button"]').on('click',function(){
-  $(window).trigger('scroll');
-  });
+  function attachEvent() {
+    $('input[type="button"]').on('click', function () {
+      $(window).trigger('scroll');
+    });
   }
-  $(window).load(function(){
-  setTimeout(attachEvent, 1000);
+  $(window).load(function () {
+    setTimeout(attachEvent, 1000);
   });
 </script>
 </body>
