@@ -343,7 +343,8 @@ Feature: Smoke Tests
       | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
     And I have following override ISA values:
       | Facility Code | Program  | Product | ISA  |
-      | F11           | VACCINES | P11     | 1000 |
+      | F11           | VACCINES | P11     | 1005 |
+    And I update population of facility "F10" as "342"
     And I have role assigned to delivery zones
     When I am logged in as "fieldCoordinator"
     And I access plan my distribution page
@@ -352,6 +353,12 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I click load amount
     Then I should see ISA values as per delivery zone facilities
+    And  I verify ISA values for Product1 as:
+       | Facility1 | Facility2 |
+       | 31        | 31        |
+    And  I verify ISA values for Product2 as:
+      | Facility1 | Facility2 |
+      | 101       | --        |
     When I access plan my distribution page
     And I select delivery zone "Delivery Zone Second"
     And I select program "TB"

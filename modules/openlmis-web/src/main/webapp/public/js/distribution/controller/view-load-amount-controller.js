@@ -39,7 +39,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
           programProduct.programProductIsa = new ProgramProductISA(programProduct.programProductIsa);
           programProduct.isaAmount = programProduct.overriddenIsa ? programProduct.overriddenIsa : programProduct.programProductIsa.calculate(facility.catchmentPopulation);
 //          TODO important need validation on packSize to be more than 0
-          programProduct.isaAmount = programProduct.isaAmount ? Math.ceil(programProduct.isaAmount / programProduct.product.packSize) * period.numberOfMonths : 0;
+          programProduct.isaAmount = programProduct.isaAmount ? Math.round((programProduct.isaAmount * period.numberOfMonths)/ programProduct.product.packSize)  : 0;
         }
       });
       facility.supportedPrograms[0].programProductMap = _.groupBy(facility.supportedPrograms[0].programProducts, function (programProduct) {

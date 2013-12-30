@@ -734,16 +734,19 @@ public class DBWrapper {
     return population;
   }
 
-  public Integer getOverriddenIsa(String facilityCode, String program, String product) throws IOException, SQLException {
+  public Integer getOverriddenIsa(String facilityCode, String program, String product, String period) throws IOException, SQLException {
     Integer overriddenIsa = 0;
+    float numberOfMonths = 0;
+    ResultSet rs2 = query("SELECT numberOfMonths FROM processing_periods where name ='"+ period+"';");
+    if(rs2.next()){
+      numberOfMonths= rs2.getFloat("numberOfMonths");
+    }
     ResultSet rs = query("select overriddenIsa from facility_program_products " +
       "where facilityId = '" + getFacilityID(facilityCode) + "' and programProductId = " +
       "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
+
     if (rs.next()) {
-      if (rs.getInt("overriddenIsa") % getPackSize("P11") > 0)
-        overriddenIsa = rs.getInt("overriddenIsa") / getPackSize("P11") + 1;
-      else
-        overriddenIsa = rs.getInt("overriddenIsa") / getPackSize("P11");
+      overriddenIsa = Math.round(rs.getFloat("overriddenIsa")*numberOfMonths/getPackSize(product));
     }
     return overriddenIsa;
   }
@@ -1577,6 +1580,13 @@ public class DBWrapper {
       packSize = rs.getInt("packSize");
     }
     return packSize;
+  }
+
+  public void updateProcessingPeriodByField(String field, String fieldValue, String periodName, String scheduleCode) throws SQLException {
+    update("update processing_periods set " + field + "=" + fieldValue +
+      " where name='" + periodName + "'" +
+      " and scheduleId =" +
+      "(Select id from processing_schedules where code = '" + scheduleCode + "');");
   }
 }
 
