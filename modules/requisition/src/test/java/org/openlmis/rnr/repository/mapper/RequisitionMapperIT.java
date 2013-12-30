@@ -478,13 +478,13 @@ public class RequisitionMapperIT {
   }
 
   private void assertContainsRequisition(List<Rnr> actualRequisitions, final Rnr expectedRequisition) {
-    CollectionUtils.exists(actualRequisitions, new Predicate() {
+    assertTrue(CollectionUtils.exists(actualRequisitions, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         Rnr requisition = (Rnr) o;
         return requisition.getStatus().equals(expectedRequisition.getStatus()) && requisition.getId().equals(expectedRequisition.getId());
       }
-    });
+    }));
   }
 
   @Test

@@ -10,6 +10,8 @@
 
 package org.openlmis.rnr.repository.mapper;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -514,8 +516,19 @@ public class RnrLineItemMapperIT {
     List<RnrLineItem> rnrLineItems = rnrLineItemMapper.getAuthorizedRegularUnSkippedLineItems(lineItem.getProductCode(), currentRnr, 2, getDateByDays(-3));
 
     assertThat(rnrLineItems.size(), is(2));
-    assertThat(rnrLineItems.get(0).getNormalizedConsumption(), is(3));
-    assertThat(rnrLineItems.get(1).getNormalizedConsumption(), is(9));
+
+    assertContainsLineItemWithNC(rnrLineItems, 3);
+    assertContainsLineItemWithNC(rnrLineItems, 9);
+  }
+
+  private void assertContainsLineItemWithNC(List<RnrLineItem> rnrLineItems, final Integer expectedNormalizedConsumption) {
+    assertTrue(CollectionUtils.exists(rnrLineItems, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        RnrLineItem lineItem = (RnrLineItem) o;
+        return lineItem.getNormalizedConsumption().equals(expectedNormalizedConsumption);
+      }
+    }));
   }
 
   @Test
