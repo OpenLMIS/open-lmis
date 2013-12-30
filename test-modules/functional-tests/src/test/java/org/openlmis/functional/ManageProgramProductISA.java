@@ -25,7 +25,6 @@ import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,8 +71,8 @@ public class ManageProgramProductISA extends TestCaseHelper {
         String actualISA = programProductISAPage.fillPopulation(population);
         double calcISA =Math.ceil((Double.parseDouble(actualISA)/10) * 1);
         actualISA=Integer.toString((int)(calcISA));
-        String expectedISA = calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue, population);
-        assertEquals(expectedISA, actualISA);
+      String expectedISA = String.valueOf(calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue, population));
+      assertEquals(expectedISA, actualISA);
     }
 
     @Then("^I click cancel$")
@@ -88,7 +87,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("1", "2", "3", "4", "5", "10", "1000", "1");
+    String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "5", "10", "1000", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -102,7 +101,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "55", "10", "50");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("1", "2", "3", "4", "55", "10", "50", "1");
+    String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "55", "10", "50", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
@@ -116,7 +115,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
     String actualISA = programProductISAPage.fillPopulation("1");
-    String expectedISA = calculateISA("1", "2", "3", "4", "5", "5", "1000", "1");
+    String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "5", "5", "1000", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);

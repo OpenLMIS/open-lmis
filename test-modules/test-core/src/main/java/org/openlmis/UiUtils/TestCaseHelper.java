@@ -27,7 +27,6 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertNull;
 
 public class TestCaseHelper {
 
@@ -274,13 +273,13 @@ public class TestCaseHelper {
     locator.sendKeys(value);
   }
 
-  public String isAProgramProduct(String program, String product, String population) throws IOException, SQLException {
+  public String getISAForProgramProduct(String program, String product, String population) throws IOException, SQLException {
     String[] isaParams = dbWrapper.getProgramProductISA(program, product);
-    return calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population);
+    return String.valueOf(Math.round((float) calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population) / 10));
   }
 
-  public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                             String minimumValue, String maximumValue, String populationValue) throws SQLException {
+  public Integer calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
+                              String minimumValue, String maximumValue, String populationValue) throws SQLException {
     Float calculatedISA;
     Float minimum = 0.0F;
     Float maximum = 0.0F;
@@ -300,13 +299,13 @@ public class TestCaseHelper {
 
     Integer adjustment = Integer.parseInt(adjustmentValue);
 
-    calculatedISA =( ((((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment)/10) * 1;
+    calculatedISA = ((((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment) * 1;
 
     if (calculatedISA <= minimum && minimum != 0.0)
-      return (minimumValue);
+      return (Integer.parseInt(minimumValue));
     else if (calculatedISA >= maximum && maximum != 0.0)
-      return (maximumValue);
-    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).toString();
+      return (Integer.parseInt(maximumValue));
+    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).intValue();
   }
 
   public void setupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
