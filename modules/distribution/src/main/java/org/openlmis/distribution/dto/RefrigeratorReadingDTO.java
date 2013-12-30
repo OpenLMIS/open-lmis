@@ -12,6 +12,7 @@ package org.openlmis.distribution.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -27,6 +28,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
 public class RefrigeratorReadingDTO extends BaseModel {
 
   Refrigerator refrigerator;
