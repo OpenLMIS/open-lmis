@@ -47,8 +47,9 @@
                 <span ng-bind="lineItem.productName"></span>
               </td>
               <td class="col-ideal-quantity">
-                <span ng-show="lineItem.idealQuantity" ng-bind="lineItem.idealQuantity"></span>
-                <span ng-hide="lineItem.idealQuantity">--</span>
+                <span ng-show="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)"
+                      ng-bind="lineItem.idealQuantity"></span>
+                <span ng-hide="(lineItem.idealQuantity === 0) || (lineItem.idealQuantity)">--</span>
               </td>
               <td class="col-existing-quantity">
                 <div>
