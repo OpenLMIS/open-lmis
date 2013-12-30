@@ -34,7 +34,7 @@ public class EpiInventory extends BaseModel {
 
     for (FacilityProgramProduct facilityProgramProduct : facility.getSupportedPrograms().get(0).getProgramProducts()) {
       if (facilityProgramProduct.isActive() && facilityProgramProduct.getProduct().getActive()) {
-        lineItems.add(new EpiInventoryLineItem(facilityProgramProduct, facility.getCatchmentPopulation()));
+        lineItems.add(new EpiInventoryLineItem(facilityProgramProduct, facility.getCatchmentPopulation(), distribution.getPeriod().getNumberOfMonths()));
       }
     }
   }

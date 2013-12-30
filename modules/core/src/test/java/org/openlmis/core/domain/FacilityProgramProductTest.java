@@ -86,13 +86,15 @@ public class FacilityProgramProductTest {
   @Test
   public void shouldCalculateIsaIfOverriddenISAIsNull() throws Exception {
     ProgramProduct programProduct = new ProgramProduct();
+    programProduct.setProduct(new Product());
+    programProduct.getProduct().setPackSize(7);
     ProgramProductISA programProductIsa = mock(ProgramProductISA.class);
     programProduct.setProgramProductIsa(programProductIsa);
 
-    when(programProductIsa.calculate(420L)).thenReturn(108);
+    when(programProductIsa.calculate(420L, 3, 7)).thenReturn(108);
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
 
-    assertThat(facilityProgramProduct.calculateIsa(420L), is(108));
+    assertThat(facilityProgramProduct.calculateIsa(420L, 3), is(108));
   }
 
   @Test
@@ -101,7 +103,7 @@ public class FacilityProgramProductTest {
 
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, 98);
 
-    assertThat(facilityProgramProduct.calculateIsa(420L), is(98));
+    assertThat(facilityProgramProduct.calculateIsa(420L, 5), is(98));
   }
 
   @Test
@@ -110,7 +112,7 @@ public class FacilityProgramProductTest {
 
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
 
-    assertThat(facilityProgramProduct.calculateIsa(420L), is(nullValue()));
+    assertThat(facilityProgramProduct.calculateIsa(420L, 5), is(nullValue()));
 
   }
 
@@ -120,7 +122,7 @@ public class FacilityProgramProductTest {
 
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(programProduct, 3L, null);
 
-    assertThat(facilityProgramProduct.calculateIsa(null), is(nullValue()));
+    assertThat(facilityProgramProduct.calculateIsa(null, 5), is(nullValue()));
 
   }
 }

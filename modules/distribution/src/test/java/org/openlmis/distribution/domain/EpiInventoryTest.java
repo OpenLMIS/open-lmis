@@ -13,10 +13,7 @@ package org.openlmis.distribution.domain;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProgramSupported;
+import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -76,6 +73,7 @@ public class EpiInventoryTest {
 
     Distribution distribution = new Distribution();
     distribution.setId(1L);
+    distribution.setPeriod(new ProcessingPeriod(null, null, null, 4, "period"));
 
     EpiInventory epiInventory = new EpiInventory(facility, distribution);
 

@@ -25,8 +25,8 @@ public class EpiInventoryLineItem extends BaseModel {
   private Integer idealQuantity;
   private String productName;
 
-  public EpiInventoryLineItem(FacilityProgramProduct facilityProgramProduct, Long population) {
-    this.idealQuantity = facilityProgramProduct.calculateIsa(population);
+  public EpiInventoryLineItem(FacilityProgramProduct facilityProgramProduct, Long population, Integer numberOfMonths) {
+    this.idealQuantity = facilityProgramProduct.calculateIsa(population, numberOfMonths);
     this.productName = facilityProgramProduct.getProduct().getPrimaryName();
   }
 }

@@ -35,9 +35,9 @@ public class EpiInventoryLineItemTest {
     product.setPrimaryName("Primary Name");
     facilityProgramProduct.setProduct(product);
     FacilityProgramProduct spyFPP = spy(facilityProgramProduct);
-    doReturn(567).when(spyFPP).calculateIsa(420L);
+    doReturn(567).when(spyFPP).calculateIsa(420L, 5);
 
-    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(spyFPP, 420L);
+    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(spyFPP, 420L, 5);
 
     assertThat(lineItem.getIdealQuantity(), is(567));
     assertThat(lineItem.getProductName(), is("Primary Name"));

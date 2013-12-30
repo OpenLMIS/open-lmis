@@ -27,8 +27,8 @@ public class ProgramProductISATest {
   public void shouldCalculateISA() throws Exception {
     ProgramProductISA programProductISA = new ProgramProductISA(3L, 3.33, 44, 1.4, 33.9, 23, 345, 11);
 
-    Integer isaAmount = programProductISA.calculate(420L);
+    Integer isaAmount = programProductISA.calculate(420L, 2, 4);
 
-    assertThat(isaAmount, is(108));
+    assertThat(isaAmount, is(54));
   }
 }
