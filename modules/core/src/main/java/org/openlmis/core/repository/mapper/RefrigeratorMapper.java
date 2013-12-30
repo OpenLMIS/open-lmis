@@ -36,7 +36,7 @@ public interface RefrigeratorMapper {
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   List<Refrigerator> getRefrigeratorsForADeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
-  @Update({"UPDATE refrigerators SET brand = #{brand}, model = #{model}, enabled = #{enabled} WHERE id = #{id}"})
+  @Update({"UPDATE refrigerators SET brand = #{brand}, model = #{model}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})
   void update(Refrigerator refrigerator);
 
   @Select({"SELECT * FROM refrigerators WHERE facilityId = #{facilityId}"})

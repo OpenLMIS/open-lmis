@@ -14,10 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-import org.openlmis.core.builder.DeliveryZoneBuilder;
-import org.openlmis.core.builder.FacilityBuilder;
-import org.openlmis.core.builder.ProcessingScheduleBuilder;
-import org.openlmis.core.builder.ProgramBuilder;
+import org.openlmis.core.builder.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.FacilityBuilder.*;
+import static org.openlmis.core.builder.UserBuilder.defaultUser;
+import static org.openlmis.core.builder.UserBuilder.restrictLogin;
 
 @Category(IntegrationTests.class)
 @Transactional
@@ -80,9 +79,12 @@ public class RefrigeratorMapperIT {
   @Autowired
   DeliveryZoneMapper deliveryZoneMapper;
 
+  @Autowired
+  private UserMapper userMapper;
   ProcessingSchedule processingSchedule;
   Program program;
   DeliveryZone deliveryZone;
+
   Facility facility;
 
   @Before
@@ -128,13 +130,17 @@ public class RefrigeratorMapperIT {
 
   @Test
   public void shouldUpdateRefrigerator() throws Exception {
+    Long createdBy = 1L;
+    User someUser = make(a(defaultUser, with(UserBuilder.facilityId, facility.getId()), with(UserBuilder.active, true), with(restrictLogin, true)));
+    userMapper.insert(someUser);
     Refrigerator refrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId(), true);
-    refrigerator.setCreatedBy(1L);
-    refrigerator.setModifiedBy(1L);
+    refrigerator.setCreatedBy(createdBy);
+    refrigerator.setModifiedBy(createdBy);
 
     mapper.insert(refrigerator);
 
     refrigerator.setBrand("LG");
+    refrigerator.setModifiedBy(someUser.getId());
     refrigerator.setEnabled(false);
     mapper.update(refrigerator);
 
@@ -142,6 +148,7 @@ public class RefrigeratorMapperIT {
 
     assertThat(refrigerators.get(0).getBrand(), is(refrigerator.getBrand()));
     assertThat(refrigerators.get(0).getEnabled(), is(false));
+    assertThat(refrigerators.get(0).getModifiedBy(), is(someUser.getId()));
   }
 
   @Test
