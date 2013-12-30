@@ -425,6 +425,7 @@ public class DBWrapper {
     update("delete from supervisory_nodes");
     update("delete from refrigerators");
     update("delete from facility_ftp_details");
+    update("delete from refrigerators");
     update("delete from facilities");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
     update("delete from processing_periods");
@@ -739,10 +740,10 @@ public class DBWrapper {
       "where facilityId = '" + getFacilityID(facilityCode) + "' and programProductId = " +
       "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
     if (rs.next()) {
-      if(rs.getInt("overriddenIsa")%getPackSize("P11")>0)
-        overriddenIsa = rs.getInt("overriddenIsa")/getPackSize("P11")+1;
+      if (rs.getInt("overriddenIsa") % getPackSize("P11") > 0)
+        overriddenIsa = rs.getInt("overriddenIsa") / getPackSize("P11") + 1;
       else
-        overriddenIsa = rs.getInt("overriddenIsa")/getPackSize("P11");
+        overriddenIsa = rs.getInt("overriddenIsa") / getPackSize("P11");
     }
     return overriddenIsa;
   }
@@ -1570,8 +1571,8 @@ public class DBWrapper {
   }
 
   public Integer getPackSize(String programCode) throws SQLException {
-    Integer packSize=0;
-    ResultSet rs = query("SELECT packsize FROM products WHERE code='"+programCode+"';");
+    Integer packSize = 0;
+    ResultSet rs = query("SELECT packsize FROM products WHERE code='" + programCode + "';");
     if (rs.next()) {
       packSize = rs.getInt("packSize");
     }
