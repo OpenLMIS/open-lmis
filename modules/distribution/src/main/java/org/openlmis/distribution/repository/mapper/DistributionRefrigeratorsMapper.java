@@ -36,7 +36,8 @@ public interface DistributionRefrigeratorsMapper {
   void insertReading(RefrigeratorReading refrigeratorReading);
 
   @Insert({"INSERT INTO refrigerator_problems(readingId, operatorError, burnerProblem, gasLeakage, egpFault, thermostatSetting, other, otherProblemExplanation) ",
-    "VALUES (#{readingId}, #{operatorError}, #{burnerProblem}, #{gasLeakage}, #{egpFault}, #{thermostatSetting}, #{other}, #{otherProblemExplanation})"})
+    "VALUES (#{readingId}, COALESCE(#{operatorError}, FALSE), COALESCE(#{burnerProblem}, FALSE), COALESCE(#{gasLeakage}, FALSE),",
+    "COALESCE(#{egpFault}, FALSE), COALESCE(#{thermostatSetting}, FALSE), COALESCE(#{other}, FALSE), #{otherProblemExplanation})"})
   @Options(useGeneratedKeys = true)
   void insertProblems(RefrigeratorProblem problem);
 

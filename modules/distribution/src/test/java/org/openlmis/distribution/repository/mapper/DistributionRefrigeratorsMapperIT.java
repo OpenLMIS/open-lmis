@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.DeliveryZoneBuilder.defaultDeliveryZone;
@@ -180,5 +181,32 @@ public class DistributionRefrigeratorsMapperIT {
 
     assertThat(savedDistributionRefrigerators.getFacilityId(), is(distributionRefrigerators.getFacilityId()));
     assertThat(savedDistributionRefrigerators.getDistributionId(), is(distributionRefrigerators.getDistributionId()));
+  }
+
+  @Test
+  public void shouldInsertDefaultValuesForNullProblemsExceptNotes() throws SQLException {
+    Refrigerator refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId(), true);
+    refrigerator.setCreatedBy(1L);
+    refrigerator.setModifiedBy(1L);
+    RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
+    reading.setTemperature(98.6F);
+    reading.setFunctioningCorrectly("Y");
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+
+    refrigeratorMapper.insert(refrigerator);
+    mapper.insert(distributionRefrigerators);
+
+    reading.setDistributionRefrigeratorsId(distributionRefrigerators.getId());
+    mapper.insertReading(reading);
+
+    RefrigeratorProblem problem = new RefrigeratorProblem(reading.getId(), true, null, true, false, true, null, null);
+    mapper.insertProblems(problem);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM refrigerator_problems WHERE readingId = " + reading.getId());
+    assertTrue(resultSet.next());
+    assertThat(resultSet.getBoolean("gasLeakage"), is(problem.getGasLeakage()));
+    assertThat(resultSet.getBoolean("burnerProblem"), is(false));
+    assertThat(resultSet.getBoolean("other"), is(false));
+    assertThat(resultSet.getString("otherProblemExplanation"), is(nullValue()));
   }
 }
