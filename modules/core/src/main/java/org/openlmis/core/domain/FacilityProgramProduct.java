@@ -47,11 +47,15 @@ public class FacilityProgramProduct extends ProgramProduct {
   }
 
   public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod) {
+    Integer idealQuantity;
     if (this.overriddenIsa != null)
-      return this.overriddenIsa;
-    if (this.programProductIsa == null || population == null)
+      idealQuantity = this.overriddenIsa;
+    else if (this.programProductIsa == null || population == null)
       return null;
+    else
+      idealQuantity = this.programProductIsa.calculate(population);
 
-    return this.programProductIsa.calculate(population, numberOfMonthsInPeriod, this.getProduct().getPackSize());
+    idealQuantity = Math.round(idealQuantity * ((float) numberOfMonthsInPeriod / this.getProduct().getPackSize()));
+    return idealQuantity < 0 ? 0 : idealQuantity;
   }
 }

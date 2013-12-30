@@ -30,7 +30,7 @@ public class ProgramProductISA extends BaseModel {
   Integer maximumValue;
   Integer adjustmentValue;
 
-  public Integer calculate(Long population, Integer numberOfMonthsInPeriod, Integer packSize) {
+  public Integer calculate(Long population) {
     int isaValue = (int) Math.ceil(population * (this.whoRatio / 100) * this.dosesPerYear * this.wastageFactor / 12 * (1 + this.bufferPercentage / 100) + this.adjustmentValue);
 
     if (this.minimumValue != null && isaValue < this.minimumValue)
@@ -38,7 +38,6 @@ public class ProgramProductISA extends BaseModel {
     if (this.maximumValue != null && isaValue > this.maximumValue)
       return this.maximumValue;
 
-    Integer idealQuantity = Math.round(isaValue * ((float) numberOfMonthsInPeriod / packSize));
-    return idealQuantity < 0 ? 0 : idealQuantity;
+    return isaValue;
   }
 }
