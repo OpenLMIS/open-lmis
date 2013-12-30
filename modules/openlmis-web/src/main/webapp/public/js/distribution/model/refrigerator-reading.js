@@ -21,6 +21,9 @@ function RefrigeratorReading(refrigeratorReading) {
     var _this = this;
 
     function isEmpty(field) {
+      if (field === "temperature" && !(isUndefined(_this[field].value)) && _this[field].value.toString().trim() === "-") {
+        return true;
+      }
       if (isUndefined(_this[field])) {
         return true;
       }
@@ -49,9 +52,9 @@ function RefrigeratorReading(refrigeratorReading) {
       if (!_this.problems) statusClass = incomplete;
       else {
         var hasAtLeastOneProblem = _.find(_.values(_this.problems),
-            function (problemValue) {
-              return problemValue === true;
-            });
+          function (problemValue) {
+            return problemValue === true;
+          });
 
         if (!_this.problems || !hasAtLeastOneProblem)
           statusClass = incomplete;
