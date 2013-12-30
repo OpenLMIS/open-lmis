@@ -137,7 +137,7 @@ public class RequisitionPage extends Page {
     isAddedBy = commentAddedBy.getText().contains("By: " + AddedBy);
     assertTrue(isAddedBy);
     Date date = new Date();
-    SimpleDateFormat ft = new SimpleDateFormat("dd/MM/YYYY");
+    SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
     isAddedOn = commentAddedBy.getText().contains(ft.format(date));
     assertTrue(isAddedOn);
     commentCloseIcon.click();

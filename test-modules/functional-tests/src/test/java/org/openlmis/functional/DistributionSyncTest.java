@@ -147,7 +147,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals("samuel", m1.get("confirmedByName").toString());
     assertEquals("Doe", m1.get("confirmedByTitle").toString());
     assertEquals("Verifier", m1.get("verifiedByName").toString());
-    assertEquals("XYZ", m1.get("verifiedByTitle").toString());
+    assertEquals("X Y Z", m1.get("verifiedByTitle").toString());
 
     distributionPage.clickRecordData();
     facilityListPage.selectFacility("F10");
