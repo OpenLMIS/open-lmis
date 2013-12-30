@@ -241,7 +241,7 @@
   background: #f9f9f9;
 }
 
-#epiUseTable, #epiInventoryTable {
+.epi-table {
   overflow: auto;
   table {
     min-width: 800px;
@@ -269,12 +269,21 @@
       position: relative;
     }
     .rnr-form-error {
+      left: initial;
       bottom: 30px;
-      left: -10px;
+      right: 8%;
+    }
+    .rnr-form-error:after {
+      left: initial;
+      right: 16px;
     }
     .warning-alert {
       bottom: 25px;
     }
+  }
+  .col-ideal-quantity span {
+    display: block;
+    text-align: right;
   }
   .col-doses, .col-vials {
     min-width: 100px;
@@ -284,9 +293,12 @@
   .col-total {
     min-width: 70px;
   }
-  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-expiration-date, .col-ideal-quantity, .col-existing-quantity, .col-spoiled-quantity, .col-delivered-quantity {
+  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-ideal-quantity, .col-existing-quantity, .col-spoiled-quantity, .col-delivered-quantity {
     max-width: 100px;
     min-width: 70px;
+    input[type="text"] {
+      text-align: right;
+    }
   }
   input[type="text"] {
     width: 85%;

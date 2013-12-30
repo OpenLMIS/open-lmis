@@ -28,8 +28,9 @@
         <span openlmis-message="message.no.product.groups"></span>
       </div>
 
-      <div id="epiInventoryTable" tab-scroll bottom-offset="180" ng-show="facilityData.epiInventory.lineItems.length">
-        <form auto-save="distribution" object-store="distributions">
+      <div id="epiInventoryTable" class="epi-table" tab-scroll bottom-offset="180"
+           ng-show="facilityData.epiInventory.lineItems.length">
+      <form auto-save="distribution" object-store="distributions">
           <table class="table table-bordered">
             <thead>
             <tr>
