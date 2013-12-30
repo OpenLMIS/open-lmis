@@ -544,7 +544,7 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
     When I try to sync recorded data
-    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be synchronized"
+    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be synced"
     When I record data
 
     And I choose facility "F10"
