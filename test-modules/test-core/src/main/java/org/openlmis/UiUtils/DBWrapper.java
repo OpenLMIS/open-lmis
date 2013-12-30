@@ -395,6 +395,7 @@ public class DBWrapper {
     update("delete from distribution_refrigerators");
 
     update("delete from distributions");
+    update("delete from refrigerators");
     update("delete from users where userName not like('Admin%')");
     update("DELETE FROM requisition_line_item_losses_adjustments");
     update("DELETE FROM requisition_line_items");
