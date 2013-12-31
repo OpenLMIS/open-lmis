@@ -52,7 +52,6 @@ public class ManageDistribution extends TestCaseHelper {
     deliveryZoneNameFirst, deliveryZoneNameSecond,
     facilityCodeFirst, facilityCodeSecond,
     programFirst, programSecond, schedule;
-
   private HashMap<String, DistributionTab> tabMap;
 
   @BeforeMethod(groups = "distribution")
@@ -314,7 +313,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view observations data in DB:$")
   public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data){
+    for (Map map : data) {
       dbWrapper.getFacilityVisitDetails();
       HashMap m1 = dbWrapper.getFacilityVisitDetails();
       assertEquals(m1.get("observations").toString(), map.get("observations").toString());
@@ -328,8 +327,8 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view epi use data in DB for facility \"([^\"]*)\" and product group \"([^\"]*)\":$")
   public void verifyEpiUseDataInDB(String facilityCode, String productGroupCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,facilityCode);
-    for (Map map : data){
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
+    for (Map map : data) {
       assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
       assertEquals(map.get("received").toString(), epiDetails.get("received"));
       assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
@@ -349,9 +348,13 @@ public class ManageDistribution extends TestCaseHelper {
       assertEquals(map.get("lowAlarmEvents"), resultSet.getString("lowAlarmEvents"));
       assertEquals(map.get("highAlarmEvents"), resultSet.getString("highAlarmEvents"));
       assertEquals(map.get("problemSinceLastTime"), resultSet.getString("problemSinceLastTime"));
-      assertEquals(map.get("notes"), resultSet.getString("notes"));
+      String notes = (String) map.get("notes");
+      if (notes.equals("null")) {
+        notes = null;
+      }
+      assertEquals(notes, resultSet.getString("notes"));
     }
-}
+  }
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber) throws SQLException {

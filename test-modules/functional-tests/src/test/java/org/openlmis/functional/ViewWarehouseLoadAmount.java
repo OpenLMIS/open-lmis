@@ -76,7 +76,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @And("^I have data available for \"([^\"]*)\" (facility|facilities) attached to delivery zones$")
-  public void setupDataForMultipleDeliveryZones(String facilityInstances) throws Exception {
+  public void setupDataForMultipleDeliveryZones(String facilityInstances, String facility) throws Exception {
     if (facilityInstances.equalsIgnoreCase("Multiple")) {
       setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
         deliveryZoneNameFirst, deliveryZoneNameSecond,

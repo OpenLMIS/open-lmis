@@ -67,6 +67,7 @@ public class EPIUse extends DistributionTab {
     enterValueInLoss(data.get("loss"), 1);
     enterValueInReceived(data.get("received"), 1);
     enterValueInStockAtFirstOfMonth(data.get("firstOfMonth"), 1);
+    enterValueInStockAtEndOfMonth(data.get("endOfMonth"), 1);
   }
 
   @Override

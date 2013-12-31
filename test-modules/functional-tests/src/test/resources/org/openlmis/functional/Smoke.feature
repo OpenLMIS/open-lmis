@@ -457,8 +457,7 @@ Feature: Smoke Tests
     When I delete refrigerator
     Then I should see confirmation for delete
     When I confirm delete
-    #TODO uncomment when refrigerator sync2 is done
-    #Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
+    Then I should see refrigerator "LG;800 LITRES;GR-J287PGHV" deleted successfully
 
   @smokeDistribution
   Scenario: User should fill general observation data
@@ -483,11 +482,11 @@ Feature: Smoke Tests
     Then Verify "general observation" indicator should be "AMBER"
     When I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier         | X YZ             |
+      | some observation | samuel          | fc               | Verifier       | X YZ            |
     Then Verify "general observation" indicator should be "GREEN"
     And I verify saved "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier         | X YZ             |
+      | some observation | samuel          | fc               | Verifier       | X YZ            |
 
   @smokeDistribution
   Scenario: User should fill EPI use data
@@ -523,7 +522,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
-  #@smokeDistribution - uncomment when refrigerator sync2 is done
+  @smokeDistribution
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -551,7 +550,7 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
     When I try to sync recorded data
-    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be synced"
+    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
     When I record data
 
     And I choose facility "F10"
@@ -565,7 +564,7 @@ Feature: Smoke Tests
     And I navigate to general observations tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier         | XYZ             |
+      | some observation | samuel          | fc               | Verifier         | XYZ           |
 
     And Navigate to EPI tab
     And I Enter "epi use" values:
@@ -576,28 +575,28 @@ Feature: Smoke Tests
     Then I see "Overall" facility icon as "GREEN"
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
-#    TODO uncomment when refrigerator sync2 is done
-#    When I sync recorded data
-#    Then I check confirm sync message as "F10-Village Dispensary"
-#    When I done sync message
-#    And I view observations data in DB:
-#      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-#      | some observation | samuel          | fc               | Verifier         | XYZ             |
-#    And I view epi use data in DB for facility "F10" and product group "penta":
-#      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
-#      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
-#    And I view refrigerator readings in DB for refrigerator serial number "GR-J287PGHV":
-#      | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
-#      | 3F          | "Y"                  | 1              | 0               | "N"                  |       |
-#    And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV"
-#    When I record data
-#    And I choose facility "F10"
-#    Then I see "Overall" facility icon as "BLUE"
-#    And I see "Individual" facility icon as "BLUE"
-#    When I navigate to general observations tab
-#    And I see general observations fields disabled
-#    When Navigate to EPI tab
-#    Then I see epi fields disabled
-#    When I navigate to refrigerator tab
-#    And I access show
-#    Then I see refrigerator fields disabled
+
+    When I sync recorded data
+    Then I check confirm sync message as "F10-Village Dispensary"
+    When I done sync message
+    And I view observations data in DB:
+      | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
+      | some observation | samuel          | fc               | Verifier         | XYZ           |
+    And I view epi use data in DB for facility "F10" and product group "penta":
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
+    And I view refrigerator readings in DB for refrigerator serial number "GR-J287PGHV":
+      | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
+      | 3.0         | Y                    | 1              | 0               | N                    | null  |
+    And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV"
+    When I record data
+    And I choose facility "F10"
+    Then I see "Overall" facility icon as "BLUE"
+    And I see "Individual" facility icon as "BLUE"
+    When I navigate to general observations tab
+    And I see general observations fields disabled
+    When Navigate to EPI tab
+    Then I see epi fields disabled
+    When I navigate to refrigerator tab
+    And I access show
+    Then I see refrigerator fields disabled
