@@ -170,6 +170,16 @@
                     <property name="title" value="National Summary Report by Regimen"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="district_financial_summary"/>
+                    <property name="template" value="district-financial-summary.jasper"/>
+                    <property name="reportDataProvider" ref="districtFinancialSummaryDataProvider"/>
+                    <property name="id" value="RP-District-Order-Compilation-Report"/>
+                    <property name="name" value="District Order Compilation Report"/>
+                    <property name="title" value="District Order Compilation Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
 
 
 
