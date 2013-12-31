@@ -8,15 +8,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-distributionModule.service('distributionService', function ($dialog, messageService, SharedDistributions, IndexedDB) {
+distributionModule.service('distributionService', function ($dialog, SharedDistributions, IndexedDB) {
 
   var _this = this;
 
   this.applyNR = function (applyFunc) {
     var dialogOpts = {
       id: "distributionInitiated",
-      header: messageService.get('label.apply.nr.all'),
-      body: messageService.get('message.apply.nr')
+      header: 'label.apply.nr.all',
+      body: 'message.apply.nr'
     };
 
     var callback = function () {
@@ -28,7 +28,7 @@ distributionModule.service('distributionService', function ($dialog, messageServ
       };
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog);
   };
 
   this.isCached = function (distribution) {

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see http://www.gnu.org/licenses. For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, messageService, distributionService, $dialog) {
+function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, distributionService, $dialog) {
   $scope.COMPLETE = 'is-complete';
   $scope.SYNCED = 'is-synced';
   $scope.DUPLICATE = 'is-duplicate';
@@ -80,8 +80,8 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     $scope.syncMessage = '';
     var dialogOpts = {
       id: "distributionInitiated",
-      header: messageService.get('label.delete.distribution.header'),
-      body: messageService.get('label.confirm.delete.distribution')
+      header: 'label.delete.distribution.header',
+      body: 'label.confirm.delete.distribution'
     };
 
     var callback = function (result) {
@@ -90,7 +90,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
       }
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, callback, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, callback, $dialog);
   };
 
 
@@ -115,10 +115,10 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
     var dialogOpts = {
       id: "syncDistributionDialog",
-      header: messageService.get('sync.distribution.header'),
-      body: messageService.get('sync.distribution.confirm')
+      header: 'sync.distribution.header',
+      body: 'sync.distribution.confirm'
     };
-    OpenLmisDialog.newDialog(dialogOpts, syncDistributionCallBack(distributionId), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, syncDistributionCallBack(distributionId), $dialog);
   };
 
 }

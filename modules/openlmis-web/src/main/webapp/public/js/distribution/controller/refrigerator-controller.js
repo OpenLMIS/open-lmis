@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $routeParams, distributionService) {
+function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
   $scope.selectedFacilityId = $routeParams.facility;
 
@@ -51,8 +51,8 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
   $scope.showDeleteRefrigeratorConfirmationModel = function (serialNumberToDelete) {
     var dialogOpts = {
       id: "deleteRefrigeratorInfo",
-      header: messageService.get('delete.refrigerator.readings.header'),
-      body: messageService.get('delete.refrigerator.readings.confirm')
+      header: 'delete.refrigerator.readings.header',
+      body: 'delete.refrigerator.readings.confirm'
     };
 
     var callback = function (serialNumberToDelete) {
@@ -67,7 +67,7 @@ function RefrigeratorController($scope, $dialog, messageService, IndexedDB, $rou
       };
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, callback(serialNumberToDelete), $dialog);
   };
 
 

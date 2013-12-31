@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, messageService, requisitionService, $q) {
+function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, regimenTemplate, $location, Requisitions, $routeParams, $dialog, requisitionService, $q) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -132,7 +132,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
       validateRegimenLineItems();
     var regimenError;
     if ($scope.regimenLineItemInValid) {
-      regimenError = messageService.get("error.rnr.validation");
+      regimenError = "error.rnr.validation";
     }
     var errorMessage = fullSupplyError || nonFullSupplyError || regimenError;
     if (errorMessage) {
@@ -188,11 +188,11 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
 
     var options = {
       id: "confirmDialog",
-      header: messageService.get("label.confirm.action"),
-      body: messageService.get("msg.question.confirmation")
+      header: "label.confirm.action",
+      body: "msg.question.confirmation"
     };
 
-    OpenLmisDialog.newDialog(options, callBack, $dialog, messageService);
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
   $scope.highlightRequiredFieldInModal = function (value) {
@@ -212,7 +212,7 @@ function CreateRequisitionController($scope, requisition, pageSize, rnrColumns, 
   };
 
   $scope.lineItemErrorMessage = function (rnrLineItem) {
-    return messageService.get(rnrLineItem.getErrorMessage());
+    return rnrLineItem.getErrorMessage();
   };
 
   $scope.getRowErrorClass = function (rnrLineItem) {

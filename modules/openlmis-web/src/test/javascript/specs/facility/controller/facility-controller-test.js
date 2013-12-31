@@ -73,7 +73,7 @@ describe("Facility Controller", function () {
       spyOn(messageService, 'get');
       scope.facilityForm.$error.pattern = "{}";
       scope.saveFacility();
-      expect(messageService.get).toHaveBeenCalledWith("form.error");
+      expect(scope.error).toEqual("form.error");
       expect("true").toEqual(scope.showError);
     });
 
@@ -81,7 +81,7 @@ describe("Facility Controller", function () {
       spyOn(messageService, 'get');
       scope.facilityForm.$error.required = "{}";
       scope.saveFacility();
-      expect(messageService.get).toHaveBeenCalledWith("form.error");
+      expect(scope.error).toEqual("form.error");
       expect("").toEqual(scope.message);
       expect("true").toEqual(scope.showError);
     });
@@ -94,7 +94,7 @@ describe("Facility Controller", function () {
         {"code": "HIV", "name": "HIV", "description": "HIV", "active": true}
       ];
       scope.saveFacility();
-      expect(messageService.get).toHaveBeenCalledWith("form.error");
+      expect(scope.error).toEqual("form.error");
 
       expect("").toEqual(scope.message);
       expect("true").toEqual(scope.showError);

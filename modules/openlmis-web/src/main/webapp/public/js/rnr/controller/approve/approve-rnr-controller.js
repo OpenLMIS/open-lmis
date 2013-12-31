@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService, requisitionService, $q) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
@@ -104,10 +104,10 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   var confirm = function () {
     var options = {
       id: "confirmDialog",
-      header: messageService.get("label.confirm.action"),
-      body: messageService.get("msg.question.confirmation")
+      header: "label.confirm.action",
+      body: "msg.question.confirmation"
     };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
   $scope.dialogCloseCallback = function (result) {

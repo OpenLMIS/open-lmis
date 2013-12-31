@@ -98,7 +98,7 @@
           </span>
 
           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage()">
-            <span ng-bind="lineItemErrorMessage(rnrLineItem)"></span>
+            <span openlmis-message="lineItemErrorMessage(rnrLineItem)"></span>
             <span class="beak-down"></span>
           </span>
         </span>
@@ -117,7 +117,7 @@
                 style="display:none;" openlmis-message="error.number.only">
           </span>
           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage()">
-            <span ng-bind="lineItemErrorMessage(rnrLineItem)"></span>
+            <span openlmis-message="lineItemErrorMessage(rnrLineItem)"></span>
             <span class="beak-down"></span>
           </span>
         </span>
@@ -152,7 +152,7 @@
           </span>
           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage()"
                 style="background: red;">
-            <span ng-bind="lineItemErrorMessage(rnrLineItem)"></span>
+            <span openlmis-message="lineItemErrorMessage(rnrLineItem)"></span>
             <span class="beak-down"></span>
           </span>
         </span>
@@ -185,7 +185,7 @@
                 style="display:none;" openlmis-message="error.number.only">
           </span>
           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage()">
-            <span ng-bind="lineItemErrorMessage(rnrLineItem)"></span>
+            <span openlmis-message="lineItemErrorMessage(rnrLineItem)"></span>
             <span class="beak-down"></span>
           </span>
         </span>
@@ -261,7 +261,7 @@
           <span id="{{getId(column.name, $parent)}}" ng-bind="rnrLineItem[column.name]"
                 class="cell-text text-right-align display-block"> </span>
           <span class="row-specific-error" ng-show="rnrLineItem.getErrorMessage()">
-            <span ng-bind="lineItemErrorMessage(rnrLineItem)"></span>
+            <span openlmis-message="lineItemErrorMessage(rnrLineItem)"></span>
             <span class="beak-down"></span>
           </span>
         </span>

@@ -85,7 +85,7 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.saveFacility = function () {
     if ($scope.facilityForm.$error.pattern || $scope.facilityForm.$error.required) {
       $scope.showError = "true";
-      $scope.error = messageService.get('form.error');
+      $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
@@ -141,10 +141,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     }
     var dialogOpts = {
       id: "dateChangeConfirmModal",
-      header: messageService.get('message.setProgramStartDate'),
-      body: messageService.get('message.dateChangeConfirmMessage')
+      header: 'message.setProgramStartDate',
+      body: 'message.dateChangeConfirmMessage'
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.dateChangeCallback, $dialog);
   };
 
   $scope.dateChangeCallback = function (result) {
@@ -159,10 +159,10 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     $scope.selectedSupportedProgram = supportedProgram;
     var options = {
       id: "removeProgramConfirmDialog",
-      header: messageService.get('delete.facility.program.header'),
+      header: 'delete.facility.program.header',
       body: messageService.get('delete.facility.program.confirm', $scope.selectedSupportedProgram.program.name)
     };
-    OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramConfirm, $dialog, messageService);
+    OpenLmisDialog.newDialog(options, $scope.removeSupportedProgramConfirm, $dialog);
   };
 
   $scope.removeSupportedProgramConfirm = function (result) {
@@ -205,19 +205,19 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
   $scope.showConfirmFacilityDisableWindow = function () {
     var dialogOpts = {
       id: "disableFacilityDialog",
-      header: messageService.get('disable.facility.header'),
+      header: 'disable.facility.header',
       body: messageService.get('disable.facility.confirm', $scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.disableFacilityCallBack, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.disableFacilityCallBack, $dialog);
   };
 
   $scope.showConfirmFacilityEnable = function () {
     var dialogOpts = {
       id: "enableConfirmModal",
-      header: messageService.get("create.facility.enableFacility"),
+      header: "create.facility.enableFacility",
       body: "'{0}' / '{1}' will be enabled in the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.enableFacilityCallBack, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.enableFacilityCallBack, $dialog);
   };
 
   $scope.enableFacilityCallBack = function (result) {

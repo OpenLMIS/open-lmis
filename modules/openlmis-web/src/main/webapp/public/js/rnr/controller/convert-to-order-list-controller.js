@@ -99,8 +99,8 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
   var showConfirmModal = function () {
     var options = {
       id: "confirmDialog",
-      header: messageService.get("label.confirm.action"),
-      body: messageService.get("msg.question.confirmation")
+      header: "label.confirm.action",
+      body: "msg.question.confirmation"
     };
 
     function callBack() {
@@ -111,7 +111,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
       };
     }
 
-    OpenLmisDialog.newDialog(options, callBack(), $dialog, messageService);
+    OpenLmisDialog.newDialog(options, callBack(), $dialog);
   };
 
   $scope.convertToOrder = function () {

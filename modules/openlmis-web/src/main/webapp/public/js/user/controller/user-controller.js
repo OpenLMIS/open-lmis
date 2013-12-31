@@ -174,10 +174,10 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.confirmFacilityDelete = function () {
     var dialogOpts = {
       id: "deleteFacilityModal",
-      header: messageService.get('delete.facility.header'),
-      body: messageService.get('confirm.programRole.deletion')
+      header: 'delete.facility.header',
+      body: 'confirm.programRole.deletion'
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.clearSelectedFacility, $dialog);
   };
 
   function loadUserFacility() {
@@ -226,10 +226,10 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.showConfirmUserDisableModal = function () {
     var dialogOpts = {
       id: "disableUserDialog",
-      header: messageService.get('disable.user.header'),
+      header: 'disable.user.header',
       body: messageService.get('disable.user.confirm', $scope.user.firstName, $scope.user.lastName)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.disableUserCallback, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.disableUserCallback, $dialog);
   };
 
   $scope.disableUserCallback = function (result) {
@@ -246,10 +246,10 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.showConfirmUserRestoreModal = function () {
     var dialogOpts = {
       id: "restoreUserDialog",
-      header: messageService.get('enable.user.header'),
+      header: 'enable.user.header',
       body: messageService.get('enable.user.confirm', $scope.user.firstName, $scope.user.lastName)
     };
-    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreUserCallback, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.restoreUserCallback, $dialog);
   };
 
   $scope.restoreUserCallback = function (result) {

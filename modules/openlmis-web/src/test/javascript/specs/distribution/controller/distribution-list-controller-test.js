@@ -223,8 +223,7 @@ describe('DistributionListController', function () {
   it('should ask before deleting a distribution', function () {
     scope.deleteDistribution(1);
 
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog,
-        messageService);
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog);
   });
 
   it('should delete distribution on click of OK', function () {

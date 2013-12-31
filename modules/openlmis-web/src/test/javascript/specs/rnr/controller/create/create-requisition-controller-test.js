@@ -668,7 +668,7 @@ describe('CreateRequisitionController', function () {
 
     rootScope.$apply();
     expect(scope.regimenLineItemInValid).toBeTruthy();
-    expect(scope.submitError).toEqual('some message');
+    expect(scope.submitError).toEqual('error.rnr.validation');
   });
 
   it('should set regimenLineItemInValid as false if the required fields are not missing', function () {
