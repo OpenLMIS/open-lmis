@@ -198,10 +198,10 @@ public class ManageDistribution extends TestCaseHelper {
     facilityListPage.verifyFacilityIndicatorColor(whichIcon, color);
   }
 
-  @And("^I record data$")
-  public void clickRecordData() throws IOException {
+  @When("^I record data for distribution \"([^\"]*)\"$")
+  public void clickRecordDataForGivenRow(String rowNumber) throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(Integer.parseInt(rowNumber));
   }
 
   @Then("^I should see No facility selected$")
@@ -313,7 +313,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view observations data in DB:$")
   public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data) {
+    for (Map map : data){
       dbWrapper.getFacilityVisitDetails();
       HashMap m1 = dbWrapper.getFacilityVisitDetails();
       assertEquals(m1.get("observations").toString(), map.get("observations").toString());
@@ -327,8 +327,8 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view epi use data in DB for facility \"([^\"]*)\" and product group \"([^\"]*)\":$")
   public void verifyEpiUseDataInDB(String facilityCode, String productGroupCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
-    for (Map map : data) {
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,facilityCode);
+    for (Map map : data){
       assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
       assertEquals(map.get("received").toString(), epiDetails.get("received"));
       assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
@@ -354,7 +354,7 @@ public class ManageDistribution extends TestCaseHelper {
       }
       assertEquals(notes, resultSet.getString("notes"));
     }
-  }
+}
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber) throws SQLException {
@@ -698,7 +698,7 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
     distributionPage.clickInitiateDistribution();
-    FacilityListPage facilityListPage = distributionPage.clickRecordData();
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
     facilityListPage.clickFacilityListDropDown();
     facilityListPage.verifyGeographicZoneOrder(geoZoneFirst, geoZoneSecond);
 

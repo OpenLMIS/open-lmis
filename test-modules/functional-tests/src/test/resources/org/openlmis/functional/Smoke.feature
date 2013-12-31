@@ -398,7 +398,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     And I verify Distributions data is not synchronised
     Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
@@ -422,7 +422,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     When I choose facility "F10"
     Then I should see Refrigerators screen
     When I add new refrigerator
@@ -472,7 +472,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     And I choose facility "F10"
     And I navigate to general observations tab
     Then Verify "general observation" indicator should be "RED"
@@ -502,7 +502,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     And I choose facility "F10"
     And Navigate to EPI tab
     Then Verify "epi use" indicator should be "RED"
@@ -518,7 +518,7 @@ Feature: Smoke Tests
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth | total |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          | 22    |
     When I access plan my distribution page
-    When I record data
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
@@ -537,7 +537,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    When I record data
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "AMBER"
     And I see "Individual" facility icon as "AMBER"
@@ -551,7 +551,7 @@ Feature: Smoke Tests
     When I access plan my distribution page
     When I try to sync recorded data
     Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
-    When I record data
+    When I record data for distribution "1"
 
     And I choose facility "F10"
     When I edit refrigerator
@@ -589,7 +589,7 @@ Feature: Smoke Tests
       | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
       | 3.0         | Y                    | 1              | 0               | N                    | null  |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV"
-    When I record data
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
     And I see "Individual" facility icon as "BLUE"
@@ -600,3 +600,19 @@ Feature: Smoke Tests
     When I navigate to refrigerator tab
     And I access show
     Then I see refrigerator fields disabled
+
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period13"
+    And I initiate distribution
+    When I record data for distribution "2"
+    And I choose facility "F10"
+    Then I see "Overall" facility icon as "RED"
+    And I see "Individual" facility icon as "RED"
+    And I see "overall" refrigerator icon as "RED"
+    And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
+
+
+
+

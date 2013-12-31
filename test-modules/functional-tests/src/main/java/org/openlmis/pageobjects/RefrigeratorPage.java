@@ -22,6 +22,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.*;
 
 public class RefrigeratorPage extends Page {
+  //TODO extend DistributionTab
 
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;

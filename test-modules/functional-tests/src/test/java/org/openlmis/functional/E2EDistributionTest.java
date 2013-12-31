@@ -79,7 +79,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertFalse("Program selectBox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
 
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
@@ -96,7 +96,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateOfflineDistribution();
 
 
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
 
     String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
@@ -150,7 +150,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
 
     refrigeratorPage.clickShowForRefrigerator1();
@@ -193,7 +193,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(m1.get("verifiedByTitle").toString(), "XYZ");
 
     distributionPage.syncDistributionMessageDone();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
     generalObservationPage.navigate();

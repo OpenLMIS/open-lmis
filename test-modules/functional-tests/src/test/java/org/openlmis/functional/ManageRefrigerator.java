@@ -232,7 +232,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility("F10");
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
@@ -257,6 +257,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     assertTrue("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).deletePopUpHeader.isDisplayed());
   }
 
+  @And("^I verify the refrigerator \"([^\"]*)\" present$")
   public void verifyRefrigeratorAdded(String data) {
     String[] refrigeratorDetails = data.split(";");
 

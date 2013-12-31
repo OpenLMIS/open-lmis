@@ -22,13 +22,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static java.lang.String.valueOf;
 
@@ -450,7 +448,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
 
@@ -519,7 +517,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
   }
 
   public void enterDataInGeneralObservationsPage(String observation, String confirmName, String confirmTitle, String verifierName,

@@ -235,7 +235,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878");
   }
 
-  //@Test(groups = {"distribution"})
+  @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenRefrigeratorIsDeletedBeforeSync() throws Exception {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
@@ -311,7 +311,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
   }
 
   public void enterDataInGeneralObservationsPage(String observation, String confirmName, String confirmTitle, String verifierName,

@@ -31,7 +31,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   public String userSIC, password;
 
-
   @BeforeMethod(groups = {"distribution"})
   public void setUp() throws Exception {
     super.setup();
@@ -65,7 +64,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
 
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
@@ -95,14 +94,14 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F11");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
@@ -128,7 +127,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F11");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
@@ -149,7 +148,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals("Verifier", m1.get("verifiedByName").toString());
     assertEquals("X Y Z", m1.get("verifiedByTitle").toString());
 
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
     facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
@@ -160,10 +159,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.verifyAllFieldsDisabled();
 
     homePage.navigatePlanDistribution();
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F11");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
     generalObservationPage.navigate();
     generalObservationPage.verifyAllFieldsDisabled();
 
@@ -171,106 +169,106 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.verifyAllFieldsDisabled();
 
     homePage.navigatePlanDistribution();
-      distributionPage.deleteDistribution();
-      distributionPage.ConfirmDeleteDistribution();
+    distributionPage.deleteDistribution();
+    distributionPage.ConfirmDeleteDistribution();
 
   }
 
-    @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-    public void testDeleteDistributionAfterSync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                         String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                         String facilityCodeFirst, String facilityCodeSecond,
-                                         String programFirst, String programSecond, String schedule) throws Exception {
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
+  public void testDeleteDistributionAfterSync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                              String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                              String facilityCodeFirst, String facilityCodeSecond,
+                                              String programFirst, String programSecond, String schedule) throws Exception {
 
-        List<String> rightsList = new ArrayList<>();
-        rightsList.add("MANAGE_DISTRIBUTION");
-        setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-        setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-                deliveryZoneNameFirst, deliveryZoneNameSecond,
-                facilityCodeFirst, facilityCodeSecond,
-                programFirst, programSecond, schedule);
-        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-        dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-        dbWrapper.insertProductGroup("PG1");
-        dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
-        dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
-        dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-        dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.insertProductGroup("PG1");
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
 
-        LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-        HomePage homePage = loginPage.loginAs(userSIC, password);
-        DistributionPage distributionPage = homePage.navigatePlanDistribution();
-        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-        distributionPage.selectValueFromProgram(programFirst);
-        distributionPage.clickInitiateDistribution();
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickInitiateDistribution();
 
-        distributionPage.clickRecordData();
-        FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-        facilityListPage.selectFacility("F10");
+    distributionPage.clickRecordData(1);
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility("F10");
 
-        EPIUse epiUse = new EPIUse(testWebDriver);
-        epiUse.navigate();
-        epiUse.checkApplyNRToAllFields(true);
+    EPIUse epiUse = new EPIUse(testWebDriver);
+    epiUse.navigate();
+    epiUse.checkApplyNRToAllFields(true);
 
-        GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-        generalObservationPage.navigate();
-        generalObservationPage.setObservations("Some observations");
-        generalObservationPage.setConfirmedByName("samuel");
-        generalObservationPage.setConfirmedByTitle("Doe");
-        generalObservationPage.setVerifiedByName("Verifier");
-        generalObservationPage.setVerifiedByTitle("XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.setObservations("Some observations");
+    generalObservationPage.setConfirmedByName("samuel");
+    generalObservationPage.setConfirmedByTitle("Doe");
+    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByTitle("XYZ");
 
-        homePage.navigateHomePage();
-        homePage.navigatePlanDistribution();
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
 
-        distributionPage.syncDistribution();
-        distributionPage.syncDistributionMessageDone();
+    distributionPage.syncDistribution();
+    distributionPage.syncDistributionMessageDone();
 
-        distributionPage.deleteDistribution();
-        distributionPage.ConfirmDeleteDistribution();
-        distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-        distributionPage.selectValueFromProgram(programFirst);
-        distributionPage.clickInitiateDistribution();
-        distributionPage.ConfirmDeleteDistribution();
+    distributionPage.deleteDistribution();
+    distributionPage.ConfirmDeleteDistribution();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.ConfirmDeleteDistribution();
 
-        distributionPage.clickRecordData();
-        facilityListPage.selectFacility("F10");
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility("F10");
 
-        epiUse.navigate();
-        epiUse.checkApplyNRToAllFields(true);
+    epiUse.navigate();
+    epiUse.checkApplyNRToAllFields(true);
 
-        generalObservationPage.navigate();
-        generalObservationPage.setObservations("Some observations");
-        generalObservationPage.setConfirmedByName("samuel");
-        generalObservationPage.setConfirmedByTitle("Doe");
-        generalObservationPage.setVerifiedByName("Verifier");
-        generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.navigate();
+    generalObservationPage.setObservations("Some observations");
+    generalObservationPage.setConfirmedByName("samuel");
+    generalObservationPage.setConfirmedByTitle("Doe");
+    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByTitle("XYZ");
 
-        facilityListPage.selectFacility("F11");
-        epiUse.navigate();
-        epiUse.checkApplyNRToAllFields(true);
+    facilityListPage.selectFacility("F11");
+    epiUse.navigate();
+    epiUse.checkApplyNRToAllFields(true);
 
-        generalObservationPage.navigate();
-        generalObservationPage.setObservations("Some observations");
-        generalObservationPage.setConfirmedByName("samuel");
-        generalObservationPage.setConfirmedByTitle("Doe");
-        generalObservationPage.setVerifiedByName("Verifier");
-        generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.navigate();
+    generalObservationPage.setObservations("Some observations");
+    generalObservationPage.setConfirmedByName("samuel");
+    generalObservationPage.setConfirmedByTitle("Doe");
+    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByTitle("XYZ");
 
-        homePage.navigateHomePage();
-        homePage.navigatePlanDistribution();
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
 
-        distributionPage.syncDistribution();
-        assertEquals(distributionPage.getFacilityAlreadySyncMessage(),"Already synced facilities : \n" +
-                "F10-Village Dispensary");
-        assertEquals(distributionPage.getSyncMessage(),"Synced facilities : \n" +
-                "F11-Central Hospital");
-        distributionPage.syncDistributionMessageDone();
+    distributionPage.syncDistribution();
+    assertEquals(distributionPage.getFacilityAlreadySyncMessage(), "Already synced facilities : \n" +
+      "F10-Village Dispensary");
+    assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" +
+      "F11-Central Hospital");
+    distributionPage.syncDistributionMessageDone();
 
 
-    }
+  }
 
-    @AfterMethod(groups = "distribution")
+  @AfterMethod(groups = "distribution")
   public void tearDown() throws Exception {
     testWebDriver.sleep(500);
     if (!testWebDriver.getElementById("username").isDisplayed()) {

@@ -12,6 +12,7 @@ package org.openlmis.pageobjects;
 
 
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -42,9 +43,6 @@ public class DistributionPage extends Page {
 
   @FindBy(how = ID, using = "initiateDistribution")
   private static WebElement initiateDistributionButton = null;
-
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Record Data')]")
-  private static WebElement recordDataButton = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement saveSuccessMessageDiv = null;
@@ -147,7 +145,8 @@ public class DistributionPage extends Page {
     return syncAlertMessage.getText();
   }
 
-  public FacilityListPage clickRecordData() throws IOException {
+  public FacilityListPage clickRecordData(int rowNumber) throws IOException {
+    WebElement recordDataButton = testWebDriver.findElement(By.xpath("//div[@class='list-container']/div["+rowNumber+"]/div[5]/a"));
     testWebDriver.waitForElementToAppear(recordDataButton);
     recordDataButton.click();
     testWebDriver.sleep(250);
