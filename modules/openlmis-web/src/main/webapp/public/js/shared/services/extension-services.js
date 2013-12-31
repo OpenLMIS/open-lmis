@@ -389,3 +389,7 @@ services.factory('RegimenSummaryReport', function ($resource) {
 services.factory('ReportRegimenPrograms', function ($resource) {
     return $resource('/reports/regimenPrograms.json', {}, {});
 });
+
+services.factory('DistrictFinancialSummaryReport', function ($resource) {
+    return $resource('/reports/reportdata/districtFinancialSummary.json', {}, {});
+});
