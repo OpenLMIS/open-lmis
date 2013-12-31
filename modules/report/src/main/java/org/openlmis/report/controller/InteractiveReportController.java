@@ -305,12 +305,11 @@ public class InteractiveReportController  extends BaseController {
                 (List<OrderFillRateReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
         return new Pages(page,max,orderFillRateReportList);
     }
-
     @RequestMapping(value = "/reportdata/regimenSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REGIMEN_SUMMARY_REPORT')")
     public Pages getRegimenSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                      HttpServletRequest request
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
 
     ) {
 
@@ -322,9 +321,16 @@ public class InteractiveReportController  extends BaseController {
         return new Pages(page,max,regimenSummaryReportList);
     }
 
+    @RequestMapping(value = "/reportdata/districtFinancialSummary", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')")
+    public Pages geDistrictFinancialSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                HttpServletRequest request
 
-
-
-
-
+    ) {
+        Report report = reportManager.getReportByKey("district_financial_summary");
+        List<DistrictSummaryReport> districtSummaryReportList =
+                (List<DistrictSummaryReport>) report.getReportDataProvider().getReportDataByFilterCriteriaAndPagingAndSorting(request.getParameterMap(),request.getParameterMap(),page,max);
+        return new Pages(page,max,districtSummaryReportList);
+    }
 }
