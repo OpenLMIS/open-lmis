@@ -19,11 +19,11 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -37,18 +37,41 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testMultipleFacilitySync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                       String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                       String facilityCodeFirst, String facilityCodeSecond,
-                                       String programFirst, String programSecond, String schedule) throws Exception {
+  public void testMultipleFacilitySync(String userSIC,
+                                       String password,
+                                       String deliveryZoneCodeFirst,
+                                       String deliveryZoneCodeSecond,
+                                       String deliveryZoneNameFirst,
+                                       String deliveryZoneNameSecond,
+                                       String facilityCodeFirst,
+                                       String facilityCodeSecond,
+                                       String programFirst,
+                                       String programSecond,
+                                       String schedule) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupTestDataToInitiateRnRAndDistribution("F10",
+      "F11",
+      true,
+      programFirst,
+      userSIC,
+      "200",
+      rightsList,
+      programSecond,
+      "District1",
+      "Ngorongoro",
+      "Ngorongoro");
+    setupDataForDeliveryZone(true,
+      deliveryZoneCodeFirst,
+      deliveryZoneCodeSecond,
+      deliveryZoneNameFirst,
+      deliveryZoneNameSecond,
+      facilityCodeFirst,
+      facilityCodeSecond,
+      programFirst,
+      programSecond,
+      schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
@@ -119,10 +142,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.verifyIndicator("GREEN");
 
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
+    generalObservationPage.setObservations("Some other observations");
+    generalObservationPage.setConfirmedByName("john");
     generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier");
+    generalObservationPage.setVerifiedByName("Verifier2");
     generalObservationPage.setVerifiedByTitle("X Y Z");
 
     homePage.navigateHomePage();
@@ -140,13 +163,19 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
     distributionPage.syncDistributionMessageDone();
 
-    HashMap m1 = dbWrapper.getFacilityVisitDetails();
+    Map<String, String> facilityVisitF10 = dbWrapper.getFacilityVisitDetails("F10");
+    assertEquals(facilityVisitF10.get("observations"), "Some observations");
+    assertEquals(facilityVisitF10.get("confirmedByName"), "samuel");
+    assertEquals(facilityVisitF10.get("confirmedByTitle"), "Doe");
+    assertEquals(facilityVisitF10.get("verifiedByName"), "Verifier");
+    assertEquals(facilityVisitF10.get("verifiedByTitle"), "XYZ");
 
-    assertEquals("Some observations", m1.get("observations").toString());
-    assertEquals("samuel", m1.get("confirmedByName").toString());
-    assertEquals("Doe", m1.get("confirmedByTitle").toString());
-    assertEquals("Verifier", m1.get("verifiedByName").toString());
-    assertEquals("X Y Z", m1.get("verifiedByTitle").toString());
+    Map<String, String> facilityVisitF11 = dbWrapper.getFacilityVisitDetails("F11");
+    assertEquals(facilityVisitF11.get("observations"), "Some other observations");
+    assertEquals(facilityVisitF11.get("confirmedByName"), "john");
+    assertEquals(facilityVisitF11.get("confirmedByTitle"), "Doe");
+    assertEquals(facilityVisitF11.get("verifiedByName"), "Verifier2");
+    assertEquals(facilityVisitF11.get("verifiedByTitle"), "X Y Z");
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
@@ -175,18 +204,41 @@ public class DistributionSyncTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testDeleteDistributionAfterSync(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                              String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                              String facilityCodeFirst, String facilityCodeSecond,
-                                              String programFirst, String programSecond, String schedule) throws Exception {
+  public void testDeleteDistributionAfterSync(String userSIC,
+                                              String password,
+                                              String deliveryZoneCodeFirst,
+                                              String deliveryZoneCodeSecond,
+                                              String deliveryZoneNameFirst,
+                                              String deliveryZoneNameSecond,
+                                              String facilityCodeFirst,
+                                              String facilityCodeSecond,
+                                              String programFirst,
+                                              String programSecond,
+                                              String schedule) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
+    setupTestDataToInitiateRnRAndDistribution("F10",
+      "F11",
+      true,
+      programFirst,
+      userSIC,
+      "200",
+      rightsList,
+      programSecond,
+      "District1",
+      "Ngorongoro",
+      "Ngorongoro");
+    setupDataForDeliveryZone(true,
+      deliveryZoneCodeFirst,
+      deliveryZoneCodeSecond,
+      deliveryZoneNameFirst,
+      deliveryZoneNameSecond,
+      facilityCodeFirst,
+      facilityCodeSecond,
+      programFirst,
+      programSecond,
+      schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
@@ -259,10 +311,9 @@ public class DistributionSyncTest extends TestCaseHelper {
     homePage.navigatePlanDistribution();
 
     distributionPage.syncDistribution();
-    assertEquals(distributionPage.getFacilityAlreadySyncMessage(), "Already synced facilities : \n" +
-      "F10-Village Dispensary");
-    assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" +
-      "F11-Central Hospital");
+    assertEquals(distributionPage.getFacilityAlreadySyncMessage(),
+      "Already synced facilities : \n" + "F10-Village Dispensary");
+    assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" + "F11-Central Hospital");
     distributionPage.syncDistributionMessageDone();
 
 
@@ -282,10 +333,7 @@ public class DistributionSyncTest extends TestCaseHelper {
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
-    return new Object[][]{
-      {"fieldCoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
-        "F10", "F11", "VACCINES", "TB", "M"}
-    };
+    return new Object[][]{{"fieldCoordinator", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second", "F10", "F11", "VACCINES", "TB", "M"}};
 
   }
 }

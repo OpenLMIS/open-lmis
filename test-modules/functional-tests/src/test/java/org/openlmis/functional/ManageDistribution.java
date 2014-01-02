@@ -311,17 +311,16 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
   }
 
-  @Then("^I view observations data in DB:$")
-  public void verifyObservationsDataInDB(DataTable tableData) throws SQLException {
+  @Then("^I view observations data in DB for facility \"([^\"]*)\":$")
+  public void verifyObservationsDataInDB(String facility, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     for (Map map : data){
-      dbWrapper.getFacilityVisitDetails();
-      HashMap m1 = dbWrapper.getFacilityVisitDetails();
-      assertEquals(m1.get("observations").toString(), map.get("observations").toString());
-      assertEquals(m1.get("confirmedByName").toString(), map.get("confirmedByName").toString());
-      assertEquals(m1.get("confirmedByTitle").toString(), map.get("confirmedByTitle").toString());
-      assertEquals(m1.get("verifiedByName").toString(), map.get("verifiedByName").toString());
-      assertEquals(m1.get("verifiedByTitle").toString(), map.get("verifiedByTitle").toString());
+      Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facility);
+      assertEquals(facilityVisitDetails.get("observations"), map.get("observations"));
+      assertEquals(facilityVisitDetails.get("confirmedByName"), map.get("confirmedByName"));
+      assertEquals(facilityVisitDetails.get("confirmedByTitle"), map.get("confirmedByTitle"));
+      assertEquals(facilityVisitDetails.get("verifiedByName"), map.get("verifiedByName"));
+      assertEquals(facilityVisitDetails.get("verifiedByTitle"), map.get("verifiedByTitle"));
     }
   }
 

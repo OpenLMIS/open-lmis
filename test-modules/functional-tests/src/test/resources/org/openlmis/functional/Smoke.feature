@@ -579,7 +579,7 @@ Feature: Smoke Tests
     When I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
-    And I view observations data in DB:
+    And I view observations data in DB for facility "F10":
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier         | XYZ           |
     And I view epi use data in DB for facility "F10" and product group "penta":

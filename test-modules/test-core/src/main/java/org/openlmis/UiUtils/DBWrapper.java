@@ -84,14 +84,20 @@ public class DBWrapper {
     return query(format(sql, params));
   }
 
-  public void insertUser(String userId, String userName, String password, String facilityCode, String email)
-    throws SQLException, IOException {
+  public void insertUser(String userId,
+                         String userName,
+                         String password,
+                         String facilityCode,
+                         String email) throws SQLException, IOException {
 
     update("delete from users where userName like('%s')", userName);
 
-    update("INSERT INTO users(id, userName, password, facilityId, firstName, lastName, email, active, verified) " +
-      "VALUES ('%s', '%s', '%s', (SELECT id FROM facilities WHERE code = '%s'), 'Fatima', 'Doe', '%s','true','true')",
-      userId, userName, password, facilityCode, email);
+    update("INSERT INTO users(id, userName, password, facilityId, firstName, lastName, email, active, verified) " + "VALUES ('%s', '%s', '%s', (SELECT id FROM facilities WHERE code = '%s'), 'Fatima', 'Doe', '%s','true','true')",
+      userId,
+      userName,
+      password,
+      facilityCode,
+      email);
   }
 
   public void insertPeriodAndAssociateItWithSchedule(String period, String schedule) throws SQLException, IOException {
@@ -125,7 +131,8 @@ public class DBWrapper {
     return prodDetails;
   }
 
-  public List<String> getProductDetailsForProgramAndFacilityType(String programCode, String facilityCode) throws SQLException {
+  public List<String> getProductDetailsForProgramAndFacilityType(String programCode,
+                                                                 String facilityCode) throws SQLException {
 
     List<String> prodDetails = new ArrayList<>();
 
@@ -161,23 +168,28 @@ public class DBWrapper {
     return -1;
   }
 
-  public void updateActiveStatusOfProgramProduct(String productCode, String programCode, String active) throws SQLException {
+  public void updateActiveStatusOfProgramProduct(String productCode,
+                                                 String programCode,
+                                                 String active) throws SQLException {
     update("update program_products set active='%s' WHERE" +
       " programId = (select id from programs where code='%s')  AND" +
       " productId = (select id from products where code='%s')", active, programCode, productCode);
   }
 
-  public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName, String program, boolean active) throws SQLException {
+  public List<String> getFacilityCodeNameForDeliveryZoneAndProgram(String deliveryZoneName,
+                                                                   String program,
+                                                                   boolean active) throws SQLException {
     List<String> codeName = new ArrayList<>();
-    ResultSet rs = query("select f.code, f.name from facilities f, programs p, programs_supported ps, delivery_zone_members dzm, delivery_zones dz where " +
-      "dzm.DeliveryZoneId=dz.id and " +
-      "f.active='" + active + "' and " +
-      "p.id= ps.programId and " +
-      "p.code='" + program + "' and " +
-      "dz.id = dzm.DeliveryZoneId and " +
-      "dz.name='" + deliveryZoneName + "' and " +
-      "dzm.facilityId = f.id and " +
-      "ps.facilityId = f.id;");
+    ResultSet rs = query(
+      "select f.code, f.name from facilities f, programs p, programs_supported ps, delivery_zone_members dzm, delivery_zones dz where " +
+        "dzm.DeliveryZoneId=dz.id and " +
+        "f.active='" + active + "' and " +
+        "p.id= ps.programId and " +
+        "p.code='" + program + "' and " +
+        "dz.id = dzm.DeliveryZoneId and " +
+        "dz.name='" + deliveryZoneName + "' and " +
+        "dzm.facilityId = f.id and " +
+        "ps.facilityId = f.id;");
 
     while (rs.next()) {
       String code = rs.getString("code");
@@ -192,7 +204,8 @@ public class DBWrapper {
   }
 
   public void deleteDeliveryZoneMembers(String facilityCode) throws SQLException, IOException {
-    update("delete from delivery_zone_members where facilityId in (select id from facilities where code ='%s')", facilityCode);
+    update("delete from delivery_zone_members where facilityId in (select id from facilities where code ='%s')",
+      facilityCode);
   }
 
   public String getVirtualPropertyOfFacility(String facilityCode) throws SQLException, IOException {
@@ -234,7 +247,9 @@ public class DBWrapper {
     return status;
   }
 
-  public void insertRequisitions(int numberOfRequisitions, String program, boolean withSupplyLine) throws SQLException, IOException {
+  public void insertRequisitions(int numberOfRequisitions,
+                                 String program,
+                                 boolean withSupplyLine) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
     ResultSet rs = query("select count(*) from requisitions");
@@ -272,7 +287,9 @@ public class DBWrapper {
 
   }
 
-  public void insertFulfilmentRoleAssignment(String userName, String roleName, String facilityCode) throws SQLException {
+  public void insertFulfilmentRoleAssignment(String userName,
+                                             String roleName,
+                                             String facilityCode) throws SQLException {
     update("insert into fulfillment_role_assignments(userId, roleId, facilityId) values " +
       "((select id from users where username='" + userName + "')," +
       "(select id from roles where name='" + roleName + "'),(select id from facilities where code='" + facilityCode + "'))");
@@ -281,8 +298,9 @@ public class DBWrapper {
 
   public String getDeliveryZoneNameAssignedToUser(String user) throws SQLException, IOException {
     String deliveryZoneName = "";
-    ResultSet rs = query("select name from delivery_zones where id in(select deliveryZoneId from role_assignments where " +
-      "userId=(select id from users where username='" + user + "'))");
+    ResultSet rs = query(
+      "select name from delivery_zones where id in(select deliveryZoneId from role_assignments where " +
+        "userId=(select id from users where username='" + user + "'))");
 
     if (rs.next()) {
       deliveryZoneName = rs.getString("name");
@@ -337,7 +355,10 @@ public class DBWrapper {
     update("delete from processing_periods where name='" + periodName + "';");
   }
 
-  public void insertFacilitiesWithDifferentGeoZones(String facility1, String facility2, String geoZone1, String geoZone2) throws IOException, SQLException {
+  public void insertFacilitiesWithDifferentGeoZones(String facility1,
+                                                    String facility2,
+                                                    String geoZone1,
+                                                    String geoZone2) throws IOException, SQLException {
     update("INSERT INTO facilities\n" +
       "(code, name, description, gln, mainPhone, fax, address1, address2, geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById, coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, hasElectricity, online, hasElectronicSCC, hasElectronicDAR, active, goLiveDate, goDownDate, satellite, comment, enabled, virtualFacility) values\n" +
       "('" + facility1 + "','Village Dispensary','IT department','G7645',9876234981,'fax','A','B',(select id from geographic_zones where code='" + geoZone1 + "'),2,333,22.1,1.2,3.3,2,9.9,6.6,'TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','TRUE','11/11/12','11/11/1887','TRUE','fc','TRUE', 'FALSE'),\n" +
@@ -360,13 +381,19 @@ public class DBWrapper {
   }
 
   public void allocateFacilityToUser(String userId, String facilityCode) throws IOException, SQLException {
-    update("update users set facilityId = (Select id from facilities where code = '%s') where id = '%s'", facilityCode, userId);
+    update("update users set facilityId = (Select id from facilities where code = '%s') where id = '%s'",
+      facilityCode,
+      userId);
 
   }
 
-  public void updateSourceOfAProgramTemplate(String program, String label, String source) throws IOException, SQLException {
-    update("update program_rnr_columns set source = '%s'" +
-      " where programId = (select id from programs where code = '%s') and label = '%s'", source, program, label);
+  public void updateSourceOfAProgramTemplate(String program,
+                                             String label,
+                                             String source) throws IOException, SQLException {
+    update("update program_rnr_columns set source = '%s'" + " where programId = (select id from programs where code = '%s') and label = '%s'",
+      source,
+      program,
+      label);
   }
 
   public void deleteData() throws SQLException, IOException {
@@ -420,7 +447,8 @@ public class DBWrapper {
     update("delete from delivery_zone_program_schedules");
     update("delete from delivery_zone_warehouses");
     update("delete from delivery_zone_members");
-    update("delete from role_assignments where deliveryZoneId in (select id from delivery_zones where code in('DZ1','DZ2'))");
+    update(
+      "delete from role_assignments where deliveryZoneId in (select id from delivery_zones where code in('DZ1','DZ2'))");
     update("delete from delivery_zones");
 
     update("delete from supervisory_nodes");
@@ -445,11 +473,16 @@ public class DBWrapper {
     }
   }
 
-  public void insertSupervisoryNode(String facilityCode, String supervisoryNodeCode, String supervisoryNodeName, String supervisoryNodeParentCode) throws SQLException, IOException {
+  public void insertSupervisoryNode(String facilityCode,
+                                    String supervisoryNodeCode,
+                                    String supervisoryNodeName,
+                                    String supervisoryNodeParentCode) throws SQLException, IOException {
     update("delete from supervisory_nodes");
-    update("INSERT INTO supervisory_nodes (parentId, facilityId, name, code) " +
-      "VALUES (%s, (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
-      supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode);
+    update("INSERT INTO supervisory_nodes (parentId, facilityId, name, code) " + "VALUES (%s, (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
+      supervisoryNodeParentCode,
+      facilityCode,
+      supervisoryNodeName,
+      supervisoryNodeCode);
   }
 
   public void insertSupervisoryNodeSecond(String facilityCode,
@@ -458,11 +491,17 @@ public class DBWrapper {
                                           String supervisoryNodeParentCode) throws SQLException, IOException {
     update("INSERT INTO supervisory_nodes" +
       "  (parentId, facilityId, name, code) VALUES" +
-      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')"
-      , supervisoryNodeParentCode, facilityCode, supervisoryNodeName, supervisoryNodeCode);
+      "  ((select id from  supervisory_nodes where code ='%s'), (SELECT id FROM facilities WHERE code = '%s'), '%s', '%s')",
+      supervisoryNodeParentCode,
+      facilityCode,
+      supervisoryNodeName,
+      supervisoryNodeCode);
   }
 
-  public void insertRequisitionGroups(String code1, String code2, String supervisoryNodeCode1, String supervisoryNodeCode2) throws SQLException, IOException {
+  public void insertRequisitionGroups(String code1,
+                                      String code2,
+                                      String supervisoryNodeCode1,
+                                      String supervisoryNodeCode2) throws SQLException, IOException {
     ResultSet rs = query("Select id from requisition_groups;");
 
     if (rs.next()) {
@@ -491,13 +530,14 @@ public class DBWrapper {
     if (rs.next()) {
       update("delete from requisition_group_program_schedules;");
     }
-    update("insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
-      "((select id from requisition_groups where code='RG1'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
-      "((select id from requisition_groups where code='RG1'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
-      "((select id from requisition_groups where code='RG1'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE),\n" +
-      "((select id from requisition_groups where code='RG2'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
-      "((select id from requisition_groups where code='RG2'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
-      "((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);\n");
+    update(
+      "insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
+        "((select id from requisition_groups where code='RG1'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+        "((select id from requisition_groups where code='RG1'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+        "((select id from requisition_groups where code='RG1'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE),\n" +
+        "((select id from requisition_groups where code='RG2'),(select id from programs where code='ESS_MEDS'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+        "((select id from requisition_groups where code='RG2'),(select id from programs where code='MALARIA'),(select id from processing_schedules where code='Q1stM'),TRUE),\n" +
+        "((select id from requisition_groups where code='RG2'),(select id from programs where code='HIV'),(select id from processing_schedules where code='M'),TRUE);\n");
   }
 
   //TODO
@@ -511,7 +551,9 @@ public class DBWrapper {
   }
 
   //TODO
-  public void insertRoleAssignmentForSupervisoryNodeForProgramId1(String userID, String roleName, String supervisoryNode) throws SQLException, IOException {
+  public void insertRoleAssignmentForSupervisoryNodeForProgramId1(String userID,
+                                                                  String roleName,
+                                                                  String supervisoryNode) throws SQLException, IOException {
     update("delete from role_assignments where userId='" + userID + "';");
 
     update(" INSERT INTO role_assignments\n" +
@@ -558,7 +600,9 @@ public class DBWrapper {
     update("UPDATE products SET description = null");
   }
 
-  public void insertProductWithCategory(String product, String productName, String category) throws SQLException, IOException {
+  public void insertProductWithCategory(String product,
+                                        String productName,
+                                        String category) throws SQLException, IOException {
 
     update("INSERT INTO product_categories (code, name, displayOrder) values ('" + category + "', '" + productName + "', 1);");
     update("INSERT INTO products\n" +
@@ -571,7 +615,10 @@ public class DBWrapper {
     update("INSERT INTO product_groups (code, name) values ('" + group + "', '" + group + "-Name');");
   }
 
-  public void insertProductWithGroup(String product, String productName, String group, boolean status) throws SQLException, IOException {
+  public void insertProductWithGroup(String product,
+                                     String productName,
+                                     String group,
+                                     boolean status) throws SQLException, IOException {
     update("INSERT INTO products\n" +
       "(code,    alternateItemCode,  manufacturer,       manufacturerCode,  manufacturerBarcode,   mohBarcode,   gtin,   type,         primaryName,    fullName,       genericName,    alternateName,    description,      strength,    formId,  dosageUnitId, dispensingUnit,  dosesPerDispensingUnit,  packSize,  alternatePackSize,  storeRefrigerated,   storeRoomTemperature,   hazardous,  flammable,   controlledSubstance,  lightSensitive,  approvedByWho,  contraceptiveCyp,  packLength,  packWidth, packHeight,  packWeight,  packsPerCarton, cartonLength,  cartonWidth,   cartonHeight, cartonsPerPallet,  expectedShelfLife,  specialStorageInstructions, specialTransportInstructions, active,  fullSupply, tracer,   packRoundingThreshold,  roundToZero,  archived, displayOrder, productGroupId) values\n" +
       "('" + product + "',  'a',                'Glaxo and Smith',  'a',              'a',                    'a',          'a',    '" + productName + "', '" + productName + "',   'TDF/FTC/EFV',  'TDF/FTC/EFV',  'TDF/FTC/EFV',    'TDF/FTC/EFV',  '300/200/600',  2,        1,            'Strip',           10,                     10,        30,                   TRUE,                  TRUE,                TRUE,       TRUE,         TRUE,                 TRUE,             TRUE,               1,          2.2,            2,          2,            2,            2,            2,              2,              2,              2,                    2,                    'a',                          'a',          " + status + ",TRUE,       TRUE,         1,                    FALSE,      TRUE,    1, (Select id from product_groups where code='" + group + "'));\n");
@@ -595,7 +642,10 @@ public class DBWrapper {
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product2 + "'), 30, 12.5, true);");
   }
 
-  public void insertProgramProduct(String product, String program, String doses, String active) throws SQLException, IOException {
+  public void insertProgramProduct(String product,
+                                   String program,
+                                   String doses,
+                                   String active) throws SQLException, IOException {
 
 
     update("INSERT INTO program_products(programId, productId, dosesPerMonth, currentPrice, active) VALUES\n" +
@@ -609,32 +659,47 @@ public class DBWrapper {
       "((SELECT ID from programs where code='" + program + "'), (SELECT id from products WHERE code = '" + product + "'), 30, 12.5, true);");
   }
 
-  public void insertProgramProductISA(String program, String product, String whoRatio, String dosesPerYear, String wastageFactor, String bufferPercentage, String minimumValue, String maximumValue, String adjustmentValue) throws SQLException, IOException {
-    update("INSERT INTO program_product_isa(programProductId, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue) VALUES\n" +
-      "((SELECT ID from program_products where programId = " +
-      "(SELECT ID from programs where code='" + program + "') and productId = " +
-      "(SELECT id from products WHERE code = '" + product + "')),"
-      + whoRatio + "," + dosesPerYear + "," + wastageFactor + "," + bufferPercentage + "," + minimumValue + ","
-      + maximumValue + "," + adjustmentValue + ");");
+  public void insertProgramProductISA(String program,
+                                      String product,
+                                      String whoRatio,
+                                      String dosesPerYear,
+                                      String wastageFactor,
+                                      String bufferPercentage,
+                                      String minimumValue,
+                                      String maximumValue,
+                                      String adjustmentValue) throws SQLException, IOException {
+    update(
+      "INSERT INTO program_product_isa(programProductId, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue) VALUES\n" +
+        "((SELECT ID from program_products where programId = " +
+        "(SELECT ID from programs where code='" + program + "') and productId = " +
+        "(SELECT id from products WHERE code = '" + product + "'))," + whoRatio + "," + dosesPerYear + "," + wastageFactor + "," + bufferPercentage + "," + minimumValue + "," + maximumValue + "," + adjustmentValue + ");");
   }
 
   public void deleteFacilityApprovedProducts() throws SQLException {
     update("DELETE FROM facility_approved_products");
   }
 
-  public void insertFacilityApprovedProduct(String productCode, String programCode, String facilityTypeCode) throws Exception {
+  public void insertFacilityApprovedProduct(String productCode,
+                                            String programCode,
+                                            String facilityTypeCode) throws Exception {
 
     String facilityTypeIdQuery = format("(SELECT id FROM facility_types WHERE code = '%s')", facilityTypeCode);
     String productIdQuery = format("(SELECT id FROM products WHERE  code = '%s')", productCode);
     String programIdQuery = format("(SELECT ID from programs where code = '%s' )", programCode);
     String programProductIdQuery = format("(SELECT id FROM program_products WHERE programId = %s AND productId = %s)",
-      programIdQuery, productIdQuery);
+      programIdQuery,
+      productIdQuery);
 
-    update(format("INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES (%s,%s,%d)",
-      facilityTypeIdQuery, programProductIdQuery, DEFAULT_MAX_MONTH_OF_STOCK));
+    update(format(
+      "INSERT INTO facility_approved_products(facilityTypeId, programProductId, maxMonthsOfStock) VALUES (%s,%s,%d)",
+      facilityTypeIdQuery,
+      programProductIdQuery,
+      DEFAULT_MAX_MONTH_OF_STOCK));
   }
 
-  public String fetchNonFullSupplyData(String productCode, String facilityTypeID, String programID) throws SQLException, IOException {
+  public String fetchNonFullSupplyData(String productCode,
+                                       String facilityTypeID,
+                                       String programID) throws SQLException, IOException {
     ResultSet rs = query("Select p.code, p.displayOrder, p.primaryName, pf.code as ProductForm," +
       "p.strength as Strength, du.code as DosageUnit from facility_approved_products fap, " +
       "program_products pp, products p, product_forms pf , dosage_units du where fap. facilityTypeId='" + facilityTypeID + "' " +
@@ -643,16 +708,24 @@ public class DBWrapper {
       "and du.id = p.dosageUnitId order by p. displayOrder asc;");
     String nonFullSupplyValues = null;
     if (rs.next()) {
-      nonFullSupplyValues = rs.getString("primaryName") + " " + rs.getString("productForm") + " " + rs.getString("strength") + " " + rs.getString("dosageUnit");
+      nonFullSupplyValues = rs.getString("primaryName") + " " + rs.getString("productForm") + " " + rs.getString(
+        "strength") + " " + rs.getString("dosageUnit");
     }
     return nonFullSupplyValues;
   }
 
-  public void insertSchedule(String scheduleCode, String scheduleName, String scheduleDesc) throws SQLException, IOException {
+  public void insertSchedule(String scheduleCode,
+                             String scheduleName,
+                             String scheduleDesc) throws SQLException, IOException {
     update("INSERT INTO processing_schedules(code, name, description) values('" + scheduleCode + "', '" + scheduleName + "', '" + scheduleDesc + "');");
   }
 
-  public void insertProcessingPeriod(String periodName, String periodDesc, String periodStartDate, String periodEndDate, Integer numberOfMonths, String scheduleCode) throws SQLException, IOException {
+  public void insertProcessingPeriod(String periodName,
+                                     String periodDesc,
+                                     String periodStartDate,
+                                     String periodEndDate,
+                                     Integer numberOfMonths,
+                                     String scheduleCode) throws SQLException, IOException {
     update("INSERT INTO processing_periods\n" +
       "(name, description, startDate, endDate, numberOfMonths, scheduleId, modifiedBy) VALUES\n" +
       "('" + periodName + "', '" + periodDesc + "', '" + periodStartDate + " 00:00:00', '" + periodEndDate + " 23:59:59', " + numberOfMonths + ", (SELECT id FROM processing_schedules WHERE code = '" + scheduleCode + "'), (SELECT id FROM users LIMIT 1));");
@@ -735,16 +808,20 @@ public class DBWrapper {
     return population;
   }
 
-  public Integer getOverriddenIsa(String facilityCode, String program, String product, String period) throws IOException, SQLException {
+  public Integer getOverriddenIsa(String facilityCode,
+                                  String program,
+                                  String product,
+                                  String period) throws IOException, SQLException {
     Integer overriddenIsa = 0;
     float numberOfMonths = 0;
-    ResultSet rs2 = query("SELECT numberOfMonths FROM processing_periods where name ='"+ period+"';");
-    if(rs2.next()){
-      numberOfMonths= rs2.getFloat("numberOfMonths");
+    ResultSet rs2 = query("SELECT numberOfMonths FROM processing_periods where name ='" + period + "';");
+    if (rs2.next()) {
+      numberOfMonths = rs2.getFloat("numberOfMonths");
     }
     ResultSet rs = query("select overriddenIsa from facility_program_products " +
       "where facilityId = '" + getFacilityID(facilityCode) + "' and programProductId = " +
-      "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
+      "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(
+      product) + "');");
 
     if (rs.next()) {
       overriddenIsa = Math.round(rs.getFloat("overriddenIsa") * numberOfMonths / getPackSize(product));
@@ -752,21 +829,30 @@ public class DBWrapper {
     return overriddenIsa;
   }
 
-  public void InsertOverriddenIsa(String facilityCode, String program, String product, int overriddenIsa) throws IOException, SQLException {
-    update("INSERT INTO facility_program_products (facilityId, programProductId,overriddenIsa) VALUES (" + getFacilityID(facilityCode) + "," +
-      "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "')," + overriddenIsa + ");");
+  public void InsertOverriddenIsa(String facilityCode,
+                                  String program,
+                                  String product,
+                                  int overriddenIsa) throws IOException, SQLException {
+    update("INSERT INTO facility_program_products (facilityId, programProductId,overriddenIsa) VALUES (" + getFacilityID(
+      facilityCode) + "," +
+      "(select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(
+      product) + "')," + overriddenIsa + ");");
   }
 
-  public void updateOverriddenIsa(String facilityCode, String program, String product, String overriddenIsa) throws IOException, SQLException {
-    update("Update facility_program_products set overriddenIsa=" + overriddenIsa + " where facilityId='"
-      + getFacilityID(facilityCode) + "' and programProductId = (select id from program_products where programId='"
-      + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
+  public void updateOverriddenIsa(String facilityCode,
+                                  String program,
+                                  String product,
+                                  String overriddenIsa) throws IOException, SQLException {
+    update("Update facility_program_products set overriddenIsa=" + overriddenIsa + " where facilityId='" + getFacilityID(
+      facilityCode) + "' and programProductId = (select id from program_products where programId='" + getProgramID(
+      program) + "' and productId='" + getProductID(product) + "');");
   }
 
   public String[] getProgramProductISA(String program, String product) throws IOException, SQLException {
     String isaParams[] = new String[7];
     ResultSet rs = query("select * from program_product_Isa where " +
-      " programProductId = (select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(product) + "');");
+      " programProductId = (select id from program_products where programId='" + getProgramID(program) + "' and productId='" + getProductID(
+      product) + "');");
 
     if (rs.next()) {
       isaParams[0] = rs.getString("whoRatio");
@@ -804,9 +890,13 @@ public class DBWrapper {
     update("update facilities set " + field + "='" + value + "' where code='" + code + "';");
   }
 
-  public void insertSupplyLines(String supervisoryNode, String programCode, String facilityCode, boolean exportOrders) throws IOException, SQLException {
-    update("insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
-      "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "')," + exportOrders + ");\n");
+  public void insertSupplyLines(String supervisoryNode,
+                                String programCode,
+                                String facilityCode,
+                                boolean exportOrders) throws IOException, SQLException {
+    update(
+      "insert into supply_lines (description, supervisoryNodeId, programId, supplyingFacilityId,exportOrders) values\n" +
+        "('supplying node for " + programCode + "', (select id from supervisory_nodes where code = '" + supervisoryNode + "'), (select id from programs where code='" + programCode + "'),(select id from facilities where code = '" + facilityCode + "')," + exportOrders + ");\n");
   }
 
   public void updateSupplyLines(String previousFacilityCode, String newFacilityCode) throws IOException, SQLException {
@@ -829,9 +919,7 @@ public class DBWrapper {
                                              String patientsToInitiateTreatment,
                                              String patientsStoppedTreatment,
                                              String remarks) throws IOException, SQLException {
-    update("update regimen_line_items set patientsOnTreatment='" + patientsOnTreatment
-      + "', patientsToInitiateTreatment='" + patientsToInitiateTreatment + "', patientsStoppedTreatment='"
-      + patientsStoppedTreatment + "',remarks='" + remarks + "';");
+    update("update regimen_line_items set patientsOnTreatment='" + patientsOnTreatment + "', patientsToInitiateTreatment='" + patientsToInitiateTreatment + "', patientsStoppedTreatment='" + patientsStoppedTreatment + "',remarks='" + remarks + "';");
 
   }
 
@@ -851,7 +939,9 @@ public class DBWrapper {
     update("update requisitions set createdBy= (select id from users where username = '" + username + "') , modifiedBy= (select id from users where username = '" + username + "');");
   }
 
-  public void updateRequisitionStatusByRnrId(String status, String username, int rnrId) throws IOException, SQLException {
+  public void updateRequisitionStatusByRnrId(String status,
+                                             String username,
+                                             int rnrId) throws IOException, SQLException {
     update("update requisitions set status='" + status + "' where id=" + rnrId + ";");
     update("insert into requisition_status_changes(rnrId, status, createdBy, modifiedBy) values(" + rnrId + ", '" + status + "', " +
       "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
@@ -892,7 +982,10 @@ public class DBWrapper {
     return rnrId;
   }
 
-  public void setupMultipleProducts(String program, String facilityType, int numberOfProductsOfEachType, boolean defaultDisplayOrder) throws SQLException, IOException {
+  public void setupMultipleProducts(String program,
+                                    String facilityType,
+                                    int numberOfProductsOfEachType,
+                                    boolean defaultDisplayOrder) throws SQLException, IOException {
 
 
     update("delete from facility_approved_products;");
@@ -956,7 +1049,10 @@ public class DBWrapper {
 
   }
 
-  public void setupMultipleCategoryProducts(String program, String facilityType, int numberOfCategories, boolean defaultDisplayOrder) throws SQLException, IOException {
+  public void setupMultipleCategoryProducts(String program,
+                                            String facilityType,
+                                            int numberOfCategories,
+                                            boolean defaultDisplayOrder) throws SQLException, IOException {
 
     update("delete from facility_approved_products;");
     update("delete from program_products;");
@@ -1078,7 +1174,10 @@ public class DBWrapper {
 
   }
 
-  public void insertPastPeriodRequisitionAndLineItems(String facilityCode, String program, String periodName, String product) throws IOException, SQLException {
+  public void insertPastPeriodRequisitionAndLineItems(String facilityCode,
+                                                      String program,
+                                                      String periodName,
+                                                      String product) throws IOException, SQLException {
     update("DELETE FROM requisition_line_item_losses_adjustments;");
     update("DELETE FROM requisition_line_items;");
     update("DELETE FROM requisitions;");
@@ -1105,7 +1204,9 @@ public class DBWrapper {
 
   }
 
-  public void insertRoleAssignmentForDistribution(String userName, String roleName, String deliveryZoneCode) throws SQLException, IOException {
+  public void insertRoleAssignmentForDistribution(String userName,
+                                                  String roleName,
+                                                  String deliveryZoneCode) throws SQLException, IOException {
 
     update("INSERT INTO role_assignments\n" +
       "  (userId, roleId, deliveryZoneId) VALUES\n" +
@@ -1136,9 +1237,12 @@ public class DBWrapper {
   }
 
   public void insertWarehouseIntoSupplyLinesTable(String facilityCodeFirst,
-                                                  String programFirst, String supervisoryNode, boolean exportOrders) throws SQLException {
-    update("INSERT INTO supply_lines (supplyingFacilityId, programId, supervisoryNodeId, description, exportOrders, createdBy, modifiedBy) values " +
-      "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='" + programFirst + "')," + "(select id from supervisory_nodes where code='" + supervisoryNode + "'),'warehouse', " + exportOrders + ", '1', '1');");
+                                                  String programFirst,
+                                                  String supervisoryNode,
+                                                  boolean exportOrders) throws SQLException {
+    update(
+      "INSERT INTO supply_lines (supplyingFacilityId, programId, supervisoryNodeId, description, exportOrders, createdBy, modifiedBy) values " +
+        "(" + "(select id from facilities where code = '" + facilityCodeFirst + "')," + "(select id from programs where name ='" + programFirst + "')," + "(select id from supervisory_nodes where code='" + supervisoryNode + "'),'warehouse', " + exportOrders + ", '1', '1');");
   }
 
   public void insertDeliveryZoneMembers(String code, String facility) throws SQLException {
@@ -1155,7 +1259,8 @@ public class DBWrapper {
       ");");
   }
 
-  public void insertProcessingPeriodForDistribution(int numberOfPeriodsRequired, String schedule) throws IOException, SQLException {
+  public void insertProcessingPeriodForDistribution(int numberOfPeriodsRequired,
+                                                    String schedule) throws IOException, SQLException {
     for (int counter = 1; counter <= numberOfPeriodsRequired; counter++) {
       String startDate = "2013-01-0" + counter;
       String endDate = "2013-01-0" + counter;
@@ -1177,7 +1282,11 @@ public class DBWrapper {
       "('remarks',(SELECT id FROM programs WHERE name='" + programName + "'),'Remarks',true,'regimen.reporting.dataType.text');");
   }
 
-  public void insertRegimenTemplateConfiguredForProgram(String programName, String categoryCode, String code, String name, boolean active) throws SQLException {
+  public void insertRegimenTemplateConfiguredForProgram(String programName,
+                                                        String categoryCode,
+                                                        String code,
+                                                        String name,
+                                                        boolean active) throws SQLException {
     update("update programs set regimenTemplateConfigured='true' where name='" + programName + "';");
     update("INSERT INTO regimens\n" +
       "  (programId, categoryId, code, name, active,displayOrder) VALUES\n" +
@@ -1199,7 +1308,9 @@ public class DBWrapper {
     return programsString;
   }
 
-  public void updateProgramRegimenColumns(String programName, String regimenColumnName, boolean visible) throws SQLException {
+  public void updateProgramRegimenColumns(String programName,
+                                          String regimenColumnName,
+                                          boolean visible) throws SQLException {
     update("update program_regimen_columns set visible=" + visible + " where name ='" + regimenColumnName +
       "'and programId=(SELECT id FROM programs WHERE name='" + programName + "');");
   }
@@ -1216,19 +1327,23 @@ public class DBWrapper {
     update("INSERT INTO shipment_configuration(headerInFile) VALUES('" + headerInFile + "')");
   }
 
-  public void setupOrderFileOpenLMISColumns(String dataFieldLabel, String includeInOrderFile, String columnLabel,
-                                            int position, String Format) throws IOException, SQLException {
+  public void setupOrderFileOpenLMISColumns(String dataFieldLabel,
+                                            String includeInOrderFile,
+                                            String columnLabel,
+                                            int position,
+                                            String Format) throws IOException, SQLException {
     update("UPDATE order_file_columns SET " +
-      "includeInOrderFile='" + includeInOrderFile + "', columnLabel='" + columnLabel + "', position=" + position
-      + ", format='" + Format + "' where dataFieldLabel='" + dataFieldLabel + "'");
+      "includeInOrderFile='" + includeInOrderFile + "', columnLabel='" + columnLabel + "', position=" + position + ", format='" + Format + "' where dataFieldLabel='" + dataFieldLabel + "'");
   }
 
   public void deleteOrderFileNonOpenLMISColumns() throws SQLException {
     update("DELETE FROM order_file_columns where openLMISField = FALSE");
   }
 
-  public void setupOrderFileNonOpenLMISColumns(String dataFieldLabel, String includeInOrderFile,
-                                               String columnLabel, int position) throws IOException, SQLException {
+  public void setupOrderFileNonOpenLMISColumns(String dataFieldLabel,
+                                               String includeInOrderFile,
+                                               String columnLabel,
+                                               int position) throws IOException, SQLException {
     update("INSERT INTO order_file_columns (dataFieldLabel, includeInOrderFile, columnLabel, position, openLMISField) " +
       "VALUES ('" + dataFieldLabel + "','" + includeInOrderFile + "','" + columnLabel + "'," + position + ", FALSE)");
   }
@@ -1257,8 +1372,7 @@ public class DBWrapper {
       update("update requisitions set status='RELEASED' where id =" + rs.getString("id"));
 
 
-      update("insert into orders(Id, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id")
-        + ", '" + status + "', (select id from supply_lines where supplyingFacilityId = " +
+      update("insert into orders(Id, status,supplyLineId, createdBy, modifiedBy) values(" + rs.getString("id") + ", '" + status + "', (select id from supply_lines where supplyingFacilityId = " +
         "(select facilityId from fulfillment_role_assignments where userId = " +
         "(select id from users where username = '" + username + "')) limit 1) ," +
         "(select id from users where username = '" + username + "'), (select id from users where username = '" + username + "'));");
@@ -1266,31 +1380,35 @@ public class DBWrapper {
     }
   }
 
-  public void setupUserForFulfillmentRole(String username, String roleName, String facilityCode) throws IOException, SQLException {
-    update("insert into fulfillment_role_assignments(userId, roleId,facilityId) values((select id from users where userName = '" + username +
-      "'),(select id from roles where name = '" + roleName + "')," +
-      "(select id from facilities where code = '" + facilityCode + "'));");
+  public void setupUserForFulfillmentRole(String username,
+                                          String roleName,
+                                          String facilityCode) throws IOException, SQLException {
+    update(
+      "insert into fulfillment_role_assignments(userId, roleId,facilityId) values((select id from users where userName = '" + username +
+        "'),(select id from roles where name = '" + roleName + "')," +
+        "(select id from facilities where code = '" + facilityCode + "'));");
 
   }
 
-  public HashMap getFacilityVisitDetails() throws SQLException {
-    HashMap m1 = new HashMap();
-    ResultSet rs = query("select observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle from facility_visits;");
-    while (rs.next()) {
-      m1.put("observations", rs.getString("observations"));
-      m1.put("confirmedByName", rs.getString("confirmedByName"));
-      m1.put("confirmedByTitle", rs.getString("confirmedByTitle"));
-      m1.put("verifiedByName", rs.getString("verifiedByName"));
-      m1.put("verifiedByTitle", rs.getString("verifiedByTitle"));
+  public Map<String, String> getFacilityVisitDetails(String facilityCode) throws SQLException {
+    Map<String, String> facilityVisitsDetails = new HashMap<>();
+    try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle from facility_visits" +
+        " WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
+      while (rs.next()) {
+        facilityVisitsDetails.put("observations", rs.getString("observations"));
+        facilityVisitsDetails.put("confirmedByName", rs.getString("confirmedByName"));
+        facilityVisitsDetails.put("confirmedByTitle", rs.getString("confirmedByTitle"));
+        facilityVisitsDetails.put("verifiedByName", rs.getString("verifiedByName"));
+        facilityVisitsDetails.put("verifiedByTitle", rs.getString("verifiedByTitle"));
+      }
+      return facilityVisitsDetails;
     }
-    return m1;
   }
 
   public String getWarehouse1Name(String facilityCode) throws SQLException {
     String warehouseName = "";
     ResultSet rs = query("select name from facilities where code='" + facilityCode + "';");
-    if (rs.next())
-      warehouseName = rs.getString(1);
+    if (rs.next()) warehouseName = rs.getString(1);
     return warehouseName;
   }
 
@@ -1306,7 +1424,9 @@ public class DBWrapper {
     try (ResultSet rs1 = query("SELECT id FROM pod WHERE OrderId = %d", orderId)) {
       if (rs1.next()) {
         int podId = rs1.getInt("id");
-        ResultSet rs2 = query("SELECT quantityReceived FROM pod_line_items WHERE podId = %d and productCode='%s'", podId, productCode);
+        ResultSet rs2 = query("SELECT quantityReceived FROM pod_line_items WHERE podId = %d and productCode='%s'",
+          podId,
+          productCode);
         if (rs2.next()) {
           return rs2.getInt("quantityReceived");
         }
@@ -1320,13 +1440,15 @@ public class DBWrapper {
   }
 
   public void enterValidDetailsInFacilityFtpDetailsTable(String facilityCode) throws SQLException {
-    update("INSERT INTO facility_ftp_details(facilityId, serverHost, serverPort, username, password, localFolderPath) VALUES" +
-      "((SELECT id FROM facilities WHERE code = '%s' ), '192.168.34.1', 21, 'openlmis', 'openlmis', '/ftp');", facilityCode);
+    update(
+      "INSERT INTO facility_ftp_details(facilityId, serverHost, serverPort, username, password, localFolderPath) VALUES" + "((SELECT id FROM facilities WHERE code = '%s' ), '192.168.34.1', 21, 'openlmis', 'openlmis', '/ftp');",
+      facilityCode);
   }
 
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
     int rgId = 0;
-    ResultSet rs = query("SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
+    ResultSet rs = query(
+      "SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
     if (rs.next()) {
       rgId = rs.getInt(1);
     }
@@ -1335,17 +1457,24 @@ public class DBWrapper {
 
   public List<Integer> getAllProgramsOfFacility(String facilityCode) throws SQLException {
     List<Integer> l1 = new ArrayList<>();
-    ResultSet rs = query("SELECT programId FROM programs_supported WHERE facilityId = (SELECT id FROM facilities WHERE code ='%s')", facilityCode);
+    ResultSet rs = query(
+      "SELECT programId FROM programs_supported WHERE facilityId = (SELECT id FROM facilities WHERE code ='%s')",
+      facilityCode);
     while (rs.next()) {
       l1.add(rs.getInt(1));
     }
     return l1;
   }
 
-  public String getProgramFieldForProgramIdAndFacilityCode(int programId, String facilityCode, String field) throws SQLException {
+  public String getProgramFieldForProgramIdAndFacilityCode(int programId,
+                                                           String facilityCode,
+                                                           String field) throws SQLException {
     String res = null;
-    ResultSet rs = query("SELECT %s FROM programs_supported WHERE programId = %d AND facilityId = (SELECT id FROM facilities WHERE code = '%s')",
-      field, programId, facilityCode);
+    ResultSet rs = query(
+      "SELECT %s FROM programs_supported WHERE programId = %d AND facilityId = (SELECT id FROM facilities WHERE code = '%s')",
+      field,
+      programId,
+      facilityCode);
 
     if (rs.next()) {
       res = rs.getString(1);
@@ -1355,8 +1484,10 @@ public class DBWrapper {
 
   public Date getProgramStartDateForProgramIdAndFacilityCode(int programId, String facilityCode) throws SQLException {
     Date date = null;
-    ResultSet rs = query("SELECT startDate FROM programs_supported WHERE programId = %d AND facilityId = (SELECT id FROM facilities WHERE code ='%s')",
-      programId, facilityCode);
+    ResultSet rs = query(
+      "SELECT startDate FROM programs_supported WHERE programId = %d AND facilityId = (SELECT id FROM facilities WHERE code ='%s')",
+      programId,
+      facilityCode);
 
     if (rs.next()) {
       date = rs.getDate(1);
@@ -1393,8 +1524,7 @@ public class DBWrapper {
   }
 
   public void updateProgramsSupportedByField(String field, String newValue, String facilityCode) throws SQLException {
-    update("Update programs_supported set " + field + "='" + newValue + "' where facilityId=(Select id from facilities where code ='"
-      + facilityCode + "');");
+    update("Update programs_supported set " + field + "='" + newValue + "' where facilityId=(Select id from facilities where code ='" + facilityCode + "');");
   }
 
   public void deleteSupervisoryRoleFromRoleAssignment() throws SQLException {
@@ -1405,7 +1535,9 @@ public class DBWrapper {
     update("delete from program_rnr_columns");
   }
 
-  public void deleteProductAvailableAtFacility(String productCode, String programCode, String facilityCode) throws SQLException {
+  public void deleteProductAvailableAtFacility(String productCode,
+                                               String programCode,
+                                               String facilityCode) throws SQLException {
     update("delete from facility_approved_products where facilityTypeId=(select typeId from facilities where code='" + facilityCode + "') " +
       "and programproductid=(select id from program_products where programId=(select id from programs where code='" + programCode + "')" +
       "and productid=(select id from products where code='" + productCode + "'));");
@@ -1429,7 +1561,11 @@ public class DBWrapper {
       "(SELECT id from programs where code='" + programCode + "');");
   }
 
-  public void updateConfigureTemplate(String programCode, String fieldName, String fieldValue, String visibilityFlag, String rnrColumnName) throws SQLException {
+  public void updateConfigureTemplate(String programCode,
+                                      String fieldName,
+                                      String fieldValue,
+                                      String visibilityFlag,
+                                      String rnrColumnName) throws SQLException {
     update("UPDATE program_rnr_columns SET visible ='" + visibilityFlag + "', " + fieldName + "='" + fieldValue + "' WHERE programId=" +
       "(SELECT id from programs where code='" + programCode + "')" +
       "AND masterColumnId =(SELECT id from master_rnr_columns WHERE name = '" + rnrColumnName + "') ;");
@@ -1451,10 +1587,14 @@ public class DBWrapper {
 
   }
 
-  public String getRequisitionLineItemFieldValue(Long requisitionId, String field, String productCode) throws SQLException {
+  public String getRequisitionLineItemFieldValue(Long requisitionId,
+                                                 String field,
+                                                 String productCode) throws SQLException {
     String value = null;
     ResultSet rs = query("SELECT %s FROM requisition_line_items WHERE rnrId = %d AND productCode = '%s'",
-      field, requisitionId, productCode);
+      field,
+      requisitionId,
+      productCode);
     if (rs.next()) {
       value = rs.getString(field);
     }
@@ -1465,7 +1605,10 @@ public class DBWrapper {
     update("UPDATE products SET fullSupply = %b WHERE code = '%s'", isFullSupply, productCode);
   }
 
-  public void insertRoleAssignmentForSupervisoryNode(String userID, String roleName, String supervisoryNode, String programCode) throws SQLException {
+  public void insertRoleAssignmentForSupervisoryNode(String userID,
+                                                     String roleName,
+                                                     String supervisoryNode,
+                                                     String programCode) throws SQLException {
     update(" INSERT INTO role_assignments\n" +
       "            (userId, roleId, programId, supervisoryNodeId) VALUES \n" +
       "    ('" + userID + "', (SELECT id FROM roles WHERE name = '" + roleName + "')," +
@@ -1473,11 +1616,14 @@ public class DBWrapper {
       "(SELECT id from supervisory_nodes WHERE code = '" + supervisoryNode + "'));");
   }
 
-  public void insertRequisitionGroupProgramScheduleForProgram(String requisitionGroupCode, String programCode, String scheduleCode) throws SQLException {
+  public void insertRequisitionGroupProgramScheduleForProgram(String requisitionGroupCode,
+                                                              String programCode,
+                                                              String scheduleCode) throws SQLException {
     update("delete from requisition_group_program_schedules where programId=(select id from programs where code='" + programCode + "');");
-    update("insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
-      "((select id from requisition_groups where code='" + requisitionGroupCode + "'),(select id from programs where code='" + programCode + "')," +
-      "(select id from processing_schedules where code='" + scheduleCode + "'),TRUE);");
+    update(
+      "insert into requisition_group_program_schedules ( requisitionGroupId , programId , scheduleId , directDelivery ) values\n" +
+        "((select id from requisition_groups where code='" + requisitionGroupCode + "'),(select id from programs where code='" + programCode + "')," +
+        "(select id from processing_schedules where code='" + scheduleCode + "'),TRUE);");
   }
 
   public void updateCreatedDateInRequisitionStatusChanges(String newDate, Long rnrId) throws SQLException {
@@ -1509,7 +1655,8 @@ public class DBWrapper {
     update("update requisition_status_changes set createdDate='" + createdDate + "';");
   }
 
-  public void updateSupervisoryNodeForRequisitionGroup(String requisitionGroup, String supervisoryNodeCode) throws SQLException {
+  public void updateSupervisoryNodeForRequisitionGroup(String requisitionGroup,
+                                                       String supervisoryNodeCode) throws SQLException {
     update("update requisition_groups set supervisoryNodeId=(select id from supervisory_nodes where code='" + supervisoryNodeCode +
       "') where code='" + requisitionGroup + "';");
   }
@@ -1549,7 +1696,8 @@ public class DBWrapper {
 
   public void insertBudgetData() throws IOException, SQLException {
     update("INSERT INTO budget_file_info VALUES (1,'abc.csv','f',200,'12/12/13',200,'12/12/13');");
-    update("INSERT INTO budget_line_items VALUES (1,(select id from processing_periods where name='current Period'),1,'01/01/2013',200,'hjhj',200,'12/12/2013',200,'12/12/2013',(select id from facilities where code='F10'),1);");
+    update(
+      "INSERT INTO budget_line_items VALUES (1,(select id from processing_periods where name='current Period'),1,'01/01/2013',200,'hjhj',200,'12/12/2013',200,'12/12/2013',(select id from facilities where code='F10'),1);");
 
   }
 
@@ -1557,7 +1705,10 @@ public class DBWrapper {
     update("UPDATE budget_line_items SET " + field + " ='" + newValue + "';");
   }
 
-  public void addRefrigeratorToFacility(String brand, String model, String serialNumber, String facilityCode) throws SQLException {
+  public void addRefrigeratorToFacility(String brand,
+                                        String model,
+                                        String serialNumber,
+                                        String facilityCode) throws SQLException {
     update("INSERT INTO refrigerators(brand, model, serialNumber, facilityId, createdBy , modifiedBy) VALUES" +
       "('" + brand + "','" + model + "','" + serialNumber + "',(SELECT id FROM facilities WHERE code = '" + facilityCode + "'),1,1);");
   }
@@ -1584,7 +1735,10 @@ public class DBWrapper {
     return packSize;
   }
 
-  public void updateProcessingPeriodByField(String field, String fieldValue, String periodName, String scheduleCode) throws SQLException {
+  public void updateProcessingPeriodByField(String field,
+                                            String fieldValue,
+                                            String periodName,
+                                            String scheduleCode) throws SQLException {
     update("update processing_periods set " + field + "=" + fieldValue +
       " where name='" + periodName + "'" +
       " and scheduleId =" +
@@ -1592,8 +1746,9 @@ public class DBWrapper {
   }
 
   public ResultSet getRefrigeratorsData(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
-    ResultSet resultSet = query("SELECT * FROM refrigerators WHERE serialNumber = '%s' AND facilityId = " +
-      "(SELECT id FROM facilities WHERE code = '%s');", refrigeratorSerialNumber, facilityCode);
+    ResultSet resultSet = query("SELECT * FROM refrigerators WHERE serialNumber = '%s' AND facilityId = " + "(SELECT id FROM facilities WHERE code = '%s');",
+      refrigeratorSerialNumber,
+      facilityCode);
     resultSet.next();
     return resultSet;
   }
