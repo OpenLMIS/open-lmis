@@ -30,6 +30,7 @@ function RefrigeratorController($scope, $dialog, IndexedDB, $routeParams, distri
   $scope.showRefrigeratorModal = function () {
     $scope.addRefrigeratorModal = true;
     $scope.newRefrigeratorReading = null;
+    $scope.isDuplicateSerialNumber = false;
   };
 
   $scope.addRefrigeratorToStore = function () {
