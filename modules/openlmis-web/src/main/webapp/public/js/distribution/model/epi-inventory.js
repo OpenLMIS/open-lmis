@@ -14,7 +14,7 @@ function EpiInventory(epiInventory) {
   var complete = 'is-complete';
   var incomplete = 'is-incomplete';
   var empty = 'is-empty';
-  var mandatoryFields = ['existingQuantity', 'deliveredQuantity', 'spoiledQuantity']
+  var mandatoryFields = ['existingQuantity', 'deliveredQuantity', 'spoiledQuantity'];
 
   function isValid(lineItem, field) {
     if (isUndefined(lineItem[field]) || field === 'deliveredQuantity')
@@ -38,6 +38,6 @@ function EpiInventory(epiInventory) {
       });
     });
     return statusClass;
-  }
+  };
 
 }
