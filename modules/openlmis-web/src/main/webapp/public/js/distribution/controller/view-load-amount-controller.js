@@ -42,9 +42,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
 
       facility.supportedPrograms[0].programProducts = programProductsWithISA;
 
-      facility.supportedPrograms[0].programProductMap = _.groupBy(facility.supportedPrograms[0].programProducts, function (programProduct) {
-        return programProduct.product.productGroup ? programProduct.product.productGroup.name : otherGroupName;
-      });
+      facility.supportedPrograms[0].programProductMap = ProgramProduct.groupProductsMapByName(facility, otherGroupName);
 
       facility.supportedPrograms[0].sortedProductGroup = _.sortBy(_.keys(facility.supportedPrograms[0].programProductMap), function (key) {
         return key;
@@ -113,16 +111,6 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
     return programProducts;
   };
 
-  function calculateProductIsaTotal(aggregateProduct, productTotal) {
-    if (!isNaN(utils.parseIntWithBaseTen(aggregateProduct.isaAmount))) {
-      if (productTotal.isaAmount == "--") {
-        productTotal.isaAmount = aggregateProduct.isaAmount;
-      } else {
-        productTotal.isaAmount = productTotal.isaAmount + aggregateProduct.isaAmount;
-      }
-    }
-  }
-
   function calculateTotalForPopulation(population, presentTotalPopulation) {
     if (presentTotalPopulation == "--") {
       return  population;
@@ -149,7 +137,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
             return totalProduct.code == aggregateProduct.product.code;
           });
           if (productTotal) {
-            calculateProductIsaTotal(aggregateProduct, productTotal);
+            ProgramProduct.calculateProductIsaTotal(aggregateProduct, productTotal);
 
           } else {
             totalForGroup.push({code: aggregateProduct.product.code, isaAmount: aggregateProduct.isaAmount});
@@ -169,7 +157,7 @@ function ViewLoadAmountController($scope, facilities, period, deliveryZone) {
       });
 
       if (existingTotal) {
-        calculateProductIsaTotal(programProduct, existingTotal);
+        ProgramProduct.calculateProductIsaTotal(programProduct, existingTotal);
       } else {
         total.push({product: {code: programProduct.product.code}, isaAmount: programProduct.isaAmount});
       }

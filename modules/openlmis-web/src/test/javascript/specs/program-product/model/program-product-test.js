@@ -93,4 +93,75 @@ describe('ProgramProduct', function () {
     expect(programProduct.isaAmount).toEqual(0);
   });
 
+  it('should group program products by product group name', function () {
+    var product1 = {
+      name: "product1",
+      productGroup: {
+        name: 'group1'
+      }
+    };
+    var product2 = {
+      name: "product2",
+      productGroup: {
+        name: 'group2'
+      }
+    };
+    var facility = {
+      supportedPrograms: [
+        {
+          programProducts: [
+            {
+              product: product1
+            },
+            {
+              product: {
+                productGroup: {
+                  name: 'group1'
+                }
+              }
+            },
+            {
+              product: {
+                productGroup: {
+                  name: 'group2'
+                }
+              }
+            },
+            {
+              product: product2
+            },
+            {
+              product: {}
+            }
+          ]
+        }
+      ]
+    }
+
+    var mapOfProductsByGroup = ProgramProduct.groupProductsMapByName(facility, "");
+
+    expect(Object.keys(mapOfProductsByGroup).length).toEqual(3);
+    expect(mapOfProductsByGroup["group1"][0]).toEqual({product: product1});
+    expect(mapOfProductsByGroup["group2"][1]).toEqual({product: product2});
+
+  });
+
+  it('should calculate total for product isa as aggregate isa when existing is blank', function () {
+
+    var aggregareProduct = {isaAmount: 100};
+    var productTotal = {isaAmount: "--"};
+    ProgramProduct.calculateProductIsaTotal(aggregareProduct, productTotal);
+
+    expect(productTotal.isaAmount).toEqual(100);
+  });
+
+  it('should calculate total for product isa as sum of product total and aggregate isa', function () {
+
+    var aggregareProduct = {isaAmount: 100};
+    var productTotal = {isaAmount: 450};
+    ProgramProduct.calculateProductIsaTotal(aggregareProduct, productTotal);
+
+    expect(productTotal.isaAmount).toEqual(550);
+  });
+
 })

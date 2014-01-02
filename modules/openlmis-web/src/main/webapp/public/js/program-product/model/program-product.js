@@ -23,5 +23,23 @@ var ProgramProduct = function (programProduct) {
 
     this.isaAmount = programProduct.isaAmount;
   };
+
+
 };
 
+ProgramProduct.groupProductsMapByName = function (facility, otherGroupName) {
+  var programProductsMap = _.groupBy(facility.supportedPrograms[0].programProducts, function (programProduct) {
+    return programProduct.product.productGroup ? programProduct.product.productGroup.name : otherGroupName;
+  });
+  return programProductsMap;
+};
+
+ProgramProduct.calculateProductIsaTotal = function (aggregateProduct, productTotal) {
+  if (!isNaN(utils.parseIntWithBaseTen(aggregateProduct.isaAmount))) {
+    if (productTotal.isaAmount == "--") {
+      productTotal.isaAmount = aggregateProduct.isaAmount;
+    } else {
+      productTotal.isaAmount = productTotal.isaAmount + aggregateProduct.isaAmount;
+    }
+  }
+};
