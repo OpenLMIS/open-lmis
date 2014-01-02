@@ -22,7 +22,7 @@
         <span openlmis-message="label.refrigerators"></span>
       </a>
     </li>
-    <li ng-class="[isSelected('epi-inventory')]" class="is-complete">
+    <li ng-class="[distributionData.epiInventory.computeStatus(), isSelected('epi-inventory')]">
       <a href="" ng-click="changeRoute('epi-inventory')">
         <span class="status-icon"></span>
         <span openlmis-message="label.epi.inventory"></span>
