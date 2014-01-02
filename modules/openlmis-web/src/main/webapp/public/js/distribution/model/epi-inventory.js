@@ -10,4 +10,34 @@
 
 function EpiInventory(epiInventory) {
   $.extend(true, this, epiInventory);
+
+  var complete = 'is-complete';
+  var incomplete = 'is-incomplete';
+  var empty = 'is-empty';
+  var mandatoryFields = ['existingQuantity', 'deliveredQuantity', 'spoiledQuantity']
+
+  function isValid(lineItem, field) {
+    if (isUndefined(lineItem[field]) || field === 'deliveredQuantity')
+      return !isUndefined(lineItem[field]);
+    return (!isUndefined(lineItem[field].value) || lineItem[field].notRecorded);
+  }
+
+  EpiInventory.prototype.computeStatus = function () {
+    var statusClass;
+    $(this.lineItems).each(function (index, lineItem) {
+      $(mandatoryFields).each(function (index, field) {
+        if (isValid(lineItem, field) && (!statusClass || statusClass === complete)) {
+          statusClass = complete;
+        } else if (!isValid(lineItem, field) && (!statusClass || statusClass === empty)) {
+          statusClass = empty;
+        } else if ((!isValid(lineItem, field) && statusClass === complete) || (isValid(lineItem, field) && statusClass === empty)) {
+          statusClass = incomplete;
+          return false;
+        }
+        return true;
+      });
+    });
+    return statusClass;
+  }
+
 }
