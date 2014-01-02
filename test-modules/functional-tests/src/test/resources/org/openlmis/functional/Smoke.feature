@@ -585,10 +585,10 @@ Feature: Smoke Tests
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |
-    And I view refrigerator readings in DB for refrigerator serial number "GR-J287PGHV":
+    And I view refrigerator readings in DB for refrigerator serial number "GR-J287PGHV" and facility "F10":
       | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
       | 3.0         | Y                    | 1              | 0               | N                    | null  |
-    And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV"
+    And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"

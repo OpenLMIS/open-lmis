@@ -515,9 +515,9 @@ public class TestCaseHelper {
     assertEquals(expirationDate, epiDetails.get("expirationdate"));
   }
 
-  public void verifyRefrigeratorReadingDataInDatabase(String refrigeratorSerialNumber, Float temperature, String functioningCorrectly, Integer lowAlarmEvents,
+  public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature, String functioningCorrectly, Integer lowAlarmEvents,
                                                       Integer highAlarmEvents, String problemSinceLastTime, String notes) throws SQLException {
-    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     assertEquals(temperature, resultSet.getString("temperature"));
     assertEquals(functioningCorrectly, resultSet.getString("functioningCorrectly"));
     assertEquals(lowAlarmEvents, resultSet.getString("lowAlarmEvents"));
@@ -526,16 +526,16 @@ public class TestCaseHelper {
     assertEquals(notes, resultSet.getString("notes"));
   }
 
-  public void verifyRefrigeratorProblemDataNullInDatabase(String refrigeratorSerialNumber) throws SQLException {
-    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+  public void verifyRefrigeratorProblemDataNullInDatabase(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     Long readingId = resultSet.getLong("id");
     resultSet = dbWrapper.getRefrigeratorProblems(readingId);
     assertFalse(resultSet.next());
   }
 
-  public void verifyRefrigeratorProblemDataInDatabase(String refrigeratorSerialNumber, Boolean operatorError, Boolean burnerProblem, Boolean gasLeakage,
+  public void verifyRefrigeratorProblemDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Boolean operatorError, Boolean burnerProblem, Boolean gasLeakage,
                                                       Boolean egpFault, Boolean thermostatSetting, Boolean other, String otherProblemExplanation) throws SQLException {
-    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     Long readingId = resultSet.getLong("id");
     resultSet = dbWrapper.getRefrigeratorProblems(readingId);
     resultSet.next();

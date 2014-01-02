@@ -171,6 +171,9 @@ public class RefrigeratorPage extends Page {
   @FindBy(how = ID, using = "otherTextbox")
   private static WebElement problemOtherTextBox= null;
 
+  @FindBy(how = ID, using = "noRefrigerators")
+  private static WebElement noRefrigeratorAddedMessage = null;
+
   public RefrigeratorPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -464,6 +467,10 @@ public class RefrigeratorPage extends Page {
 
     assertTrue("notesTextArea enabled.", notesTextArea.isEnabled());
 
+  }
+
+  public Boolean isNoRefrigeratorAddedMessagePresent() {
+    return noRefrigeratorAddedMessage.isDisplayed();
   }
 
 }

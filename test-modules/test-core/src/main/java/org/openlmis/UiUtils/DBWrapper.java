@@ -1562,9 +1562,10 @@ public class DBWrapper {
       "('" + brand + "','" + model + "','" + serialNumber + "',(SELECT id FROM facilities WHERE code = '" + facilityCode + "'),1,1);");
   }
 
-  public ResultSet getRefrigeratorReadings(String refrigeratorSerialNumber) throws SQLException {
+  public ResultSet getRefrigeratorReadings(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
     ResultSet resultSet = query("SELECT * FROM refrigerator_readings WHERE refrigeratorId = " +
-      "(SELECT id FROM refrigerators WHERE serialNumber = '%s');", refrigeratorSerialNumber);
+      "(SELECT id FROM refrigerators WHERE serialNumber = '%s' AND facilityId = " +
+      "(SELECT id FROM facilities WHERE code = '%s'));", refrigeratorSerialNumber, facilityCode);
     resultSet.next();
     return resultSet;
   }
@@ -1589,5 +1590,9 @@ public class DBWrapper {
       " and scheduleId =" +
       "(Select id from processing_schedules where code = '" + scheduleCode + "');");
   }
+
+//  public void insertReadingsInRefrigerator(String serialNumber) {
+//    update("INSERT INTO refrigerator_readings() values");
+//  }
 }
 

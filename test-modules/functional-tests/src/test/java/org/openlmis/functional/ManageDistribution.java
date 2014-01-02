@@ -338,10 +338,10 @@ public class ManageDistribution extends TestCaseHelper {
     }
   }
 
-  @And("^I view refrigerator readings in DB for refrigerator serial number \"([^\"]*)\":$")
-  public void verifyRefrigeratorReadingDataInDB(String refrigeratorSerialNumber, DataTable tableData) throws SQLException {
+  @And("^I view refrigerator readings in DB for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\":$")
+  public void verifyRefrigeratorReadingDataInDB(String facilityCode, String refrigeratorSerialNumber, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber);
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     for (Map map : data) {
       assertEquals(map.get("temperature"), resultSet.getString("temperature"));
       assertEquals(map.get("functioningCorrectly"), resultSet.getString("functioningCorrectly"));
@@ -356,9 +356,9 @@ public class ManageDistribution extends TestCaseHelper {
     }
 }
 
-  @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\"$")
-  public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber) throws SQLException {
-    verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber);
+  @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
+  public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
+    verifyRefrigeratorProblemDataNullInDatabase(refrigeratorSerialNumber, facilityCode);
   }
 
   @Then("^I should see data download successfully$")

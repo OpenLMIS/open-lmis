@@ -46,7 +46,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
@@ -58,7 +58,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.deleteDeliveryZoneMembers("F11");
+    dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
@@ -81,7 +81,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility("F10");
+    facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.onRefrigeratorScreen();
@@ -97,7 +97,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
 
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
+    facilityListPage.selectFacility(facilityCodeFirst);
 
     String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++) {
@@ -151,7 +151,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
+    facilityListPage.selectFacility(facilityCodeFirst);
 
     refrigeratorPage.clickShowForRefrigerator1();
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
@@ -194,7 +194,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.syncDistributionMessageDone();
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
+    facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
     generalObservationPage.navigate();
     generalObservationPage.verifyAllFieldsDisabled();
@@ -206,9 +206,9 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", "F10");
-    verifyRefrigeratorReadingDataInDatabase("GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
-    verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV");
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
+    verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
+    verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
   }
 
   @AfterMethod(groups = {"offline"})
