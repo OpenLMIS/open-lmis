@@ -485,7 +485,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
     assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
     assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
-    assertEquals("Period1 (01/11/2013 - 02/01/2014)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1 (01/11/2013 - 02/01/2014)')]")).getText());
+    assertEquals("Period1 (01/11/2013 - 02/01/2014)", testWebDriver.findElement(By.xpath("//div[1]/span[contains(text(),'Period1 (01/11/2013 - 02/01/2014)')]")).getText());
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
     // assertEquals(facility_code,testWebDriver.findElement(By.xpath("//div[@class='ngCellText ng-scope']")).getText());
     if (rnrType == "Emergency") {
