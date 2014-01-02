@@ -105,6 +105,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I verify saved \"([^\"]*)\" values:$")
   public void verifySavedEPIValues(String tabName, DataTable tableData) {
+    testWebDriver.sleep(1000);
     new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
     DistributionTab tab = tabMap.get(tabName);
     tab.navigate();
@@ -339,7 +340,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @And("^I view refrigerator readings in DB for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\":$")
-  public void verifyRefrigeratorReadingDataInDB(String facilityCode, String refrigeratorSerialNumber, DataTable tableData) throws SQLException {
+  public void verifyRefrigeratorReadingDataInDB(String refrigeratorSerialNumber, String facilityCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
     ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
     for (Map map : data) {
