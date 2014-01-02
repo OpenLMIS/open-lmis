@@ -80,7 +80,7 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "duplicateFacilities")
   private static WebElement facilityAlreadySyncMessage = null;
 
-    public DistributionPage(TestWebDriver driver) throws IOException {
+  public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
@@ -151,7 +151,7 @@ public class DistributionPage extends Page {
   }
 
   public FacilityListPage clickRecordData(int rowNumber) throws IOException {
-    WebElement recordDataButton = testWebDriver.findElement(By.xpath("//div[@class='list-container']/div["+rowNumber+"]/div[5]/a"));
+    WebElement recordDataButton = testWebDriver.findElement(By.id("recordData" + (rowNumber - 1)));
     testWebDriver.waitForElementToAppear(recordDataButton);
     recordDataButton.click();
     testWebDriver.sleep(250);
@@ -167,8 +167,8 @@ public class DistributionPage extends Page {
 
   public String getFacilityAlreadySyncMessage() {
     testWebDriver.waitForElementToAppear(facilityAlreadySyncMessage);
-      return facilityAlreadySyncMessage.getText();
-    }
+    return facilityAlreadySyncMessage.getText();
+  }
 
 
   public void verifyFacilityNotSupportedMessage(String programFirst, String deliveryZoneNameFirst) {
