@@ -34,8 +34,8 @@
         <span openlmis-message="label.epi.use"></span>
       </a>
     </li>
-    <li class="is-empty">
-      <a href="">
+    <li ng-class="[distributionData.coverage.computeStatus(), isSelected('coverage')]">
+      <a href="" ng-click="changeRoute('coverage')">
         <span class="status-icon"></span>
         <span openlmis-message="label.coverage"></span>
       </a>
