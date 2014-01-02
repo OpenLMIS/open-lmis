@@ -365,7 +365,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I should see data download successfully$")
   public void seeDownloadSuccessfully() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']"));
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementById("cachedDistributions"));
     distributionPage.verifyDownloadSuccessFullMessage(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
   }
 
