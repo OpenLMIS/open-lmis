@@ -124,6 +124,11 @@ public class DistributionPage extends Page {
   public void clickSyncDistribution() {
     testWebDriver.waitForElementToAppear(syncLink);
     syncLink.click();
+//    WebElement recordDataButton = testWebDriver.findElement(By.xpath("//div[@class='list-container']/div["+rowNumber+"]/div[5]/a"));
+//    testWebDriver.waitForElementToAppear(recordDataButton);
+//    recordDataButton.click();
+//    testWebDriver.sleep(250);
+//    return new FacilityListPage(testWebDriver);
   }
 
   public void syncDistribution() {
