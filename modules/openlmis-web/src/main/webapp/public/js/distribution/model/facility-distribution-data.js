@@ -25,7 +25,7 @@ function FacilityDistribution(facilityDistribution) {
 
   FacilityDistribution.prototype.computeStatus = function () {
 
-    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.coverage];
+    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.coverage];
     var overallStatus;
     if(this.status === SYNCED || this.status === DUPLICATE) {
       return this.status;
