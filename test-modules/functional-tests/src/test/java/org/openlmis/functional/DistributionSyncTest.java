@@ -83,6 +83,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
+
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
@@ -114,6 +115,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     generalObservationPage.setConfirmedByTitle("Doe");
     generalObservationPage.setVerifiedByName("Verifier");
     generalObservationPage.setVerifiedByTitle("XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -250,6 +253,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
+
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
@@ -269,6 +273,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     generalObservationPage.setConfirmedByTitle("Doe");
     generalObservationPage.setVerifiedByName("Verifier");
     generalObservationPage.setVerifiedByTitle("XYZ");
+
+    enterDataInCoverage(23, 66, 77, 45);
 
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
@@ -318,6 +324,16 @@ public class DistributionSyncTest extends TestCaseHelper {
 
 
   }
+
+  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
+    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
+    coveragePage.setMaleHealthCenter(maleHealthCenter);
+    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
+  }
+
 
   @AfterMethod(groups = "distribution")
   public void tearDown() throws Exception {

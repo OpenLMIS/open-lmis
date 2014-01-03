@@ -9,16 +9,16 @@
   -->
 
 <ng-include
-  src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
+    src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 <div class="clearfix facility-container">
   <ng-include
-    src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
+      src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
 
   <div class="facility-info" ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
     <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
       <h3>
         <span openlmis-message="header.coverage"></span>
-        <input type="button" ng-click="applyNRAll()"
+        <input id="CoverageFormApplyNRToAll" type="button" ng-click="applyNRAll()"
                class="pull-right btn"
                openlmis-message="button.apply.nr.all"/>
       </h3>
@@ -38,7 +38,7 @@
                 <td openlmis-message="label.coverage.females"></td>
                 <td>
                   <div>
-                    <input type="text"
+                    <input id="femaleHealthCenter" type="text"
                            ng-model="facilityData.coverage.fullCoverage.femaleHealthCenterReading.value"
                            name="coverageFemaleHC"
                            numeric-validator="positiveInteger" maxlength="7"
@@ -50,7 +50,7 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </div>
-                  <input id="coverageFemaleHC" type="checkbox"
+                  <input id="coverageFemaleHCNR" type="checkbox"
                          ng-model="facilityData.coverage.fullCoverage.femaleHealthCenterReading.notRecorded"
                          not-recorded/>
                   <label class="checkbox-label"
@@ -58,7 +58,7 @@
                          openlmis-message="label.not.recorded"></label>
                 <td>
                   <div>
-                    <input type="text"
+                    <input id="femaleMobileBrigade" type="text"
                            ng-model="facilityData.coverage.fullCoverage.femaleMobileBrigadeReading.value"
                            name="coverageFemaleMB"
                            numeric-validator="positiveInteger" maxlength="7"
@@ -70,7 +70,7 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </div>
-                  <input id="coverageFemaleMB" type="checkbox"
+                  <input id="coverageFemaleMBNR" type="checkbox"
                          ng-model="facilityData.coverage.fullCoverage.femaleMobileBrigadeReading.notRecorded"
                          not-recorded/>
                   <label class="checkbox-label"
@@ -82,7 +82,7 @@
                 <td openlmis-message="label.coverage.males"></td>
                 <td>
                   <div>
-                    <input type="text"
+                    <input id="maleHealthCenter" type="text"
                            ng-model="facilityData.coverage.fullCoverage.maleHealthCenterReading.value"
                            name="coverageMaleHC"
                            numeric-validator="positiveInteger" maxlength="7"
@@ -94,7 +94,7 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </div>
-                  <input id="coverageMaleHC" type="checkbox"
+                  <input id="coverageMaleHCNR" type="checkbox"
                          ng-model="facilityData.coverage.fullCoverage.maleHealthCenterReading.notRecorded"
                          not-recorded/>
                   <label class="checkbox-label"
@@ -102,7 +102,7 @@
                          openlmis-message="label.not.recorded"></label>
                 <td>
                   <div>
-                    <input type="text"
+                    <input id="maleMobileBrigade" type="text"
                            ng-model="facilityData.coverage.fullCoverage.maleMobileBrigadeReading.value"
                            name="coverageMaleMB"
                            numeric-validator="positiveInteger" maxlength="7"
@@ -114,7 +114,7 @@
                           openlmis-message="error.number.only"
                           style="display: none"></span>
                   </div>
-                  <input id="coverageMaleMB" type="checkbox"
+                  <input id="coverageMaleMBNR" type="checkbox"
                          ng-model="facilityData.coverage.fullCoverage.maleMobileBrigadeReading.notRecorded"
                          not-recorded/>
                   <label class="checkbox-label"

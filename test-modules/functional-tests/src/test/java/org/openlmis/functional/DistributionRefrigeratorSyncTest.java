@@ -106,6 +106,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    enterDataInCoverage(45, 67, 89, 90);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -143,6 +144,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    enterDataInCoverage(67, 44, 22, 11);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -180,6 +182,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    enterDataInCoverage(77, 56, 78, 34);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -211,6 +214,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    enterDataInCoverage(78, 67, 34, 12);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -239,8 +243,6 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
     homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(2);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -285,10 +287,16 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickDone();
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+
+    enterDataInCoverage(12, 34, 45, 56);
+
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
+
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
+
     distributionPage.syncDistributionMessageDone();
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(SECOND_FACILITY_CODE), "GNR7878", 3.0f, "Y", 2, 2, null, null);
@@ -325,6 +333,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    enterDataInCoverage(67, 8, 33, 54);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -407,11 +416,21 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
+
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
+  }
+
+  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
+    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
+    coveragePage.setMaleHealthCenter(maleHealthCenter);
+    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
   }
 
   @AfterMethod(groups = "distribution")

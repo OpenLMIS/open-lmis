@@ -82,17 +82,18 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
+    enterDataInCoverage(12, 34, 45, 56);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -110,7 +111,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");
 
-    enterDataInEpiUsePage(10,20,30,40,50,"10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.navigateToRefrigeratorTab();
@@ -148,7 +149,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
     epiUse.checkUncheckExpirationDateNotRecorded(1);
 
-    enterDataInEpiUsePage(20,30,40,50,60,"11/2012",1);
+    enterDataInEpiUsePage(20, 30, 40, 50, 60, "11/2012", 1);
 
     refrigeratorPage.navigateToRefrigeratorTab();
     epiUse.navigate();
@@ -179,13 +180,15 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
+    enterDataInCoverage(12, 34, 45, 56);
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(20, 30, 40, 50, 60, "11/2012", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(20, 30, 40, 50, 60, "11/2012", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -202,9 +205,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -212,7 +217,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateActiveStatusOfProduct("Product5", "true");
     dbWrapper.updateActiveStatusOfProduct("Product6", "true");
@@ -233,9 +238,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -243,7 +250,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -260,9 +267,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -270,7 +279,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateActiveStatusOfFacility("F10", "true");
   }
@@ -289,9 +298,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -299,7 +310,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
   }
@@ -316,9 +327,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -326,7 +339,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
 
     dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
   }
@@ -343,9 +356,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -353,7 +368,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -369,9 +384,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -379,7 +396,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -404,10 +421,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
+    enterDataInCoverage(12, 34, 45, 56);
+
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -428,7 +447,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.verifyProductGroup("PG1-Name", 1);
 
     epiUse.verifyIndicator("RED");
-    enterDataInEpiUsePage(10,20,30,40,50,"10/2011",1);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
     epiUse.verifyIndicator("GREEN");
 
     epiUse.checkApplyNRToAllFields(true);
@@ -442,6 +461,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
+    enterDataInCoverage(12, 34, 45, 56);
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
     distributionPage.syncDistribution(1);
@@ -452,7 +473,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
 
-    verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, null, null, epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -474,12 +495,14 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.checkApplyNRToReceived0();
     epiUse.checkApplyNRToDistributed0();
     epiUse.checkApplyNRToLoss0();
-    epiUse.enterValueInStockAtEndOfMonth("4",1);
-    epiUse.enterValueInExpirationDate("12/2031",1);
+    epiUse.enterValueInStockAtEndOfMonth("4", 1);
+    epiUse.enterValueInExpirationDate("12/2031", 1);
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011",2);
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 2);
 
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    enterDataInCoverage(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -487,8 +510,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-    verifyEpiUseDataInDatabase(null, null, null, null, 4, "12/2031", epiUseData.get(PRODUCT_GROUP_CODE),epiUseData.get(FIRST_FACILITY_CODE));
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG2",epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(null, null, null, null, 4, "12/2031", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
+    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", "PG2", epiUseData.get(FIRST_FACILITY_CODE));
   }
 
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -529,6 +552,15 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     generalObservationPage.setConfirmedByTitle(confirmTitle);
     generalObservationPage.setVerifiedByName(verifierName);
     generalObservationPage.setVerifiedByTitle(verifierTitle);
+  }
+
+  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
+    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
+    coveragePage.setMaleHealthCenter(maleHealthCenter);
+    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
   }
 
   public void enterDataInEpiUsePage(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
