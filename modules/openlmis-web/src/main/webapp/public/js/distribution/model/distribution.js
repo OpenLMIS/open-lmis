@@ -24,6 +24,10 @@ function Distribution(distributionJson) {
     this.facilityDistributions[facilityId].epiUse.setNotRecorded();
   };
 
+  Distribution.prototype.setCoverageRecorded = function (facilityId) {
+    this.facilityDistributions[facilityId].coverage.setNotRecorded();
+  };
+
   return this;
 }
 

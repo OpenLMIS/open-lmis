@@ -11,4 +11,11 @@
 function CoverageController($scope, $routeParams, distributionService) {
   $scope.distribution = distributionService.distribution;
   $scope.selectedFacilityId = $routeParams.facility;
-};
+
+  $scope.applyNRAll = function() {
+    distributionService.applyNR(function(distribution) {
+      distribution.setCoverageRecorded($routeParams.facility);
+    });
+  };
+
+}

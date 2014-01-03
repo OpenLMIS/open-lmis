@@ -10,12 +10,58 @@
 
 
 function Coverage(coverage) {
-  $.extend(true, this, coverage);
+  var fieldList = ['femaleHealthCenterReading', 'femaleMobileBrigadeReading', 'maleHealthCenterReading', 'maleMobileBrigadeReading'];
+
+
+  function init() {
+    $.extend(true, this, coverage);
+
+    var fullCoverage = this.fullCoverage || {};
+    $(fieldList).each(function (i, fieldName) {
+      fullCoverage[fieldName] = fullCoverage[fieldName] || {};
+    });
+    this.fullCoverage = fullCoverage;
+  }
+
+  init.call(this);
 
   Coverage.prototype.computeStatus = function () {
-    return 'is-complete';
-  }
-  Coverage.prototype.applyNRAll = function () {
-    return undefined;
-  }
+    var _this = this;
+    var COMPLETE = 'is-complete';
+    var INCOMPLETE = 'is-incomplete';
+    var EMPTY = 'is-empty';
+
+    var fullCoverage = this.fullCoverage;
+    function isEmpty(fieldName) {
+      return (isUndefined(fullCoverage[fieldName].value) && !fullCoverage[fieldName].notRecorded);
+    }
+
+    var status;
+
+
+    $(fieldList).each(function (i, fieldName) {
+      if (!isEmpty(fieldName) && (status == COMPLETE || !status)) {
+        status = COMPLETE;
+      } else if (isEmpty(fieldName) && (!status || status == EMPTY)) {
+        status = EMPTY;
+      } else if ((isEmpty(fieldName) && status === COMPLETE) || (!isEmpty(fieldName) && status === EMPTY) || (!isEmpty(fieldName))) {
+        status = INCOMPLETE;
+        return false;
+      }
+      return true;
+    });
+
+    _this.status = status;
+
+    return status;
+  };
+
+
+  Coverage.prototype.setNotRecorded = function () {
+    var fullCoverage = this.fullCoverage;
+    $(fieldList).each(function (j, fieldName) {
+      fullCoverage[fieldName].notRecorded = true;
+    });
+    this.fullCoverage = fullCoverage;
+  };
 }
