@@ -243,6 +243,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    enterDataInCoverage(78, 67, 34, 12);
+
     homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(2);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));

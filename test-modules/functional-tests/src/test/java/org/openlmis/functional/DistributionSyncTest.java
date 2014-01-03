@@ -151,6 +151,8 @@ public class DistributionSyncTest extends TestCaseHelper {
     generalObservationPage.setVerifiedByName("Verifier2");
     generalObservationPage.setVerifiedByTitle("X Y Z");
 
+    enterDataInCoverage(12, 34, 45, 56);
+
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
     distributionPage.clickRecordData(1);
@@ -302,6 +304,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     generalObservationPage.setVerifiedByName("Verifier");
     generalObservationPage.setVerifiedByTitle("XYZ");
 
+    enterDataInCoverage(66, 78, 89, 9);
     facilityListPage.selectFacility("F11");
     epiUse.navigate();
     epiUse.checkApplyNRToAllFields(true);
