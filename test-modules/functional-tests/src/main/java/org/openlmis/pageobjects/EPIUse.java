@@ -20,6 +20,7 @@ import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.ID;
+import static org.openqa.selenium.support.How.NAME;
 import static org.openqa.selenium.support.How.XPATH;
 
 public class EPIUse extends DistributionTab {
@@ -42,6 +43,12 @@ public class EPIUse extends DistributionTab {
   @FindBy(how = ID, using = "stockAtFirstOfMonth0")
   private static WebElement NRForStockFirstOfMonth0 =null;
 
+  @FindBy(how = ID, using = "expirationDate0")
+  private static WebElement NRForExpirationDate0=null;
+
+  @FindBy(how = ID, using = "stockAtEndOfMonth0")
+  private static WebElement NRForStockEndOfMonth0 =null;
+
   @FindBy(how = ID, using = "received0")
   private static WebElement NRForReceived0=null;
 
@@ -50,6 +57,24 @@ public class EPIUse extends DistributionTab {
 
   @FindBy(how = ID, using = "loss0")
   private static WebElement NRForLoss0=null;
+
+  @FindBy(how = NAME, using = "stockAtFirstOfMonth0")
+  private static WebElement textBoxStockAtFirstOfMonth0=null;
+
+  @FindBy(how = NAME, using = "received0")
+  private static WebElement textBoxReceived0=null;
+
+  @FindBy(how = NAME, using = "distributed0")
+  private static WebElement textBoxDistributed0=null;
+
+  @FindBy(how = NAME, using = "loss0")
+  private static WebElement textBoxLoss0=null;
+
+  @FindBy(how = NAME, using = "stockAtEndOfMonth0")
+  private static WebElement textBoxStockAtEndOfMonth0=null;
+
+  @FindBy(how = NAME, using = "expirationDate0")
+  private static WebElement textBoxExpirationDate0=null;
 
   public EPIUse(TestWebDriver driver) {
     super(driver);
@@ -77,19 +102,19 @@ public class EPIUse extends DistributionTab {
   }
 
   public void verifyAllFieldsDisabled() {
-    assertFalse("stockAtFirstOfMonth field enabled.", testWebDriver.getElementByName("stockAtFirstOfMonth0").isEnabled());
-    assertFalse("received field enabled.", testWebDriver.getElementByName("received0").isEnabled());
-    assertFalse("distributed field enabled.", testWebDriver.getElementByName("distributed0").isEnabled());
-    assertFalse("loss field enabled.", testWebDriver.getElementByName("loss0").isEnabled());
-    assertFalse("stockAtEndOfMonth Field enabled.", testWebDriver.getElementByName("stockAtEndOfMonth0").isEnabled());
-    assertFalse("expirationDate Field enabled.", testWebDriver.getElementByName("expirationDate0").isEnabled());
+    assertFalse("stockAtFirstOfMonth field enabled.", textBoxStockAtFirstOfMonth0.isEnabled());
+    assertFalse("received field enabled.", textBoxReceived0.isEnabled());
+    assertFalse("distributed field enabled.", textBoxDistributed0.isEnabled());
+    assertFalse("loss field enabled.", textBoxLoss0.isEnabled());
+    assertFalse("stockAtEndOfMonth Field enabled.", textBoxStockAtEndOfMonth0.isEnabled());
+    assertFalse("expirationDate Field enabled.", textBoxExpirationDate0.isEnabled());
 
-    assertFalse("stockAtFirstOfMonth field NR enabled.", testWebDriver.getElementById("stockAtFirstOfMonth0").isEnabled());
-    assertFalse("received field NR enabled.", testWebDriver.getElementById("received0").isEnabled());
-    assertFalse("distributed field NR enabled.", testWebDriver.getElementById("distributed0").isEnabled());
-    assertFalse("loss field NR enabled.", testWebDriver.getElementById("loss0").isEnabled());
-    assertFalse("stockAtEndOfMonth Field NR enabled.", testWebDriver.getElementById("stockAtEndOfMonth0").isEnabled());
-    assertFalse("expirationDate Field NR enabled.", testWebDriver.getElementById("expirationDate0").isEnabled());
+    assertFalse("stockAtFirstOfMonth field NR enabled.", NRForStockFirstOfMonth0.isEnabled());
+    assertFalse("received field NR enabled.", NRForReceived0.isEnabled());
+    assertFalse("distributed field NR enabled.", NRForDistributed0.isEnabled());
+    assertFalse("loss field NR enabled.", NRForLoss0.isEnabled());
+    assertFalse("stockAtEndOfMonth Field NR enabled.",NRForStockEndOfMonth0 .isEnabled());
+    assertFalse("expirationDate Field NR enabled.",NRForExpirationDate0 .isEnabled());
 
     assertFalse("applyNRToAllFieldsCheckbox NR enabled.", applyNRToAllFieldsCheckbox.isEnabled());
   }
