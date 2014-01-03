@@ -49,7 +49,8 @@ public class DistrictFinancialSummaryQueryBuilder {
 
     private static String writePredicates(DistrictSummaryReportFilter filter){
         String predicate="";
-        predicate = " WHERE status in ('APPROVED') ";
+        predicate = " WHERE status in ('IN_APPROVAL','APPROVED','RELEASED') ";
+
         if(filter != null){
 
 
