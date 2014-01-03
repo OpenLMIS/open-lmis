@@ -26,7 +26,7 @@ function EpiInventory(epiInventory) {
       lineItem.existingQuantity.notRecorded = true;
       lineItem.spoiledQuantity.notRecorded = true;
     });
-  }
+  };
 
   function isValid(lineItem, field) {
     if (isUndefined(lineItem[field]) || field === 'deliveredQuantity')
