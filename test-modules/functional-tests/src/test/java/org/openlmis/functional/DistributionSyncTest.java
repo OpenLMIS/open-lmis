@@ -158,7 +158,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
     distributionPage.syncDistributionMessageDone();
@@ -273,7 +273,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     distributionPage.syncDistributionMessageDone();
 
     distributionPage.deleteDistribution();
@@ -310,7 +310,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertEquals(distributionPage.getFacilityAlreadySyncMessage(),
       "Already synced facilities : \n" + "F10-Village Dispensary");
     assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" + "F11-Central Hospital");

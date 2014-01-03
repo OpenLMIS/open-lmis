@@ -73,59 +73,41 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorPageSyncWith2Refrigerators() throws Exception {
-    dbWrapper.addRefrigeratorToFacility("LG1", "800L1", "TGNR7878", "F10");
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
 
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    HomePage homePage = new HomePage(testWebDriver);
+    dbWrapper.addRefrigeratorToFacility("LG", "800L1", "TGNR7878", "F10");
+    initiateDistributionAndVerifyStatusColor();
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.enterValueInRefrigeratorTemperature("999.9");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "AMBER");
-
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
     refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
-
     refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
     refrigeratorPage.clickDone();
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.clickShowForRefrigerator2();
-
     refrigeratorPage.enterValueInRefrigeratorTemperatureForSecondRefrigerator("5");
     refrigeratorPage.clickFunctioningCorrectlyNoRadioForSecondRefrigerator();
     refrigeratorPage.enterValueInLowAlarmEventsForSecondRefrigerator("10");
     refrigeratorPage.enterValueInHighAlarmEventsForSecondRefrigerator("05");
     refrigeratorPage.clickProblemSinceLastVisitNoRadioForSecondRefrigerator();
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
-
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     //TODO check why it is unable to find done button for second refrigerator when Done buttons for both refrigerator have same ID
     //refrigeratorPage.clickDone();
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -138,46 +120,31 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenRefrigeratorHasProblem() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
 
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    HomePage homePage = new HomePage(testWebDriver);
+    initiateDistributionAndVerifyStatusColor();
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.enterValueInRefrigeratorTemperature("-999.9");
-
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.clickFunctioningCorrectlyNoRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
     refrigeratorPage.clickProblemSinceLastVisitYesRadio();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.selectOtherProblem();
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
-
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.enterTextInOtherProblemTextBox("others");
     refrigeratorPage.selectGasLeakProblem();
     refrigeratorPage.clickDone();
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -187,47 +154,34 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenProblemIsSelectedAndAppliedNRBeforeSync() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
 
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    HomePage homePage = new HomePage(testWebDriver);
+    initiateDistributionAndVerifyStatusColor();
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.applyNRToRefrigeratorTemperature();
-
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.clickFunctioningCorrectlyNR();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.applyNRToLowAlarmEvent();
     refrigeratorPage.applyNRToHighAlarmEvent();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.clickProblemSinceLastVisitYesRadio();
     refrigeratorPage.selectGasLeakProblem();
     refrigeratorPage.clickProblemSinceLastVisitNR();
 
     refrigeratorPage.verifyFieldsDisabledWhenAllNRSelected();
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -235,192 +189,150 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
   }
 
-  //@Test(groups = {"distribution"})
+  @Test(groups = {"distribution"})
   public void testRefrigeratorSyncWhenRefrigeratorIsDeletedBeforeSync() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
 
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    HomePage homePage = new HomePage(testWebDriver);
+    initiateDistributionAndVerifyStatusColor();
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.clickFunctioningCorrectlyNoRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
     refrigeratorPage.clickProblemSinceLastVisitNoRadio();
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-
     initiateDistributionForPeriod("Period13");
     distributionPage.clickRecordData(2);
-
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("2");
     refrigeratorPage.enterValueInHighAlarmEvents("2");
     refrigeratorPage.clickProblemSinceLastVisitYesRadio();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
     refrigeratorPage.selectOtherProblem();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
+
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
     homePage.navigatePlanDistribution();
-    //TODO sync record 2
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(2);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
-
-    initiateDistributionForPeriod("Period12");
-    distributionPage.clickRecordData(3);
-
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-
-
-
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    assertTrue(refrigeratorPage.isNoRefrigeratorAddedMessagePresent());
-
-    verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0f, "N", 1, 0, "N", null);
-    verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
-    //TODO verify refrigerator enable flag false and no new record added in refrigerator_readings table
-
-
-  }
-
-  //@Test(groups = {"distribution"})
-  public void testAddingDuplicateRefrigeratorForSameFacility() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    //TODO add new refrigerator for same serial number and assert error message
-
-  }
-
- // @Test(groups = {"distribution"})
-  public void testAddingDuplicateRefrigeratorForDifferentFacility() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
-
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
-
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-
-    //TODO add new refrigerator for same serial number for F11 and assert refrigerator is successfully added
+    verifyRefrigeratorsDataInDatabase("F10", "GNR7878", "LG", "800L", "f");
 
   }
 
   @Test(groups = {"distribution"})
-  public void testUpdatingRefrigeratorAndSync() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
+  public void testAddingDuplicateRefrigeratorForSameFacility() throws Exception {
 
-    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    HomePage homePage = new HomePage(testWebDriver);
+    initiateDistributionAndVerifyStatusColor();
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-
-    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
-    refrigeratorPage.clickDelete();
-    refrigeratorPage.clickOKButton();
-
-    facilityListPage.verifyFacilityIndicatorColor("overall","AMBER");
     refrigeratorPage.clickAddNew();
-    refrigeratorPage.addNewRefrigerator("LG1", "800L1", "GNR7878");
+    refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
+    refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Manufacturer Serial Number");
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testAddingDuplicateRefrigeratorForDifferentFacility() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
+    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(refrigeratorTestData.get(SECOND_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("LG22", "800L22", "GNR7878");
+
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
-
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("2");
     refrigeratorPage.enterValueInHighAlarmEvents("2");
     refrigeratorPage.clickProblemSinceLastVisitNR();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
     enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-
     enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
+    assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
+    distributionPage.syncDistributionMessageDone();
+
+    verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(SECOND_FACILITY_CODE), "GNR7878", 3.0f, "Y", 2, 2, null, null);
+    verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(SECOND_FACILITY_CODE));
+
+    verifyRefrigeratorsDataInDatabase("F11", "GNR7878", "LG22", "800L22", "t");
+  }
+
+  @Test(groups = {"distribution"})
+  public void testUpdatingRefrigeratorAndSync() throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    initiateDistributionAndVerifyStatusColor();
+
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    refrigeratorPage.clickDelete();
+    refrigeratorPage.clickOKButton();
+
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.verifyFacilityIndicatorColor("overall", "AMBER");
+
+    refrigeratorPage.clickAddNew();
+    refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
+    refrigeratorPage.enterValueInRefrigeratorTemperature("3");
+    refrigeratorPage.clickFunctioningCorrectlyYesRadio();
+    refrigeratorPage.enterValueInLowAlarmEvents("2");
+    refrigeratorPage.enterValueInHighAlarmEvents("2");
+    refrigeratorPage.clickProblemSinceLastVisitNR();
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.clickDone();
+
+    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
     verifyRefrigeratorReadingDataInDatabase(refrigeratorTestData.get(FIRST_FACILITY_CODE), "GNR7878", 3.0f, "Y", 2, 2, null, null);
     verifyRefrigeratorProblemDataNullInDatabase("GNR7878", refrigeratorTestData.get(FIRST_FACILITY_CODE));
-    verifyRefrigeratorsDataInDatabase("F10","GNR7878","LG1", "800L1","t");
+    verifyRefrigeratorsDataInDatabase("F10", "GNR7878", "LG", "800L1", "t");
 
   }
 
@@ -488,6 +400,18 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     epiUse.enterValueInStockAtEndOfMonth(stockAtEndOfMonth.toString(), rowNumber);
     epiUse.enterValueInExpirationDate(expirationDate, rowNumber);
     epiUse.verifyIndicator("GREEN");
+  }
+
+  public void initiateDistributionAndVerifyStatusColor() throws IOException {
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
+    initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
+    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
+    facilityListPage.selectFacility(refrigeratorTestData.get(FIRST_FACILITY_CODE));
+    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+    facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
   }
 
   @AfterMethod(groups = "distribution")

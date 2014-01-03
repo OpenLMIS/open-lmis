@@ -284,13 +284,13 @@ public class ManageDistribution extends TestCaseHelper {
   @When("^I sync recorded data$")
   public void syncDistribution() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
   }
 
   @When("^I try to sync recorded data$")
   public void clickSyncLink() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.clickSyncDistribution();
+    distributionPage.clickSyncDistribution(1);
   }
 
   @Then("^I verify sync message as \"([^\"]*)\"$")

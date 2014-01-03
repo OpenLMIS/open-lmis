@@ -19,7 +19,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,21 +106,21 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
     refrigeratorPage.clickShowForRefrigerator1();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
 
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
     refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
     refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
     refrigeratorPage.clickDone();
@@ -159,8 +158,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), "1");
     assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), "0");
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), "miscellaneous");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
     epiUse.navigate();
     epiUse.verifyIndicator("GREEN");
@@ -182,7 +181,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     switchOnNetwork();
     testWebDriver.sleep(5000);
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
     Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facilityCodeFirst);

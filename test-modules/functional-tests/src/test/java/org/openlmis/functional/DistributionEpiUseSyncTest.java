@@ -88,7 +88,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -181,7 +181,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -208,7 +208,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -239,7 +239,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -266,7 +266,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -295,7 +295,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -322,7 +322,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -349,7 +349,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -375,7 +375,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -444,7 +444,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 
@@ -483,7 +483,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
 

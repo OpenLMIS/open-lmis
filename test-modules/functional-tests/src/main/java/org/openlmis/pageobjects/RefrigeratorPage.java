@@ -388,7 +388,7 @@ public class RefrigeratorPage extends Page {
     return testWebDriver.getAttribute(notesTextArea, "value");
   }
 
-  public void verifyIndividualRefrigeratorColor(String whichIcon, String color) {
+  public void verifyRefrigeratorColor(String whichIcon, String color) {
     testWebDriver.waitForElementToAppear(individualRefrigeratorIcon);
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";

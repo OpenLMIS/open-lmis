@@ -121,18 +121,16 @@ public class DistributionPage extends Page {
     testWebDriver.sleep(200);
   }
 
-  public void clickSyncDistribution() {
-    testWebDriver.waitForElementToAppear(syncLink);
-    syncLink.click();
-//    WebElement recordDataButton = testWebDriver.findElement(By.xpath("//div[@class='list-container']/div["+rowNumber+"]/div[5]/a"));
-//    testWebDriver.waitForElementToAppear(recordDataButton);
-//    recordDataButton.click();
-//    testWebDriver.sleep(250);
-//    return new FacilityListPage(testWebDriver);
+  public void clickSyncDistribution(int rowNumber) {
+ //   testWebDriver.waitForElementToAppear(syncLink);
+//    testWebDriver.findElement(By.xpath("//div[@id='cachedDistributions']/div[2]/div["+rowNumber+"]div[6]/a")).click();
+    testWebDriver.sleep(500);
+    testWebDriver.findElement(By.id("sync"+(rowNumber-1))).click();
   }
 
-  public void syncDistribution() {
-    clickSyncDistribution();
+  public void syncDistribution(int rowNumber) {
+    clickSyncDistribution(rowNumber);
+    testWebDriver.sleep(1000);
     okButton.click();
   }
 
