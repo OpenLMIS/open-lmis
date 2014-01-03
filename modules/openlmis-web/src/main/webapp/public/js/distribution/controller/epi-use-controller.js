@@ -15,7 +15,7 @@ function EPIUseController($scope, $routeParams, distributionService) {
 
   $scope.applyNRAll = function() {
     distributionService.applyNR(function(distribution) {
-      distribution.setEpiNotRecorded($routeParams.facility);
+      distribution.setEpiUseNotRecorded($routeParams.facility);
     });
   };
 }

@@ -9,14 +9,17 @@
  */
 
 describe('EPI Inventory Controller', function () {
-  var scope, routeParams, distributionService;
+  var scope, routeParams, distributionService, distribution;
 
-  beforeEach(inject(function ($controller, $rootScope) {
+  beforeEach(module('distribution'))
+  beforeEach(inject(function ($controller, $rootScope, _distributionService_) {
     scope = $rootScope.$new();
     routeParams = {facility: '4'};
-    distributionService = {distribution: {id: 5}};
+    distributionService = _distributionService_;
+    distributionService.distribution = jasmine.createSpyObj('Distribution', ['setEpiInventoryNotRecorded']);
+    spyOn(distributionService, 'applyNR');
 
-    $controller(EPIInventoryController, {$scope: scope, $routeParams: routeParams, distributionService: distributionService});
+    $controller(EPIInventoryController, {$scope: scope, $routeParams: routeParams});
   }));
 
   it('should set distribution in scope', function () {
@@ -25,6 +28,16 @@ describe('EPI Inventory Controller', function () {
 
   it('should set facility id from route params', function () {
     expect(scope.selectedFacilityId).toEqual('4');
+  });
+
+  it('should set all NR flags to true in epi inventory', function () {
+    scope.applyNRAll();
+
+    expect(distributionService.applyNR).toHaveBeenCalled();
+    var callbackFunctionForNR = distributionService.applyNR.calls[0].args[0];
+    callbackFunctionForNR(distributionService.distribution);
+
+    expect(distributionService.distribution.setEpiInventoryNotRecorded).toHaveBeenCalledWith(scope.selectedFacilityId);
   });
 
 });

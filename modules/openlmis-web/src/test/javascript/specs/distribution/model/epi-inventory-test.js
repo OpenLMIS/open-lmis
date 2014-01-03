@@ -61,4 +61,15 @@ describe('epi inventory', function () {
     expect(status).toEqual("is-complete");
   });
 
+  it('should set all NR flags to true', function() {
+    var epiInventory = new EpiInventory({lineItems: [
+      {existingQuantity: {notRecorded: false}, deliveredQuantity: 1, spoiledQuantity: {value: 1, notRecorded: false}}
+    ]});
+
+    var status = epiInventory.setNotRecorded();
+
+    expect(epiInventory.lineItems[0].existingQuantity.notRecorded).toBeTruthy();
+    expect(epiInventory.lineItems[0].spoiledQuantity.notRecorded).toBeTruthy();
+  });
+
 });

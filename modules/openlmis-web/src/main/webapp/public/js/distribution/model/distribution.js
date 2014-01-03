@@ -20,8 +20,12 @@ function Distribution(distributionJson) {
     });
   }
 
-  Distribution.prototype.setEpiNotRecorded = function (facilityId) {
+  Distribution.prototype.setEpiUseNotRecorded = function (facilityId) {
     this.facilityDistributions[facilityId].epiUse.setNotRecorded();
+  };
+
+  Distribution.prototype.setEpiInventoryNotRecorded = function (facilityId) {
+    this.facilityDistributions[facilityId].epiInventory.setNotRecorded();
   };
 
   Distribution.prototype.setCoverageRecorded = function (facilityId) {

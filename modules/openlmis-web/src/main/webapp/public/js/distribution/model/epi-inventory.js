@@ -10,11 +10,23 @@
 
 function EpiInventory(epiInventory) {
   $.extend(true, this, epiInventory);
+  $(this.lineItems).each(function(index, lineItem) {
+    lineItem.existingQuantity = this.existingQuantity || {};
+    lineItem.spoiledQuantity = this.spoiledQuantity || {};
+  });
+
 
   var complete = 'is-complete';
   var incomplete = 'is-incomplete';
   var empty = 'is-empty';
   var mandatoryFields = ['existingQuantity', 'deliveredQuantity', 'spoiledQuantity'];
+
+  EpiInventory.prototype.setNotRecorded = function() {
+    $(this.lineItems).each(function(index, lineItem) {
+      lineItem.existingQuantity.notRecorded = true;
+      lineItem.spoiledQuantity.notRecorded = true;
+    });
+  }
 
   function isValid(lineItem, field) {
     if (isUndefined(lineItem[field]) || field === 'deliveredQuantity')
