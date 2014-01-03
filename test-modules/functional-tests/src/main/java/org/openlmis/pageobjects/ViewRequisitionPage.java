@@ -47,7 +47,7 @@ public class ViewRequisitionPage extends RequisitionPage {
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col7 colt7']/span")
   private static WebElement status=null;
 
-  @FindBy(how = XPATH, using = "//i[@class='icon-ok']")
+  @FindBy(how = ID, using = "emergency0")
   private static WebElement emergencyIcon=null;
 
   @FindBy(how = XPATH, using = "//select[@data-handler='selectYear']")
@@ -61,9 +61,6 @@ public class ViewRequisitionPage extends RequisitionPage {
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'26')]")
   private static WebElement endDateCalender=null;
-
-  @FindBy(how = XPATH, using = "//div[@class='ngViewport ng-scope']/div/div/div[1]")
-  private static WebElement viewRnRList=null;
 
   @FindBy(how = ID, using = "cost_0")
   private static WebElement totalCostPreApproval=null;
@@ -144,8 +141,8 @@ public class ViewRequisitionPage extends RequisitionPage {
   }
 
   public void clickRnRList() {
-    testWebDriver.waitForElementToAppear(viewRnRList);
-    viewRnRList.click();
+    testWebDriver.waitForElementToAppear(emergencyIcon);
+    emergencyIcon.click();
   }
 
 
