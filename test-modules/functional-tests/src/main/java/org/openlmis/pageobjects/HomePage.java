@@ -115,7 +115,7 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//h2[contains(text(),'Regimen Template')]")
   private static WebElement RegimenTemplateHeader = null;
 
-  @FindBy(how = LINK_TEXT, using = "Requisitions")
+  @FindBy(how = ID, using = "requisitions-menu")
   private static WebElement requisitionsLink = null;
 
   @FindBy(how = XPATH, using = "//div[@class='submenu']")
@@ -154,7 +154,7 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//div[@class='ngCellText ng-scope col2 colt2']/span")
   private static WebElement endDate = null;
 
-  @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']")
+  @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private static WebElement errorMsg = null;
 
   @FindBy(how = ID, using = "program")
