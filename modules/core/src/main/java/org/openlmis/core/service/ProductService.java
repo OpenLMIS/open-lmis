@@ -44,6 +44,8 @@ public class ProductService {
   ProgramService programService;
 
   public void save(Product product) {
+
+    product.validate();
     validateAndSetProductCategory(product);
 
     if (product.getId() == null) {
