@@ -511,7 +511,8 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(100, "quantityDispensedFirstProduct");
@@ -603,11 +604,12 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     Integer quantityDispensed = 100;
-    Integer beginningBalance = 100;
+    Integer beginningBalance = 1;
     Integer quantityReceived = 100;
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage1 = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage1 =new InitiateRnRPage(testWebDriver);
     initiateRnRPage1.enterValue(beginningBalance, "beginningBalanceFirstProduct");
     initiateRnRPage1.enterValue(quantityReceived, "quantityReceivedFirstProduct");
     initiateRnRPage1.enterValue(quantityDispensed, "quantityDispensedFirstProduct");
@@ -690,7 +692,8 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(1000, "quantityDispensedFirstProduct");
@@ -716,7 +719,8 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage =new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "beginningBalanceFirstProduct");
     initiateRnRPage.enterValue(0, "quantityReceivedFirstProduct");
     initiateRnRPage.enterValue(1000, "stockInHandFirstProduct");

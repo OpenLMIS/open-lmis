@@ -102,7 +102,7 @@ public class ViewRequisitionPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(selectFacilityDropDown);
     testWebDriver.selectByIndex(selectFacilityDropDown, 1);
     testWebDriver.sleep(250);
-    enterStartEndDateInCalender("2004", "2013");
+    enterStartEndDateInCalender("2004", "2016");
   }
 
   public void enterStartEndDateInCalender(String startDateYear, String endDateYear) {
