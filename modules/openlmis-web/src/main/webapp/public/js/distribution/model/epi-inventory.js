@@ -37,7 +37,8 @@ function EpiInventory(epiInventory) {
         return true;
       });
     });
-    return statusClass;
+    this.status = statusClass;
+    return this.status;
   };
 
 }
