@@ -20,7 +20,7 @@ function FacilityDistribution(facilityDistribution) {
   this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);
   this.refrigerators = new Refrigerators(facilityDistribution.refrigerators);
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
-  this.coverage = facilityDistribution.coverage;
+  this.coverage = new Coverage(facilityDistribution.coverage);
   this.status = facilityDistribution.status;
 
   FacilityDistribution.prototype.computeStatus = function () {

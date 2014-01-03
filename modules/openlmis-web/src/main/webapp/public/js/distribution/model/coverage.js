@@ -10,6 +10,7 @@
 
 
 function Coverage(coverage) {
+  $.extend(true, this, coverage);
 
   Coverage.prototype.computeStatus = function () {
     return 'is-complete';
