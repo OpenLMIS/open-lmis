@@ -52,7 +52,10 @@ public class CoveragePage extends DistributionTab {
 
   @Override
   public void enterValues(Map<String, String> map) {
-    //To change body of implemented methods use File | Settings | File Templates.
+    setFemaleHealthCenter(Integer.valueOf(map.get("femaleHealthCenter")));
+    setFemaleMobileBrigade(Integer.valueOf(map.get("femaleMobileBrigade")));
+    setMaleHealthCenter(Integer.valueOf(map.get("maleHealthCenter")));
+    setMaleMobileBrigade(Integer.valueOf(map.get("maleMobileBrigade")));
   }
 
   @Override

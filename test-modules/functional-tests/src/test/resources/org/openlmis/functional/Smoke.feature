@@ -354,8 +354,8 @@ Feature: Smoke Tests
     And I click load amount
     Then I should see ISA values as per delivery zone facilities
     And  I verify ISA values for Product1 as:
-       | Facility1 | Facility2 |
-       | 31        | 31        |
+      | Facility1 | Facility2 |
+      | 31        | 31        |
     And  I verify ISA values for Product2 as:
       | Facility1 | Facility2 |
       | 101       | --        |
@@ -564,7 +564,7 @@ Feature: Smoke Tests
     And I navigate to general observations tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier         | XYZ           |
+      | some observation | samuel          | fc               | Verifier       | XYZ             |
 
     And Navigate to EPI tab
     And I Enter "epi use" values:
@@ -572,6 +572,10 @@ Feature: Smoke Tests
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
+    And Navigate to Coverage tab
+    And I Enter "coverage" values:
+      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | female   | 123                | 22                  | 23               | 242               |
     Then I see "Overall" facility icon as "GREEN"
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
@@ -581,7 +585,7 @@ Feature: Smoke Tests
     When I done sync message
     And I view observations data in DB for facility "F10":
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | Verifier         | XYZ           |
+      | some observation | samuel          | fc               | Verifier       | XYZ             |
     And I view epi use data in DB for facility "F10" and product group "penta":
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          |

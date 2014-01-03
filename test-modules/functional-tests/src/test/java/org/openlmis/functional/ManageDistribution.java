@@ -61,6 +61,7 @@ public class ManageDistribution extends TestCaseHelper {
     tabMap = new HashMap<String, DistributionTab>() {{
       put("epi use", new EPIUse(testWebDriver));
       put("general observation", new GeneralObservationPage(testWebDriver));
+      put("coverage", new CoveragePage(testWebDriver));
     }};
   }
 
@@ -97,7 +98,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @When("^I Enter \"([^\"]*)\" values:$")
-  public void enterEPIValues(String tabName, DataTable tableData) {
+  public void enterValuesInForm(String tabName, DataTable tableData) {
     Map<String, String> data = tableData.asMaps().get(0);
 
     tabMap.get(tabName).enterValues(data);
@@ -314,7 +315,7 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view observations data in DB for facility \"([^\"]*)\":$")
   public void verifyObservationsDataInDB(String facility, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    for (Map map : data){
+    for (Map map : data) {
       Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facility);
       assertEquals(facilityVisitDetails.get("observations"), map.get("observations"));
       assertEquals(facilityVisitDetails.get("confirmedByName"), map.get("confirmedByName"));
@@ -327,8 +328,8 @@ public class ManageDistribution extends TestCaseHelper {
   @Then("^I view epi use data in DB for facility \"([^\"]*)\" and product group \"([^\"]*)\":$")
   public void verifyEpiUseDataInDB(String facilityCode, String productGroupCode, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
-    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode,facilityCode);
-    for (Map map : data){
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
+    for (Map map : data) {
       assertEquals(map.get("firstOfMonth").toString(), epiDetails.get("stockatfirstofmonth"));
       assertEquals(map.get("received").toString(), epiDetails.get("received"));
       assertEquals(map.get("distributed").toString(), epiDetails.get("distributed"));
@@ -354,7 +355,7 @@ public class ManageDistribution extends TestCaseHelper {
       }
       assertEquals(notes, resultSet.getString("notes"));
     }
-}
+  }
 
   @Then("^I verify no record present in refrigerator problem table for refrigerator serial number \"([^\"]*)\" and facility \"([^\"]*)\"$")
   public void verifyNoRecordAddedToRefrigeratorProblemsTable(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
@@ -767,6 +768,12 @@ public class ManageDistribution extends TestCaseHelper {
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
 
+  }
+
+  @And("^Navigate to Coverage tab$")
+  public void navigateToCoverageTab() throws Throwable {
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
   }
 }
 
