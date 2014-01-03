@@ -241,7 +241,7 @@
   background: #f9f9f9;
 }
 
-.epi-table {
+.facility-distribution-form-table {
   overflow: auto;
   table {
     min-width: 800px;
@@ -301,8 +301,8 @@
     }
   }
   .col-complete-vaccinated, .col-health-center, .col-mobile-brigade {
-    max-width: 70px;
-    min-width: 20px;
+//    max-width: 70px;
+//    min-width: 20px;
     input[type="text"] {
       text-align: right;
       width: 80px;
@@ -314,6 +314,19 @@
   }
   input[type="checkbox"] {
     margin-top: 0;
+  }
+}
+
+#coverageTable table{
+  width: 55%;
+  min-width: 600px;
+  th, td {
+    word-wrap: break-word;
+  }
+  tbody {
+    tr td:first-child {
+      font-weight: bold;
+    }
   }
 }
 
