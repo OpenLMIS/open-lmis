@@ -26,7 +26,7 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       when('/record-facility-data/:distribution/:facility/epi-inventory',
       {controller: EPIInventoryController, templateUrl: 'partials/epi-inventory.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/coverage',
-      {controller: CoverageController, templateUrl: 'partials/coverage.html', resolve: ResolveDistribution}).
+      {controller: CoverageController, templateUrl: 'partials/coverage/index.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/facility-visit',
       {controller: FacilityVisitController, templateUrl: 'partials/facility-visit.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});

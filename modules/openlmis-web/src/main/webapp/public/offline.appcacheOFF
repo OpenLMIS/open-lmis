@@ -49,7 +49,8 @@ CACHE:
 /public/pages/logistics/distribution/partials/refrigerator-reading.html
 /public/pages/logistics/distribution/partials/refrigerator.html
 /public/pages/logistics/distribution/partials/facility-visit.html
-/public/pages/logistics/distribution/partials/coverage.html
+/public/pages/logistics/distribution/partials/coverage/index.html
+/public/pages/logistics/distribution/partials/coverage/full.html
 
 /public/js/distribution/resolve/distribution-resolve.js
 /public/js/distribution/module/distribution-module.js
