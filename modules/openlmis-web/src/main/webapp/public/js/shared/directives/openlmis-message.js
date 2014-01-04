@@ -17,7 +17,7 @@ app.directive('openlmisMessage', function (messageService) {
     link: function (scope, element, attrs) {
       var keyWithArgs = attrs.openlmisMessage.split("|");
 
-      function useExternalisedMessage(displayMessage) {
+      function apply(displayMessage) {
         var children = element.children();
         if (element[0].localName == 'textarea' || element[0].localName == 'select') {
           element.attr('placeholder', displayMessage);
@@ -36,47 +36,37 @@ app.directive('openlmisMessage', function (messageService) {
 
           default:
             element.html(displayMessage).append(children);
-            if (element.hasClass('welcome-message')) {       // Adding same title as the HTML content to the welcome message on home page
+            if (element.hasClass('welcome-message')) {
               element.attr('title', displayMessage);
             }
-            break;
         }
       }
 
       var refreshMessages = function () {
-        var evaluatedVariable = scope;
-        var existsInScope = true;
-        $(keyWithArgs[0].split('.')).each(function(index, arg) {
-          evaluatedVariable = evaluatedVariable[arg];
-          if(!evaluatedVariable) {
-            existsInScope = false;
-            return false;
-          }
-          return true;
-        });
+        var key = scope.$eval(keyWithArgs[0]) || keyWithArgs[0];
+        var message = messageService.get(key) || key;
 
-        var key = existsInScope ? evaluatedVariable : keyWithArgs[0];
-        var displayMessage = messageService.get(key) || key;
-        if (!isUndefined(keyWithArgs) && keyWithArgs.length > 1) {
-          displayMessage = replaceArgs(scope, displayMessage, keyWithArgs);
+        if (keyWithArgs[1]) {
+          message = replaceArgs(scope, message, keyWithArgs);
         }
-        useExternalisedMessage(displayMessage);
+        apply(message);
       };
 
       scope.$watch("[" + keyWithArgs.toString() + "]", refreshMessages, true);
       scope.$on('messagesPopulated', refreshMessages);
 
-      function replaceArgs(scope, displayMessage, args) {
-        $.each(args, function (index, arg) {
+      function argumentMatcher(index) {
+        return ['{', index - 1, '}'].join('');
+      }
+
+      function replaceArgs(scope, message, args) {
+        $(args).each(function (index, arg) {
           if (index > 0) {
-            var value = scope[arg];
-            if (value === null || value === undefined) {
-              value = arg;
-            }
-            displayMessage = displayMessage.replace("{" + (index - 1) + "}", value);
+            var argValue = scope.$eval(arg) || arg;
+            message = message.replace(argumentMatcher(index), argValue);
           }
         });
-        return displayMessage;
+        return message;
       }
     }
   };
