@@ -408,7 +408,7 @@ public class DBWrapper {
     update("delete from pod_line_items");
     update("delete from pod");
     update("delete from orders");
-    update("DELETE FROM requisition_status_changes");
+    update("delete from requisition_status_changes");
 
     update("delete from user_password_reset_tokens");
     update("delete from comments");
@@ -420,14 +420,16 @@ public class DBWrapper {
     update("delete from refrigerator_problems");
     update("delete from refrigerator_readings");
     update("delete from distribution_refrigerators");
+    update("delete from vaccination_full_coverages");
+    update("delete from vaccination_coverages");
 
     update("delete from distributions");
     update("delete from refrigerators");
     update("delete from users where userName not like('Admin%')");
-    update("DELETE FROM requisition_line_item_losses_adjustments");
-    update("DELETE FROM requisition_line_items");
-    update("DELETE FROM regimen_line_items");
-    update("DELETE FROM requisitions");
+    update("delete from requisition_line_item_losses_adjustments");
+    update("delete from requisition_line_items");
+    update("delete from regimen_line_items");
+    update("delete from requisitions");
 
     update("delete from program_product_isa");
     update("delete from facility_approved_products");
@@ -447,8 +449,7 @@ public class DBWrapper {
     update("delete from delivery_zone_program_schedules");
     update("delete from delivery_zone_warehouses");
     update("delete from delivery_zone_members");
-    update(
-      "delete from role_assignments where deliveryZoneId in (select id from delivery_zones where code in('DZ1','DZ2'))");
+    update("delete from role_assignments where deliveryZoneId in (select id from delivery_zones where code in('DZ1','DZ2'))");
     update("delete from delivery_zones");
 
     update("delete from supervisory_nodes");
@@ -462,7 +463,6 @@ public class DBWrapper {
     update("delete from atomfeed.event_records");
     update("delete from regimens");
     update("delete from program_regimen_columns");
-
   }
 
   public void insertRole(String role, String description) throws SQLException, IOException {
@@ -1393,7 +1393,7 @@ public class DBWrapper {
   public Map<String, String> getFacilityVisitDetails(String facilityCode) throws SQLException {
     Map<String, String> facilityVisitsDetails = new HashMap<>();
     try (ResultSet rs = query("SELECT observations,confirmedByName,confirmedByTitle,verifiedByName,verifiedByTitle from facility_visits" +
-        " WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
+      " WHERE facilityId = (SELECT id FROM facilities WHERE code = '" + facilityCode + "');")) {
       while (rs.next()) {
         facilityVisitsDetails.put("observations", rs.getString("observations"));
         facilityVisitsDetails.put("confirmedByName", rs.getString("confirmedByName"));

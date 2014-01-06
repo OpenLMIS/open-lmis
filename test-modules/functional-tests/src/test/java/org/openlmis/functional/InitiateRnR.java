@@ -895,8 +895,8 @@ public class InitiateRnR extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage = new InitiateRnRPage(testWebDriver);
+    homePage.clickProceed();
+    InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(100, "requestedQuantityFirstProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
