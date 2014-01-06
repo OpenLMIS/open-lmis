@@ -7,6 +7,15 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
+
+var DistributionStatus = {
+  EMPTY: 'is-empty',
+  INCOMPLETE: 'is-incomplete',
+  COMPLETE: 'is-complete',
+  SYNCED: 'is-synced',
+  DUPLICATE: 'is-duplicate'
+};
+
 var distributionModule = angular.module('distribution',
   ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 

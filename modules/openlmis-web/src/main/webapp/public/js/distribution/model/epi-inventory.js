@@ -15,10 +15,6 @@ function EpiInventory(epiInventory) {
     lineItem.spoiledQuantity = this.spoiledQuantity || {};
   });
 
-
-  var complete = 'is-complete';
-  var incomplete = 'is-incomplete';
-  var empty = 'is-empty';
   var mandatoryFields = ['existingQuantity', 'deliveredQuantity', 'spoiledQuantity'];
 
   EpiInventory.prototype.setNotRecorded = function() {
@@ -38,12 +34,12 @@ function EpiInventory(epiInventory) {
     var statusClass;
     $(this.lineItems).each(function (index, lineItem) {
       $(mandatoryFields).each(function (index, field) {
-        if (isValid(lineItem, field) && (!statusClass || statusClass === complete)) {
-          statusClass = complete;
-        } else if (!isValid(lineItem, field) && (!statusClass || statusClass === empty)) {
-          statusClass = empty;
-        } else if ((!isValid(lineItem, field) && statusClass === complete) || (isValid(lineItem, field) && statusClass === empty)) {
-          statusClass = incomplete;
+        if (isValid(lineItem, field) && (!statusClass || statusClass === DistributionStatus.COMPLETE)) {
+          statusClass = DistributionStatus.COMPLETE;
+        } else if (!isValid(lineItem, field) && (!statusClass || statusClass === DistributionStatus.EMPTY)) {
+          statusClass = DistributionStatus.EMPTY;
+        } else if ((!isValid(lineItem, field) && statusClass === DistributionStatus.COMPLETE) || (isValid(lineItem, field) && statusClass === DistributionStatus.EMPTY)) {
+          statusClass = DistributionStatus.INCOMPLETE;
           return false;
         }
         return true;

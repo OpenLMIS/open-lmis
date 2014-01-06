@@ -13,11 +13,8 @@ function RefrigeratorReading(refrigeratorReading) {
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
   RefrigeratorReading.prototype.computeStatus = function () {
-    var complete = 'is-complete';
-    var incomplete = 'is-incomplete';
-    var empty = 'is-empty';
 
-    var statusClass = complete;
+    var statusClass = DistributionStatus.COMPLETE;
     var _this = this;
 
     function isEmpty(field) {
@@ -32,24 +29,24 @@ function RefrigeratorReading(refrigeratorReading) {
 
     $(fieldList).each(function (index, field) {
       if (isEmpty(field)) {
-        statusClass = empty;
+        statusClass = DistributionStatus.EMPTY;
         return false;
       }
       return true;
     });
 
-    if (statusClass === empty) {
+    if (statusClass === DistributionStatus.EMPTY) {
       $(fieldList).each(function (index, field) {
         if (!isEmpty(field)) {
-          statusClass = incomplete;
+          statusClass = DistributionStatus.INCOMPLETE;
           return false;
         }
         return true;
       });
     }
 
-    if (statusClass === complete && _this.problemSinceLastTime && _this.problemSinceLastTime.value === 'Y') {
-      if (!_this.problems) statusClass = incomplete;
+    if (statusClass === DistributionStatus.COMPLETE && _this.problemSinceLastTime && _this.problemSinceLastTime.value === 'Y') {
+      if (!_this.problems) statusClass = DistributionStatus.INCOMPLETE;
       else {
         var hasAtLeastOneProblem = _.find(_.values(_this.problems),
           function (problemValue) {
@@ -57,7 +54,7 @@ function RefrigeratorReading(refrigeratorReading) {
           });
 
         if (!_this.problems || !hasAtLeastOneProblem)
-          statusClass = incomplete;
+          statusClass = DistributionStatus.INCOMPLETE;
       }
     }
 

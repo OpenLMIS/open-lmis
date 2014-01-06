@@ -27,9 +27,6 @@ function Coverage(coverage) {
 
   Coverage.prototype.computeStatus = function () {
     var _this = this;
-    var COMPLETE = 'is-complete';
-    var INCOMPLETE = 'is-incomplete';
-    var EMPTY = 'is-empty';
 
     var fullCoverage = this.fullCoverage;
     function isEmpty(fieldName) {
@@ -40,12 +37,12 @@ function Coverage(coverage) {
 
 
     $(fieldList).each(function (i, fieldName) {
-      if (!isEmpty(fieldName) && (status == COMPLETE || !status)) {
-        status = COMPLETE;
-      } else if (isEmpty(fieldName) && (!status || status == EMPTY)) {
-        status = EMPTY;
-      } else if ((isEmpty(fieldName) && status === COMPLETE) || (!isEmpty(fieldName) && status === EMPTY) || (!isEmpty(fieldName))) {
-        status = INCOMPLETE;
+      if (!isEmpty(fieldName) && (status == DistributionStatus.COMPLETE || !status)) {
+        status = DistributionStatus.COMPLETE;
+      } else if (isEmpty(fieldName) && (!status || status == DistributionStatus.EMPTY)) {
+        status = DistributionStatus.EMPTY;
+      } else if ((isEmpty(fieldName) && status === DistributionStatus.COMPLETE) || (!isEmpty(fieldName) && status === DistributionStatus.EMPTY) || (!isEmpty(fieldName))) {
+        status = DistributionStatus.INCOMPLETE;
         return false;
       }
       return true;

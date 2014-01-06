@@ -34,10 +34,6 @@ function EpiUse(epiUse) {
 
   EpiUse.prototype.computeStatus = function () {
     var _this = this;
-    var complete = 'is-complete';
-    var incomplete = 'is-incomplete';
-    var empty = 'is-empty';
-
     var statusClass;
 
     function isEmpty(field, obj) {
@@ -53,23 +49,23 @@ function EpiUse(epiUse) {
 
     $(_this.lineItems).each(function (i, lineItem) {
       if (!lineItem) {
-        statusClass = empty;
+        statusClass = DistributionStatus.EMPTY;
         return;
       }
       $(fieldList).each(function (i, fieldName) {
-        if (isValid(fieldName, lineItem) && (!statusClass || statusClass == complete)) {
-          statusClass = complete;
-        } else if (!isValid(fieldName, lineItem) && (!statusClass || statusClass == empty)) {
-          statusClass = empty;
-        } else if ((!isValid(fieldName, lineItem) && statusClass == complete) || (isValid(fieldName, lineItem) && statusClass == empty)) {
-          statusClass = incomplete;
+        if (isValid(fieldName, lineItem) && (!statusClass || statusClass == DistributionStatus.COMPLETE)) {
+          statusClass = DistributionStatus.COMPLETE;
+        } else if (!isValid(fieldName, lineItem) && (!statusClass || statusClass == DistributionStatus.EMPTY)) {
+          statusClass = DistributionStatus.EMPTY;
+        } else if ((!isValid(fieldName, lineItem) && statusClass == DistributionStatus.COMPLETE) || (isValid(fieldName, lineItem) && statusClass == DistributionStatus.EMPTY)) {
+          statusClass = DistributionStatus.INCOMPLETE;
           return false;
         }
         return true;
       });
     });
 
-    _this.status = statusClass || complete;
+    _this.status = statusClass || DistributionStatus.COMPLETE;
 
     return _this.status;
   };

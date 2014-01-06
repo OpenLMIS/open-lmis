@@ -11,9 +11,6 @@
 function FacilityVisit(facilityVisitJson) {
   $.extend(true, this, facilityVisitJson);
   var mandatoryList = ['observations', 'verifiedBy', 'confirmedBy'];
-  var COMPLETE = 'is-complete';
-  var EMPTY = 'is-empty';
-  var INCOMPLETE = 'is-incomplete';
 
   FacilityVisit.prototype.computeStatus = function () {
     var _this = this;
@@ -36,12 +33,12 @@ function FacilityVisit(facilityVisitJson) {
     }
 
     $(mandatoryList).each(function (i, fieldName) {
-      if (isValid(fieldName) && (status == COMPLETE || !status)) {
-        status = COMPLETE;
-      } else if (!isValid(fieldName) && isEmpty(fieldName) && (!status || status == EMPTY)) {
-        status = EMPTY;
-      } else if ((!isValid(fieldName) && status === COMPLETE) || (isValid(fieldName) && status === EMPTY) || (!isEmpty(fieldName))) {
-        status = INCOMPLETE;
+      if (isValid(fieldName) && (status == DistributionStatus.COMPLETE || !status)) {
+        status = DistributionStatus.COMPLETE;
+      } else if (!isValid(fieldName) && isEmpty(fieldName) && (!status || status == DistributionStatus.EMPTY)) {
+        status = DistributionStatus.EMPTY;
+      } else if ((!isValid(fieldName) && status === DistributionStatus.COMPLETE) || (isValid(fieldName) && status === DistributionStatus.EMPTY) || (!isEmpty(fieldName))) {
+        status = DistributionStatus.INCOMPLETE;
         return false;
       }
       return true;

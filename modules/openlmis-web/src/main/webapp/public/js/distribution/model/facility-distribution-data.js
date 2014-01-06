@@ -10,12 +10,6 @@
 
 function FacilityDistribution(facilityDistribution) {
 
-  var COMPLETE = 'is-complete';
-  var EMPTY = 'is-empty';
-  var INCOMPLETE = 'is-incomplete';
-  var SYNCED = 'is-synced';
-  var DUPLICATE = 'is-duplicate';
-
   this.epiUse = new EpiUse(facilityDistribution.epiUse);
   this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);
   this.refrigerators = new Refrigerators(facilityDistribution.refrigerators);
@@ -27,18 +21,18 @@ function FacilityDistribution(facilityDistribution) {
 
     var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.coverage];
     var overallStatus;
-    if(this.status === SYNCED || this.status === DUPLICATE) {
+    if(this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
       return this.status;
     }
     $.each(forms, function (index, form) {
       var computedStatus = form.computeStatus();
-      if (computedStatus === COMPLETE && (overallStatus === COMPLETE || !overallStatus)) {
-        overallStatus = COMPLETE;
-      } else if (computedStatus === EMPTY && (!overallStatus || overallStatus == EMPTY)) {
-        overallStatus = EMPTY;
-      } else if (computedStatus === INCOMPLETE || (computedStatus === EMPTY && overallStatus === COMPLETE) ||
-        (computedStatus === COMPLETE && overallStatus === EMPTY)) {
-        overallStatus = INCOMPLETE;
+      if (computedStatus === DistributionStatus.COMPLETE && (overallStatus === DistributionStatus.COMPLETE || !overallStatus)) {
+        overallStatus = DistributionStatus.COMPLETE;
+      } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
+        overallStatus = DistributionStatus.EMPTY;
+      } else if (computedStatus === DistributionStatus.INCOMPLETE || (computedStatus === DistributionStatus.EMPTY && overallStatus === DistributionStatus.COMPLETE) ||
+        (computedStatus === DistributionStatus.COMPLETE && overallStatus === DistributionStatus.EMPTY)) {
+        overallStatus = DistributionStatus.INCOMPLETE;
         return false;
       }
       return true;
@@ -50,7 +44,7 @@ function FacilityDistribution(facilityDistribution) {
   };
 
   FacilityDistribution.prototype.isDisabled = function () {
-    return [SYNCED, DUPLICATE].indexOf(this.status) != -1;
+    return [DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1;
   };
 
 }

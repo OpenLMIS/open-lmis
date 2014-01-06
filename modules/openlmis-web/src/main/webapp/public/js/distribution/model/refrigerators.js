@@ -19,16 +19,16 @@ function Refrigerators(refrigerators) {
   });
 
   Refrigerators.prototype.computeStatus = function () {
-    if (_.findWhere(this.readings, {status: 'is-incomplete'})) {
-      return 'is-incomplete';
+    if (_.findWhere(this.readings, {status: DistributionStatus.INCOMPLETE})) {
+      return DistributionStatus.INCOMPLETE;
     }
-    if (_.findWhere(this.readings, {status: 'is-empty'})) {
-      if (_.findWhere(this.readings, {status: 'is-complete'})) {
-        return 'is-incomplete';
+    if (_.findWhere(this.readings, {status: DistributionStatus.EMPTY})) {
+      if (_.findWhere(this.readings, {status: DistributionStatus.COMPLETE})) {
+        return DistributionStatus.INCOMPLETE;
       }
-      return 'is-empty';
+      return DistributionStatus.EMPTY;
     }
-    return 'is-complete';
+    return DistributionStatus.COMPLETE;
   };
 
   Refrigerators.prototype.addReading = function (reading) {

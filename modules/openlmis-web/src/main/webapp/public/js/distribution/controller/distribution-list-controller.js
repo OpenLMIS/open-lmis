@@ -9,9 +9,7 @@
  */
 
 function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, distributionService, $dialog) {
-  $scope.COMPLETE = 'is-complete';
-  $scope.SYNCED = 'is-synced';
-  $scope.DUPLICATE = 'is-duplicate';
+  angular.extend($scope, DistributionStatus);
   var SYNC_COMPLETE = 'label.distribution.synchronization.complete';
   var SYNC_IN_PROGRESS = 'label.distribution.synchronization.progress';
   var totalFacilityCount;
