@@ -51,6 +51,11 @@ task jsHint(type: GruntTask) {
   dependsOn npm
 }
 
+task karmaRun(type: Exec) {
+    description = 'Runs jasmine specs and publishes js tests coverage report'
+    commandLine 'karma', 'start', 'karma.config.js', '--singleRun'
+}
+
 task lesslint(type: GruntTask) {
   description = 'Runs LessLint against all LESS files'
   workingDir '.'
@@ -139,6 +144,7 @@ task cleanWorkspace(type: Delete) {
 }
 
 build.doLast {
+  karmaRun.execute()
   jsHint.execute()
   cleanWorkspace.execute()
 }
