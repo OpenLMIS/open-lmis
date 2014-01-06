@@ -11,21 +11,22 @@
 <div id="coverageTable" class="facility-distribution-form-table">
   <div id="applyNRContainer" class="clearfix">
     <input id="CoverageFormApplyNRToAll" type="button" ng-click="applyNRAll()"
-         class="pull-right btn"
-         openlmis-message="button.apply.nr.all"/>
+           class="pull-right btn"
+           openlmis-message="button.apply.nr.all"/>
   </div>
   <form auto-save="distribution" object-store="distributions">
     <table class="table table-bordered">
       <thead>
       <tr>
-        <th class="col-complete-vaccinated" openlmis-message="label.coverage.complete.vaccinated"></th>
-        <th class="col-health-center" openlmis-message="label.coverage.health.center"></th>
-        <th class="col-mobile-brigade" openlmis-message="label.coverage.mobile.brigade"></th>
+        <th class="col-complete-vaccinated" id="completeVaccinatedHeader"
+            openlmis-message="label.coverage.complete.vaccinated"></th>
+        <th class="col-health-center" id="healthCenterHeader" openlmis-message="label.coverage.health.center"></th>
+        <th class="col-mobile-brigade" id="mobileBrigadeHeader" openlmis-message="label.coverage.mobile.brigade"></th>
       </tr>
       </thead>
       <tdata>
         <tr>
-          <td openlmis-message="label.coverage.females"></td>
+          <td id="femaleHeader" openlmis-message="label.coverage.females"></td>
           <td>
             <div>
               <input id="femaleHealthCenter" type="text"
@@ -35,10 +36,10 @@
                      error-holder="coverageFemaleHCError"/>
             </div>
             <div class="error">
-                    <span id="coverageFemaleHCError"
-                          class="rnr-form-error"
-                          openlmis-message="error.number.only"
-                          style="display: none"></span>
+              <span id="coverageFemaleHCError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
             </div>
             <input id="coverageFemaleHC" type="checkbox"
                    ng-model="facilityData.coverage.fullCoverage.femaleHealthCenterReading.notRecorded"
@@ -55,10 +56,10 @@
                      error-holder="coverageFemaleMBError"/>
             </div>
             <div class="error">
-                    <span id="coverageFemaleMBError"
-                          class="rnr-form-error"
-                          openlmis-message="error.number.only"
-                          style="display: none"></span>
+              <span id="coverageFemaleMBError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
             </div>
             <input id="coverageFemaleMB" type="checkbox"
                    ng-model="facilityData.coverage.fullCoverage.femaleMobileBrigadeReading.notRecorded"
@@ -69,7 +70,7 @@
           </td>
         </tr>
         <tr>
-          <td openlmis-message="label.coverage.males"></td>
+          <td id="maleHeader" openlmis-message="label.coverage.males"></td>
           <td>
             <div>
               <input id="maleHealthCenter" type="text"
@@ -79,10 +80,10 @@
                      error-holder="coverageMaleHCError"/>
             </div>
             <div class="error">
-                    <span id="coverageMaleHCError"
-                          class="rnr-form-error"
-                          openlmis-message="error.number.only"
-                          style="display: none"></span>
+              <span id="coverageMaleHCError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
             </div>
             <input id="coverageMaleHC" type="checkbox"
                    ng-model="facilityData.coverage.fullCoverage.maleHealthCenterReading.notRecorded"
@@ -99,10 +100,10 @@
                      error-holder="coverageMaleMBError"/>
             </div>
             <div class="error">
-                    <span id="coverageMaleMBError"
-                          class="rnr-form-error"
-                          openlmis-message="error.number.only"
-                          style="display: none"></span>
+              <span id="coverageMaleMBError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
             </div>
             <input id="coverageMaleMB" type="checkbox"
                    ng-model="facilityData.coverage.fullCoverage.maleMobileBrigadeReading.notRecorded"
