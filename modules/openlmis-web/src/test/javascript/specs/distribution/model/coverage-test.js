@@ -8,14 +8,14 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-describe('Coveage', function () {
+describe('Coverage', function () {
 
   it('should set status as empty if coverage form is empty', function () {
     var coverage = new Coverage({fullCoverage: {}});
 
     var status = coverage.computeStatus();
 
-    expect(status).toEqual('is-empty');
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should set status as complete if coverage form is valid and filled', function () {
@@ -25,7 +25,7 @@ describe('Coveage', function () {
 
     var status = coverage.computeStatus();
 
-    expect(status).toEqual('is-complete');
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status as complete if the form is valid', function () {
@@ -35,7 +35,7 @@ describe('Coveage', function () {
 
     var status = coverage.computeStatus();
 
-    expect(status).toEqual('is-complete');
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status as incomplete if the only last form field valid', function () {
@@ -45,7 +45,7 @@ describe('Coveage', function () {
 
     var status = coverage.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set not recorded checkbox for epi use', function () {

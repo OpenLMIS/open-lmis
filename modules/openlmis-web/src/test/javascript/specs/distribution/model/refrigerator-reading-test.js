@@ -16,7 +16,7 @@ describe('RefrigeratorReading', function () {
 
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual("is-empty");
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should return red status class if internal refrigerator form fields are filled', function () {
@@ -24,7 +24,7 @@ describe('RefrigeratorReading', function () {
 
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual("is-empty");
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should return yellow status class if internal refrigerator form fields are partially filled', function () {
@@ -32,7 +32,7 @@ describe('RefrigeratorReading', function () {
 
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual("is-incomplete");
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return yellow status class if internal refrigerator form fields are partially filled and not recorded flag undefined',
@@ -42,7 +42,7 @@ describe('RefrigeratorReading', function () {
 
         var status = refrigeratorReading.computeStatus();
 
-        expect(status).toEqual("is-incomplete");
+        expect(status).toEqual(DistributionStatus.INCOMPLETE);
       });
 
   it('should return yellow status class if internal refrigerator form fields are empty string and not recorded flag undefined',
@@ -52,7 +52,7 @@ describe('RefrigeratorReading', function () {
 
         var status = refrigeratorReading.computeStatus();
 
-        expect(status).toEqual("is-incomplete");
+        expect(status).toEqual(DistributionStatus.INCOMPLETE);
       });
 
   it('should return green status class if internal refrigerator form fields are completely filled', function () {
@@ -61,7 +61,7 @@ describe('RefrigeratorReading', function () {
 
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual("is-complete");
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should return green status class if internal refrigerator form fields are completely filled or NR flag set',
@@ -71,7 +71,7 @@ describe('RefrigeratorReading', function () {
 
         var status = refrigeratorReading.computeStatus();
 
-        expect(status).toEqual("is-complete");
+        expect(status).toEqual(DistributionStatus.COMPLETE);
       });
 
   it('should return yellow status class if all fields filled but not even 1 problem selected', function () {
@@ -81,7 +81,7 @@ describe('RefrigeratorReading', function () {
 
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return green status class if all fields filled and problems selected', function () {
@@ -91,7 +91,7 @@ describe('RefrigeratorReading', function () {
     refrigeratorReading.problems = {operatorError: true};
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual('is-complete');
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should return yellow status class if all fields filled and problems selected', function () {
@@ -100,7 +100,7 @@ describe('RefrigeratorReading', function () {
 
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual('is-empty');
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should return green status class if all fields filled and problems selected', function () {
@@ -110,7 +110,7 @@ describe('RefrigeratorReading', function () {
     refrigeratorReading.problems = {problemMap: {'problem': false, 'problem2': undefined}};
     var status = refrigeratorReading.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
 

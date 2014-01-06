@@ -17,7 +17,7 @@ describe('EPI Use', function () {
 
     var status = epiUse.computeStatus();
 
-    expect(status).toEqual('is-empty');
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should set status as incomplete if expiration date format is invalid and at least one other field is filled', function () {
@@ -27,7 +27,7 @@ describe('EPI Use', function () {
 
     var status = epiUse.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set status as incomplete if expiration date format is invalid and rest of the form is valid', function () {
@@ -39,7 +39,7 @@ describe('EPI Use', function () {
 
     var status = epiUse.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set status as incomplete if expiration date is not recorded and rest of the form is valid', function () {
@@ -51,7 +51,7 @@ describe('EPI Use', function () {
 
     var status = epiUse.computeStatus();
 
-    expect(status).toEqual('is-complete');
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status as complete if the form is valid', function () {
@@ -63,7 +63,7 @@ describe('EPI Use', function () {
 
     var status = epiUse.computeStatus();
 
-    expect(status).toEqual('is-complete');
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status as incomplete if the only last form field valid', function () {
@@ -73,7 +73,7 @@ describe('EPI Use', function () {
 
     var status = epiUse.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set not recorded checkbox for epi use', function () {

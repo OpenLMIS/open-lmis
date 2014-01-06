@@ -14,7 +14,7 @@ describe('Facility Visit', function () {
 
     var status = facilityVisit.computeStatus();
 
-    expect(status).toEqual('is-empty');
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should return incomplete if visit details not present', function () {
@@ -22,7 +22,7 @@ describe('Facility Visit', function () {
 
     var status = facilityVisit.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return incomplete if verified By Name not present', function () {
@@ -30,7 +30,7 @@ describe('Facility Visit', function () {
 
     var status = facilityVisit.computeStatus();
 
-    expect(status).toEqual('is-incomplete');
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should return empty if visit details is undefined', function () {
@@ -38,7 +38,7 @@ describe('Facility Visit', function () {
 
     var status = facilityVisit.computeStatus();
 
-    expect(status).toEqual('is-empty');
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should return complete if visit details valid', function () {
@@ -46,7 +46,7 @@ describe('Facility Visit', function () {
 
     var status = facilityVisit.computeStatus();
 
-    expect(status).toEqual('is-complete');
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should retain its status', function () {
@@ -54,6 +54,6 @@ describe('Facility Visit', function () {
 
     facilityVisit.computeStatus();
 
-    expect(facilityVisit.status).toEqual('is-complete');
+    expect(facilityVisit.status).toEqual(DistributionStatus.COMPLETE);
   });
 });

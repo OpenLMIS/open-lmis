@@ -18,7 +18,7 @@ describe('epi inventory', function () {
 
     var status = epiInventory.computeStatus();
 
-    expect(status).toEqual("is-empty");
+    expect(status).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should set status as incomplete if only deliveredQuantity is valid', function () {
@@ -28,7 +28,7 @@ describe('epi inventory', function () {
 
     var status = epiInventory.computeStatus();
 
-    expect(status).toEqual("is-incomplete");
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set status as incomplete if only existingQuantity is valid', function () {
@@ -38,7 +38,7 @@ describe('epi inventory', function () {
 
     var status = epiInventory.computeStatus();
 
-    expect(status).toEqual("is-incomplete");
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set status as incomplete if some fields are not recorded and form is partially filled', function() {
@@ -48,7 +48,7 @@ describe('epi inventory', function () {
 
     var status = epiInventory.computeStatus();
 
-    expect(status).toEqual("is-incomplete");
+    expect(status).toEqual(DistributionStatus.INCOMPLETE);
   });
 
   it('should set status as complete if form is completely filled and all fields valid', function() {
@@ -58,7 +58,7 @@ describe('epi inventory', function () {
 
     var status = epiInventory.computeStatus();
 
-    expect(status).toEqual("is-complete");
+    expect(status).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set all NR flags to true', function() {

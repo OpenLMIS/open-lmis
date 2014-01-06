@@ -127,7 +127,7 @@ describe('DistributionListController', function () {
 
     $httpBackend.flush();
 
-    expect(scope.syncResult['is-synced'].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.SYNCED].length).toEqual(1);
   });
 
   it('should update progress bar on success of a sync', function () {
@@ -162,7 +162,7 @@ describe('DistributionListController', function () {
   });
 
   it('should populate synced, already synced, failed to sync facilities ', function () {
-    var distribution = {facilityDistributions: {44: {status: 'is-complete'}, 46: {status: 'is-complete'}, 45: {status: 'is-complete'}}}
+    var distribution = {facilityDistributions: {44: {status: DistributionStatus.COMPLETE}, 46: {status: DistributionStatus.COMPLETE}, 45: {status: DistributionStatus.COMPLETE}}}
 
     $httpBackend.when('PUT', '/distributions/1/facilities/44.json', distribution.facilityDistributions[44]).respond(200, {syncStatus: false});
     $httpBackend.when('PUT', '/distributions/1/facilities/46.json', distribution.facilityDistributions[46]).respond(500);
@@ -182,15 +182,15 @@ describe('DistributionListController', function () {
 
     scope.$apply();
 
-    expect(scope.syncResult['is-complete'].length).toEqual(1);
-    expect(scope.syncResult['is-synced'].length).toEqual(1);
-    expect(scope.syncResult['is-duplicate'].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.COMPLETE].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.SYNCED].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.DUPLICATE].length).toEqual(1);
   });
 
   it('should show message if no facility available for sync ', function () {
     distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'}, 'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
-      'facilityDistributions': {'44': new FacilityDistribution({status: 'is-synced'}),
-        '45': new FacilityDistribution({status: 'is-synced'})}};
+      'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED}),
+        '45': new FacilityDistribution({status: DistributionStatus.SYNCED})}};
 
     scope.sharedDistributions.distributionList = [distribution];
 
@@ -212,11 +212,11 @@ describe('DistributionListController', function () {
 
     $httpBackend.flush();
 
-    expect(distribution.facilityDistributions[45].status).toEqual('is-duplicate');
+    expect(distribution.facilityDistributions[45].status).toEqual(DistributionStatus.DUPLICATE);
 
     scope.$apply();
 
-    expect(scope.syncResult['is-duplicate'][0].facilityDistribution).toEqual(distribution.facilityDistributions[45]);
+    expect(scope.syncResult[DistributionStatus.DUPLICATE][0].facilityDistribution).toEqual(distribution.facilityDistributions[45]);
     expect(distributionService.save).toHaveBeenCalledWith(distribution);
   });
 
