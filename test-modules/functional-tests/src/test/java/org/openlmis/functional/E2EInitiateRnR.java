@@ -246,7 +246,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC = CalculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, 36, 3, 11);
-    initiateRnRPage.verifyPacksToShip("10");
+    initiateRnRPage.verifyPacksToShip("P10");
   }
 
   @And("^I update & verify quantities for emergency RnR$")
@@ -256,8 +256,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
     int expectedCalculatedNC = CalculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
-    // TODO: remove hard coded value
-    initiateRnRPage.verifyPacksToShip("10");
+    initiateRnRPage.verifyPacksToShip("P10");
   }
 
   @And("^I update & verify requested quantities$")
@@ -266,7 +265,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterValue(10, "requestedQuantityFirstProduct");
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.verifyPacksToShip("1");
+    initiateRnRPage.verifyPacksToShip("P10");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
   }
@@ -485,8 +484,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
     assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
     assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
-//    assertEquals("Period1 (01/11/2013 - 02/01/2014)", testWebDriver.findElement(By.xpath("//div[1]/span[contains(text(),'Period1 (01/11/2013 - 02/01/2014)')]")).getText());
+    assertEquals("Period1 (01/12/2013 - 02/02/2014)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1 (01/12/2013 - 02/02/2014)')]")).getText());
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
+      //TODO find proper xpath or give id
+   // assertEquals(facility_code,testWebDriver.findElement(By.xpath("").getText());
     if (rnrType.equals("Emergency")) {
       assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
     }

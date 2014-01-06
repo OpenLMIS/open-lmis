@@ -1726,9 +1726,9 @@ public class DBWrapper {
     return resultSet;
   }
 
-  public Integer getPackSize(String programCode) throws SQLException {
+  public Integer getPackSize(String productCode) throws SQLException {
     Integer packSize = 0;
-    ResultSet rs = query("SELECT packsize FROM products WHERE code='" + programCode + "';");
+    ResultSet rs = query("SELECT packSize FROM products WHERE code='" + productCode + "';");
     if (rs.next()) {
       packSize = rs.getInt("packSize");
     }

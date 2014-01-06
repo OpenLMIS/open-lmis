@@ -488,10 +488,22 @@ public class InitiateRnRPage extends RequisitionPage {
     verifyFieldValue(String.valueOf(expectedMaxStockQuantity - stockOnHand), actualCalculatedOrderQuantity.trim());
   }
 
-  public void verifyPacksToShip(String V) {
+  public void verifyPacksToShip(String productCode) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
-    verifyFieldValue(V, actualPacksToShip.trim());
+    DBWrapper dbWrapper = new DBWrapper();
+    float packSize = dbWrapper.getPackSize(productCode);
+    Integer expectedPacksToShip;
+    if(requestedQuantityFirstProduct.getAttribute("value").isEmpty()){
+        float actualCalculatedOrderQuantity = Float.parseFloat(testWebDriver.getText(calculatedOrderQuantity));
+        expectedPacksToShip= Math.round(actualCalculatedOrderQuantity / packSize);
+    }
+    else
+    {
+       float actualRequestedQuantity = Float.parseFloat(requestedQuantityFirstProduct.getAttribute("value"));
+       expectedPacksToShip = Math.round(actualRequestedQuantity/packSize);
+    }
+    verifyFieldValue(expectedPacksToShip.toString(), actualPacksToShip.trim());
     testWebDriver.sleep(500);
 
   }
