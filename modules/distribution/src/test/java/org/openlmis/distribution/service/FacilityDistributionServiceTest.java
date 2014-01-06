@@ -59,6 +59,9 @@ public class FacilityDistributionServiceTest {
   @Mock
   private RefrigeratorService refrigeratorService;
 
+  @Mock
+  private VaccinationCoverageService vaccinationCoverageService;
+
   @InjectMocks
   FacilityDistributionService facilityDistributionService;
 
@@ -98,7 +101,6 @@ public class FacilityDistributionServiceTest {
 
     when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
     when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(new ProductGroup("PG2", "PG2"));
-
 
     Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L, true);
     List<Refrigerator> refrigerators = asList(refrigerator);
@@ -184,7 +186,8 @@ public class FacilityDistributionServiceTest {
     FacilityVisit facilityVisit = new FacilityVisit();
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
     EpiInventory epiInventory = new EpiInventory();
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, new VaccinationCoverage());
+    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationCoverage);
 
     when(facilityVisitService.save(facilityVisit)).thenReturn(true);
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);
@@ -192,6 +195,7 @@ public class FacilityDistributionServiceTest {
     verify(facilityVisitService).save(facilityVisit);
     verify(distributionRefrigeratorsService).save(distributionRefrigerators);
     verify(epiUseService).save(epiUse);
+    verify(vaccinationCoverageService).save(vaccinationCoverage);
     assertTrue(saveStatus);
   }
 }

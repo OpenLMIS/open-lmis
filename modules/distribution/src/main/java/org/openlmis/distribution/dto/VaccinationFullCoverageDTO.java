@@ -15,43 +15,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = NON_EMPTY)
-public class FacilityDistributionDTO {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class VaccinationFullCoverageDTO {
 
-  private FacilityVisit facilityVisit;
-  private EpiUseDTO epiUse;
-  private DistributionRefrigeratorsDTO refrigerators;
-  private VaccinationCoverageDTO coverage;
+  private Reading femaleHealthCenterReading;
+  private Reading femaleMobileBrigadeReading;
+  private Reading maleMobileBrigadeReading;
+  private Reading maleHealthCenterReading;
 
-  public FacilityDistribution transform() {
-    return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), null, this.coverage.transform());
+  public VaccinationFullCoverage transform() {
+    return new VaccinationFullCoverage(femaleHealthCenterReading.parsePositiveInt(),
+      femaleMobileBrigadeReading.parsePositiveInt(),
+      maleHealthCenterReading.parsePositiveInt(),
+      maleMobileBrigadeReading.parsePositiveInt());
   }
-
-  public void setDistributionId(Long distributionId) {
-    facilityVisit.setDistributionId(distributionId);
-    epiUse.setFacilityId(distributionId);
-    coverage.setDistributionId(distributionId);
-  }
-
-  public void setFacilityId(Long facilityId) {
-    facilityVisit.setFacilityId(facilityId);
-    epiUse.setFacilityId(facilityId);
-    coverage.setFacilityId(facilityId);
-  }
-
-  public void setModifiedBy(Long modifiedBy) {
-    facilityVisit.setCreatedBy(modifiedBy);
-    epiUse.setModifiedBy(modifiedBy);
-    refrigerators.setCreatedBy(modifiedBy);
-  }
-
 }

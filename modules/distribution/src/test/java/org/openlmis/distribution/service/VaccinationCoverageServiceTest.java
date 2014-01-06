@@ -8,32 +8,44 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.dto;
+package org.openlmis.distribution.service;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.VaccinationCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
-public class VaccinationCoverageDTOTest {
+@RunWith(MockitoJUnitRunner.class)
+public class VaccinationCoverageServiceTest {
+
+  @Mock
+  private VaccinationCoverageRepository repository;
+
+  @InjectMocks
+  private VaccinationCoverageService service;
 
   @Test
-  public void shouldTransformCoverageDTOIntoCoverage() throws Exception {
-    VaccinationFullCoverageDTO fullCoverageDTO = mock(VaccinationFullCoverageDTO.class);
+  public void shouldSaveVaccinationCoverageAlongWithFullCoverage() throws Exception {
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
+    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
+    vaccinationCoverage.setId(55L);
+    vaccinationCoverage.setFullCoverage(vaccinationFullCoverage);
 
-    VaccinationCoverageDTO coverageDTO = new VaccinationCoverageDTO(123L, 234L, fullCoverageDTO);
+    service.save(vaccinationCoverage);
 
-    VaccinationCoverage vaccinationCoverage = coverageDTO.transform();
-
-    verify(fullCoverageDTO).transform();
-
-    assertThat(vaccinationCoverage.getFacilityId(), is(123L));
-    assertThat(vaccinationCoverage.getDistributionId(), is(234L));
+    verify(repository).save(vaccinationCoverage);
+    verify(repository).saveFullCoverage(vaccinationFullCoverage);
+    assertThat(vaccinationFullCoverage.getVaccinationCoverageId(), is(vaccinationCoverage.getId()));
   }
 }

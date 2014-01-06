@@ -14,23 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Facility;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class VaccinationCoverage extends BaseModel {
 
-  private Long distributionId;
   private Long facilityId;
-  private Integer femaleHealthCenterReading;
-  private Integer femaleMobileBrigadeReading;
-  private Integer maleMobileBrigadeReading;
-  private Integer maleHealthCenterReading;
+  private Long distributionId;
+  private VaccinationFullCoverage fullCoverage;
 
-
-  public VaccinationCoverage(Facility facility, Distribution distribution) {
-    this.facilityId = facility.getId();
-    this.distributionId = distribution.getId();
-  }
 }

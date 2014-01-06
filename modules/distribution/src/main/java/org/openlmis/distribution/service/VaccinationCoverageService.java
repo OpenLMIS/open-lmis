@@ -8,29 +8,24 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-package org.openlmis.distribution.dto;
+package org.openlmis.distribution.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.distribution.domain.VaccinationCoverage;
+import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.repository.VaccinationCoverageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+@Service
+public class VaccinationCoverageService {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonSerialize(include = NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class VaccinationCoverageDTO {
+  @Autowired
+  private VaccinationCoverageRepository repository;
 
-  private Long facilityId;
-  private Long distributionId;
-  private VaccinationFullCoverageDTO fullCoverage;
-
-  public VaccinationCoverage transform() {
-    return new VaccinationCoverage(facilityId, distributionId, fullCoverage.transform());
+  public void save(VaccinationCoverage coverage) {
+    repository.save(coverage);
+    VaccinationFullCoverage fullCoverage = coverage.getFullCoverage();
+    fullCoverage.setVaccinationCoverageId(coverage.getId());
+    repository.saveFullCoverage(fullCoverage);
   }
 }
