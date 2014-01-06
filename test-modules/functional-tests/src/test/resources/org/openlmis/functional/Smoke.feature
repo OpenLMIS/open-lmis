@@ -522,7 +522,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
-  @smokeDistribution
+#  @smokeDistribution
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
