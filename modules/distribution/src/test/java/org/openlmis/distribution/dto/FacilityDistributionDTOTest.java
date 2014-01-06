@@ -13,10 +13,7 @@ package org.openlmis.distribution.dto;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.DistributionRefrigerators;
-import org.openlmis.distribution.domain.EpiUse;
-import org.openlmis.distribution.domain.FacilityDistribution;
-import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -31,11 +28,9 @@ public class FacilityDistributionDTOTest {
     FacilityVisit facilityVisit = new FacilityVisit();
     EpiUseDTO epiUseDTO = mock(EpiUseDTO.class);
     DistributionRefrigeratorsDTO distributionRefrigeratorsDTO = mock(DistributionRefrigeratorsDTO.class);
+    VaccinationCoverageDTO coverageDTO = mock(VaccinationCoverageDTO.class);
 
-    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO();
-    facilityDistributionDTO.setFacilityVisit(facilityVisit);
-    facilityDistributionDTO.setEpiUse(epiUseDTO);
-    facilityDistributionDTO.setRefrigerators(distributionRefrigeratorsDTO);
+    FacilityDistributionDTO facilityDistributionDTO = new FacilityDistributionDTO(facilityVisit, epiUseDTO, distributionRefrigeratorsDTO, coverageDTO);
 
     EpiUse epiUse = new EpiUse();
     when(epiUseDTO.transform()).thenReturn(epiUse);
@@ -43,10 +38,14 @@ public class FacilityDistributionDTOTest {
     DistributionRefrigerators distributionRefrigerators = mock(DistributionRefrigerators.class);
     when(distributionRefrigeratorsDTO.transform()).thenReturn(distributionRefrigerators);
 
+    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
+    when(coverageDTO.transform()).thenReturn(vaccinationCoverage);
+
     FacilityDistribution facilityDistribution = facilityDistributionDTO.transform();
 
     assertThat(facilityDistribution.getFacilityVisit(), is(facilityDistributionDTO.getFacilityVisit()));
     assertThat(facilityDistribution.getEpiUse(), is(epiUse));
     assertThat(facilityDistribution.getRefrigerators(), is(distributionRefrigerators));
+    assertThat(facilityDistribution.getCoverage(), is(vaccinationCoverage));
   }
 }

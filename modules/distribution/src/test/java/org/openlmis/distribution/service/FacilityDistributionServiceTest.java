@@ -72,7 +72,7 @@ public class FacilityDistributionServiceTest {
     FacilityDistributionService spyFacilityDistributionService = spy(facilityDistributionService);
     Facility facility = new Facility(1234L);
     List<Facility> facilities = asList(facility);
-    FacilityDistribution facilityDistribution = new FacilityDistribution(null, new EpiUse(), null, null);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(null, new EpiUse(), null, null, null);
 
     Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L, true);
     List<Refrigerator> refrigerators = asList(refrigerator);
@@ -143,8 +143,8 @@ public class FacilityDistributionServiceTest {
     List<Refrigerator> refrigerators = asList(new Refrigerator(), new Refrigerator());
     Facility facility1 = new Facility(9l);
     Facility facility2 = new Facility(12L);
-    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null);
-    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null);
+    FacilityDistribution facilityDistribution1 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationCoverage());
+    FacilityDistribution facilityDistribution2 = new FacilityDistribution(new FacilityVisit(), new EpiUse(), null, null, new VaccinationCoverage());
     FacilityDistributionService service = spy(facilityDistributionService);
 
     when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(4L, 16L)).thenReturn(refrigerators);
@@ -184,7 +184,7 @@ public class FacilityDistributionServiceTest {
     FacilityVisit facilityVisit = new FacilityVisit();
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
     EpiInventory epiInventory = new EpiInventory();
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, new VaccinationCoverage());
 
     when(facilityVisitService.save(facilityVisit)).thenReturn(true);
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);

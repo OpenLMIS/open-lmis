@@ -36,6 +36,7 @@ public class FacilityDistribution {
   private EpiUse epiUse;
   private DistributionRefrigerators refrigerators;
   private EpiInventory epiInventory;
+  private VaccinationCoverage coverage;
 
   public FacilityDistribution(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.epiUse = new EpiUse(facility, distribution);
