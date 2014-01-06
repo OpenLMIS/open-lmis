@@ -14,7 +14,7 @@ function CoverageController($scope, $routeParams, distributionService) {
 
   $scope.applyNRAll = function() {
     distributionService.applyNR(function(distribution) {
-      distribution.setCoverageRecorded($routeParams.facility);
+      distribution.setCoverageNotRecorded($routeParams.facility);
     });
   };
 

@@ -28,7 +28,7 @@ function Distribution(distributionJson) {
     this.facilityDistributions[facilityId].epiInventory.setNotRecorded();
   };
 
-  Distribution.prototype.setCoverageRecorded = function (facilityId) {
+  Distribution.prototype.setCoverageNotRecorded = function (facilityId) {
     this.facilityDistributions[facilityId].coverage.setNotRecorded();
   };
 
