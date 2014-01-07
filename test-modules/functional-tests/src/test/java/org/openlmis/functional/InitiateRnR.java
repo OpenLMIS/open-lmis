@@ -855,7 +855,7 @@ public class InitiateRnR extends TestCaseHelper {
     initiateRnRPage.verifySubmitRnrSuccessMsg();
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
-    assertEquals("125.0", dbWrapper.getAttributeFromTable("requisitions", "fullSupplyItemsSubmittedCost", "id", String.valueOf(dbWrapper.getMaxRnrID())));
+    assertEquals("125.0", Float.parseFloat(dbWrapper.getAttributeFromTable("requisitions", "fullSupplyItemsSubmittedCost", "id", String.valueOf(dbWrapper.getMaxRnrID()))));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
