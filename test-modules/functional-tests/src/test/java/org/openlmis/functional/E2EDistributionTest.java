@@ -173,6 +173,15 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiUse.verifyStockAtEndOfMonth("50", 1);
     epiUse.verifyExpirationDate("10/2011", 1);
 
+    EpiInventoryPage epiInventoryPage = new EpiInventoryPage(testWebDriver);
+    epiInventoryPage.navigateToEpiInventory();
+    epiInventoryPage.applyNRToAll();
+    epiInventoryPage.fillDeliveredQuantity(1,"10");
+    epiInventoryPage.fillDeliveredQuantity(2,"20");
+    epiInventoryPage.fillDeliveredQuantity(3,"30");
+
+    epiInventoryPage.verifyIndicator("GREEN");
+
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
@@ -205,6 +214,8 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.navigateToRefrigeratorTab();
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
+
+
 
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
