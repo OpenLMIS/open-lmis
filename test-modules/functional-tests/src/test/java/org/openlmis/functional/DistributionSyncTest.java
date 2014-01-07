@@ -203,46 +203,20 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     homePage.navigatePlanDistribution();
     distributionPage.deleteDistribution();
-    distributionPage.ConfirmDeleteDistribution();
+    distributionPage.confirmDeleteDistribution();
 
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testDeleteDistributionAfterSync(String userSIC,
-                                              String password,
-                                              String deliveryZoneCodeFirst,
-                                              String deliveryZoneCodeSecond,
-                                              String deliveryZoneNameFirst,
-                                              String deliveryZoneNameSecond,
-                                              String facilityCodeFirst,
-                                              String facilityCodeSecond,
-                                              String programFirst,
-                                              String programSecond,
-                                              String schedule) throws Exception {
+  public void shouldCheckAlreadySyncedFacilities(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
+                                                 String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond,
+                                                 String schedule) throws Exception {
 
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10",
-      "F11",
-      true,
-      programFirst,
-      userSIC,
-      "200",
-      rightsList,
-      programSecond,
-      "District1",
-      "Ngorongoro",
-      "Ngorongoro");
-    setupDataForDeliveryZone(true,
-      deliveryZoneCodeFirst,
-      deliveryZoneCodeSecond,
-      deliveryZoneNameFirst,
-      deliveryZoneNameSecond,
-      facilityCodeFirst,
-      facilityCodeSecond,
-      programFirst,
-      programSecond,
-      schedule);
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst,
+      programSecond, schedule);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
@@ -255,21 +229,20 @@ public class DistributionSyncTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickInitiateDistribution();
+    distributionPage.initiate(deliveryZoneNameFirst, programFirst);
 
-    distributionPage.clickRecordData(1);
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility("F10");
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility("F10");
+    EPIUsePage epiUse = refrigeratorPage.navigateToEpiUse();
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
     epiUse.checkApplyNRToAllFields(true);
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
     generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    epiInventoryPage.fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
 
     CoveragePage coveragePage = new CoveragePage(testWebDriver);
     coveragePage.navigate();
@@ -282,11 +255,12 @@ public class DistributionSyncTest extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
 
     distributionPage.deleteDistribution();
-    distributionPage.ConfirmDeleteDistribution();
+    distributionPage.confirmDeleteDistribution();
+
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
-    distributionPage.ConfirmDeleteDistribution();
+    distributionPage.confirmDeleteDistribution();
 
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F10");
@@ -299,6 +273,15 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     coveragePage.navigate();
     coveragePage.enterData(66, 78, 89, 9);
+    epiInventoryPage = generalObservationPage.navigateToEpiInventory();
+    epiInventoryPage.fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
+
+    coveragePage = epiInventoryPage.navigateToCoverage();
+    coveragePage.setFemaleHealthCenter(66);
+    coveragePage.setFemaleMobileBrigade(78);
+    coveragePage.setMaleHealthCenter(89);
+    coveragePage.setMaleMobileBrigade(9);
+
     facilityListPage.selectFacility("F11");
     epiUse.navigate();
     epiUse.checkApplyNRToAllFields(true);
@@ -310,8 +293,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     homePage.navigatePlanDistribution();
 
     distributionPage.syncDistribution(1);
-    assertEquals(distributionPage.getFacilityAlreadySyncMessage(),
-      "Already synced facilities : \n" + "F10-Village Dispensary");
+    assertEquals(distributionPage.getFacilityAlreadySyncMessage(), "Already synced facilities : \n" + "F10-Village Dispensary");
     assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" + "F11-Central Hospital");
     distributionPage.syncDistributionMessageDone();
 

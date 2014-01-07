@@ -5,28 +5,24 @@ import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.Map;
 
-import static org.openqa.selenium.support.How.*;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.openqa.selenium.support.How.ID;
 
 public class EpiInventoryPage extends DistributionTab {
 
 
-  @FindBy(how = ID, using ="applyNRAll")
-  private static WebElement applyNRToAllFieldsCheckbox = null;
+  @FindBy(how = ID, using = "applyNRAll")
+  private static WebElement applyNRToAllButton = null;
 
   @FindBy(how = ID, using = "button_OK")
   private static WebElement okButton = null;
 
   @FindBy(how = ID, using = "noLineItems")
   private static WebElement noLineItems = null;
-
 
   public EpiInventoryPage(TestWebDriver driver) {
     super(driver);
@@ -51,6 +47,10 @@ public class EpiInventoryPage extends DistributionTab {
   public void navigate() {
   }
 
+  public void fillDeliveredQuantity(int rowNumber, String deliveredQuantity) {
+    testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).sendKeys(deliveredQuantity);
+  }
+
   public String getProductCode(int rowNumber) {
     return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).getText();
   }
@@ -61,5 +61,17 @@ public class EpiInventoryPage extends DistributionTab {
 
   public String getMessage() {
     return noLineItems.getText();
+  }
+
+  public void applyNRToAll() {
+    applyNRToAllButton.click();
+    okButton.click();
+  }
+
+  public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
+    this.applyNRToAll();
+    this.fillDeliveredQuantity(1, deliveredQuantity1);
+    this.fillDeliveredQuantity(2, deliveredQuantity2);
+    this.fillDeliveredQuantity(3, deliveredQuantity3);
   }
 }

@@ -118,7 +118,6 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     assertEquals(epiInventoryPage.getIsaValue(3), "--");
     assertEquals(epiInventoryPage.getProductCode(1),"antibiotic");
-
   }
 
   // @Test(groups = {"distribution"})

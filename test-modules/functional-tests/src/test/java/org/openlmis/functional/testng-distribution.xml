@@ -28,6 +28,8 @@
       </class>
       <class name="org.openlmis.functional.DistributionRefrigeratorSyncTest">
       </class>
+      <class name="org.openlmis.functional.DistributionEpiInventoryTest">
+      </class>
     </classes>
   </test>
 </suite>

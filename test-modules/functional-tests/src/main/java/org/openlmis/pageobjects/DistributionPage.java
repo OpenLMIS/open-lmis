@@ -122,10 +122,8 @@ public class DistributionPage extends Page {
   }
 
   public void clickSyncDistribution(int rowNumber) {
- //   testWebDriver.waitForElementToAppear(syncLink);
-//    testWebDriver.findElement(By.xpath("//div[@id='cachedDistributions']/div[2]/div["+rowNumber+"]div[6]/a")).click();
     testWebDriver.sleep(500);
-    testWebDriver.findElement(By.id("sync"+(rowNumber-1))).click();
+    testWebDriver.findElement(By.id("sync" + (rowNumber - 1))).click();
   }
 
   public void syncDistribution(int rowNumber) {
@@ -263,7 +261,7 @@ public class DistributionPage extends Page {
     assertEquals("Delete distribution", deleteConfirmDialogHeader.getText());
   }
 
-  public void ConfirmDeleteDistribution() {
+  public void confirmDeleteDistribution() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
   }
