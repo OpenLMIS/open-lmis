@@ -70,7 +70,7 @@
               <td class="col-delivered-quantity">
                 <div>
                   <input id="deliveredQuantity{{ $index }}" type="text" ng-model="lineItem.deliveredQuantity" name="deliveredQuantityNR{{ $index }}"
-                         numeric-validator="positiveInteger" maxlength="7" error-holder="deliveredQuantity{{$index}}"/>
+                         numeric-validator="positiveInteger" maxlength="7" error-holder="deliveredQuantityError{{$index}}"/>
                 </div>
                 <div class="error">
                     <span id="deliveredQuantityError{{$index}}"

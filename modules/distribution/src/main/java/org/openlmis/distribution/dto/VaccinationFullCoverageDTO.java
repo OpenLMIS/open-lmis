@@ -28,8 +28,8 @@ public class VaccinationFullCoverageDTO {
 
   private Reading femaleHealthCenterReading;
   private Reading femaleMobileBrigadeReading;
-  private Reading maleMobileBrigadeReading;
   private Reading maleHealthCenterReading;
+  private Reading maleMobileBrigadeReading;
 
   public VaccinationFullCoverage transform() {
     return new VaccinationFullCoverage(femaleHealthCenterReading.parsePositiveInt(),
