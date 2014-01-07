@@ -40,7 +40,6 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ConvertToOrderPagination extends TestCaseHelper {
 
-
   @BeforeMethod(groups = "requisition")
   @Before
   public void setUp() throws Exception {

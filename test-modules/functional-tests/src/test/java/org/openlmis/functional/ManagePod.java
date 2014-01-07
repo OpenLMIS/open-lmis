@@ -196,7 +196,6 @@ public class ManagePod extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 
   @DataProvider(name = "Data-Provider-Function-RnR")
@@ -205,5 +204,4 @@ public class ManagePod extends TestCaseHelper {
       {"HIV", "storeIncharge", "Admin123"}
     };
   }
-
 }
