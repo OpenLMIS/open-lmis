@@ -32,7 +32,7 @@ public class PODTest extends JsonUtility {
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String POD_URL = "http://localhost:9091/rest-api/orders/%s/pod.json";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -40,7 +40,7 @@ public class PODTest extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -56,7 +56,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "RELEASED", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -73,9 +73,9 @@ public class PODTest extends JsonUtility {
 
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
-    assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
+    assertEquals("RECEIVED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
 
-    assertEquals(65,dbWrapper.getPODLineItemQuantityReceived(id, "P10"));
+    assertEquals(65, dbWrapper.getPODLineItemQuantityReceived(Long.parseLong(id), "P10"));
 
     responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
@@ -90,7 +90,7 @@ public class PODTest extends JsonUtility {
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
-  public void verifyPODHavingProductNotAvailableinRnR(String userName, String program) throws Exception {
+  public void verifyPODHavingProductNotAvailableInRnR(String userName, String program) throws Exception {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
     dbWrapper.setupUserForFulfillmentRole("commTrack", "store in-charge", "F10");
     HttpClient client = new HttpClient();
@@ -98,7 +98,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "RELEASED", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P11");
@@ -115,9 +115,9 @@ public class PODTest extends JsonUtility {
 
     assertEquals(200, responseEntity.getStatus());
     assertEquals(response, "{\"success\":\"POD updated successfully\"}");
-    assertEquals("RECEIVED", dbWrapper.getOrderStatus(id));
+    assertEquals("RECEIVED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
 
-      assertEquals(650,dbWrapper.getPODLineItemQuantityReceived(id, "P11"));
+    assertEquals(650, dbWrapper.getPODLineItemQuantityReceived(Long.parseLong(id), "P11"));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -128,7 +128,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "READY_TO_PACK", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -145,7 +145,7 @@ public class PODTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"User does not have permission\"}");
-    assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    assertEquals("READY_TO_PACK", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -155,7 +155,7 @@ public class PODTest extends JsonUtility {
 
     client.createContext();
     createOrder(userName, "READY_TO_PACK", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -172,7 +172,7 @@ public class PODTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"User does not have permission\"}");
-    assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    assertEquals("READY_TO_PACK", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
   }
 
   @Test(groups = {"webservice"})
@@ -187,10 +187,10 @@ public class PODTest extends JsonUtility {
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(PODFromJson),
-              format(POD_URL, 19999999),
-              "POST",
-              "commTrack",
-              "Admin123");
+        format(POD_URL, 19999999),
+        "POST",
+        "commTrack",
+        "Admin123");
 
     String response = responseEntity.getResponse();
 
@@ -207,7 +207,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "READY_TO_PACK", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P1000000");
@@ -224,7 +224,7 @@ public class PODTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"[P1000000] Invalid product code\"}");
-    assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    assertEquals("READY_TO_PACK", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -236,7 +236,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "READY_TO_PACK", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -253,7 +253,7 @@ public class PODTest extends JsonUtility {
 
     assertEquals(401, responseEntity.getStatus());
     assertTrue(response.contains("Error 401 Authentication Failed"));
-    assertEquals("READY_TO_PACK", dbWrapper.getOrderStatus(id));
+    assertEquals("READY_TO_PACK", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -265,7 +265,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "TRANSFER_FAILED", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
     PODFromJson.getPodLineItems().get(0).setProductCode("P10");
@@ -282,7 +282,7 @@ public class PODTest extends JsonUtility {
 
     assertEquals(400, responseEntity.getStatus());
     assertEquals(response, "{\"error\":\"Invalid received quantity\"}");
-    assertEquals("TRANSFER_FAILED", dbWrapper.getOrderStatus(id));
+    assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
   }
 
   @Test(groups = {"webservice"}, dataProvider = "Data-Provider")
@@ -294,7 +294,7 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     createOrder(userName, "RELEASED", program);
-    Long id = (long) dbWrapper.getMaxRnrID();
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     String wrongJson = "{\"podLineItems\": [" +
       "        {" +
@@ -307,16 +307,13 @@ public class PODTest extends JsonUtility {
       "}";
     ResponseEntity responseEntity =
       client.SendJSON(wrongJson,
-        "http://localhost:9091/rest-api/orders/"+id+"/pod",
+        "http://localhost:9091/rest-api/orders/" + id + "/pod",
         POST,
         "commTrack",
         "Admin123");
 
-    String response = responseEntity.getResponse();
     assertEquals(400, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"error\":\"Could not read JSON: Unrecognized field"));
-
-
   }
 
   @DataProvider(name = "Data-Provider")

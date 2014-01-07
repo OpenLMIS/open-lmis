@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static java.lang.Math.*;
+import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -161,7 +161,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update \"([^\"]*)\" home facility$")
   public void updateHomeFacility(String user) throws Exception {
-    dbWrapper.allocateFacilityToUser(dbWrapper.getUserID(user), facility_code);
+    dbWrapper.allocateFacilityToUser(dbWrapper.getAttributeFromTable("users", "id", "userName", user), facility_code);
   }
 
   @And("^I configure \"([^\"]*)\" template$")

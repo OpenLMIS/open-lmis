@@ -1543,7 +1543,7 @@ public class DBWrapper {
 
   public String getAttributeFromTable(String tableName, String attribute, String queryColumn, String queryParam) throws SQLException {
     String returnValue = null;
-    ResultSet resultSet = query("select * from %s where %s = '%s';", tableName, queryColumn, queryParam);
+    ResultSet resultSet = query("select * from %s where %s in ('%s');", tableName, queryColumn, queryParam);
 
     if (resultSet.next()) {
       returnValue = resultSet.getString(attribute);
@@ -1559,15 +1559,6 @@ public class DBWrapper {
       id = rs.getLong("id");
     }
     return id;
-  }
-
-  public String getUserID(String userName) throws IOException, SQLException {
-    String userId = null;
-    ResultSet rs = query("select id from users where username='" + userName + "'");
-    if (rs.next()) {
-      userId = rs.getString("id");
-    }
-    return userId;
   }
 
   public Long getProgramID(String program) throws IOException, SQLException {
@@ -1589,28 +1580,6 @@ public class DBWrapper {
       productID = rs.getLong("id");
     }
     return productID;
-
-  }
-
-  public String getRequisitionStatus(Long requisitionId) throws IOException, SQLException {
-    String requisitionStatus = null;
-    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
-
-    if (rs.next()) {
-      requisitionStatus = rs.getString("status");
-    }
-    return requisitionStatus;
-
-  }
-
-  public String getOrderStatus(Long orderId) throws IOException, SQLException {
-    String orderStatus = null;
-    ResultSet rs = query("SELECT status from orders where id=" + orderId);
-
-    if (rs.next()) {
-      orderStatus = rs.getString("status");
-    }
-    return orderStatus;
 
   }
 

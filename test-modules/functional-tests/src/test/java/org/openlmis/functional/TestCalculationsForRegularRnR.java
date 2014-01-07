@@ -106,7 +106,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "normalizedConsumption");
     dbWrapper.updateConfigureTemplate("ESS_MEDS", "source", "C", "false", "amc");
     dbWrapper.insertRequisitionGroupProgramScheduleForProgram("RG1", "ESS_MEDS", "M");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getUserID(userSIC), "store in-charge", null, "ESS_MEDS");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", null, "ESS_MEDS");
     dbWrapper.updateProductFullSupplyFlag(false, "P11");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
@@ -185,7 +185,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
 
     dbWrapper.insertSupervisoryNodeSecond("F11", "N2", "Node2", "N1");
     dbWrapper.updateSupervisoryNodeForRequisitionGroup("RG2", "N2");
-    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getUserID(userSIC), "store in-charge", "N2", "HIV");
+    dbWrapper.insertRoleAssignmentForSupervisoryNode(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge", "N2", "HIV");
 
     homePage.navigateAndInitiateRnrForSupervisedFacility("HIV");
     homePage.selectFacilityForSupervisoryNodeRnR("F11 - Central Hospital");
@@ -509,7 +509,7 @@ public class TestCalculationsForRegularRnR extends TestCaseHelper {
     dbWrapper.assignRight("store in-charge", "APPROVE_REQUISITION");
     dbWrapper.insertRole("fulfilment", "convert to order");
     dbWrapper.assignRight("fulfilment", "CONVERT_TO_ORDER");
-    dbWrapper.insertRoleAssignment(dbWrapper.getUserID(userSIC), "store in-charge");
+    dbWrapper.insertRoleAssignment(dbWrapper.getAttributeFromTable("users", "id", "userName", userSIC), "store in-charge");
     dbWrapper.insertFulfilmentRoleAssignment(userSIC, "fulfilment", "F10");
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);

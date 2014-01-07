@@ -63,10 +63,10 @@ public class ManagePod extends TestCaseHelper {
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
     managePodPage.verifyMessageOnManagePodScreen();
-    Integer id=dbWrapper.getMaxRnrID();
-    assertEquals("TRANSFER_FAILED",dbWrapper.getOrderStatus((long)id));
-    assertTrue(dbWrapper.getOrderFtpComment((long)id).contains("supplyline.missing"));
-   }
+    String id = String.valueOf(dbWrapper.getMaxRnrID());
+    assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
+    assertTrue(dbWrapper.getOrderFtpComment(Long.parseLong(id)).contains("supplyline.missing"));
+  }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")
   public void testVerifyManagePODValidFlowForEmergencyRnR(String program, String userSIC, String password) throws Exception {
