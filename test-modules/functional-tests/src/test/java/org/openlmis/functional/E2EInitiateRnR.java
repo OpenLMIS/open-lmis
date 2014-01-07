@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.Integer.parseInt;
 import static java.lang.Math.round;
 import static org.junit.Assert.assertTrue;
 
@@ -55,7 +56,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeInCharge";
-
 
   @Before
   public void setUp() throws Exception {
@@ -185,16 +185,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I enter beginning balance as \"([^\"]*)\", quantityDispensed as \"([^\"]*)\", quantityReceived as \"([^\"]*)\" and totalAdjustmentAndLoses as \"([^\"]*)\"$")
   public void enterValuesInRnR(String beginningBalance, String quantityDispensed, String quantityReceived, String totalAdjustmentAndLoses) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.calculateAndVerifyStockOnHand(Integer.parseInt(beginningBalance), Integer.parseInt(quantityDispensed),
-      Integer.parseInt(quantityReceived), Integer.parseInt(totalAdjustmentAndLoses));
+    initiateRnRPage.calculateAndVerifyStockOnHand(parseInt(beginningBalance), parseInt(quantityDispensed),
+      parseInt(quantityReceived), parseInt(totalAdjustmentAndLoses));
     initiateRnRPage.verifyTotalField();
   }
 
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\"$")
   public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(Integer.parseInt(normalisedConsumption));
-    initiateRnRPage.verifyAmcForFirstProduct(Integer.parseInt(amc));
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(parseInt(normalisedConsumption));
+    initiateRnRPage.verifyAmcForFirstProduct(parseInt(amc));
   }
 
   @And("^I submit RnR$")
@@ -236,7 +236,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.closeCommentPopUp();
     initiateRnRPage.addComments("Dummy Comments.");
     initiateRnRPage.verifyComment("Dummy Comments.", userSICUserName, 1);
-
   }
 
   @And("^I update & verify ordered quantities$")
@@ -244,9 +243,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "newPatientFirstProduct");
     initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
-    int expectedCalculatedNC = CalculatedExpectedNC(10, 10, 10);
+    int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, 36, 3, 11);
-    initiateRnRPage.verifyPacksToShip("P10");
+    Integer packSize = parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
+    initiateRnRPage.verifyPacksToShip(packSize);
   }
 
   @And("^I update & verify quantities for emergency RnR$")
@@ -254,9 +254,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     initiateRnRPage.enterValue(10, "newPatientFirstProduct");
     initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
-    int expectedCalculatedNC = CalculatedExpectedNC(10, 10, 10);
+    int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
     initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
-    initiateRnRPage.verifyPacksToShip("P10");
+    Integer packSize = Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
+    initiateRnRPage.verifyPacksToShip(packSize);
   }
 
   @And("^I update & verify requested quantities$")
@@ -265,7 +266,8 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.enterValue(10, "requestedQuantityFirstProduct");
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.verifyPacksToShip("P10");
+    Integer packSize = Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
+    initiateRnRPage.verifyPacksToShip(packSize);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
   }
@@ -479,15 +481,13 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @Then("^I should see list of orders to manage POD for \"([^\"]*)\" Rnr$")
   public void verifyListOfOrdersOnPodScreen(String rnrType) throws Exception {
-    ManagePodPage managePodPage = new ManagePodPage(testWebDriver);
     testWebDriver.sleep(1000);
     assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
     assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
     assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
     assertEquals("Period1 (01/12/2013 - 02/02/2014)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1 (01/12/2013 - 02/02/2014)')]")).getText());
     assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
-      //TODO find proper xpath or give id
-   // assertEquals(facility_code,testWebDriver.findElement(By.xpath("").getText());
+    //TODO find proper xpath or give id for facility_code
     if (rnrType.equals("Emergency")) {
       assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
     }
@@ -529,10 +529,10 @@ public class E2EInitiateRnR extends TestCaseHelper {
     viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
-  public int CalculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws IOException, SQLException {
+  public int calculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws IOException, SQLException {
     int id = dbWrapper.getMaxRnrID();
 
-    Integer dayDiff = Integer.parseInt(dbWrapper.getRequisitionLineItemFieldValue((long) id, "reportingDays", "P10"));
+    Integer dayDiff = parseInt(dbWrapper.getRequisitionLineItemFieldValue((long) id, "reportingDays", "P10"));
     float ans;
 
     if (dayDiff <= stockOutDays) {
@@ -552,7 +552,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 
 }

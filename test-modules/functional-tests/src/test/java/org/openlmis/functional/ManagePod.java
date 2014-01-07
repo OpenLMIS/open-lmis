@@ -65,7 +65,7 @@ public class ManagePod extends TestCaseHelper {
     managePodPage.verifyMessageOnManagePodScreen();
     String id = String.valueOf(dbWrapper.getMaxRnrID());
     assertEquals("TRANSFER_FAILED", dbWrapper.getAttributeFromTable("orders", "status", "id", id));
-    assertTrue(dbWrapper.getOrderFtpComment(Long.parseLong(id)).contains("supplyline.missing"));
+    assertTrue(dbWrapper.getAttributeFromTable("orders", "ftpComment", "id", id).contains("supplyline.missing"));
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-RnR")

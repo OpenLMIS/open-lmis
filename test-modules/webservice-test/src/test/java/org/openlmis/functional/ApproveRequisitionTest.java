@@ -69,7 +69,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("success\":\"R&R approved successfully!"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getApproverName(Long.parseLong(id)));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
     ResponseEntity responseEntity1 = client.SendJSON("", "http://localhost:9091/feeds/requisition-status/recent", "GET", "", "");
 
     assertTrue(responseEntity1.getResponse().contains("{\"requisitionId\":" + id + ",\"requisitionStatus\":\"APPROVED\",\"emergency\":false,\"startDate\":"));
@@ -183,7 +183,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getApproverName(Long.parseLong(id)));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
 
@@ -214,7 +214,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getApproverName(Long.parseLong(id)));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
     dbWrapper.updateActiveStatusOfProgram("HIV", true);
   }
 
@@ -244,7 +244,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getApproverName(Long.parseLong(id)));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
     dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 

@@ -136,12 +136,12 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertVirtualFacility(virtualFacilityCode, parentFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographiczoneid", "code", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographiczoneid", "code", parentFacilityCode), dbWrapper.getAttributeFromTable("geographic_zones", "id", "code", "Ngorongoro"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeid", "code", parentFacilityCode), dbWrapper.getFacilityTypeId("warehouse"));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeid", "code", parentFacilityCode), dbWrapper.getAttributeFromTable("facility_types", "id", "code", "warehouse"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);

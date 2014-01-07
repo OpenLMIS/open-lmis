@@ -766,7 +766,7 @@ public class DBWrapper {
       product) + "');");
 
     if (rs.next()) {
-      overriddenIsa = Math.round(rs.getFloat("overriddenIsa") * numberOfMonths / getPackSize(product));
+      overriddenIsa = Math.round(rs.getFloat("overriddenIsa") * numberOfMonths / Integer.parseInt(getAttributeFromTable("products", "packSize", "code", product)));
     }
     return overriddenIsa;
   }
@@ -1569,7 +1569,6 @@ public class DBWrapper {
       programID = rs.getLong("id");
     }
     return programID;
-
   }
 
   public Long getProductID(String product) throws IOException, SQLException {
@@ -1580,7 +1579,6 @@ public class DBWrapper {
       productID = rs.getLong("id");
     }
     return productID;
-
   }
 
   public String getOrderId() throws IOException, SQLException {
@@ -1591,7 +1589,6 @@ public class DBWrapper {
       orderId = rs.getString("id");
     }
     return orderId;
-
   }
 
   public String getCreatedDate(String tableName, String dateFormat) throws SQLException {
@@ -1604,13 +1601,6 @@ public class DBWrapper {
     return createdDate;
   }
 
-  public String getWarehouse1Name(String facilityCode) throws SQLException {
-    String warehouseName = "";
-    ResultSet rs = query("select name from facilities where code='" + facilityCode + "';");
-    if (rs.next()) warehouseName = rs.getString(1);
-    return warehouseName;
-  }
-
   public int getRequisitionGroupId(String facilityCode) throws SQLException {
     int rgId = 0;
     ResultSet rs = query(
@@ -1620,57 +1610,5 @@ public class DBWrapper {
     }
     return rgId;
   }
-
-  public String getGeographicZoneId(String geographicZone) throws SQLException {
-    String res = null;
-    ResultSet rs = query("select id  from geographic_zones WHERE code ='" + geographicZone + "';");
-
-    if (rs.next()) {
-      res = rs.getString(1);
-    }
-    return res;
-  }
-
-  public String getFacilityTypeId(String facilityType) throws SQLException {
-    String res = null;
-    ResultSet rs = query("select id  from facility_types WHERE code ='" + facilityType + "';");
-
-    if (rs.next()) {
-      res = rs.getString(1);
-    }
-    return res;
-  }
-
-  public String getApproverName(long requisitionId) throws IOException, SQLException {
-    String name = null;
-    ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrId =" + requisitionId + " and status='APPROVED';");
-
-    if (rs.next()) {
-      name = rs.getString("name");
-    }
-    return name;
-
-  }
-
-  public String getOrderFtpComment(Long orderId) throws IOException, SQLException {
-    String orderFtpcomment = null;
-    ResultSet rs = query("SELECT ftpComment from orders where id=" + orderId);
-
-    if (rs.next()) {
-      orderFtpcomment = rs.getString("ftpComment");
-    }
-    return orderFtpcomment;
-
-  }
-
-  public Integer getPackSize(String productCode) throws SQLException {
-    Integer packSize = 0;
-    ResultSet rs = query("SELECT packSize FROM products WHERE code='" + productCode + "';");
-    if (rs.next()) {
-      packSize = rs.getInt("packSize");
-    }
-    return packSize;
-  }
-
 }
 
