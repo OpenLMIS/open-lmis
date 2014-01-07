@@ -12,9 +12,6 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.springframework.stereotype.Repository;
@@ -22,16 +19,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DistributionRefrigeratorsMapper {
 
-  @Insert({"INSERT INTO distribution_refrigerators (facilityId, distributionId) VALUES (#{facilityId}, #{distributionId})"})
-  @Options(useGeneratedKeys = true)
-  void insert(DistributionRefrigerators distributionRefrigerators);
 
   @Insert({"INSERT INTO refrigerator_readings",
     "(temperature, functioningCorrectly, lowAlarmEvents, highAlarmEvents, ",
-    "problemSinceLastTime, notes, distributionRefrigeratorsId, refrigeratorId, refrigeratorSerialNumber, refrigeratorBrand, refrigeratorModel)",
+    "problemSinceLastTime, notes, facilityVisitId, refrigeratorId, refrigeratorSerialNumber, refrigeratorBrand, refrigeratorModel)",
     "VALUES",
     "(#{temperature}, #{functioningCorrectly}, #{lowAlarmEvents}, #{highAlarmEvents}, ",
-    "#{problemSinceLastTime}, #{notes}, #{distributionRefrigeratorsId}, #{refrigerator.id}, #{refrigerator.serialNumber}, #{refrigerator.brand}, #{refrigerator.model})"})
+    "#{problemSinceLastTime}, #{notes}, #{facilityVisitId}, #{refrigerator.id}, #{refrigerator.serialNumber}, #{refrigerator.brand}, #{refrigerator.model})"})
   @Options(useGeneratedKeys = true)
   void insertReading(RefrigeratorReading refrigeratorReading);
 
@@ -41,6 +35,4 @@ public interface DistributionRefrigeratorsMapper {
   @Options(useGeneratedKeys = true)
   void insertProblems(RefrigeratorProblem problem);
 
-  @Select({"SELECT * FROM distribution_refrigerators WHERE facilityId = #{facilityId} AND distributionId = #{distributionId}"})
-  DistributionRefrigerators getBy(@Param("facilityId") Long facilityId, @Param("distributionId") Long distributionId);
 }

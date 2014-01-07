@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.core.domain.Facility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
@@ -21,12 +21,14 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class DistributionRefrigerators extends BaseModel {
 
-  private Long facilityId;
-  private Long distributionId;
-  private List<RefrigeratorReading> readings;
+  private List<RefrigeratorReading> readings = new ArrayList<>();
 
-  public DistributionRefrigerators(Facility facility, Long distributionId, List<RefrigeratorReading> readings) {
-    this(facility.getId(), distributionId, readings);
+  public DistributionRefrigerators(Long facilityVisitId, List<RefrigeratorReading> readings) {
+    for (RefrigeratorReading reading : readings) {
+      reading.setFacilityVisitId(facilityVisitId);
+      reading.setCreatedBy(this.createdBy);
+      reading.setModifiedBy(this.modifiedBy);
+      this.readings.add(reading);
+    }
   }
-
 }

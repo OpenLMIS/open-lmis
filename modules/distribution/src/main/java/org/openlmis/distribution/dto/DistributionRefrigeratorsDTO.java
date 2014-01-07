@@ -35,8 +35,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class DistributionRefrigeratorsDTO extends BaseModel {
 
-  Long facilityId;
-  Long distributionId;
+  Long facilityVisitId;
   List<RefrigeratorReadingDTO> readings;
 
   public DistributionRefrigerators transform() {
@@ -50,8 +49,10 @@ public class DistributionRefrigeratorsDTO extends BaseModel {
         }
       });
     }
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, refrigeratorReadings);
+
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, refrigeratorReadings);
     distributionRefrigerators.setCreatedBy(this.createdBy);
+    distributionRefrigerators.setModifiedBy(this.modifiedBy);
     return distributionRefrigerators;
   }
 }

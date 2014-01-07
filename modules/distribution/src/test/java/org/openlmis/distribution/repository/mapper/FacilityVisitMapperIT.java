@@ -59,6 +59,9 @@ public class FacilityVisitMapperIT {
   Program program1;
   ProcessingPeriod processingPeriod;
 
+  Facility facility;
+  Distribution distribution;
+
   @Before
   public void setUp() throws Exception {
     zone = make(a(defaultDeliveryZone));
@@ -72,33 +75,27 @@ public class FacilityVisitMapperIT {
     deliveryZoneMapper.insert(zone);
     programMapper.insert(program1);
     periodMapper.insert(processingPeriod);
-  }
 
-  @Test
-  public void shouldInsertFacilityVisit() {
-
-    Facility facility = make(a(defaultFacility));
+    facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
-    Distribution distribution = make(a(initiatedDistribution,
+    distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
       with(program, program1)));
 
     distributionMapper.insert(distribution);
 
-    FacilityVisit facilityVisit = new FacilityVisit();
+  }
+
+  @Test
+  public void shouldInsertFacilityVisit() {
+    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-
     facilityVisit.setConfirmedBy(confirmedBy);
     facilityVisit.setVerifiedBy(verifiedBy);
-
     facilityVisit.setObservations("I observed something");
-
-    facilityVisit.setDistributionId(distribution.getId());
-    facilityVisit.setFacilityId(facility.getId());
-    facilityVisit.setCreatedBy(1l);
 
     mapper.insert(facilityVisit);
 
@@ -110,37 +107,31 @@ public class FacilityVisitMapperIT {
 
   @Test
   public void shouldUpdateFacilityVisit() {
-
-    Facility facility = make(a(defaultFacility));
-    facilityMapper.insert(facility);
-
-    Distribution distribution = make(a(initiatedDistribution,
-      with(deliveryZone, zone),
-      with(period, processingPeriod),
-      with(program, program1)));
-
-    distributionMapper.insert(distribution);
-
-    FacilityVisit facilityVisit = new FacilityVisit();
+    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-
-
-    facilityVisit.setDistributionId(distribution.getId());
-    facilityVisit.setFacilityId(facility.getId());
-    facilityVisit.setCreatedBy(1l);
 
     mapper.insert(facilityVisit);
 
     facilityVisit.setConfirmedBy(confirmedBy);
     facilityVisit.setVerifiedBy(verifiedBy);
-
     facilityVisit.setObservations("I observed something");
 
     mapper.update(facilityVisit);
 
     FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(distribution.getId(), facility.getId());
-
     assertThat(actualFacilityVisit, is(facilityVisit));
+  }
+
+  @Test
+  public void shouldGetFacilityVisitById() {
+    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+
+    mapper.insert(facilityVisit);
+
+    FacilityVisit savedFacilityVisit = mapper.getById(facilityVisit.getId());
+
+    assertThat(savedFacilityVisit, is(facilityVisit));
+
   }
 }

@@ -23,4 +23,8 @@ public class FacilityVisitService {
     }
     return false;
   }
+
+  public FacilityVisit getById(Long facilityVisitId) {
+    return repository.getById(facilityVisitId);
+  }
 }

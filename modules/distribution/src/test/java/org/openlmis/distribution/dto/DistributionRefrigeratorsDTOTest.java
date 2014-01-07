@@ -10,20 +10,19 @@
 
 package org.openlmis.distribution.dto;
 
+import org.apache.tools.ant.util.CollectionUtils;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 public class DistributionRefrigeratorsDTOTest {
@@ -32,10 +31,13 @@ public class DistributionRefrigeratorsDTOTest {
   public void shouldTransformRefrigeratorsDTOIntoRefrigerators() throws Exception {
     RefrigeratorReadingDTO refrigeratorReadingDTO1 = mock(RefrigeratorReadingDTO.class);
     RefrigeratorReadingDTO refrigeratorReadingDTO2 = mock(RefrigeratorReadingDTO.class);
+    RefrigeratorReading reading1 = new RefrigeratorReading();
+    RefrigeratorReading reading2 = new RefrigeratorReading();
+    when(refrigeratorReadingDTO1.transform()).thenReturn(reading1);
+    when(refrigeratorReadingDTO2.transform()).thenReturn(reading2);
     List<RefrigeratorReadingDTO> readings = asList(refrigeratorReadingDTO1, refrigeratorReadingDTO2);
-    Long facilityId = 3L;
-    Long distributionId = 6L;
-    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityId, distributionId, readings);
+    Long facilityVisitId = 3L;
+    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityVisitId, readings);
 
     refrigeratorsDTO.transform();
 
@@ -45,15 +47,12 @@ public class DistributionRefrigeratorsDTOTest {
 
   @Test
   public void shouldTransformRefrigeratorsDTOIntoRefrigeratorsWithBlankReadingsIfNotProvided() throws Exception {
-    Long facilityId = 3L;
-    Long distributionId = 6L;
-    List<RefrigeratorReading> refrigeratorReadings = new ArrayList<>();
-    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityId, distributionId, null);
+    Long facilityVisitId = 3L;
+    List<RefrigeratorReading> refrigeratorReadings = CollectionUtils.EMPTY_LIST;
+    DistributionRefrigeratorsDTO refrigeratorsDTO = new DistributionRefrigeratorsDTO(facilityVisitId, CollectionUtils.EMPTY_LIST);
 
     DistributionRefrigerators distributionRefrigerators = refrigeratorsDTO.transform();
 
     assertThat(distributionRefrigerators.getReadings(), is(refrigeratorReadings));
-    assertThat(distributionRefrigerators.getFacilityId(), is(facilityId));
-    assertThat(distributionRefrigerators.getDistributionId(), is(distributionId));
   }
 }

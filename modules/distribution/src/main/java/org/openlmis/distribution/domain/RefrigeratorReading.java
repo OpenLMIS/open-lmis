@@ -33,7 +33,7 @@ public class RefrigeratorReading extends BaseModel {
   private Refrigerator refrigerator;
 
   //Readings
-  private Long distributionRefrigeratorsId;
+  private Long facilityVisitId;
   private Float temperature;
   private String functioningCorrectly;
   private Integer lowAlarmEvents;

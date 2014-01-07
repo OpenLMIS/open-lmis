@@ -185,7 +185,6 @@ public class FacilityDistributionServiceTest {
     boolean saveStatus = facilityDistributionService.save(facilityDistribution);
 
     verify(facilityVisitService).save(facilityVisit);
-    verify(distributionRefrigeratorsService).save(distributionRefrigerators);
     verify(epiUseService).save(epiUse);
     verify(vaccinationCoverageService).save(vaccinationCoverage);
     assertTrue(saveStatus);

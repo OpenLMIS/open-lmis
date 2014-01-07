@@ -34,4 +34,8 @@ public class FacilityVisitRepository {
   public void update(FacilityVisit facilityVisit) {
     mapper.update(facilityVisit);
   }
+
+  public FacilityVisit getById(Long facilityVisitId) {
+    return mapper.getById(facilityVisitId);
+  }
 }

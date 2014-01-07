@@ -31,10 +31,14 @@ public interface FacilityVisitMapper {
     @Result(property = "confirmedBy.name", column = "confirmedByName"),
     @Result(property = "confirmedBy.title", column = "confirmedByTitle")
   })
-  FacilityVisit getByDistributionAndFacility(@Param(value = "distributionId") Long distributionId,
-                                             @Param(value = "facilityId") Long facilityId);
+  public FacilityVisit getByDistributionAndFacility(@Param(value = "distributionId") Long distributionId,
+                                                    @Param(value = "facilityId") Long facilityId);
 
   @Update({"UPDATE facility_visits SET confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
     "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}"})
-  void update(FacilityVisit facilityVisit);
+  public void update(FacilityVisit facilityVisit);
+
+
+  @Select({"SELECT * FROM facility_visits WHERE id = #{id}"})
+  public FacilityVisit getById(Long id);
 }

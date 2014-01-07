@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.service;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 
@@ -27,7 +29,8 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -39,58 +42,38 @@ public class DistributionRefrigeratorsServiceTest {
   @Mock
   private DistributionRefrigeratorsRepository repository;
 
+  @Mock
+  private FacilityVisitService facilityVisitService;
+
   @InjectMocks
   private DistributionRefrigeratorsService service;
 
-  @Test
-  public void shouldSaveDistributionRefrigerators() throws Exception {
+  private Long facilityId;
+  private Long facilityVisitId;
+  private Long refrigeratorId;
+  private Long createdBy;
 
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
-    Long facilityId = 1L;
-    distributionRefrigerators.setFacilityId(facilityId);
-    RefrigeratorReading refrigeratorReading = new RefrigeratorReading();
-    RefrigeratorReading spyRefrigeratorReading = spy(refrigeratorReading);
-    Refrigerator refrigerator = new Refrigerator();
-    spyRefrigeratorReading.setRefrigerator(refrigerator);
-    distributionRefrigerators.setReadings(asList(spyRefrigeratorReading));
+  private FacilityVisit facilityVisit;
 
-    service.save(distributionRefrigerators);
+  @Before
+  public void setUp() throws Exception {
+    facilityId = 1L;
+    facilityVisitId = 2L;
+    refrigeratorId = 3L;
+    createdBy = 4L;
+    facilityVisit = new FacilityVisit();
+    facilityVisit.setId(facilityVisitId);
+    when(facilityVisitService.getById(facilityVisitId)).thenReturn(facilityVisit);
 
-    verify(repository).saveReading(spyRefrigeratorReading);
-    verify(repository).save(distributionRefrigerators);
-    verify(spyRefrigeratorReading).setDistributionRefrigeratorsId(distributionRefrigerators.getId());
-    verify(refrigeratorService).save(refrigerator);
-  }
-
-  @Test
-  public void shouldNotSaveDistributionRefrigeratorsIfAlreadyExists() throws Exception {
-    Long facilityId = 1L;
-    Long distributionId = 2L;
-    Refrigerator refrigerator = new Refrigerator();
-    RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    RefrigeratorReading spyRefrigeratorReading = spy(refrigeratorReading);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(spyRefrigeratorReading));
-    when(repository.getBy(facilityId, distributionId)).thenReturn(distributionRefrigerators);
-
-    service.save(distributionRefrigerators);
-
-    verify(repository, never()).saveReading(spyRefrigeratorReading);
-    verify(repository, never()).save(distributionRefrigerators);
-    verify(refrigeratorService, never()).save(refrigerator);
-
-    verify(repository).getBy(facilityId, distributionId);
   }
 
   @Test
   public void shouldDisableAllRefrigeratorsForAFacilityBeforeSynchronizingTheRefrigerators() {
-    Long facilityId = 1L;
-    Long distributionId = 2L;
     Refrigerator refrigerator = new Refrigerator();
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(refrigeratorReading));
-    when(repository.getBy(facilityId, distributionId)).thenReturn(null);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
 
-    service.save(distributionRefrigerators);
+    service.save(facilityId, distributionRefrigerators);
 
     verify(refrigeratorService).disableAllFor(facilityId);
   }
@@ -98,34 +81,26 @@ public class DistributionRefrigeratorsServiceTest {
 
   @Test
   public void shouldGetAllRefrigeratorsByFacilityBeforeSync() {
-    Long facilityId = 1L;
-    Long distributionId = 2L;
     Refrigerator refrigerator = new Refrigerator();
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(refrigeratorReading));
-    when(repository.getBy(facilityId, distributionId)).thenReturn(null);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
 
-    service.save(distributionRefrigerators);
+    service.save(facilityId, distributionRefrigerators);
 
     verify(refrigeratorService).getAllBy(facilityId);
   }
 
   @Test
   public void shouldSetIdIfRefrigeratorAlreadyExists() {
-    Long facilityId = 1L;
-    Long distributionId = 2L;
-    Long refrigeratorId = 3L;
-    Long createdBy = 4L;
     Refrigerator refrigerator = new Refrigerator("serialNumber");
     Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
     existingRefrigerator.setId(refrigeratorId);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(refrigeratorReading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
     distributionRefrigerators.setCreatedBy(createdBy);
-    when(repository.getBy(facilityId, distributionId)).thenReturn(null);
     when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
-    service.save(distributionRefrigerators);
+    service.save(facilityId, distributionRefrigerators);
 
     assertThat(refrigerator.getId(), is(refrigeratorId));
     assertThat(refrigerator.getModifiedBy(), is(createdBy));
@@ -135,20 +110,15 @@ public class DistributionRefrigeratorsServiceTest {
 
   @Test
   public void shouldNotSetIdIfSynchronizingANewRefrigerator() throws Exception {
-    Long facilityId = 1L;
-    Long distributionId = 2L;
-    Long refrigeratorId = 3L;
-    Long createdBy = 4L;
     Refrigerator refrigerator = new Refrigerator("serialNumberNew");
     Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
     existingRefrigerator.setId(refrigeratorId);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityId, distributionId, asList(refrigeratorReading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
     distributionRefrigerators.setCreatedBy(createdBy);
-    when(repository.getBy(facilityId, distributionId)).thenReturn(null);
     when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
-    service.save(distributionRefrigerators);
+    service.save(facilityId, distributionRefrigerators);
 
     assertThat(refrigerator.getId(), is(nullValue()));
     assertThat(refrigerator.getFacilityId(), is(facilityId));
@@ -156,4 +126,20 @@ public class DistributionRefrigeratorsServiceTest {
     verify(refrigeratorService).save(refrigerator);
   }
 
+  @Test
+  public void shouldNotSyncIfAlreadySyncedFacility() throws Exception {
+    Refrigerator refrigerator = new Refrigerator("serialNumberNew");
+    Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
+    existingRefrigerator.setId(refrigeratorId);
+    RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
+    distributionRefrigerators.setCreatedBy(createdBy);
+    facilityVisit.setSynced(true);
+    when(facilityVisitService.getById(facilityVisitId)).thenReturn(facilityVisit);
+    when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
+
+    service.save(facilityId, distributionRefrigerators);
+
+    verify(facilityVisitService).getById(facilityVisitId);
+  }
 }
