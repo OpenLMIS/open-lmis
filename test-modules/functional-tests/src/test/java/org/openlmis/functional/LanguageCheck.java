@@ -14,7 +14,10 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.ForgotPasswordPage;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 
@@ -30,7 +33,7 @@ public class LanguageCheck extends TestCaseHelper {
         super.setup();
     }
 
-    @Test(groups = {"requisition"})
+    @Test(groups = {"admin"})
     public void changeLanguageAsEnglishOnLoginPage() throws Exception
     {
         LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -39,7 +42,7 @@ public class LanguageCheck extends TestCaseHelper {
         verifyPageIdentifierLabelOnLoginPage("Sign In");
     }
 
-    @Test(groups = {"requisition"})
+    @Test(groups = {"admin"})
     public void changeLanguageAsPortuguesOnLoginPage() throws Exception
     {
         LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -48,7 +51,7 @@ public class LanguageCheck extends TestCaseHelper {
         verifyPageIdentifierLabelOnLoginPage("Entrar");
     }
 
-    @Test(groups = {"requisition"})
+    @Test(groups = {"admin"})
     public void changeLanguageAsPortuguesBeforeForgotPasswordPage() throws Exception
     {
         LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -58,7 +61,7 @@ public class LanguageCheck extends TestCaseHelper {
         verifyPageIdentifierLabelOnForgotPasswordPage("Submeter");
     }
 
-    @Test(groups = {"requisition"})
+    @Test(groups = {"admin"})
     public void changeLanguageAsEnglishBeforeForgotPasswordPage() throws Exception
     {
         LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -68,7 +71,7 @@ public class LanguageCheck extends TestCaseHelper {
         verifyPageIdentifierLabelOnForgotPasswordPage("Submit");
     }
 
-    @Test(groups = {"requisition"})
+    @Test(groups = {"admin"})
     public void changeLanguageAsPortuguesOnForgotPasswordPage() throws Exception
     {
         LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -93,7 +96,7 @@ public class LanguageCheck extends TestCaseHelper {
         assertEquals(forgotPassword.getPageIdentifierOnForgotPasswordPageAttribute(),expectedLabel);
     }
 
-    @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function")
+    @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function")
     public void signInAsAdmin123AndEnglish(String user) throws Exception
     {
         LoginPage loginpage = new LoginPage(testWebDriver, baseUrlGlobal);
@@ -112,7 +115,7 @@ public class LanguageCheck extends TestCaseHelper {
 
     }
 
-    @AfterMethod(groups = "requisition")
+    @AfterMethod(groups = "admin")
     public void tearDown() throws Exception {
         testWebDriver.sleep(500);
         if (!testWebDriver.getElementById("username").isDisplayed()) {
