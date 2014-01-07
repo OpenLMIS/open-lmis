@@ -777,7 +777,6 @@ public class ManageDistribution extends TestCaseHelper {
       {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
-
   }
 }
 
