@@ -185,7 +185,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @And("^I verify Distributions data is not synchronised$")
   public void verifyDistributionsInDB() throws IOException, SQLException {
-    assertEquals(dbWrapper.getRecordCountInTable("Distributions"), 1);
+    assertEquals(dbWrapper.getRowsCountFromDB("Distributions"), 1);
   }
 
   @And("^I initiate distribution$")

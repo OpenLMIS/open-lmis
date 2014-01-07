@@ -19,21 +19,22 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.RefrigeratorPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -92,7 +93,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify Refrigerator data is not synchronised")
   public void verifyRefrigeratorsInDB() throws IOException, SQLException {
-    assertEquals(dbWrapper.getRecordCountInTable("Refrigerators"),0);
+    assertEquals(dbWrapper.getRowsCountFromDB("Refrigerators"), 0);
   }
 
   @And("^I delete refrigerator")
@@ -168,7 +169,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I should see Edit button$")
   public void shouldSeeEditButton() throws IOException, SQLException {
-    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).showButtonForRefrigerator1.isDisplayed());
+    assertTrue("Edit button should show up", RefrigeratorPage.showButtonForRefrigerator1.isDisplayed());
   }
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")
@@ -197,6 +198,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     else
       refrigeratorPage.clickProblemSinceLastVisitNR();
   }
+
   @Then("^I should see Refrigerators screen")
   public void onRefrigeratorScreen() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
@@ -208,20 +210,21 @@ public class ManageRefrigerator extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
+    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), low);
+    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), high);
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
-    assertTrue("New Refrigerator modal window should show up", new RefrigeratorPage(testWebDriver).newRefrigeratorHeaderOnModal.isDisplayed());
+    assertTrue("New Refrigerator modal window should show up", RefrigeratorPage.newRefrigeratorHeaderOnModal.isDisplayed());
   }
 
-
   public void verifyShouldNotSeeRefrigeratorSection() {
-    assertFalse("Refrigerator details section should not show up", new RefrigeratorPage(testWebDriver).refrigeratorTemperatureTextField.isDisplayed());
+    assertFalse("Refrigerator details section should not show up", RefrigeratorPage.refrigeratorTemperatureTextField.isDisplayed());
   }
 
   public void verifyConfirmationPopUp() {
     testWebDriver.sleep(250);
-    assertTrue("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).deletePopUpHeader.isDisplayed());
+    assertTrue("Refrigerator confirmation for delete should show up", RefrigeratorPage.deletePopUpHeader.isDisplayed());
   }
 
   @And("^I verify the refrigerator \"([^\"]*)\" present$")
@@ -231,9 +234,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     for (int i = 0; i < refrigeratorDetails.length; i++) {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
     }
-
   }
-
 
   @AfterMethod(groups = "distribution")
   @After
@@ -246,9 +247,7 @@ public class ManageRefrigerator extends TestCaseHelper {
       dbWrapper.closeConnection();
       ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
@@ -256,7 +255,5 @@ public class ManageRefrigerator extends TestCaseHelper {
       {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
-
   }
 }
-

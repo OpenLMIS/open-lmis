@@ -408,7 +408,6 @@ Feature: Smoke Tests
     And  I should verify facility name "Village Dispensary" in the header
     And I verify legends
 
-
   @smokeDistribution
   Scenario: User should be able to add/edit/delete refrigerator
     Given I have the following data for distribution:
