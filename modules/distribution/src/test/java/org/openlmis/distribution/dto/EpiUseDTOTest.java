@@ -21,8 +21,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 public class EpiUseDTOTest {
@@ -30,16 +29,19 @@ public class EpiUseDTOTest {
   @Test
   public void shouldReturnEpiUse() throws Exception {
 
+    Long facilityVisitId = 234L;
+    Long modifiedBy = 2L;
     EpiUseLineItemDTO epiUseLineItemDTO = mock(EpiUseLineItemDTO.class);
     List<EpiUseLineItemDTO> epiUseLineItemDTOList = asList(epiUseLineItemDTO);
-    EpiUseDTO epiUseDTO = new EpiUseDTO(123L, 234L, epiUseLineItemDTOList);
+    EpiUseDTO epiUseDTO = new EpiUseDTO(facilityVisitId, epiUseLineItemDTOList);
+    epiUseDTO.setModifiedBy(modifiedBy);
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
     when(epiUseLineItemDTO.transform()).thenReturn(epiUseLineItem);
 
     EpiUse epiUse = epiUseDTO.transform();
 
-    assertThat(epiUse.getFacilityId(), is(123L));
-    assertThat(epiUse.getDistributionId(), is(234L));
     assertThat(epiUse.getLineItems(), is(asList(epiUseLineItem)));
+    verify(epiUseLineItemDTO).setFacilityVisitId(facilityVisitId);
+    verify(epiUseLineItemDTO).setModifiedBy(modifiedBy);
   }
 }

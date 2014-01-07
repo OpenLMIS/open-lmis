@@ -24,9 +24,6 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.EpiUseRepository;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
@@ -42,31 +39,15 @@ public class EpiUseServiceTest {
   @InjectMocks
   EpiUseService service;
 
-  @Test
-  public void shouldNotSaveEpiUseIfExists() throws Exception {
-    EpiUse epiUse = new EpiUse();
-    epiUse.setId(1L);
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
-    epiUse.setLineItems(asList(epiUseLineItem));
-
-    service.save(epiUse);
-
-    verify(epiUseRepository, never()).insert(epiUse);
-    verify(epiUseRepository).saveLineItem(epiUseLineItem);
-    assertThat(epiUseLineItem.getEpiUseId(), is(epiUse.getId()));
-  }
 
   @Test
-  public void shouldSaveEpiUseAndEpiUseLineItem() throws Exception {
+  public void shouldSaveEpiUseLineItem() throws Exception {
     EpiUse epiUse = new EpiUse();
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
     epiUse.setLineItems(asList(epiUseLineItem));
 
     service.save(epiUse);
 
-    verify(epiUseRepository).insert(epiUse);
     verify(epiUseRepository).saveLineItem(epiUseLineItem);
-    assertThat(epiUseLineItem.getEpiUseId(), is(epiUse.getId()));
   }
-
 }

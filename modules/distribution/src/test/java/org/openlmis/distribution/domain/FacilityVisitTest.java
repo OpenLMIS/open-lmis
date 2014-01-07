@@ -28,13 +28,12 @@ public class FacilityVisitTest {
     Long facilityId = 2L;
     Long createdBy = 3L;
 
-    FacilityVisit facilityVisit = new FacilityVisit();
 
-    facilityVisit.construct(distributionId, facilityId, createdBy);
-    
-    assertThat(facilityVisit.getDistributionId(),is(distributionId));
-    assertThat(facilityVisit.getFacilityId(),is(facilityId));
-    assertThat(facilityVisit.getCreatedBy(),is(createdBy));
+    FacilityVisit facilityVisit = new FacilityVisit(distributionId, facilityId, createdBy);
+
+    assertThat(facilityVisit.getDistributionId(), is(distributionId));
+    assertThat(facilityVisit.getFacilityId(), is(facilityId));
+    assertThat(facilityVisit.getCreatedBy(), is(createdBy));
 
   }
 }

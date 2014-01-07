@@ -37,10 +37,9 @@ public class EpiUseTest {
     programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
     facility.setSupportedPrograms(asList(programSupported));
 
-    Distribution distribution = new Distribution();
-    distribution.setId(1L);
+    FacilityVisit facilityVisit = new FacilityVisit();
 
-    EpiUse epiUse = new EpiUse(facility, distribution);
+    EpiUse epiUse = new EpiUse(facility, facilityVisit);
 
     List<EpiUseLineItem> lineItems = epiUse.getLineItems();
     assertThat(lineItems.size(), is(1));

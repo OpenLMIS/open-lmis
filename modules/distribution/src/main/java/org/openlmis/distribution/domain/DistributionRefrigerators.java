@@ -25,8 +25,8 @@ public class DistributionRefrigerators extends BaseModel {
   private Long distributionId;
   private List<RefrigeratorReading> readings;
 
-  public DistributionRefrigerators(Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
-    this(facility.getId(), distribution.getId(), readings);
+  public DistributionRefrigerators(Facility facility, Long distributionId, List<RefrigeratorReading> readings) {
+    this(facility.getId(), distributionId, readings);
   }
 
 }

@@ -11,25 +11,18 @@
 package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EpiUseMapper {
 
-  @Insert({"INSERT INTO epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
-    "distributed, loss, stockAtEndOfMonth, expirationDate, createdBy) VALUES (#{epiUseId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
+  @Insert({"INSERT INTO epi_use_line_items (facilityVisitId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
+    "distributed, loss, stockAtEndOfMonth, expirationDate, createdBy) VALUES (#{facilityVisitId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
     " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public void insertLineItem(EpiUseLineItem epiUseLineItem);
 
-  @Insert({"INSERT INTO epi_use (distributionId, facilityId, createdBy) VALUES (#{distributionId}, #{facilityId}, #{createdBy})"})
-  @Options(useGeneratedKeys = true)
-  public void insert(EpiUse epiUse);
-
-  @Select({"SELECT * FROM epi_use WHERE id = #{id}"})
-  public EpiUse getById(EpiUse epiUse);
 
   @Select({"SELECT * FROM epi_use_line_items WHERE id = #{id}"})
   @Results(value = {

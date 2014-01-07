@@ -10,7 +10,6 @@
 
 package org.openlmis.distribution.repository;
 
-import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.mapper.EpiUseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +27,5 @@ public class EpiUseRepository {
       return;
     }
     mapper.updateLineItem(epiUseLineItem);
-  }
-
-  public void insert(EpiUse epiUse) {
-    mapper.insert(epiUse);
   }
 }

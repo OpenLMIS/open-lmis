@@ -118,7 +118,8 @@ public class FacilityDistributionServiceTest {
     List<Refrigerator> refrigerators = Collections.emptyList();
     FacilityDistribution distributionData = mock(FacilityDistribution.class);
 
-    whenNew(FacilityDistribution.class).withArguments(facility, distribution, refrigerators).thenReturn(distributionData);
+    FacilityVisit facilityVisit = new FacilityVisit();
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, refrigerators).thenReturn(distributionData);
     when(distributionData.getEpiInventory()).thenReturn(epiInventory);
 
     facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
@@ -161,11 +162,13 @@ public class FacilityDistributionServiceTest {
     List<Refrigerator> refrigerators = asList(nonFacilityRefrigerator, facilityRefrigerator);
     FacilityDistribution expectedFacilityDistribution = new FacilityDistribution();
     expectedFacilityDistribution.setEpiUse(new EpiUse());
-    whenNew(FacilityDistribution.class).withArguments(facility, distribution, asList(facilityRefReading)).thenReturn(expectedFacilityDistribution);
+    FacilityVisit facilityVisit = new FacilityVisit();
+    whenNew(FacilityVisit.class).withArguments(distribution.getId(), facility.getId(), distribution.getCreatedBy()).thenReturn(facilityVisit);
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading)).thenReturn(expectedFacilityDistribution);
 
     FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
 
-    verifyNew(FacilityDistribution.class).withArguments(facility, distribution, asList(facilityRefReading));
+    verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading));
     assertThat(facilityDistribution, is(expectedFacilityDistribution));
   }
 

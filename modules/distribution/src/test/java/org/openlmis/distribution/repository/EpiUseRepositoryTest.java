@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.mapper.EpiUseMapper;
 
@@ -33,14 +32,6 @@ public class EpiUseRepositoryTest {
   @InjectMocks
   EpiUseRepository repository;
 
-  @Test
-  public void shouldInsertEpiUse() throws Exception {
-    EpiUse epiUse = new EpiUse();
-
-    repository.insert(epiUse);
-
-    verify(mapper).insert(epiUse);
-  }
 
   @Test
   public void shouldInsertEpiUseLineItem() throws Exception {

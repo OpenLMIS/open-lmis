@@ -108,4 +108,39 @@ public class FacilityVisitMapperIT {
     assertThat(actualFacilityVisit.getCreatedBy(), is(1l));
   }
 
+  @Test
+  public void shouldUpdateFacilityVisit() {
+
+    Facility facility = make(a(defaultFacility));
+    facilityMapper.insert(facility);
+
+    Distribution distribution = make(a(initiatedDistribution,
+      with(deliveryZone, zone),
+      with(period, processingPeriod),
+      with(program, program1)));
+
+    distributionMapper.insert(distribution);
+
+    FacilityVisit facilityVisit = new FacilityVisit();
+    Facilitator confirmedBy = new Facilitator("Barack", "President");
+    Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
+
+
+    facilityVisit.setDistributionId(distribution.getId());
+    facilityVisit.setFacilityId(facility.getId());
+    facilityVisit.setCreatedBy(1l);
+
+    mapper.insert(facilityVisit);
+
+    facilityVisit.setConfirmedBy(confirmedBy);
+    facilityVisit.setVerifiedBy(verifiedBy);
+
+    facilityVisit.setObservations("I observed something");
+
+    mapper.update(facilityVisit);
+
+    FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(distribution.getId(), facility.getId());
+
+    assertThat(actualFacilityVisit, is(facilityVisit));
+  }
 }

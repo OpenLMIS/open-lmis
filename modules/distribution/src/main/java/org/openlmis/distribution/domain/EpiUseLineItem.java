@@ -27,7 +27,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @EqualsAndHashCode(callSuper = false)
 public class EpiUseLineItem extends BaseModel {
 
-  private Long epiUseId;
+  private Long facilityVisitId;
   private ProductGroup productGroup;
   private Integer stockAtFirstOfMonth;
   private Integer stockAtEndOfMonth;
@@ -36,8 +36,9 @@ public class EpiUseLineItem extends BaseModel {
   private Integer distributed;
   private String expirationDate;
 
-  public EpiUseLineItem(ProductGroup productGroup, Long createdBy) {
+  public EpiUseLineItem(Long facilityVisitId, ProductGroup productGroup, Long createdBy) {
     this.productGroup = productGroup;
     this.createdBy = createdBy;
+    this.facilityVisitId = facilityVisitId;
   }
 }

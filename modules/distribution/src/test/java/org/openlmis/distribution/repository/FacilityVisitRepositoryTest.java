@@ -20,16 +20,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.mapper.FacilityVisitMapper;
-import org.springframework.dao.DuplicateKeyException;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,9 +52,9 @@ public class FacilityVisitRepositoryTest {
   }
 
   @Test
-  public void shouldReturnFacilityVisit(){
+  public void shouldReturnFacilityVisit() {
 
-    FacilityVisit facilityVisit = new FacilityVisit().construct(1L,1L,1L);
+    FacilityVisit facilityVisit = new FacilityVisit(1L, 1L, 1L);
     when(facilityVisitMapper.getByDistributionAndFacility(1L, 1L)).thenReturn(facilityVisit);
 
     FacilityVisit expectedFacilityVisit = facilityVisitRepository.get(facilityVisit);

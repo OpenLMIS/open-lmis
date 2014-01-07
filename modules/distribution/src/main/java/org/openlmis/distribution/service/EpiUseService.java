@@ -25,11 +25,7 @@ public class EpiUseService {
   private EpiUseRepository epiUseRepository;
 
   public void save(EpiUse epiUse) {
-    if (epiUse.getId() == null) {
-      epiUseRepository.insert(epiUse);
-    }
     for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
-      lineItem.setEpiUseId(epiUse.getId());
       epiUseRepository.saveLineItem(lineItem);
     }
   }

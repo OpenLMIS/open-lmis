@@ -36,15 +36,14 @@ public class FacilityDistributionDTO {
     return new FacilityDistribution(this.facilityVisit, this.epiUse.transform(), this.refrigerators.transform(), null, this.coverage.transform());
   }
 
+
   public void setDistributionId(Long distributionId) {
     facilityVisit.setDistributionId(distributionId);
-    epiUse.setFacilityId(distributionId);
     coverage.setDistributionId(distributionId);
   }
 
   public void setFacilityId(Long facilityId) {
     facilityVisit.setFacilityId(facilityId);
-    epiUse.setFacilityId(facilityId);
     coverage.setFacilityId(facilityId);
   }
 

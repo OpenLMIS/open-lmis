@@ -13,11 +13,14 @@ public class FacilityVisitService {
   FacilityVisitRepository repository;
 
   public boolean save(FacilityVisit facilityVisit) {
-    if (repository.get(facilityVisit) != null) {
-      return false;
+    FacilityVisit savedVisit = facilityVisit;
+    if (repository.get(savedVisit) == null) {
+      repository.insert(facilityVisit);
+    } else if (!savedVisit.getSynced()) {
+      facilityVisit.setSynced(true);
+      repository.update(facilityVisit);
+      return true;
     }
-    repository.insert(facilityVisit);
-    return true;
+    return false;
   }
-
 }

@@ -113,7 +113,7 @@ public class DistributionRefrigeratorsMapperIT {
   @Test
   public void shouldInsertDistributionRefrigerators() throws SQLException {
     RefrigeratorReading reading = new RefrigeratorReading();
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution.getId(), asList(reading));
 
     mapper.insert(distributionRefrigerators);
 
@@ -130,7 +130,7 @@ public class DistributionRefrigeratorsMapperIT {
     RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
     reading.setTemperature(98.6F);
     reading.setFunctioningCorrectly("Y");
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution.getId(), asList(reading));
 
     refrigeratorMapper.insert(refrigerator);
     mapper.insert(distributionRefrigerators);
@@ -154,7 +154,7 @@ public class DistributionRefrigeratorsMapperIT {
     RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
     reading.setTemperature(98.6F);
     reading.setFunctioningCorrectly("Y");
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution.getId(), asList(reading));
 
     refrigeratorMapper.insert(refrigerator);
     mapper.insert(distributionRefrigerators);
@@ -173,7 +173,7 @@ public class DistributionRefrigeratorsMapperIT {
   @Test
   public void shouldGetDistributionRefrigeratorsByFacilityIdAndDistributionId() throws Exception {
     RefrigeratorReading reading = new RefrigeratorReading();
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution.getId(), asList(reading));
 
     mapper.insert(distributionRefrigerators);
 
@@ -191,7 +191,7 @@ public class DistributionRefrigeratorsMapperIT {
     RefrigeratorReading reading = new RefrigeratorReading(refrigerator);
     reading.setTemperature(98.6F);
     reading.setFunctioningCorrectly("Y");
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution, asList(reading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facility, distribution.getId(), asList(reading));
 
     refrigeratorMapper.insert(refrigerator);
     mapper.insert(distributionRefrigerators);

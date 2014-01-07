@@ -19,6 +19,7 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,7 +85,9 @@ public class FacilityDistributionService {
       }
     });
 
-    FacilityDistribution facilityDistribution = new FacilityDistribution(facility, distribution, refrigeratorReadings);
+    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), distribution.getCreatedBy());
+    facilityVisitService.save(facilityVisit);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings);
     epiUseService.save(facilityDistribution.getEpiUse());
     epiInventoryService.save(facilityDistribution.getEpiInventory());
     return facilityDistribution;

@@ -31,4 +31,7 @@ public class FacilityVisitRepository {
     return mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
   }
 
+  public void update(FacilityVisit facilityVisit) {
+    mapper.update(facilityVisit);
+  }
 }

@@ -36,27 +36,23 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 public class EpiUse extends BaseModel {
 
-  private Long facilityId;
-  private Long distributionId;
-  private List<EpiUseLineItem> lineItems;
+  private List<EpiUseLineItem> lineItems = new ArrayList<>();
 
-  public EpiUse(Facility facility, Distribution distribution) {
-    this(facility.getId(), distribution.getId(), new ArrayList<EpiUseLineItem>());
-    this.setCreatedBy(distribution.getCreatedBy());
+  public EpiUse(Facility facility, FacilityVisit facilityVisit) {
 
     if (facility.getSupportedPrograms().size() != 0) {
       List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
-      this.populateEpiUseLineItems(programProducts, distribution.getCreatedBy());
+      this.populateEpiUseLineItems(programProducts, facilityVisit.getCreatedBy(), facilityVisit.getId());
     }
   }
 
-  private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy) {
+  private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy, Long facilityVisitId) {
     Set<ProductGroup> productGroupSet = new HashSet<>();
 
     for (FacilityProgramProduct facilityProgramProduct : programProducts) {
       ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
       if (productGroup != null && productGroupSet.add(productGroup)) {
-        this.lineItems.add(new EpiUseLineItem(productGroup, createdBy));
+        this.lineItems.add(new EpiUseLineItem(facilityVisitId, productGroup, createdBy));
       }
     }
   }
