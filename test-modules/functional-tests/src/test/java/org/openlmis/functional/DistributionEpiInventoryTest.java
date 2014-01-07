@@ -98,13 +98,13 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
     ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
-    programProductISAPage.selectProgram("VACCINES");
-    programProductISAPage.editFormula();
-    programProductISAPage.fillProgramProductISA("100", "1", "50", "30", "0", "100", "2000");
-    String expectedISAValue = String.valueOf(Math.round(Integer.parseInt(programProductISAPage.calculateISA("333")) / 10));
-    programProductISAPage.saveISA();
+    String expectedISAValue = programProductISAPage.fillProgramProductISA(epiUseData.get(VACCINES_PROGRAM), "100", "1", "50", "30", "0", "100", "2000", "333");
 
-    loginPage = programProductISAPage.logout();
+    homePage.navigateHomePage();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
+    manageFacilityPage.overrideISA("567", 3, epiUseData.get(FIRST_FACILITY_CODE));
+
+    loginPage = manageFacilityPage.logout();
 
     homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
@@ -116,7 +116,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     assertEquals(epiInventoryPage.getIsaValue(1), expectedISAValue);
     assertEquals(epiInventoryPage.getProductName(1), "antibiotic");
 
-    assertEquals(epiInventoryPage.getIsaValue(2), "--");
+    assertEquals(epiInventoryPage.getIsaValue(2), "57");
     assertEquals(epiInventoryPage.getProductName(2), "ProductName6");
 
     assertEquals(epiInventoryPage.getIsaValue(3), "--");
@@ -138,8 +138,45 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiInventory();
 
     assertTrue(epiInventoryPage.getNoProductsAddedMessage().contains("No products added"));
+    epiInventoryPage.verifyIndicator("GREEN");
   }
 
+  @Test(groups = {"distribution"})
+  public void shouldFillInEpiInventoryDataAndVerifyIndicatorStatusWithLocalCaching() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
+
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    EpiInventoryPage epiInventoryPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiInventory();
+
+    epiInventoryPage.verifyIndicator("RED");
+
+    epiInventoryPage.fillDeliveredQuantity(1, "1");
+    epiInventoryPage.fillDeliveredQuantity(2, "2");
+    epiInventoryPage.fillDeliveredQuantity(3, "3");
+
+    epiInventoryPage.verifyIndicator("AMBER");
+
+    epiInventoryPage.applyNRToAll();
+
+    epiInventoryPage.toggleExistingQuantityNR(1);
+    epiInventoryPage.fillExistingQuantity(1, "5");
+
+    epiInventoryPage.toggleSpoiledQuantityNR(2);
+    epiInventoryPage.fillSpoiledQuantity(2, "-");
+    assertTrue(epiInventoryPage.errorMessageDisplayed(2));
+
+    epiInventoryPage.fillSpoiledQuantity(2, "4");
+
+    epiInventoryPage = epiInventoryPage.navigateToGeneralObservations().navigateToEpiInventory();
+
+    assertEquals(epiInventoryPage.getDeliveredQuantity(1),"1");
+
+    epiInventoryPage.verifyIndicator("GREEN");
+  }
 
   // @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenAllProductsInactiveAfterCaching() throws Exception {

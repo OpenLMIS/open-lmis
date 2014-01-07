@@ -24,6 +24,9 @@ public class EpiInventoryPage extends DistributionTab {
   @FindBy(how = ID, using = "noLineItems")
   private static WebElement noLineItems = null;
 
+  @FindBy(how = ID, using = "epiInventoryTabIcon")
+  private static WebElement epiInventoryStatusIcon = null;
+
   public EpiInventoryPage(TestWebDriver driver) {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
@@ -33,6 +36,7 @@ public class EpiInventoryPage extends DistributionTab {
 
   @Override
   public void verifyIndicator(String color) {
+    verifyOverallIndicator(epiInventoryStatusIcon, color);
   }
 
   @Override
@@ -67,4 +71,29 @@ public class EpiInventoryPage extends DistributionTab {
     applyNRToAllButton.click();
     okButton.click();
   }
+
+  public void toggleExistingQuantityNR(int rowNumber) {
+    testWebDriver.findElement(By.id("existingQuantityNR" + (rowNumber - 1))).click();
+  }
+
+  public void fillExistingQuantity(int rowNumber, String existingQuantity) {
+    testWebDriver.findElement(By.id("existingQuantity" + (rowNumber - 1))).sendKeys(existingQuantity);
+  }
+
+  public void toggleSpoiledQuantityNR(int rowNumber) {
+    testWebDriver.findElement(By.id("spoiledQuantityNR" + (rowNumber - 1))).click();
+  }
+
+  public void fillSpoiledQuantity(int rowNumber, String spoiledQuantity) {
+    testWebDriver.findElement(By.id("spoiledQuantity" + (rowNumber - 1))).sendKeys(spoiledQuantity);
+  }
+
+  public boolean errorMessageDisplayed(int rowNumber) {
+    return testWebDriver.findElement(By.id("spoiledQuantityError" + (rowNumber - 1))).isDisplayed();
+  }
+
+  public String getDeliveredQuantity(int rowNumber) {
+    return testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).getAttribute("value");
+  }
+
 }

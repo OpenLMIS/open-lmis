@@ -200,7 +200,7 @@ public class HomePage extends Page {
     return new LoginPage(testWebDriver, baseUrl);
   }
 
-  public ManageFacilityPage navigateCreateFacility() throws IOException {
+  public ManageFacilityPage navigateManageFacility() throws IOException {
     testWebDriver.waitForElementToAppear(AdministrationMenuItem);
     testWebDriver.keyPress(AdministrationMenuItem);
     testWebDriver.waitForElementToAppear(manageFacilityMenuItem);

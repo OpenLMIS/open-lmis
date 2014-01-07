@@ -42,7 +42,7 @@ public class ManageFacility extends TestCaseHelper {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
     homePage.verifyAdminTabs();
     homePage.clickCreateFacilityButton();
     homePage.verifyHeader("Add new facility");

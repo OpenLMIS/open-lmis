@@ -45,7 +45,7 @@ function EpiInventory(epiInventory) {
         return true;
       });
     });
-    this.status = statusClass;
+    this.status = statusClass || DistributionStatus.COMPLETE;
     return this.status;
   };
 

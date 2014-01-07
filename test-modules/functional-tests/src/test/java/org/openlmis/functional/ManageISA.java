@@ -82,7 +82,7 @@ public class ManageISA extends TestCaseHelper {
   @And("^I override ISA \"([^\"]*)\"$")
   public void overrideISA(String isaValue) throws Exception {
     ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    manageFacilityPage.overrideIsa(Integer.parseInt(isaValue));
+    manageFacilityPage.overrideIsa(isaValue, 1);
   }
 
   @Then("^I should see calculated ISA \"([^\"]*)\"$")
@@ -128,7 +128,7 @@ public class ManageISA extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
     HomePage homePage=new HomePage(testWebDriver);
-    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
 
     String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
@@ -137,32 +137,32 @@ public class ManageISA extends TestCaseHelper {
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
 
-    manageFacilityPage.overrideIsa(24);
+    manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.verifyCalculatedIsa(100);
     manageFacilityPage.clickIsaDoneButton();
     manageFacilityPage.verifyOverriddenIsa("24");
 
-    manageFacilityPage.overrideIsa(30);
+    manageFacilityPage.overrideIsa("30", 1);
     manageFacilityPage.clickIsaCancelButton();
     manageFacilityPage.verifyOverriddenIsa("24");
 
-    manageFacilityPage.overrideIsa(30);
+    manageFacilityPage.overrideIsa("30", 1);
     manageFacilityPage.clickUseCalculatedIsaButton();
     manageFacilityPage.clickIsaDoneButton();
     manageFacilityPage.verifyOverriddenIsa("");
 
-    manageFacilityPage.editPopulation(valueOf(30));
-    manageFacilityPage.overrideIsa(24);
+    manageFacilityPage.editPopulation(valueOf("30"));
+    manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.verifyCalculatedIsa(100);
     manageFacilityPage.clickIsaCancelButton();
 
     manageFacilityPage.editPopulation(valueOf(3000000));
-    manageFacilityPage.overrideIsa(124);
+    manageFacilityPage.overrideIsa("124", 1);
     manageFacilityPage.verifyCalculatedIsa(1000);
     manageFacilityPage.clickIsaCancelButton();
     manageFacilityPage.verifyOverriddenIsa("");
 
-    manageFacilityPage.overrideIsa(24);
+    manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.clickIsaDoneButton();
     SaveButton.click();
     manageFacilityPage.verifySuccessMessage();

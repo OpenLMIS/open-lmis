@@ -112,7 +112,7 @@ public class ProgramProductISAPage extends Page {
   public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
                                     String adjustmentValue, String minimumValue, String maximumValue) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
-    enterValueInRadioTextField(ratio);
+    enterValueInRatioTextField(ratio);
     enterValueInDosesTextField(dosesPerYear);
     enterValueInWastageTextField(wastage);
     enterValueInBufferPercentageTextField(bufferPercentage);
@@ -155,7 +155,7 @@ public class ProgramProductISAPage extends Page {
     dosesPerYearTextBox.sendKeys(dosesPerYear);
   }
 
-  public void enterValueInRadioTextField(String ratio) {
+  public void enterValueInRatioTextField(String ratio) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
     ratioTextBox.sendKeys(Keys.ARROW_RIGHT);
     ratioTextBox.sendKeys(Keys.BACK_SPACE);
@@ -263,4 +263,12 @@ public class ProgramProductISAPage extends Page {
     assertTrue("Product "+product+" should be displayed as a search Result",productPrimaryName.isDisplayed());
   }
 
+  public String fillProgramProductISA(String program, String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue, String minimumValue, String maximumValue, String population) {
+    selectProgram(program);
+    editFormula();
+    fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue);
+    String expectedISAValue = String.valueOf(Math.round(Integer.parseInt(calculateISA(population)) / 10));
+    saveISA();
+    return expectedISAValue;
+  }
 }

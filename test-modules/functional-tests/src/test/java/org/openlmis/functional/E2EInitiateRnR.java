@@ -70,7 +70,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I access create facility page$")
   public void navigateManageFacilityPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.navigateCreateFacility();
+    homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
   }
 
