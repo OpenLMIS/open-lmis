@@ -890,7 +890,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    dbWrapper.updateProductFullSupplyStatus("P11", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
@@ -941,7 +941,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    dbWrapper.updateProductFullSupplyStatus("P11", true);
 
     HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(userSIC, password);
 
@@ -991,7 +991,7 @@ public class InitiateRnR extends TestCaseHelper {
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    dbWrapper.updateProductFullSupplyStatus("P11", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 

@@ -25,8 +25,6 @@ import org.testng.annotations.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
@@ -42,12 +40,12 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @Then("^I should see product group \"([^\"]*)\"")
   public void verifyProductGroup(String productGroup) {
-    new EPIUse(testWebDriver).verifyProductGroup(productGroup, 1);
+    new EPIUsePage(testWebDriver).verifyProductGroup(productGroup, 1);
   }
 
   @When("^I Enter EPI values without end of month:$")
   public void enterEPIValues(DataTable tableData) {
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     Map<String, String> epiData = tableData.asMaps().get(0);
 
     epiUse.enterValueInDistributed(epiData.get("distributed"), 1);
@@ -60,7 +58,7 @@ public class RecordEPIUse extends TestCaseHelper {
   @When("^I verify saved EPI values:$")
   public void verifySavedEPIValues(DataTable tableData) {
     new RefrigeratorPage(testWebDriver).navigateToRefrigeratorTab();
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     Map<String, String> epiData = tableData.asMaps().get(0);
 
@@ -69,25 +67,25 @@ public class RecordEPIUse extends TestCaseHelper {
 
   @And("^I verify total is \"([^\"]*)\"$")
   public void verifyTotalField(String total) {
-    new EPIUse(testWebDriver).verifyTotal(total, 1);
+    new EPIUsePage(testWebDriver).verifyTotal(total, 1);
   }
 
 
   @Then("^Navigate to EPI tab$")
   public void navigateToEpiTab() throws IOException {
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
   }
 
   @Then("^Verify indicator should be \"([^\"]*)\"$")
   public void shouldVerifyIndicatorColor(String color) throws IOException, SQLException {
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.verifyIndicator(color);
   }
 
   @When("^I enter EPI end of month as \"([^\"]*)\"")
   public void enterEPIEndOfMonth(String endOfMonth) throws InterruptedException {
-    new EPIUse(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
+    new EPIUsePage(testWebDriver).enterValueInStockAtEndOfMonth(endOfMonth, 1);
   }
 
   @AfterMethod(groups = {"distribution"})

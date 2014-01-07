@@ -59,7 +59,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void setUp() throws Exception {
     super.setup();
     tabMap = new HashMap<String, DistributionTab>() {{
-      put("epi use", new EPIUse(testWebDriver));
+      put("epi use", new EPIUsePage(testWebDriver));
       put("general observation", new GeneralObservationPage(testWebDriver));
       put("coverage", new CoveragePage(testWebDriver));
     }};
@@ -244,7 +244,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @Then("^I see epi fields disabled$")
   public void verifyEpiFieldsDisabled() throws IOException {
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.verifyAllFieldsDisabled();
   }
 

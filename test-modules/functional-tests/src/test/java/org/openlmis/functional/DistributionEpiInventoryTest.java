@@ -21,14 +21,12 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.String.valueOf;
+import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class DistributionEpiInventoryTest extends TestCaseHelper {
 
@@ -72,69 +70,6 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
       dataMap.get(PRODUCT_GROUP_CODE));
   }
 
-  @Test(groups = {"distribution"})
-  public void testDisplayAllActiveProductsWithIdealQuantityOnEpiInventoryPage() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-    EpiInventoryPage epiInventoryPage=new EpiInventoryPage(testWebDriver);
-    epiInventoryPage.navigate();
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(12, 34, 45, 56);
-    //DistributionPage distributionPage = homePage.navigatePlanDistribution();
-  }
-
-  @Test(groups = {"distribution"})
-  public void testDisplayFullSupplyAndNonFullSupplyProductsWithIdealQuantityOnEpiInventoryPage() throws Exception {
-
-
-  }
-
-  @Test(groups = {"distribution"})
-  public void testDisplayNoProductsAddedMessageWhOnEpiInventoryPageWhenNoActiveProducts() throws Exception {
-
-
-  }
-
- // @Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenAllProductsInactiveAfterCaching() throws Exception {
-
-  }
-
-  //@Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenFacilityInactiveAfterCaching() throws Exception {
-
-
-  }
-
-//  @Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenFacilityDisabledAfterCaching() throws Exception {
-
-  }
-
-  //@Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenAllProgramInactiveAfterCaching() throws Exception {
-
-  }
-
- // @Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenSomeFieldsEmpty() throws Exception {
-
-  }
-
- // @Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenNrAppliedToAllFields() throws Exception {
-
-  }
-
-  @Test(groups = {"distribution"})
-  public void testEpiInventoryPageSyncWhenNRAppliedToFewFields() throws Exception {
-
-  }
-
   public void setupDataForDistributionTest(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
                                            String deliveryZoneNameFirst, String deliveryZoneNameSecond,
                                            String facilityCodeFirst, String facilityCodeSecond,
@@ -154,51 +89,72 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
   }
 
-  public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
+  @Test(groups = {"distribution"})
+  public void testDisplayAllActiveProductsWithIdealQuantityOnEpiInventoryPage() throws Exception {
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
-    HomePage homePage = new HomePage(testWebDriver);
+    ProgramProductISAPage programProductISAPage = homePage.navigateProgramProductISA();
+    programProductISAPage.selectProgram("VACCINES");
+    programProductISAPage.editFormula();
+    programProductISAPage.fillProgramProductISA("100", "1", "50", "30", "0", "100", "2000");
+    String expectedISAValue = String.valueOf(Math.round(Integer.parseInt(programProductISAPage.calculateISA("333")) / 10));
+    programProductISAPage.saveISA();
+
+    loginPage = programProductISAPage.logout();
+
+    homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickInitiateDistribution();
-    distributionPage.clickRecordData(1);
+    distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    EpiInventoryPage epiInventoryPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiInventory();
+
+    assertEquals(epiInventoryPage.getIsaValue(1), expectedISAValue);
+    assertEquals(epiInventoryPage.getProductCode(1),"antibiotic");
+
+    assertEquals(epiInventoryPage.getIsaValue(2), "--");
+    assertEquals(epiInventoryPage.getProductCode(2),"ProductName6");
+
+    assertEquals(epiInventoryPage.getIsaValue(3), "--");
+    assertEquals(epiInventoryPage.getProductCode(1),"antibiotic");
+
   }
 
-  public void enterDataInGeneralObservationsPage(String observation, String confirmName, String confirmTitle, String verifierName,
-                                                 String verifierTitle) {
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.setObservations(observation);
-    generalObservationPage.setConfirmedByName(confirmName);
-    generalObservationPage.setConfirmedByTitle(confirmTitle);
-    generalObservationPage.setVerifiedByName(verifierName);
-    generalObservationPage.setVerifiedByTitle(verifierTitle);
+  // @Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenAllProductsInactiveAfterCaching() throws Exception {
+
   }
 
-  public void enterDataInEpiUsePage(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
-                                    Integer loss, Integer stockAtEndOfMonth, String expirationDate, int rowNumber) {
-    EPIUse epiUse = new EPIUse(testWebDriver);
-    epiUse.navigate();
+  //@Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenFacilityInactiveAfterCaching() throws Exception {
 
-    epiUse.verifyProductGroup("PG1-Name", 1);
 
-    epiUse.enterValueInStockAtFirstOfMonth(stockAtFirstOfMonth.toString(), rowNumber);
-    epiUse.verifyIndicator("AMBER");
-    epiUse.enterValueInReceived(receivedValue.toString(), rowNumber);
-    epiUse.enterValueInDistributed(distributedValue.toString(), rowNumber);
-    epiUse.enterValueInLoss(valueOf(loss), rowNumber);
-    epiUse.enterValueInStockAtEndOfMonth(stockAtEndOfMonth.toString(), rowNumber);
-    epiUse.enterValueInExpirationDate(expirationDate, rowNumber);
-    epiUse.verifyIndicator("GREEN");
   }
 
-  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
-    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
-    coveragePage.setMaleHealthCenter(maleHealthCenter);
-    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
+  //  @Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenFacilityDisabledAfterCaching() throws Exception {
+
+  }
+
+  //@Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenAllProgramInactiveAfterCaching() throws Exception {
+
+  }
+
+  // @Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenSomeFieldsEmpty() throws Exception {
+
+  }
+
+  // @Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenNrAppliedToAllFields() throws Exception {
+
+  }
+
+  @Test(groups = {"distribution"})
+  public void testEpiInventoryPageSyncWhenNRAppliedToFewFields() throws Exception {
+
   }
 
   @AfterMethod(groups = "distribution")

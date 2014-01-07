@@ -1543,7 +1543,7 @@ public class DBWrapper {
       "and productid=(select id from products where code='" + productCode + "'));");
   }
 
-  public void UpdateProductFullSupplyStatus(String productCode, boolean fullSupply) throws SQLException {
+  public void updateProductFullSupplyStatus(String productCode, boolean fullSupply) throws SQLException {
     update("UPDATE products SET fullSupply=" + fullSupply + " WHERE code='" + productCode + "';");
   }
 

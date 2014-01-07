@@ -125,7 +125,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
     refrigeratorPage.clickDone();
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");

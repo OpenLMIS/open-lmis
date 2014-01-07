@@ -23,7 +23,7 @@ import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.NAME;
 import static org.openqa.selenium.support.How.XPATH;
 
-public class EPIUse extends DistributionTab {
+public class EPIUsePage extends DistributionTab {
 
   @FindBy(how = XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[4]/a/span[2]")
   private static WebElement epiUseTab=null;
@@ -76,7 +76,7 @@ public class EPIUse extends DistributionTab {
   @FindBy(how = NAME, using = "expirationDate0")
   private static WebElement textBoxExpirationDate0=null;
 
-  public EPIUse(TestWebDriver driver) {
+  public EPIUsePage(TestWebDriver driver) {
     super(driver);
   }
 

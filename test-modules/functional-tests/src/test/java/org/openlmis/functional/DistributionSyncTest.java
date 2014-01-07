@@ -93,7 +93,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");
@@ -264,7 +264,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility("F10");
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     epiUse.checkApplyNRToAllFields(true);
 

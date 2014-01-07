@@ -187,7 +187,7 @@ public class ProgramProductISAPage extends Page {
   }
 
 
-  public String fillPopulation(String population) {
+  public String calculateISA(String population) {
     populationTextBox.clear();
     populationTextBox.sendKeys(population);
     testWebDriver.sleep(100);

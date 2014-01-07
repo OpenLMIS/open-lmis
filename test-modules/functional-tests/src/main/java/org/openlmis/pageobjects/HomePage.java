@@ -195,7 +195,6 @@ public class HomePage extends Page {
   }
 
   public LoginPage logout(String baseUrl) throws IOException {
-
     testWebDriver.waitForElementToAppear(logoutLink);
     logoutLink.click();
     return new LoginPage(testWebDriver, baseUrl);

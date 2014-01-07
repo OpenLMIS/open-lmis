@@ -68,7 +68,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
   @Then("^I verify calculated ISA value having population \"([^\"]*)\" ratio \"([^\"]*)\" dosesPerYear \"([^\"]*)\" wastage \"([^\"]*)\" bufferPercentage \"([^\"]*)\" adjustmentValue \"([^\"]*)\" minimumValue \"([^\"]*)\" maximumValue \"([^\"]*)\"$")
   public void verifyCalculatedISA(String population, String ratio, String dosesPerYear, String wastage, String bufferPercentage,
                                   String adjustmentValue, String minimumValue, String maximumValue) throws IOException, SQLException {
-    String actualISA = programProductISAPage.fillPopulation(population);
+    String actualISA = programProductISAPage.calculateISA(population);
     String expectedISA = String.valueOf(calculateISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue, population));
     assertEquals(expectedISA, actualISA);
   }
@@ -84,7 +84,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "10", "1000");
-    String actualISA = programProductISAPage.fillPopulation("1");
+    String actualISA = programProductISAPage.calculateISA("1");
     String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "5", "10", "1000", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
@@ -98,7 +98,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "55", "10", "50");
-    String actualISA = programProductISAPage.fillPopulation("1");
+    String actualISA = programProductISAPage.calculateISA("1");
     String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "55", "10", "50", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
@@ -112,7 +112,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "5", "5", "1000");
-    String actualISA = programProductISAPage.fillPopulation("1");
+    String actualISA = programProductISAPage.calculateISA("1");
     String expectedISA = String.valueOf(calculateISA("1", "2", "3", "4", "5", "5", "1000", "1"));
     assertEquals(expectedISA, actualISA);
     programProductISAPage.cancelISA();
@@ -127,7 +127,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("999.999", "999", "999.999", "999.999", "999999", "5", "1000");
-    programProductISAPage.fillPopulation("1");
+    programProductISAPage.calculateISA("1");
     String isaFormula = programProductISAPage.getISAFormulaFromISAFormulaModal();
     String expectedISAFormula = "(population) * 9.99999 * 999 * 999.999 / 12 * 10.99999 + 999999";
     assertEquals(expectedISAFormula, isaFormula);

@@ -400,7 +400,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   public void enterDataInEpiUsePage(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
                                     Integer loss, Integer stockAtEndOfMonth, String expirationDate, int rowNumber) {
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
 
     epiUse.verifyProductGroup("PG1-Name", 1);

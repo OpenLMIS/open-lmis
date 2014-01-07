@@ -106,7 +106,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");
@@ -410,7 +410,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     epiUse.verifyProductGroup("PG1-Name", 1);
 
@@ -441,7 +441,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
 
     epiUse.verifyProductGroup("PG1-Name", 1);
@@ -489,7 +489,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
     epiUse.checkApplyNRToStockAtFirstOfMonth0();
     epiUse.checkApplyNRToReceived0();
@@ -565,7 +565,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
   public void enterDataInEpiUsePage(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
                                     Integer loss, Integer stockAtEndOfMonth, String expirationDate, int rowNumber) {
-    EPIUse epiUse = new EPIUse(testWebDriver);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
 
     epiUse.verifyProductGroup("PG1-Name", 1);

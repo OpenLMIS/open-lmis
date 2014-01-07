@@ -12,6 +12,7 @@ package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static org.openqa.selenium.support.How.ID;
 
 abstract public class DistributionTab extends Page {
 
@@ -30,6 +32,21 @@ abstract public class DistributionTab extends Page {
     put("green", COLOR_GREEN);
     put("amber", COLOR_AMBER);
   }};
+
+  @FindBy(how = ID, using = "epiInventoryTab")
+  private static WebElement epiInventoryTab = null;
+
+  @FindBy(how = ID, using = "refrigeratorTab")
+  private static WebElement refrigeratorTab = null;
+
+  @FindBy(how = ID, using = "epiUseTab")
+  private static WebElement epiUseTab = null;
+
+  @FindBy(how = ID, using = "generalObservationTab")
+  private static WebElement generalObservationTab = null;
+
+  @FindBy(how = ID, using = "coverageTab")
+  private static WebElement coverageTab = null;
 
   public DistributionTab(TestWebDriver driver) {
     super(driver);
@@ -50,4 +67,28 @@ abstract public class DistributionTab extends Page {
     assertEquals(colorMap.get(color.toLowerCase()), element.getCssValue("background-color"));
   }
 
+  public RefrigeratorPage navigateToRefrigerators() {
+    refrigeratorTab.click();
+    return new RefrigeratorPage(testWebDriver);
+  }
+
+  public EPIUsePage navigateToEpiUse() {
+    epiUseTab.click();
+    return new EPIUsePage(testWebDriver);
+  }
+
+  public EpiInventoryPage navigateToEpiInventory() {
+    epiInventoryTab.click();
+    return new EpiInventoryPage(testWebDriver);
+  }
+
+  public CoveragePage navigateToCoverage() {
+    coverageTab.click();
+    return new CoveragePage(testWebDriver);
+  }
+
+  public GeneralObservationPage navigateToGeneralObservations() {
+    generalObservationTab.click();
+    return new GeneralObservationPage(testWebDriver);
+  }
 }

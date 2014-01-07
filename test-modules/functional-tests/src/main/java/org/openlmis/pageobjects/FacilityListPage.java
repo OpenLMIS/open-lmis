@@ -122,7 +122,7 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[2]/div").getText());
   }
 
-  public void selectFacility(String facilityCode) {
+  public RefrigeratorPage selectFacility(String facilityCode) {
     clickFacilityListDropDown();
     testWebDriver.waitForElementToAppear(facilityListTextField);
     facilityListTextField.clear();
@@ -130,6 +130,8 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
     testWebDriver.sleep(250);
+
+    return new RefrigeratorPage(testWebDriver);
   }
 
   public void clickFacilityListDropDown() {

@@ -277,4 +277,10 @@ public class DistributionPage extends Page {
     testWebDriver.waitForElementToAppear(noDistributionCachedMessage);
     assertEquals("No distributions cached", noDistributionCachedMessage.getText());
   }
+
+  public void initiate(String deliveryZoneName, String programName) {
+    selectValueFromDeliveryZone(deliveryZoneName);
+    selectValueFromProgram(programName);
+    clickInitiateDistribution();
+  }
 }

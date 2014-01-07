@@ -18,11 +18,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.util.Map;
+
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static org.openqa.selenium.support.How.*;
 
-public class RefrigeratorPage extends Page {
-  //TODO extend DistributionTab
+public class RefrigeratorPage extends DistributionTab {
 
   @FindBy(how = ID, using = "addNew")
   private static WebElement addNewButton = null;
@@ -178,6 +179,26 @@ public class RefrigeratorPage extends Page {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
     testWebDriver.setImplicitWait(10);
+  }
+
+  @Override
+  public void verifyIndicator(String color) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void enterValues(Map<String, String> map) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void verifyData(Map<String, String> map) {
+    //To change body of implemented methods use File | Settings | File Templates.
+  }
+
+  @Override
+  public void navigate() {
+    //To change body of implemented methods use File | Settings | File Templates.
   }
 
   public void enterValueInRefrigeratorTemperature(String value) {
