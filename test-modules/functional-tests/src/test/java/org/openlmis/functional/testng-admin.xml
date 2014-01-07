@@ -15,36 +15,9 @@
                 <include name="admin"/>
             </run>
         </groups>
-        <classes preserver-order="true">
-            <class name="org.openlmis.functional.E2EUpload">
-            </class>
-            <class name="org.openlmis.functional.ManageFacility">
-            </class>
-            <class name="org.openlmis.functional.ManageRights">
-            </class>
-            <class name="org.openlmis.functional.ConfigureProgramTemplate">
-            </class>
-            <class name="org.openlmis.functional.ManageISA">
-            </class>
-            <class name="org.openlmis.functional.ConfigureOrderTemplate">
-            </class>
-            <class name="org.openlmis.functional.ManageProgramProductISA">
-            </class>
-            <class name="org.openlmis.functional.ManageRolesAndUsers">
-            </class>
-            <class name="org.openlmis.functional.ConfigureRegimenProgramTemplate">
-            </class>
-            <class name="org.openlmis.functional.ManageReport">
-            </class>
-            <class name="org.openlmis.functional.ForgotPassword">
-            </class>
-            <class name="org.openlmis.functional.ConfigureShipmentTemplate">
-            </class>
-            <class name="org.openlmis.functional.ConfigureBudgetTemplate">
-            </class>
-            <class name="org.openlmis.functional.LanguageCheck">
-            </class>
-        </classes>
+      <packages>
+        <package name="org.openlmis.functional"/>
+      </packages>
     </test>
 </suite>
 
