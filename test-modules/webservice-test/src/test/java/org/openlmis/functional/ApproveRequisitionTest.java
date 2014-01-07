@@ -183,7 +183,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "rnrId", id));
     dbWrapper.updateActiveStatusOfProgramProduct("P10", "HIV", "True");
   }
 
@@ -214,7 +214,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "rnrId", id));
     dbWrapper.updateActiveStatusOfProgram("HIV", true);
   }
 
@@ -244,7 +244,7 @@ public class ApproveRequisitionTest extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
     assertTrue(response.contains("{\"success\":"));
     assertEquals("APPROVED", dbWrapper.getAttributeFromTable("requisitions", "status", "id", id));
-    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "id", id));
+    assertEquals("some random name", dbWrapper.getAttributeFromTable("requisition_status_changes", "name", "rnrId", id));
     dbWrapper.updateActiveStatusOfProduct("P10", "True");
   }
 

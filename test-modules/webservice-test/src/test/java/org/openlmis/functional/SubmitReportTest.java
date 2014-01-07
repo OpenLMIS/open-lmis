@@ -24,7 +24,6 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openlmis.UiUtils.HttpClient.POST;
 
-
 public class SubmitReportTest extends JsonUtility {
 
   public static final String MINIMUM_JSON_TXT_FILE_NAME = "ReportMinimumJson.txt";
