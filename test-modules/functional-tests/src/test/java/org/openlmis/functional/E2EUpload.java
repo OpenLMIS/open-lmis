@@ -136,18 +136,18 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertVirtualFacility(virtualFacilityCode, parentFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographiczoneid", "code", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode), dbWrapper.getFacilityTypeId("warehouse"));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeid", "code", parentFacilityCode), dbWrapper.getFacilityTypeId("warehouse"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
-    assertEquals("Dispensary", dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-    assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+    assertEquals("Dispensary", dbWrapper.getAttributeFromTable("facilities", "name", "code", parentFacilityCode));
+    assertNotEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "name", "code", parentFacilityCode));
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
     testWebDriver.sleep(2000);
     List<Integer> listOfProgramsSupportedByParentFacility;
@@ -428,13 +428,13 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
-    assertEquals(dbWrapper.getRestrictLogin("User123"), "f");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User123"), "f");
 
     uploadPage.uploadUsers("QA_Users_Others.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    assertEquals(dbWrapper.getRestrictLogin("User1234"), "f");
-    assertEquals(dbWrapper.getRestrictLogin("User1235"), "t");
-    assertEquals(dbWrapper.getRestrictLogin("User1236"), "f");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1234"), "f");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1235"), "t");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1236"), "f");
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -681,8 +681,8 @@ public class E2EUpload extends TestCaseHelper {
   }
 
   public void verifyGeographicZoneAndFacilityTypeForVirtualFacility(String virtualFacilityCode, String parentFacilityCode) throws IOException, SQLException {
-    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographiczoneid", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "geographiczoneid", "code", parentFacilityCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeid", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "typeid", "code", parentFacilityCode));
   }
 
   @AfterMethod(groups = {"admin"})

@@ -150,8 +150,8 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public void verifyISAAndOverrideISA() throws Exception {
     WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
-    assertEquals(dbWrapper.getFacilityName(facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
-    assertEquals(dbWrapper.getFacilityPopulation(facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
 
     assertEquals(getISAForProgramProduct(programFirst, product, warehouseLoadAmountPage.getFacilityPopulation(1, 1)), warehouseLoadAmountPage.getProduct1Isa(1, 1));
     assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2, periodDisplayedByDefault), warehouseLoadAmountPage.getProduct2Isa(1, 1));

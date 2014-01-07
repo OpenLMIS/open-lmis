@@ -159,14 +159,6 @@ public class DBWrapper {
     update("update products set active='%s' where code='%s'", active, productCode);
   }
 
-  public int getRecordCountInTable(String tableName) throws SQLException {
-    ResultSet rs = query("select count(*) from %s", tableName);
-
-    if (rs.next()) {
-      return rs.getInt("count");
-    }
-    return -1;
-  }
 
   public void updateActiveStatusOfProgramProduct(String productCode,
                                                  String programCode,
@@ -208,26 +200,6 @@ public class DBWrapper {
       facilityCode);
   }
 
-  public String getVirtualPropertyOfFacility(String facilityCode) throws SQLException, IOException {
-    String flag = "";
-    ResultSet rs = query("select virtualFacility from facilities where code = '%s'", facilityCode);
-
-    if (rs.next()) {
-      flag = rs.getString("virtualFacility");
-    }
-    return flag;
-  }
-
-  public String getActivePropertyOfFacility(String facilityCode) throws SQLException, IOException {
-    String flag = "";
-    ResultSet rs = query("select active from facilities where code='%s'", facilityCode);
-
-    if (rs.next()) {
-      flag = rs.getString("active");
-    }
-    return flag;
-  }
-
   public void updateUser(String password, String email) throws SQLException, IOException {
     update("DELETE FROM user_password_reset_tokens");
     update("update users set password = '%s', active = TRUE, verified = TRUE  where email = '%s'", password, email);
@@ -235,16 +207,6 @@ public class DBWrapper {
 
   public void updateRestrictLogin(String userName, boolean status) throws SQLException, IOException {
     update("update users set restrictLogin = '%s' where userName = '%s'", status, userName);
-  }
-
-  public String getRestrictLogin(String userName) throws SQLException, IOException {
-    String status = null;
-    ResultSet rs = query("select restrictLogin from users where userName='%s'", userName);
-
-    if (rs.next()) {
-      status = rs.getString("restrictLogin");
-    }
-    return status;
   }
 
   public void insertRequisitions(int numberOfRequisitions,
@@ -788,26 +750,6 @@ public class DBWrapper {
       "(24, (select id from programs where code = '" + program + "'), true, 'U', 23, 'Remarks');");
   }
 
-  public String getFacilityName(String code) throws IOException, SQLException {
-    String name = null;
-    ResultSet rs = query("select name from facilities where code = '" + code + "';");
-
-    if (rs.next()) {
-      name = rs.getString("name");
-    }
-    return name;
-  }
-
-  public String getFacilityPopulation(String code) throws IOException, SQLException {
-    String population = null;
-    ResultSet rs = query("select catchmentPopulation from facilities where code = '" + code + "';");
-
-    if (rs.next()) {
-      population = rs.getString("catchmentPopulation");
-    }
-    return population;
-  }
-
   public Integer getOverriddenIsa(String facilityCode,
                                   String program,
                                   String product,
@@ -864,26 +806,6 @@ public class DBWrapper {
       isaParams[6] = rs.getString("maximumValue");
     }
     return isaParams;
-  }
-
-  public Long getFacilityID(String facilityCode) throws IOException, SQLException {
-    Long id = null;
-    ResultSet rs = query("select id from facilities where code='" + facilityCode + "';");
-
-    if (rs.next()) {
-      id = rs.getLong("id");
-    }
-    return id;
-  }
-
-  public String getFacilityFieldBYCode(String field, String code) throws IOException, SQLException {
-    String facilityField = null;
-    ResultSet rs = query("SELECT %s FROM facilities WHERE code = '%s'", field, code);
-
-    if (rs.next()) {
-      facilityField = rs.getString(1);
-    }
-    return facilityField;
   }
 
   public void updateFacilityFieldBYCode(String field, String value, String code) throws IOException, SQLException {
@@ -962,15 +884,6 @@ public class DBWrapper {
     }
     return facilityName;
 
-  }
-
-  public String getUserID(String userName) throws IOException, SQLException {
-    String userId = null;
-    ResultSet rs = query("select id from users where username='" + userName + "'");
-    if (rs.next()) {
-      userId = rs.getString("id");
-    }
-    return userId;
   }
 
   public int getMaxRnrID() throws IOException, SQLException {
@@ -1117,61 +1030,6 @@ public class DBWrapper {
 
   public void updatePacksToShip(String packsToShip) throws SQLException {
     update("update requisition_line_items set packsToShip='" + packsToShip + "';");
-  }
-
-  public Long getProgramID(String program) throws IOException, SQLException {
-    Long programID = null;
-    ResultSet rs = query("SELECT ID from programs where code='" + program + "'");
-
-    if (rs.next()) {
-      programID = rs.getLong("id");
-    }
-    return programID;
-
-  }
-
-  public Long getProductID(String product) throws IOException, SQLException {
-    Long productID = null;
-    ResultSet rs = query("SELECT ID from products where code='" + product + "'");
-
-    if (rs.next()) {
-      productID = rs.getLong("id");
-    }
-    return productID;
-
-  }
-
-  public String getRequisitionStatus(Long requisitionId) throws IOException, SQLException {
-    String requisitionStatus = null;
-    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
-
-    if (rs.next()) {
-      requisitionStatus = rs.getString("status");
-    }
-    return requisitionStatus;
-
-  }
-
-  public String getOrderStatus(Long orderId) throws IOException, SQLException {
-    String orderStatus = null;
-    ResultSet rs = query("SELECT status from orders where id=" + orderId);
-
-    if (rs.next()) {
-      orderStatus = rs.getString("status");
-    }
-    return orderStatus;
-
-  }
-
-  public String getOrderId() throws IOException, SQLException {
-    String orderId = null;
-    ResultSet rs = query("SELECT id from orders");
-
-    if (rs.next()) {
-      orderId = rs.getString("id");
-    }
-    return orderId;
-
   }
 
   public void insertPastPeriodRequisitionAndLineItems(String facilityCode,
@@ -1348,16 +1206,6 @@ public class DBWrapper {
       "VALUES ('" + dataFieldLabel + "','" + includeInOrderFile + "','" + columnLabel + "'," + position + ", FALSE)");
   }
 
-  public String getCreatedDate(String tableName, String dateFormat) throws SQLException {
-    String createdDate = null;
-    ResultSet rs = query("SELECT to_char(createdDate, '" + dateFormat + "' ) from " + tableName);
-
-    if (rs.next()) {
-      createdDate = rs.getString(1);
-    }
-    return createdDate;
-  }
-
   public void updateProductToHaveGroup(String product, String productGroup) throws SQLException {
     update("UPDATE products set productGroupId = (SELECT id from product_groups where code = '" + productGroup + "') where code = '" + product + "'");
   }
@@ -1405,13 +1253,6 @@ public class DBWrapper {
     }
   }
 
-  public String getWarehouse1Name(String facilityCode) throws SQLException {
-    String warehouseName = "";
-    ResultSet rs = query("select name from facilities where code='" + facilityCode + "';");
-    if (rs.next()) warehouseName = rs.getString(1);
-    return warehouseName;
-  }
-
   public void disableFacility(String warehouseName) throws SQLException {
     update("UPDATE facilities SET enabled='false' WHERE name='" + warehouseName + "';");
   }
@@ -1443,16 +1284,6 @@ public class DBWrapper {
     update(
       "INSERT INTO facility_ftp_details(facilityId, serverHost, serverPort, username, password, localFolderPath) VALUES" + "((SELECT id FROM facilities WHERE code = '%s' ), '192.168.34.1', 21, 'openlmis', 'openlmis', '/ftp');",
       facilityCode);
-  }
-
-  public int getRequisitionGroupId(String facilityCode) throws SQLException {
-    int rgId = 0;
-    ResultSet rs = query(
-      "SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
-    if (rs.next()) {
-      rgId = rs.getInt(1);
-    }
-    return rgId;
   }
 
   public List<Integer> getAllProgramsOfFacility(String facilityCode) throws SQLException {
@@ -1497,26 +1328,6 @@ public class DBWrapper {
 
   public void changeVirtualFacilityTypeId(String facilityCode, int facilityTypeId) throws SQLException {
     update("UPDATE facilities SET typeid=" + facilityTypeId + "WHERE code='" + facilityCode + "';");
-  }
-
-  public String getGeographicZoneId(String geographicZone) throws SQLException {
-    String res = null;
-    ResultSet rs = query("select id  from geographic_zones WHERE code ='" + geographicZone + "';");
-
-    if (rs.next()) {
-      res = rs.getString(1);
-    }
-    return res;
-  }
-
-  public String getFacilityTypeId(String facilityType) throws SQLException {
-    String res = null;
-    ResultSet rs = query("select id  from facility_types WHERE code ='" + facilityType + "';");
-
-    if (rs.next()) {
-      res = rs.getString(1);
-    }
-    return res;
   }
 
   public void deleteCurrentPeriod() throws SQLException {
@@ -1574,17 +1385,6 @@ public class DBWrapper {
 
   public void deleteConfigureTemplate(String program) throws SQLException {
     update("DELETE FROM program_rnr_columns where programId=(select id from programs where code = '" + program + "');");
-  }
-
-  public String getApproverName(long requisitionId) throws IOException, SQLException {
-    String name = null;
-    ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrId =" + requisitionId + " and status='APPROVED';");
-
-    if (rs.next()) {
-      name = rs.getString("name");
-    }
-    return name;
-
   }
 
   public String getRequisitionLineItemFieldValue(Long requisitionId,
@@ -1673,17 +1473,6 @@ public class DBWrapper {
     update("delete from supply_lines where description='supplying node for MALARIA'");
   }
 
-  public String getOrderFtpComment(Long orderId) throws IOException, SQLException {
-    String orderFtpcomment = null;
-    ResultSet rs = query("SELECT ftpComment from orders where id=" + orderId);
-
-    if (rs.next()) {
-      orderFtpcomment = rs.getString("ftpComment");
-    }
-    return orderFtpcomment;
-
-  }
-
   public Map<String, String> getEpiUseDetails(String productGroupCode, String facilityCode) throws SQLException {
     return select("SELECT * FROM epi_use_line_items WHERE productGroupName = " +
       "(SELECT name FROM product_groups where code = '%s') AND epiUseId=(Select id from epi_use where facilityId=" +
@@ -1722,17 +1511,7 @@ public class DBWrapper {
   }
 
   public ResultSet getRefrigeratorProblems(Long readingId) throws SQLException {
-    ResultSet resultSet = query("SELECT * FROM refrigerator_problems WHERE readingId = %d", readingId);
-    return resultSet;
-  }
-
-  public Integer getPackSize(String productCode) throws SQLException {
-    Integer packSize = 0;
-    ResultSet rs = query("SELECT packSize FROM products WHERE code='" + productCode + "';");
-    if (rs.next()) {
-      packSize = rs.getInt("packSize");
-    }
-    return packSize;
+    return query("SELECT * FROM refrigerator_problems WHERE readingId = %d", readingId);
   }
 
   public void updateProcessingPeriodByField(String field,
@@ -1751,6 +1530,177 @@ public class DBWrapper {
       facilityCode);
     resultSet.next();
     return resultSet;
+  }
+
+  public int getRecordCountInTable(String tableName) throws SQLException {
+    ResultSet rs = query("select count(*) from %s", tableName);
+
+    if (rs.next()) {
+      return rs.getInt("count");
+    }
+    return -1;
+  }
+
+  public String getAttributeFromTable(String tableName, String attribute, String queryColumn, String queryParam) throws SQLException {
+    String returnValue = null;
+    ResultSet resultSet = query("select * from %s where %s = '%s';", tableName, queryColumn, queryParam);
+
+    if (resultSet.next()) {
+      returnValue = resultSet.getString(attribute);
+    }
+    return returnValue;
+  }
+
+  public Long getFacilityID(String facilityCode) throws IOException, SQLException {
+    Long id = null;
+    ResultSet rs = query("select id from facilities where code='" + facilityCode + "';");
+
+    if (rs.next()) {
+      id = rs.getLong("id");
+    }
+    return id;
+  }
+
+  public String getUserID(String userName) throws IOException, SQLException {
+    String userId = null;
+    ResultSet rs = query("select id from users where username='" + userName + "'");
+    if (rs.next()) {
+      userId = rs.getString("id");
+    }
+    return userId;
+  }
+
+  public Long getProgramID(String program) throws IOException, SQLException {
+    Long programID = null;
+    ResultSet rs = query("SELECT ID from programs where code='" + program + "'");
+
+    if (rs.next()) {
+      programID = rs.getLong("id");
+    }
+    return programID;
+
+  }
+
+  public Long getProductID(String product) throws IOException, SQLException {
+    Long productID = null;
+    ResultSet rs = query("SELECT ID from products where code='" + product + "'");
+
+    if (rs.next()) {
+      productID = rs.getLong("id");
+    }
+    return productID;
+
+  }
+
+  public String getRequisitionStatus(Long requisitionId) throws IOException, SQLException {
+    String requisitionStatus = null;
+    ResultSet rs = query("SELECT status from requisitions where id=" + requisitionId);
+
+    if (rs.next()) {
+      requisitionStatus = rs.getString("status");
+    }
+    return requisitionStatus;
+
+  }
+
+  public String getOrderStatus(Long orderId) throws IOException, SQLException {
+    String orderStatus = null;
+    ResultSet rs = query("SELECT status from orders where id=" + orderId);
+
+    if (rs.next()) {
+      orderStatus = rs.getString("status");
+    }
+    return orderStatus;
+
+  }
+
+  public String getOrderId() throws IOException, SQLException {
+    String orderId = null;
+    ResultSet rs = query("SELECT id from orders");
+
+    if (rs.next()) {
+      orderId = rs.getString("id");
+    }
+    return orderId;
+
+  }
+
+  public String getCreatedDate(String tableName, String dateFormat) throws SQLException {
+    String createdDate = null;
+    ResultSet rs = query("SELECT to_char(createdDate, '" + dateFormat + "' ) from " + tableName);
+
+    if (rs.next()) {
+      createdDate = rs.getString(1);
+    }
+    return createdDate;
+  }
+
+  public String getWarehouse1Name(String facilityCode) throws SQLException {
+    String warehouseName = "";
+    ResultSet rs = query("select name from facilities where code='" + facilityCode + "';");
+    if (rs.next()) warehouseName = rs.getString(1);
+    return warehouseName;
+  }
+
+  public int getRequisitionGroupId(String facilityCode) throws SQLException {
+    int rgId = 0;
+    ResultSet rs = query(
+      "SELECT requisitionGroupId FROM requisition_group_members where facilityId=(SELECT id FROM facilities WHERE code ='" + facilityCode + "');");
+    if (rs.next()) {
+      rgId = rs.getInt(1);
+    }
+    return rgId;
+  }
+
+  public String getGeographicZoneId(String geographicZone) throws SQLException {
+    String res = null;
+    ResultSet rs = query("select id  from geographic_zones WHERE code ='" + geographicZone + "';");
+
+    if (rs.next()) {
+      res = rs.getString(1);
+    }
+    return res;
+  }
+
+  public String getFacilityTypeId(String facilityType) throws SQLException {
+    String res = null;
+    ResultSet rs = query("select id  from facility_types WHERE code ='" + facilityType + "';");
+
+    if (rs.next()) {
+      res = rs.getString(1);
+    }
+    return res;
+  }
+
+  public String getApproverName(long requisitionId) throws IOException, SQLException {
+    String name = null;
+    ResultSet rs = query("SELECT name FROM requisition_status_changes WHERE rnrId =" + requisitionId + " and status='APPROVED';");
+
+    if (rs.next()) {
+      name = rs.getString("name");
+    }
+    return name;
+
+  }
+
+  public String getOrderFtpComment(Long orderId) throws IOException, SQLException {
+    String orderFtpcomment = null;
+    ResultSet rs = query("SELECT ftpComment from orders where id=" + orderId);
+
+    if (rs.next()) {
+      orderFtpcomment = rs.getString("ftpComment");
+    }
+    return orderFtpcomment;
+
+  }
+
+  public Integer getPackSize(String productCode) throws SQLException {
+    Integer packSize = 0;
+    ResultSet rs = query("SELECT packSize FROM products WHERE code='" + productCode + "';");
+    if (rs.next()) {
+      packSize = rs.getInt("packSize");
+    }
+    return packSize;
   }
 
 }

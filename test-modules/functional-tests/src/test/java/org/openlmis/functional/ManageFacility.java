@@ -60,7 +60,7 @@ public class ManageFacility extends TestCaseHelper {
     String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
     manageFacilityPage.verifyMessageOnFacilityScreen(facilityNamePrefix + date_time, "created");
-    assertEquals("f", dbWrapper.getVirtualPropertyOfFacility(facilityCodePrefix + date_time));
+    assertEquals("f", dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", facilityCodePrefix + date_time));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);

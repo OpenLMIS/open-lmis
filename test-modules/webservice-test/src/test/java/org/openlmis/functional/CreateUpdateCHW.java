@@ -47,14 +47,14 @@ public class CreateUpdateCHW extends JsonUtility {
   public static final String JSON_EXTENSION = ".json";
 
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(true);
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws Exception {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -85,7 +85,7 @@ public class CreateUpdateCHW extends JsonUtility {
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.uploadFacilities("QA_facilities_WebService.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    assertEquals(FALSE_FLAG, dbWrapper.getVirtualPropertyOfFacility("facilityf10"));
+    assertEquals(FALSE_FLAG, dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", "facilityf10"));
     homePage.logout(baseUrlGlobal);
   }
 
@@ -123,9 +123,8 @@ public class CreateUpdateCHW extends JsonUtility {
     manageFacilityPageRestore.clickFacilityList(agentCode);
     manageFacilityPage.saveFacility();
     manageFacilityPage.verifyMessageOnFacilityScreen(DEFAULT_AGENT_NAME, "updated");
-    assertEquals(TRUE_FLAG, dbWrapper.getVirtualPropertyOfFacility(agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", agentCode));
     homePage.logout(baseUrlGlobal);
-
   }
 
 
@@ -286,7 +285,7 @@ public class CreateUpdateCHW extends JsonUtility {
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
 
-    assertEquals(FALSE_FLAG, dbWrapper.getActivePropertyOfFacility(AGENT_CODE));
+    assertEquals(FALSE_FLAG, dbWrapper.getAttributeFromTable("facilities", "active", "code", AGENT_CODE));
   }
 
   @Test(groups = {"webservice"})
@@ -317,23 +316,23 @@ public class CreateUpdateCHW extends JsonUtility {
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode("name", agentCode), DEFAULT_AGENT_NAME);
-    assertNotEquals(dbWrapper.getFacilityFieldBYCode("id", agentCode), dbWrapper.getFacilityFieldBYCode("id", firstParentFacility));
-    assertEquals(dbWrapper.getFacilityFieldBYCode("code", agentCode), agentCode);
-    assertNull(dbWrapper.getFacilityFieldBYCode("description", agentCode));
-    assertNull(dbWrapper.getFacilityFieldBYCode("gln", agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode("mainPhone", agentCode), PHONE_NUMBER);
-    assertNull(dbWrapper.getFacilityFieldBYCode("fax", agentCode));
-    assertNull(dbWrapper.getFacilityFieldBYCode("address1", agentCode));
-    assertNull(dbWrapper.getFacilityFieldBYCode("address2", agentCode));
-    assertNull(dbWrapper.getFacilityFieldBYCode("catchmentPopulation", agentCode));
-    assertNull(dbWrapper.getFacilityFieldBYCode("operatedById", agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode("active", agentCode), "t");
-    assertEquals(dbWrapper.getFacilityFieldBYCode("enabled", agentCode), TRUE_FLAG);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("virtualFacility", agentCode), TRUE_FLAG);
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", typeId, "code", firstParentFacility), dbWrapper.getAttributeFromTable("facilities", typeId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", firstParentFacility), dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", id, "code", firstParentFacility), dbWrapper.getAttributeFromTable("facilities", parentFacilityId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", agentCode), DEFAULT_AGENT_NAME);
+    assertNotEquals(dbWrapper.getAttributeFromTable("facilities", "id", "code", agentCode), dbWrapper.getAttributeFromTable("facilities", "id", "code", firstParentFacility));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "code", "code", agentCode), agentCode);
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "description", "code", agentCode));
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "gln", "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "mainPhone", "code", agentCode), PHONE_NUMBER);
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "fax", "code", agentCode));
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "address1", "code", agentCode));
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "address2", "code", agentCode));
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", agentCode));
+    assertNull(dbWrapper.getAttributeFromTable("facilities", "operatedById", "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "active", "code", agentCode), "t");
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "enabled", "code", agentCode), TRUE_FLAG);
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "virtualFacility", "code", agentCode), TRUE_FLAG);
     assertEquals(dbWrapper.getRequisitionGroupId(firstParentFacility), dbWrapper.getRequisitionGroupId(agentCode));
 
     agentJson.setParentFacilityCode(updateParentFacility);
@@ -345,9 +344,9 @@ public class CreateUpdateCHW extends JsonUtility {
       "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, updateParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, updateParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", typeId, "code", updateParentFacility), dbWrapper.getAttributeFromTable("facilities", typeId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", updateParentFacility), dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", id, "code", updateParentFacility), dbWrapper.getAttributeFromTable("facilities", parentFacilityId, "code", agentCode));
     assertEquals(dbWrapper.getRequisitionGroupId(updateParentFacility), dbWrapper.getRequisitionGroupId(agentCode));
 
     List<Integer> listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(updateParentFacility);
@@ -403,17 +402,17 @@ public class CreateUpdateCHW extends JsonUtility {
     assertTrue("Showing response as : " + responseEntity.getResponse(),
       responseEntity.getResponse().contains("{\"success\":\"CHW created successfully\"}"));
 
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacility), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacility), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(agentCode, dbWrapper.getFacilityFieldBYCode(code, agentCode));
-    assertEquals(agentName, dbWrapper.getFacilityFieldBYCode(name, agentCode));
-    assertEquals(phoneNumber, dbWrapper.getFacilityFieldBYCode(mainPhone, agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", typeId, "code", firstParentFacility), dbWrapper.getAttributeFromTable("facilities", typeId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", firstParentFacility), dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", id, "code", firstParentFacility), dbWrapper.getAttributeFromTable("facilities", parentFacilityId, "code", agentCode));
+    assertEquals(agentCode, dbWrapper.getAttributeFromTable("facilities", code, "code", agentCode));
+    assertEquals(agentName, dbWrapper.getAttributeFromTable("facilities", name, "code", agentCode));
+    assertEquals(phoneNumber, dbWrapper.getAttributeFromTable("facilities", mainPhone, "code", agentCode));
 
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(active, agentCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualFacility, agentCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, agentCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", active, "code", agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", virtualFacility, "code", agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", sdp, "code", agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", enabled, "code", agentCode));
 
     agentJson.setAgentName(agentNameUpdated);
     agentJson.setParentFacilityCode(firstParentFacilityUpdated);
@@ -427,16 +426,16 @@ public class CreateUpdateCHW extends JsonUtility {
       "Admin123");
     assertTrue("Showing response as : " + responseEntityUpdated.getResponse(),
       responseEntityUpdated.getResponse().contains("{\"success\":\"CHW updated successfully\"}"));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(typeId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(typeId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(geographicZoneId, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(geographicZoneId, agentCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode(id, firstParentFacilityUpdated), dbWrapper.getFacilityFieldBYCode(parentFacilityId, agentCode));
-    assertEquals(agentCode, dbWrapper.getFacilityFieldBYCode(code, agentCode));
-    assertEquals(agentNameUpdated, dbWrapper.getFacilityFieldBYCode(name, agentCode));
-    assertEquals(phoneNumberUpdated, dbWrapper.getFacilityFieldBYCode(mainPhone, agentCode));
-    assertEquals(FALSE_FLAG, dbWrapper.getFacilityFieldBYCode(active, agentCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(virtualFacility, agentCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(sdp, agentCode));
-    assertEquals(TRUE_FLAG, dbWrapper.getFacilityFieldBYCode(enabled, agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", typeId, "code", firstParentFacilityUpdated), dbWrapper.getAttributeFromTable("facilities", typeId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", firstParentFacilityUpdated), dbWrapper.getAttributeFromTable("facilities", geographicZoneId, "code", agentCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", id, "code", firstParentFacilityUpdated), dbWrapper.getAttributeFromTable("facilities", parentFacilityId, "code", agentCode));
+    assertEquals(agentCode, dbWrapper.getAttributeFromTable("facilities", code, "code", agentCode));
+    assertEquals(agentNameUpdated, dbWrapper.getAttributeFromTable("facilities", name, "code", agentCode));
+    assertEquals(phoneNumberUpdated, dbWrapper.getAttributeFromTable("facilities", mainPhone, "code", agentCode));
+    assertEquals(FALSE_FLAG, dbWrapper.getAttributeFromTable("facilities", active, "code", agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", virtualFacility, "code", agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", sdp, "code", agentCode));
+    assertEquals(TRUE_FLAG, dbWrapper.getAttributeFromTable("facilities", enabled, "code", agentCode));
   }
 
   @Test(groups = {"webservice"})
