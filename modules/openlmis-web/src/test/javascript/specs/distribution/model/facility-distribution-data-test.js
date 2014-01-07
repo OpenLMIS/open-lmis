@@ -33,6 +33,7 @@ describe('Facility Distribution data', function() {
     spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.EMPTY);
+    spyOn(epiInventory, "computeStatus").andReturn(DistributionStatus.EMPTY);
 
     expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.EMPTY);
   });
