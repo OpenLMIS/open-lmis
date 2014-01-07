@@ -24,9 +24,7 @@ import java.io.IOException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.LINK_TEXT;
-import static org.openqa.selenium.support.How.XPATH;
+import static org.openqa.selenium.support.How.*;
 
 
 public class HomePage extends Page {
@@ -394,7 +392,7 @@ public class HomePage extends Page {
     return new ConvertOrderPage(testWebDriver);
   }
 
-  public DistributionPage navigatePlanDistribution() throws IOException {
+  public DistributionPage navigateToDistributionWhenOnline() throws IOException {
     testWebDriver.waitForElementToAppear(distributionsMenuItem);
     testWebDriver.keyPress(distributionsMenuItem);
     testWebDriver.waitForElementToAppear(manageDistributionMenuItem);

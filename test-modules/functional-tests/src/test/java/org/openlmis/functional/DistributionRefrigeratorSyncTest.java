@@ -116,7 +116,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(45, 67, 89, 90);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -166,7 +166,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(67, 44, 22, 11);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -216,7 +216,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(77, 56, 78, 34);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -260,7 +260,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(78, 67, 34, 12);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -299,7 +299,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(78, 67, 34, 12);
 
-    homePage.navigatePlanDistribution();
+    homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(2);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -352,7 +352,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.navigate();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
 
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
@@ -403,7 +403,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     CoveragePage coveragePage = new CoveragePage(testWebDriver);
     coveragePage.navigate();
     coveragePage.enterData(67, 8, 33, 54);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
@@ -445,7 +445,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
 
     HomePage homePage = new HomePage(testWebDriver);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();

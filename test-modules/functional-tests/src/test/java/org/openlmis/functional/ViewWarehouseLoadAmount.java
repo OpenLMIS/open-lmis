@@ -223,7 +223,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -282,7 +282,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -306,7 +306,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
-    homePage.navigatePlanDistribution();
+    homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);

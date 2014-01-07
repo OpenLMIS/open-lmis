@@ -81,12 +81,12 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyIndicator("RED");
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
@@ -95,7 +95,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     CoveragePage coveragePage = new CoveragePage(testWebDriver);
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -182,13 +182,6 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.verifyStockAtEndOfMonthStatus(true, 1);
     epiUse.verifyExpirationDateStatus(true, 1);
     epiUse.verifyIndicator("GREEN");
-    epiUse.verifyStockAtFirstOfMonthStatus(true, 1);
-    epiUse.verifyReceivedStatus(true, 1);
-    epiUse.verifyDistributedStatus(true, 1);
-    epiUse.verifyLossStatus(true, 1);
-    epiUse.verifyStockAtEndOfMonthStatus(true, 1);
-    epiUse.verifyExpirationDateStatus(true, 1);
-    epiUse.verifyIndicator("GREEN");
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
@@ -198,7 +191,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -236,7 +229,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -278,7 +271,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -287,159 +280,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
   }
 
-  @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenFacilityInactiveAfterCaching() throws Exception {
 
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
-    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-
-    dbWrapper.updateActiveStatusOfFacility("F10", "false");
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyIndicator("RED");
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.enterData(12, 34, 45, 56);
-
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution(1);
-    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
-    distributionPage.syncDistributionMessageDone();
-
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
-
-    dbWrapper.updateActiveStatusOfFacility("F10", "true");
-  }
-
-  @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenFacilityDisabledAfterCaching() throws Exception {
-
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
-    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-
-    dbWrapper.updateFacilityFieldBYCode("enabled", "false", "F10");
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyIndicator("RED");
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.enterData(12, 34, 45, 56);
-
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution(1);
-    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
-    distributionPage.syncDistributionMessageDone();
-
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
-
-    dbWrapper.updateFacilityFieldBYCode("enabled", "true", "F10");
-  }
-
-  @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenAllProgramInactiveAfterCaching() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
-    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-
-    dbWrapper.updateActiveStatusOfProgram("VACCINES", false);
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyIndicator("RED");
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.enterData(12, 34, 45, 56);
-
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution(1);
-    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
-    distributionPage.syncDistributionMessageDone();
-
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
-
-    dbWrapper.updateActiveStatusOfProgram("VACCINES", true);
-  }
-
-  @Test(groups = {"distribution"})
-  public void testEpiUsePageSyncWhenProgramDeletedAfterCaching() throws Exception {
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-
-    initiateDistribution(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
-
-    dbWrapper.deleteProgramToFacilityMapping("VACCINES");
-
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
-
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyIndicator("RED");
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.enterData(12, 34, 45, 56);
-
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution(1);
-    assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
-    distributionPage.syncDistributionMessageDone();
-
-    verifyEpiUseDataInDatabase(10, 20, 30, 40, 50, "10/2011", epiUseData.get(PRODUCT_GROUP_CODE), epiUseData.get(FIRST_FACILITY_CODE));
-  }
 
   @Test(groups = {"distribution"})
   public void testEpiUsePageSyncWhenProductWithNoProductGroupAddedAfterCaching() throws Exception {
@@ -469,7 +310,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -551,7 +392,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -600,7 +441,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -632,7 +473,7 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
   public void initiateDistribution(String deliveryZoneNameFirst, String programFirst) throws IOException {
 
     HomePage homePage = new HomePage(testWebDriver);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();

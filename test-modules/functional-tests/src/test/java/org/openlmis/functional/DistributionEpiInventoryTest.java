@@ -107,7 +107,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     loginPage = manageFacilityPage.logout();
 
     homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
 
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
@@ -131,7 +131,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
 
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
@@ -146,7 +146,7 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
 
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
 
     FacilityListPage facilityListPage = distributionPage.clickRecordData(1);

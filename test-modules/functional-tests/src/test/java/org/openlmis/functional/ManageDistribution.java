@@ -157,7 +157,7 @@ public class ManageDistribution extends TestCaseHelper {
   public void accessDistributionPage() throws IOException, SQLException {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
-    homePage.navigatePlanDistribution();
+    homePage.navigateToDistributionWhenOnline();
   }
 
   @When("^I assign delivery zone \"([^\"]*)\" to user \"([^\"]*)\" having role \"([^\"]*)\"$")
@@ -465,7 +465,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
@@ -493,7 +493,7 @@ public class ManageDistribution extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     verifyElementsPresent(distributionPage);
 
     String defaultDistributionZoneValuesToBeVerified = NONE_ASSIGNED;
@@ -504,7 +504,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
 
     homePage.navigateHomePage();
-    homePage.navigatePlanDistribution();
+    homePage.navigateToDistributionWhenOnline();
 
     List<String> distributionZoneValuesToBeVerified = new ArrayList<>();
     distributionZoneValuesToBeVerified.add(deliveryZoneNameFirst);
@@ -596,7 +596,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.deleteDeliveryZoneToFacilityMapping(deliveryZoneNameFirst);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
@@ -630,7 +630,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.deleteProgramToFacilityMapping(programFirst);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
@@ -662,7 +662,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.updateActiveStatusOfFacility(facilityCodeSecond, "false");
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);
@@ -694,7 +694,7 @@ public class ManageDistribution extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(period + totalNumberOfPeriods);

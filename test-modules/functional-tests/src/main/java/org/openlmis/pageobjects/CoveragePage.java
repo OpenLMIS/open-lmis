@@ -14,21 +14,46 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.How;
 
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.XPATH;
-
 public class CoveragePage extends DistributionTab {
 
-  @FindBy(how = How.XPATH, using = "//div[1]/div/div/ng-include/div/ul/li[5]/a")
+  @FindBy(how = ID, using = "coverageTabLabel")
   private static WebElement coverageTab = null;
 
-  @FindBy(how = XPATH, using = "//div[@class='left-navigation ng-scope']/ul/li[5]/a/span[1][@class='status-icon']")
+  @FindBy(how = ID, using = "coverageTabIcon")
   public static WebElement coverageIndicator = null;
+
+  @FindBy(how = ID, using = "coverageHeader")
+  public static WebElement coverageHeader = null;
+
+  @FindBy(how = ID, using = "fullTab")
+  public static WebElement fullTab = null;
+
+  @FindBy(how = ID, using = "childrenTab")
+  public static WebElement childrenTab = null;
+
+  @FindBy(how = ID, using = "adultsTab")
+  public static WebElement adultsTab = null;
+
+  @FindBy(how = ID, using = "completeVaccinatedHeader")
+  public static WebElement completeVaccinatedHeader = null;
+
+  @FindBy(how = ID, using = "healthCenterHeader")
+  public static WebElement healthCenterHeader = null;
+
+  @FindBy(how = ID, using = "mobileBrigadeHeader")
+  public static WebElement mobileBrigadeHeader = null;
+
+  @FindBy(how = ID, using = "femaleHeader")
+  public static WebElement femaleHeader = null;
+
+  @FindBy(how = ID, using = "maleHeader")
+  public static WebElement maleHeader = null;
 
   @FindBy(how = ID, using = "femaleHealthCenter")
   public static WebElement femaleHealthCenterField = null;
@@ -42,6 +67,30 @@ public class CoveragePage extends DistributionTab {
   @FindBy(how = ID, using = "maleMobileBrigade")
   public static WebElement maleMobileBrigadeField = null;
 
+  @FindBy(how = ID, using = "CoverageFormApplyNRToAll")
+  public static WebElement coverageFormApplyNRToAll = null;
+
+  @FindBy(how = ID, using = "coverageFemaleHC")
+  public static WebElement femaleHealthCenterNR = null;
+
+  @FindBy(how = ID, using = "coverageFemaleMB")
+  public static WebElement femaleMobileBrigadeNR = null;
+
+  @FindBy(how = ID, using = "coverageMaleHC")
+  public static WebElement maleHealthCenterNR = null;
+
+  @FindBy(how = ID, using = "button_OK")
+  public static WebElement okButton = null;
+
+  @FindBy(how = ID, using = "coverageMaleMB")
+  public static WebElement maleMobileBrigadeNR = null;
+
+  private Map<String, WebElement> coveragePageElements = new HashMap<String, WebElement>(){{
+    put("femaleHealthCenter", femaleHealthCenterField);
+    put("femaleMobileBrigade", femaleMobileBrigadeField);
+    put("maleHealthCenter", maleHealthCenterField);
+    put("maleMobileBrigade", maleMobileBrigadeField);
+  }};
   public CoveragePage(TestWebDriver driver) {
     super(driver);
   }
@@ -64,7 +113,6 @@ public class CoveragePage extends DistributionTab {
   public void verifyData(Map<String, String> map) {
     //To change body of implemented methods use File | Settings | File Templates.
   }
-
 
   @Override
   public void navigate() {
@@ -94,11 +142,97 @@ public class CoveragePage extends DistributionTab {
   }
 
   public void enterData(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
-    navigate();
     enterFemaleHealthCenter(femaleHealthCenter);
     enterFemaleMobileBrigade(femaleMobileBrigade);
     enterMaleHealthCenter(maleHealthCenter);
     enterMaleMobileBrigade(maleMobileBrigade);
   }
 
+  public void clickApplyNRToAll(){
+    testWebDriver.waitForElementToAppear(coverageFormApplyNRToAll);
+    coverageFormApplyNRToAll.click();
+    clickOkButton();
+  }
+
+  public void applyNRToFemaleHealthCenter(){
+    testWebDriver.waitForElementToAppear(femaleHealthCenterNR);
+    femaleHealthCenterNR.click();
+  }
+
+  public void applyNRToMaleHealthCenter(){
+    testWebDriver.waitForElementToAppear(maleHealthCenterNR);
+    maleHealthCenterNR.click();
+  }
+
+  public void applyNRToFemaleMobileBrigade(){
+    testWebDriver.waitForElementToAppear(femaleMobileBrigadeNR);
+    femaleMobileBrigadeNR.click();
+  }
+
+  public void applyNRToMaleMobileBrigade(){
+    testWebDriver.waitForElementToAppear(maleMobileBrigadeNR);
+    maleMobileBrigadeNR.click();
+  }
+
+  public String getTextOfCoverageHeader(){
+    testWebDriver.waitForElementToAppear(coverageHeader);
+    return coverageHeader.getText();
+  }
+
+  public String getTextOfFullTab(){
+    testWebDriver.waitForElementToAppear(fullTab);
+    return fullTab.getText();
+  }
+
+  public String getTextOfChildrenTab(){
+    testWebDriver.waitForElementToAppear(childrenTab);
+    return childrenTab.getText();
+  }
+
+  public String getTextOfAdultsTab(){
+    testWebDriver.waitForElementToAppear(adultsTab);
+    return adultsTab.getText();
+  }
+
+  public String getTextOfCompletelyVaccinatedHeader(){
+    testWebDriver.waitForElementToAppear(completeVaccinatedHeader);
+    return completeVaccinatedHeader.getText();
+  }
+
+  public String getTextOfFemaleHeader(){
+    testWebDriver.waitForElementToAppear(femaleHeader);
+    return femaleHeader.getText();
+  }
+
+  public String getTextOfMaleHeader(){
+    testWebDriver.waitForElementToAppear(maleHeader);
+    return maleHeader.getText();
+  }
+
+  public String getTextOfHealthCenterHeader(){
+    testWebDriver.waitForElementToAppear(healthCenterHeader);
+    return healthCenterHeader.getText();
+  }
+
+  public String getTextOfMobileBrigadeHeader(){
+    testWebDriver.waitForElementToAppear(mobileBrigadeHeader);
+    return mobileBrigadeHeader.getText();
+  }
+
+  public boolean getStatusForField(String fieldName){
+    WebElement field = coveragePageElements.get(fieldName);
+    testWebDriver.waitForElementToAppear(field);
+    return field.isEnabled();
+  }
+
+  public String getValueForField(String fieldName){
+    WebElement field = coveragePageElements.get(fieldName);
+    testWebDriver.waitForElementToAppear(field);
+    return field.getAttribute("value");
+  }
+
+  private void clickOkButton(){
+    testWebDriver.waitForElementToAppear(okButton);
+    okButton.click();
+  }
 }

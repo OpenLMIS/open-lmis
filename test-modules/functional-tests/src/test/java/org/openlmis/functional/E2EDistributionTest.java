@@ -64,7 +64,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
@@ -142,11 +142,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
-    generalObservationPage.enterObservations("Some observations");
-    generalObservationPage.enterConfirmedByName("samuel");
-    generalObservationPage.enterConfirmedByTitle("Doe");
-    generalObservationPage.enterVerifiedByName("Verifier");
-    generalObservationPage.enterVerifiedByTitle("XYZ");
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
