@@ -51,7 +51,7 @@ public class EpiInventoryPage extends DistributionTab {
     testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).sendKeys(deliveredQuantity);
   }
 
-  public String getProductCode(int rowNumber) {
+  public String getProductName(int rowNumber) {
     return testWebDriver.findElement(By.id("productName" + (rowNumber - 1))).getText();
   }
 
@@ -59,7 +59,7 @@ public class EpiInventoryPage extends DistributionTab {
     return testWebDriver.findElement(By.id("idealQuantity" + (rowNumber - 1))).getText();
   }
 
-  public String getMessage() {
+  public String getNoProductsAddedMessage() {
     return noLineItems.getText();
   }
 

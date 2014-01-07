@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 public class DistributionEpiInventoryTest extends TestCaseHelper {
 
@@ -90,7 +91,9 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"})
-  public void testDisplayAllActiveProductsWithIdealQuantityOnEpiInventoryPage() throws Exception {
+  public void shouldDisplayAllActiveFullAndNonFullSupplyProductsWithIdealQuantityOnEpiInventoryPage() throws Exception {
+    dbWrapper.updateProductFullSupplyStatus("P10", false);
+
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs("Admin123", "Admin123");
 
@@ -111,14 +114,32 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     EpiInventoryPage epiInventoryPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiInventory();
 
     assertEquals(epiInventoryPage.getIsaValue(1), expectedISAValue);
-    assertEquals(epiInventoryPage.getProductCode(1),"antibiotic");
+    assertEquals(epiInventoryPage.getProductName(1), "antibiotic");
 
     assertEquals(epiInventoryPage.getIsaValue(2), "--");
-    assertEquals(epiInventoryPage.getProductCode(2),"ProductName6");
+    assertEquals(epiInventoryPage.getProductName(2), "ProductName6");
 
     assertEquals(epiInventoryPage.getIsaValue(3), "--");
-    assertEquals(epiInventoryPage.getProductCode(1),"antibiotic");
+    assertEquals(epiInventoryPage.getProductName(1), "antibiotic");
   }
+
+  @Test(groups = {"distribution"})
+  public void shouldDisplayNoProductsAddedMessageWhOnEpiInventoryPageWhenNoActiveProducts() throws Exception {
+    dbWrapper.updateActiveStatusOfProduct("P10", "false");
+    dbWrapper.updateActiveStatusOfProduct("P11", "false");
+    dbWrapper.updateActiveStatusOfProduct("Product6", "false");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(epiUseData.get(USER), epiUseData.get(PASSWORD));
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    distributionPage.initiate(epiUseData.get(FIRST_DELIVERY_ZONE_NAME), epiUseData.get(VACCINES_PROGRAM));
+
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+    EpiInventoryPage epiInventoryPage = facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE)).navigateToEpiInventory();
+
+    assertTrue(epiInventoryPage.getNoProductsAddedMessage().contains("No products added"));
+  }
+
 
   // @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenAllProductsInactiveAfterCaching() throws Exception {
