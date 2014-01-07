@@ -37,7 +37,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeIncharge";
-  public String[] csvRows;
+  public String[] csvRows = null;
 
   @Before
   @BeforeMethod(groups = "requisition")
@@ -49,7 +49,6 @@ public class DownloadOrderFile extends TestCaseHelper {
   public Object[][] getEnvData() {
     return new Object[][]{};
   }
-
 
   @And("^I configure order file:$")
   public void setupOrderFileConfiguration(DataTable userTable) throws Exception {
@@ -81,16 +80,12 @@ public class DownloadOrderFile extends TestCaseHelper {
   }
 
   @And("^I get order data in file prefix \"([^\"]*)\"$")
-  public String[] getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
-    csvRows = null;
-
-    String orderId = dbWrapper.getOrderId();
+  public void getOrderDataFromDownloadedFile(String filePrefix) throws Exception {
+    String orderId = String.valueOf(dbWrapper.getMaxRnrID());
 
     csvRows = readCSVFile(filePrefix + orderId + ".csv");
     testWebDriver.sleep(5000);
     deleteFile(filePrefix + orderId + ".csv");
-
-    return csvRows;
   }
 
   @And("^I verify order file line \"([^\"]*)\" having \"([^\"]*)\"$")
@@ -107,7 +102,7 @@ public class DownloadOrderFile extends TestCaseHelper {
 
   @And("^I verify order id in line \"([^\"]*)\"$")
   public void checkOrderFileOrderId(int lineNumber) throws Exception {
-    String orderId = dbWrapper.getOrderId();
+    String orderId = String.valueOf(dbWrapper.getMaxRnrID());
     assertTrue("Order date incorrect.", csvRows[lineNumber - 1].contains(orderId));
   }
 
@@ -189,7 +184,6 @@ public class DownloadOrderFile extends TestCaseHelper {
     convertOrderPage.clickOk();
     homePage.navigateViewOrders();
     downloadOrderFile();
-
   }
 
   @After
@@ -202,7 +196,6 @@ public class DownloadOrderFile extends TestCaseHelper {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 
   @DataProvider(name = "Data-Provider-Function")

@@ -162,7 +162,6 @@ public class CreateUpdateCHW extends JsonUtility {
     }
   }
 
-
   @Test(groups = {"webservice"})
   public void testUpdateChwFeedForEnableScenarios() throws Exception {
     HttpClient client = new HttpClient();
