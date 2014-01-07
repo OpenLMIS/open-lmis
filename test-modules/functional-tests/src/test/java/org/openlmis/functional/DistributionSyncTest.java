@@ -110,13 +110,15 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier");
-    generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.enterObservations("Some observations");
+    generalObservationPage.enterConfirmedByName("samuel");
+    generalObservationPage.enterConfirmedByTitle("Doe");
+    generalObservationPage.enterVerifiedByName("Verifier");
+    generalObservationPage.enterVerifiedByTitle("XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -145,13 +147,10 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.verifyIndicator("GREEN");
 
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some other observations");
-    generalObservationPage.setConfirmedByName("john");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier2");
-    generalObservationPage.setVerifiedByTitle("X Y Z");
+    generalObservationPage.enterData("Some other observations", "john", "Doe", "Verifier2", "X Y Z");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -270,13 +269,11 @@ public class DistributionSyncTest extends TestCaseHelper {
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier");
-    generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(23, 66, 77, 45);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(23, 66, 77, 45);
 
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
@@ -298,23 +295,16 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.checkApplyNRToAllFields(true);
 
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier");
-    generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(66, 78, 89, 9);
+    coveragePage.navigate();
+    coveragePage.enterData(66, 78, 89, 9);
     facilityListPage.selectFacility("F11");
     epiUse.navigate();
     epiUse.checkApplyNRToAllFields(true);
 
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier");
-    generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
@@ -327,16 +317,6 @@ public class DistributionSyncTest extends TestCaseHelper {
 
 
   }
-
-  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
-    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
-    coveragePage.setMaleHealthCenter(maleHealthCenter);
-    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
-  }
-
 
   @AfterMethod(groups = "distribution")
   public void tearDown() throws Exception {

@@ -94,27 +94,27 @@ public class GeneralObservationPage extends DistributionTab {
     assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), data.get(CONFIRMED_BY_TITLE));
   }
 
-  public void setObservations(String observations) {
+  public void enterObservations(String observations) {
     testWebDriver.waitForElementToAppear(observationsField);
     sendKeys(observationsField, observations);
   }
 
-  public void setConfirmedByName(String confirmedByName) {
+  public void enterConfirmedByName(String confirmedByName) {
     testWebDriver.waitForElementToAppear(confirmedByNameField);
     sendKeys(confirmedByNameField, confirmedByName);
   }
 
-  public void setConfirmedByTitle(String confirmedByTitle) {
+  public void enterConfirmedByTitle(String confirmedByTitle) {
     testWebDriver.waitForElementToAppear(confirmedByTitleField);
     sendKeys(confirmedByTitleField, confirmedByTitle);
   }
 
-  public void setVerifiedByName(String verifiedByName) {
+  public void enterVerifiedByName(String verifiedByName) {
     testWebDriver.waitForElementToAppear(verifiedByNameField);
     sendKeys(verifiedByNameField, verifiedByName);
   }
 
-  public void setVerifiedByTitle(String verifiedByTitle) {
+  public void enterVerifiedByTitle(String verifiedByTitle) {
     testWebDriver.waitForElementToAppear(verifiedByTitleField);
     sendKeys(verifiedByTitleField, verifiedByTitle);
   }
@@ -130,5 +130,14 @@ public class GeneralObservationPage extends DistributionTab {
     assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
     assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
     assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
+  }
+
+  public void enterData(String observation, String confirmName, String confirmTitle, String verifierName,
+                        String verifierTitle) {
+    enterObservations(observation);
+    enterConfirmedByName(confirmName);
+    enterConfirmedByTitle(confirmTitle);
+    enterVerifiedByName(verifierName);
+    enterVerifiedByTitle(verifierTitle);
   }
 }

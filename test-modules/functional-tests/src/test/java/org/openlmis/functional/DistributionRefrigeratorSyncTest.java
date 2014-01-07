@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.String.valueOf;
 
 public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
@@ -104,9 +103,19 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     //TODO check why it is unable to find done button for second refrigerator when Done buttons for both refrigerator have same ID
     //refrigeratorPage.clickDone();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(45, 67, 89, 90);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
+
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(45, 67, 89, 90);
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -142,9 +151,21 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.selectGasLeakProblem();
     refrigeratorPage.clickDone();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(67, 44, 22, 11);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
+
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(67, 44, 22, 11);
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -180,9 +201,21 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(77, 56, 78, 34);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
+
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(77, 56, 78, 34);
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -212,9 +245,21 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(78, 67, 34, 12);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
+
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(78, 67, 34, 12);
+
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -243,9 +288,16 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.clickDelete();
     refrigeratorPage.clickOKButton();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(78, 67, 34, 12);
+    epiUsePage.navigate();
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
+
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    coveragePage.navigate();
+    coveragePage.enterData(78, 67, 34, 12);
 
     homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(2);
@@ -258,10 +310,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
 
   @Test(groups = {"distribution"})
   public void testAddingDuplicateRefrigeratorForSameFacility() throws Exception {
-
-    HomePage homePage = new HomePage(testWebDriver);
     initiateDistributionAndVerifyStatusColor();
-
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.clickAddNew();
     refrigeratorPage.addNewRefrigerator("LG", "800L1", "GNR7878");
@@ -290,11 +339,18 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
@@ -335,9 +391,18 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
     refrigeratorPage.clickDone();
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
-    enterDataInCoverage(67, 8, 33, 54);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
+
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
+
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(67, 8, 33, 54);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
@@ -387,38 +452,10 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
   }
 
-  public void enterDataInGeneralObservationsPage(String observation, String confirmName, String confirmTitle, String verifierName,
-                                                 String verifierTitle) {
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.setObservations(observation);
-    generalObservationPage.setConfirmedByName(confirmName);
-    generalObservationPage.setConfirmedByTitle(confirmTitle);
-    generalObservationPage.setVerifiedByName(verifierName);
-    generalObservationPage.setVerifiedByTitle(verifierTitle);
-  }
-
-  public void enterDataInEpiUsePage(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
-                                    Integer loss, Integer stockAtEndOfMonth, String expirationDate, int rowNumber) {
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-
-    epiUse.verifyProductGroup("PG1-Name", 1);
-
-    epiUse.enterValueInStockAtFirstOfMonth(stockAtFirstOfMonth.toString(), rowNumber);
-    epiUse.verifyIndicator("AMBER");
-    epiUse.enterValueInReceived(receivedValue.toString(), rowNumber);
-    epiUse.enterValueInDistributed(distributedValue.toString(), rowNumber);
-    epiUse.enterValueInLoss(valueOf(loss), rowNumber);
-    epiUse.enterValueInStockAtEndOfMonth(stockAtEndOfMonth.toString(), rowNumber);
-    epiUse.enterValueInExpirationDate(expirationDate, rowNumber);
-    epiUse.verifyIndicator("GREEN");
-  }
-
   public void initiateDistributionAndVerifyStatusColor() throws IOException {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
+    loginPage.loginAs(refrigeratorTestData.get(USER), refrigeratorTestData.get(PASSWORD));
     initiateDistribution(refrigeratorTestData.get(FIRST_DELIVERY_ZONE_NAME), refrigeratorTestData.get(VACCINES_PROGRAM));
 
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
@@ -426,15 +463,6 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
     refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
-  }
-
-  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
-    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
-    coveragePage.setMaleHealthCenter(maleHealthCenter);
-    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
   }
 
   @AfterMethod(groups = "distribution")

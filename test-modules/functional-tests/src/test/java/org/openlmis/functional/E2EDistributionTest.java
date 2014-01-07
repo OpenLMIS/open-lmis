@@ -142,11 +142,11 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
     generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Verifier");
-    generalObservationPage.setVerifiedByTitle("XYZ");
+    generalObservationPage.enterObservations("Some observations");
+    generalObservationPage.enterConfirmedByName("samuel");
+    generalObservationPage.enterConfirmedByTitle("Doe");
+    generalObservationPage.enterVerifiedByName("Verifier");
+    generalObservationPage.enterVerifiedByTitle("XYZ");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();

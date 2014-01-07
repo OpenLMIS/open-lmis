@@ -210,39 +210,6 @@ public class ManageRefrigerator extends TestCaseHelper {
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
   }
 
-  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDuplicateRefrigerator(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                              String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                              String facilityCodeFirst, String facilityCodeSecond,
-                                              String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
-
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickInitiateDistribution();
-    distributionPage.clickRecordData(1);
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility("F10");
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickAddNew();
-    refrigeratorPage.addNewRefrigerator("a", "a", "a");
-    refrigeratorPage.clickAddNew();
-    refrigeratorPage.addNewRefrigerator("a", "a", "a");
-    refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Manufacturer Serial Number");
-  }
-
   public void verifyNewRefrigeratorModalWindowExist() {
     assertTrue("New Refrigerator modal window should show up", new RefrigeratorPage(testWebDriver).newRefrigeratorHeaderOnModal.isDisplayed());
   }

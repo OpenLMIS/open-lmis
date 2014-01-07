@@ -52,10 +52,10 @@ public class CoveragePage extends DistributionTab {
 
   @Override
   public void enterValues(Map<String, String> map) {
-    setFemaleHealthCenter(Integer.valueOf(map.get("femaleHealthCenter")));
-    setFemaleMobileBrigade(Integer.valueOf(map.get("femaleMobileBrigade")));
-    setMaleHealthCenter(Integer.valueOf(map.get("maleHealthCenter")));
-    setMaleMobileBrigade(Integer.valueOf(map.get("maleMobileBrigade")));
+    enterFemaleHealthCenter(Integer.valueOf(map.get("femaleHealthCenter")));
+    enterFemaleMobileBrigade(Integer.valueOf(map.get("femaleMobileBrigade")));
+    enterMaleHealthCenter(Integer.valueOf(map.get("maleHealthCenter")));
+    enterMaleMobileBrigade(Integer.valueOf(map.get("maleMobileBrigade")));
   }
 
   @Override
@@ -70,24 +70,33 @@ public class CoveragePage extends DistributionTab {
   }
 
 
-  public void setFemaleHealthCenter(Integer femaleHealthCenter) {
+  public void enterFemaleHealthCenter(Integer femaleHealthCenter) {
     testWebDriver.waitForElementToAppear(femaleHealthCenterField);
     sendKeys(femaleHealthCenterField, femaleHealthCenter.toString());
   }
 
 
-  public void setFemaleMobileBrigade(Integer femaleMobileBrigade) {
+  public void enterFemaleMobileBrigade(Integer femaleMobileBrigade) {
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeField);
     sendKeys(femaleMobileBrigadeField, femaleMobileBrigade.toString());
   }
 
-  public void setMaleHealthCenter(Integer maleHealthCenter) {
+  public void enterMaleHealthCenter(Integer maleHealthCenter) {
     testWebDriver.waitForElementToAppear(maleHealthCenterField);
     sendKeys(maleHealthCenterField, maleHealthCenter.toString());
   }
 
-  public void setMaleMobileBrigade(Integer maleMobileBrigade) {
+  public void enterMaleMobileBrigade(Integer maleMobileBrigade) {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeField);
     sendKeys(maleMobileBrigadeField, maleMobileBrigade.toString());
   }
+
+  public void enterData(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
+    navigate();
+    enterFemaleHealthCenter(femaleHealthCenter);
+    enterFemaleMobileBrigade(femaleMobileBrigade);
+    enterMaleHealthCenter(maleHealthCenter);
+    enterMaleMobileBrigade(maleMobileBrigade);
+  }
+
 }

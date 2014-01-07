@@ -19,6 +19,7 @@ import org.openqa.selenium.support.How;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
+import static java.lang.String.valueOf;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.NAME;
 import static org.openqa.selenium.support.How.XPATH;
@@ -99,6 +100,16 @@ public class EPIUsePage extends DistributionTab {
   public void navigate() {
     testWebDriver.waitForElementToAppear(epiUseTab);
     epiUseTab.click();
+  }
+
+  public void enterData(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
+                        Integer loss, Integer stockAtEndOfMonth, String expirationDate, int rowNumber) {
+    enterValueInStockAtFirstOfMonth(stockAtFirstOfMonth.toString(), rowNumber);
+    enterValueInReceived(receivedValue.toString(), rowNumber);
+    enterValueInDistributed(distributedValue.toString(), rowNumber);
+    enterValueInLoss(valueOf(loss), rowNumber);
+    enterValueInStockAtEndOfMonth(stockAtEndOfMonth.toString(), rowNumber);
+    enterValueInExpirationDate(expirationDate, rowNumber);
   }
 
   public void verifyAllFieldsDisabled() {

@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
-import static java.lang.String.valueOf;
 
 public class DistributionEpiUseSyncTest extends TestCaseHelper {
 
@@ -82,11 +81,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
     distributionPage.syncDistribution(1);
@@ -110,8 +118,11 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.navigate();
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");
+    epiUse.enterValueInLoss("0",1);
+    epiUse.verifyIndicator("AMBER");
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     refrigeratorPage.navigateToRefrigeratorTab();
@@ -149,7 +160,8 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.checkUncheckStockAtEndOfMonthNotRecorded(1);
     epiUse.checkUncheckExpirationDateNotRecorded(1);
 
-    enterDataInEpiUsePage(20, 30, 40, 50, 60, "11/2012", 1);
+    epiUse.enterData(20, 30, 40, 50, 60, "11/2012", 1);
+    epiUse.verifyIndicator("GREEN");
 
     refrigeratorPage.navigateToRefrigeratorTab();
     epiUse.navigate();
@@ -178,9 +190,13 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     epiUse.verifyExpirationDateStatus(true, 1);
     epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -205,11 +221,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -238,11 +263,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -267,11 +301,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -298,11 +341,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -327,11 +379,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -356,11 +417,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
+    epiUse.navigate();
+    epiUse.verifyIndicator("RED");
+    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUse.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUse.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -384,11 +454,20 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -410,18 +489,22 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyProductGroup("PG1-Name", 1);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
 
-    epiUse.verifyIndicator("RED");
+    epiUsePage.verifyIndicator("RED");
 
-    epiUse.enterValueInStockAtFirstOfMonth("10", 1);
-    epiUse.verifyIndicator("AMBER");
+    epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
+    epiUsePage.verifyIndicator("AMBER");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
@@ -441,27 +524,32 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
 
-    epiUse.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
 
-    epiUse.verifyIndicator("RED");
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
-    epiUse.checkApplyNRToAllFields(true);
-    epiUse.verifyIndicator("GREEN");
-    epiUse.verifyStockAtFirstOfMonthStatus(false, 1);
-    epiUse.verifyReceivedStatus(false, 1);
-    epiUse.verifyDistributedStatus(false, 1);
-    epiUse.verifyLossStatus(false, 1);
-    epiUse.verifyStockAtEndOfMonthStatus(false, 1);
-    epiUse.verifyExpirationDateStatus(false, 1);
+    epiUsePage.checkApplyNRToAllFields(true);
+    epiUsePage.verifyIndicator("GREEN");
+    epiUsePage.verifyStockAtFirstOfMonthStatus(false, 1);
+    epiUsePage.verifyReceivedStatus(false, 1);
+    epiUsePage.verifyDistributedStatus(false, 1);
+    epiUsePage.verifyLossStatus(false, 1);
+    epiUsePage.verifyStockAtEndOfMonthStatus(false, 1);
+    epiUsePage.verifyExpirationDateStatus(false, 1);
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -489,20 +577,28 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
     facilityListPage.selectFacility(epiUseData.get(FIRST_FACILITY_CODE));
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.checkApplyNRToStockAtFirstOfMonth0();
-    epiUse.checkApplyNRToReceived0();
-    epiUse.checkApplyNRToDistributed0();
-    epiUse.checkApplyNRToLoss0();
-    epiUse.enterValueInStockAtEndOfMonth("4", 1);
-    epiUse.enterValueInExpirationDate("12/2031", 1);
+    EPIUsePage epiUsePage = new EPIUsePage(testWebDriver);
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("RED");
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.checkApplyNRToStockAtFirstOfMonth0();
+    epiUsePage.verifyIndicator("AMBER");
+    epiUsePage.checkApplyNRToReceived0();
+    epiUsePage.checkApplyNRToDistributed0();
+    epiUsePage.checkApplyNRToLoss0();
+    epiUsePage.enterValueInStockAtEndOfMonth("4", 1);
+    epiUsePage.enterValueInExpirationDate("12/2031", 1);
 
-    enterDataInEpiUsePage(10, 20, 30, 40, 50, "10/2011", 2);
+    epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
-    enterDataInGeneralObservationsPage("some observations", "samuel", "Doe", "Verifier", "XYZ");
+    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
+    generalObservationPage.navigate();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
-    enterDataInCoverage(12, 34, 45, 56);
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    coveragePage.navigate();
+    coveragePage.enterData(12, 34, 45, 56);
 
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
@@ -541,43 +637,6 @@ public class DistributionEpiUseSyncTest extends TestCaseHelper {
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
     distributionPage.clickRecordData(1);
-  }
-
-  public void enterDataInGeneralObservationsPage(String observation, String confirmName, String confirmTitle, String verifierName,
-                                                 String verifierTitle) {
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.setObservations(observation);
-    generalObservationPage.setConfirmedByName(confirmName);
-    generalObservationPage.setConfirmedByTitle(confirmTitle);
-    generalObservationPage.setVerifiedByName(verifierName);
-    generalObservationPage.setVerifiedByTitle(verifierTitle);
-  }
-
-  public void enterDataInCoverage(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
-    coveragePage.setFemaleHealthCenter(femaleHealthCenter);
-    coveragePage.setFemaleMobileBrigade(femaleMobileBrigade);
-    coveragePage.setMaleHealthCenter(maleHealthCenter);
-    coveragePage.setMaleMobileBrigade(maleMobileBrigade);
-  }
-
-  public void enterDataInEpiUsePage(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
-                                    Integer loss, Integer stockAtEndOfMonth, String expirationDate, int rowNumber) {
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-
-    epiUse.verifyProductGroup("PG1-Name", 1);
-
-    epiUse.enterValueInStockAtFirstOfMonth(stockAtFirstOfMonth.toString(), rowNumber);
-    epiUse.verifyIndicator("AMBER");
-    epiUse.enterValueInReceived(receivedValue.toString(), rowNumber);
-    epiUse.enterValueInDistributed(distributedValue.toString(), rowNumber);
-    epiUse.enterValueInLoss(valueOf(loss), rowNumber);
-    epiUse.enterValueInStockAtEndOfMonth(stockAtEndOfMonth.toString(), rowNumber);
-    epiUse.enterValueInExpirationDate(expirationDate, rowNumber);
-    epiUse.verifyIndicator("GREEN");
   }
 
   @AfterMethod(groups = "distribution")
