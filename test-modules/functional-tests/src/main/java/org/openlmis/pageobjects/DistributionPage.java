@@ -93,7 +93,7 @@ public class DistributionPage extends Page {
   }
 
   public void selectValueFromProgram(String valueToBeSelected) {
-    testWebDriver.waitForElementToAppear(selectProgramSelectBox);
+    testWebDriver.waitForAjax();
     testWebDriver.selectByVisibleText(selectProgramSelectBox, valueToBeSelected);
   }
 

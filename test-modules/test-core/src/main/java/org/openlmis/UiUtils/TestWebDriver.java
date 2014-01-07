@@ -115,6 +115,15 @@ public class TestWebDriver {
     });
   }
 
+  public void waitForAjax() {
+    final WebElement loader = findElement(By.id("loader"));
+    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver d) {
+        return (!loader.isDisplayed());
+      }
+    });
+  }
+
   public void waitForElementToBeEnabled(final WebElement element) {
     (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver d) {
