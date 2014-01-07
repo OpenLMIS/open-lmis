@@ -67,11 +67,4 @@ public class EpiInventoryPage extends DistributionTab {
     applyNRToAllButton.click();
     okButton.click();
   }
-
-  public void fillEpiInventoryWithOnlyDeliveredQuantity(String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
-    this.applyNRToAll();
-    this.fillDeliveredQuantity(1, deliveredQuantity1);
-    this.fillDeliveredQuantity(2, deliveredQuantity2);
-    this.fillDeliveredQuantity(3, deliveredQuantity3);
-  }
 }

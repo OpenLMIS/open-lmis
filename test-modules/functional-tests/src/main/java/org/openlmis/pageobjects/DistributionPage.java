@@ -261,7 +261,7 @@ public class DistributionPage extends Page {
     assertEquals("Delete distribution", deleteConfirmDialogHeader.getText());
   }
 
-  public void confirmDeleteDistribution() {
+  public void clickOk() {
     testWebDriver.waitForElementToAppear(okButton);
     okButton.click();
   }

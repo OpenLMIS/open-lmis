@@ -48,56 +48,21 @@ public class DistributionSyncTest extends TestCaseHelper {
                                        String programFirst,
                                        String programSecond,
                                        String schedule) throws Exception {
-
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10",
-      "F11",
-      true,
-      programFirst,
-      userSIC,
-      "200",
-      rightsList,
-      programSecond,
-      "District1",
-      "Ngorongoro",
-      "Ngorongoro");
-    setupDataForDeliveryZone(true,
-      deliveryZoneCodeFirst,
-      deliveryZoneCodeSecond,
-      deliveryZoneNameFirst,
-      deliveryZoneNameSecond,
-      facilityCodeFirst,
-      facilityCodeSecond,
-      programFirst,
-      programSecond,
-      schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.insertProductGroup("PG1");
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
-    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    setup(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     DistributionPage distributionPage = homePage.navigatePlanDistribution();
 
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickInitiateDistribution();
+    distributionPage.initiate(deliveryZoneNameFirst, programFirst);
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
 
-    distributionPage.clickRecordData(1);
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility("F10");
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
+    EPIUsePage epiUse = refrigeratorPage.navigateToEpiUse();
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");
-
     epiUse.enterValueInStockAtFirstOfMonth("10", 1);
     epiUse.verifyIndicator("AMBER");
     epiUse.enterValueInReceived("20", 1);
@@ -107,33 +72,28 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.enterValueInExpirationDate("10/2011", 1);
     epiUse.verifyIndicator("GREEN");
 
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
+    GeneralObservationPage generalObservationPage = epiUse.navigateToGeneralObservations();
     generalObservationPage.enterObservations("Some observations");
     generalObservationPage.enterConfirmedByName("samuel");
     generalObservationPage.enterConfirmedByTitle("Doe");
     generalObservationPage.enterVerifiedByName("Verifier");
     generalObservationPage.enterVerifiedByTitle("XYZ");
 
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
     coveragePage.navigate();
     coveragePage.enterData(12, 34, 45, 56);
 
-    homePage.navigateHomePage();
-    homePage.navigateOfflineDistribution();
-    distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
+    EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
-    distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F11");
+    facilityListPage = distributionPage.clickRecordData(1);
+    epiUse = facilityListPage.selectFacility("F11").navigateToEpiUse();
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
 
-    epiUse.navigate();
     epiUse.verifyProductGroup("PG1-Name", 1);
     epiUse.verifyIndicator("RED");
 
@@ -146,25 +106,24 @@ public class DistributionSyncTest extends TestCaseHelper {
     epiUse.enterValueInExpirationDate("10/2011", 1);
     epiUse.verifyIndicator("GREEN");
 
-    generalObservationPage.navigate();
+    generalObservationPage = epiUse.navigateToGeneralObservations();
     generalObservationPage.enterData("Some other observations", "john", "Doe", "Verifier2", "X Y Z");
 
-    coveragePage.navigate();
+    coveragePage = generalObservationPage.navigateToCoverage();
     coveragePage.enterData(12, 34, 45, 56);
 
-    homePage.navigateHomePage();
-    homePage.navigateOfflineDistribution();
-    distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F11");
+    epiInventoryPage =coveragePage.navigateToEpiInventory();
+    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
     homePage.navigateHomePage();
     homePage.navigatePlanDistribution();
-
     distributionPage.syncDistribution(1);
+
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     assertTrue(distributionPage.getSyncMessage().contains("F11-Central Hospital"));
+
     distributionPage.syncDistributionMessageDone();
 
     Map<String, String> facilityVisitF10 = dbWrapper.getFacilityVisitDetails("F10");
@@ -182,36 +141,68 @@ public class DistributionSyncTest extends TestCaseHelper {
     assertEquals(facilityVisitF11.get("verifiedByTitle"), "X Y Z");
 
     distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
+    refrigeratorPage = facilityListPage.selectFacility("F10");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
     facilityListPage.verifyFacilityIndicatorColor("individual", "BLUE");
-    generalObservationPage.navigate();
+
+    generalObservationPage = refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.verifyAllFieldsDisabled();
 
-    epiUse.navigate();
+    epiUse = generalObservationPage.navigateToEpiUse();
     epiUse.verifyAllFieldsDisabled();
 
     homePage.navigatePlanDistribution();
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility("F11");
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    generalObservationPage.navigate();
-    generalObservationPage.verifyAllFieldsDisabled();
-
-    epiUse.navigate();
-    epiUse.verifyAllFieldsDisabled();
 
     homePage.navigatePlanDistribution();
     distributionPage.deleteDistribution();
-    distributionPage.confirmDeleteDistribution();
-
+    distributionPage.clickOk();
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
   public void shouldCheckAlreadySyncedFacilities(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst,
                                                  String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond,
                                                  String schedule) throws Exception {
+    setup(userSIC, deliveryZoneCodeFirst, deliveryZoneCodeSecond, deliveryZoneNameFirst, deliveryZoneNameSecond, facilityCodeFirst, facilityCodeSecond, programFirst, programSecond, schedule);
 
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+
+    distributionPage.initiate(deliveryZoneNameFirst, programFirst);
+
+    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
+
+    fillFacilityData(facilityListPage, "F10");
+
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
+    distributionPage.syncDistribution(1);
+    distributionPage.syncDistributionMessageDone();
+
+    distributionPage.deleteDistribution();
+    distributionPage.clickOk();
+
+    distributionPage.initiate(deliveryZoneNameFirst, programFirst);
+    distributionPage.clickOk();
+
+    facilityListPage = distributionPage.clickRecordData(1);
+    fillFacilityData(facilityListPage, "F10");
+    fillFacilityData(facilityListPage, "F11");
+
+    homePage.navigateHomePage();
+    homePage.navigatePlanDistribution();
+    distributionPage.syncDistribution(1);
+
+    assertEquals(distributionPage.getFacilityAlreadySyncMessage(), "Already synced facilities : \n" + "F10-Village Dispensary");
+    assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" + "F11-Central Hospital");
+
+    distributionPage.syncDistributionMessageDone();
+  }
+
+  private void setup(String userSIC, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond, String deliveryZoneNameFirst, String deliveryZoneNameSecond, String facilityCodeFirst, String facilityCodeSecond, String programFirst, String programSecond, String schedule) throws Exception {
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
@@ -224,80 +215,26 @@ public class DistributionSyncTest extends TestCaseHelper {
     dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+  }
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-
-    distributionPage.initiate(deliveryZoneNameFirst, programFirst);
-
-    FacilityListPage facilityListPage = distributionPage.clickRecordData(1);
-    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility("F10");
+  private GeneralObservationPage fillFacilityData(FacilityListPage facilityListPage, String facilityCode) {
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCode);
     EPIUsePage epiUse = refrigeratorPage.navigateToEpiUse();
-
     epiUse.checkApplyNRToAllFields(true);
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
+    GeneralObservationPage generalObservationPage = epiUse.navigateToGeneralObservations();
     generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
-
     EpiInventoryPage epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    epiInventoryPage.fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
-
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
+    fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
+    CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
     coveragePage.enterData(23, 66, 77, 45);
+    return generalObservationPage;
+  }
 
-    homePage.navigateHomePage();
-    homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution(1);
-    distributionPage.syncDistributionMessageDone();
-
-    distributionPage.deleteDistribution();
-    distributionPage.confirmDeleteDistribution();
-
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickInitiateDistribution();
-    distributionPage.confirmDeleteDistribution();
-
-    distributionPage.clickRecordData(1);
-    facilityListPage.selectFacility("F10");
-
-    epiUse.navigate();
-    epiUse.checkApplyNRToAllFields(true);
-
-    generalObservationPage.navigate();
-    generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    coveragePage.navigate();
-    coveragePage.enterData(66, 78, 89, 9);
-    epiInventoryPage = generalObservationPage.navigateToEpiInventory();
-    epiInventoryPage.fillEpiInventoryWithOnlyDeliveredQuantity("2", "4", "6");
-
-    coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.setFemaleHealthCenter(66);
-    coveragePage.setFemaleMobileBrigade(78);
-    coveragePage.setMaleHealthCenter(89);
-    coveragePage.setMaleMobileBrigade(9);
-
-    facilityListPage.selectFacility("F11");
-    epiUse.navigate();
-    epiUse.checkApplyNRToAllFields(true);
-
-    generalObservationPage.navigate();
-    generalObservationPage.enterData("Some observations", "samuel", "Doe", "Verifier", "XYZ");
-
-    homePage.navigateHomePage();
-    homePage.navigatePlanDistribution();
-
-    distributionPage.syncDistribution(1);
-    assertEquals(distributionPage.getFacilityAlreadySyncMessage(), "Already synced facilities : \n" + "F10-Village Dispensary");
-    assertEquals(distributionPage.getSyncMessage(), "Synced facilities : \n" + "F11-Central Hospital");
-    distributionPage.syncDistributionMessageDone();
-
-
+  public void fillEpiInventoryWithOnlyDeliveredQuantity(EpiInventoryPage epiInventoryPage, String deliveredQuantity1, String deliveredQuantity2, String deliveredQuantity3) {
+    epiInventoryPage.applyNRToAll();
+    epiInventoryPage.fillDeliveredQuantity(1, deliveredQuantity1);
+    epiInventoryPage.fillDeliveredQuantity(2, deliveredQuantity2);
+    epiInventoryPage.fillDeliveredQuantity(3, deliveredQuantity3);
   }
 
   @AfterMethod(groups = "distribution")

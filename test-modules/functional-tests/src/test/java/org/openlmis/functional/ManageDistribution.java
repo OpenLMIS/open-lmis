@@ -413,7 +413,7 @@ public class ManageDistribution extends TestCaseHelper {
   @And("I confirm delete distribution$")
   public void confirmDeleteDistributionConfirmation() throws IOException {
     DistributionPage distributionPage = new DistributionPage(testWebDriver);
-    distributionPage.confirmDeleteDistribution();
+    distributionPage.clickOk();
   }
 
   @Then("I see no distribution in cache$")
