@@ -17,6 +17,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
@@ -56,7 +57,7 @@ abstract public class DistributionTab extends Page {
 
   abstract public void verifyIndicator(String color);
 
-  abstract public void enterValues(Map<String, String> map);
+  abstract public void enterValues(List<Map<String, String>> dataMapList);
 
   abstract public void verifyData(Map<String, String> map);
 

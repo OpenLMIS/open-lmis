@@ -16,13 +16,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static java.lang.String.valueOf;
-import static org.openqa.selenium.support.How.ID;
-import static org.openqa.selenium.support.How.NAME;
-import static org.openqa.selenium.support.How.XPATH;
+import static org.openqa.selenium.support.How.*;
 
 public class EPIUsePage extends DistributionTab {
 
@@ -87,13 +86,14 @@ public class EPIUsePage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(Map<String, String> data) {
-    enterValueInDistributed(data.get("distributed"), 1);
-    enterValueInExpirationDate(data.get("expirationDate"), 1);
-    enterValueInLoss(data.get("loss"), 1);
-    enterValueInReceived(data.get("received"), 1);
-    enterValueInStockAtFirstOfMonth(data.get("firstOfMonth"), 1);
-    enterValueInStockAtEndOfMonth(data.get("endOfMonth"), 1);
+  public void enterValues(List<Map<String, String>> data) {
+    Map<String, String> map = data.get(0);
+    enterValueInDistributed(map.get("distributed"), 1);
+    enterValueInExpirationDate(map.get("expirationDate"), 1);
+    enterValueInLoss(map.get("loss"), 1);
+    enterValueInReceived(map.get("received"), 1);
+    enterValueInStockAtFirstOfMonth(map.get("firstOfMonth"), 1);
+    enterValueInStockAtEndOfMonth(map.get("endOfMonth"), 1);
   }
 
   @Override

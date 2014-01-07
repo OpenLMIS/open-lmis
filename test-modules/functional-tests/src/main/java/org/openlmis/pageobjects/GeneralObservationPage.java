@@ -17,6 +17,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -72,16 +73,17 @@ public class GeneralObservationPage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(Map<String, String> data) {
-    sendKeys(fieldMap.get(OBSERVATIONS), data.get(OBSERVATIONS));
+  public void enterValues(List<Map<String, String>> data) {
+    Map<String, String> map = data.get(0);
+    sendKeys(fieldMap.get(OBSERVATIONS), map.get(OBSERVATIONS));
     fieldMap.get(OBSERVATIONS).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(VERIFIED_BY_NAME), data.get(VERIFIED_BY_NAME));
+    sendKeys(fieldMap.get(VERIFIED_BY_NAME), map.get(VERIFIED_BY_NAME));
     fieldMap.get(VERIFIED_BY_NAME).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(VERIFIED_BY_TITLE), data.get(VERIFIED_BY_TITLE));
+    sendKeys(fieldMap.get(VERIFIED_BY_TITLE), map.get(VERIFIED_BY_TITLE));
     fieldMap.get(VERIFIED_BY_TITLE).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(CONFIRMED_BY_NAME), data.get(CONFIRMED_BY_NAME));
+    sendKeys(fieldMap.get(CONFIRMED_BY_NAME), map.get(CONFIRMED_BY_NAME));
     fieldMap.get(CONFIRMED_BY_NAME).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(CONFIRMED_BY_TITLE), data.get(CONFIRMED_BY_TITLE));
+    sendKeys(fieldMap.get(CONFIRMED_BY_TITLE), map.get(CONFIRMED_BY_TITLE));
     fieldMap.get(CONFIRMED_BY_TITLE).sendKeys(Keys.TAB);
   }
 

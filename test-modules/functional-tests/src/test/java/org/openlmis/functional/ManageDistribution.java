@@ -62,6 +62,7 @@ public class ManageDistribution extends TestCaseHelper {
       put("epi use", new EPIUsePage(testWebDriver));
       put("general observation", new GeneralObservationPage(testWebDriver));
       put("coverage", new CoveragePage(testWebDriver));
+      put("epi inventory", new EpiInventoryPage(testWebDriver));
     }};
   }
 
@@ -99,8 +100,7 @@ public class ManageDistribution extends TestCaseHelper {
 
   @When("^I Enter \"([^\"]*)\" values:$")
   public void enterValuesInForm(String tabName, DataTable tableData) {
-    Map<String, String> data = tableData.asMaps().get(0);
-
+    List<Map<String, String>> data = tableData.asMaps();
     tabMap.get(tabName).enterValues(data);
   }
 
@@ -748,6 +748,16 @@ public class ManageDistribution extends TestCaseHelper {
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
   }
 
+  @And("^Navigate to Coverage tab$")
+  public void navigateToCoverageTab() throws Throwable {
+    new CoveragePage(testWebDriver).navigateToCoverage();
+  }
+
+  @And("^I navigate to epi inventory tab$")
+  public void navigateToEpiInventoryTab() {
+    new EpiInventoryPage(testWebDriver).navigateToEpiInventory();
+  }
+
   @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
@@ -768,12 +778,6 @@ public class ManageDistribution extends TestCaseHelper {
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
 
-  }
-
-  @And("^Navigate to Coverage tab$")
-  public void navigateToCoverageTab() throws Throwable {
-    CoveragePage coveragePage = new CoveragePage(testWebDriver);
-    coveragePage.navigate();
   }
 }
 

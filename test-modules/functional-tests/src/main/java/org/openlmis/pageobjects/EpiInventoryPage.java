@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.openqa.selenium.support.How.ID;
@@ -40,7 +41,13 @@ public class EpiInventoryPage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(Map<String, String> map) {
+  public void enterValues(List<Map<String, String>> dataMapList) {
+    for (int i = 0; i < dataMapList.size(); ++i) {
+      Map<String, String> epiInventoryData = dataMapList.get(i);
+      fillDeliveredQuantity(i + 1, epiInventoryData.get("deliveredQuantity"));
+      fillExistingQuantity(i + 1, epiInventoryData.get("existingQuantity"));
+      fillSpoiledQuantity(i + 1, epiInventoryData.get("spoiledQuantity"));
+    }
   }
 
   @Override

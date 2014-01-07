@@ -18,6 +18,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -187,7 +188,7 @@ public class RefrigeratorPage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(Map<String, String> map) {
+  public void enterValues(List<Map<String, String>> dataMapList) {
     //To change body of implemented methods use File | Settings | File Templates.
   }
 

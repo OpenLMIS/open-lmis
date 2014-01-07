@@ -521,7 +521,7 @@ Feature: Smoke Tests
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
 
-#  @smokeDistribution
+  @smokeDistribution
   Scenario: User should verify facility and sync status
     Given I have the following data for distribution:
       | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
@@ -575,6 +575,11 @@ Feature: Smoke Tests
     And I Enter "coverage" values:
       | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
       | female   | 123                | 22                  | 23               | 242               |
+    And I navigate to epi inventory tab
+    And I Enter "epi inventory" values:
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 20               | 100               | 5               |
+      | 10               | 50                | 3               |
     Then I see "Overall" facility icon as "GREEN"
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page

@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.openqa.selenium.support.How.ID;
@@ -51,11 +52,12 @@ public class CoveragePage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(Map<String, String> map) {
-    enterFemaleHealthCenter(Integer.valueOf(map.get("femaleHealthCenter")));
-    enterFemaleMobileBrigade(Integer.valueOf(map.get("femaleMobileBrigade")));
-    enterMaleHealthCenter(Integer.valueOf(map.get("maleHealthCenter")));
-    enterMaleMobileBrigade(Integer.valueOf(map.get("maleMobileBrigade")));
+  public void enterValues(List<Map<String, String>> dataMapList) {
+    Map<String, String> data = dataMapList.get(0);
+    enterFemaleHealthCenter(Integer.valueOf(data.get("femaleHealthCenter")));
+    enterFemaleMobileBrigade(Integer.valueOf(data.get("femaleMobileBrigade")));
+    enterMaleHealthCenter(Integer.valueOf(data.get("maleHealthCenter")));
+    enterMaleMobileBrigade(Integer.valueOf(data.get("maleMobileBrigade")));
   }
 
   @Override
