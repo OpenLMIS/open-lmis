@@ -15,7 +15,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
-import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -49,7 +49,7 @@ public class RestRequisitionCalculator {
       searchCriteria.setFacilityId(reportingFacility.getId());
 
       if (!requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+        (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
         throw new DataException("error.rnr.previous.not.filled");
       }
     }
@@ -93,9 +93,9 @@ public class RestRequisitionCalculator {
     if (rnrLineItem.getQuantityReceived() != null)
       return;
 
-    List<PODLineItem> nPodLineItems = podService.getNPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+    List<OrderPODLineItem> nOrderPodLineItems = podService.getNPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
 
-    Integer quantityReceived = nPodLineItems.size() != 0 ? nPodLineItems.get(0).getQuantityReceived() : 0;
+    Integer quantityReceived = nOrderPodLineItems.size() != 0 ? nOrderPodLineItems.get(0).getQuantityReceived() : 0;
 
     rnrLineItem.setQuantityReceived(quantityReceived);
   }

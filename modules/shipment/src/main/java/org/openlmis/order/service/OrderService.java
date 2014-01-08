@@ -49,10 +49,13 @@ public class OrderService {
 
   @Autowired
   private OrderConfigurationRepository orderConfigurationRepository;
+
   @Autowired
   private OrderRepository orderRepository;
+
   @Autowired
   private RequisitionService requisitionService;
+
   @Autowired
   private SupplyLineService supplyLineService;
 
@@ -99,20 +102,10 @@ public class OrderService {
     return fillOrders(orders);
   }
 
-  private List<Order> fillOrders(List<Order> orders) {
-    Rnr rnr;
-    for (Order order : orders) {
-      rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
-      removeUnorderedProducts(rnr);
-      order.setRnr(rnr);
-    }
-    return orders;
-  }
-
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     if (order == null) {
-      return order;
+      return null;
     }
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
     removeUnorderedProducts(requisition);
@@ -125,16 +118,6 @@ public class OrderService {
     requisition.setFullSupplyLineItems(getLineItemsForOrder(fullSupplyLineItems));
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     requisition.setNonFullSupplyLineItems(getLineItemsForOrder(nonFullSupplyLineItems));
-  }
-
-  private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
-    List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
-    for (RnrLineItem rnrLineItem : rnrLineItems) {
-      if (rnrLineItem.getPacksToShip() != null && rnrLineItem.getPacksToShip() > 0) {
-        lineItemsForOrder.add(rnrLineItem);
-      }
-    }
-    return lineItemsForOrder;
   }
 
   public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
@@ -198,5 +181,25 @@ public class OrderService {
     sort(orders);
 
     return orders;
+  }
+
+  private List<Order> fillOrders(List<Order> orders) {
+    Rnr rnr;
+    for (Order order : orders) {
+      rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
+      removeUnorderedProducts(rnr);
+      order.setRnr(rnr);
+    }
+    return orders;
+  }
+
+  private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
+    List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
+    for (RnrLineItem rnrLineItem : rnrLineItems) {
+      if (rnrLineItem.getPacksToShip() != null && rnrLineItem.getPacksToShip() > 0) {
+        lineItemsForOrder.add(rnrLineItem);
+      }
+    }
+    return lineItemsForOrder;
   }
 }

@@ -12,7 +12,7 @@ package org.openlmis.functional;
 
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -58,12 +58,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "RELEASED", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",
@@ -78,7 +78,7 @@ public class PODTest extends JsonUtility {
     assertEquals(65, dbWrapper.getPODLineItemQuantityReceived(Long.parseLong(id), "P10"));
 
     responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",
@@ -100,12 +100,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "RELEASED", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P11");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(650);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P11");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(650);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",
@@ -130,12 +130,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",
@@ -157,12 +157,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",
@@ -181,12 +181,12 @@ public class PODTest extends JsonUtility {
 
     client.createContext();
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, 19999999),
         "POST",
         "commTrack",
@@ -209,12 +209,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P1000000");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P1000000");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",
@@ -238,12 +238,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "READY_TO_PACK", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack100",
@@ -267,12 +267,12 @@ public class PODTest extends JsonUtility {
     createOrder(userName, "TRANSFER_FAILED", program);
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(-65);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(-65);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",

@@ -13,7 +13,7 @@ package org.openlmis.functional;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.lang.String.format;
 
 public class GetRequisitionDetailsAPI extends JsonUtility {
@@ -30,7 +29,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/rest-api/requisitions/";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -41,7 +40,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -208,7 +207,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkRequisitionStatus("RELEASED",responseEntity);
+    checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "READY_TO_PACK", responseEntity);
 
   }
@@ -232,7 +231,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
-    checkRequisitionStatus("RELEASED",responseEntity);
+    checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "TRANSFER_FAILED", responseEntity);
   }
 
@@ -259,7 +258,7 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     dbWrapper.updateRestrictLogin("commTrack", true);
 
     responseEntity = waitUntilOrderStatusUpdatedOrTimeOut(id, "\"orderStatus\":\"RELEASED\"");
-    checkRequisitionStatus("RELEASED",responseEntity);
+    checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "RELEASED", responseEntity);
   }
 
@@ -283,23 +282,23 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     convertToOrder("commTrack", "Admin123");
     dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkRequisitionStatus("RELEASED",responseEntity);
+    checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "READY_TO_PACK", responseEntity);
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
 
-    client.SendJSON(getJsonStringFor(PODFromJson),
+    client.SendJSON(getJsonStringFor(OrderPODFromJson),
       format(POD_URL, id),
       "POST",
       "commTrack",
       "Admin123");
 
     responseEntity = client.SendJSON("", URL + id, "GET", "commTrack", "Admin123");
-    checkRequisitionStatus("RELEASED",responseEntity);
+    checkRequisitionStatus("RELEASED", responseEntity);
     checkOrderStatus(65, "RECEIVED", responseEntity);
   }
 
@@ -325,21 +324,21 @@ public class GetRequisitionDetailsAPI extends JsonUtility {
     assertEquals(200, responseEntity.getStatus());
   }
 
-  private void checkOrderDetailsNotPresent(ResponseEntity responseEntity){
+  private void checkOrderDetailsNotPresent(ResponseEntity responseEntity) {
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityRequested\":3"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
     assertFalse("Response entity : " + responseEntity.getResponse(),
-            responseEntity.getResponse().contains("\"quantityRequested\":3"));
+      responseEntity.getResponse().contains("\"quantityRequested\":3"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"reasonForRequestedQuantity\":\"reason\""));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"calculatedOrderQuantity\":57"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"quantityApproved\":57"));
     assertTrue("Response entity : " + responseEntity.getResponse(),
-            responseEntity.getResponse().contains("\"skipped\":false"));
+      responseEntity.getResponse().contains("\"skipped\":false"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"remarks\":\"1\""));
-    assertFalse("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"orderStatus\":"));
-    assertFalse("Response entity : " + responseEntity.getResponse(),responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"orderStatus\":"));
+    assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"supplyingFacilityCode\""));
 
   }
 

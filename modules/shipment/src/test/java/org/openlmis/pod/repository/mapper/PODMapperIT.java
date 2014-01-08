@@ -17,8 +17,8 @@ import org.openlmis.context.ApplicationTestContext;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
-import org.openlmis.pod.domain.POD;
-import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,72 +50,72 @@ public class PODMapperIT extends ApplicationTestContext {
 
   @Test
   public void shouldInsertPOD() {
-    POD pod = new POD();
-    pod.setOrderId(order.getId());
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setOrderId(order.getId());
     Rnr rnr = order.getRnr();
-    pod.fillPOD(rnr);
-    podMapper.insertPOD(pod);
+    orderPod.fillPOD(rnr);
+    podMapper.insertPOD(orderPod);
 
-    POD savedPod = podMapper.getPODByOrderId(pod.getOrderId());
+    OrderPOD savedOrderPod = podMapper.getPODByOrderId(orderPod.getOrderId());
 
-    assertThat(savedPod.getId(), is(notNullValue()));
-    assertThat(savedPod.getFacilityId(), is(rnr.getFacility().getId()));
-    assertThat(savedPod.getProgramId(), is(rnr.getProgram().getId()));
-    assertThat(savedPod.getPeriodId(), is(rnr.getPeriod().getId()));
+    assertThat(savedOrderPod.getId(), is(notNullValue()));
+    assertThat(savedOrderPod.getFacilityId(), is(rnr.getFacility().getId()));
+    assertThat(savedOrderPod.getProgramId(), is(rnr.getProgram().getId()));
+    assertThat(savedOrderPod.getPeriodId(), is(rnr.getPeriod().getId()));
   }
 
   @Test
   public void shouldInsertPODLineItem() {
-    POD pod = new POD();
-    pod.setOrderId(order.getId());
-    podMapper.insertPOD(pod);
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setOrderId(order.getId());
+    podMapper.insertPOD(orderPod);
 
-    PODLineItem podLineItem = new PODLineItem(pod.getId(), productCode, 100);
-    podMapper.insertPODLineItem(podLineItem);
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, 100);
+    podMapper.insertPODLineItem(orderPodLineItem);
 
-    List<PODLineItem> podLineItems = podMapper.getPODLineItemsByPODId(pod.getId());
-    assertThat(podLineItems.size(), is(1));
-    assertThat(podLineItems.get(0).getProductCode(), is(productCode));
+    List<OrderPODLineItem> orderPodLineItems = podMapper.getPODLineItemsByPODId(orderPod.getId());
+    assertThat(orderPodLineItems.size(), is(1));
+    assertThat(orderPodLineItems.get(0).getProductCode(), is(productCode));
   }
 
 
   @Test
   public void shouldGetPodLineItemsByOrderId() throws SQLException {
-    POD pod = new POD();
-    pod.setOrderId(order.getId());
-    podMapper.insertPOD(pod);
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setOrderId(order.getId());
+    podMapper.insertPOD(orderPod);
     queryExecutor.executeUpdate("INSERT INTO pod_line_items (podId, productCode, quantityReceived, createdBy, modifiedBy) values(?, ?, ?, ?, ?)",
-      pod.getId(), productCode, 100, 1, 1);
+      orderPod.getId(), productCode, 100, 1, 1);
 
-    List<PODLineItem> podLineItems = podMapper.getPODLineItemsByPODId(pod.getId());
-    assertThat(podLineItems.size(), is(1));
-    assertThat(podLineItems.get(0).getProductCode(), is(productCode));
+    List<OrderPODLineItem> orderPodLineItems = podMapper.getPODLineItemsByPODId(orderPod.getId());
+    assertThat(orderPodLineItems.size(), is(1));
+    assertThat(orderPodLineItems.get(0).getProductCode(), is(productCode));
   }
 
   @Test
   public void shouldGetPODByOrderId() throws SQLException {
-    POD pod = new POD();
-    pod.setOrderId(order.getId());
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setOrderId(order.getId());
     queryExecutor.executeUpdate("INSERT INTO pod(orderId) values(?)", order.getId());
 
-    POD savedPOD = podMapper.getPODByOrderId(order.getId());
-    assertThat(savedPOD, is(notNullValue()));
-    assertThat(savedPOD.getOrderId(), is(order.getId()));
+    OrderPOD savedOrderPOD = podMapper.getPODByOrderId(order.getId());
+    assertThat(savedOrderPOD, is(notNullValue()));
+    assertThat(savedOrderPOD.getOrderId(), is(order.getId()));
   }
 
 
   @Test
   public void shouldGetNPreviousPODLineItemsAfterGivenTrackingDateForGivenProgramPeriodAndProduct() {
-    POD pod = new POD();
-    pod.setOrderId(order.getId());
-    pod.fillPOD(order.getRnr());
+    OrderPOD orderPod = new OrderPOD();
+    orderPod.setOrderId(order.getId());
+    orderPod.fillPOD(order.getRnr());
     Rnr requisition = order.getRnr();
-    podMapper.insertPOD(pod);
-    PODLineItem podLineItem = new PODLineItem(pod.getId(), productCode, 100);
-    podMapper.insertPODLineItem(podLineItem);
+    podMapper.insertPOD(orderPod);
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, 100);
+    podMapper.insertPODLineItem(orderPodLineItem);
 
-    List<PODLineItem> nPodLineItems = podMapper.getNPodLineItems(productCode, requisition, 1, DateTime.now().minusDays(5).toDate());
+    List<OrderPODLineItem> nOrderPodLineItems = podMapper.getNPodLineItems(productCode, requisition, 1, DateTime.now().minusDays(5).toDate());
 
-    assertThat(nPodLineItems, hasItems(podLineItem));
+    assertThat(nOrderPodLineItems, hasItems(orderPodLineItem));
   }
 }

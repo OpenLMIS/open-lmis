@@ -2,7 +2,7 @@ package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestPODService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ public class RestPODController extends BaseController {
   private RestPODService restPODService;
 
   @RequestMapping(value = "/rest-api/orders/{orderId}/pod", method = POST, headers = ACCEPT_JSON)
-  public ResponseEntity<RestResponse> savePOD(@RequestBody POD pod, @PathVariable Long orderId, Principal principal) {
+  public ResponseEntity<RestResponse> savePOD(@RequestBody OrderPOD orderPod, @PathVariable Long orderId, Principal principal) {
     try {
-      pod.setOrderId(orderId);
-      restPODService.updatePOD(pod, loggedInUserId(principal));
+      orderPod.setOrderId(orderId);
+      restPODService.updatePOD(orderPod, loggedInUserId(principal));
       return RestResponse.success("message.success.pod.updated");
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);

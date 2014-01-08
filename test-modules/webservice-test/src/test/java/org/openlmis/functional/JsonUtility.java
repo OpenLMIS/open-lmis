@@ -17,7 +17,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.domain.Report;
 
@@ -150,12 +150,12 @@ public class JsonUtility extends TestCaseHelper {
     dbWrapper.updatePacksToShip("1");
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(quantityReceived);
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(quantityReceived);
 
     ResponseEntity responseEntity =
-      client.SendJSON(getJsonStringFor(PODFromJson),
+      client.SendJSON(getJsonStringFor(OrderPODFromJson),
         format(POD_URL, id),
         "POST",
         "commTrack",

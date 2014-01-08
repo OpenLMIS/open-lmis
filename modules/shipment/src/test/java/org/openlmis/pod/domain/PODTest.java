@@ -39,64 +39,64 @@ public class PODTest {
 
   @Test
   public void shouldThrowErrorIfOrderIdIsBlank() {
-    POD pod = new POD(1l);
-    pod.setOrderId(null);
-    List<PODLineItem> podLineItems = asList(new PODLineItem(1l, "P100", 100));
-    pod.setPodLineItems(podLineItems);
+    OrderPOD orderPod = new OrderPOD(1l);
+    orderPod.setOrderId(null);
+    List<OrderPODLineItem> orderPodLineItems = asList(new OrderPODLineItem(1l, "P100", 100));
+    orderPod.setOrderPodLineItems(orderPodLineItems);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
 
-    pod.validate();
+    orderPod.validate();
   }
 
   @Test
   public void shouldFillPODWithFacilityProgramAndPeriodFromRequisition() throws Exception {
     Rnr rnr = new Rnr(new Facility(2L), new Program(3L), new ProcessingPeriod(4L));
-    POD pod = new POD();
+    OrderPOD orderPod = new OrderPOD();
 
-    pod.fillPOD(rnr);
+    orderPod.fillPOD(rnr);
 
-    assertThat(pod.getFacilityId(), is(2L));
-    assertThat(pod.getProgramId(), is(3L));
-    assertThat(pod.getPeriodId(), is(4L));
+    assertThat(orderPod.getFacilityId(), is(2L));
+    assertThat(orderPod.getProgramId(), is(3L));
+    assertThat(orderPod.getPeriodId(), is(4L));
   }
 
   @Test
   public void shouldThrowErrorIfLineItemsNotPresent() {
-    POD pod = new POD(1l);
-    pod.setOrderId(2l);
-    pod.setPodLineItems(null);
+    OrderPOD orderPod = new OrderPOD(1l);
+    orderPod.setOrderId(2l);
+    orderPod.setOrderPodLineItems(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
 
-    pod.validate();
+    orderPod.validate();
   }
 
   @Test
   public void shouldThrowErrorIfLineItemsSizeIsZero() {
-    POD pod = new POD(1l);
-    pod.setOrderId(2l);
-    List<PODLineItem> podLineItems = new ArrayList<>();
-    pod.setPodLineItems(podLineItems);
+    OrderPOD orderPod = new OrderPOD(1l);
+    orderPod.setOrderId(2l);
+    List<OrderPODLineItem> orderPodLineItems = new ArrayList<>();
+    orderPod.setOrderPodLineItems(orderPodLineItems);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
 
-    pod.validate();
+    orderPod.validate();
   }
 
   @Test
   public void shouldValidateLineItemsForPOD() {
-    POD pod = new POD(1l);
-    pod.setOrderId(2l);
-    PODLineItem podLineItem = mock(PODLineItem.class);
-    List<PODLineItem> podLineItems = asList(podLineItem);
-    pod.setPodLineItems(podLineItems);
+    OrderPOD orderPod = new OrderPOD(1l);
+    orderPod.setOrderId(2l);
+    OrderPODLineItem orderPodLineItem = mock(OrderPODLineItem.class);
+    List<OrderPODLineItem> orderPodLineItems = asList(orderPodLineItem);
+    orderPod.setOrderPodLineItems(orderPodLineItems);
 
-    pod.validate();
+    orderPod.validate();
 
-    verify(podLineItem).validate();
+    verify(orderPodLineItem).validate();
   }
 }

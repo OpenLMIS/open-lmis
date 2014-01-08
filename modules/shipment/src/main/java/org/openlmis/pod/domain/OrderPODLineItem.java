@@ -23,7 +23,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class PODLineItem extends BaseModel {
+public class OrderPODLineItem extends BaseModel {
 
   private Long podId;
   private String productCode;

@@ -24,23 +24,23 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class POD extends BaseModel {
+public class OrderPOD extends BaseModel {
 
   private Long orderId;
   private Long facilityId;
   private Long programId;
   private Long periodId;
-  private List<PODLineItem> podLineItems;
+  private List<OrderPODLineItem> orderPodLineItems;
 
-  public POD(Long id) {
+  public OrderPOD(Long id) {
     this.id = id;
   }
 
   public void validate() {
-    if (orderId == null || podLineItems == null || podLineItems.size() == 0) {
+    if (orderId == null || orderPodLineItems == null || orderPodLineItems.size() == 0) {
       throw new DataException("error.mandatory.fields.missing");
     }
-    for (PODLineItem lineItem : podLineItems) {
+    for (OrderPODLineItem lineItem : orderPodLineItems) {
       lineItem.validate();
       lineItem.setCreatedBy(createdBy);
       lineItem.setModifiedBy(modifiedBy);

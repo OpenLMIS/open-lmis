@@ -14,38 +14,38 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
 
-public class PODLineItemTest {
+public class OrderPODLineItemTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   @Test
-  public void shouldThrowExceptionIfProductCodeIsEmpty(){
-    PODLineItem podLineItem = new PODLineItem(1l, null, 100);
+  public void shouldThrowExceptionIfProductCodeIsEmpty() {
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1l, null, 100);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
 
-    podLineItem.validate();
+    orderPodLineItem.validate();
   }
 
   @Test
-  public void shouldThrowExceptionIfQuantityReceivedIsEmpty(){
-    PODLineItem podLineItem = new PODLineItem(1l, "P100", null);
+  public void shouldThrowExceptionIfQuantityReceivedIsEmpty() {
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1l, "P100", null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
 
-    podLineItem.validate();
+    orderPodLineItem.validate();
   }
 
   @Test
-  public void shouldThrowExceptionIfQuantityReceivedIsNegative(){
-    PODLineItem podLineItem = new PODLineItem(1l, "P100", -100);
+  public void shouldThrowExceptionIfQuantityReceivedIsNegative() {
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem(1l, "P100", -100);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.invalid.received.quantity");
 
-    podLineItem.validate();
+    orderPodLineItem.validate();
   }
 }

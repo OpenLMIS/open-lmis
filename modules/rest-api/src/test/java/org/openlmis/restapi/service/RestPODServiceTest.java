@@ -21,7 +21,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.service.PODService;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -48,49 +48,49 @@ public class RestPODServiceTest {
 
   @Test
   public void shouldUpdatePOD() {
-    POD pod = new POD(3L);
-    pod.setOrderId(4L);
+    OrderPOD orderPod = new OrderPOD(3L);
+    orderPod.setOrderId(4L);
 
-    POD spyPod = spy(pod);
-    doNothing().when(spyPod).validate();
+    OrderPOD spyOrderPod = spy(orderPod);
+    doNothing().when(spyOrderPod).validate();
     when(orderService.getOrder(4L)).thenReturn(new Order());
     when(podService.getPODByOrderId(4L)).thenReturn(null);
 
-    restPODService.updatePOD(spyPod, 1L);
+    restPODService.updatePOD(spyOrderPod, 1L);
 
     verify(orderService).getOrder(4L);
     verify(podService).getPODByOrderId(4L);
-    verify(podService).updatePOD(pod);
+    verify(podService).updatePOD(orderPod);
   }
 
   @Test
   public void shouldThrowErrorIfInvalidOrder() throws Exception {
-    POD pod = new POD(3L);
-    pod.setOrderId(4L);
+    OrderPOD orderPod = new OrderPOD(3L);
+    orderPod.setOrderId(4L);
 
-    POD spyPod = spy(pod);
-    doNothing().when(spyPod).validate();
+    OrderPOD spyOrderPod = spy(orderPod);
+    doNothing().when(spyOrderPod).validate();
     when(orderService.getOrder(4L)).thenReturn(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.invalid.order");
 
-    restPODService.updatePOD(spyPod, 1L);
+    restPODService.updatePOD(spyOrderPod, 1L);
   }
 
   @Test
   public void shouldThrowErrorIfPODAlreadyConfirmed() throws Exception {
-    POD pod = new POD(3L);
-    pod.setOrderId(4L);
+    OrderPOD orderPod = new OrderPOD(3L);
+    orderPod.setOrderId(4L);
 
-    POD spyPod = spy(pod);
-    doNothing().when(spyPod).validate();
+    OrderPOD spyOrderPod = spy(orderPod);
+    doNothing().when(spyOrderPod).validate();
     when(orderService.getOrder(4L)).thenReturn(new Order());
-    when(podService.getPODByOrderId(4L)).thenReturn(new POD());
+    when(podService.getPODByOrderId(4L)).thenReturn(new OrderPOD());
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.delivery.already.confirmed");
 
-    restPODService.updatePOD(spyPod, 1L);
+    restPODService.updatePOD(spyOrderPod, 1L);
   }
 }

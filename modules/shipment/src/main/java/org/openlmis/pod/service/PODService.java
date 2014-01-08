@@ -18,8 +18,8 @@ import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.service.OrderService;
-import org.openlmis.pod.domain.POD;
-import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.repository.PODRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.service.RequisitionService;
@@ -52,36 +52,36 @@ public class PODService {
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Transactional
-  public void updatePOD(POD pod) {
-    if (!fulfillmentPermissionService.hasPermission(pod.getCreatedBy(), getWarehouseForOrder(pod.getOrderId()), MANAGE_POD)) {
+  public void updatePOD(OrderPOD orderPod) {
+    if (!fulfillmentPermissionService.hasPermission(orderPod.getCreatedBy(), getWarehouseForOrder(orderPod.getOrderId()), MANAGE_POD)) {
       throw new DataException("error.permission.denied");
     }
-    insert(pod);
-    if (pod.getPodLineItems() == null) return;
-    List<String> invalidProductCodes = getInvalidProductCodes(pod.getPodLineItems());
+    insert(orderPod);
+    if (orderPod.getOrderPodLineItems() == null) return;
+    List<String> invalidProductCodes = getInvalidProductCodes(orderPod.getOrderPodLineItems());
     if (invalidProductCodes.size() > 0) {
       throw new DataException("error.invalid.product.code", invalidProductCodes.toString());
     }
-    for (PODLineItem podLineItem : pod.getPodLineItems()) {
-      podLineItem.setPodId(pod.getId());
-      podRepository.insertPODLineItem(podLineItem);
+    for (OrderPODLineItem orderPodLineItem : orderPod.getOrderPodLineItems()) {
+      orderPodLineItem.setPodId(orderPod.getId());
+      podRepository.insertPODLineItem(orderPodLineItem);
     }
-    Order order = new Order(pod.getOrderId());
+    Order order = new Order(orderPod.getOrderId());
     order.setStatus(OrderStatus.RECEIVED);
     orderService.updateOrderStatus(order);
   }
 
-  private void insert(POD pod) {
-    Rnr requisition = requisitionService.getLWById(pod.getOrderId());
-    pod.fillPOD(requisition);
-    podRepository.insertPOD(pod);
+  private void insert(OrderPOD orderPod) {
+    Rnr requisition = requisitionService.getLWById(orderPod.getOrderId());
+    orderPod.fillPOD(requisition);
+    podRepository.insertPOD(orderPod);
   }
 
-  public POD getPODByOrderId(Long orderId) {
+  public OrderPOD getPODByOrderId(Long orderId) {
     return podRepository.getPODByOrderId(orderId);
   }
 
-  public List<PODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
     return podRepository.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
@@ -90,11 +90,11 @@ public class PODService {
     return order.getSupplyLine().getSupplyingFacility().getId();
   }
 
-  private List<String> getInvalidProductCodes(List<PODLineItem> podLineItems) {
+  private List<String> getInvalidProductCodes(List<OrderPODLineItem> orderPodLineItems) {
     List<String> invalidProductCodes = new ArrayList<>();
-    for (PODLineItem podLineItem : podLineItems) {
-      if (productService.getByCode(podLineItem.getProductCode()) == null) {
-        invalidProductCodes.add(podLineItem.getProductCode());
+    for (OrderPODLineItem orderPodLineItem : orderPodLineItems) {
+      if (productService.getByCode(orderPodLineItem.getProductCode()) == null) {
+        invalidProductCodes.add(orderPodLineItem.getProductCode());
       }
     }
     return invalidProductCodes;

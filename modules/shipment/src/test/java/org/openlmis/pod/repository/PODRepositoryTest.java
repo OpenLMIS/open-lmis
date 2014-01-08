@@ -16,8 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.IntegrationTests;
-import org.openlmis.pod.domain.POD;
-import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.repository.mapper.PODMapper;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -38,25 +38,25 @@ public class PODRepositoryTest {
   @Test
   public void shouldInsertPODLineItem() {
 
-    PODLineItem podLineItem = new PODLineItem();
-    podRepository.insertPODLineItem(podLineItem);
-    verify(podMapper).insertPODLineItem(podLineItem);
+    OrderPODLineItem orderPodLineItem = new OrderPODLineItem();
+    podRepository.insertPODLineItem(orderPodLineItem);
+    verify(podMapper).insertPODLineItem(orderPodLineItem);
   }
 
   @Test
   public void shouldInsertPOD() {
-    POD pod = new POD();
-    podRepository.insertPOD(pod);
-    verify(podMapper).insertPOD(pod);
+    OrderPOD orderPod = new OrderPOD();
+    podRepository.insertPOD(orderPod);
+    verify(podMapper).insertPOD(orderPod);
   }
 
   @Test
   public void shouldGetPODByOrderId() {
     Long orderId = 1l;
-    POD expectedPOD = new POD();
-    when(podMapper.getPODByOrderId(orderId)).thenReturn(expectedPOD);
-    POD pod = podRepository.getPODByOrderId(orderId);
+    OrderPOD expectedOrderPOD = new OrderPOD();
+    when(podMapper.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
+    OrderPOD orderPod = podRepository.getPODByOrderId(orderId);
     verify(podMapper).getPODByOrderId(orderId);
-    assertThat(pod, is(expectedPOD));
+    assertThat(orderPod, is(expectedOrderPOD));
   }
 }
