@@ -167,7 +167,6 @@ public interface FacilityMapper {
     "INNER JOIN programs_supported PS ON PS.facilityId = F.id",
     "INNER JOIN delivery_zones DZ ON DZ.id = DZM.deliveryZoneId",
     "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
-    "LEFT OUTER JOIN refrigerators RF ON RF.facilityId = F.id",
     "WHERE DZPS.programId = #{programId} AND F.active = true",
     "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
   @Results(value = {
