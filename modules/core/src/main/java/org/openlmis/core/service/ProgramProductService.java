@@ -114,4 +114,8 @@ public class ProgramProductService {
   public List<ProgramProduct> getNonFullSupplyProductsForProgram(Program program) {
     return programProductRepository.getNonFullSupplyProductsForProgram(program);
   }
+
+  public List<ProgramProduct> getActiveByProgram(Long programId) {
+    return programProductRepository.getActiveByProgram(programId);
+  }
 }
