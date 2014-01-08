@@ -118,10 +118,10 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
     assertEquals(epiInventoryPage.getIsaValue(1), expectedISAValue);
     assertEquals(epiInventoryPage.getProductName(1), "antibiotic");
 
-    assertEquals(epiInventoryPage.getIsaValue(2), "57");
+    assertEquals(epiInventoryPage.getIsaValue(2), "--");
     assertEquals(epiInventoryPage.getProductName(2), "ProductName6");
 
-    assertEquals(epiInventoryPage.getIsaValue(3), "--");
+    assertEquals(epiInventoryPage.getIsaValue(3), "57");
     assertEquals(epiInventoryPage.getProductName(3), "antibiotic");
 
     assertFalse(epiInventoryPage.getDataEpiInventory().contains("ProductName5"));

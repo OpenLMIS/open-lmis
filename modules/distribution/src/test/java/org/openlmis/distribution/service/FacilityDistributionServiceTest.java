@@ -24,7 +24,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -94,31 +93,21 @@ public class FacilityDistributionServiceTest {
   public void shouldGetFacilityDistributionDataForAFacilityAndDistribution() throws Exception {
     Facility facility = new Facility(2L);
 
-    ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
-
-    FacilityProgramProduct facilityProgramProduct1 = mock(FacilityProgramProduct.class);
-    FacilityProgramProduct facilityProgramProduct2 = mock(FacilityProgramProduct.class);
-
-    when(facilityProgramProduct1.getActiveProductGroup()).thenReturn(new ProductGroup("PG1", "PG1"));
-    when(facilityProgramProduct2.getActiveProductGroup()).thenReturn(new ProductGroup("PG2", "PG2"));
-
     Refrigerator refrigerator = new Refrigerator("LG", "S. No.", "Model", 2L, true);
     List<Refrigerator> refrigerators = asList(refrigerator);
-
-    programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
-    facility.setSupportedPrograms(asList(programSupported));
+    RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
 
     Distribution distribution = new Distribution();
     distribution.setId(1L);
+    distribution.setPeriod(new ProcessingPeriod());
+
+    whenNew(FacilityDistribution.class).withArguments(facility, distribution, asList(refrigeratorReading)).thenReturn(mock(FacilityDistribution.class));
 
     FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
 
-    EpiUse epiUse = distributionData.getEpiUse();
-
-    assertThat(epiUse.getDistributionId(), is(distribution.getId()));
-    assertThat(epiUse.getFacilityId(), is(facility.getId()));
-    assertThat(epiUse.getLineItems().size(), is(2));
-    verify(epiUseService).save(epiUse);
+    verify(epiUseService).save(distributionData.getEpiUse());
+    verify(epiInventoryService).save(distributionData.getEpiInventory());
+    verifyNew(FacilityDistribution.class).withArguments(facility, distribution, asList(refrigeratorReading));
   }
 
   @Test

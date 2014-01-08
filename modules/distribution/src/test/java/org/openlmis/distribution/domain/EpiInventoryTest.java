@@ -79,34 +79,4 @@ public class EpiInventoryTest {
 
     assertThat(epiInventory.getLineItems().size(), is(2));
   }
-
-  @Test
-  public void shouldIgnoreProductIfGloballyInactiveOrProgramInactive() throws Exception {
-    Facility facility = new Facility(2L);
-    facility.setCatchmentPopulation(333L);
-    ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
-
-    FacilityProgramProduct facilityProgramProduct1 = spy(new FacilityProgramProduct());
-    facilityProgramProduct1.setProduct(mock(Product.class));
-    FacilityProgramProduct facilityProgramProduct2 = spy(new FacilityProgramProduct());
-    facilityProgramProduct2.setProduct(mock(Product.class));
-
-    programSupported.setProgramProducts(asList(facilityProgramProduct1, facilityProgramProduct2));
-    facility.setSupportedPrograms(asList(programSupported));
-
-    when(facilityProgramProduct1.isActive()).thenReturn(true);
-    when(facilityProgramProduct1.getProduct().getActive()).thenReturn(false);
-
-    when(facilityProgramProduct2.isActive()).thenReturn(false);
-    when(facilityProgramProduct2.getProduct().getActive()).thenReturn(true);
-
-    whenNew(EpiInventoryLineItem.class).withAnyArguments().thenReturn(mock(EpiInventoryLineItem.class));
-
-    Distribution distribution = new Distribution();
-    distribution.setId(1L);
-
-    EpiInventory epiInventory = new EpiInventory(facility, distribution);
-
-    assertThat(epiInventory.getLineItems().size(), is(0));
-  }
 }
