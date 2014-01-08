@@ -9,15 +9,15 @@
   -->
 
 <suite name="Openlmis admin Test" verbose="10" allow-return-values="true">
-    <test name="Openlmis admin test">
-        <groups>
-            <run>
-                <include name="admin"/>
-            </run>
-        </groups>
-      <packages>
-        <package name="org.openlmis.functional"/>
-      </packages>
-    </test>
+  <test name="Openlmis admin test">
+    <groups>
+      <run>
+        <include name="admin"/>
+      </run>
+    </groups>
+    <packages>
+      <package name="org.openlmis.functional"/>
+    </packages>
+  </test>
 </suite>
 
