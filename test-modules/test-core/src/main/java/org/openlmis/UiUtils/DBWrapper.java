@@ -1316,8 +1316,8 @@ public class DBWrapper {
   }
 
   public ResultSet getRefrigeratorsData(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
-    ResultSet resultSet = query("SELECT * FROM refrigerators WHERE serialNumber = " + refrigeratorSerialNumber
-      + " AND facilityId = " + getAttributeFromTable("facilities", "id", "code", facilityCode));
+    ResultSet resultSet = query("SELECT * FROM refrigerators WHERE serialNumber = '" + refrigeratorSerialNumber
+      + "' AND facilityId = " + getAttributeFromTable("facilities", "id", "code", facilityCode));
     resultSet.next();
     return resultSet;
   }

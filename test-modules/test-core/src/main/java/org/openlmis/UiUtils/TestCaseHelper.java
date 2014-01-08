@@ -499,6 +499,17 @@ public class TestCaseHelper {
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+  public void verifyGeneralObservationsDataInDatabase(String facilityCode, String observation, String confirmedByName, String confirmedByTitle,
+                                                      String verifiedByName, String verifiedByTitle) throws SQLException {
+    Map<String, String> generalObservations = dbWrapper.getFacilityVisitDetails(facilityCode);
+
+    assertEquals(observation, generalObservations.get("observations"));
+    assertEquals(confirmedByName, generalObservations.get("confirmedByName"));
+    assertEquals(confirmedByTitle, generalObservations.get("confirmedByTitle"));
+    assertEquals(verifiedByName, generalObservations.get("verifiedByName"));
+    assertEquals(verifiedByTitle, generalObservations.get("verifiedByTitle"));
+  }
+
   public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
                                          Integer loss, Integer stockAtEndOfMonth, String expirationDate, String productGroupCode,
                                          String facilityCode) throws SQLException {

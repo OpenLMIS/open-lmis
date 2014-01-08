@@ -34,7 +34,6 @@ public class EpiInventoryPage extends DistributionTab {
     testWebDriver.setImplicitWait(10);
   }
 
-
   @Override
   public void verifyIndicator(String color) {
     verifyOverallIndicator(epiInventoryStatusIcon, color);
