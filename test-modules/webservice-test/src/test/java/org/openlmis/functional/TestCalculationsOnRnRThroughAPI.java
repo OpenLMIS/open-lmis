@@ -312,7 +312,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
   }
 
-
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs2() throws Exception {
     Long id;
@@ -354,7 +353,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
   }
 
-
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsForRequisition2WhenNumberOfMonthsIs3() throws Exception {
     Long id;
@@ -375,7 +373,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals("16", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "newPatientCount", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
-
   }
 
   @Test(groups = {"webservice"})
@@ -399,13 +396,10 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals("1", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "newPatientCount", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
-
   }
-
 
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldsWhenMultipleProducts() throws Exception {
-
     HttpClient client = new HttpClient();
     client.createContext();
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
@@ -430,7 +424,7 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals(201, responseEntity.getStatus());
     assertTrue(responseEntity.getResponse().contains("{\"requisitionId\":"));
 
-    Long id = Long.valueOf(dbWrapper.getMaxRnrID());
+    Long id = (long) dbWrapper.getMaxRnrID();
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
@@ -445,7 +439,6 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P11"));
   }
 
-
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldWhenStockInHandIsCalculated() throws Exception {
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "stockInHand");
@@ -459,37 +452,29 @@ public class TestCalculationsOnRnRThroughAPI extends JsonUtility {
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
   }
 
-
   @Test(groups = {"webservice"})
   public void testCalculationForAllFieldWhenBeginningBalanceIsHidden() throws Exception {
-    Long id;
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "true", "stockInHand");
     dbWrapper.updateConfigureTemplate("HIV", "source", "C", "true", "quantityDispensed");
     dbWrapper.updateConfigureTemplate("HIV", "source", "U", "false", "beginningBalance");
-    submitRnRThroughApi("V10", "HIV", "P10", null, 10, null, 20, null, null);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 5, null, 10, null, null);
-    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
-    assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
-    assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
-    assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"));
-    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "newPatientCount", "P10"));
-    assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
-    dbWrapper.updatePeriodIdInRequisitions(id);
-    id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, 10, null, null);
-    assertEquals("5", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
+    dbWrapper.deleteRnrData();
+    dbWrapper.deletePeriod("Period1");
+    dbWrapper.deletePeriod("Period2");
+    dbWrapper.insertRequisitions(1, "HIV", false, "2013-01-16", "2013-01-29", "V10");
+
+    Long id = submitRnRThroughApi("V10", "HIV", "P10", null, 4, null, 10, null, null);
+    assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "beginningBalance", "P10"));
     assertEquals("4", dbWrapper.getRequisitionLineItemFieldValue(id, "stockInHand", "P10"));
     assertEquals("10", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityReceived", "P10"));
-    assertEquals("11", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"));
+    assertEquals("16", dbWrapper.getRequisitionLineItemFieldValue(id, "quantityDispensed", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "newPatientCount", "P10"));
     assertEquals("0", dbWrapper.getRequisitionLineItemFieldValue(id, "stockOutDays", "P10"));
-
   }
 
-  public long calculateDaysDifference(String createdDateInString) throws ParseException {
+  public Long calculateDaysDifference(String createdDateInString) throws ParseException {
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     Date formattedCreatedDate = formatter.parse(createdDateInString);
     long timeDifference = new Date().getTime() - formattedCreatedDate.getTime();
-    long daysDifference = timeDifference / (24 * 3600 * 1000);
-    return (daysDifference);
+    return (timeDifference / (24 * 3600 * 1000));
   }
 }

@@ -200,7 +200,7 @@ public class DBWrapper {
 
   public void insertRequisitions(int numberOfRequisitions,
                                  String program,
-                                 boolean withSupplyLine) throws SQLException, IOException {
+                                 boolean withSupplyLine, String periodStartDate, String periodEndDate, String facilityCode) throws SQLException, IOException {
     int numberOfRequisitionsAlreadyPresent = 0;
     boolean flag = true;
     ResultSet rs = query("select count(*) from requisitions");
@@ -209,10 +209,10 @@ public class DBWrapper {
     }
 
     for (int i = numberOfRequisitionsAlreadyPresent + 1; i <= numberOfRequisitions + numberOfRequisitionsAlreadyPresent; i++) {
-      insertProcessingPeriod("PeriodName" + i, "PeriodDesc" + i, "2012-12-01", "2015-12-01", 1, "M");
+      insertProcessingPeriod("PeriodName" + i, "PeriodDesc" + i, periodStartDate, periodEndDate, 1, "M");
       update("insert into requisitions (facilityId, programId, periodId, status, emergency, " +
         "fullSupplyItemsSubmittedCost, nonFullSupplyItemsSubmittedCost, supervisoryNodeId) " +
-        "values ((Select id from facilities where code='F10'),(Select id from programs where code='" + program + "')," +
+        "values ((Select id from facilities where code='" + facilityCode + "'),(Select id from programs where code='" + program + "')," +
         "(Select id from processing_periods where name='PeriodName" + i + "'), 'APPROVED', 'false', 50.0000, 0.0000, " +
         "(select id from supervisory_nodes where code='N1'))");
 
@@ -361,10 +361,7 @@ public class DBWrapper {
     update("delete from distributions");
     update("delete from refrigerators");
     update("delete from users where userName not like('Admin%')");
-    update("delete from requisition_line_item_losses_adjustments");
-    update("delete from requisition_line_items");
-    update("delete from regimen_line_items");
-    update("delete from requisitions");
+    deleteRnrData();
 
     update("delete from program_product_isa");
     update("delete from facility_approved_products");
@@ -398,6 +395,13 @@ public class DBWrapper {
     update("delete from atomfeed.event_records");
     update("delete from regimens");
     update("delete from program_regimen_columns");
+  }
+
+  public void deleteRnrData() throws SQLException {
+    update("delete from requisition_line_item_losses_adjustments");
+    update("delete from requisition_line_items");
+    update("delete from regimen_line_items");
+    update("delete from requisitions");
   }
 
   public void insertRole(String role, String description) throws SQLException, IOException {
@@ -919,10 +923,7 @@ public class DBWrapper {
   }
 
   public void insertPastPeriodRequisitionAndLineItems(String facilityCode, String program, String periodName, String product) throws IOException, SQLException {
-    update("DELETE FROM requisition_line_item_losses_adjustments;");
-    update("DELETE FROM requisition_line_items;");
-    update("DELETE FROM requisitions;");
-
+    deleteRnrData();
     update("INSERT INTO requisitions " +
       "(facilityId, programId, periodId, status) VALUES " +
       "((SELECT id FROM facilities WHERE code = '" + facilityCode + "'), (SELECT ID from programs where code='" + program + "'), (select id from processing_periods where name='" + periodName + "'), 'RELEASED');");
@@ -1245,17 +1246,6 @@ public class DBWrapper {
 
   public void updateCreatedDateInPODLineItems(String newDate, Long rnrId) throws SQLException {
     update("update pod SET createdDate= '" + newDate + "' WHERE orderId=" + rnrId + ";");
-  }
-
-  public void updatePeriodIdInRequisitions(Long rnrId) throws SQLException {
-    Integer reqId = 0;
-    ResultSet rs = query("select " + "periodId" + " from requisitions where id= " + rnrId + ";");
-
-    if (rs.next()) {
-      reqId = Integer.parseInt(rs.getString(1));
-    }
-    reqId = reqId - 1;
-    update("update requisitions SET periodId= '" + reqId + "' WHERE id=" + rnrId + ";");
   }
 
   public void updateProductsByField(String field, String fieldValue, String productCode) throws SQLException {

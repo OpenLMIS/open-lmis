@@ -52,12 +52,12 @@ public class JsonUtility extends TestCaseHelper {
   }
 
   public static void submitRequisition(String userName, String program) throws Exception {
-    dbWrapper.insertRequisitions(1, program, true);
+    dbWrapper.insertRequisitions(1, program, true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
   }
 
   public static void createOrder(String userName, String status, String program) throws Exception {
-    dbWrapper.insertRequisitions(1, program, true);
+    dbWrapper.insertRequisitions(1, program, true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userName, program);
     dbWrapper.updateRequisitionStatus("APPROVED", userName, program);
     dbWrapper.insertApprovedQuantity(1);
