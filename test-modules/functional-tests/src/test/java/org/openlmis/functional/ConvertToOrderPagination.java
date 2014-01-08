@@ -121,7 +121,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   private void clickPageNumberLink(int pageNumber) {
-    testWebDriver.getElementByXpath("//a[contains(text(), '" + pageNumber + "') and @class='ng-binding']").click();
+    testWebDriver.getElementById(String.valueOf(pageNumber)).click();
     testWebDriver.sleep(2000);
   }
 
@@ -227,8 +227,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.waitForPageToLoad();
-    List<WebElement> x = testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
+    testWebDriver.waitForAjax();
+    List<WebElement> x = testWebDriver.getElementsByXpath("//div[@id='convertToOrderGrid']//input[@class='ngSelectionCheckbox']");
     testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
     x.get(whichRequisition - 1).click();
   }

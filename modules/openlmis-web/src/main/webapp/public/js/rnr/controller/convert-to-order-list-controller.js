@@ -91,7 +91,7 @@ function ConvertToOrderListController($scope, Orders, RequisitionForConvertToOrd
       {field: 'stringModifiedDate', displayName: messageService.get("label.date.modified")},
       {field: 'supplyingDepotName', displayName: messageService.get("label.supplying.depot")},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
-        cellTemplate: "<div class='ngCellText checked'><i ng-class='{\"icon-ok\": row.entity.emergency}'></i></div>",
+        cellTemplate: "<div id=\"orderCheckbox{{ $parent.$index }}\" class='ngCellText checked'><i ng-class='{\"icon-ok\": row.entity.emergency}'></i></div>",
         width: 110 }
     ]
   };

@@ -116,6 +116,7 @@ public class TestWebDriver {
   }
 
   public void waitForAjax() {
+    waitForPageToLoad();
     final WebElement loader = findElement(By.id("loader"));
     (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver d) {

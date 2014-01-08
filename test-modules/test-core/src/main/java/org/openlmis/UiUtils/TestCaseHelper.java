@@ -11,6 +11,7 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
@@ -457,22 +458,20 @@ public class TestCaseHelper {
   }
 
   public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForAjax();
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
     }
     for (int i = 1; i <= numberOfPages; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
-      assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
+      testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id(String.valueOf(i))));
+      assertTrue(testWebDriver.findElement(By.id(String.valueOf(i))).isDisplayed());
     }
   }
 
   public void verifyNextAndLastLinksEnabled() throws Exception {
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForAjax();
     WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
-
-    testWebDriver.waitForElementToAppear(nextPageLink);
 
     assertEquals(nextPageLink.getCssValue("color"), "rgba(119, 119, 119, 1)");
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
@@ -493,10 +492,8 @@ public class TestCaseHelper {
   }
 
   public void verifyPreviousAndFirstLinksDisabled() throws Exception {
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
-
-    testWebDriver.waitForElementToAppear(firstPageLink);
 
     assertEquals(firstPageLink.getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
@@ -526,8 +523,8 @@ public class TestCaseHelper {
     assertEquals(notes, resultSet.getString("notes"));
   }
 
-  public void verifyRefrigeratorsDataInDatabase(String facilityCode, String refrigeratorSerialNumber,String brandName,
-                                                String modelName,String enabledFlag) throws SQLException {
+  public void verifyRefrigeratorsDataInDatabase(String facilityCode, String refrigeratorSerialNumber, String brandName,
+                                                String modelName, String enabledFlag) throws SQLException {
     ResultSet resultSet = dbWrapper.getRefrigeratorsData(refrigeratorSerialNumber, facilityCode);
     assertEquals(brandName, resultSet.getString("brand"));
     assertEquals(modelName, resultSet.getString("model"));
