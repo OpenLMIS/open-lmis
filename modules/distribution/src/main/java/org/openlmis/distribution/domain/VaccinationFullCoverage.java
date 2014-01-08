@@ -11,11 +11,13 @@
 package org.openlmis.distribution.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class VaccinationFullCoverage extends BaseModel {
 
   private Long vaccinationCoverageId;
