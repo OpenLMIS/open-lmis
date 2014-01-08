@@ -17,7 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.domain.FacilityProgramProduct;
-import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.ProgramProductISA;
 import org.openlmis.core.repository.FacilityProgramProductRepository;
@@ -72,7 +71,7 @@ public class FacilityProgramProductServiceTest {
       add(programProduct);
       add(programProduct2);
     }};
-    when(programProductService.getByProgram(new Program(1l))).thenReturn(products);
+    when(programProductService.getActiveByProgram(1l)).thenReturn(products);
 
     FacilityProgramProduct facilityProduct1 = new FacilityProgramProduct(programProduct, 2l, 34);
     when(repository.getOverriddenIsa(programProduct.getId(), facilityId)).thenReturn(34);
@@ -88,7 +87,7 @@ public class FacilityProgramProductServiceTest {
     assertThat(returnedProducts.get(1), is(facilityProduct2));
     assertThat(returnedProducts.get(1).getOverriddenIsa(), is(44));
 
-    verify(programProductService).getByProgram(new Program(1l));
+    verify(programProductService).getActiveByProgram(1l);
     verify(repository).getOverriddenIsa(programProduct.getId(), facilityId);
     verify(repository).getOverriddenIsa(programProduct2.getId(), facilityId);
   }

@@ -34,7 +34,7 @@ public class FacilityProgramProductService {
   ProgramProductService programProductService;
 
   public List<FacilityProgramProduct> getForProgramAndFacility(Long programId, final Long facilityId) {
-    List<ProgramProduct> programProducts = programProductService.getByProgram(new Program(programId));
+    List<ProgramProduct> programProducts = programProductService.getActiveByProgram(programId);
     final List<FacilityProgramProduct> facilityProgramProducts = new ArrayList<>();
     forAllDo(programProducts, new Closure() {
       @Override
