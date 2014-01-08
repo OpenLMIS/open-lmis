@@ -102,4 +102,27 @@ public class EpiInventoryPage extends DistributionTab {
     return testWebDriver.findElement(By.id("deliveredQuantity" + (rowNumber - 1))).getAttribute("value");
   }
 
+  public String getLabelVialsUnitsLabel() {
+    return testWebDriver.findElement(By.id("vialsUnitsLabel")).getText();
+  }
+
+  public String getLabelIdealQuantity() {
+    return testWebDriver.findElement(By.id("idealQuantityLabel")).getText();
+  }
+
+  public String getLabelExistingQuantity() {
+    return testWebDriver.findElement(By.id("existingQuantityLabel")).getText();
+  }
+
+  public String getLabelDeliveredQuantity() {
+    return testWebDriver.findElement(By.id("deliveredQuantityLabel")).getText();
+  }
+
+  public String getLabelSpoiledQuantity() {
+    return testWebDriver.findElement(By.id("spoiledQuantityLabel")).getText();
+  }
+
+  public String getDataEpiInventory() {
+    return testWebDriver.findElement(By.id("epiInventoryTable")).getText();
+  }
 }
