@@ -134,7 +134,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     assertEquals(expectedISAFormula, isaFormula);
     verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(programProductISAPage);
     programProductISAPage.saveISA();
-    programProductISAPage.verifyISAFormula(isaFormula);
+    verifyISAFormula(programProductISAPage,isaFormula);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
@@ -147,7 +147,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     ProgramProductISAPage programProductISAPage = navigateConfigureProductISAPage();
     programProductISAPage.selectProgram(program);
     programProductISAPage.searchProduct(productName);
-    programProductISAPage.verifySearchResults(productName);
+    verifySearchResults(programProductISAPage,productName);
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
   }
@@ -207,10 +207,9 @@ public class ManageProgramProductISA extends TestCaseHelper {
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("", "1", "2", "3", "4", "10", "10");
-    programProductISAPage.verifyFieldsOnISAModalWindow();
+    verifyFieldsOnISAModalWindow(programProductISAPage);
     programProductISAPage.saveISA();
-    programProductISAPage.verifyMandatoryFieldsToBeFilled();
-    programProductISAPage.verifyErrorMessageDiv();
+    verifyErrorMessageDiv(programProductISAPage);
   }
 
 
@@ -220,7 +219,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     Login(userSIC, password);
     ProgramProductISAPage programProductISAPage = navigateProgramProductISAPage(program);
     programProductISAPage.fillProgramProductISA("1", "2", "3", "4", "0", "10", "10");
-    programProductISAPage.verifyMonthlyRestockAmountPresent();
+    verifyMonthlyRestockAmountPresent(programProductISAPage);
     programProductISAPage.cancelISA();
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateHomePage();
@@ -269,6 +268,34 @@ public class ManageProgramProductISA extends TestCaseHelper {
     assertTrue(programProductISAPage.getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow().contains("ISA formula for antibiotic1"));
     assertTrue(programProductISAPage.getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow().contains("doses of antibiotic1 per month"));
  }
+
+  public void verifyISAFormula(ProgramProductISAPage programProductISAPage,String ISAFormula) {
+    assertEquals(programProductISAPage.verifyISAFormula(),ISAFormula);
+  }
+
+  public void verifyFieldsOnISAModalWindow(ProgramProductISAPage programProductISAPage){
+   assertTrue(programProductISAPage.verifyRatioTextBoxFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyDosesPerYearTextBoxFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyBufferPercentageTextBoxFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyWastageRateTextBoxFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyProgramProductISACancelButtonFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyProgramProductISASaveButtonFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyISAPopulationTextFieldOnISAModalWindowIsDisplayed());
+   assertTrue(programProductISAPage.verifyAdjustmentValueTextBoxFieldOnISAModalWindowIsDisplayed());
+  }
+
+  public void verifyErrorMessageDiv(ProgramProductISAPage programProductISAPage){
+    assertTrue(programProductISAPage.verifyErrorMessageDiv());
+  }
+
+  public void verifySearchResults(ProgramProductISAPage programProductISAPage,String productName){
+    assertTrue(programProductISAPage.verifySearchResults(productName));
+  }
+
+  public void verifyMonthlyRestockAmountPresent(ProgramProductISAPage programProductISAPage){
+    assertTrue(programProductISAPage.verifyMonthlyRestockAmountPresent());
+  }
+
 
   @AfterMethod(groups = "admin")
   @After
