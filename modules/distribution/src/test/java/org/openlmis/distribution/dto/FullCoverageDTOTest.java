@@ -18,16 +18,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
-public class VaccinationFullCoverageDTOTest {
+public class FullCoverageDTOTest {
 
   @Test
   public void shouldTransformFullCoverageDTO() throws Exception {
+    Long facilityVisitId = 1L;
     Reading femaleHealthCenterReading = mock(Reading.class);
     Reading femaleMobileBrigadeReading = mock(Reading.class);
     Reading maleMobileBrigadeReading = mock(Reading.class);
     Reading maleHealthCenterReading = mock(Reading.class);
 
-    VaccinationFullCoverageDTO fullCoverageDTO = new VaccinationFullCoverageDTO(femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading);
+    FullCoverageDTO fullCoverageDTO = new FullCoverageDTO(facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading);
     fullCoverageDTO.transform();
 
     verify(femaleHealthCenterReading).parsePositiveInt();

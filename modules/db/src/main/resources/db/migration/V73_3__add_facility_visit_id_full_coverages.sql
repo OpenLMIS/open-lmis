@@ -8,4 +8,8 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DROP TABLE epi_use;
+ALTER TABLE vaccination_full_coverages
+RENAME TO full_coverages;
+ALTER TABLE full_coverages
+DROP COLUMN vaccinationCoverageId,
+ADD COLUMN facilityVisitId INTEGER NOT NULL REFERENCES facility_visits (id);

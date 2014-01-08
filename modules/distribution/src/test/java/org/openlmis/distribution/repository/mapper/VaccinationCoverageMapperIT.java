@@ -19,8 +19,8 @@ import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.VaccinationCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.domain.FacilityVisit;
+import org.openlmis.distribution.domain.FullCoverage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -67,15 +67,19 @@ public class VaccinationCoverageMapperIT {
   private QueryExecutor queryExecutor;
 
   @Autowired
+  private FacilityVisitMapper facilityVisitMapper;
+
+  @Autowired
   private FacilityMapper facilityMapper;
 
   @Autowired
   VaccinationCoverageMapper mapper;
 
+  Distribution distribution;
   DeliveryZone zone;
   Program program1;
   ProcessingPeriod processingPeriod;
-  Distribution distribution;
+
   Facility facility;
 
   @Before
@@ -102,34 +106,20 @@ public class VaccinationCoverageMapperIT {
     facilityMapper.insert(facility);
   }
 
-  @Test
-  public void shouldSaveVaccinationCoverage() throws Exception {
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
-    vaccinationCoverage.setFacilityId(facility.getId());
-    vaccinationCoverage.setDistributionId(distribution.getId());
-    mapper.insert(vaccinationCoverage);
-
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM vaccination_coverages WHERE id = " + vaccinationCoverage.getId());
-
-    assertTrue(resultSet.next());
-    assertThat(resultSet.getLong("facilityId"), is(facility.getId()));
-    assertThat(resultSet.getLong("distributionId"), is(distribution.getId()));
-  }
 
   @Test
   public void shouldSaveVaccinationFullCoverage() throws Exception {
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
-    vaccinationCoverage.setFacilityId(facility.getId());
-    vaccinationCoverage.setDistributionId(distribution.getId());
-    mapper.insert(vaccinationCoverage);
+    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+    facilityVisitMapper.insert(facilityVisit);
 
-    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 666, 11);
-    vaccinationFullCoverage.setVaccinationCoverageId(vaccinationCoverage.getId());
-    mapper.insertFullVaccinationCoverage(vaccinationFullCoverage);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM vaccination_full_coverages WHERE id = " + vaccinationFullCoverage.getId());
+    FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
+    fullCoverage.setFacilityVisitId(facilityVisit.getId());
+    mapper.insertFullVaccinationCoverage(fullCoverage);
+
+    ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + fullCoverage.getId());
     assertTrue(resultSet.next());
-    assertThat(resultSet.getLong("vaccinationCoverageId"), is(vaccinationCoverage.getId()));
+    assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
     assertThat(resultSet.getInt("femaleHealthCenterReading"), is(34));
     assertThat(resultSet.getInt("femaleMobileBrigadeReading"), is(78));
     assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(11));

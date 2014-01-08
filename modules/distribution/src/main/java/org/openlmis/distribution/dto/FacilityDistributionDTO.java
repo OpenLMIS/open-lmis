@@ -39,12 +39,10 @@ public class FacilityDistributionDTO {
 
   public void setDistributionId(Long distributionId) {
     facilityVisit.setDistributionId(distributionId);
-    coverage.setDistributionId(distributionId);
   }
 
   public void setFacilityId(Long facilityId) {
     facilityVisit.setFacilityId(facilityId);
-    coverage.setFacilityId(facilityId);
   }
 
   public void setModifiedBy(Long modifiedBy) {

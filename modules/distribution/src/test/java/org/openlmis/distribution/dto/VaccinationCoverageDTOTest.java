@@ -13,27 +13,26 @@ package org.openlmis.distribution.dto;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.distribution.domain.FullCoverage;
 import org.openlmis.distribution.domain.VaccinationCoverage;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 public class VaccinationCoverageDTOTest {
 
   @Test
   public void shouldTransformCoverageDTOIntoCoverage() throws Exception {
-    VaccinationFullCoverageDTO fullCoverageDTO = mock(VaccinationFullCoverageDTO.class);
-
-    VaccinationCoverageDTO coverageDTO = new VaccinationCoverageDTO(123L, 234L, fullCoverageDTO);
+    FullCoverage expectedFullCoverage = mock(FullCoverage.class);
+    FullCoverageDTO fullCoverageDTO = mock(FullCoverageDTO.class);
+    when(fullCoverageDTO.transform()).thenReturn(expectedFullCoverage);
+    VaccinationCoverageDTO coverageDTO = new VaccinationCoverageDTO(fullCoverageDTO);
 
     VaccinationCoverage vaccinationCoverage = coverageDTO.transform();
 
     verify(fullCoverageDTO).transform();
-
-    assertThat(vaccinationCoverage.getFacilityId(), is(123L));
-    assertThat(vaccinationCoverage.getDistributionId(), is(234L));
+    assertThat(vaccinationCoverage.getFullCoverage(), is(expectedFullCoverage));
   }
 }

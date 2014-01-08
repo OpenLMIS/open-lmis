@@ -40,19 +40,21 @@ public class DistributionRefrigeratorsDTO extends BaseModel {
 
   public DistributionRefrigerators transform() {
     List<RefrigeratorReading> refrigeratorReadings = new ArrayList<>();
+    final Long createdBy = this.createdBy;
+    final Long modifiedBy = this.modifiedBy;
     if (readings != null) {
       refrigeratorReadings = (List) collect(readings, new Transformer() {
         @Override
         public Object transform(Object o) {
-          RefrigeratorReading reading = ((RefrigeratorReadingDTO) o).transform();
+          RefrigeratorReadingDTO readingDTO = (RefrigeratorReadingDTO) o;
+          readingDTO.setCreatedBy(createdBy);
+          readingDTO.setModifiedBy(modifiedBy);
+          RefrigeratorReading reading = readingDTO.transform();
           return reading;
         }
       });
     }
 
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, refrigeratorReadings);
-    distributionRefrigerators.setCreatedBy(this.createdBy);
-    distributionRefrigerators.setModifiedBy(this.modifiedBy);
-    return distributionRefrigerators;
+    return new DistributionRefrigerators(refrigeratorReadings);
   }
 }

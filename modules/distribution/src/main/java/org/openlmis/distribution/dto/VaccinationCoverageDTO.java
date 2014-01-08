@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.distribution.domain.VaccinationCoverage;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
@@ -26,13 +27,11 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-public class VaccinationCoverageDTO {
+public class VaccinationCoverageDTO extends BaseModel {
 
-  private Long facilityId;
-  private Long distributionId;
-  private VaccinationFullCoverageDTO fullCoverage;
+  private FullCoverageDTO fullCoverage;
 
   public VaccinationCoverage transform() {
-    return new VaccinationCoverage(facilityId, distributionId, fullCoverage.transform());
+    return new VaccinationCoverage(fullCoverage.transform());
   }
 }

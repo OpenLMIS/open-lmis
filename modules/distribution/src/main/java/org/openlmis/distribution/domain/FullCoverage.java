@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,15 +19,16 @@ import org.openlmis.core.domain.BaseModel;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class VaccinationFullCoverage extends BaseModel {
+@AllArgsConstructor
+public class FullCoverage extends BaseModel {
 
-  private Long vaccinationCoverageId;
+  private Long facilityVisitId;
   private Integer femaleHealthCenterReading;
   private Integer femaleMobileBrigadeReading;
-  private Integer maleHealthCenterReading;
   private Integer maleMobileBrigadeReading;
+  private Integer maleHealthCenterReading;
 
-  public VaccinationFullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
+  public FullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleMobileBrigadeReading, Integer maleHealthCenterReading) {
     this.femaleHealthCenterReading = femaleHealthCenterReading;
     this.femaleMobileBrigadeReading = femaleMobileBrigadeReading;
     this.maleHealthCenterReading = maleHealthCenterReading;

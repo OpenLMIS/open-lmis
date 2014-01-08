@@ -21,9 +21,5 @@ import org.openlmis.core.domain.BaseModel;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class VaccinationCoverage extends BaseModel {
-
-  private Long facilityId;
-  private Long distributionId;
-  private VaccinationFullCoverage fullCoverage;
-
+  private FullCoverage fullCoverage;
 }

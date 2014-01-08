@@ -10,8 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
-import org.openlmis.distribution.domain.VaccinationCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.domain.FullCoverage;
 import org.openlmis.distribution.repository.mapper.VaccinationCoverageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,11 +21,7 @@ public class VaccinationCoverageRepository {
   @Autowired
   private VaccinationCoverageMapper mapper;
 
-  public void save(VaccinationCoverage coverage) {
-    mapper.insert(coverage);
-  }
-
-  public void saveFullCoverage(VaccinationFullCoverage fullCoverage) {
+  public void saveFullCoverage(FullCoverage fullCoverage) {
     mapper.insertFullVaccinationCoverage(fullCoverage);
   }
 }

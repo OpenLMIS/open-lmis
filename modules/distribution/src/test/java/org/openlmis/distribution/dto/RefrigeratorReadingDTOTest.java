@@ -28,6 +28,7 @@ public class RefrigeratorReadingDTOTest {
 
   @Test
   public void shouldTransformRefrigeratorReadingToReading() throws Exception {
+    Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
     Reading functioningCorrectly = new Reading("Y", false);
     Reading lowAlarmEvents = new Reading("2", false);
@@ -37,10 +38,11 @@ public class RefrigeratorReadingDTOTest {
     String notes = "Notes";
     Long facilityId = 2L;
 
-    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), null, 32.4F,
+    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
       "Y", 2, null, "Y", problems, notes);
 
     RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId, true),
+      facilityVisitId,
       temperature,
       functioningCorrectly,
       lowAlarmEvents,
@@ -56,6 +58,7 @@ public class RefrigeratorReadingDTOTest {
 
   @Test
   public void shouldValidateRefrigeratorProblemsIfProblemSinceLastVisitIsTrue() throws Exception {
+    Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
     Reading functioningCorrectly = new Reading("Y", false);
     Reading lowAlarmEvents = new Reading("2", false);
@@ -65,10 +68,11 @@ public class RefrigeratorReadingDTOTest {
     String notes = "Notes";
     Long facilityId = 2L;
 
-    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), null, 32.4F,
+    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
       "Y", 2, null, "Y", problems, notes);
 
     RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId, true),
+      facilityVisitId,
       temperature,
       functioningCorrectly,
       lowAlarmEvents,
@@ -85,6 +89,7 @@ public class RefrigeratorReadingDTOTest {
 
   @Test
   public void shouldSetProblemsToNullIfProblemSinceLastVisitIsFalse() throws Exception {
+    Long facilityVisitId = 5L;
     Reading temperature = new Reading("32.4", false);
     Reading functioningCorrectly = new Reading("Y", false);
     Reading lowAlarmEvents = new Reading("2", false);
@@ -95,6 +100,7 @@ public class RefrigeratorReadingDTOTest {
     Long facilityId = 2L;
 
     RefrigeratorReadingDTO refrigeratorReadingDTO = new RefrigeratorReadingDTO(new Refrigerator("brand", "model", "serial number", facilityId, true),
+      facilityVisitId,
       temperature,
       functioningCorrectly,
       lowAlarmEvents,
@@ -105,7 +111,7 @@ public class RefrigeratorReadingDTOTest {
 
     RefrigeratorReading refrigeratorReading = refrigeratorReadingDTO.transform();
 
-    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), null, 32.4F,
+    RefrigeratorReading expectedReading = new RefrigeratorReading(new Refrigerator("brand", "model", "serial number", facilityId, true), facilityVisitId, 32.4F,
       "Y", 2, null, "N", null, notes);
 
     assertThat(refrigeratorReading, is(expectedReading));

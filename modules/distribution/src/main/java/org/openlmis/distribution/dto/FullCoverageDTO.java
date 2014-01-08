@@ -16,7 +16,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.distribution.domain.FullCoverage;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -26,18 +27,18 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-public class VaccinationFullCoverageDTO {
+public class FullCoverageDTO extends BaseModel {
 
+  private Long facilityVisitId;
   private Reading femaleHealthCenterReading;
   private Reading femaleMobileBrigadeReading;
   private Reading maleHealthCenterReading;
   private Reading maleMobileBrigadeReading;
 
-  public VaccinationFullCoverage transform() {
-    return new VaccinationFullCoverage(femaleHealthCenterReading.parsePositiveInt(),
-      femaleMobileBrigadeReading.parsePositiveInt(),
-      maleHealthCenterReading.parsePositiveInt(),
-      maleMobileBrigadeReading.parsePositiveInt()
-    );
+  public FullCoverage transform() {
+    return new FullCoverage(this.facilityVisitId, this.femaleHealthCenterReading.parsePositiveInt(),
+      this.femaleMobileBrigadeReading.parsePositiveInt(),
+      this.maleHealthCenterReading.parsePositiveInt(),
+      this.maleMobileBrigadeReading.parsePositiveInt());
   }
 }

@@ -17,12 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.distribution.domain.FullCoverage;
 import org.openlmis.distribution.domain.VaccinationCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
 import org.openlmis.distribution.repository.VaccinationCoverageRepository;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
@@ -36,16 +34,12 @@ public class VaccinationCoverageServiceTest {
   private VaccinationCoverageService service;
 
   @Test
-  public void shouldSaveVaccinationCoverageAlongWithFullCoverage() throws Exception {
-    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage();
-    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
-    vaccinationCoverage.setId(55L);
-    vaccinationCoverage.setFullCoverage(vaccinationFullCoverage);
+  public void shouldSaveFullCoverageData() throws Exception {
+    FullCoverage fullCoverage = new FullCoverage();
 
+    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage(fullCoverage);
     service.save(vaccinationCoverage);
 
-    verify(repository).save(vaccinationCoverage);
-    verify(repository).saveFullCoverage(vaccinationFullCoverage);
-    assertThat(vaccinationFullCoverage.getVaccinationCoverageId(), is(vaccinationCoverage.getId()));
+    verify(repository).saveFullCoverage(fullCoverage);
   }
 }

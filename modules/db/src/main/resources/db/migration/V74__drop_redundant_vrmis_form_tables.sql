@@ -10,3 +10,4 @@
 
 DROP TABLE epi_use;
 DROP TABLE distribution_refrigerators;
+DROP TABLE vaccination_coverages;

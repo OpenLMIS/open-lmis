@@ -41,12 +41,12 @@ public class EpiUseLineItemDTO extends BaseModel {
 
   public EpiUseLineItem transform() {
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem(this.facilityVisitId, this.productGroup,
-      stockAtFirstOfMonth.parsePositiveInt(),
-      stockAtEndOfMonth.parsePositiveInt(),
-      received.parsePositiveInt(),
-      loss.parsePositiveInt(),
-      distributed.parsePositiveInt(),
-      expirationDate.getEffectiveValue());
+      this.stockAtFirstOfMonth.parsePositiveInt(),
+      this.stockAtEndOfMonth.parsePositiveInt(),
+      this.received.parsePositiveInt(),
+      this.loss.parsePositiveInt(),
+      this.distributed.parsePositiveInt(),
+      this.expirationDate.getEffectiveValue());
 
     epiUseLineItem.setId(this.id);
     epiUseLineItem.setModifiedBy(this.modifiedBy);

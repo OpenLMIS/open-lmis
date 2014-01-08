@@ -12,20 +12,16 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
-import org.openlmis.distribution.domain.VaccinationCoverage;
-import org.openlmis.distribution.domain.VaccinationFullCoverage;
+import org.openlmis.distribution.domain.FullCoverage;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VaccinationCoverageMapper {
 
-  @Insert({"INSERT into vaccination_coverages (facilityId, distributionId) VALUES (#{facilityId}, #{distributionId})"})
-  @Options(useGeneratedKeys = true)
-  public void insert(VaccinationCoverage coverage);
 
-  @Insert({"INSERT into vaccination_full_coverages (vaccinationCoverageId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading)",
-    "VALUES (#{vaccinationCoverageId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading})"})
+  @Insert({"INSERT into full_coverages (facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading)",
+    "VALUES (#{facilityVisitId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading})"})
   @Options(useGeneratedKeys = true)
-  public void insertFullVaccinationCoverage(VaccinationFullCoverage fullCoverage);
+  public void insertFullVaccinationCoverage(FullCoverage fullCoverage);
 
 }
