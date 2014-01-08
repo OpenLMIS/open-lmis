@@ -180,38 +180,42 @@ public class DistributionEpiInventoryTest extends TestCaseHelper {
 
   // @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenAllProductsInactiveAfterCaching() throws Exception {
-
+   //TODO moving to DistributionSyncTest
   }
 
   //@Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenFacilityInactiveAfterCaching() throws Exception {
-
-
+  //TODO moving to DistributionSyncTest
   }
 
   //  @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenFacilityDisabledAfterCaching() throws Exception {
-
+    //TODO moving to DistributionSyncTest
   }
 
   //@Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenAllProgramInactiveAfterCaching() throws Exception {
-
+    //TODO moving to DistributionSyncTest
   }
 
   // @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenSomeFieldsEmpty() throws Exception {
-
+    //TODO add it
   }
 
   // @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenNrAppliedToAllFields() throws Exception {
-
+   //TODO add it
   }
+
+  //TODO check inactive products are not displayed - program inactive, global inactive, both inactive
+  //TODO sorting of products - display order and alphabetic order
+  //TODO check QA scenarios added in the story
+  //TODO verify headers
 
   @Test(groups = {"distribution"})
   public void testEpiInventoryPageSyncWhenNRAppliedToFewFields() throws Exception {
-
+   //TODO add something in the test or remove the test
   }
 
   @AfterMethod(groups = "distribution")

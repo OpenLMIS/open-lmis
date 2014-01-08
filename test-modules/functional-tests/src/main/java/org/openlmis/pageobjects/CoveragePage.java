@@ -154,22 +154,22 @@ public class CoveragePage extends DistributionTab {
     clickOkButton();
   }
 
-  public void applyNRToFemaleHealthCenter(){
+  public void toggleApplyNRToFemaleHealthCenter(){
     testWebDriver.waitForElementToAppear(femaleHealthCenterNR);
     femaleHealthCenterNR.click();
   }
 
-  public void applyNRToMaleHealthCenter(){
+  public void toggleApplyNRToMaleHealthCenter(){
     testWebDriver.waitForElementToAppear(maleHealthCenterNR);
     maleHealthCenterNR.click();
   }
 
-  public void applyNRToFemaleMobileBrigade(){
+  public void toggleApplyNRToFemaleMobileBrigade(){
     testWebDriver.waitForElementToAppear(femaleMobileBrigadeNR);
     femaleMobileBrigadeNR.click();
   }
 
-  public void applyNRToMaleMobileBrigade(){
+  public void toggleApplyNRToMaleMobileBrigade(){
     testWebDriver.waitForElementToAppear(maleMobileBrigadeNR);
     maleMobileBrigadeNR.click();
   }

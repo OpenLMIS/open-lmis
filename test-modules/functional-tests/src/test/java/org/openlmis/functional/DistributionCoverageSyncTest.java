@@ -95,6 +95,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     assertEquals("Health Center", coveragePage.getTextOfHealthCenterHeader());
     assertEquals("Mobile Brigade", coveragePage.getTextOfMobileBrigadeHeader());
 
+    coveragePage.enterFemaleHealthCenter(5);
     coveragePage.clickApplyNRToAll();
     coveragePage.clickApplyNRToAll(); //just checking reapplying NR to all doesn't deselect NR check boxes
     coveragePage.verifyIndicator("GREEN");
@@ -136,15 +137,15 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
 
     CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
     coveragePage.verifyIndicator("RED");
-    coveragePage.applyNRToFemaleMobileBrigade();
+    coveragePage.toggleApplyNRToFemaleMobileBrigade();
     coveragePage.verifyIndicator("AMBER");
 
     coveragePage.enterFemaleHealthCenter(9999999);
-    coveragePage.applyNRToMaleHealthCenter();
-    coveragePage.applyNRToMaleHealthCenter();
+    coveragePage.toggleApplyNRToMaleHealthCenter();
+    coveragePage.toggleApplyNRToMaleHealthCenter();
     coveragePage.enterMaleHealthCenter(10);
     coveragePage.enterMaleMobileBrigade(0);
-    coveragePage.applyNRToMaleMobileBrigade();
+    coveragePage.toggleApplyNRToMaleMobileBrigade();
 
     coveragePage.verifyIndicator("GREEN");
 
@@ -241,7 +242,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     coveragePage.enterMaleHealthCenter(33);
     coveragePage.enterFemaleHealthCenter(67);
     coveragePage.enterMaleMobileBrigade(0);
-    coveragePage.applyNRToMaleMobileBrigade();
+    coveragePage.toggleApplyNRToMaleMobileBrigade();
     coveragePage.verifyIndicator("AMBER");
 
     EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
