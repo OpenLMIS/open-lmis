@@ -26,7 +26,7 @@ import static org.testng.Assert.assertTrue;
 
 public class LanguageCheck extends TestCaseHelper {
 
-  @BeforeMethod()
+  @BeforeMethod(groups = "admin")
   public void setUp() throws Exception {
     super.setup();
   }
