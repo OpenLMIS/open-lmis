@@ -21,6 +21,7 @@ import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.HomePage;
 import org.openlmis.pageobjects.LoginPage;
 import org.openlmis.pageobjects.ProgramProductISAPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
@@ -131,6 +132,7 @@ public class ManageProgramProductISA extends TestCaseHelper {
     String isaFormula = programProductISAPage.getISAFormulaFromISAFormulaModal();
     String expectedISAFormula = "(population) * 9.99999 * 999 * 999.999 / 12 * 10.99999 + 999999";
     assertEquals(expectedISAFormula, isaFormula);
+    verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(programProductISAPage);
     programProductISAPage.saveISA();
     programProductISAPage.verifyISAFormula(isaFormula);
     HomePage homePage = new HomePage(testWebDriver);
@@ -262,6 +264,11 @@ public class ManageProgramProductISA extends TestCaseHelper {
     }
 
   }
+
+  public void verifyProgramNameIsDisplayedOnConfigureISAFormulaWindow(ProgramProductISAPage programProductISAPage){
+    assertTrue(programProductISAPage.getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow().contains("ISA formula for antibiotic1"));
+    assertTrue(programProductISAPage.getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow().contains("doses of antibiotic1 per month"));
+ }
 
   @AfterMethod(groups = "admin")
   @After

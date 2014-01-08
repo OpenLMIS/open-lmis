@@ -39,8 +39,8 @@ public class ManageISA extends TestCaseHelper {
   private static String operatedBy = "MoH";
   private static String facilityCodePrefix = "FCcode";
   private static String facilityNamePrefix = "FCname";
-  public String user, program, product, productName, category, whoratio, dosesperyear, wastageFactor,
-    bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, date_time;
+  public String user, program, product, productName, category, whoRatio, dosesPerYear, wastageFactor,
+    bufferPercentage, minimumValue, maximumValue, adjustmentValue, date_time;
 
   @BeforeMethod(groups = "admin")
   @Before
@@ -58,16 +58,16 @@ public class ManageISA extends TestCaseHelper {
       product = map.get("product").toString();
       productName = map.get("productName").toString();
       category = map.get("category").toString();
-      whoratio = map.get("whoRatio").toString();
-      dosesperyear = map.get("dosesPerYear").toString();
+      whoRatio = map.get("whoRatio").toString();
+      dosesPerYear = map.get("dosesPerYear").toString();
       wastageFactor = map.get("wastageFactor").toString();
-      bufferpercentage = map.get("bufferPercentage").toString();
-      minimumvalue = map.get("minimumValue").toString();
-      maximumvalue = map.get("maximumValue").toString();
-      adjustmentvalue = map.get("adjustmentValue").toString();
+      bufferPercentage = map.get("bufferPercentage").toString();
+      minimumValue = map.get("minimumValue").toString();
+      maximumValue = map.get("maximumValue").toString();
+      adjustmentValue = map.get("adjustmentValue").toString();
 
       setupProgramProductTestDataWithCategories(product, productName, category, program);
-      setupProgramProductISA(program, product, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
+      setupProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue);
 
     }
   }

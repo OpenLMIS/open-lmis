@@ -13,6 +13,7 @@ package org.openlmis.pageobjects;
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -99,6 +100,11 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "productPrimaryName")
   private static WebElement productPrimaryName=null;
 
+  @FindBy(how = XPATH, using = "//div[@class='modal-header']")
+  private static WebElement programNameOnModalHeaderOFConfigureISAFormulaWindow =null;
+
+  @FindBy(how = XPATH, using = "//div[@id='ISA-population']")
+  private static WebElement programNameOnPopulationLabelOFConfigureISAFormulaWindow =null;
 
 
 
@@ -270,5 +276,13 @@ public class ProgramProductISAPage extends Page {
     String expectedISAValue = String.valueOf(Math.round(Integer.parseInt(calculateISA(population)) / 10));
     saveISA();
     return expectedISAValue;
+  }
+
+  public String getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow(){
+    return programNameOnModalHeaderOFConfigureISAFormulaWindow.getText();
+  }
+
+  public String getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow(){
+    return programNameOnPopulationLabelOFConfigureISAFormulaWindow.getText();
   }
 }
