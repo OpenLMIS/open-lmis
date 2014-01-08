@@ -147,6 +147,7 @@ public class DistributionPage extends Page {
   }
 
   public FacilityListPage clickRecordData(int rowNumber) throws IOException {
+    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("recordData" + (rowNumber - 1))));
     WebElement recordDataButton = testWebDriver.findElement(By.id("recordData" + (rowNumber - 1)));
     recordDataButton.click();
     return new FacilityListPage(testWebDriver);
