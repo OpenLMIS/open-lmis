@@ -26,7 +26,10 @@ describe("RecordFacilityMenuController", function () {
             {refrigerator: {serialNumber: "abc"}},
             {refrigerator: {serialNumber: "XYZ"}}
           ]
-        }
+        },
+          facilityVisit: {
+            id: 1
+          }
         }
       }
     });

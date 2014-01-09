@@ -21,75 +21,75 @@ describe('DistributionListController', function () {
 
   beforeEach(function () {
 
-        module(function ($provide) {
-          $provide.value('IndexedDB',
-              {
-                put: function () {
-                },
-                get: function () {
-                },
-                delete: function () {
-                }
-              });
-        });
+      module(function ($provide) {
+        $provide.value('IndexedDB',
+          {
+            put: function () {
+            },
+            get: function () {
+            },
+            delete: function () {
+            }
+          });
+      });
 
-        inject(function ($rootScope, $location, $controller, $compile, _$httpBackend_, $q, _messageService_, _distributionService_, _$dialog_) {
+      inject(function ($rootScope, $location, $controller, $compile, _$httpBackend_, $q, _messageService_, _distributionService_, _$dialog_) {
 
-          rootScope = $rootScope;
-          scope = rootScope.$new();
-          $httpBackend = _$httpBackend_
-          messageService = _messageService_;
-          dialog = _$dialog_;
-          spyOn(OpenLmisDialog, 'newDialog');
-          distributionService = _distributionService_;
-          spyOn(distributionService, 'deleteDistribution');
-          spyOn(distributionService, 'save');
-          spyOn(distributionService, 'getReferenceData');
-          q = $q;
-          location = $location;
+        rootScope = $rootScope;
+        scope = rootScope.$new();
+        $httpBackend = _$httpBackend_
+        messageService = _messageService_;
+        dialog = _$dialog_;
+        spyOn(OpenLmisDialog, 'newDialog');
+        distributionService = _distributionService_;
+        spyOn(distributionService, 'deleteDistribution');
+        spyOn(distributionService, 'save');
+        spyOn(distributionService, 'getReferenceData');
+        q = $q;
+        location = $location;
 
-          sharedDistribution = {update: function () {
+        sharedDistribution = {update: function () {
+        }};
+
+        var facilityDistribution1 = new FacilityDistribution(
+          {'epiUse': {'productGroups': [
+            {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false},
+              'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
+          ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
+            'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
+
+        var facilityDistribution2 = new FacilityDistribution(
+          {status: 'is-complete', 'epiUse': {'productGroups': [
+            {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
+          ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
+            'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}});
+
+        spyOn(facilityDistribution1, 'computeStatus');
+
+        spyOn(sharedDistribution, 'update');
+
+        distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8,
+          'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'},
+          'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
+          'facilityDistributions': {
+            '44': facilityDistribution1,
+            '45': facilityDistribution2
           }};
 
-          var facilityDistribution1 = new FacilityDistribution(
-              {'epiUse': {'productGroups': [
-                {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false},
-                  'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
-              ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
-                'facilityVisit': {'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
+        sharedDistribution.distributionList = [distribution];
 
-          var facilityDistribution2 = new FacilityDistribution(
-              {status: 'is-complete', 'epiUse': {'productGroups': [
-                {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
-              ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
-                'facilityVisit': {'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}});
+        spyOn(messageService, 'get');
 
-          spyOn(facilityDistribution1, 'computeStatus');
+        compile = $compile;
+        element = angular.element('<div id="progressbar"></div>');
+        compile(element)(scope);
+        scope.$digest();
+        $controller(DistributionListController,
+          {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService});
 
-          spyOn(sharedDistribution, 'update');
-
-          distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8,
-            'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'},
-            'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
-            'facilityDistributions': {
-              '44': facilityDistribution1,
-              '45': facilityDistribution2
-            }};
-
-          sharedDistribution.distributionList = [distribution];
-
-          spyOn(messageService, 'get');
-
-          compile = $compile;
-          element = angular.element('<div id="progressbar"></div>');
-          compile(element)(scope);
-          scope.$digest();
-          $controller(DistributionListController,
-              {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService});
-
-          scope.distributionData = distribution;
-        })
-      }
+        scope.distributionData = distribution;
+      })
+    }
   );
 
   afterEach(function () {
@@ -188,9 +188,12 @@ describe('DistributionListController', function () {
   });
 
   it('should show message if no facility available for sync ', function () {
-    distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'}, 'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
-      'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED}),
-        '45': new FacilityDistribution({status: DistributionStatus.SYNCED})}};
+    distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'},
+      'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true},
+      'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1},
+      'status': 'INITIATED', 'zpp': '8_5_9',
+      'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}}),
+        '45': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}})}};
 
     scope.sharedDistributions.distributionList = [distribution];
 

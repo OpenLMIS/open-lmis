@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RefrigeratorReading(refrigeratorReading) {
+function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
 
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
@@ -66,6 +66,7 @@ function RefrigeratorReading(refrigeratorReading) {
   init.call(this);
 
   function init() {
+    this.facilityVisitId = facilityVisitId;
     var _this = this;
     $.extend(true, this, refrigeratorReading);
     $(fieldList).each(function (i, fieldName) {

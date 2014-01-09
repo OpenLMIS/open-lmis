@@ -45,7 +45,7 @@ public class DistributionRefrigeratorsRepositoryTest {
 
     verify(mapper).insertReading(refrigeratorReading);
     verify(refrigeratorProblem).setReadingId(readingId);
-    verify(mapper).insertProblems(refrigeratorReading.getProblem());
+    verify(mapper).insertProblem(refrigeratorReading.getProblem());
   }
 
   @Test
@@ -58,6 +58,6 @@ public class DistributionRefrigeratorsRepositoryTest {
     repository.saveReading(refrigeratorReading);
 
     verify(mapper).insertReading(refrigeratorReading);
-    verify(mapper, never()).insertProblems(refrigeratorReading.getProblem());
+    verify(mapper, never()).insertProblem(refrigeratorReading.getProblem());
   }
 }

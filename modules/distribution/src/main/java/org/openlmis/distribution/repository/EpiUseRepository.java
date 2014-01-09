@@ -10,10 +10,13 @@
 
 package org.openlmis.distribution.repository;
 
+import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.mapper.EpiUseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class EpiUseRepository {
@@ -27,5 +30,10 @@ public class EpiUseRepository {
       return;
     }
     mapper.updateLineItem(epiUseLineItem);
+  }
+
+  public EpiUse getBy(Long facilityVisitId) {
+    List<EpiUseLineItem> epiUseLineItems = mapper.getBy(facilityVisitId);
+    return new EpiUse(epiUseLineItems);
   }
 }

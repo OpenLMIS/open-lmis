@@ -26,4 +26,8 @@ public class VaccinationCoverageService {
     FullCoverage fullCoverage = coverage.getFullCoverage();
     repository.saveFullCoverage(fullCoverage);
   }
+
+  public VaccinationCoverage getBy(Long facilityVisitId) {
+    return repository.getBy(facilityVisitId);
+  }
 }

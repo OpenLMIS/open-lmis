@@ -101,13 +101,17 @@ public class FacilityDistributionServiceTest {
     distribution.setId(1L);
     distribution.setPeriod(new ProcessingPeriod());
 
-    whenNew(FacilityDistribution.class).withArguments(facility, distribution, asList(refrigeratorReading)).thenReturn(mock(FacilityDistribution.class));
+    FacilityVisit facilityVisit = new FacilityVisit();
+    whenNew(FacilityVisit.class).withArguments(distribution.getId(), facility.getId(), distribution.getCreatedBy()).thenReturn(facilityVisit);
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading)).thenReturn(mock(FacilityDistribution.class));
 
     FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
 
     verify(epiUseService).save(distributionData.getEpiUse());
+    verify(facilityVisitService).save(facilityVisit);
     verify(epiInventoryService).save(distributionData.getEpiInventory());
-    verifyNew(FacilityDistribution.class).withArguments(facility, distribution, asList(refrigeratorReading));
+    verifyNew(FacilityVisit.class).withArguments(distribution.getId(), facility.getId(), distribution.getCreatedBy());
+    verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading));
   }
 
   @Test

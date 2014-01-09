@@ -9,14 +9,14 @@
  */
 
 
-function Coverage(coverage) {
+function Coverage(facilityVisitId, coverage) {
   var fieldList = ['femaleHealthCenterReading', 'femaleMobileBrigadeReading', 'maleHealthCenterReading', 'maleMobileBrigadeReading'];
 
 
   function init() {
     $.extend(true, this, coverage);
 
-    var fullCoverage = this.fullCoverage || {};
+    var fullCoverage = this.fullCoverage || {facilityVisitId: facilityVisitId};
     $(fieldList).each(function (i, fieldName) {
       fullCoverage[fieldName] = fullCoverage[fieldName] || {};
     });
@@ -29,6 +29,7 @@ function Coverage(coverage) {
     var _this = this;
 
     var fullCoverage = this.fullCoverage;
+
     function isEmpty(fieldName) {
       return (isUndefined(fullCoverage[fieldName].value) && !fullCoverage[fieldName].notRecorded);
     }

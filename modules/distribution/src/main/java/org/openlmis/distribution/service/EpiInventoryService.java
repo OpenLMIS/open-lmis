@@ -24,4 +24,8 @@ public class EpiInventoryService {
   public void save(EpiInventory epiInventory) {
     repository.save(epiInventory);
   }
+
+  public EpiInventory getBy(Long facilityVisitId) {
+    return repository.getBy(facilityVisitId);
+  }
 }

@@ -106,25 +106,30 @@ public class RefrigeratorMapperIT {
 
   @Test
   public void shouldGetAllInDeliveryZoneAndOrderByGeographicZoneParentAndFacilityName() {
-    Refrigerator disabledRefrigerator = new Refrigerator("SAM", "AUO", "SAM1", facility.getId(), false);
+    Refrigerator disabledRefrigerator = new Refrigerator("SAM1", "AUO1", "SAM1", facility.getId(), false);
     disabledRefrigerator.setCreatedBy(1L);
     disabledRefrigerator.setModifiedBy(1L);
 
     mapper.insert(disabledRefrigerator);
 
-    Refrigerator enabledRefrigerator = new Refrigerator("SAM2", "AUO2", "SAM2", facility.getId(), true);
-    enabledRefrigerator.setCreatedBy(1L);
-    enabledRefrigerator.setModifiedBy(1L);
+    Refrigerator enabledRefrigerator1 = new Refrigerator("SAM3", "AUO3", "SAM3", facility.getId(), true);
+    enabledRefrigerator1.setCreatedBy(1L);
+    enabledRefrigerator1.setModifiedBy(1L);
+    mapper.insert(enabledRefrigerator1);
 
-    mapper.insert(enabledRefrigerator);
+    Refrigerator enabledRefrigerator2 = new Refrigerator("SAM2", "AUO2", "SAM2", facility.getId(), true);
+    enabledRefrigerator2.setCreatedBy(1L);
+    enabledRefrigerator2.setModifiedBy(1L);
+    mapper.insert(enabledRefrigerator2);
 
     Program unsupportedProgram = new Program();
     unsupportedProgram.setId(2l);
 
     List<Refrigerator> refrigerators = mapper.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZone.getId(), program.getId());
 
-    assertThat(refrigerators.size(), is(1));
-    assertThat(refrigerators.get(0).getSerialNumber(), is(enabledRefrigerator.getSerialNumber()));
+    assertThat(refrigerators.size(), is(2));
+    assertThat(refrigerators.get(0).getSerialNumber(), is(enabledRefrigerator2.getSerialNumber()));
+    assertThat(refrigerators.get(1).getSerialNumber(), is(enabledRefrigerator1.getSerialNumber()));
     assertThat(refrigerators.get(0).getEnabled(), is(true));
   }
 

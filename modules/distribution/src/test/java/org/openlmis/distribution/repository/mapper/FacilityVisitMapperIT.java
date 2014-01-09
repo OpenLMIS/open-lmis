@@ -99,7 +99,7 @@ public class FacilityVisitMapperIT {
 
     mapper.insert(facilityVisit);
 
-    FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+    FacilityVisit actualFacilityVisit = mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
 
     assertThat(actualFacilityVisit, is(facilityVisit));
     assertThat(actualFacilityVisit.getCreatedBy(), is(1l));
@@ -119,7 +119,7 @@ public class FacilityVisitMapperIT {
 
     mapper.update(facilityVisit);
 
-    FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(distribution.getId(), facility.getId());
+    FacilityVisit actualFacilityVisit = mapper.getBy(facility.getId(), distribution.getId());
     assertThat(actualFacilityVisit, is(facilityVisit));
   }
 

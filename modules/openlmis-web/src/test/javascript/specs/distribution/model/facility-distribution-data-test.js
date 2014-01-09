@@ -7,11 +7,11 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-describe('Facility Distribution data', function() {
+describe('Facility Distribution data', function () {
   var facilityDistributions, epiUse, refrigerators, facilityVisit, epiInventory, coverage;
 
-  beforeEach(function() {
-    facilityDistributions = new FacilityDistribution({});
+  beforeEach(function () {
+    facilityDistributions = new FacilityDistribution({facilityVisit: {id: 1}});
     epiUse = facilityDistributions.epiUse;
     refrigerators = facilityDistributions.refrigerators;
     facilityVisit = facilityDistributions.facilityVisit;
@@ -19,7 +19,7 @@ describe('Facility Distribution data', function() {
     coverage = facilityDistributions.coverage;
   });
 
-  it("should compute status as complete when all the forms for the facility are COMPLETE",function(){
+  it("should compute status as complete when all the forms for the facility are COMPLETE", function () {
     spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.COMPLETE);
@@ -29,7 +29,7 @@ describe('Facility Distribution data', function() {
     expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
-  it("should compute status as empty when all the forms for the facility are empty",function(){
+  it("should compute status as empty when all the forms for the facility are empty", function () {
     spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.EMPTY);
@@ -38,7 +38,7 @@ describe('Facility Distribution data', function() {
     expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.EMPTY);
   });
 
-  it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete",function(){
+  it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete", function () {
     spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.COMPLETE);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
@@ -46,7 +46,7 @@ describe('Facility Distribution data', function() {
     expect(facilityDistributions.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
-  it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete (another variant)",function(){
+  it("should compute status as incomplete when one of the forms for the facility is either empty or incomplete (another variant)", function () {
     spyOn(epiUse, "computeStatus").andReturn(DistributionStatus.EMPTY);
     spyOn(refrigerators, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);
     spyOn(facilityVisit, "computeStatus").andReturn(DistributionStatus.INCOMPLETE);

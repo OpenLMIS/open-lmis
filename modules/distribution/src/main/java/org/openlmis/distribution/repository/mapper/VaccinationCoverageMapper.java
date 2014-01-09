@@ -12,6 +12,7 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.distribution.domain.FullCoverage;
 import org.springframework.stereotype.Repository;
 
@@ -24,4 +25,7 @@ public interface VaccinationCoverageMapper {
   @Options(useGeneratedKeys = true)
   public void insertFullVaccinationCoverage(FullCoverage fullCoverage);
 
+
+  @Select({"SELECT * FROM full_coverages WHERE facilityVisitId = #{facilityVisitId}"})
+  FullCoverage getBy(Long facilityVisitId);
 }

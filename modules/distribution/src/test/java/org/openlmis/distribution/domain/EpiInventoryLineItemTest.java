@@ -32,14 +32,18 @@ public class EpiInventoryLineItemTest {
   public void shouldCreateEpiInventoryLineItemFromFacilityProgramProduct() throws Exception {
     FacilityProgramProduct facilityProgramProduct = new FacilityProgramProduct(new ProgramProduct(), 4L, 567);
     Product product = new Product();
+    product.setCode("P10");
+    product.setDisplayOrder(1);
     product.setPrimaryName("Primary Name");
     facilityProgramProduct.setProduct(product);
     FacilityProgramProduct spyFPP = spy(facilityProgramProduct);
     doReturn(567).when(spyFPP).calculateIsa(420L, 5);
 
-    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(spyFPP, 420L, 5);
+    EpiInventoryLineItem lineItem = new EpiInventoryLineItem(6L, spyFPP, 420L, 5);
 
     assertThat(lineItem.getIdealQuantity(), is(567));
     assertThat(lineItem.getProductName(), is("Primary Name"));
+    assertThat(lineItem.getProductCode(), is("P10"));
+    assertThat(lineItem.getProductDisplayOrder(), is(1));
   }
 }

@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,19 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class EpiInventory extends BaseModel {
-  private Long facilityId;
-  private Long distributionId;
+
   private List<EpiInventoryLineItem> lineItems = new ArrayList<>();
 
-  public EpiInventory(Facility facility, Distribution distribution) {
-    this.facilityId = facility.getId();
-    this.distributionId = distribution.getId();
+  public EpiInventory(FacilityVisit facilityVisit, Facility facility, Distribution distribution) {
 
     for (FacilityProgramProduct facilityProgramProduct : facility.getSupportedPrograms().get(0).getProgramProducts()) {
-      lineItems.add(new EpiInventoryLineItem(facilityProgramProduct, facility.getCatchmentPopulation(), distribution.getPeriod().getNumberOfMonths()));
+      EpiInventoryLineItem lineItem = new EpiInventoryLineItem(facilityVisit.getId(), facilityProgramProduct, facility.getCatchmentPopulation(), distribution.getPeriod().getNumberOfMonths());
+      lineItem.setCreatedBy(facilityVisit.getCreatedBy());
+      lineItems.add(lineItem);
     }
   }
 }

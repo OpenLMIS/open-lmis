@@ -10,6 +10,7 @@
 
 package org.openlmis.distribution.repository;
 
+import org.openlmis.distribution.domain.DistributionRefrigerators;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.mapper.DistributionRefrigeratorsMapper;
@@ -29,7 +30,11 @@ public class DistributionRefrigeratorsRepository {
     RefrigeratorProblem problem = reading.getProblem();
     if (problem != null) {
       problem.setReadingId(reading.getId());
-      mapper.insertProblems(problem);
+      mapper.insertProblem(problem);
     }
+  }
+
+  public DistributionRefrigerators getBy(Long facilityVisitId) {
+    return new DistributionRefrigerators(mapper.getBy(facilityVisitId));
   }
 }

@@ -13,7 +13,7 @@ describe('Distribution', function () {
   it('should set all Not Recorded flags to true for Epi Use', function () {
     var facilityId = '4';
     var epiUse = jasmine.createSpyObj('EpiUse', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {epiUse: epiUse}}});
+    var distribution = new Distribution({facilityDistributions: {4: {epiUse: epiUse, facilityVisit: {id: 1}}}});
 
     distribution.setEpiUseNotRecorded(facilityId);
 
@@ -24,7 +24,7 @@ describe('Distribution', function () {
   it('should set all Not Recorded flags to true for Epi Inventory', function () {
     var facilityId = '4';
     var epiInventory = jasmine.createSpyObj('EpiInventory', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {epiInventory: epiInventory}}});
+    var distribution = new Distribution({facilityDistributions: {4: {epiInventory: epiInventory, facilityVisit: {id: 1}}}});
 
     distribution.setEpiInventoryNotRecorded(facilityId);
 
@@ -34,7 +34,7 @@ describe('Distribution', function () {
   it('should set all Not Recorded flags to true for Coverage', function () {
     var facilityId = '4';
     var coverage = jasmine.createSpyObj('Coverage', ['setNotRecorded']);
-    var distribution = new Distribution({facilityDistributions: {4: {coverage: coverage}}});
+    var distribution = new Distribution({facilityDistributions: {4: {coverage: coverage, facilityVisit: {id: 1}}}});
 
     distribution.setCoverageNotRecorded(facilityId);
 

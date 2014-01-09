@@ -81,6 +81,7 @@ public class VaccinationCoverageMapperIT {
   ProcessingPeriod processingPeriod;
 
   Facility facility;
+  FacilityVisit facilityVisit;
 
   @Before
   public void setUp() throws Exception {
@@ -104,13 +105,15 @@ public class VaccinationCoverageMapperIT {
     distributionMapper.insert(distribution);
 
     facilityMapper.insert(facility);
+
+    facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+    facilityVisitMapper.insert(facilityVisit);
+
   }
 
 
   @Test
   public void shouldSaveVaccinationFullCoverage() throws Exception {
-    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
-    facilityVisitMapper.insert(facilityVisit);
 
 
     FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
@@ -124,5 +127,17 @@ public class VaccinationCoverageMapperIT {
     assertThat(resultSet.getInt("femaleMobileBrigadeReading"), is(78));
     assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(11));
     assertThat(resultSet.getInt("maleHealthCenterReading"), is(666));
+  }
+
+
+  @Test
+  public void shouldGetFullCoverageByFacilityVisitId() {
+    FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
+    fullCoverage.setFacilityVisitId(facilityVisit.getId());
+    mapper.insertFullVaccinationCoverage(fullCoverage);
+
+    FullCoverage savedFullCoverage = mapper.getBy(facilityVisit.getId());
+
+    assertThat(savedFullCoverage, is(fullCoverage));
   }
 }

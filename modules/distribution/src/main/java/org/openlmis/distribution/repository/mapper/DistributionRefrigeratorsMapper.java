@@ -10,11 +10,12 @@
 
 package org.openlmis.distribution.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.RefrigeratorProblem;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface DistributionRefrigeratorsMapper {
@@ -33,6 +34,19 @@ public interface DistributionRefrigeratorsMapper {
     "VALUES (#{readingId}, COALESCE(#{operatorError}, FALSE), COALESCE(#{burnerProblem}, FALSE), COALESCE(#{gasLeakage}, FALSE),",
     "COALESCE(#{egpFault}, FALSE), COALESCE(#{thermostatSetting}, FALSE), COALESCE(#{other}, FALSE), #{otherProblemExplanation})"})
   @Options(useGeneratedKeys = true)
-  void insertProblems(RefrigeratorProblem problem);
+  void insertProblem(RefrigeratorProblem problem);
 
+  @Select({"SELECT * FROM refrigerator_readings where facilityVisitId = #{facilityVisitId} ORDER BY LOWER(refrigeratorSerialNumber)"})
+  @Results(value = {
+    @Result(column = "refrigeratorId", property = "refrigerator.id"),
+    @Result(column = "refrigeratorSerialNumber", property = "refrigerator.serialNumber"),
+    @Result(column = "refrigeratorBrand", property = "refrigerator.brand"),
+    @Result(column = "refrigeratorModel", property = "refrigerator.model"),
+    @Result(column = "id", property = "id"),
+    @Result(column = "id", property = "problem", javaType = RefrigeratorProblem.class, one = @One(select = "getProblemByReadingId")),
+  })
+  List<RefrigeratorReading> getBy(Long facilityVisitId);
+
+  @Select({"SELECT * FROM refrigerator_problems WHERE readingId = #{readingId}"})
+  RefrigeratorProblem getProblemByReadingId(Long readingId);
 }

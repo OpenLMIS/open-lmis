@@ -85,7 +85,7 @@ public class DistributionController extends BaseController {
     existingDistribution.setPeriod(distribution.getPeriod());
     existingDistribution.setProgram(distribution.getProgram());
 
-    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.createFor(existingDistribution);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.get(existingDistribution);
     existingDistribution.setFacilityDistributions(facilityDistributions);
 
     OpenLmisResponse openLmisResponse = new OpenLmisResponse("distribution", existingDistribution);

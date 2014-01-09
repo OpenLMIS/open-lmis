@@ -14,6 +14,8 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface EpiUseMapper {
 
@@ -35,4 +37,11 @@ public interface EpiUseMapper {
     "stockAtFirstOfMonth = #{stockAtFirstOfMonth}, stockAtEndOfMonth = #{stockAtEndOfMonth}, expirationDate = #{expirationDate},",
     "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
   public void updateLineItem(EpiUseLineItem epiUseLineItem);
+
+  @Select({"SELECT * FROM epi_use_line_items WHERE facilityVisitId = #{facilityVisitId} ORDER BY LOWER(productGroupName)"})
+  @Results(value = {
+    @Result(property = "productGroup.id", column = "productGroupId"),
+    @Result(property = "productGroup.name", column = "productGroupName")
+  })
+  List<EpiUseLineItem> getBy(Long facilityVisitId);
 }

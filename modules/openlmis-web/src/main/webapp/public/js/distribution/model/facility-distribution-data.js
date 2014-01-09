@@ -10,18 +10,20 @@
 
 function FacilityDistribution(facilityDistribution) {
 
+  this.facilityVisitId = facilityDistribution.facilityVisit.id;
   this.epiUse = new EpiUse(facilityDistribution.epiUse);
   this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);
-  this.refrigerators = new Refrigerators(facilityDistribution.refrigerators);
+  this.refrigerators = new Refrigerators(this.facilityVisitId, facilityDistribution.refrigerators);
   this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
-  this.coverage = new Coverage(facilityDistribution.coverage);
+  this.coverage = new Coverage(this.facilityVisitId, facilityDistribution.coverage);
+
   this.status = facilityDistribution.status;
 
   FacilityDistribution.prototype.computeStatus = function () {
 
     var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.coverage];
     var overallStatus;
-    if(this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
+    if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
       return this.status;
     }
     $.each(forms, function (index, form) {

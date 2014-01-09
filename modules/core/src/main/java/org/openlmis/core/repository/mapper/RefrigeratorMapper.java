@@ -33,7 +33,7 @@ public interface RefrigeratorMapper {
     "INNER JOIN delivery_zone_program_schedules DZPS ON DZPS.deliveryZoneId = DZM.deliveryZoneId",
     "INNER JOIN refrigerators RF ON RF.facilityId = F.id",
     "WHERE DZPS.programId = #{programId} AND F.active = true AND RF.enabled = true",
-    "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name"})
+    "AND PS.programId = #{programId}  AND DZM.deliveryZoneId = #{deliveryZoneId} order by F.name, RF.serialNumber"})
   List<Refrigerator> getRefrigeratorsForADeliveryZoneAndProgram(@Param("deliveryZoneId") Long deliveryZoneId, @Param("programId") Long programId);
 
   @Update({"UPDATE refrigerators SET brand = #{brand}, model = #{model}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = DEFAULT WHERE id = #{id}"})

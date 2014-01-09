@@ -8,7 +8,8 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DROP TABLE epi_use;
-DROP TABLE distribution_refrigerators;
-DROP TABLE vaccination_coverages;
-DROP TABLE epi_inventory;
+ALTER TABLE epi_inventory_line_items
+DROP COLUMN epiInventoryId,
+ADD COLUMN facilityVisitId INTEGER NOT NULL REFERENCES facility_visits (id),
+ADD COLUMN productCode VARCHAR(50) NOT NULL,
+ADD COLUMN productDisplayOrder INTEGER NOT NULL;

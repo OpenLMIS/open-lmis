@@ -31,8 +31,7 @@ public interface FacilityVisitMapper {
     @Result(property = "confirmedBy.name", column = "confirmedByName"),
     @Result(property = "confirmedBy.title", column = "confirmedByTitle")
   })
-  public FacilityVisit getByDistributionAndFacility(@Param(value = "distributionId") Long distributionId,
-                                                    @Param(value = "facilityId") Long facilityId);
+  public FacilityVisit getBy(@Param(value = "facilityId") Long facilityId, @Param(value = "distributionId") Long distributionId);
 
   @Update({"UPDATE facility_visits SET confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
     "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}"})

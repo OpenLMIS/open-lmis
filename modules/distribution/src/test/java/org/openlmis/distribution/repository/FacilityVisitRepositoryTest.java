@@ -55,7 +55,7 @@ public class FacilityVisitRepositoryTest {
   public void shouldReturnFacilityVisit() {
 
     FacilityVisit facilityVisit = new FacilityVisit(1L, 1L, 1L);
-    when(facilityVisitMapper.getByDistributionAndFacility(1L, 1L)).thenReturn(facilityVisit);
+    when(facilityVisitMapper.getBy(1L, 1L)).thenReturn(facilityVisit);
 
     FacilityVisit expectedFacilityVisit = facilityVisitRepository.get(facilityVisit);
 

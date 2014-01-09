@@ -21,10 +21,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityProgramProduct;
 import org.openlmis.core.domain.ProductGroup;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -44,6 +41,9 @@ public class EpiUse extends BaseModel {
       List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
       this.populateEpiUseLineItems(programProducts, facilityVisit.getCreatedBy(), facilityVisit.getId());
     }
+
+    Comparator<EpiUseLineItem> productNameComparator = new ProductNameComparator();
+    Collections.sort(lineItems, productNameComparator);
   }
 
   private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy, Long facilityVisitId) {
@@ -54,6 +54,14 @@ public class EpiUse extends BaseModel {
       if (productGroup != null && productGroupSet.add(productGroup)) {
         this.lineItems.add(new EpiUseLineItem(facilityVisitId, productGroup, createdBy));
       }
+    }
+  }
+
+  private class ProductNameComparator implements Comparator<EpiUseLineItem> {
+
+    @Override
+    public int compare(EpiUseLineItem lineItem1, EpiUseLineItem lineItem2) {
+      return lineItem1.getProductGroup().getName().compareTo(lineItem2.getProductGroup().getName());
     }
   }
 }

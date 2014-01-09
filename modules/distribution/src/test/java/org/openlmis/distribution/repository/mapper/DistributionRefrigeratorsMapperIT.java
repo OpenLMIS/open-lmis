@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -151,7 +152,7 @@ public class DistributionRefrigeratorsMapperIT {
     mapper.insertReading(reading);
 
     RefrigeratorProblem problem = new RefrigeratorProblem(reading.getId(), true, false, true, false, true, false, "No Problem");
-    mapper.insertProblems(problem);
+    mapper.insertProblem(problem);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM refrigerator_problems WHERE readingId = " + reading.getId());
     assertTrue(resultSet.next());
@@ -165,7 +166,7 @@ public class DistributionRefrigeratorsMapperIT {
     mapper.insertReading(reading);
 
     RefrigeratorProblem problem = new RefrigeratorProblem(reading.getId(), true, null, true, false, true, null, null);
-    mapper.insertProblems(problem);
+    mapper.insertProblem(problem);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM refrigerator_problems WHERE readingId = " + reading.getId());
     assertTrue(resultSet.next());
@@ -173,5 +174,57 @@ public class DistributionRefrigeratorsMapperIT {
     assertThat(resultSet.getBoolean("burnerProblem"), is(false));
     assertThat(resultSet.getBoolean("other"), is(false));
     assertThat(resultSet.getString("otherProblemExplanation"), is(nullValue()));
+  }
+
+
+  @Test
+  public void shouldGetRefrigeratorReadingsByFacilityVisitId() {
+    mapper.insertReading(reading);
+
+    RefrigeratorProblem expectedRefrigeratorProblem = new RefrigeratorProblem(reading.getId(), true, true, true, true, false, false, null);
+    mapper.insertProblem(expectedRefrigeratorProblem);
+
+
+    Refrigerator refrigerator2 = new Refrigerator("SAM2", "SAM2", "LG2", facility.getId(), true);
+    refrigerator2.setCreatedBy(createdBy);
+    refrigerator2.setModifiedBy(createdBy);
+    refrigeratorMapper.insert(refrigerator2);
+
+    RefrigeratorReading reading2 = new RefrigeratorReading(refrigerator2);
+    reading2.setTemperature(98.6F);
+    reading2.setFunctioningCorrectly("Y");
+    reading2.setFacilityVisitId(facilityVisit.getId());
+
+    mapper.insertReading(reading2);
+
+    List<RefrigeratorReading> refrigeratorReadings = mapper.getBy(facilityVisit.getId());
+
+
+    assertForRefrigerator(refrigeratorReadings.get(0).getRefrigerator(), refrigerator);
+    assertForRefrigerator(refrigeratorReadings.get(1).getRefrigerator(), refrigerator2);
+    assertThat(refrigeratorReadings.get(0).getId(), is(reading.getId()));
+    assertThat(refrigeratorReadings.get(1).getId(), is(reading2.getId()));
+
+    assertThat(refrigeratorReadings.get(0).getProblem(), is(expectedRefrigeratorProblem));
+    assertThat(refrigeratorReadings.get(1).getProblem(), is(nullValue()));
+  }
+
+  private void assertForRefrigerator(Refrigerator actualRefrigerator, Refrigerator expectedRefrigerator) {
+    assertThat(actualRefrigerator.getId(), is(expectedRefrigerator.getId()));
+    assertThat(actualRefrigerator.getModel(), is(expectedRefrigerator.getModel()));
+    assertThat(actualRefrigerator.getBrand(), is(expectedRefrigerator.getBrand()));
+    assertThat(actualRefrigerator.getSerialNumber(), is(expectedRefrigerator.getSerialNumber()));
+  }
+
+  @Test
+  public void shouldGetRefrigeratorProblemsByReadingId() {
+    mapper.insertReading(reading);
+
+    RefrigeratorProblem expectedRefrigeratorProblem = new RefrigeratorProblem(reading.getId(), true, true, true, true, false, false, null);
+    mapper.insertProblem(expectedRefrigeratorProblem);
+
+    RefrigeratorProblem actualRefrigeratorProblem = mapper.getProblemByReadingId(reading.getId());
+
+    assertThat(actualRefrigeratorProblem, is(expectedRefrigeratorProblem));
   }
 }

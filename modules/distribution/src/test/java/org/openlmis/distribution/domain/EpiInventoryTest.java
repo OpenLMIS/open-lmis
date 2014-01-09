@@ -18,7 +18,6 @@ import org.openlmis.db.categories.UnitTests;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Collections;
 import java.util.Date;
 
 import static java.util.Arrays.asList;
@@ -33,22 +32,6 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @Category(UnitTests.class)
 @PrepareForTest({EpiInventory.class})
 public class EpiInventoryTest {
-
-  @Test
-  public void shouldCreateEPIInventoryWithFacilityAndDistribution() throws Exception {
-    Facility facility = new Facility(5L);
-    ProgramSupported programSupported = new ProgramSupported(1L, true, new Date());
-    programSupported.setProgramProducts(Collections.<FacilityProgramProduct>emptyList());
-    facility.setSupportedPrograms(asList(programSupported));
-
-    Distribution distribution = new Distribution();
-    distribution.setId(55L);
-
-    EpiInventory epiInventory = new EpiInventory(facility, distribution);
-
-    assertThat(epiInventory.getFacilityId(), is(facility.getId()));
-    assertThat(epiInventory.getDistributionId(), is(distribution.getId()));
-  }
 
   @Test
   public void shouldPopulateEpiInventoryLineItems() throws Exception {
@@ -74,8 +57,12 @@ public class EpiInventoryTest {
     Distribution distribution = new Distribution();
     distribution.setId(1L);
     distribution.setPeriod(new ProcessingPeriod(null, null, null, 4, "period"));
-
-    EpiInventory epiInventory = new EpiInventory(facility, distribution);
+    Long createdBy = 2L;
+    Long facilityVisitId = 3L;
+    FacilityVisit facilityVisit = mock(FacilityVisit.class);
+    facilityVisit.setId(facilityVisitId);
+    facilityVisit.setCreatedBy(createdBy);
+    EpiInventory epiInventory = new EpiInventory(facilityVisit, facility, distribution);
 
     assertThat(epiInventory.getLineItems().size(), is(2));
   }

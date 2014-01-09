@@ -38,17 +38,13 @@ public class EpiInventoryRepositoryTest {
   @Test
   public void shouldInsertEpiInventoryWithLineItems() throws Exception {
     EpiInventory epiInventory = new EpiInventory();
-    epiInventory.setId(5L);
     EpiInventoryLineItem lineItem1 = mock(EpiInventoryLineItem.class);
     EpiInventoryLineItem lineItem2 = mock(EpiInventoryLineItem.class);
     epiInventory.setLineItems(asList(lineItem1, lineItem2));
 
     repository.save(epiInventory);
 
-    verify(lineItem1).setEpiInventoryId(5L);
-    verify(lineItem2).setEpiInventoryId(5L);
     verify(mapper).saveLineItem(lineItem1);
     verify(mapper).saveLineItem(lineItem2);
-    verify(mapper).save(epiInventory);
   }
 }

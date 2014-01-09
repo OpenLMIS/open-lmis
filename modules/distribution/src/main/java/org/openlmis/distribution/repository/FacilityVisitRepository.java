@@ -28,7 +28,7 @@ public class FacilityVisitRepository {
   }
 
   public FacilityVisit get(FacilityVisit facilityVisit) {
-    return mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+    return mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
   }
 
   public void update(FacilityVisit facilityVisit) {
@@ -37,5 +37,9 @@ public class FacilityVisitRepository {
 
   public FacilityVisit getById(Long facilityVisitId) {
     return mapper.getById(facilityVisitId);
+  }
+
+  public FacilityVisit getBy(Long facilityId, Long distributionId) {
+    return mapper.getBy(facilityId, distributionId);
   }
 }

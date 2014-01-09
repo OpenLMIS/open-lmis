@@ -73,4 +73,8 @@ public class DistributionRefrigeratorsService {
       repository.saveReading(reading);
     }
   }
+
+  public DistributionRefrigerators getBy(Long facilityVisitId) {
+    return repository.getBy(facilityVisitId);
+  }
 }

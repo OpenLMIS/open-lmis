@@ -8,14 +8,14 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function Refrigerators(refrigerators) {
+function Refrigerators(facilityVisitId, refrigerators) {
 
   $.extend(true, this, refrigerators);
 
   var _this = this;
-
+  this.facilityVisitId = facilityVisitId;
   $(this.readings).each(function (i, value) {
-    _this.readings[i] = new RefrigeratorReading(value);
+    _this.readings[i] = new RefrigeratorReading(facilityVisitId, value);
   });
 
   Refrigerators.prototype.computeStatus = function () {
@@ -35,6 +35,7 @@ function Refrigerators(refrigerators) {
     if (!this.readings) {
       this.readings = [];
     }
-    this.readings.push(new RefrigeratorReading(reading));
+
+    this.readings.push(new RefrigeratorReading(facilityVisitId, reading));
   };
 }

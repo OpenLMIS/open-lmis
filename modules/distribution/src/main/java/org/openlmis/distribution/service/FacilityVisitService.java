@@ -27,4 +27,8 @@ public class FacilityVisitService {
   public FacilityVisit getById(Long facilityVisitId) {
     return repository.getById(facilityVisitId);
   }
+
+  public FacilityVisit getBy(Long facilityId, Long distributionId) {
+    return repository.getBy(facilityId, distributionId);
+  }
 }

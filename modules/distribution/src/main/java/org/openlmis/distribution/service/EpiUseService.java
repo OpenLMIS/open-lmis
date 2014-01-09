@@ -22,11 +22,15 @@ import org.springframework.stereotype.Service;
 public class EpiUseService {
 
   @Autowired
-  private EpiUseRepository epiUseRepository;
+  private EpiUseRepository repository;
 
   public void save(EpiUse epiUse) {
     for (EpiUseLineItem lineItem : epiUse.getLineItems()) {
-      epiUseRepository.saveLineItem(lineItem);
+      repository.saveLineItem(lineItem);
     }
+  }
+
+  public EpiUse getBy(Long facilityVisitId) {
+    return repository.getBy(facilityVisitId);
   }
 }

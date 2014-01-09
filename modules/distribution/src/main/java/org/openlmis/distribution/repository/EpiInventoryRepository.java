@@ -23,10 +23,12 @@ public class EpiInventoryRepository {
   private EpiInventoryMapper mapper;
 
   public void save(EpiInventory epiInventory) {
-    mapper.save(epiInventory);
     for (EpiInventoryLineItem lineItem : epiInventory.getLineItems()) {
-      lineItem.setEpiInventoryId(epiInventory.getId());
       mapper.saveLineItem(lineItem);
     }
+  }
+
+  public EpiInventory getBy(Long facilityVisitId) {
+    return new EpiInventory(mapper.getLineItemsBy(facilityVisitId));
   }
 }

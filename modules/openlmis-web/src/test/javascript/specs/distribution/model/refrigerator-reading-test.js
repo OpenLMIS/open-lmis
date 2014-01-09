@@ -10,7 +10,7 @@
 
 describe('RefrigeratorReading', function () {
   var refrigeratorReading;
-
+  var facilityVisitId = 1;
   it('should return red status class if refrigerator form is completely unfilled', function () {
     refrigeratorReading = new RefrigeratorReading({});
 
@@ -28,7 +28,7 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return yellow status class if internal refrigerator form fields are partially filled', function () {
-    refrigeratorReading = new RefrigeratorReading({temperature: undefined, functioningCorrectly: {value: 'Y'}});
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: undefined, functioningCorrectly: {value: 'Y'}});
 
     var status = refrigeratorReading.computeStatus();
 
@@ -36,27 +36,27 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return yellow status class if internal refrigerator form fields are partially filled and not recorded flag undefined',
-      function () {
-        refrigeratorReading = new RefrigeratorReading({temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
-          lowAlarmEvents: {notRecorded: undefined}, highAlarmEvents: {value: undefined, notRecorded: undefined}, problemSinceLastTime: {value: 'Y'}});
+    function () {
+      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
+        lowAlarmEvents: {notRecorded: undefined}, highAlarmEvents: {value: undefined, notRecorded: undefined}, problemSinceLastTime: {value: 'Y'}});
 
-        var status = refrigeratorReading.computeStatus();
+      var status = refrigeratorReading.computeStatus();
 
-        expect(status).toEqual(DistributionStatus.INCOMPLETE);
-      });
+      expect(status).toEqual(DistributionStatus.INCOMPLETE);
+    });
 
   it('should return yellow status class if internal refrigerator form fields are empty string and not recorded flag undefined',
-      function () {
-        refrigeratorReading = new RefrigeratorReading({temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
-          lowAlarmEvents: {value: 3}, highAlarmEvents: {value: ''}, problemSinceLastTime: {value: 'Y'}});
+    function () {
+      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
+        lowAlarmEvents: {value: 3}, highAlarmEvents: {value: ''}, problemSinceLastTime: {value: 'Y'}});
 
-        var status = refrigeratorReading.computeStatus();
+      var status = refrigeratorReading.computeStatus();
 
-        expect(status).toEqual(DistributionStatus.INCOMPLETE);
-      });
+      expect(status).toEqual(DistributionStatus.INCOMPLETE);
+    });
 
   it('should return green status class if internal refrigerator form fields are completely filled', function () {
-    refrigeratorReading = new RefrigeratorReading({temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {value: 7}, functioningCorrectly: {value: 'Y'},
       lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6}, problemSinceLastTime: {notRecorded: true}});
 
     var status = refrigeratorReading.computeStatus();
@@ -65,17 +65,17 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return green status class if internal refrigerator form fields are completely filled or NR flag set',
-      function () {
-        refrigeratorReading = new RefrigeratorReading({temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
-          lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: undefined, notRecorded: true}});
+    function () {
+      refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
+        lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: undefined, notRecorded: true}});
 
-        var status = refrigeratorReading.computeStatus();
+      var status = refrigeratorReading.computeStatus();
 
-        expect(status).toEqual(DistributionStatus.COMPLETE);
-      });
+      expect(status).toEqual(DistributionStatus.COMPLETE);
+    });
 
   it('should return yellow status class if all fields filled but not even 1 problem selected', function () {
-    refrigeratorReading = new RefrigeratorReading({temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
       lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y', notRecorded: false}});
 
 
@@ -85,7 +85,7 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return green status class if all fields filled and problems selected', function () {
-    refrigeratorReading = new RefrigeratorReading({temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
       lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y', notRecorded: false}});
 
     refrigeratorReading.problems = {operatorError: true};
@@ -95,7 +95,7 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return yellow status class if all fields filled and problems selected', function () {
-    refrigeratorReading = new RefrigeratorReading({temperature: {notRecorded: false}, functioningCorrectly: undefined,
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: false}, functioningCorrectly: undefined,
       lowAlarmEvents: undefined, highAlarmEvents: undefined, problemSinceLastTime: undefined});
 
     var status = refrigeratorReading.computeStatus();
@@ -104,7 +104,7 @@ describe('RefrigeratorReading', function () {
   });
 
   it('should return green status class if all fields filled and problems selected', function () {
-    refrigeratorReading = new RefrigeratorReading({temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
+    refrigeratorReading = new RefrigeratorReading(facilityVisitId, {temperature: {notRecorded: true}, functioningCorrectly: {value: 'Y'},
       lowAlarmEvents: {value: 3}, highAlarmEvents: {value: 6, notRecorded: true}, problemSinceLastTime: {value: 'Y', notRecorded: false}});
 
     refrigeratorReading.problems = {problemMap: {'problem': false, 'problem2': undefined}};

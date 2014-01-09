@@ -9,9 +9,9 @@
  */
 
 describe('Coverage', function () {
-
+  var facilityVisitId = 1;
   it('should set status as empty if coverage form is empty', function () {
-    var coverage = new Coverage({fullCoverage: {}});
+    var coverage = new Coverage(facilityVisitId, {fullCoverage: {}});
 
     var status = coverage.computeStatus();
 
@@ -19,7 +19,7 @@ describe('Coverage', function () {
   });
 
   it('should set status as complete if coverage form is valid and filled', function () {
-    var coverage = new Coverage({fullCoverage: {
+    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
       femaleHealthCenterReading: {value: 123}, femaleMobileBrigadeReading: {value: 5432}, maleHealthCenterReading: {value: 3}, maleMobileBrigadeReading: {value: 23}
     }});
 
@@ -29,7 +29,7 @@ describe('Coverage', function () {
   });
 
   it('should set status as complete if the form is valid', function () {
-    var coverage = new Coverage({fullCoverage: {
+    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
       femaleHealthCenterReading: {notRecorded: true}, femaleMobileBrigadeReading: {value: 5432}, maleHealthCenterReading: {value: 3}, maleMobileBrigadeReading: {value: 23}
     }});
 
@@ -39,7 +39,7 @@ describe('Coverage', function () {
   });
 
   it('should set status as incomplete if the only last form field valid', function () {
-    var coverage = new Coverage({fullCoverage: {
+    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
       femaleHealthCenterReading: {value: 1210}, femaleMobileBrigadeReading: {value: 5432}
     }});
 
@@ -49,7 +49,7 @@ describe('Coverage', function () {
   });
 
   it('should set not recorded checkbox for epi use', function () {
-    var coverage = new Coverage({fullCoverage: {
+    var coverage = new Coverage(facilityVisitId, {fullCoverage: {
       femaleHealthCenterReading: {notRecorded: true}, femaleMobileBrigadeReading: {value: 5432}, maleHealthCenterReading: {value: 3}, maleMobileBrigadeReading: {value: 23}
     }});
 

@@ -12,18 +12,21 @@ package org.openlmis.distribution.repository.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
-import org.openlmis.distribution.domain.EpiInventory;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface EpiInventoryMapper {
 
-  @Insert("INSERT INTO epi_inventory (facilityId, distributionId) VALUES (#{facilityId}, #{distributionId})")
-  @Options(useGeneratedKeys = true)
-  void save(EpiInventory epiInventory);
 
-  @Insert("INSERT INTO epi_inventory_line_items (epiInventoryId, productName, idealQuantity) VALUES (#{epiInventoryId}, #{productName}, #{idealQuantity})")
+  @Insert({"INSERT INTO epi_inventory_line_items (facilityVisitId, productCode, productName, productDisplayOrder, idealQuantity) VALUES ",
+    "(#{facilityVisitId}, #{productCode}, #{productName}, #{productDisplayOrder}, #{idealQuantity})"})
   @Options(useGeneratedKeys = true)
   void saveLineItem(EpiInventoryLineItem lineItem);
+
+  @Select({"SELECT * FROM epi_inventory_line_items WHERE facilityVisitId = #{facilityVisitId} ORDER BY productDisplayOrder, LOWER(productCode)"})
+  List<EpiInventoryLineItem> getLineItemsBy(Long facilityVisitId);
 }
