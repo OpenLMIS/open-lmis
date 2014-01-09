@@ -12,6 +12,7 @@ package org.openlmis.pageobjects.edi;
 
 
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
+import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.RequisitionPage;
 import org.openqa.selenium.WebElement;
@@ -21,6 +22,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestCase.assertEquals;
@@ -150,4 +152,11 @@ public class ConvertOrderPage extends RequisitionPage {
     public String getNoRequisitionPendingMessage() {
         return noRequisitionPending.getText();
     }
+
+  public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
+    testWebDriver.waitForAjax();
+    List<WebElement> x = testWebDriver.getElementsByXpath("//div[@id='convertToOrderGrid']//input[@class='ngSelectionCheckbox']");
+    testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
+    x.get(whichRequisition - 1).click();
+  }
 }

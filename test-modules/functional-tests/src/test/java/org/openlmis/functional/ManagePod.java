@@ -41,7 +41,7 @@ public class ManagePod extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
@@ -58,7 +58,7 @@ public class ManagePod extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
@@ -76,7 +76,7 @@ public class ManagePod extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     ConvertOrderPage convertOrderPage = homePage.navigateConvertToOrder();
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertOrderPage.clickConvertToOrderButton();
     convertOrderPage.clickOk();
     ManagePodPage managePodPage = homePage.navigateManagePOD();
@@ -177,13 +177,6 @@ public class ManagePod extends TestCaseHelper {
     dbWrapper.updateRequisitionStatus("AUTHORIZED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
-  }
-
-  public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.waitForPageToLoad();
-    List<WebElement> x = testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
-    testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
-    x.get(whichRequisition - 1).click();
   }
 
   @AfterMethod(groups = "requisition")

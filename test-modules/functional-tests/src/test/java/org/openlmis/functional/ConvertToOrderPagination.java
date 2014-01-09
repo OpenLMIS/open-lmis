@@ -25,7 +25,6 @@ import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -65,7 +64,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     String url = ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("return window.location.href").toString();
     url = url.substring(0, url.length() - 1) + page;
     testWebDriver.getUrl(url);
-    selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
+    new ConvertOrderPage(testWebDriver).selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
 
   @And("^I access convert to order$")
@@ -107,9 +106,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyPreviousAndFirstLinksEnabled();
     verifyNextAndLastLinksDisabled();
 
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     clickPageNumberLink(1);
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertToOrder(convertOrderPage);
 
     verifyNumberOfPageLinks(49, 50);
@@ -224,13 +223,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
-  }
-
-  public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.waitForAjax();
-    List<WebElement> x = testWebDriver.getElementsByXpath("//div[@id='convertToOrderGrid']//input[@class='ngSelectionCheckbox']");
-    testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
-    x.get(whichRequisition - 1).click();
   }
 
 
