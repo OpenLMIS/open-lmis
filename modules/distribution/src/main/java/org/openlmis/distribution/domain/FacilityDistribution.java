@@ -41,7 +41,7 @@ public class FacilityDistribution {
   public FacilityDistribution(FacilityVisit facilityVisit, Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
     this.facilityVisit = facilityVisit;
     this.epiUse = new EpiUse(facility, facilityVisit);
-    this.refrigerators = new DistributionRefrigerators(facilityVisit.getId(), readings);
+    this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
   }
 }

@@ -115,7 +115,7 @@ public class EpiUseMapperIT {
 
     Long createdBy = 1L;
 
-    facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), createdBy);
+    facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
 
   }

@@ -20,7 +20,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.mapper.FacilityVisitMapper;
 
@@ -53,9 +55,13 @@ public class FacilityVisitRepositoryTest {
 
   @Test
   public void shouldReturnFacilityVisit() {
+    Distribution distribution = new Distribution();
+    distribution.setId(1L);
+    distribution.setCreatedBy(3L);
+    Facility facility = new Facility(2L);
 
-    FacilityVisit facilityVisit = new FacilityVisit(1L, 1L, 1L);
-    when(facilityVisitMapper.getBy(1L, 1L)).thenReturn(facilityVisit);
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
+    when(facilityVisitMapper.getBy(2L, 1L)).thenReturn(facilityVisit);
 
     FacilityVisit expectedFacilityVisit = facilityVisitRepository.get(facilityVisit);
 

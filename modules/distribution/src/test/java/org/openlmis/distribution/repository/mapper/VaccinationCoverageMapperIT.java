@@ -106,7 +106,7 @@ public class VaccinationCoverageMapperIT {
 
     facilityMapper.insert(facility);
 
-    facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+    facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
 
   }
@@ -125,8 +125,8 @@ public class VaccinationCoverageMapperIT {
     assertThat(resultSet.getLong("facilityVisitId"), is(facilityVisit.getId()));
     assertThat(resultSet.getInt("femaleHealthCenterReading"), is(34));
     assertThat(resultSet.getInt("femaleMobileBrigadeReading"), is(78));
-    assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(11));
-    assertThat(resultSet.getInt("maleHealthCenterReading"), is(666));
+    assertThat(resultSet.getInt("maleHealthCenterReading"), is(11));
+    assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(666));
   }
 
 

@@ -43,6 +43,8 @@ public class RefrigeratorReadingDTO extends BaseModel {
   String notes;
 
   public RefrigeratorReading transform() {
+    refrigerator.setModifiedBy(this.modifiedBy);
+    refrigerator.setCreatedBy(this.createdBy);
     refrigerator.validate();
     if ("Y".equalsIgnoreCase(problemSinceLastTime.getEffectiveValue())) {
       problems.validate();

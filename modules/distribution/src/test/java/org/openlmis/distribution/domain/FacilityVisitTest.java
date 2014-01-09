@@ -14,6 +14,7 @@ package org.openlmis.distribution.domain;
 
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.db.categories.UnitTests;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -24,16 +25,15 @@ public class FacilityVisitTest {
 
   @Test
   public void shouldConstruct() throws Exception {
-    Long distributionId = 1L;
-    Long facilityId = 2L;
-    Long createdBy = 3L;
+    Distribution distribution = new Distribution();
+    distribution.setId(1L);
+    distribution.setCreatedBy(3L);
+    Facility facility = new Facility(2L);
 
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
 
-    FacilityVisit facilityVisit = new FacilityVisit(distributionId, facilityId, createdBy);
-
-    assertThat(facilityVisit.getDistributionId(), is(distributionId));
-    assertThat(facilityVisit.getFacilityId(), is(facilityId));
-    assertThat(facilityVisit.getCreatedBy(), is(createdBy));
-
+    assertThat(facilityVisit.getDistributionId(), is(distribution.getId()));
+    assertThat(facilityVisit.getFacilityId(), is(facility.getId()));
+    assertThat(facilityVisit.getCreatedBy(), is(distribution.getCreatedBy()));
   }
 }

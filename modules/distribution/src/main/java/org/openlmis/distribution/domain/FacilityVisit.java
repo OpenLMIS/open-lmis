@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -35,9 +36,9 @@ public class FacilityVisit extends BaseModel {
   private String observations;
   private Boolean synced = Boolean.FALSE;
 
-  public FacilityVisit(Long distributionId, Long facilityId, Long createdBy) {
-    this.distributionId = distributionId;
-    this.facilityId = facilityId;
-    this.createdBy = createdBy;
+  public FacilityVisit(Facility facility, Distribution distribution) {
+    this.distributionId = distribution.getId();
+    this.facilityId = facility.getId();
+    this.createdBy = distribution.getCreatedBy();
   }
 }

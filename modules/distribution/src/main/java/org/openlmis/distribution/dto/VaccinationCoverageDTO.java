@@ -34,4 +34,8 @@ public class VaccinationCoverageDTO extends BaseModel {
   public VaccinationCoverage transform() {
     return new VaccinationCoverage(fullCoverage.transform());
   }
+
+  public void setModifiedBy(Long modifiedBy) {
+    fullCoverage.setModifiedBy(modifiedBy);
+  }
 }

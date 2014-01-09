@@ -89,7 +89,8 @@ public class DistributionRefrigeratorsMapperIT {
   Distribution distribution;
 
   private Refrigerator refrigerator;
-  private Long createdBy;
+  private Long createdBy = 1L;
+  ;
   private RefrigeratorReading reading;
   private FacilityVisit facilityVisit;
 
@@ -113,11 +114,12 @@ public class DistributionRefrigeratorsMapperIT {
     distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(DistributionBuilder.program, program)));
+      with(DistributionBuilder.program, program),
+      with(DistributionBuilder.createdBy, createdBy)));
     distributionMapper.insert(distribution);
 
+
     refrigerator = new Refrigerator("SAM", "SAM", "LG", facility.getId(), true);
-    createdBy = 1L;
     refrigerator.setCreatedBy(createdBy);
     refrigerator.setModifiedBy(createdBy);
     refrigeratorMapper.insert(refrigerator);
@@ -125,8 +127,9 @@ public class DistributionRefrigeratorsMapperIT {
     reading = new RefrigeratorReading(refrigerator);
     reading.setTemperature(98.6F);
     reading.setFunctioningCorrectly("Y");
+    reading.setCreatedBy(createdBy);
 
-    facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), createdBy);
+    facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
 
     reading.setFacilityVisitId(facilityVisit.getId());
@@ -152,6 +155,7 @@ public class DistributionRefrigeratorsMapperIT {
     mapper.insertReading(reading);
 
     RefrigeratorProblem problem = new RefrigeratorProblem(reading.getId(), true, false, true, false, true, false, "No Problem");
+    problem.setCreatedBy(createdBy);
     mapper.insertProblem(problem);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM refrigerator_problems WHERE readingId = " + reading.getId());

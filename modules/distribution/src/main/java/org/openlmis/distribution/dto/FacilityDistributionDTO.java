@@ -50,6 +50,7 @@ public class FacilityDistributionDTO {
     epiUse.setModifiedBy(modifiedBy);
     refrigerators.setCreatedBy(modifiedBy);
     refrigerators.setModifiedBy(modifiedBy);
+    coverage.setModifiedBy(modifiedBy);
   }
 
 }

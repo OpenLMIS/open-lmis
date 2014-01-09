@@ -19,6 +19,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
+import org.openlmis.distribution.builder.DistributionBuilder;
 import org.openlmis.distribution.domain.Distribution;
 import org.openlmis.distribution.domain.EpiInventory;
 import org.openlmis.distribution.domain.EpiInventoryLineItem;
@@ -114,19 +115,20 @@ public class EpiInventoryMapperIT {
 
     processingPeriod = make(a(defaultProcessingPeriod, with(scheduleId, schedule.getId())));
     periodMapper.insert(processingPeriod);
+    Long createdBy = 1L;
 
     distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
-      with(program, program1)));
+      with(program, program1),
+      with(DistributionBuilder.createdBy, createdBy)));
     distributionMapper.insert(distribution);
 
     facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
     epiInventory = new EpiInventory();
-    Long createdBy = 1L;
-    facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), createdBy);
+    facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitMapper.insert(facilityVisit);
 
 
@@ -161,6 +163,7 @@ public class EpiInventoryMapperIT {
     lineItem.setProductCode("code 1");
     lineItem.setProductDisplayOrder(2);
     lineItem.setIdealQuantity(76);
+    lineItem.setCreatedBy(1L);
 
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11"), with(displayOrder, 2)));
     productMapper.insert(product1);
@@ -174,6 +177,7 @@ public class EpiInventoryMapperIT {
     lineItem2.setProductCode("code 2");
     lineItem2.setProductDisplayOrder(1);
     lineItem2.setIdealQuantity(76);
+    lineItem2.setCreatedBy(1L);
 
     mapper.saveLineItem(lineItem);
     mapper.saveLineItem(lineItem2);
@@ -195,6 +199,7 @@ public class EpiInventoryMapperIT {
     lineItem.setProductCode("code 1");
     lineItem.setProductDisplayOrder(2);
     lineItem.setIdealQuantity(76);
+    lineItem.setCreatedBy(1L);
 
     Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11"), with(displayOrder, 2)));
     productMapper.insert(product1);
@@ -208,6 +213,7 @@ public class EpiInventoryMapperIT {
     lineItem2.setProductCode("code 2");
     lineItem2.setProductDisplayOrder(1);
     lineItem2.setIdealQuantity(76);
+    lineItem2.setCreatedBy(1L);
 
     mapper.saveLineItem(lineItem);
     mapper.saveLineItem(lineItem2);

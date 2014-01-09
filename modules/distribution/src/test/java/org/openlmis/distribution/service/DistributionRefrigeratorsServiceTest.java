@@ -71,7 +71,7 @@ public class DistributionRefrigeratorsServiceTest {
   public void shouldDisableAllRefrigeratorsForAFacilityBeforeSynchronizingTheRefrigerators() {
     Refrigerator refrigerator = new Refrigerator();
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisit, asList(refrigeratorReading));
 
     service.save(facilityId, distributionRefrigerators);
 
@@ -83,7 +83,7 @@ public class DistributionRefrigeratorsServiceTest {
   public void shouldGetAllRefrigeratorsByFacilityBeforeSync() {
     Refrigerator refrigerator = new Refrigerator();
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisit, asList(refrigeratorReading));
 
     service.save(facilityId, distributionRefrigerators);
 
@@ -96,15 +96,13 @@ public class DistributionRefrigeratorsServiceTest {
     Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
     existingRefrigerator.setId(refrigeratorId);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisit, asList(refrigeratorReading));
     distributionRefrigerators.setCreatedBy(createdBy);
     when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
     service.save(facilityId, distributionRefrigerators);
 
     assertThat(refrigerator.getId(), is(refrigeratorId));
-    assertThat(refrigerator.getModifiedBy(), is(createdBy));
-    assertThat(refrigerator.getCreatedBy(), is(nullValue()));
     verify(refrigeratorService).save(refrigerator);
   }
 
@@ -114,7 +112,7 @@ public class DistributionRefrigeratorsServiceTest {
     Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
     existingRefrigerator.setId(refrigeratorId);
     RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisit, asList(refrigeratorReading));
     distributionRefrigerators.setCreatedBy(createdBy);
     when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
@@ -122,24 +120,8 @@ public class DistributionRefrigeratorsServiceTest {
 
     assertThat(refrigerator.getId(), is(nullValue()));
     assertThat(refrigerator.getFacilityId(), is(facilityId));
-    assertThat(refrigerator.getCreatedBy(), is(createdBy));
     verify(refrigeratorService).save(refrigerator);
   }
 
-  @Test
-  public void shouldNotSyncIfAlreadySyncedFacility() throws Exception {
-    Refrigerator refrigerator = new Refrigerator("serialNumberNew");
-    Refrigerator existingRefrigerator = new Refrigerator("serialNumber");
-    existingRefrigerator.setId(refrigeratorId);
-    RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(facilityVisitId, asList(refrigeratorReading));
-    distributionRefrigerators.setCreatedBy(createdBy);
-    facilityVisit.setSynced(true);
-    when(facilityVisitService.getById(facilityVisitId)).thenReturn(facilityVisit);
-    when(refrigeratorService.getAllBy(facilityId)).thenReturn(asList(existingRefrigerator));
 
-    service.save(facilityId, distributionRefrigerators);
-
-    verify(facilityVisitService).getById(facilityVisitId);
-  }
 }

@@ -102,7 +102,7 @@ public class FacilityDistributionServiceTest {
     distribution.setPeriod(new ProcessingPeriod());
 
     FacilityVisit facilityVisit = new FacilityVisit();
-    whenNew(FacilityVisit.class).withArguments(distribution.getId(), facility.getId(), distribution.getCreatedBy()).thenReturn(facilityVisit);
+    whenNew(FacilityVisit.class).withArguments(facility, distribution).thenReturn(facilityVisit);
     whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading)).thenReturn(mock(FacilityDistribution.class));
 
     FacilityDistribution distributionData = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);
@@ -110,7 +110,7 @@ public class FacilityDistributionServiceTest {
     verify(epiUseService).save(distributionData.getEpiUse());
     verify(facilityVisitService).save(facilityVisit);
     verify(epiInventoryService).save(distributionData.getEpiInventory());
-    verifyNew(FacilityVisit.class).withArguments(distribution.getId(), facility.getId(), distribution.getCreatedBy());
+    verifyNew(FacilityVisit.class).withArguments(facility, distribution);
     verifyNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(refrigeratorReading));
   }
 
@@ -167,7 +167,7 @@ public class FacilityDistributionServiceTest {
     FacilityDistribution expectedFacilityDistribution = new FacilityDistribution();
     expectedFacilityDistribution.setEpiUse(new EpiUse());
     FacilityVisit facilityVisit = new FacilityVisit();
-    whenNew(FacilityVisit.class).withArguments(distribution.getId(), facility.getId(), distribution.getCreatedBy()).thenReturn(facilityVisit);
+    whenNew(FacilityVisit.class).withArguments(facility, distribution).thenReturn(facilityVisit);
     whenNew(FacilityDistribution.class).withArguments(facilityVisit, facility, distribution, asList(facilityRefReading)).thenReturn(expectedFacilityDistribution);
 
     FacilityDistribution facilityDistribution = facilityDistributionService.createDistributionData(facility, distribution, refrigerators);

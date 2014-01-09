@@ -15,7 +15,6 @@ import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.service.RefrigeratorService;
 import org.openlmis.distribution.domain.DistributionRefrigerators;
-import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.domain.RefrigeratorReading;
 import org.openlmis.distribution.repository.DistributionRefrigeratorsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +40,6 @@ public class DistributionRefrigeratorsService {
       refrigeratorService.disableAllFor(facilityId);
       return;
     }
-    FacilityVisit facilityVisit = facilityVisitService.getById(readings.get(0).getFacilityVisitId());
-    if (facilityVisit.getSynced()) {
-      return;
-    }
     refrigeratorService.disableAllFor(facilityId);
 
     List<Refrigerator> refrigeratorsForFacility = refrigeratorService.getAllBy(facilityId);
@@ -60,13 +55,10 @@ public class DistributionRefrigeratorsService {
       });
 
       refrigerator.setEnabled(true);
-      refrigerator.setModifiedBy(distributionRefrigerators.getCreatedBy());
       if (existingRefrigerator != null) {
         refrigerator.setId(existingRefrigerator.getId());
-        refrigerator.setModifiedBy(distributionRefrigerators.getCreatedBy());
       } else {
         refrigerator.setFacilityId(facilityId);
-        refrigerator.setCreatedBy(distributionRefrigerators.getCreatedBy());
       }
       refrigeratorService.save(refrigerator);
 

@@ -90,7 +90,7 @@ public class FacilityVisitMapperIT {
 
   @Test
   public void shouldInsertFacilityVisit() {
-    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
     facilityVisit.setConfirmedBy(confirmedBy);
@@ -107,7 +107,7 @@ public class FacilityVisitMapperIT {
 
   @Test
   public void shouldUpdateFacilityVisit() {
-    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
 
@@ -125,7 +125,7 @@ public class FacilityVisitMapperIT {
 
   @Test
   public void shouldGetFacilityVisitById() {
-    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), 1L);
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
 
     mapper.insert(facilityVisit);
 

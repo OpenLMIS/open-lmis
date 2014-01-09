@@ -23,12 +23,13 @@ public class DistributionRefrigerators extends BaseModel {
 
   private List<RefrigeratorReading> readings = new ArrayList<>();
 
-  public DistributionRefrigerators(Long facilityVisitId, List<RefrigeratorReading> readings) {
+  public DistributionRefrigerators(FacilityVisit facilityVisit, List<RefrigeratorReading> readings) {
     for (RefrigeratorReading reading : readings) {
-      reading.setFacilityVisitId(facilityVisitId);
-      reading.setCreatedBy(this.createdBy);
-      reading.setModifiedBy(this.modifiedBy);
+      reading.setFacilityVisitId(facilityVisit.getId());
+      reading.setCreatedBy(facilityVisit.getCreatedBy());
       this.readings.add(reading);
     }
   }
+
+
 }

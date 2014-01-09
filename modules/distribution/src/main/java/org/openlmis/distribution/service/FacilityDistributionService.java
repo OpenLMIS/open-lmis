@@ -82,7 +82,7 @@ public class FacilityDistributionService {
       }
     });
 
-    FacilityVisit facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), distribution.getCreatedBy());
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     facilityVisitService.save(facilityVisit);
     FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, facility, distribution, refrigeratorReadings);
     epiUseService.save(facilityDistribution.getEpiUse());
@@ -90,11 +90,15 @@ public class FacilityDistributionService {
     return facilityDistribution;
   }
 
+
   public boolean save(FacilityDistribution facilityDistribution) {
-    epiUseService.save(facilityDistribution.getEpiUse());
-    distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
-    vaccinationCoverageService.save(facilityDistribution.getCoverage());
-    return facilityVisitService.save(facilityDistribution.getFacilityVisit());
+    boolean synced = facilityVisitService.save(facilityDistribution.getFacilityVisit());
+    if (synced) {
+      epiUseService.save(facilityDistribution.getEpiUse());
+      distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
+      vaccinationCoverageService.save(facilityDistribution.getCoverage());
+    }
+    return synced;
   }
 
   public Map<Long, FacilityDistribution> get(Distribution distribution) {
