@@ -490,16 +490,30 @@ public class InitiateRnRPage extends RequisitionPage {
   public void verifyPacksToShip(Integer packSize) throws IOException, SQLException {
     testWebDriver.waitForElementToAppear(packsToShip);
     String actualPacksToShip = testWebDriver.getText(packsToShip);
+    int expectedPacksToShip;
+    Integer remainingQuantity;
 
-    Integer expectedPacksToShip;
     if (requestedQuantityFirstProduct.getAttribute("value").isEmpty()) {
-      float actualCalculatedOrderQuantity = Float.parseFloat(testWebDriver.getText(calculatedOrderQuantity));
-      expectedPacksToShip = Math.round(actualCalculatedOrderQuantity / packSize);
+      Integer actualCalculatedOrderQuantity = Integer.parseInt(testWebDriver.getText(calculatedOrderQuantity));
+      expectedPacksToShip = (int) Math.floor((float)actualCalculatedOrderQuantity / packSize);
+      remainingQuantity = (actualCalculatedOrderQuantity % packSize);
     } else {
-      float actualRequestedQuantity = Float.parseFloat(requestedQuantityFirstProduct.getAttribute("value"));
-      expectedPacksToShip = Math.round(actualRequestedQuantity / packSize);
+      Integer actualRequestedQuantity = Integer.parseInt(requestedQuantityFirstProduct.getAttribute("value"));
+      expectedPacksToShip = (int) Math.floor((float)actualRequestedQuantity / packSize);
+      remainingQuantity = (actualRequestedQuantity % packSize);
     }
-    verifyFieldValue(expectedPacksToShip.toString(), actualPacksToShip.trim());
+
+    DBWrapper dbWrapper = new DBWrapper();
+    boolean roundToZeroFlag = Boolean.parseBoolean(dbWrapper.getAttributeFromTable("products","roundToZero","code","P10"));
+
+    if(expectedPacksToShip>0 || (expectedPacksToShip==0 && !roundToZeroFlag)){
+      Integer packRoundingThreshold =Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packRoundingThreshold", "code", "P10")) ;
+      if(remainingQuantity>=packRoundingThreshold){
+          expectedPacksToShip++;
+      }
+    }
+
+    verifyFieldValue(String.valueOf(expectedPacksToShip), actualPacksToShip.trim());
     testWebDriver.sleep(500);
   }
 
