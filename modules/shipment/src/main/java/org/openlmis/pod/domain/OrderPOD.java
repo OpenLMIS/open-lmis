@@ -30,17 +30,17 @@ public class OrderPOD extends BaseModel {
   private Long facilityId;
   private Long programId;
   private Long periodId;
-  private List<OrderPODLineItem> orderPodLineItems;
+  private List<OrderPODLineItem> podLineItems;
 
   public OrderPOD(Long id) {
     this.id = id;
   }
 
   public void validate() {
-    if (orderId == null || orderPodLineItems == null || orderPodLineItems.size() == 0) {
+    if (orderId == null || podLineItems == null || podLineItems.size() == 0) {
       throw new DataException("error.mandatory.fields.missing");
     }
-    for (OrderPODLineItem lineItem : orderPodLineItems) {
+    for (OrderPODLineItem lineItem : podLineItems) {
       lineItem.validate();
       lineItem.setCreatedBy(createdBy);
       lineItem.setModifiedBy(modifiedBy);

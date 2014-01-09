@@ -13,7 +13,6 @@
 package org.openlmis.pod.service;
 
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ProductService;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -40,9 +38,6 @@ public class PODService {
   private PODRepository podRepository;
 
   @Autowired
-  private ProductService productService;
-
-  @Autowired
   private OrderService orderService;
 
   @Autowired
@@ -53,28 +48,41 @@ public class PODService {
 
   @Transactional
   public void updatePOD(OrderPOD orderPod) {
-    if (!fulfillmentPermissionService.hasPermission(orderPod.getCreatedBy(), getWarehouseForOrder(orderPod.getOrderId()), MANAGE_POD)) {
-      throw new DataException("error.permission.denied");
-    }
-    insert(orderPod);
-    if (orderPod.getOrderPodLineItems() == null) return;
-    List<String> invalidProductCodes = getInvalidProductCodes(orderPod.getOrderPodLineItems());
-    if (invalidProductCodes.size() > 0) {
-      throw new DataException("error.invalid.product.code", invalidProductCodes.toString());
-    }
-    for (OrderPODLineItem orderPodLineItem : orderPod.getOrderPodLineItems()) {
-      orderPodLineItem.setPodId(orderPod.getId());
-      podRepository.insertPODLineItem(orderPodLineItem);
-    }
+    checkPermissions(orderPod);
+    insertOrderPOD(orderPod);
+    List<OrderPODLineItem> orderPodLineItems = orderPod.getPodLineItems();
+    insertLineItems(orderPod, orderPodLineItems);
+    updateOrderStatus(orderPod);
+  }
+
+  private void insertOrderPOD(OrderPOD orderPod) {
+    Rnr requisition = requisitionService.getFullRequisitionById(orderPod.getOrderId());
+    orderPod.fillPOD(requisition);
+    fillPodLineItems(orderPod, requisition);
+    insertPOD(orderPod);
+  }
+
+  private void fillPodLineItems(OrderPOD orderPod, Rnr requisition) {
+
+  }
+
+  public void updateOrderStatus(OrderPOD orderPod) {
     Order order = new Order(orderPod.getOrderId());
     order.setStatus(OrderStatus.RECEIVED);
     orderService.updateOrderStatus(order);
   }
 
-  private void insert(OrderPOD orderPod) {
-    Rnr requisition = requisitionService.getLWById(orderPod.getOrderId());
-    orderPod.fillPOD(requisition);
-    podRepository.insertPOD(orderPod);
+  public void insertLineItems(OrderPOD orderPod, List<OrderPODLineItem> orderPodLineItems) {
+    for (OrderPODLineItem orderPodLineItem : orderPodLineItems) {
+      orderPodLineItem.setPodId(orderPod.getId());
+      podRepository.insertPODLineItem(orderPodLineItem);
+    }
+  }
+
+  public void checkPermissions(OrderPOD orderPod) {
+    if (!fulfillmentPermissionService.hasPermission(orderPod.getCreatedBy(), getWarehouseForOrder(orderPod.getOrderId()), MANAGE_POD)) {
+      throw new DataException("error.permission.denied");
+    }
   }
 
   public OrderPOD getPODByOrderId(Long orderId) {
@@ -90,13 +98,7 @@ public class PODService {
     return order.getSupplyLine().getSupplyingFacility().getId();
   }
 
-  private List<String> getInvalidProductCodes(List<OrderPODLineItem> orderPodLineItems) {
-    List<String> invalidProductCodes = new ArrayList<>();
-    for (OrderPODLineItem orderPodLineItem : orderPodLineItems) {
-      if (productService.getByCode(orderPodLineItem.getProductCode()) == null) {
-        invalidProductCodes.add(orderPodLineItem.getProductCode());
-      }
-    }
-    return invalidProductCodes;
+  public void insertPOD(OrderPOD orderPod) {
+    podRepository.insertPOD(orderPod);
   }
 }

@@ -18,15 +18,19 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.service.PODService;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -43,6 +47,12 @@ public class RestPODServiceTest {
   @Mock
   private PODService podService;
 
+  @Mock
+  private ProductService productService;
+
+  @Mock
+  private RequisitionService requisitionService;
+
   @Rule
   private ExpectedException expectedException = ExpectedException.none();
 
@@ -54,13 +64,23 @@ public class RestPODServiceTest {
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
     when(orderService.getOrder(4L)).thenReturn(new Order());
+    doNothing().when(podService).checkPermissions(orderPod);
     when(podService.getPODByOrderId(4L)).thenReturn(null);
+    Rnr rnr = new Rnr();
+    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(rnr);
+    doNothing().when(spyOrderPod).fillPOD(rnr);
+    doNothing().when(podService).insertPOD(orderPod);
+    doNothing().when(podService).insertLineItems(orderPod, null);
+    doNothing().when(podService).updateOrderStatus(orderPod);
 
     restPODService.updatePOD(spyOrderPod, 1L);
 
     verify(orderService).getOrder(4L);
+    verify(podService).checkPermissions(orderPod);
     verify(podService).getPODByOrderId(4L);
-    verify(podService).updatePOD(orderPod);
+    verify(podService).insertPOD(orderPod);
+    verify(podService).insertLineItems(orderPod, null);
+    verify(podService).updateOrderStatus(orderPod);
   }
 
   @Test
@@ -90,6 +110,32 @@ public class RestPODServiceTest {
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.restapi.delivery.already.confirmed");
+
+    restPODService.updatePOD(spyOrderPod, 1L);
+  }
+
+  @Test
+  public void shouldThrowErrorWhenInvalidProductCodes() throws Exception {
+    OrderPOD orderPod = new OrderPOD(3L);
+    orderPod.setOrderId(4L);
+
+    OrderPOD spyOrderPod = spy(orderPod);
+    doNothing().when(spyOrderPod).validate();
+    when(orderService.getOrder(4L)).thenReturn(new Order());
+    when(podService.getPODByOrderId(4L)).thenReturn(null);
+
+    Rnr rnr = new Rnr();
+    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(rnr);
+    doNothing().when(spyOrderPod).fillPOD(rnr);
+    doNothing().when(podService).insertPOD(orderPod);
+
+    OrderPODLineItem orderPODLineItem = mock(OrderPODLineItem.class);
+    when(orderPODLineItem.getProductCode()).thenReturn("ABC");
+    when(productService.getByCode("ABC")).thenReturn(null);
+    when(spyOrderPod.getPodLineItems()).thenReturn(asList(orderPODLineItem));
+
+    expectedException.expect(DataException.class);
+    expectedException.expectMessage("code: error.invalid.product.code, params: { [ABC] }");
 
     restPODService.updatePOD(spyOrderPod, 1L);
   }

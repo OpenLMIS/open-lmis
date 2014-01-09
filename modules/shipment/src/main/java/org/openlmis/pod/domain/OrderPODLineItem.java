@@ -14,10 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Data
 @NoArgsConstructor
@@ -28,9 +29,21 @@ public class OrderPODLineItem extends BaseModel {
   private Long podId;
   private String productCode;
   private Integer quantityReceived;
+  private String productName;
+  private String dispensingUnit;
+  private Integer packsToShip;
+  private Integer quantityShipped;
+  private Boolean fullSupply;
+  private String notes;
+
+  public OrderPODLineItem(Long podId, String productCode, Integer quantityReceived) {
+    this.podId = podId;
+    this.productCode = productCode;
+    this.quantityReceived = quantityReceived;
+  }
 
   public void validate() {
-    if (StringUtils.isEmpty(productCode) || quantityReceived == null) {
+    if (isEmpty(productCode) || quantityReceived == null) {
       throw new DataException("error.mandatory.fields.missing");
     }
     if (quantityReceived < 0) {

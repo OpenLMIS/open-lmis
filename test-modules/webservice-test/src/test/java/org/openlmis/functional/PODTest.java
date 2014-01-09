@@ -59,8 +59,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -101,8 +101,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P11");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(650);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P11");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(650);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -131,8 +131,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -158,8 +158,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -182,8 +182,8 @@ public class PODTest extends JsonUtility {
     client.createContext();
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -210,8 +210,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P1000000");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P1000000");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -239,8 +239,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),
@@ -268,8 +268,8 @@ public class PODTest extends JsonUtility {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(-65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(-65);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),

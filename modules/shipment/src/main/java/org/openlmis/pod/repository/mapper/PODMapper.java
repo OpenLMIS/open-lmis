@@ -26,15 +26,16 @@ import java.util.List;
 @Repository
 public interface PODMapper {
 
-  @Insert({"INSERT INTO pod_line_items (podId, productCode, quantityReceived, createdBy, modifiedBy) values",
-    "(#{podId}, #{productCode}, #{quantityReceived}, #{createdBy}, #{modifiedBy} )"})
+  @Insert({"INSERT INTO pod_line_items " +
+    "(podId, productCode, quantityReceived, productName, dispensingUnit, packsToShip, quantityShipped, createdBy, modifiedBy) VALUES " +
+    "(#{podId}, #{productCode}, #{quantityReceived}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{quantityShipped}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
-  @Select("SELECT * FROM pod_line_items where podId = #{podId}")
+  @Select("SELECT * FROM pod_line_items WHERE podId = #{podId}")
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
-  @Insert({"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) values ",
+  @Insert({"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ",
     "(#{orderId}, #{facilityId}, #{programId}, #{periodId}, DEFAULT, #{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);

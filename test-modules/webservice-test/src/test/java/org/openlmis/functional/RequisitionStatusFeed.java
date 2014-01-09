@@ -88,8 +88,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(65);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
     client.SendJSON(getJsonStringFor(OrderPODFromJson),
       format(POD_URL, id),

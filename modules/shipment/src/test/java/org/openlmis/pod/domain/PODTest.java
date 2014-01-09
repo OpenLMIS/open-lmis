@@ -42,7 +42,7 @@ public class PODTest {
     OrderPOD orderPod = new OrderPOD(1l);
     orderPod.setOrderId(null);
     List<OrderPODLineItem> orderPodLineItems = asList(new OrderPODLineItem(1l, "P100", 100));
-    orderPod.setOrderPodLineItems(orderPodLineItems);
+    orderPod.setPodLineItems(orderPodLineItems);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
@@ -66,7 +66,7 @@ public class PODTest {
   public void shouldThrowErrorIfLineItemsNotPresent() {
     OrderPOD orderPod = new OrderPOD(1l);
     orderPod.setOrderId(2l);
-    orderPod.setOrderPodLineItems(null);
+    orderPod.setPodLineItems(null);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
@@ -79,7 +79,7 @@ public class PODTest {
     OrderPOD orderPod = new OrderPOD(1l);
     orderPod.setOrderId(2l);
     List<OrderPODLineItem> orderPodLineItems = new ArrayList<>();
-    orderPod.setOrderPodLineItems(orderPodLineItems);
+    orderPod.setPodLineItems(orderPodLineItems);
 
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.mandatory.fields.missing");
@@ -93,7 +93,7 @@ public class PODTest {
     orderPod.setOrderId(2l);
     OrderPODLineItem orderPodLineItem = mock(OrderPODLineItem.class);
     List<OrderPODLineItem> orderPodLineItems = asList(orderPodLineItem);
-    orderPod.setOrderPodLineItems(orderPodLineItems);
+    orderPod.setPodLineItems(orderPodLineItems);
 
     orderPod.validate();
 

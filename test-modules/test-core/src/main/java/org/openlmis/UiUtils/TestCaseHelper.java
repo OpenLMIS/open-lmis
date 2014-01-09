@@ -20,7 +20,6 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -193,15 +192,11 @@ public class TestCaseHelper {
   }
 
   public void setupTestData(boolean isPreviousPeriodRnRRequired) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    rightsList.add("AUTHORIZE_REQUISITION");
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
       setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);
     else
       setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", "700", rightsList);
-
   }
 
   public void setupDataRequisitionApprover() throws IOException, SQLException {

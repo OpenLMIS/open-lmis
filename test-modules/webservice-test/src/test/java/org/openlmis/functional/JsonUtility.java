@@ -151,8 +151,8 @@ public class JsonUtility extends TestCaseHelper {
     String id = String.valueOf(dbWrapper.getMaxRnrID());
 
     OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
-    OrderPODFromJson.getOrderPodLineItems().get(0).setProductCode("P10");
-    OrderPODFromJson.getOrderPodLineItems().get(0).setQuantityReceived(quantityReceived);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(quantityReceived);
 
     ResponseEntity responseEntity =
       client.SendJSON(getJsonStringFor(OrderPODFromJson),

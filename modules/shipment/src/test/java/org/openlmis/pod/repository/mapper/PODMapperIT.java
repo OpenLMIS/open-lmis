@@ -25,8 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItems;
 
@@ -71,13 +70,19 @@ public class PODMapperIT extends ApplicationTestContext {
     podMapper.insertPOD(orderPod);
 
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, 100);
+    orderPodLineItem.setQuantityShipped(100);
+    orderPodLineItem.setDispensingUnit("Tablets");
+    orderPodLineItem.setPacksToShip(10);
     podMapper.insertPODLineItem(orderPodLineItem);
 
     List<OrderPODLineItem> orderPodLineItems = podMapper.getPODLineItemsByPODId(orderPod.getId());
     assertThat(orderPodLineItems.size(), is(1));
     assertThat(orderPodLineItems.get(0).getProductCode(), is(productCode));
+    assertThat(orderPodLineItems.get(0).getQuantityShipped(), is(100));
+    assertThat(orderPodLineItems.get(0).getDispensingUnit(), is("Tablets"));
+    assertThat(orderPodLineItems.get(0).getPacksToShip(), is(10));
+    assertThat(orderPodLineItems.get(0).getProductName(), is(nullValue()));
   }
-
 
   @Test
   public void shouldGetPodLineItemsByOrderId() throws SQLException {
@@ -102,7 +107,6 @@ public class PODMapperIT extends ApplicationTestContext {
     assertThat(savedOrderPOD, is(notNullValue()));
     assertThat(savedOrderPOD.getOrderId(), is(order.getId()));
   }
-
 
   @Test
   public void shouldGetNPreviousPODLineItemsAfterGivenTrackingDateForGivenProgramPeriodAndProduct() {

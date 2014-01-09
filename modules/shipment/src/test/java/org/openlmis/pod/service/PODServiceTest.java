@@ -97,7 +97,7 @@ public class PODServiceTest {
     ArrayList invalidProducts = mock(ArrayList.class);
     OrderPODLineItem orderPodLineItem2 = mock(OrderPODLineItem.class);
     List<OrderPODLineItem> lineItems = asList(orderPodLineItem1, orderPodLineItem2);
-    orderPod.setOrderPodLineItems(lineItems);
+    orderPod.setPodLineItems(lineItems);
     Order order = mock(Order.class);
     whenNew(Order.class).withArguments(orderId).thenReturn(order);
     whenNew(ArrayList.class).withNoArguments().thenReturn(invalidProducts);
@@ -122,13 +122,12 @@ public class PODServiceTest {
     verify(podRepository).insertPODLineItem(orderPodLineItem2);
   }
 
-
   @Test
   public void shouldThrowErrorIfProductIsNotValid() throws Exception {
     ArrayList invalidProducts = mock(ArrayList.class);
     String productCode = "productCode1";
     List<OrderPODLineItem> lineItems = asList(new OrderPODLineItem(podId, productCode, 100), new OrderPODLineItem(podId, "productCode2", 100));
-    orderPod.setOrderPodLineItems(lineItems);
+    orderPod.setPodLineItems(lineItems);
     when(productService.getIdForCode(productCode)).thenReturn(null);
     whenNew(ArrayList.class).withNoArguments().thenReturn(invalidProducts);
     when(invalidProducts.toString()).thenReturn("[invalid product list]");
