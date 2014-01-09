@@ -30,61 +30,57 @@ import static org.openqa.selenium.support.How.XPATH;
 public class DistributionPage extends Page {
 
   @FindBy(how = ID, using = "selectDeliveryZone")
-  private static WebElement selectDeliveryZoneSelectBox = null;
+  private WebElement selectDeliveryZoneSelectBox = null;
 
   @FindBy(how = ID, using = "selectProgram")
-  private static WebElement selectProgramSelectBox = null;
+  private WebElement selectProgramSelectBox = null;
 
   @FindBy(how = ID, using = "selectPeriod")
-  private static WebElement selectPeriodSelectBox = null;
+  private WebElement selectPeriodSelectBox = null;
 
   @FindBy(how = XPATH, using = "//input[@value='View load amounts']")
-  private static WebElement viewLoadAmountButton = null;
+  private WebElement viewLoadAmountButton = null;
 
   @FindBy(how = ID, using = "initiateDistribution")
-  private static WebElement initiateDistributionButton = null;
+  private WebElement initiateDistributionButton = null;
 
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
-  private static WebElement saveSuccessMessageDiv = null;
-
-  @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[6]/a")
-  private static WebElement syncLink = null;
+  private WebElement saveSuccessMessageDiv = null;
 
   @FindBy(how = XPATH, using = "//div[@id='cachedDistributions']/div[2]/div/div[7]/i[@class='icon-remove-sign']")
-  private static WebElement deleteDistributionIcon = null;
+  private WebElement deleteDistributionIcon = null;
 
   @FindBy(how = ID, using = "button_Cancel")
-  private static WebElement cancelButton = null;
+  private WebElement cancelButton = null;
 
   @FindBy(how = ID, using = "button_OK")
-  private static WebElement okButton = null;
+  private WebElement okButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='distributionInitiated']/div[2][@class='modal-body']/p")
-  private static WebElement deleteConfirmDialogMessage = null;
+  private WebElement deleteConfirmDialogMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='distributionInitiated']/div[1][@class='modal-header']/h3")
-  private static WebElement deleteConfirmDialogHeader = null;
+  private WebElement deleteConfirmDialogHeader = null;
 
   @FindBy(how = XPATH, using = "//div[@id='noDistributionInitiated']/span")
-  private static WebElement noDistributionCachedMessage = null;
+  private WebElement noDistributionCachedMessage = null;
 
   @FindBy(how = XPATH, using = "//div[@id='synchronizationModal']/div[3]/input[1]")
-  private static WebElement distributionSyncMessageDone = null;
+  private WebElement distributionSyncMessageDone = null;
 
   @FindBy(how = ID, using = "syncedFacilities")
-  private static WebElement syncMessage = null;
+  private WebElement syncMessage = null;
 
   @FindBy(how = XPATH, using = "//div[2][@class='alert alert-info']/span")
-  private static WebElement syncAlertMessage = null;
+  private WebElement syncAlertMessage = null;
 
   @FindBy(how = ID, using = "duplicateFacilities")
-  private static WebElement facilityAlreadySyncMessage = null;
+  private WebElement facilityAlreadySyncMessage = null;
 
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);
     testWebDriver.setImplicitWait(1);
-
   }
 
   public void selectValueFromDeliveryZone(String valueToBeSelected) {
@@ -115,10 +111,7 @@ public class DistributionPage extends Page {
   }
 
   public void clickInitiateDistribution() {
-    testWebDriver.sleep(500);
-    testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
-    testWebDriver.sleep(200);
   }
 
   public void clickSyncDistribution(int rowNumber) {
@@ -147,7 +140,7 @@ public class DistributionPage extends Page {
   }
 
   public FacilityListPage clickRecordData(int rowNumber) throws IOException {
-    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id("recordData" + (rowNumber - 1))));
+    testWebDriver.waitForAjax();
     WebElement recordDataButton = testWebDriver.findElement(By.id("recordData" + (rowNumber - 1)));
     recordDataButton.click();
     return new FacilityListPage(testWebDriver);
