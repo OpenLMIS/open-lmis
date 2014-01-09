@@ -123,7 +123,7 @@ public class VaccinationCoverageMapperIT {
     vaccinationCoverage.setDistributionId(distribution.getId());
     mapper.insert(vaccinationCoverage);
 
-    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 11, 666);
+    VaccinationFullCoverage vaccinationFullCoverage = new VaccinationFullCoverage(34, 78, 666, 11);
     vaccinationFullCoverage.setVaccinationCoverageId(vaccinationCoverage.getId());
     mapper.insertFullVaccinationCoverage(vaccinationFullCoverage);
 

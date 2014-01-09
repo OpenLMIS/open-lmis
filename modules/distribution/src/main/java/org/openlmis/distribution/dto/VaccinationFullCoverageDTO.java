@@ -37,6 +37,7 @@ public class VaccinationFullCoverageDTO {
     return new VaccinationFullCoverage(femaleHealthCenterReading.parsePositiveInt(),
       femaleMobileBrigadeReading.parsePositiveInt(),
       maleHealthCenterReading.parsePositiveInt(),
-      maleMobileBrigadeReading.parsePositiveInt());
+      maleMobileBrigadeReading.parsePositiveInt()
+    );
   }
 }

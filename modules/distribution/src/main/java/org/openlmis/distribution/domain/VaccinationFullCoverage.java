@@ -23,10 +23,10 @@ public class VaccinationFullCoverage extends BaseModel {
   private Long vaccinationCoverageId;
   private Integer femaleHealthCenterReading;
   private Integer femaleMobileBrigadeReading;
-  private Integer maleMobileBrigadeReading;
   private Integer maleHealthCenterReading;
+  private Integer maleMobileBrigadeReading;
 
-  public VaccinationFullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleMobileBrigadeReading, Integer maleHealthCenterReading) {
+  public VaccinationFullCoverage(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading, Integer maleHealthCenterReading, Integer maleMobileBrigadeReading) {
     this.femaleHealthCenterReading = femaleHealthCenterReading;
     this.femaleMobileBrigadeReading = femaleMobileBrigadeReading;
     this.maleHealthCenterReading = maleHealthCenterReading;
