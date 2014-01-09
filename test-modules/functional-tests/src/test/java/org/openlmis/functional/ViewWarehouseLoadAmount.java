@@ -69,6 +69,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Given("^I have data available for distribution load amount$")
   public void setupDataForDistributionLoadAmount() throws Exception {
+    String productGroupCode="PG1" ;
     List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true,

@@ -39,7 +39,6 @@ public class TestCaseHelper {
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
-  public String productGroupCode="PG1";
 
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
