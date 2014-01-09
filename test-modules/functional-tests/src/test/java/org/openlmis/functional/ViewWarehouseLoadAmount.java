@@ -73,6 +73,12 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true,
       programFirst, userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone);
+    dbWrapper.insertProductGroup(productGroupCode);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    dbWrapper.updateActiveStatusOfProduct("Product6","false");
 
   }
 

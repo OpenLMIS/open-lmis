@@ -168,12 +168,6 @@ public class TestCaseHelper {
     dbWrapper.deleteFacilityApprovedProducts();
     dbWrapper.insertFacilityApprovedProduct(product1, program, facilityTypeCode);
     dbWrapper.insertFacilityApprovedProduct(product2, program, facilityTypeCode);
-    dbWrapper.insertProductGroup(productGroupCode);
-    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
-    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
-    dbWrapper.insertProgramProduct("Product5", program, "10", "false");
-    dbWrapper.insertProgramProduct("Product6", program, "10", "true");
-    dbWrapper.updateActiveStatusOfProduct("Product6","false");
   }
 
   public void setupProgramProductTestDataWithCategories(String product, String productName, String category, String program) throws IOException, SQLException {
