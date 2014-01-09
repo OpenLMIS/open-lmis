@@ -56,7 +56,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "orders-menu")
   private static WebElement ordersMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Approve')]")
+  @FindBy(how = ID, using = "approveRnr")
   private static WebElement approveLink = null;
 
   @FindBy(how = ID, using = "administration-menu")
@@ -65,7 +65,7 @@ public class HomePage extends Page {
   @FindBy(how = ID, using = "manage-option")
   private static WebElement manageFacilityMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'Convert to Order')]")
+  @FindBy(how = ID, using = "convertToOrderRnr")
   private static WebElement convertToOrderMenuItem = null;
 
   @FindBy(how = ID, using = "manage-distribution")
@@ -77,7 +77,7 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//a[contains(text(),'View Orders')]")
   private static WebElement viewOrdersMenuItem = null;
 
-  @FindBy(how = XPATH, using = "//a[contains(text(),'View')]")
+  @FindBy(how = ID, using = "viewRnr")
   private static WebElement viewRequisitionMenuItem = null;
 
   @FindBy(how = XPATH, using = "//h2[contains(text(),'View Requisitions')]")
@@ -119,7 +119,7 @@ public class HomePage extends Page {
   @FindBy(how = XPATH, using = "//div[@class='submenu']")
   private static WebElement SubMenuItem = null;
 
-  @FindBy(how = LINK_TEXT, using = "Create / Authorize")
+  @FindBy(how = ID, using = "createRnr")
   private static WebElement createLink = null;
 
   @FindBy(how = XPATH, using = "//input[@id='myFacilityRnr']")

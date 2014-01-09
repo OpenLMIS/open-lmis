@@ -18,19 +18,19 @@
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/init-rnr"
+            <a id="createRnr" href="/public/pages/logistics/rnr/index.html#/init-rnr"
                openlmis-message="link.requisitions.create.authorize"></a>
           </li>
           <li ng-show="hasPermission('APPROVE_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
+            <a id="approveRnr" href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
                openlmis-message="link.requisition.approve"></a>
           </li>
           <li ng-show="hasPermission('CONVERT_TO_ORDER')">
-            <a href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order"
+            <a id="convertToOrderRnr" href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order"
                openlmis-message="link.requisitions.convertToOrder"></a>
           </li>
           <li ng-show="hasPermission('VIEW_REQUISITION')">
-            <a href="/public/pages/logistics/rnr/index.html#/view-requisitions"
+            <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/view-requisitions"
                openlmis-message="link.requisition.view"></a>
           </li>
           <li class="beak"></li>
