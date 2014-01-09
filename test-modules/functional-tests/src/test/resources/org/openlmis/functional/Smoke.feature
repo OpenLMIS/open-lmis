@@ -359,6 +359,7 @@ Feature: Smoke Tests
     And  I verify ISA values for Product2 as:
       | Facility1 | Facility2 |
       | 101       | --        |
+    And I should not see inactive products on view load amount
     When I access plan my distribution page
     And I select delivery zone "Delivery Zone Second"
     And I select program "TB"

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -155,7 +156,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     assertEquals(getISAForProgramProduct(programFirst, product, warehouseLoadAmountPage.getFacilityPopulation(1, 1)), warehouseLoadAmountPage.getProduct1Isa(1, 1));
     assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2, periodDisplayedByDefault), warehouseLoadAmountPage.getProduct2Isa(1, 1));
-
   }
 
   @And("^I verify ISA values for Product1 as:$")
@@ -176,6 +176,19 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
       assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct2Isa(1, 1));
       assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProduct2Isa(2, 1));
     }
+  }
+
+  @And("^I should not see inactive products on view load amount$")
+  public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() throws IOException {
+    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
+
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName5"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName5"));
+
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("PG1-Name"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("PG1-Name"));
   }
 
   @Then("^I should see message \"([^\"]*)\"$")
