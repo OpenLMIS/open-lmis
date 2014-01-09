@@ -34,7 +34,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static java.lang.Math.round;
 import static java.util.Arrays.asList;
 
-public class TestCalculationsForRegularRnR extends TestCaseHelper {
+public class TestCalculationsForRnR extends TestCaseHelper {
 
   public static final int NUMBER_OF_DAYS_IN_MONTH = 30;
   private static final int MILLISECONDS_IN_ONE_DAY = 24 * 60 * 60 * 1000;
