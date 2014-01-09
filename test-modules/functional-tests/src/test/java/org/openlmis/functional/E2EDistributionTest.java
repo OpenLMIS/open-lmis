@@ -81,16 +81,15 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility(facilityCodeFirst);
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
     refrigeratorPage.enterValueInBrandModal("LG");
     refrigeratorPage.enterValueInModelModal("800 LITRES");
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
-
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
@@ -125,23 +124,20 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
     refrigeratorPage.clickDone();
 
-    EPIUsePage epiUse = new EPIUsePage(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.verifyIndicator("RED");
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.verifyIndicator("RED");
 
-    epiUse.enterValueInStockAtFirstOfMonth("10", 1);
-    epiUse.verifyIndicator("AMBER");
-    epiUse.enterValueInReceived("20", 1);
-    epiUse.enterValueInDistributed("30", 1);
-    epiUse.checkApplyNRToLoss0();
-    epiUse.enterValueInStockAtEndOfMonth("50", 1);
-    epiUse.enterValueInExpirationDate("10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
+    epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
+    epiUsePage.verifyIndicator("AMBER");
+    epiUsePage.enterValueInReceived("20", 1);
+    epiUsePage.enterValueInDistributed("30", 1);
+    epiUsePage.checkApplyNRToLoss0();
+    epiUsePage.enterValueInStockAtEndOfMonth("50", 1);
+    epiUsePage.enterValueInExpirationDate("10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
+    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     homePage.navigateHomePage();
@@ -157,26 +153,29 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
     refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-    epiUse.navigate();
-    epiUse.verifyIndicator("GREEN");
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("GREEN");
 
-    epiUse.verifyTotal("30", 1);
-    epiUse.verifyStockAtFirstOfMonth("10", 1);
-    epiUse.verifyReceived("20", 1);
-    epiUse.verifyDistributed("30", 1);
-    epiUse.verifyLoss(null, 1);
-    epiUse.verifyLossStatus(false,1);
-    epiUse.verifyStockAtEndOfMonth("50", 1);
-    epiUse.verifyExpirationDate("10/2011", 1);
+    epiUsePage.verifyTotal("30", 1);
+    epiUsePage.verifyStockAtFirstOfMonth("10", 1);
+    epiUsePage.verifyReceived("20", 1);
+    epiUsePage.verifyDistributed("30", 1);
+    epiUsePage.verifyLoss(null, 1);
+    epiUsePage.verifyLossStatus(false,1);
+    epiUsePage.verifyStockAtEndOfMonth("50", 1);
+    epiUsePage.verifyExpirationDate("10/2011", 1);
 
-    EpiInventoryPage epiInventoryPage = new EpiInventoryPage(testWebDriver);
-    epiInventoryPage.navigateToEpiInventory();
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
     epiInventoryPage.applyNRToAll();
     epiInventoryPage.fillDeliveredQuantity(1,"10");
     epiInventoryPage.fillDeliveredQuantity(2,"20");
     epiInventoryPage.fillDeliveredQuantity(3,"30");
 
     epiInventoryPage.verifyIndicator("GREEN");
+
+    CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
+    coveragePage.enterData(5,7,0,9999999);
+    coveragePage.verifyIndicator("GREEN");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
@@ -201,21 +200,26 @@ public class E2EDistributionTest extends TestCaseHelper {
     distributionPage.clickRecordData(1);
     facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    generalObservationPage.navigate();
+    refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.verifyAllFieldsDisabled();
 
-    epiUse.navigate();
-    epiUse.verifyAllFieldsDisabled();
+    generalObservationPage.navigateToEpiUse();
+    epiUsePage.verifyAllFieldsDisabled();
 
-    refrigeratorPage.navigateToRefrigeratorTab();
+    epiUsePage.navigateToRefrigerators();
     refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
 
-
+    refrigeratorPage.navigateToCoverage();
+    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
 
     verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
+    verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
   }
 
   @AfterMethod(groups = {"offline"})
