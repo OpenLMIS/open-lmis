@@ -39,6 +39,7 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestBase.fail;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 import static java.util.Collections.addAll;
+import static org.testng.AssertJUnit.assertFalse;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -53,6 +54,7 @@ public class ManageDistribution extends TestCaseHelper {
     facilityCodeFirst, facilityCodeSecond,
     programFirst, programSecond, schedule;
   private HashMap<String, DistributionTab> tabMap;
+  String productGroupCode="PG1" ;
 
   @BeforeMethod(groups = "distribution")
   @Before
@@ -706,6 +708,45 @@ public class ManageDistribution extends TestCaseHelper {
 
   }
 
+  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
+  public void testVerifyOnlyActiveProductsDisplayedOnViewLoadAmountScreenDistribution(String userSIC, String password, String deliveryZoneCodeFirst,
+                                                  String deliveryZoneCodeSecond,
+                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                  String facilityCodeFirst, String facilityCodeSecond,
+                                                  String programFirst, String programSecond, String schedule,
+                                                  String period, Integer totalNumberOfPeriods) throws Exception {
+
+    List<String> rightsList = new ArrayList<>();
+    rightsList.add("MANAGE_DISTRIBUTION");
+    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList,
+      programSecond, "District1", "Ngorongoro", "Ngorongoro");
+
+    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
+      deliveryZoneNameFirst, deliveryZoneNameSecond,
+      facilityCodeFirst, facilityCodeSecond,
+      programFirst, programSecond, schedule);
+
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
+    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
+    dbWrapper.insertProductGroup(productGroupCode);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    dbWrapper.updateActiveStatusOfProduct("Product6","false");
+
+    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
+    HomePage homePage = loginPage.loginAs(userSIC, password);
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
+    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
+    distributionPage.selectValueFromProgram(programFirst);
+    distributionPage.clickViewLoadAmount();
+
+    verifyInactiveProductsNotDisplayedOnViewLoadAmount();
+
+
+  }
+
   private void verifyElementsPresent(DistributionPage distributionPage) {
     assertTrue("selectDeliveryZoneSelectBox should be present", distributionPage.IsDisplayedSelectDeliveryZoneSelectBox());
     assertTrue("selectProgramSelectBox should be present", distributionPage.IsDisplayedSelectProgramSelectBox());
@@ -746,6 +787,18 @@ public class ManageDistribution extends TestCaseHelper {
     testWebDriver.sleep(200);
     testWebDriver.waitForElementToAppear(actualSelectFieldElement);
     assertEquals(valuesToBeVerified, actualSelectFieldElement.getText());
+  }
+
+  public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() throws IOException {
+    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
+
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName5"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName5"));
+
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("PG1-Name"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("PG1-Name"));
   }
 
   @And("^Navigate to Coverage tab$")
