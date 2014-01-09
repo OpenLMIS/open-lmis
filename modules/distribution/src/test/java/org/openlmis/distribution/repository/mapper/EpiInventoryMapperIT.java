@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openlmis.core.builder.ProductBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
@@ -45,6 +46,8 @@ import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
 import static org.openlmis.core.builder.ProcessingScheduleBuilder.defaultProcessingSchedule;
+import static org.openlmis.core.builder.ProductBuilder.code;
+import static org.openlmis.core.builder.ProductBuilder.displayOrder;
 import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
 
@@ -82,13 +85,21 @@ public class EpiInventoryMapperIT {
   @Autowired
   private FacilityVisitMapper facilityVisitMapper;
 
+  @Autowired
+  private ProductMapper productMapper;
+
+  @Autowired
+  private ProgramProductMapper programProductMapper;
   DeliveryZone zone;
   Program program1;
   ProcessingPeriod processingPeriod;
   Distribution distribution;
   Facility facility;
+
   private EpiInventory epiInventory;
+
   private FacilityVisit facilityVisit;
+  private ProgramProduct programProduct;
 
   @Before
   public void setUp() throws Exception {
@@ -117,6 +128,13 @@ public class EpiInventoryMapperIT {
     Long createdBy = 1L;
     facilityVisit = new FacilityVisit(distribution.getId(), facility.getId(), createdBy);
     facilityVisitMapper.insert(facilityVisit);
+
+
+    Product product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 2)));
+    productMapper.insert(product);
+    programProduct = new ProgramProduct(program1, product, 10, true);
+    programProductMapper.insert(programProduct);
+
   }
 
   private List resultSetToList(ResultSet rs) throws SQLException {
@@ -130,7 +148,6 @@ public class EpiInventoryMapperIT {
       }
       list.add(row);
     }
-
     return list;
   }
 
@@ -139,13 +156,20 @@ public class EpiInventoryMapperIT {
 
     EpiInventoryLineItem lineItem = new EpiInventoryLineItem();
     lineItem.setFacilityVisitId(facilityVisit.getId());
+    lineItem.setProgramProductId(programProduct.getId());
     lineItem.setProductName("name name");
     lineItem.setProductCode("code 1");
     lineItem.setProductDisplayOrder(2);
     lineItem.setIdealQuantity(76);
 
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11"), with(displayOrder, 2)));
+    productMapper.insert(product1);
+    ProgramProduct programProduct1 = new ProgramProduct(program1, product1, 10, true);
+    programProductMapper.insert(programProduct1);
+
     EpiInventoryLineItem lineItem2 = new EpiInventoryLineItem();
     lineItem2.setFacilityVisitId(facilityVisit.getId());
+    lineItem2.setProgramProductId(programProduct1.getId());
     lineItem2.setProductName("name name");
     lineItem2.setProductCode("code 2");
     lineItem2.setProductDisplayOrder(1);
@@ -166,13 +190,20 @@ public class EpiInventoryMapperIT {
   public void shouldGetAllLineItemsByFacilityVisitId() {
     EpiInventoryLineItem lineItem = new EpiInventoryLineItem();
     lineItem.setFacilityVisitId(facilityVisit.getId());
+    lineItem.setProgramProductId(programProduct.getId());
     lineItem.setProductName("name name");
     lineItem.setProductCode("code 1");
     lineItem.setProductDisplayOrder(2);
     lineItem.setIdealQuantity(76);
 
+    Product product1 = make(a(ProductBuilder.defaultProduct, with(code, "P11"), with(displayOrder, 2)));
+    productMapper.insert(product1);
+    ProgramProduct programProduct1 = new ProgramProduct(program1, product1, 10, true);
+    programProductMapper.insert(programProduct1);
+
     EpiInventoryLineItem lineItem2 = new EpiInventoryLineItem();
     lineItem2.setFacilityVisitId(facilityVisit.getId());
+    lineItem2.setProgramProductId(programProduct1.getId());
     lineItem2.setProductName("name name");
     lineItem2.setProductCode("code 2");
     lineItem2.setProductDisplayOrder(1);
