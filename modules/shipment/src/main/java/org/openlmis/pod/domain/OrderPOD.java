@@ -17,7 +17,9 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -42,8 +44,6 @@ public class OrderPOD extends BaseModel {
     }
     for (OrderPODLineItem lineItem : podLineItems) {
       lineItem.validate();
-      lineItem.setCreatedBy(createdBy);
-      lineItem.setModifiedBy(modifiedBy);
     }
   }
 
@@ -51,5 +51,15 @@ public class OrderPOD extends BaseModel {
     this.facilityId = requisition.getFacility().getId();
     this.programId = requisition.getProgram().getId();
     this.periodId = requisition.getPeriod().getId();
+  }
+
+  public void fillPodLineItems(List<RnrLineItem> rnrLineItems) {
+    List<OrderPODLineItem> orderPODLineItems = new ArrayList<>();
+    for (RnrLineItem rnrLineItem : rnrLineItems) {
+      if (rnrLineItem.getPacksToShip() > 0) {
+        orderPODLineItems.add(OrderPODLineItem.createFrom(rnrLineItem));
+      }
+    }
+    this.setPodLineItems(orderPODLineItems);
   }
 }

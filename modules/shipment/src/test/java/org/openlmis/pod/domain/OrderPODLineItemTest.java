@@ -13,6 +13,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.builder.RnrLineItemBuilder;
+import org.openlmis.rnr.domain.RnrLineItem;
+
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class OrderPODLineItemTest {
 
@@ -47,5 +54,18 @@ public class OrderPODLineItemTest {
     expectedException.expectMessage("error.invalid.received.quantity");
 
     orderPodLineItem.validate();
+  }
+
+  @Test
+  public void shouldCreateOrderPODLineItemFromRnrLineItem() throws Exception {
+    RnrLineItem rnrLineItem = make(a(RnrLineItemBuilder.defaultRnrLineItem));
+
+    OrderPODLineItem orderPODLineItem = OrderPODLineItem.createFrom(rnrLineItem);
+
+    assertThat(orderPODLineItem.getProductCode(), is(rnrLineItem.getProductCode()));
+    assertThat(orderPODLineItem.getProductName(), is(rnrLineItem.getProduct()));
+    assertThat(orderPODLineItem.getPacksToShip(), is(rnrLineItem.getPacksToShip()));
+    assertThat(orderPODLineItem.getDispensingUnit(), is(rnrLineItem.getDispensingUnit()));
+    assertThat(orderPODLineItem.getFullSupply(), is(rnrLineItem.getFullSupply()));
   }
 }

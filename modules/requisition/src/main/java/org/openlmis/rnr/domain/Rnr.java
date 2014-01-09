@@ -167,7 +167,7 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private List<RnrLineItem> getAllLineItems() {
+  public List<RnrLineItem> getAllLineItems() {
     if (this.allLineItems.isEmpty()) {
       this.allLineItems.addAll(this.getFullSupplyLineItems());
       this.allLineItems.addAll(this.getNonFullSupplyLineItems());

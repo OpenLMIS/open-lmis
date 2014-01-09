@@ -70,7 +70,7 @@ public class RestPODServiceTest {
     when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(rnr);
     doNothing().when(spyOrderPod).fillPOD(rnr);
     doNothing().when(podService).insertPOD(orderPod);
-    doNothing().when(podService).insertLineItems(orderPod, null);
+    doNothing().when(podService).insertLineItems(orderPod);
     doNothing().when(podService).updateOrderStatus(orderPod);
 
     restPODService.updatePOD(spyOrderPod, 1L);
@@ -79,7 +79,7 @@ public class RestPODServiceTest {
     verify(podService).checkPermissions(orderPod);
     verify(podService).getPODByOrderId(4L);
     verify(podService).insertPOD(orderPod);
-    verify(podService).insertLineItems(orderPod, null);
+    verify(podService).insertLineItems(orderPod);
     verify(podService).updateOrderStatus(orderPod);
   }
 

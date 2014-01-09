@@ -32,9 +32,9 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 import static org.openlmis.order.task.OrderFtpTask.FTP_CREDENTIAL_MISSING_COMMENT;
@@ -74,9 +74,7 @@ public class OrderFtpTaskTest {
   public void setUp() throws Exception {
     fullOrder = mock(Order.class);
     order = new Order(1l);
-    orderList = new ArrayList();
-    orderList.add(order);
-
+    orderList = asList(order);
   }
 
   @Test
@@ -97,7 +95,7 @@ public class OrderFtpTaskTest {
     orderFileTemplateDTO.setOrderConfiguration(orderConfiguration);
     orderConfiguration.setFilePrefix("Order");
     when(orderService.getOrderFileTemplateDTO()).thenReturn(orderFileTemplateDTO);
-    File file  = mock(File.class);
+    File file = mock(File.class);
     whenNew(File.class).withArguments(localFileDirectory).thenReturn(file);
     whenNew(File.class).withArguments(localFileDirectory + System.getProperty("file.separator") + "Order1.csv").thenReturn(file);
     FileWriter fileWriter = mock(FileWriter.class);
@@ -108,10 +106,7 @@ public class OrderFtpTaskTest {
     verify(orderCsvHelper).writeCsvFile(fullOrder, orderFileTemplateDTO, fileWriter);
     verify(fileWriter).flush();
     verify(ftpSender).sendFile(facilityFtpDetails, file);
-
-
   }
-
 
   @Test
   public void shouldUpdateOrderAsTransferFailedIfFacilityFtpDetailsDoesNotExist() {
@@ -130,7 +125,5 @@ public class OrderFtpTaskTest {
     verify(fullOrder).setStatus(TRANSFER_FAILED);
     verify(fullOrder).setFtpComment(FTP_CREDENTIAL_MISSING_COMMENT);
     verify(orderService).updateOrderStatus(fullOrder);
-
   }
-
 }

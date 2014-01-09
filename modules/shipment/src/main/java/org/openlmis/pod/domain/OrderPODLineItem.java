@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.rnr.domain.RnrLineItem;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -49,5 +50,16 @@ public class OrderPODLineItem extends BaseModel {
     if (quantityReceived < 0) {
       throw new DataException(new OpenLmisMessage("error.invalid.received.quantity"));
     }
+  }
+
+  //Factory Pattern
+  public static OrderPODLineItem createFrom(RnrLineItem rnrLineItem) {
+    OrderPODLineItem orderPODLineItem = new OrderPODLineItem();
+    orderPODLineItem.setProductCode(rnrLineItem.getProductCode());
+    orderPODLineItem.setProductName(rnrLineItem.getProduct());
+    orderPODLineItem.setDispensingUnit(rnrLineItem.getDispensingUnit());
+    orderPODLineItem.setPacksToShip(rnrLineItem.getPacksToShip());
+    orderPODLineItem.setFullSupply(rnrLineItem.getFullSupply());
+    return orderPODLineItem;
   }
 }

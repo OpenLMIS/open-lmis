@@ -18,7 +18,8 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.IntegrationTests;
@@ -34,17 +35,12 @@ import org.openlmis.rnr.service.RequisitionService;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.openlmis.core.domain.Right.MANAGE_POD;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.*;
 
 
@@ -81,73 +77,51 @@ public class PODServiceTest {
 
   @Before
   public void setUp() throws Exception {
-    podId = 1l;
-    orderId = 2l;
-    userId = 3l;
-    facilityId = 4l;
+    podId = 1L;
+    orderId = 2L;
+    userId = 3L;
+    facilityId = 4L;
     orderPod = new OrderPOD(podId);
     orderPod.setOrderId(orderId);
     orderPod.setCreatedBy(userId);
-
   }
 
   @Test
   public void shouldUpdatePODAndLineItemsIfValid() throws Exception {
     OrderPODLineItem orderPodLineItem1 = mock(OrderPODLineItem.class);
-    ArrayList invalidProducts = mock(ArrayList.class);
     OrderPODLineItem orderPodLineItem2 = mock(OrderPODLineItem.class);
-    List<OrderPODLineItem> lineItems = asList(orderPodLineItem1, orderPodLineItem2);
-    orderPod.setPodLineItems(lineItems);
+
+    OrderPOD spyOrderPod = spy(orderPod);
+    spyOrderPod.setPodLineItems(asList(orderPodLineItem1, orderPodLineItem2));
+    whenNew(OrderPOD.class).withNoArguments().thenReturn(spyOrderPod);
+
     Order order = mock(Order.class);
     whenNew(Order.class).withArguments(orderId).thenReturn(order);
-    whenNew(ArrayList.class).withNoArguments().thenReturn(invalidProducts);
-    when(invalidProducts.size()).thenReturn(0);
+
     when(orderService.getOrder(orderId)).thenReturn(order);
+    when(spyOrderPod.getOrderId()).thenReturn(orderId);
+
     SupplyLine supplyLine = new SupplyLine();
     Facility supplyingFacility = new Facility(facilityId);
     supplyLine.setSupplyingFacility(supplyingFacility);
     order.setSupplyLine(supplyLine);
-    when(order.getSupplyLine()).thenReturn(supplyLine);
+
+    when(order.getSupplyingFacility()).thenReturn(supplyingFacility);
     when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
-    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
-    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(requisition);
-    podService.updatePOD(orderPod);
+
+    Rnr requisition = new Rnr();
+    when(requisitionService.getFullRequisitionById(spyOrderPod.getOrderId())).thenReturn(requisition);
+
+    doNothing().when(spyOrderPod).fillPOD(requisition);
+    doNothing().when(spyOrderPod).fillPodLineItems(requisition.getAllLineItems());
+
+    podService.updatePOD(orderId, userId);
 
     verify(order).setStatus(OrderStatus.RECEIVED);
-    verify(orderService).updateOrderStatus(order);
-    verify(podRepository).insertPOD(orderPod);
-    verify(orderPodLineItem1).setPodId(podId);
-    verify(orderPodLineItem2).setPodId(podId);
+    verify(podRepository).insertPOD(spyOrderPod);
     verify(podRepository).insertPODLineItem(orderPodLineItem1);
     verify(podRepository).insertPODLineItem(orderPodLineItem2);
-  }
-
-  @Test
-  public void shouldThrowErrorIfProductIsNotValid() throws Exception {
-    ArrayList invalidProducts = mock(ArrayList.class);
-    String productCode = "productCode1";
-    List<OrderPODLineItem> lineItems = asList(new OrderPODLineItem(podId, productCode, 100), new OrderPODLineItem(podId, "productCode2", 100));
-    orderPod.setPodLineItems(lineItems);
-    when(productService.getIdForCode(productCode)).thenReturn(null);
-    whenNew(ArrayList.class).withNoArguments().thenReturn(invalidProducts);
-    when(invalidProducts.toString()).thenReturn("[invalid product list]");
-    when(invalidProducts.size()).thenReturn(1);
-    Order order = mock(Order.class);
-    when(orderService.getOrder(orderId)).thenReturn(order);
-    SupplyLine supplyLine = new SupplyLine();
-    Facility supplyingFacility = new Facility(facilityId);
-    supplyLine.setSupplyingFacility(supplyingFacility);
-    order.setSupplyLine(supplyLine);
-    when(order.getSupplyLine()).thenReturn(supplyLine);
-
-    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
-    when(fulfillmentPermissionService.hasPermission(userId, facilityId, MANAGE_POD)).thenReturn(true);
-    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(requisition);
-
-    expectedException.expect(DataException.class);
-    expectedException.expectMessage("code: error.invalid.product.code, params: { [invalid product list] }");
-
-    podService.updatePOD(orderPod);
+    verify(orderService).updateOrderStatus(order);
   }
 
   @Test
@@ -155,14 +129,15 @@ public class PODServiceTest {
     Long orderId = 2l;
     OrderPOD expectedOrderPOD = new OrderPOD();
     when(podRepository.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
+
     OrderPOD savedOrderPOD = podService.getPODByOrderId(orderId);
+
     verify(podRepository).getPODByOrderId(orderId);
     assertThat(savedOrderPOD, is(expectedOrderPOD));
   }
 
   @Test
   public void shouldThrowErrorIfUserDoesNotHavePermissionOnGivenWareHouse() {
-
     Order order = new Order(orderId);
     SupplyLine supplyLine = new SupplyLine();
     Facility supplyingFacility = new Facility(facilityId);
@@ -174,26 +149,6 @@ public class PODServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.permission.denied");
 
-    podService.updatePOD(orderPod);
-  }
-
-  @Test
-  public void shouldFillPODWithFacilityProgramAndPeriodBeforeInserting() throws Exception {
-    orderPod = spy(orderPod);
-    Rnr requisition = new Rnr(new Facility(), new Program(), new ProcessingPeriod());
-    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(requisition);
-    when(fulfillmentPermissionService.hasPermission(anyLong(), anyLong(), any(Right.class))).thenReturn(true);
-    SupplyLine supplyLine = new SupplyLine();
-    Facility supplyingFacility = new Facility(facilityId);
-    supplyLine.setSupplyingFacility(supplyingFacility);
-    Order order = new Order(orderId);
-    order.setSupplyLine(supplyLine);
-    when(requisitionService.getLWById(orderPod.getOrderId())).thenReturn(requisition);
-    when(orderService.getOrder(orderPod.getOrderId())).thenReturn(order);
-
-
-    podService.updatePOD(orderPod);
-
-    verify(orderPod).fillPOD(requisition);
+    podService.updatePOD(orderId, userId);
   }
 }

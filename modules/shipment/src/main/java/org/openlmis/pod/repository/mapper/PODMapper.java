@@ -27,8 +27,8 @@ import java.util.List;
 public interface PODMapper {
 
   @Insert({"INSERT INTO pod_line_items " +
-    "(podId, productCode, quantityReceived, productName, dispensingUnit, packsToShip, quantityShipped, createdBy, modifiedBy) VALUES " +
-    "(#{podId}, #{productCode}, #{quantityReceived}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{quantityShipped}, #{createdBy}, #{modifiedBy})"})
+    "(podId, productCode, quantityReceived, productName, dispensingUnit, packsToShip, fullSupply, createdBy, modifiedBy) VALUES " +
+    "(#{podId}, #{productCode}, #{quantityReceived}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
@@ -50,5 +50,5 @@ public interface PODMapper {
     "AND PLI.productCode = #{productCode}",
     "ORDER BY p.createdDate DESC LIMIT #{n}"})
   List<OrderPODLineItem> getNPodLineItems(@Param("productCode") String productCode, @Param("requisition") Rnr requisition,
-                                          @Param("n") int n, @Param("startDate") Date startDate);
+                                          @Param("n") Integer n, @Param("startDate") Date startDate);
 }

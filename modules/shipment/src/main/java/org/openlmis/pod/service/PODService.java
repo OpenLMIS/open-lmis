@@ -47,23 +47,16 @@ public class PODService {
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Transactional
-  public void updatePOD(OrderPOD orderPod) {
-    checkPermissions(orderPod);
-    insertOrderPOD(orderPod);
-    List<OrderPODLineItem> orderPodLineItems = orderPod.getPodLineItems();
-    insertLineItems(orderPod, orderPodLineItems);
-    updateOrderStatus(orderPod);
-  }
+  public void updatePOD(Long orderId, Long userId) {
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.setOrderId(orderId);
+    orderPOD.setCreatedBy(userId);
+    orderPOD.setModifiedBy(userId);
 
-  private void insertOrderPOD(OrderPOD orderPod) {
-    Rnr requisition = requisitionService.getFullRequisitionById(orderPod.getOrderId());
-    orderPod.fillPOD(requisition);
-    fillPodLineItems(orderPod, requisition);
-    insertPOD(orderPod);
-  }
-
-  private void fillPodLineItems(OrderPOD orderPod, Rnr requisition) {
-
+    checkPermissions(orderPOD);
+    insertOrderPOD(orderPOD);
+    insertLineItems(orderPOD);
+    updateOrderStatus(orderPOD);
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {
@@ -72,9 +65,11 @@ public class PODService {
     orderService.updateOrderStatus(order);
   }
 
-  public void insertLineItems(OrderPOD orderPod, List<OrderPODLineItem> orderPodLineItems) {
-    for (OrderPODLineItem orderPodLineItem : orderPodLineItems) {
+  public void insertLineItems(OrderPOD orderPod) {
+    for (OrderPODLineItem orderPodLineItem : orderPod.getPodLineItems()) {
       orderPodLineItem.setPodId(orderPod.getId());
+      orderPodLineItem.setCreatedBy(orderPod.getCreatedBy());
+      orderPodLineItem.setModifiedBy(orderPod.getModifiedBy());
       podRepository.insertPODLineItem(orderPodLineItem);
     }
   }
@@ -89,16 +84,24 @@ public class PODService {
     return podRepository.getPODByOrderId(orderId);
   }
 
-  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
     return podRepository.getNPodLineItems(productCode, requisition, n, startDate);
-  }
-
-  private Long getWarehouseForOrder(Long orderId) {
-    Order order = orderService.getOrder(orderId);
-    return order.getSupplyLine().getSupplyingFacility().getId();
   }
 
   public void insertPOD(OrderPOD orderPod) {
     podRepository.insertPOD(orderPod);
   }
+
+  private Long getWarehouseForOrder(Long orderId) {
+    Order order = orderService.getOrder(orderId);
+    return order.getSupplyingFacility().getId();
+  }
+
+  private void insertOrderPOD(OrderPOD orderPod) {
+    Rnr requisition = requisitionService.getFullRequisitionById(orderPod.getOrderId());
+    orderPod.fillPOD(requisition);
+    orderPod.fillPodLineItems(requisition.getAllLineItems());
+    insertPOD(orderPod);
+  }
+
 }

@@ -78,7 +78,6 @@ public class PODMapperIT extends ApplicationTestContext {
     List<OrderPODLineItem> orderPodLineItems = podMapper.getPODLineItemsByPODId(orderPod.getId());
     assertThat(orderPodLineItems.size(), is(1));
     assertThat(orderPodLineItems.get(0).getProductCode(), is(productCode));
-    assertThat(orderPodLineItems.get(0).getQuantityShipped(), is(100));
     assertThat(orderPodLineItems.get(0).getDispensingUnit(), is("Tablets"));
     assertThat(orderPodLineItems.get(0).getPacksToShip(), is(10));
     assertThat(orderPodLineItems.get(0).getProductName(), is(nullValue()));

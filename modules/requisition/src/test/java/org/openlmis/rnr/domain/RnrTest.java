@@ -282,7 +282,6 @@ public class RnrTest {
 
   @Test
   public void shouldCopyRegimenLineItems() throws Exception {
-
     Rnr newRnr = make(a(defaultRequisition));
     List<RegimenColumn> regimenColumns = new ArrayList<>();
     RegimenLineItem regimenLineItem = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
@@ -302,8 +301,6 @@ public class RnrTest {
     verify(spyRegimenLineItem1).copyCreatorEditableFieldsForRegimen(regimenLineItem1, regimenTemplate);
     assertThat(spyRegimenLineItem.getModifiedBy(), is(1L));
     assertThat(spyRegimenLineItem1.getModifiedBy(), is(1L));
-
-
   }
 
   private void assertModifiedBy(long userId) {
@@ -509,5 +506,18 @@ public class RnrTest {
     rnr.setProgram(program);
 
     assertFalse(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldGetAllLineItems() throws Exception {
+    Rnr rnr = make(a(defaultRequisition));
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(RnrLineItemBuilder.productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(RnrLineItemBuilder.productCode, "P2")));
+    rnr.setFullSupplyLineItems(asList(lineItem1));
+    rnr.setNonFullSupplyLineItems(asList(lineItem2));
+
+    assertThat(rnr.getAllLineItems().size(), is(2));
+    assertThat(rnr.getAllLineItems().get(0), is(lineItem1));
+    assertThat(rnr.getAllLineItems().get(1), is(lineItem2));
   }
 }

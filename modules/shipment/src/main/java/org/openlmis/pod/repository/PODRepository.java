@@ -38,7 +38,7 @@ public class PODRepository {
     return podMapper.getPODByOrderId(orderId);
   }
 
-  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
     return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
   }
 }

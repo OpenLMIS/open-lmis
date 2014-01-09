@@ -15,24 +15,33 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrLineItem;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.defaultRnrLineItem;
+import static org.openlmis.rnr.builder.RnrLineItemBuilder.packsToShip;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @Category(IntegrationTests.class)
-public class PODTest {
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(OrderPODLineItem.class)
+public class OrderPODTest {
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
@@ -98,5 +107,22 @@ public class PODTest {
     orderPod.validate();
 
     verify(orderPodLineItem).validate();
+  }
+
+  @Test
+  public void shouldFillPODLineItemsOnlyWithNonZeroPackToShip() throws Exception {
+    RnrLineItem rnrLineItem1 = make(a(defaultRnrLineItem));
+    RnrLineItem rnrLineItem2 = make(a(defaultRnrLineItem, with(packsToShip, 0)));
+
+    List<RnrLineItem> rnrLineItems = asList(rnrLineItem1, rnrLineItem2);
+    OrderPOD orderPOD = new OrderPOD();
+    orderPOD.fillPodLineItems(rnrLineItems);
+
+    mockStatic(OrderPODLineItem.class);
+    OrderPODLineItem orderPODLineItem = mock(OrderPODLineItem.class);
+    when(OrderPODLineItem.createFrom(rnrLineItem1)).thenReturn(orderPODLineItem);
+
+    assertThat(orderPOD.getPodLineItems().size(), is(1));
+    verify(OrderPODLineItem.createFrom(rnrLineItem1));
   }
 }
