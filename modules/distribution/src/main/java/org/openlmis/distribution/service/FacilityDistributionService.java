@@ -92,32 +92,26 @@ public class FacilityDistributionService {
 
 
   public boolean save(FacilityDistribution facilityDistribution) {
-    boolean synced = facilityVisitService.save(facilityDistribution.getFacilityVisit());
-    if (synced) {
+    boolean canSync = facilityVisitService.save(facilityDistribution.getFacilityVisit());
+    if (canSync) {
       epiUseService.save(facilityDistribution.getEpiUse());
       distributionRefrigeratorsService.save(facilityDistribution.getFacilityVisit().getFacilityId(), facilityDistribution.getRefrigerators());
       vaccinationCoverageService.save(facilityDistribution.getCoverage());
     }
-    return synced;
+    return canSync;
   }
 
   public Map<Long, FacilityDistribution> get(Distribution distribution) {
-    Long deliveryZoneId = distribution.getDeliveryZone().getId();
-    Long programId = distribution.getProgram().getId();
-
     Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
 
-    List<Facility> facilities = facilityService.getAllForDeliveryZoneAndProgram(deliveryZoneId, programId);
-    for (Facility facility : facilities) {
-      facilityDistributions.put(facility.getId(), getDistributionData(facility, distribution));
+    List<FacilityVisit> unSyncedFacilities = facilityVisitService.getUnSyncedFacilities(distribution.getId());
+    for (FacilityVisit facilityVisit : unSyncedFacilities) {
+      facilityDistributions.put(facilityVisit.getFacilityId(), getDistributionData(facilityVisit));
     }
-
     return facilityDistributions;
-
   }
 
-  private FacilityDistribution getDistributionData(Facility facility, Distribution distribution) {
-    FacilityVisit facilityVisit = facilityVisitService.getBy(facility.getId(), distribution.getId());
+  private FacilityDistribution getDistributionData(FacilityVisit facilityVisit) {
     EpiUse epiUse = epiUseService.getBy(facilityVisit.getId());
     DistributionRefrigerators refrigerators = distributionRefrigeratorsService.getBy(facilityVisit.getId());
     EpiInventory epiInventory = epiInventoryService.getBy(facilityVisit.getId());

@@ -193,4 +193,32 @@ public class FacilityDistributionServiceTest {
     verify(vaccinationCoverageService).save(vaccinationCoverage);
     assertTrue(saveStatus);
   }
+
+
+  @Test
+  public void shouldGetDataForADistribution() throws Exception {
+    Distribution distribution = new Distribution();
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setId(1L);
+    facilityVisit.setFacilityId(2L);
+    List<FacilityVisit> facilityVisits = asList(facilityVisit);
+    when(facilityVisitService.getUnSyncedFacilities(distribution.getId())).thenReturn(facilityVisits);
+    EpiUse epiUse = new EpiUse();
+    when(epiUseService.getBy(facilityVisit.getId())).thenReturn(epiUse);
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
+    when(distributionRefrigeratorsService.getBy(facilityVisit.getId())).thenReturn(distributionRefrigerators);
+    EpiInventory epiInventory = new EpiInventory();
+    when(epiInventoryService.getBy(facilityVisit.getId())).thenReturn(epiInventory);
+    VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
+    when(vaccinationCoverageService.getBy(facilityVisit.getId())).thenReturn(vaccinationCoverage);
+
+    FacilityDistribution facilityDistribution = new FacilityDistribution();
+    whenNew(FacilityDistribution.class).withArguments(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationCoverage).thenReturn(facilityDistribution);
+
+    Map<Long, FacilityDistribution> facilityDistributionMap = facilityDistributionService.get(distribution);
+
+    assertThat(facilityDistributionMap.size(), is(1));
+    assertThat(facilityDistributionMap.get(facilityVisit.getFacilityId()), is(facilityDistribution));
+
+  }
 }

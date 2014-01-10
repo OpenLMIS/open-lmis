@@ -5,6 +5,8 @@ import org.openlmis.distribution.repository.FacilityVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class FacilityVisitService {
@@ -30,5 +32,9 @@ public class FacilityVisitService {
 
   public FacilityVisit getBy(Long facilityId, Long distributionId) {
     return repository.getBy(facilityId, distributionId);
+  }
+
+  public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
+    return repository.getUnSyncedFacilities(distributionId);
   }
 }

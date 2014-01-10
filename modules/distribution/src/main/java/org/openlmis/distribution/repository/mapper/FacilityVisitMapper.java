@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FacilityVisitMapper {
 
@@ -34,10 +36,15 @@ public interface FacilityVisitMapper {
   public FacilityVisit getBy(@Param(value = "facilityId") Long facilityId, @Param(value = "distributionId") Long distributionId);
 
   @Update({"UPDATE facility_visits SET confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
-    "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy}"})
+    "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, " +
+      "observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy} WHERE id = #{id}"})
   public void update(FacilityVisit facilityVisit);
 
 
   @Select({"SELECT * FROM facility_visits WHERE id = #{id}"})
   public FacilityVisit getById(Long id);
+
+
+  @Select({"SELECT * FROM facility_visits WHERE distributionId = #{distributionId} AND synced = false"})
+  List<FacilityVisit> getUnSyncedFacilities(Long distributionId);
 }
