@@ -25,7 +25,6 @@ import org.openlmis.core.service.ProductService;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.Order;
-import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.domain.OrderPODLineItem;
@@ -87,7 +86,7 @@ public class PODServiceTest {
   }
 
   @Test
-  public void shouldUpdatePODAndLineItemsIfValid() throws Exception {
+  public void shouldGetPODWithLineItems() throws Exception {
     OrderPODLineItem orderPodLineItem1 = mock(OrderPODLineItem.class);
     OrderPODLineItem orderPodLineItem2 = mock(OrderPODLineItem.class);
 
@@ -115,13 +114,12 @@ public class PODServiceTest {
     doNothing().when(spyOrderPod).fillPOD(requisition);
     doNothing().when(spyOrderPod).fillPodLineItems(requisition.getAllLineItems());
 
-    podService.updatePOD(orderId, userId);
+    podService.getPOD(orderId, userId);
 
-    verify(order).setStatus(OrderStatus.RECEIVED);
     verify(podRepository).insertPOD(spyOrderPod);
     verify(podRepository).insertPODLineItem(orderPodLineItem1);
     verify(podRepository).insertPODLineItem(orderPodLineItem2);
-    verify(orderService).updateOrderStatus(order);
+    verify(podRepository).getPODWithLineItemsByOrderId(orderId);
   }
 
   @Test
@@ -149,6 +147,6 @@ public class PODServiceTest {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("error.permission.denied");
 
-    podService.updatePOD(orderId, userId);
+    podService.getPOD(orderId, userId);
   }
 }

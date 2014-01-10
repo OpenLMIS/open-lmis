@@ -93,7 +93,7 @@ public class RestRequisitionCalculator {
     if (rnrLineItem.getQuantityReceived() != null)
       return;
 
-    List<OrderPODLineItem> nOrderPodLineItems = podService.getNPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+    List<OrderPODLineItem> nOrderPodLineItems = podService.getNPreviousOrderPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
 
     Integer quantityReceived = nOrderPodLineItems.size() != 0 ? nOrderPodLineItems.get(0).getQuantityReceived() : 0;
 

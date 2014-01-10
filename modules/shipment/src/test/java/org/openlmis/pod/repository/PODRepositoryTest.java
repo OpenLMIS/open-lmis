@@ -20,6 +20,7 @@ import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.repository.mapper.PODMapper;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -57,6 +58,27 @@ public class PODRepositoryTest {
     when(podMapper.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
     OrderPOD orderPod = podRepository.getPODByOrderId(orderId);
     verify(podMapper).getPODByOrderId(orderId);
+    assertThat(orderPod, is(expectedOrderPOD));
+  }
+
+  @Test
+  public void shouldGetPODWithLineItemsByOrderId() throws Exception {
+    Long orderId = 1L;
+    Long podId = 2L;
+    OrderPOD expectedOrderPOD = new OrderPOD();
+    expectedOrderPOD.setId(podId);
+    OrderPODLineItem lineItem = new OrderPODLineItem();
+    lineItem.setPodId(podId);
+
+    when(podMapper.getPODByOrderId(orderId)).thenReturn(expectedOrderPOD);
+    expectedOrderPOD.setPodLineItems(asList(lineItem));
+
+    when(podMapper.getPODLineItemsByPODId(podId)).thenReturn(asList(lineItem));
+
+    OrderPOD orderPod = podRepository.getPODWithLineItemsByOrderId(orderId);
+
+    verify(podMapper).getPODByOrderId(orderId);
+    verify(podMapper).getPODLineItemsByPODId(podId);
     assertThat(orderPod, is(expectedOrderPOD));
   }
 }

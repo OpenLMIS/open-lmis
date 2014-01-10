@@ -9,6 +9,7 @@
 --
 
 ALTER TABLE pod_line_items
+ALTER COLUMN quantityReceived DROP NOT NULL,
 ADD COLUMN productName VARCHAR(250),
 ADD COLUMN dispensingUnit VARCHAR(20),
 ADD COLUMN packsToShip INTEGER,

@@ -41,4 +41,11 @@ public class PODRepository {
   public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
     return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
   }
+
+  public OrderPOD getPODWithLineItemsByOrderId(Long orderId) {
+    OrderPOD orderPOD = podMapper.getPODByOrderId(orderId);
+    List<OrderPODLineItem> podLineItems = podMapper.getPODLineItemsByPODId(orderPOD.getId());
+    orderPOD.setPodLineItems(podLineItems);
+    return orderPOD;
+  }
 }

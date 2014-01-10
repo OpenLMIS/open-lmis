@@ -47,7 +47,12 @@ public class PODService {
   private FulfillmentPermissionService fulfillmentPermissionService;
 
   @Transactional
-  public void updatePOD(Long orderId, Long userId) {
+  public OrderPOD getPOD(Long orderId, Long userId) {
+    save(orderId, userId);
+    return podRepository.getPODWithLineItemsByOrderId(orderId);
+  }
+
+  private void save(Long orderId, Long userId) {
     OrderPOD orderPOD = new OrderPOD();
     orderPOD.setOrderId(orderId);
     orderPOD.setCreatedBy(userId);
@@ -56,7 +61,6 @@ public class PODService {
     checkPermissions(orderPOD);
     insertOrderPOD(orderPOD);
     insertLineItems(orderPOD);
-    updateOrderStatus(orderPOD);
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {
@@ -84,7 +88,7 @@ public class PODService {
     return podRepository.getPODByOrderId(orderId);
   }
 
-  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
+  public List<OrderPODLineItem> getNPreviousOrderPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
     return podRepository.getNPodLineItems(productCode, requisition, n, startDate);
   }
 
@@ -103,5 +107,4 @@ public class PODService {
     orderPod.fillPodLineItems(requisition.getAllLineItems());
     insertPOD(orderPod);
   }
-
 }
