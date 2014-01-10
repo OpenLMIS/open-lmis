@@ -42,7 +42,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
   public static final String SCHEDULE = "schedule";
   public static final String PRODUCT_GROUP_CODE = "productGroupName";
 
-  public Map<String, String> coverageData = new HashMap<String, String>() {{
+  public final Map<String, String> coverageData = new HashMap<String, String>() {{
     put(USER, "fieldCoordinator");
     put(PASSWORD, "Admin123");
     put(FIRST_DELIVERY_ZONE_CODE, "DZ1");
