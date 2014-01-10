@@ -135,7 +135,7 @@ public class UserPage extends Page {
   private static WebElement addSupervisoryRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Warehouse Roles')]")
-  private static WebElement warehouseRolesAccordion=null;
+  private static WebElement warehouseRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[16]")
   private static WebElement rolesInputFieldWarehouse = null;
@@ -150,7 +150,7 @@ public class UserPage extends Page {
   private static WebElement addWarehouseRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Delivery zones')]")
-  private static WebElement deliveryZonesAccordion=null;
+  private static WebElement deliveryZonesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "//select[@name='selectDeliveryZone']")
   private static WebElement zoneToDelivery = null;
@@ -168,7 +168,7 @@ public class UserPage extends Page {
   private static WebElement addDeliveryZoneRoleButton = null;
 
   @FindBy(how = How.XPATH, using = "//a[contains(text(),'Admin and General Operations Roles')]")
-  private static WebElement adminAndGeneralOperationsRolesAccordion=null;
+  private static WebElement adminAndGeneralOperationsRolesAccordion = null;
 
   @FindBy(how = How.XPATH, using = "(//input[@type='text'])[17]")
   private static WebElement adminRolesInputField = null;
@@ -274,12 +274,12 @@ public class UserPage extends Page {
   }
 
   public void verifyUserCreated(String firstName, String lastName)
-            throws IOException, SQLException {
-     testWebDriver.waitForElementToAppear(successMessage);
+    throws IOException, SQLException {
+    testWebDriver.waitForElementToAppear(successMessage);
 
-     String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
-                " password link has been sent on registered Email address. View Here", firstName, lastName);
-     assertEquals(expectedMessage, successMessage.getText());
+    String expectedMessage = String.format("User \"%s %s\" has been successfully created," +
+      " password link has been sent on registered Email address. View Here", firstName, lastName);
+    assertEquals(expectedMessage, successMessage.getText());
   }
 
   public void enterUserHomeFacility(String facilityCode) {
@@ -486,13 +486,13 @@ public class UserPage extends Page {
   public void verifyRoleNotPresent(String roleName) {
     boolean rolePresent;
     try {
-          testWebDriver.sleep(500);
-          WebElement element = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
-          rolePresent = element.isDisplayed();
+      testWebDriver.sleep(500);
+      WebElement element = testWebDriver.getElementByXpath("//div[contains(text(),'" + roleName + "')]");
+      rolePresent = element.isDisplayed();
     } catch (ElementNotVisibleException e) {
-            rolePresent = false;
+      rolePresent = false;
     } catch (NoSuchElementException e) {
-            rolePresent = false;
+      rolePresent = false;
     }
     assertFalse(rolePresent);
   }
@@ -506,6 +506,7 @@ public class UserPage extends Page {
   }
 
   public String getAllWarehouseToSelect() {
+    testWebDriver.waitForElementToAppear(warehouseToSelect);
     return warehouseToSelect.getText();
   }
 
