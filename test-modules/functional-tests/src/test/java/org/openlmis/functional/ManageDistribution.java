@@ -428,7 +428,12 @@ public class ManageDistribution extends TestCaseHelper {
   public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) throws IOException {
    EpiInventoryPage epiInventoryPage=new EpiInventoryPage(testWebDriver);
    epiInventoryPage.fillDeliveredQuantity(rowNumber,deliveredQuantity);
+  }
 
+  @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")
+  public void enterCoverageMaleMobileBrigade(Integer maleMobileBrigade) throws IOException {
+   CoveragePage coveragePage=new CoveragePage(testWebDriver);
+   coveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +

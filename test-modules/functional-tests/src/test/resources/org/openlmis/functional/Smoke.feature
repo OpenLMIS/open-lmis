@@ -544,18 +544,51 @@ Feature: Smoke Tests
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
-      | 10               |                   | 10                |
+      | 10               |                   | 10              |
     Then Verify "epi inventory" indicator should be "AMBER"
     When I enter EPI Inventory deliveredQuantity of Row "2" as "5"
     Then Verify "epi inventory" indicator should be "GREEN"
     And I verify saved "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
-      | 20               | 100               | 10               |
-      | 10               | 5                | 10                |
+      | 20               | 100               | 10              |
+      | 10               | 5                 | 10              |
     When I access plan my distribution page
     When I record data for distribution "1"
     And I choose facility "F10"
     Then Verify "epi inventory" indicator should be "GREEN"
+
+
+  @smokeDistribution
+  Scenario: User should fill Coverage data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    When I am logged in as "storeIncharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And Navigate to Coverage tab
+    Then Verify "coverage" indicator should be "RED"
+    And I Enter "coverage" values:
+      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | female   | 123                | 22                  | 23               |                   |
+    Then Verify "coverage" indicator should be "AMBER"
+    When I enter coverage maleMobileBrigade as "500"
+    Then Verify "coverage" indicator should be "GREEN"
+    And I verify saved "coverage" values:
+      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | female   | 123                | 22                  | 23               | 500              |
+    When I access plan my distribution page
+    When I record data for distribution "1"
+    And I choose facility "F10"
+    Then Verify "coverage" indicator should be "GREEN"
 
   @smokeDistribution
   Scenario: User should verify facility and sync status
