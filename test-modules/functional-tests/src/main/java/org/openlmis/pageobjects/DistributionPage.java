@@ -109,7 +109,7 @@ public class DistributionPage extends Page {
 
   public void clickInitiateDistribution() {
     WebElement initiateDistributionButton = testWebDriver.findElement(By.id("initiateDistribution"));
-    testWebDriver.waitForElementToAppear(initiateDistributionButton);
+    testWebDriver.waitForElementToBeEnabled(initiateDistributionButton);
     initiateDistributionButton.click();
   }
 
