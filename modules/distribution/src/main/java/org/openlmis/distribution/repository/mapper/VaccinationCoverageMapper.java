@@ -20,8 +20,10 @@ import org.springframework.stereotype.Repository;
 public interface VaccinationCoverageMapper {
 
 
-  @Insert({"INSERT into full_coverages (facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading)",
-    "VALUES (#{facilityVisitId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading})"})
+  @Insert({"INSERT into full_coverages (facilityVisitId, femaleHealthCenterReading, femaleMobileBrigadeReading, maleHealthCenterReading, maleMobileBrigadeReading,",
+    "createdBy, modifiedBy)",
+    "VALUES (#{facilityVisitId}, #{femaleHealthCenterReading}, #{femaleMobileBrigadeReading}, #{maleHealthCenterReading}, #{maleMobileBrigadeReading},",
+    "#{createdBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public void insertFullVaccinationCoverage(FullCoverage fullCoverage);
 

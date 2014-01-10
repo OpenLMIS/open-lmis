@@ -22,8 +22,8 @@ import java.util.List;
 public interface EpiInventoryMapper {
 
 
-  @Insert({"INSERT INTO epi_inventory_line_items (facilityVisitId, programProductId, productCode, productName, productDisplayOrder, idealQuantity, createdBy) VALUES ",
-    "(#{facilityVisitId}, #{programProductId}, #{productCode}, #{productName}, #{productDisplayOrder}, #{idealQuantity}, #{createdBy})"})
+  @Insert({"INSERT INTO epi_inventory_line_items (facilityVisitId, programProductId, productCode, productName, productDisplayOrder, idealQuantity, createdBy, modifiedBy) VALUES ",
+    "(#{facilityVisitId}, #{programProductId}, #{productCode}, #{productName}, #{productDisplayOrder}, #{idealQuantity}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void saveLineItem(EpiInventoryLineItem lineItem);
 

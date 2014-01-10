@@ -118,6 +118,7 @@ public class VaccinationCoverageMapperIT {
 
     FullCoverage fullCoverage = new FullCoverage(34, 78, 11, 666);
     fullCoverage.setFacilityVisitId(facilityVisit.getId());
+    fullCoverage.setCreatedBy(1L);
     mapper.insertFullVaccinationCoverage(fullCoverage);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM full_coverages WHERE id = " + fullCoverage.getId());
@@ -127,8 +128,8 @@ public class VaccinationCoverageMapperIT {
     assertThat(resultSet.getInt("femaleMobileBrigadeReading"), is(78));
     assertThat(resultSet.getInt("maleHealthCenterReading"), is(11));
     assertThat(resultSet.getInt("maleMobileBrigadeReading"), is(666));
+    assertThat(resultSet.getLong("createdBy"), is(1L));
   }
-
 
   @Test
   public void shouldGetFullCoverageByFacilityVisitId() {

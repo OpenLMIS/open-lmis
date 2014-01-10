@@ -12,4 +12,8 @@ ALTER TABLE vaccination_full_coverages
 RENAME TO full_coverages;
 ALTER TABLE full_coverages
 DROP COLUMN vaccinationCoverageId,
-ADD COLUMN facilityVisitId INTEGER NOT NULL REFERENCES facility_visits (id);
+ADD COLUMN facilityVisitId INTEGER NOT NULL REFERENCES facility_visits (id),
+ADD COLUMN createdBy INTEGER,
+ADD COLUMN createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN modifiedBy INTEGER,
+ADD COLUMN modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
