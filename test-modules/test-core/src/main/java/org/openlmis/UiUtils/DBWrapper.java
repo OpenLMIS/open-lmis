@@ -349,14 +349,10 @@ public class DBWrapper {
     update("delete from comments");
     update("delete from facility_visits");
     update("delete from epi_use_line_items");
-    update("delete from epi_use");
     update("delete from epi_inventory_line_items");
-    update("delete from epi_inventory");
     update("delete from refrigerator_problems");
     update("delete from refrigerator_readings");
-    update("delete from distribution_refrigerators");
     update("delete from vaccination_full_coverages");
-    update("delete from vaccination_coverages");
 
     update("delete from distributions");
     update("delete from refrigerators");
