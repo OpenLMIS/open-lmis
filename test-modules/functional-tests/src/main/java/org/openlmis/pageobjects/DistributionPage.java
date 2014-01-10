@@ -41,9 +41,6 @@ public class DistributionPage extends Page {
   @FindBy(how = XPATH, using = "//input[@value='View load amounts']")
   private WebElement viewLoadAmountButton = null;
 
-  @FindBy(how = ID, using = "initiateDistribution")
-  private WebElement initiateDistributionButton = null;
-
   @FindBy(how = ID, using = "saveSuccessMsgDiv")
   private WebElement saveSuccessMessageDiv = null;
 
@@ -111,7 +108,8 @@ public class DistributionPage extends Page {
   }
 
   public void clickInitiateDistribution() {
-    testWebDriver.waitForElementToBeEnabled(initiateDistributionButton);
+    WebElement initiateDistributionButton = testWebDriver.findElement(By.id("initiateDistribution"));
+    testWebDriver.waitForElementToAppear(initiateDistributionButton);
     initiateDistributionButton.click();
   }
 
