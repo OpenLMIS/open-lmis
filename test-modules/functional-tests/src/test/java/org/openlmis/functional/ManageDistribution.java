@@ -424,6 +424,12 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.verifyNoDistributionCachedMessage();
   }
 
+  @When("I enter EPI Inventory deliveredQuantity of Row \"([^\"]*)\" as \"([^\"]*)\"$")
+  public void enterDeliveredQuantity(Integer rowNumber, String deliveredQuantity) throws IOException {
+   EpiInventoryPage epiInventoryPage=new EpiInventoryPage(testWebDriver);
+   epiInventoryPage.fillDeliveredQuantity(rowNumber,deliveredQuantity);
+
+  }
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +
       "div[1]/div[1]/div").getText(), deliveryZoneNameFirst);
