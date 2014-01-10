@@ -488,6 +488,11 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Group in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+    uploadPage.uploadProductsInvalidScenarios("QA_products_Invalid_Packsize_Less_Than_Zero.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+
   }
 
   private void verifyValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
