@@ -352,7 +352,7 @@ public class DBWrapper {
     update("delete from epi_inventory_line_items");
     update("delete from refrigerator_problems");
     update("delete from refrigerator_readings");
-    update("delete from vaccination_full_coverages");
+    update("delete from full_coverages");
 
     update("delete from distributions");
     update("delete from refrigerators");
