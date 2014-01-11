@@ -10,6 +10,7 @@ package org.openlmis.order.repository;
 
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
@@ -25,6 +26,9 @@ public class OrderRepository {
 
   @Autowired
   private OrderMapper orderMapper;
+
+  @Autowired
+  CommaSeparator commaSeparator;
 
   public void save(Order order) {
     try {
@@ -69,5 +73,13 @@ public class OrderRepository {
 
   public Integer getNumberOfPages(int pageSize) {
     return orderMapper.getNumberOfPages(pageSize);
+  }
+
+  public List<Order> searchByWarehousesAndStatuses(List<Long> facilityIds, List<OrderStatus> orderStatuses) {
+    return orderMapper.getByWarehouseIdsAndStatuses(format(facilityIds.toString()), format(orderStatuses.toString()));
+  }
+
+  private String format(String listString) {
+    return listString.replace('[', '{').replace(']', '}');
   }
 }

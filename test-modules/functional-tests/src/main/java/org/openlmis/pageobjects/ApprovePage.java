@@ -133,7 +133,7 @@ public class ApprovePage extends RequisitionPage {
   }
 
 
-  public String ClickRequisitionPresentForApproval() {
+  public String clickRequisitionPresentForApproval() {
     testWebDriver.waitForElementToAppear(requisitionListHeader);
     String period = periodStartDate.getText().trim() + " - " + periodEndDate.getText().trim();
     firstRow.click();

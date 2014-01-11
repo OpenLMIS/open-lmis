@@ -10,26 +10,58 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityProgramProduct;
+import org.openlmis.core.domain.ProductGroup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
+
+@EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 public class EpiUse extends BaseModel {
 
-  private Long distributionId;
-  private Long facilityId;
   private List<EpiUseLineItem> lineItems = new ArrayList<>();
 
+  public EpiUse(Facility facility, FacilityVisit facilityVisit) {
 
-  public EpiUse(Long distributionId, Long facilityId) {
-    this.distributionId = distributionId;
-    this.facilityId = facilityId;
+    if (facility.getSupportedPrograms().size() != 0) {
+      List<FacilityProgramProduct> programProducts = facility.getSupportedPrograms().get(0).getProgramProducts();
+      this.populateEpiUseLineItems(programProducts, facilityVisit.getCreatedBy(), facilityVisit.getId());
+    }
+
+    Comparator<EpiUseLineItem> productNameComparator = new ProductNameComparator();
+    Collections.sort(lineItems, productNameComparator);
+  }
+
+  private void populateEpiUseLineItems(List<FacilityProgramProduct> programProducts, Long createdBy, Long facilityVisitId) {
+    Set<ProductGroup> productGroupSet = new HashSet<>();
+
+    for (FacilityProgramProduct facilityProgramProduct : programProducts) {
+      ProductGroup productGroup = facilityProgramProduct.getActiveProductGroup();
+      if (productGroup != null && productGroupSet.add(productGroup)) {
+        this.lineItems.add(new EpiUseLineItem(facilityVisitId, productGroup, createdBy));
+      }
+    }
+  }
+
+  private class ProductNameComparator implements Comparator<EpiUseLineItem> {
+
+    @Override
+    public int compare(EpiUseLineItem lineItem1, EpiUseLineItem lineItem2) {
+      return lineItem1.getProductGroup().getName().compareTo(lineItem2.getProductGroup().getName());
+    }
   }
 }

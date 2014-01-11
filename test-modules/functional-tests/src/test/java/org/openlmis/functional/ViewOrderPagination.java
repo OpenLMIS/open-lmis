@@ -34,8 +34,8 @@ public class ViewOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void verifyPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(50, "MALARIA", true);
-    dbWrapper.insertRequisitions(1, "TB", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
+    dbWrapper.insertRequisitions(1, "TB", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");

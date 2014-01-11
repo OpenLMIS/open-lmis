@@ -36,8 +36,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -99,13 +97,10 @@ public class DistributionMapperIT {
     deliveryZoneMapper.insert(zone);
     programMapper.insert(program1);
     periodMapper.insert(processingPeriod);
-
   }
 
   @Test
   public void shouldInsertDistributionInInitiatedState() throws Exception {
-
-
     Distribution distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),

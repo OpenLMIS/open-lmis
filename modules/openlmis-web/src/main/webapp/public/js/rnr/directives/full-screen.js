@@ -16,10 +16,10 @@ app.directive('fullScreen', function () {
 
       var progressFunc = function () {
         fixToolbarWidth();
-        $('.rnr-body').trigger('scroll');
+        $(window).trigger('scroll');
       };
       var completeFunc = function () {
-        $('.rnr-body').trigger('scroll');
+        $(window).trigger('scroll');
       };
 
       scope.$on('$routeChangeStart', function () {
@@ -37,7 +37,7 @@ app.directive('fullScreen', function () {
         }
         else {
           fullScreen ? angular.element('.toggleFullScreen').hide() : angular.element('.toggleFullScreen').show();
-          $('.rnr-body').trigger('scroll');
+          $(window).trigger('scroll');
         }
 
         var printButton = angular.element('.print-button');

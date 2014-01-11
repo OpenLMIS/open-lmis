@@ -11,15 +11,17 @@
 package org.openlmis.UiUtils;
 
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.UnreachableBrowserException;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
@@ -28,15 +30,14 @@ import static java.util.Arrays.asList;
 
 public class TestCaseHelper {
 
+  public static final String DEFAULT_BROWSER = "firefox";
+  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
   public static DBWrapper dbWrapper;
   protected static String baseUrlGlobal;
   protected static String DOWNLOAD_FILE_PATH;
   protected static TestWebDriver testWebDriver;
   protected static boolean isSeleniumStarted = false;
   protected static DriverFactory driverFactory = new DriverFactory();
-  public static final String DEFAULT_BROWSER = "firefox";
-  public static final String DEFAULT_BASE_URL = "http://localhost:9091/";
-
 
   public void setup() throws Exception {
     String browser = getProperty("browser", DEFAULT_BROWSER);
@@ -74,7 +75,6 @@ public class TestCaseHelper {
     }
   }
 
-
   protected void addTearDownShutDownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       public void run() {
@@ -84,7 +84,6 @@ public class TestCaseHelper {
       }
     });
   }
-
 
   protected void loadDriver(String browser) throws InterruptedException, IOException {
 
@@ -193,15 +192,11 @@ public class TestCaseHelper {
   }
 
   public void setupTestData(boolean isPreviousPeriodRnRRequired) throws Exception {
-    List<String> rightsList = new ArrayList<>();
-    rightsList.add("CREATE_REQUISITION");
-    rightsList.add("VIEW_REQUISITION");
-    rightsList.add("AUTHORIZE_REQUISITION");
+    List<String> rightsList = asList("CREATE_REQUISITION", "VIEW_REQUISITION", "AUTHORIZE_REQUISITION");
     if (isPreviousPeriodRnRRequired)
       setupRnRTestDataRnRForCommTrack(false, "HIV", "commTrack", "700", rightsList);
     else
       setupRnRTestDataRnRForCommTrack(true, "HIV", "commTrack", "700", rightsList);
-
   }
 
   public void setupDataRequisitionApprover() throws IOException, SQLException {
@@ -226,7 +221,6 @@ public class TestCaseHelper {
     if (multipleFacilityInstances)
       dbWrapper.insertDeliveryZoneProgramSchedule(deliveryZoneCodeSecond, programSecond, schedule);
   }
-
 
   public void addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(String deliveryZoneCodeFirst,
                                                                                                String facilityCodeThird,
@@ -261,7 +255,6 @@ public class TestCaseHelper {
     dbWrapper.updateProductToHaveGroup(product, productGroup);
   }
 
-
   public void sendKeys(String locator, String value) {
     int length = testWebDriver.getAttribute(testWebDriver.getElementByXpath(locator), "value").length();
     for (int i = 0; i < length; i++)
@@ -276,13 +269,13 @@ public class TestCaseHelper {
     locator.sendKeys(value);
   }
 
-  public String IsaProgramProduct(String program, String product, String population) throws IOException, SQLException {
+  public String getISAForProgramProduct(String program, String product, String population) throws IOException, SQLException {
     String[] isaParams = dbWrapper.getProgramProductISA(program, product);
-    return calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population);
+    return String.valueOf(Math.round((float) calculateISA(isaParams[0], isaParams[1], isaParams[2], isaParams[3], isaParams[4], isaParams[5], isaParams[6], population) / 10));
   }
 
-  public String calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
-                             String minimumValue, String maximumValue, String populationValue) {
+  public Integer calculateISA(String ratioValue, String dosesPerYearValue, String wastageValue, String bufferPercentageValue, String adjustmentValue,
+                              String minimumValue, String maximumValue, String populationValue) throws SQLException {
     Float calculatedISA;
     Float minimum = 0.0F;
     Float maximum = 0.0F;
@@ -302,13 +295,13 @@ public class TestCaseHelper {
 
     Integer adjustment = Integer.parseInt(adjustmentValue);
 
-    calculatedISA = (((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment;
+    calculatedISA = ((((population * ratio * dosesPerYear * wastage) / 12) * bufferPercentage) + adjustment) * 1;
 
     if (calculatedISA <= minimum && minimum != 0.0)
-      return (minimumValue);
+      return (Integer.parseInt(minimumValue));
     else if (calculatedISA >= maximum && maximum != 0.0)
-      return (maximumValue);
-    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).toString();
+      return (Integer.parseInt(maximumValue));
+    return (new BigDecimal(calculatedISA).setScale(0, BigDecimal.ROUND_CEILING)).intValue();
   }
 
   public void setupDeliveryZoneRolesAndRights(String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
@@ -460,22 +453,20 @@ public class TestCaseHelper {
   }
 
   public void verifyNumberOfPageLinks(int numberOfProducts, int numberOfLineItemsPerPage) throws Exception {
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForAjax();
     int numberOfPages = numberOfProducts / numberOfLineItemsPerPage;
     if (numberOfProducts % numberOfLineItemsPerPage != 0) {
       numberOfPages = numberOfPages + 1;
     }
     for (int i = 1; i <= numberOfPages; i++) {
-      testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']"));
-      assertTrue(testWebDriver.getElementByXpath("//a[contains(text(), '" + i + "') and @class='ng-binding']").isDisplayed());
+      testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.id(String.valueOf(i))));
+      assertTrue(testWebDriver.findElement(By.id(String.valueOf(i))).isDisplayed());
     }
   }
 
   public void verifyNextAndLastLinksEnabled() throws Exception {
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForAjax();
     WebElement nextPageLink = testWebDriver.getElementById("nextPageLink");
-
-    testWebDriver.waitForElementToAppear(nextPageLink);
 
     assertEquals(nextPageLink.getCssValue("color"), "rgba(119, 119, 119, 1)");
     assertEquals(testWebDriver.getElementById("lastPageLink").getCssValue("color"), "rgba(119, 119, 119, 1)");
@@ -496,16 +487,77 @@ public class TestCaseHelper {
   }
 
   public void verifyPreviousAndFirstLinksDisabled() throws Exception {
-    testWebDriver.waitForPageToLoad();
+    testWebDriver.waitForAjax();
     WebElement firstPageLink = testWebDriver.getElementById("firstPageLink");
-
-    testWebDriver.waitForElementToAppear(firstPageLink);
 
     assertEquals(firstPageLink.getCssValue("color"), "rgba(204, 204, 204, 1)");
     assertEquals(testWebDriver.getElementById("previousPageLink").getCssValue("color"), "rgba(204, 204, 204, 1)");
   }
 
+  public void verifyGeneralObservationsDataInDatabase(String facilityCode, String observation, String confirmedByName, String confirmedByTitle,
+                                                      String verifiedByName, String verifiedByTitle) throws SQLException {
+    Map<String, String> generalObservations = dbWrapper.getFacilityVisitDetails(facilityCode);
 
+    assertEquals(observation, generalObservations.get("observations"));
+    assertEquals(confirmedByName, generalObservations.get("confirmedByName"));
+    assertEquals(confirmedByTitle, generalObservations.get("confirmedByTitle"));
+    assertEquals(verifiedByName, generalObservations.get("verifiedByName"));
+    assertEquals(verifiedByTitle, generalObservations.get("verifiedByTitle"));
+  }
+
+  public void verifyEpiUseDataInDatabase(Integer stockAtFirstOfMonth, Integer receivedValue, Integer distributedValue,
+                                         Integer loss, Integer stockAtEndOfMonth, String expirationDate, String productGroupCode,
+                                         String facilityCode) throws SQLException {
+    Map<String, String> epiDetails = dbWrapper.getEpiUseDetails(productGroupCode, facilityCode);
+
+    assertEquals(stockAtFirstOfMonth, epiDetails.get("stockatfirstofmonth"));
+    assertEquals(receivedValue, epiDetails.get("received"));
+    assertEquals(distributedValue, epiDetails.get("distributed"));
+    assertEquals(loss, epiDetails.get("loss"));
+    assertEquals(stockAtEndOfMonth, epiDetails.get("stockatendofmonth"));
+    assertEquals(expirationDate, epiDetails.get("expirationdate"));
+  }
+
+  public void verifyRefrigeratorReadingDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Float temperature, String functioningCorrectly, Integer lowAlarmEvents,
+                                                      Integer highAlarmEvents, String problemSinceLastTime, String notes) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
+    assertEquals(temperature, resultSet.getString("temperature"));
+    assertEquals(functioningCorrectly, resultSet.getString("functioningCorrectly"));
+    assertEquals(lowAlarmEvents, resultSet.getString("lowAlarmEvents"));
+    assertEquals(highAlarmEvents, resultSet.getString("highAlarmEvents"));
+    assertEquals(problemSinceLastTime, resultSet.getString("problemSinceLastTime"));
+    assertEquals(notes, resultSet.getString("notes"));
+  }
+
+  public void verifyRefrigeratorsDataInDatabase(String facilityCode, String refrigeratorSerialNumber, String brandName,
+                                                String modelName, String enabledFlag) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorsData(refrigeratorSerialNumber, facilityCode);
+    assertEquals(brandName, resultSet.getString("brand"));
+    assertEquals(modelName, resultSet.getString("model"));
+    assertEquals(enabledFlag, resultSet.getString("enabled"));
+  }
+
+  public void verifyRefrigeratorProblemDataNullInDatabase(String refrigeratorSerialNumber, String facilityCode) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
+    Long readingId = resultSet.getLong("id");
+    resultSet = dbWrapper.getRefrigeratorProblems(readingId);
+    assertFalse(resultSet.next());
+  }
+
+  public void verifyRefrigeratorProblemDataInDatabase(String facilityCode, String refrigeratorSerialNumber, Boolean operatorError, Boolean burnerProblem, Boolean gasLeakage,
+                                                      Boolean egpFault, Boolean thermostatSetting, Boolean other, String otherProblemExplanation) throws SQLException {
+    ResultSet resultSet = dbWrapper.getRefrigeratorReadings(refrigeratorSerialNumber, facilityCode);
+    Long readingId = resultSet.getLong("id");
+    resultSet = dbWrapper.getRefrigeratorProblems(readingId);
+    resultSet.next();
+    assertEquals(operatorError, resultSet.getBoolean("operatorError"));
+    assertEquals(burnerProblem, resultSet.getBoolean("burnerProblem"));
+    assertEquals(gasLeakage, resultSet.getBoolean("gasLeakage"));
+    assertEquals(egpFault, resultSet.getBoolean("egpFault"));
+    assertEquals(thermostatSetting, resultSet.getBoolean("thermostatSetting"));
+    assertEquals(other, resultSet.getBoolean("other"));
+    assertEquals(otherProblemExplanation, resultSet.getString("otherProblemExplanation"));
+  }
 
 }
 

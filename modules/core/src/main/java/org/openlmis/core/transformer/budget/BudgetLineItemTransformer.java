@@ -2,30 +2,57 @@ package org.openlmis.core.transformer.budget;
 
 import org.openlmis.core.domain.BudgetLineItem;
 import org.openlmis.core.dto.BudgetLineItemDTO;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.transformer.LineItemTransformer;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.Date;
 
+import static java.math.RoundingMode.FLOOR;
+
 @Service
-public class BudgetLineItemTransformer {
+public class BudgetLineItemTransformer extends LineItemTransformer {
 
-  public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String datePattern) throws ParseException {
+  public BudgetLineItem transform(BudgetLineItemDTO lineItemDTO, String dateFormat, Integer rowNumber) {
+
     BudgetLineItem budgetLineItem = new BudgetLineItem();
-    Date periodDate = null;
-    if (datePattern != null) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
-      periodDate = dateFormat.parse(lineItemDTO.getPeriodStartDate());
-    }
+    Date periodDate = getValidatedPeriodDate(lineItemDTO.getPeriodStartDate(), dateFormat, rowNumber);
 
-    budgetLineItem.setFacilityCode(lineItemDTO.getFacilityCode());
-    budgetLineItem.setProgramCode(lineItemDTO.getProgramCode());
+    BigDecimal allocatedBudget = getAllocatedBudget(rowNumber, lineItemDTO.getAllocatedBudget());
+
     budgetLineItem.setPeriodDate(periodDate);
-    budgetLineItem.setAllocatedBudget(BigDecimal.valueOf(Double.parseDouble(lineItemDTO.getAllocatedBudget())));
+    budgetLineItem.setAllocatedBudget(allocatedBudget);
     budgetLineItem.setNotes(lineItemDTO.getNotes());
 
     return budgetLineItem;
+  }
+
+  private BigDecimal getAllocatedBudget(Integer rowNumber, String allocatedBudget) {
+    try {
+      Double budget = Double.valueOf(allocatedBudget);
+      if (budget < 0) {
+        throw new DataException("budget.allocated.negative");
+      }
+      DecimalFormat decimalFormat = new DecimalFormat("#0.##");
+      decimalFormat.setRoundingMode(FLOOR);
+      allocatedBudget = decimalFormat.format(budget);
+    } catch (Exception e) {
+      throw new DataException("budget.allocated.invalid", allocatedBudget, rowNumber);
+    }
+    return new BigDecimal(allocatedBudget);
+  }
+
+  private Date getValidatedPeriodDate(String periodStartDate, String dateFormat, Integer rowNumber) {
+    Date periodDate = null;
+    if (dateFormat != null) {
+      try {
+        periodDate = parseDate(dateFormat, periodStartDate);
+      } catch (Exception e) {
+        throw new DataException("budget.invalid.date.format", periodStartDate, rowNumber);
+      }
+    }
+    return periodDate;
   }
 }

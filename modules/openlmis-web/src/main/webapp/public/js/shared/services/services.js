@@ -177,6 +177,9 @@ services.factory('Orders', function ($resource) {
   return $resource('/orders.json', {}, {post: {isArray: true, method: 'POST'}});
 });
 
+services.factory('OrdersForManagePOD', function ($resource) {
+  return $resource('/manage-pod-orders', {}, {});
+});
 
 services.factory('ReportTemplates', function ($resource) {
   return $resource('/report-templates.json', {}, {});

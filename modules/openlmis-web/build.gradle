@@ -51,6 +51,11 @@ task jsHint(type: GruntTask) {
   dependsOn npm
 }
 
+task karmaRun(type: Exec) {
+    description = 'Runs jasmine specs and publishes js tests coverage report'
+    commandLine 'karma', 'start', 'karma.config.js', '--singleRun'
+}
+
 task lesslint(type: GruntTask) {
   description = 'Runs LessLint against all LESS files'
   workingDir '.'
@@ -139,6 +144,7 @@ task cleanWorkspace(type: Delete) {
 }
 
 build.doLast {
+  karmaRun.execute()
   jsHint.execute()
   cleanWorkspace.execute()
 }
@@ -158,8 +164,6 @@ dependencies {
     'commons-fileupload:commons-fileupload:1.2.2',
     'javax.servlet:servlet-api:2.5',
     'org.testng:testng:6.1.1',
-    'org.seleniumhq.selenium:selenium-java:2.35.0',
-    'org.seleniumhq.selenium:selenium-firefox-driver:2.33.0 ',
     'com.itextpdf:itextpdf:5.4.0',
     'net.bull.javamelody:javamelody-core:1.47.0',
     project(':modules:authentication'),
@@ -221,17 +225,7 @@ task deployOpenLmis(type: GradleBuild) {
   tasks = ['cargoRedeployRemote']
 }
 
-task phantomRun(type: Exec) {
-  description = 'Runs Jasmine specs in PhantomJS'
-  commandLine 'phantomjs', "${projectDir}/src/test/javascript/lib/run_jasmine_test.coffee", "${projectDir}/src/test/javascript/SpecRunner.html"
-}
-
 compileJava.dependsOn less
-
-task runJsCover(type: Exec) {
-  description = 'Generates a JS code coverage report for Jasmine specs'
-  commandLine 'sh', "${projectDir}/src/test/javascript/runJsCover.sh"
-}
 
 cobertura {
   coverageFormats << 'xml'

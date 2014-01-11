@@ -20,12 +20,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.DistributionRepository;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
@@ -36,7 +40,7 @@ public class DistributionServiceTest {
   DistributionService service;
 
   @Mock
-  FacilityVisitService facilityVisitService;
+  FacilityDistributionService facilityDistributionService;
 
   @Mock
   DistributionRepository repository;
@@ -46,32 +50,35 @@ public class DistributionServiceTest {
     Distribution distribution = new Distribution();
     Distribution expectedDistribution = new Distribution();
     when(repository.create(distribution)).thenReturn(expectedDistribution);
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
+    when(facilityDistributionService.createFor(expectedDistribution)).thenReturn(facilityDistributions);
 
     Distribution initiatedDistribution = service.create(distribution);
 
     verify(repository).create(distribution);
     assertThat(initiatedDistribution, is(expectedDistribution));
-
+    assertThat(initiatedDistribution.getFacilityDistributions(), is(facilityDistributions));
   }
 
   @Test
   public void shouldSyncFacilityDistributionDataAndReturnSyncStatus() {
     FacilityVisit facilityVisit = new FacilityVisit();
 
-    FacilityDistributionData facilityDistributionData = mock(FacilityDistributionData.class);
-    when(facilityDistributionData.getFacilityVisit()).thenReturn(facilityVisit);
-    when(facilityVisitService.save(facilityVisit)).thenReturn("Synced");
-    String syncStatus = service.sync(facilityDistributionData);
+    FacilityDistribution facilityDistribution = mock(FacilityDistribution.class);
+    when(facilityDistribution.getFacilityVisit()).thenReturn(facilityVisit);
+    when(facilityDistributionService.save(facilityDistribution)).thenReturn(true);
+    boolean syncStatus = service.sync(facilityDistribution);
 
-    verify(facilityVisitService).save(facilityVisit);
-    verify(facilityDistributionData).getFacilityVisit();
-    assertThat(syncStatus, is("Synced"));
+    verify(facilityDistributionService).save(facilityDistribution);
+    assertTrue(syncStatus);
   }
 
   @Test
   public void shouldGetDistributionIfExists() throws Exception {
-    service.get(new Distribution());
+    Distribution distribution = new Distribution();
 
-    verify(repository).get(new Distribution());
+    service.get(distribution);
+
+    verify(repository).get(distribution);
   }
 }

@@ -62,4 +62,10 @@ public class ProgramProductController  extends BaseController  {
     return OpenLmisResponse.response("priceHistory", programPriceService.getByProductId( productId ) );
   }
 
+  @RequestMapping(value = "/program/{programId}/active-products", method = GET, headers = BaseController.ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getActiveProgramProductsByProgram(@PathVariable Long programId) {
+    List<ProgramProduct> programProductsByProgram = service.getActiveByProgram(programId);
+    return response(PROGRAM_PRODUCT_LIST, programProductsByProgram);
+  }
+
 }

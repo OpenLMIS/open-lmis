@@ -18,10 +18,10 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
     if (e.removed) {
       var dialogOpts = {
         id: "deleteAdminRolesModal",
-        header: messageService.get("create.user.deleteAdminRoleHeader"),
-        body: messageService.get("create.user.deleteAdminRoles")
+        header: "create.user.deleteAdminRoleHeader",
+        body: "create.user.deleteAdminRoles"
       };
-      OpenLmisDialog.newDialog(dialogOpts, $scope.restoreAdminRole, $dialog, messageService);
+      OpenLmisDialog.newDialog(dialogOpts, $scope.restoreAdminRole, $dialog);
 
       window.lastAdminRoleRemoved = e.removed;
     }
@@ -85,11 +85,11 @@ function UserRoleAssignmentController($scope, $dialog, messageService, DeliveryZ
   $scope.deleteCurrentRow = function (rowNum, roleList) {
     var dialogOpts = {
       id: "deleteRolesModal",
-      header: messageService.get("create.user.deleteRoles"),
-      body: messageService.get(getBodyMsgKey(roleList))
+      header: "create.user.deleteRoles",
+      body: getBodyMsgKey(roleList)
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRole, $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, $scope.deleteRole, $dialog);
     $scope.rowNum = rowNum;
     $scope.deleteRoleList = roleList;
   };

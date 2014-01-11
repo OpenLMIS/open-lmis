@@ -16,10 +16,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.openlmis.core.builder.DeliveryZoneBuilder.defaultDeliveryZone;
+import static org.openlmis.core.builder.FacilityBuilder.code;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.scheduleId;
@@ -59,6 +63,9 @@ public class FacilityVisitMapperIT {
   Program program1;
   ProcessingPeriod processingPeriod;
 
+  Facility facility;
+  Distribution distribution;
+
   @Before
   public void setUp() throws Exception {
     zone = make(a(defaultDeliveryZone));
@@ -72,40 +79,79 @@ public class FacilityVisitMapperIT {
     deliveryZoneMapper.insert(zone);
     programMapper.insert(program1);
     periodMapper.insert(processingPeriod);
-  }
 
-  @Test
-  public void shouldInsertFacilityVisit() {
-
-    Facility facility = make(a(defaultFacility));
+    facility = make(a(defaultFacility));
     facilityMapper.insert(facility);
 
-    Distribution distribution = make(a(initiatedDistribution,
+    distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
       with(program, program1)));
 
     distributionMapper.insert(distribution);
 
-    FacilityVisit facilityVisit = new FacilityVisit();
+  }
+
+  @Test
+  public void shouldInsertFacilityVisit() {
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
     Facilitator confirmedBy = new Facilitator("Barack", "President");
     Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
-
     facilityVisit.setConfirmedBy(confirmedBy);
     facilityVisit.setVerifiedBy(verifiedBy);
-
     facilityVisit.setObservations("I observed something");
-
-    facilityVisit.setDistributionId(distribution.getId());
-    facilityVisit.setFacilityId(facility.getId());
-    facilityVisit.setCreatedBy(1l);
 
     mapper.insert(facilityVisit);
 
-    FacilityVisit actualFacilityVisit = mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+    FacilityVisit actualFacilityVisit = mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
 
     assertThat(actualFacilityVisit, is(facilityVisit));
     assertThat(actualFacilityVisit.getCreatedBy(), is(1l));
   }
 
+  @Test
+  public void shouldUpdateFacilityVisit() {
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
+    Facilitator confirmedBy = new Facilitator("Barack", "President");
+    Facilitator verifiedBy = new Facilitator("ManMohan", "Spectator");
+
+    mapper.insert(facilityVisit);
+
+    facilityVisit.setConfirmedBy(confirmedBy);
+    facilityVisit.setVerifiedBy(verifiedBy);
+    facilityVisit.setObservations("I observed something");
+
+    mapper.update(facilityVisit);
+
+    FacilityVisit actualFacilityVisit = mapper.getBy(facility.getId(), distribution.getId());
+    assertThat(actualFacilityVisit, is(facilityVisit));
+  }
+
+  @Test
+  public void shouldGetFacilityVisitById() {
+    FacilityVisit facilityVisit = new FacilityVisit(facility, distribution);
+
+    mapper.insert(facilityVisit);
+
+    FacilityVisit savedFacilityVisit = mapper.getById(facilityVisit.getId());
+
+    assertThat(savedFacilityVisit, is(facilityVisit));
+  }
+
+  @Test
+  public void shouldGetFacilityVisitsWhichAreNotSyncedYet() {
+    FacilityVisit facilityVisit1 = new FacilityVisit(facility, distribution);
+    facilityVisit1.setSynced(true);
+    mapper.insert(facilityVisit1);
+
+    Facility facility1 = make(a(defaultFacility, with(code, "F999")));
+    facilityMapper.insert(facility1);
+    FacilityVisit facilityVisit2 = new FacilityVisit(facility1, distribution);
+    facilityVisit2.setSynced(false);
+    mapper.insert(facilityVisit2);
+
+    List<FacilityVisit> unSyncedFacilities = mapper.getUnSyncedFacilities(distribution.getId());
+
+    assertThat(unSyncedFacilities, is(asList(facilityVisit2)));
+  }
 }

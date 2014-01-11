@@ -1,0 +1,120 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~  Copyright © 2013 VillageReach
+  ~
+  ~   This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~   This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div id="coverageTable" class="facility-distribution-form-table" disable-form="{{facilityData.isDisabled()}}">
+  <div id="applyNRContainer" class="clearfix">
+    <input id="CoverageFormApplyNRToAll" type="button" ng-click="applyNRAll()"
+           class="pull-right btn"
+           openlmis-message="button.apply.nr.all"/>
+  </div>
+  <form auto-save="distribution" object-store="distributions">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th class="col-complete-vaccinated" id="completeVaccinatedHeader"
+            openlmis-message="label.coverage.complete.vaccinated"></th>
+        <th class="col-health-center" id="healthCenterHeader" openlmis-message="label.coverage.health.center"></th>
+        <th class="col-mobile-brigade" id="mobileBrigadeHeader" openlmis-message="label.coverage.mobile.brigade"></th>
+      </tr>
+      </thead>
+      <tdata>
+        <tr>
+          <td id="femaleHeader" openlmis-message="label.coverage.females"></td>
+          <td class="col-health-center">
+            <div>
+              <input id="femaleHealthCenter" type="text"
+                     ng-model="facilityData.coverage.fullCoverage.femaleHealthCenterReading.value"
+                     name="coverageFemaleHC"
+                     numeric-validator="positiveInteger" maxlength="7"
+                     error-holder="coverageFemaleHCError"/>
+            </div>
+            <div class="error">
+              <span id="coverageFemaleHCError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
+            </div>
+            <input id="coverageFemaleHC" type="checkbox"
+                   ng-model="facilityData.coverage.fullCoverage.femaleHealthCenterReading.notRecorded"
+                   not-recorded/>
+            <label class="checkbox-label"
+                   for="coverageFemaleHC"
+                   openlmis-message="label.not.recorded"></label>
+          <td class="col-mobile-brigade">
+            <div>
+              <input id="femaleMobileBrigade" type="text"
+                     ng-model="facilityData.coverage.fullCoverage.femaleMobileBrigadeReading.value"
+                     name="coverageFemaleMB"
+                     numeric-validator="positiveInteger" maxlength="7"
+                     error-holder="coverageFemaleMBError"/>
+            </div>
+            <div class="error">
+              <span id="coverageFemaleMBError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
+            </div>
+            <input id="coverageFemaleMB" type="checkbox"
+                   ng-model="facilityData.coverage.fullCoverage.femaleMobileBrigadeReading.notRecorded"
+                   not-recorded/>
+            <label class="checkbox-label"
+                   for="coverageFemaleMB"
+                   openlmis-message="label.not.recorded"></label>
+          </td>
+        </tr>
+        <tr>
+          <td id="maleHeader" openlmis-message="label.coverage.males"></td>
+          <td class="col-health-center">
+            <div>
+              <input id="maleHealthCenter" type="text"
+                     ng-model="facilityData.coverage.fullCoverage.maleHealthCenterReading.value"
+                     name="coverageMaleHC"
+                     numeric-validator="positiveInteger" maxlength="7"
+                     error-holder="coverageMaleHCError"/>
+            </div>
+            <div class="error">
+              <span id="coverageMaleHCError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
+            </div>
+            <input id="coverageMaleHC" type="checkbox"
+                   ng-model="facilityData.coverage.fullCoverage.maleHealthCenterReading.notRecorded"
+                   not-recorded/>
+            <label class="checkbox-label"
+                   for="coverageMaleHC"
+                   openlmis-message="label.not.recorded"></label>
+          <td class="col-health-center">
+            <div>
+              <input id="maleMobileBrigade" type="text"
+                     ng-model="facilityData.coverage.fullCoverage.maleMobileBrigadeReading.value"
+                     name="coverageMaleMB"
+                     numeric-validator="positiveInteger" maxlength="7"
+                     error-holder="coverageMaleMBError"/>
+            </div>
+            <div class="error">
+              <span id="coverageMaleMBError"
+                    class="rnr-form-error"
+                    openlmis-message="error.number.only"
+                    style="display: none"></span>
+            </div>
+            <input id="coverageMaleMB" type="checkbox"
+                   ng-model="facilityData.coverage.fullCoverage.maleMobileBrigadeReading.notRecorded"
+                   not-recorded/>
+            <label class="checkbox-label"
+                   for="coverageMaleMB"
+                   openlmis-message="label.not.recorded"></label>
+          </td>
+        </tr>
+        </tr>
+      </tdata>
+    </table>
+  </form>
+</div>

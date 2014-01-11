@@ -10,6 +10,7 @@
 
 package org.openlmis.functional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pageobjects.HomePage;
@@ -22,6 +23,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.*;
@@ -66,7 +69,7 @@ public class FacilityFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
@@ -102,6 +105,8 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"Comments\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoLiveDate\":\"25-01-2014\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoDownDate\":\"26-01-2014"));
 
     homePage.navigateSearchFacility();
     manageFacilityPage.searchFacility(date_time);
@@ -198,6 +203,8 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goDownDate\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoLiveDate\":\"11-11-2012\""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoDownDate\":\"11-11-1887"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satellite\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":false"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"comment\":\"fc\""));
@@ -239,6 +246,7 @@ public class FacilityFeed extends JsonUtility {
       commTrackUser,
       "Admin123");
 
+    String stringGoLiveDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
     ResponseEntity responseEntity = client.SendJSON("", FACILITY_FEED_URL, "GET", "", "");
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"code\":\"" + DEFAULT_AGENT_CODE + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"name\":\"" + DEFAULT_AGENT_NAME + "\""));
@@ -246,6 +254,7 @@ public class FacilityFeed extends JsonUtility {
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"mainPhone\":\"" + PHONE_NUMBER + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"geographicZone\":\"Ngorongoro\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"active\":" + ACTIVE_STATUS + ""));
+    assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"stringGoLiveDate\":\"" + stringGoLiveDate + "\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"goLiveDate\""));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"virtualFacility\":true"));
     assertTrue("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"parentFacility\":\"" + DEFAULT_PARENT_FACILITY_CODE + "\""));
@@ -256,6 +265,7 @@ public class FacilityFeed extends JsonUtility {
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"hasElectronicDAR\":"));
     assertFalse("Response entity : " + responseEntity.getResponse(), responseEntity.getResponse().contains("\"satelliteFacility\":"));
 
+    assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"), 29);
     agentJson.setActive("false");
     client.SendJSON(getJsonStringFor(agentJson),
       UPDATE_URL + DEFAULT_AGENT_CODE + JSON_EXTENSION,

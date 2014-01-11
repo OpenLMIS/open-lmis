@@ -17,6 +17,8 @@ import org.openlmis.distribution.repository.mapper.FacilityVisitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class FacilityVisitRepository {
 
@@ -28,7 +30,22 @@ public class FacilityVisitRepository {
   }
 
   public FacilityVisit get(FacilityVisit facilityVisit) {
-    return mapper.getByDistributionAndFacility(facilityVisit.getDistributionId(), facilityVisit.getFacilityId());
+    return mapper.getBy(facilityVisit.getFacilityId(), facilityVisit.getDistributionId());
   }
 
+  public void update(FacilityVisit facilityVisit) {
+    mapper.update(facilityVisit);
+  }
+
+  public FacilityVisit getById(Long facilityVisitId) {
+    return mapper.getById(facilityVisitId);
+  }
+
+  public FacilityVisit getBy(Long facilityId, Long distributionId) {
+    return mapper.getBy(facilityId, distributionId);
+  }
+
+  public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
+    return mapper.getUnSyncedFacilities(distributionId);
+  }
 }

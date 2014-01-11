@@ -7,6 +7,15 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
+
+var DistributionStatus = {
+  EMPTY: 'is-empty',
+  INCOMPLETE: 'is-incomplete',
+  COMPLETE: 'is-complete',
+  SYNCED: 'is-synced',
+  DUPLICATE: 'is-duplicate'
+};
+
 var distributionModule = angular.module('distribution',
   ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 
@@ -23,6 +32,10 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
       {controller: RefrigeratorController, templateUrl: 'partials/refrigerator.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/epi-use',
       {controller: EPIUseController, templateUrl: 'partials/epi-use.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/epi-inventory',
+      {controller: EPIInventoryController, templateUrl: 'partials/epi-inventory.html', resolve: ResolveDistribution}).
+      when('/record-facility-data/:distribution/:facility/coverage',
+      {controller: CoverageController, templateUrl: 'partials/coverage/index.html', resolve: ResolveDistribution}).
       when('/record-facility-data/:distribution/:facility/facility-visit',
       {controller: FacilityVisitController, templateUrl: 'partials/facility-visit.html', resolve: ResolveDistribution}).
       otherwise({redirectTo: '/manage'});

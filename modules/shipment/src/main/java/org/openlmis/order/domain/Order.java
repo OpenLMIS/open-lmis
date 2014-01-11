@@ -22,13 +22,12 @@ import org.openlmis.shipment.domain.ShipmentFileInfo;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class Order extends BaseModel {
+public class Order extends BaseModel implements Comparable {
   private Rnr rnr;
   private OrderStatus status;
   private SupplyLine supplyLine;
   private ShipmentFileInfo shipmentFileInfo;
   private String ftpComment;
-  private String supplyingFacility;
 
   public Order(Rnr rnr) {
     this(rnr.getId());
@@ -46,7 +45,20 @@ public class Order extends BaseModel {
   }
 
   public Facility getSupplyingFacility() {
-    return supplyLine == null ? null : supplyLine.getSupplyingFacility() ;
+    return supplyLine == null ? null : supplyLine.getSupplyingFacility();
+  }
+
+  @Override
+  public int compareTo(Object o) {
+    Order order2 = (Order) o;
+    int comparisonResult;
+    if ((comparisonResult = this.getSupplyingFacility().getName().compareToIgnoreCase(order2.getSupplyingFacility().getName())) != 0) {
+      return comparisonResult;
+    }
+    if ((comparisonResult = this.getRnr().getProgram().getName().compareToIgnoreCase(order2.getRnr().getProgram().getName())) != 0) {
+      return comparisonResult;
+    }
+    return this.getCreatedDate().compareTo(order2.getCreatedDate());
   }
 
   public String getConcatinatedOrderId(){

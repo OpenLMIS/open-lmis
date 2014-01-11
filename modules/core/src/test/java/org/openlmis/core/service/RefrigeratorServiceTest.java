@@ -16,11 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.openlmis.core.service.RefrigeratorService;
-import org.openlmis.db.categories.UnitTests;
+import org.openlmis.core.domain.Refrigerator;
 import org.openlmis.core.repository.RefrigeratorRepository;
+import org.openlmis.db.categories.UnitTests;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @Category(UnitTests.class)
 @RunWith(MockitoJUnitRunner.class)
@@ -38,4 +38,25 @@ public class RefrigeratorServiceTest {
 
     verify(repository).getRefrigeratorsForADeliveryZoneAndProgram(1L, 1L);
   }
+
+  @Test
+  public void shouldInsertRefrigeratorIfDoesNotExists() {
+    Refrigerator refrigerator = new Refrigerator("SerialNumber");
+
+    service.save(refrigerator);
+
+    verify(repository).insert(refrigerator);
+  }
+
+  @Test
+  public void shouldUpdateRefrigeratorIfAlreadyExists() {
+    Refrigerator refrigerator = mock(Refrigerator.class);
+    when(refrigerator.getId()).thenReturn(1L);
+
+    service.save(refrigerator);
+
+    verify(repository).update(refrigerator);
+  }
+
+
 }

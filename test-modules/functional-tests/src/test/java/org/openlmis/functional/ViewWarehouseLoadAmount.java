@@ -30,11 +30,14 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static org.testng.AssertJUnit.assertFalse;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -45,7 +48,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public static final String district2 = "District2";
   public static final String parentGeoZone = "Dodoma";
   public static final String parentGeoZone1 = "Arusha";
-
   public String userSIC = "fieldcoordinator";
   public String deliveryZoneCodeFirst = "DZ1";
   public String deliveryZoneCodeSecond = "DZ2";
@@ -67,10 +69,17 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   @Given("^I have data available for distribution load amount$")
   public void setupDataForDistributionLoadAmount() throws Exception {
-    List<String> rightsList = new ArrayList<String>();
+    String productGroupCode="PG1" ;
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true,
       programFirst, userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone);
+    dbWrapper.insertProductGroup(productGroupCode);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", productGroupCode, true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", productGroupCode, true);
+    dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
+    dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
+    dbWrapper.updateActiveStatusOfProduct("Product6","false");
 
   }
 
@@ -87,6 +96,11 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
         facilityCodeFirst, facilityCodeSecond,
         programFirst, programSecond, schedule);
     }
+  }
+
+  @And("^I update population of facility \"([^\"]*)\" as \"([^\"]*)\"$")
+  public void updatePopulationOfFacility(String facilityCode, String population) throws IOException, SQLException {
+    dbWrapper.updatePopulationOfFacility(facilityCode, population);
   }
 
   @And("^I have role assigned to delivery zones$")
@@ -144,12 +158,44 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   public void verifyISAAndOverrideISA() throws Exception {
     WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
-    assertEquals(dbWrapper.getFacilityName(facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
-    assertEquals(dbWrapper.getFacilityPopulation(facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "catchmentPopulation", "code", facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
 
-    assertEquals(IsaProgramProduct(programFirst, product, warehouseLoadAmountPage.getFacilityPopulation(1, 1)), warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals(getISAForProgramProduct(programFirst, product, warehouseLoadAmountPage.getFacilityPopulation(1, 1)), warehouseLoadAmountPage.getProduct1Isa(1, 1));
+    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2, periodDisplayedByDefault), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+  }
 
+  @And("^I verify ISA values for Product1 as:$")
+  public void verifyISAForProduct1(DataTable dataTable) throws IOException {
+    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
+    for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
+      assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct1Isa(1, 1));
+      assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProduct1Isa(2, 1));
+    }
+  }
+
+  @And("^I verify ISA values for Product2 as:$")
+  public void verifyISAForProduct2(DataTable dataTable) throws IOException {
+    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    List<Map<String, String>> facilityProductISAMaps = dataTable.asMaps();
+    for (Map<String, String> facilityProductISAMap : facilityProductISAMaps) {
+      assertEquals(facilityProductISAMap.get("Facility1"), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+      assertEquals(facilityProductISAMap.get("Facility2"), warehouseLoadAmountPage.getProduct2Isa(2, 1));
+    }
+  }
+
+  @And("^I should not see inactive products on view load amount$")
+  public void verifyInactiveProductsNotDisplayedOnViewLoadAmount() throws IOException {
+    WarehouseLoadAmountPage warehouseLoadAmountPage = new WarehouseLoadAmountPage(testWebDriver);
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName6"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName6"));
+
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("ProductName5"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("ProductName5"));
+
+    assertFalse(warehouseLoadAmountPage.getAggregateTableData().contains("PG1-Name"));
+    assertFalse(warehouseLoadAmountPage.getTable1Data().contains("PG1-Name"));
   }
 
   @Then("^I should see message \"([^\"]*)\"$")
@@ -159,12 +205,12 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
   }
 
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function-Multiple-Facilities")
-  public void testShouldVerifyAggregateISAForDeliveryZoneNegativeScenarios(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                                           String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                                           String facilityCodeFirst, String facilityCodeSecond, String facilityCodeThird, String facilityCodeFourth,
-                                                                           String programFirst, String programSecond, String schedule, String product, String product2) throws Exception {
+  public void testShouldVerifyISAForDeliveryZoneNegativeScenarios(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                                  String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                                  String facilityCodeFirst, String facilityCodeSecond, String facilityCodeThird, String facilityCodeFourth,
+                                                                  String programFirst, String programSecond, String schedule, String product1, String product2) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst,
       userSIC, "200", rightsList, programSecond, district1, district1, parentGeoZone1);
@@ -177,23 +223,27 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     addOnDataSetupForDeliveryZoneForMultipleFacilitiesAttachedWithSingleDeliveryZone(deliveryZoneCodeFirst,
       facilityCodeThird, facilityCodeFourth, district2, district2, parentGeoZone);
 
+    dbWrapper.updateProductsByField("packSize", "4", product1);
+    dbWrapper.updateProductsByField("packSize", "5", product2);
+    dbWrapper.updateProcessingPeriodByField("numberOfMonths", "2", periodDisplayedByDefault, schedule);
+
 
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-    dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product, 1000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product1, 1000);
     dbWrapper.InsertOverriddenIsa(facilityCodeFirst, programFirst, product2, 9999999);
-    dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product, 3000);
+    dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product1, 3000);
     dbWrapper.InsertOverriddenIsa(facilityCodeSecond, programFirst, product2, 888888);
-    dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product, 111);
-    dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product2, 222);
-    dbWrapper.InsertOverriddenIsa(facilityCodeFourth, programFirst, product2, 333);
+    dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product1, 51);
+    dbWrapper.InsertOverriddenIsa(facilityCodeThird, programFirst, product2, 51);
+    dbWrapper.InsertOverriddenIsa(facilityCodeFourth, programFirst, product2, 57);
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
-    dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
-    dbWrapper.updateOverriddenIsa(facilityCodeSecond, programFirst, product, null);
+    dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product1, null);
+    dbWrapper.updateOverriddenIsa(facilityCodeSecond, programFirst, product1, null);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -205,12 +255,18 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(3, 1));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(2, 1));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 1));
+    assertEquals("4355555", warehouseLoadAmountPage.getProduct2Isa(3, 1));
+    assertEquals("4000000", warehouseLoadAmountPage.getProduct2Isa(2, 1));
+    assertEquals("355555", warehouseLoadAmountPage.getProduct2Isa(1, 1));
     assertEquals("--", warehouseLoadAmountPage.getFacilityPopulation(2, 1));
+    assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 1)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 1))), warehouseLoadAmountPage.getProduct2Isa(3, 1));
 
     assertEquals(Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getFacilityPopulation(2, 2)), warehouseLoadAmountPage.getFacilityPopulation(3, 2));
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeFourth, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals("23", warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals("20", warehouseLoadAmountPage.getProduct2Isa(2, 2));
+    assertEquals("26", warehouseLoadAmountPage.getProduct1Isa(2, 2));
     assertEquals(warehouseLoadAmountPage.getProduct1Isa(2, 2), warehouseLoadAmountPage.getProduct1Isa(3, 2));
     assertEquals(String.valueOf(Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(1, 2)) + Integer.parseInt(warehouseLoadAmountPage.getProduct2Isa(2, 2))), warehouseLoadAmountPage.getProduct2Isa(3, 2));
 
@@ -222,15 +278,14 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     verifyCaptionsAndLabels(deliveryZoneNameFirst, warehouseLoadAmountPage);
   }
 
-
   @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function-Multiple-GeoZones")
-  public void testShouldVerifyMultipleGeographicZones(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                                      String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                                      String facilityCodeFirst, String facilityCodeSecond,
-                                                      String programFirst, String programSecond, String schedule, String product,
-                                                      String product2, String geoZone1, String geoZone2) throws Exception {
+  public void testShouldVerifyISAForGeographicZones(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
+                                                    String deliveryZoneNameFirst, String deliveryZoneNameSecond,
+                                                    String facilityCodeFirst, String facilityCodeSecond,
+                                                    String programFirst, String programSecond, String schedule, String product,
+                                                    String product2, String geoZone1, String geoZone2) throws Exception {
 
-    List<String> rightsList = new ArrayList<String>();
+    List<String> rightsList = new ArrayList<>();
     rightsList.add("MANAGE_DISTRIBUTION");
     setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, district1, parentGeoZone, parentGeoZone);
     setupDataForDeliveryZone(false, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
@@ -247,7 +302,7 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
 
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
@@ -258,20 +313,20 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
     verifyWarehouseLoadAmountHeader(deliveryZoneNameFirst, programFirst, periodDisplayedByDefault);
     assertEquals(facilityCodeSecond, warehouseLoadAmountPage.getFacilityCode(1, 1));
-    assertEquals(dbWrapper.getFacilityName(facilityCodeSecond), warehouseLoadAmountPage.getFacilityName(1, 1));
-    assertEquals(dbWrapper.getFacilityPopulation(facilityCodeSecond), warehouseLoadAmountPage.getFacilityPopulation(1, 1));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 1));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeSecond, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 1));
+    assertEquals("Central Hospital", warehouseLoadAmountPage.getFacilityName(1, 1));
+    assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 1));
+    assertEquals("300", warehouseLoadAmountPage.getProduct1Isa(1, 1));
+    assertEquals("0", warehouseLoadAmountPage.getProduct2Isa(1, 1));
 
     assertEquals(facilityCodeFirst, warehouseLoadAmountPage.getFacilityCode(1, 2));
-    assertEquals(dbWrapper.getFacilityName(facilityCodeFirst), warehouseLoadAmountPage.getFacilityName(1, 2));
-    assertEquals(dbWrapper.getFacilityPopulation(facilityCodeFirst), warehouseLoadAmountPage.getFacilityPopulation(1, 2));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeFirst, programFirst, product), warehouseLoadAmountPage.getProduct1Isa(1, 2));
-    assertEquals(dbWrapper.getOverriddenIsa(facilityCodeFirst, programFirst, product2), warehouseLoadAmountPage.getProduct2Isa(1, 2));
+    assertEquals("Village Dispensary", warehouseLoadAmountPage.getFacilityName(1, 2));
+    assertEquals("333", warehouseLoadAmountPage.getFacilityPopulation(1, 2));
+    assertEquals("100", warehouseLoadAmountPage.getProduct1Isa(1, 2));
+    assertEquals("200", warehouseLoadAmountPage.getProduct2Isa(1, 2));
 
     dbWrapper.updatePopulationOfFacility(facilityCodeFirst, null);
     dbWrapper.updateOverriddenIsa(facilityCodeFirst, programFirst, product, null);
-    homePage.navigatePlanDistribution();
+    homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.selectValueFromPeriod(periodDisplayedByDefault);
@@ -280,7 +335,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     assertEquals("--", warehouseLoadAmountPage.getProduct1Isa(1, 2));
 
   }
-
 
   private void verifyWarehouseLoadAmountHeader(String deliverZone, String program, String period) {
     WebElement deliverZoneElement = testWebDriver.getElementByXpath("(//div[2]/div/div/div/span)[1]");
@@ -304,7 +358,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
 
   }
 
-
   @AfterMethod(groups = "distribution")
   @After
   public void tearDown() throws Exception {
@@ -318,7 +371,6 @@ public class ViewWarehouseLoadAmount extends TestCaseHelper {
     }
 
   }
-
 
   @DataProvider(name = "Data-Provider-Function-Multiple-Facilities")
   public Object[][] parameterIntTestProvider() {

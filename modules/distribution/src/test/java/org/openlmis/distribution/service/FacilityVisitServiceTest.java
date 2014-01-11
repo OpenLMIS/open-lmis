@@ -12,13 +12,13 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.openlmis.distribution.repository.FacilityVisitRepository;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @Category(UnitTests.class)
-
 @RunWith(MockitoJUnitRunner.class)
 public class FacilityVisitServiceTest {
 
@@ -32,32 +32,36 @@ public class FacilityVisitServiceTest {
   public ExpectedException expectedException = none();
 
   @Test
-  public void shouldInsertFacilityVisit() {
+  public void shouldInsertFacilityVisitIfDoesNotExistAlready() {
     FacilityVisit facilityVisit = new FacilityVisit();
-    String syncStatus = facilityVisitService.save(facilityVisit);
+    when(facilityVisitRepository.get(facilityVisit)).thenReturn(null);
+
+    boolean syncStatus = facilityVisitService.save(facilityVisit);
 
     verify(facilityVisitRepository).insert(facilityVisit);
-    assertThat(syncStatus, is("Synced"));
-
+    assertFalse(syncStatus);
   }
 
   @Test
-  public void shouldReturnAlreadySyncedStatusIfFacilityVisitAlreadyExists(){
+  public void shouldReturnAlreadySyncedStatusIfFacilityVisitAlreadySynced() {
+    FacilityVisit facilityVisit = new FacilityVisit();
+    facilityVisit.setSynced(true);
+    when(facilityVisitRepository.get(facilityVisit)).thenReturn(facilityVisit);
+
+    boolean syncStatus = facilityVisitService.save(facilityVisit);
+
+    assertFalse(syncStatus);
+  }
+
+  @Test
+  public void shouldReturnTrueStatusIfFacilityVisitIsToBeSynced() throws Exception {
     FacilityVisit facilityVisit = new FacilityVisit();
     when(facilityVisitRepository.get(facilityVisit)).thenReturn(facilityVisit);
-    String syncStatus = facilityVisitService.save(facilityVisit);
 
-    assertThat(syncStatus, is("AlreadySynced"));
+    boolean syncStatus = facilityVisitService.save(facilityVisit);
 
+    assertThat(facilityVisit.getSynced(), is(true));
+    verify(facilityVisitRepository).update(facilityVisit);
+    assertTrue(syncStatus);
   }
-  @Test
-  public void shouldReturnFailedStatusIfInsertFails() throws Exception{
-    FacilityVisit facilityVisit = new FacilityVisit();
-
-    doThrow(Exception.class).when(facilityVisitRepository).insert(facilityVisit);
-
-    expectedException.expect(Exception.class);
-    facilityVisitService.save(facilityVisit);
-  }
-
 }

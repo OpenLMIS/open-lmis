@@ -77,10 +77,10 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
           distribution = data.distribution;
           var dialogOpts = {
             id: "distributionInitiated",
-            header: messageService.get('label.distribution.initiated'),
+            header: 'label.distribution.initiated',
             body: data.message
           };
-          OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
+          OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog);
         }
       }
 

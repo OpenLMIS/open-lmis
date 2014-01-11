@@ -49,8 +49,6 @@ public class ProgramProductMapperIT {
   ProductMapper productMapper;
   @Autowired
   ProgramProductMapper programProductMapper;
-  private Product product;
-  private Program program;
   @Autowired
   private ProgramProductIsaMapper programProductISAMapper;
   @Autowired
@@ -58,11 +56,14 @@ public class ProgramProductMapperIT {
   @Autowired
   private ProductCategoryMapper productCategoryMapper;
 
+  private Product product;
+  private Program program;
+  private ProductCategory productCategory;
+
   @Before
   public void setup() {
     product = make(a(ProductBuilder.defaultProduct, with(displayOrder, 1)));
-
-    ProductCategory productCategory = new ProductCategory("10", "P1", 1);
+    productCategory = new ProductCategory("10", "P1", 1);
     productCategoryMapper.insert(productCategory);
     product.setCategory(productCategory);
 
@@ -145,6 +146,23 @@ public class ProgramProductMapperIT {
     assertThat(programProducts.size(), is(1));
     assertThat(programProducts.get(0).getId(), is(programProduct.getId()));
     assertThat(programProducts.get(0).getProgramProductIsa(), is(programProductISA));
+  }
+
+  @Test
+  public void shouldGetActiveProgramProductsByProgram() {
+    ProgramProduct programProduct = new ProgramProduct(program, product, 10, false);
+    programProductMapper.insert(programProduct);
+
+    Product activeProduct = make(a(ProductBuilder.defaultProduct, with(code, "P5000") ,with(displayOrder, 1)));
+    activeProduct.setCategory(productCategory);
+    productMapper.insert(activeProduct);
+    ProgramProduct activeProgramProduct = new ProgramProduct(program, activeProduct, 10, true);
+    programProductMapper.insert(activeProgramProduct);
+
+    List<ProgramProduct> programProducts = programProductMapper.getActiveByProgram(program.getId());
+
+    assertThat(programProducts.size(), is(1));
+    assertThat(programProducts.get(0).getId(), is(activeProgramProduct.getId()));
   }
 
   @Test

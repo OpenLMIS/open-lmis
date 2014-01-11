@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.RoleAssignment;
 import org.openlmis.core.domain.User;
@@ -26,13 +27,11 @@ import static java.util.Arrays.asList;
 @NoArgsConstructor
 public class RoleAssignmentService {
 
+  @Autowired
   private RoleAssignmentRepository roleAssignmentRepository;
 
-
   @Autowired
-  public RoleAssignmentService(RoleAssignmentRepository roleAssignmentRepository) {
-    this.roleAssignmentRepository = roleAssignmentRepository;
-  }
+  FulfillmentRoleService fulfillmentRoleService;
 
   public List<RoleAssignment> getHomeFacilityRoles(Long userId) {
     return roleAssignmentRepository.getHomeFacilityRoles(userId);
@@ -70,5 +69,14 @@ public class RoleAssignmentService {
     roleAssignmentRepository.insert(user.getAllocationRoles(), user.getId());
     roleAssignmentRepository.insert(asList(user.getReportRoles()), user.getId());
     roleAssignmentRepository.insert(asList(user.getAdminRole()), user.getId());
+    fulfillmentRoleService.saveFulfillmentRoles(user);
+  }
+
+  public List<FulfillmentRoleAssignment> getFulfilmentRoles(Long userId) {
+    return fulfillmentRoleService.getRolesForUser(userId);
+  }
+
+  public List<FulfillmentRoleAssignment> getFulfilmentRolesWithRight(Long userId, Right right) {
+    return fulfillmentRoleService.getRolesWithRight(userId, right);
   }
 }

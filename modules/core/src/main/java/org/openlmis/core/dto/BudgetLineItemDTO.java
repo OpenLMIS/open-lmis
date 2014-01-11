@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ public class BudgetLineItemDTO {
       try {
         Field field = BudgetLineItemDTO.class.getDeclaredField(name);
         field.setAccessible(true);
-        field.set(lineItemDTO, fieldsInOneRow.get(position - 1));
+        field.set(lineItemDTO, fieldsInOneRow.get(position - 1).trim());
       } catch (Exception e) {
         logger.error("Unable to set field '" + name +
           "' in BudgetLinetItemDTO, check mapping between DTO and BudgetFileColumn", e);
@@ -46,6 +47,6 @@ public class BudgetLineItemDTO {
 
   public void checkMandatoryFields() {
     if (isBlank(this.facilityCode) || isBlank(this.programCode) || isBlank(this.allocatedBudget) || isBlank(this.periodStartDate))
-      throw new DataException("mandatory.field.missing");
+      throw new DataException(new OpenLmisMessage("error.mandatory.fields.missing"));
   }
 }

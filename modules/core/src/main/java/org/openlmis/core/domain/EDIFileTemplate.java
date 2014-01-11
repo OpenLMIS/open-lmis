@@ -3,7 +3,10 @@ package org.openlmis.core.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.openlmis.core.exception.DataException;
 
 import java.util.Collection;
@@ -16,7 +19,9 @@ import static org.apache.commons.collections.CollectionUtils.select;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EDIFileTemplate {
+
   protected EDIConfiguration configuration;
   protected List<EDIFileColumn> columns;
 
@@ -29,11 +34,11 @@ public class EDIFileTemplate {
     });
   }
 
-
   public void validateAndSetModifiedBy(Long userId, List<String> mandatoryColumnNames) {
     Set<Integer> positions = new HashSet();
     Integer includedColumnCount = 0;
     configuration.setModifiedBy(userId);
+
     for (EDIFileColumn ediFileColumn : columns) {
       ediFileColumn.validate();
       if (mandatoryColumnNames.contains(ediFileColumn.getName()) && !ediFileColumn.getInclude()) {
@@ -48,5 +53,22 @@ public class EDIFileTemplate {
       }
       ediFileColumn.setModifiedBy(userId);
     }
+  }
+
+  @JsonIgnore
+  public Integer getRowOffset() {
+    return this.configuration.isHeaderInFile() ? 1 : 0;
+  }
+
+  @JsonIgnore
+  public String getDateFormatForColumn(final String columnName) {
+    EDIFileColumn column = (EDIFileColumn) CollectionUtils.find(this.columns, new Predicate() {
+      @Override
+      public boolean evaluate(Object o) {
+        EDIFileColumn fileColumn = (EDIFileColumn) o;
+        return fileColumn.getName().equals(columnName) && fileColumn.getInclude();
+      }
+    });
+    return column == null ? null : column.getDatePattern();
   }
 }

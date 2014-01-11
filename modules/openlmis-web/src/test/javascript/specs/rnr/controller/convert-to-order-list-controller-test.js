@@ -137,8 +137,7 @@ describe('ConvertToOrderListController', function () {
 
     scope.convertToOrder();
 
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), $dialog,
-        messageService);
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), $dialog);
   });
 
   function getDialogCallback() {

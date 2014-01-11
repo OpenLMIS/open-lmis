@@ -19,8 +19,8 @@ import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.core.repository.mapper.*;
 import org.openlmis.db.categories.IntegrationTests;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.EpiUse;
 import org.openlmis.distribution.domain.EpiUseLineItem;
+import org.openlmis.distribution.domain.FacilityVisit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,11 +28,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.openlmis.core.builder.DeliveryZoneBuilder.defaultDeliveryZone;
 import static org.openlmis.core.builder.FacilityBuilder.defaultFacility;
 import static org.openlmis.core.builder.ProcessingPeriodBuilder.defaultProcessingPeriod;
@@ -75,11 +75,16 @@ public class EpiUseMapperIT {
   @Autowired
   private FacilityMapper facilityMapper;
 
+  @Autowired
+  private FacilityVisitMapper facilityVisitMapper;
+
   DeliveryZone zone;
   Program program1;
   ProcessingPeriod processingPeriod;
   Distribution distribution;
   Facility facility;
+  FacilityVisit facilityVisit;
+  ProductGroup productGroup;
 
   @Before
   public void setUp() throws Exception {
@@ -95,7 +100,6 @@ public class EpiUseMapperIT {
     programMapper.insert(program1);
     periodMapper.insert(processingPeriod);
 
-
     distribution = make(a(initiatedDistribution,
       with(deliveryZone, zone),
       with(period, processingPeriod),
@@ -105,32 +109,81 @@ public class EpiUseMapperIT {
 
     facilityMapper.insert(facility);
 
-  }
+    productGroup = new ProductGroup("PG1", "Product Group 1");
+    productGroupMapper.insert(productGroup);
 
-  @Test
-  public void shouldSaveEpiUse() throws Exception {
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId());
-    mapper.insert(epiUse);
 
-    ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_use WHERE id = " + epiUse.getId());
-    assertTrue(resultSet.next());
-    assertThat(resultSet.getLong("id"), is(epiUse.getId()));
+    Long createdBy = 1L;
+
+    facilityVisit = new FacilityVisit(facility, distribution);
+    facilityVisitMapper.insert(facilityVisit);
+
   }
 
   @Test
   public void shouldSaveEpiUseLineItem() throws Exception {
-    ProductGroup productGroup = new ProductGroup("PG1", "Product Group 1");
-    productGroupMapper.insert(productGroup);
 
-    EpiUse epiUse = new EpiUse(distribution.getId(), facility.getId());
-    mapper.insert(epiUse);
-
-    EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
-    epiUseLineItem.setProductGroupId(productGroup.getId());
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    epiUseLineItem.setProductGroup(productGroup);
     mapper.insertLineItem(epiUseLineItem);
 
     ResultSet resultSet = queryExecutor.execute("SELECT * FROM epi_use_line_items WHERE id = " + epiUseLineItem.getId());
     resultSet.next();
-    assertThat(resultSet.getLong("productGroupId"), is(epiUseLineItem.getProductGroupId()));
+    assertThat(resultSet.getLong("productGroupId"), is(epiUseLineItem.getProductGroup().getId()));
   }
+
+  @Test
+  public void shouldReturnEpiUseLineItem() throws Exception {
+
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    mapper.insertLineItem(epiUseLineItem);
+
+    EpiUseLineItem epiUseLineItemFromDB = mapper.getLineItemById(epiUseLineItem);
+
+    assertThat(epiUseLineItemFromDB.getFacilityVisitId(), is(epiUseLineItem.getFacilityVisitId()));
+    assertThat(epiUseLineItemFromDB.getProductGroup().getName(), is(epiUseLineItem.getProductGroup().getName()));
+    assertThat(epiUseLineItemFromDB.getProductGroup().getId(), is(epiUseLineItem.getProductGroup().getId()));
+  }
+
+  @Test
+  public void shouldUpdateEpiUseLineItem() throws Exception {
+
+    EpiUseLineItem epiUseLineItem = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    mapper.insertLineItem(epiUseLineItem);
+
+    epiUseLineItem.setReceived(10);
+    epiUseLineItem.setDistributed(11);
+    epiUseLineItem.setLoss(12);
+    epiUseLineItem.setStockAtFirstOfMonth(13);
+    epiUseLineItem.setStockAtEndOfMonth(14);
+    epiUseLineItem.setExpirationDate("12/2010");
+    mapper.updateLineItem(epiUseLineItem);
+
+    EpiUseLineItem epiUseLineItemFromDB = mapper.getLineItemById(epiUseLineItem);
+
+    assertThat(epiUseLineItem.getReceived(), is(epiUseLineItemFromDB.getReceived()));
+    assertThat(epiUseLineItem.getLoss(), is(epiUseLineItemFromDB.getLoss()));
+    assertThat(epiUseLineItem.getDistributed(), is(epiUseLineItemFromDB.getDistributed()));
+    assertThat(epiUseLineItem.getStockAtEndOfMonth(), is(epiUseLineItemFromDB.getStockAtEndOfMonth()));
+    assertThat(epiUseLineItem.getStockAtFirstOfMonth(), is(epiUseLineItemFromDB.getStockAtFirstOfMonth()));
+    assertThat(epiUseLineItem.getExpirationDate(), is(epiUseLineItemFromDB.getExpirationDate()));
+  }
+
+  @Test
+  public void shouldGetEpiUseLineItemsByFacilityVisitId() {
+
+    EpiUseLineItem epiUseLineItem1 = new EpiUseLineItem(facilityVisit.getId(), productGroup, facilityVisit.getCreatedBy());
+    mapper.insertLineItem(epiUseLineItem1);
+
+    ProductGroup productGroup2 = new ProductGroup("PG0", "Product Group 0");
+    productGroupMapper.insert(productGroup2);
+    EpiUseLineItem epiUseLineItem2 = new EpiUseLineItem(facilityVisit.getId(), productGroup2, facilityVisit.getCreatedBy());
+    mapper.insertLineItem(epiUseLineItem2);
+
+    List<EpiUseLineItem> epiUseLineItems = mapper.getBy(facilityVisit.getId());
+
+    assertThat(epiUseLineItems.get(0).getProductGroup().getName(), is(productGroup2.getName()));
+    assertThat(epiUseLineItems.get(1).getProductGroup().getName(), is(productGroup.getName()));
+  }
+
 }

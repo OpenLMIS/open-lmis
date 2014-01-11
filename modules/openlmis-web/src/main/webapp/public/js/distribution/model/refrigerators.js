@@ -8,30 +8,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function Refrigerators(refrigerators) {
+function Refrigerators(facilityVisitId, refrigerators) {
 
   $.extend(true, this, refrigerators);
 
   var _this = this;
-
-  $(this.refrigeratorReadings).each(function (i, value) {
-    _this.refrigeratorReadings[i] = new RefrigeratorReading(value);
+  this.facilityVisitId = facilityVisitId;
+  $(this.readings).each(function (i, value) {
+    _this.readings[i] = new RefrigeratorReading(facilityVisitId, value);
   });
 
   Refrigerators.prototype.computeStatus = function () {
-    if (_.findWhere(this.refrigeratorReadings, {status: 'is-incomplete'})) {
-      return 'is-incomplete';
+    if (_.findWhere(this.readings, {status: DistributionStatus.INCOMPLETE})) {
+      return DistributionStatus.INCOMPLETE;
     }
-    if (_.findWhere(this.refrigeratorReadings, {status: 'is-empty'})) {
-      if (_.findWhere(this.refrigeratorReadings, {status: 'is-complete'})) {
-        return 'is-incomplete';
+    if (_.findWhere(this.readings, {status: DistributionStatus.EMPTY})) {
+      if (_.findWhere(this.readings, {status: DistributionStatus.COMPLETE})) {
+        return DistributionStatus.INCOMPLETE;
       }
-      return 'is-empty';
+      return DistributionStatus.EMPTY;
     }
-    return 'is-complete';
+    return DistributionStatus.COMPLETE;
   };
 
-  Refrigerators.prototype.addRefrigerator = function (reading) {
-    this.refrigeratorReadings.push(new RefrigeratorReading(reading));
+  Refrigerators.prototype.addReading = function (reading) {
+    if (!this.readings) {
+      this.readings = [];
+    }
+
+    this.readings.push(new RefrigeratorReading(facilityVisitId, reading));
   };
 }

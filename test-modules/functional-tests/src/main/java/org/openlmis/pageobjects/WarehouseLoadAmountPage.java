@@ -13,6 +13,8 @@ package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
@@ -21,6 +23,14 @@ import java.io.IOException;
 
 public class WarehouseLoadAmountPage extends Page {
 
+  @FindBy(how = How.ID, using = "aggregateTable")
+  private WebElement aggregateTable = null;
+
+  @FindBy(how = How.XPATH, using = "//div[@class='facilities-isa-amount-table']")
+  private WebElement Table1 = null;
+
+  @FindBy(how = How.ID, using = "geoZone1")
+  private WebElement Table2 = null;
 
   public WarehouseLoadAmountPage(TestWebDriver driver) throws IOException {
     super(driver);
@@ -108,4 +118,15 @@ public class WarehouseLoadAmountPage extends Page {
     return noRecordFoundMessage.getText();
   }
 
+  public String getAggregateTableData(){
+  return aggregateTable.getText();
+  }
+
+  public String getTable1Data(){
+    return Table1.getText();
+  }
+
+  public String getTable2Data(){
+    return Table2.getText();
+  }
 }

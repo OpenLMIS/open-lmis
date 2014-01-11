@@ -24,44 +24,43 @@ describe("Refrigerators", function () {
 
   it('should set status indicator to complete if all refrigeratorReadings are complete', function () {
     refrigerators.refrigeratorReadings = [
-      {status: 'is-complete'}
+      {status: DistributionStatus.COMPLETE}
     ];
 
-    expect(refrigerators.computeStatus()).toEqual('is-complete');
+    expect(refrigerators.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
   it('should set status indicator to empty if all refrigeratorReadings are empty', function () {
-    refrigerators.refrigeratorReadings = [
-      {status: 'is-empty'},
-      {status: 'is-empty'}
+    refrigerators.readings = [
+      {status: DistributionStatus.EMPTY},
+      {status: DistributionStatus.EMPTY}
     ];
 
-    expect(refrigerators.computeStatus()).toEqual('is-empty');
+    expect(refrigerators.computeStatus()).toEqual(DistributionStatus.EMPTY);
   });
 
   it('should set status indicator to incomplete if at least one refrigeratorReading is incomplete', function () {
-    refrigerators.refrigeratorReadings = [
-      {status: 'is-incomplete'}
+    refrigerators.readings = [
+      {status: DistributionStatus.INCOMPLETE}
     ];
 
-    expect(refrigerators.computeStatus()).toEqual('is-incomplete');
+    expect(refrigerators.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
   });
 
-  it('should set status indicator to incomplete if at least one refrigeratorReading is complete and rest are empty',
-    function () {
-      refrigerators.refrigeratorReadings = [
-        {status: 'is-complete'},
-        {status: 'is-complete'},
-        {status: 'is-empty'}
+  it('should set status indicator to incomplete if at least one refrigeratorReading is complete and rest are empty', function () {
+      refrigerators.readings = [
+        {status: DistributionStatus.COMPLETE},
+        {status: DistributionStatus.COMPLETE},
+        {status: DistributionStatus.EMPTY}
       ];
 
-      expect(refrigerators.computeStatus()).toEqual('is-incomplete');
+      expect(refrigerators.computeStatus()).toEqual(DistributionStatus.INCOMPLETE);
     });
 
   it('should set status indicator to complete if no refrigeratorReading exists', function () {
     refrigerators.refrigeratorReadings = [];
 
-    expect(refrigerators.computeStatus()).toEqual('is-complete');
+    expect(refrigerators.computeStatus()).toEqual(DistributionStatus.COMPLETE);
   });
 
 });

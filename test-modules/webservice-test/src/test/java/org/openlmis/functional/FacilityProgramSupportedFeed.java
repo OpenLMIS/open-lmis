@@ -10,6 +10,7 @@
 
 package org.openlmis.functional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
 import org.openlmis.pageobjects.HomePage;
@@ -24,6 +25,7 @@ import org.testng.annotations.Test;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertTrue;
 
@@ -56,13 +58,13 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
     UploadPage uploadPage = homePage.navigateUploads();
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_WebService.csv");
-    Thread.sleep(5000);
+    Thread.sleep(2000);
     ResponseEntity responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
     String expected = "{\"code\":\"" + program + "\",\"name\":\"" + program + "\",\"active\":true,\"startDate\":1296585000000,\"stringStartDate\":\"02/02/2011\"}";
     assertTrue(responseEntity.getResponse().contains(expected));
-
+    assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"), 29);
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported_Subsequent_WebService.csv");
-    Thread.sleep(5000);
+    Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -84,7 +86,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
 
-    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
     String geoZone = "Ngorongoro";
     String facilityType = "Lvl3 Hospital";
@@ -109,7 +111,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage.addProgram("VACCINES", true);
     manageFacilityPage.saveFacility();
 
-    Thread.sleep(5000);
+    Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
 
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -122,7 +124,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage.removeFirstProgram();
     manageFacilityPage.saveFacility();
 
-    Thread.sleep(5000);
+    Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -135,7 +137,7 @@ public class FacilityProgramSupportedFeed extends JsonUtility {
     manageFacilityPage.activeInactiveFirstProgram();
     manageFacilityPage.saveFacility();
 
-    Thread.sleep(5000);
+    Thread.sleep(2000);
     responseEntity = client.SendJSON("", PROGRAM_SUPPORTED_FEED_URL, "GET", "", "");
 
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");

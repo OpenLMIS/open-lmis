@@ -14,17 +14,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class FacilityProgramProduct extends ProgramProduct {
 
   Long facilityId;
@@ -35,5 +36,26 @@ public class FacilityProgramProduct extends ProgramProduct {
     super(programProduct);
     this.facilityId = facilityId;
     this.overriddenIsa = overriddenIsa;
+  }
+
+  @JsonIgnore
+  public ProductGroup getActiveProductGroup() {
+    if (this.isActive() && this.getProduct().getActive()) {
+      return this.getProduct().getProductGroup();
+    }
+    return null;
+  }
+
+  public Integer calculateIsa(Long population, Integer numberOfMonthsInPeriod) {
+    Integer idealQuantity;
+    if (this.overriddenIsa != null)
+      idealQuantity = this.overriddenIsa;
+    else if (this.programProductIsa == null || population == null)
+      return null;
+    else
+      idealQuantity = this.programProductIsa.calculate(population);
+
+    idealQuantity = Math.round(idealQuantity * ((float) numberOfMonthsInPeriod / this.getProduct().getPackSize()));
+    return idealQuantity < 0 ? 0 : idealQuantity;
   }
 }

@@ -9,7 +9,7 @@
  */
 
 function RecordFacilityMenuController($scope, $location, $routeParams, distributionService) {
-  $scope.distributionData = distributionService.distribution.facilityDistributionData[$routeParams.facility];
+  $scope.distributionData = distributionService.distribution.facilityDistributions[$routeParams.facility];
 
   $scope.changeRoute = function (routeName) {
     $location.path($location.$$path.replace(getURLName(), routeName));

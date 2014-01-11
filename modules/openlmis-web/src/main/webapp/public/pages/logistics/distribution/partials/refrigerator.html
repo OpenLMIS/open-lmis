@@ -9,23 +9,24 @@
   -->
 <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-data.html'"></ng-include>
 
-<div class="clearfix facility-container" ng-init="facilityData = distribution.facilityDistributionData[selectedFacilityId]">
+<div class="clearfix facility-container"
+     ng-init="facilityData = distribution.facilityDistributions[selectedFacilityId]">
   <ng-include src="'/public/pages/logistics/distribution/partials/record-facility-menu.html'"></ng-include>
   <div class="facility-info">
     <div class="refrigerator-container" disable-form="{{facilityData.isDisabled()}}">
       <h3>
         <span openlmis-message="label.refrigerators"></span>
         <input type="button" class="btn btn-primary pull-right" id="addNew" ng-click="showRefrigeratorModal()"
-           openlmis-message="button.add.new"/>
+               openlmis-message="button.add.new"/>
       </h3>
 
       <div class="alert alert-info" id="noRefrigerators"
-           ng-hide="facilityData.refrigerators.refrigeratorReadings.length">
+           ng-hide="facilityData.refrigerators.readings.length">
         <span openlmis-message="message.no.refrigerators.added"></span>
       </div>
 
       <div
-        ng-show="facilityData.refrigerators.refrigeratorReadings.length">
+          ng-show="facilityData.refrigerators.readings.length">
         <div class="list-header-container">
           <div class="list-header row-fluid">
             <div class="span1"></div>
@@ -37,7 +38,7 @@
         </div>
         <div class="list-container">
           <div class="list-row" ng-class="{isEditable: edit[refrigeratorReading.refrigerator.serialNumber]}"
-               ng-repeat="refrigeratorReading in facilityData.refrigerators.refrigeratorReadings">
+               ng-repeat="refrigeratorReading in facilityData.refrigerators.readings">
             <ng-include src="'/public/pages/logistics/distribution/partials/refrigerator-reading.html'"></ng-include>
           </div>
         </div>
@@ -55,7 +56,7 @@
               <label for="brand" openlmis-message="label.refrigerator.brand">
                 <span class="label-required">*</span>
               </label>
-              <input type="text" id="brand" ng-model="newRefrigerator.brand" maxlength="20"/>
+              <input type="text" id="brand" ng-model="newRefrigeratorReading.refrigerator.brand" maxlength="20"/>
             </div>
           </div>
 
@@ -64,7 +65,7 @@
               <label for="model" openlmis-message="label.refrigerator.model">
                 <span class="label-required">*</span>
               </label>
-              <input type="text" id="model" ng-model="newRefrigerator.model" maxlength="20"/>
+              <input type="text" id="model" ng-model="newRefrigeratorReading.refrigerator.model" maxlength="20"/>
             </div>
           </div>
 
@@ -74,9 +75,9 @@
                 <span class="label-required">*</span>
               </label>
               <input type="text" id="manufacturerSerialNumber" maxlength="30"
-                     ng-model="newRefrigerator.serialNumber"/>
+                     ng-model="newRefrigeratorReading.refrigerator.serialNumber"/>
 
-              <div ng-show="isDuplicateSerialNumber"
+              <div ng-show="isDuplicateSerialNumber" class="rnr-form-error"
                    openlmis-message="error.duplicate.serial.number"></div>
             </div>
           </div>
@@ -85,7 +86,7 @@
         <div class="modal-footer">
           <input type="button" id="done-button" class="btn btn-primary" ng-click="addRefrigeratorToStore()"
                  openlmis-message="button.done"
-                 ng-disabled="!newRefrigerator.brand || !newRefrigerator.model || !newRefrigerator.serialNumber"/>
+                 ng-disabled="!newRefrigeratorReading.refrigerator.brand || !newRefrigeratorReading.refrigerator.model || !newRefrigeratorReading.refrigerator.serialNumber"/>
           <input id="button-cancel" type="button" class="btn btn-cancel" ng-click="addRefrigeratorModal = false;"
                  openlmis-message="button.cancel"/>
         </div>

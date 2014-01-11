@@ -14,7 +14,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
   $scope.programLabel = messageService.get("label.none.assigned");
   $scope.selectedItems = [];
 
-  var selectionFunc = function (rowItem, event) {
+  var selectionFunc = function () {
     $scope.$parent.rnrStatus = $scope.selectedItems[0].status;
     $scope.openRequisition();
   };
@@ -40,7 +40,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
       {field: 'stringModifiedDate', displayName: messageService.get("label.date.modified")},
       {field: 'requisitionStatus', displayName: messageService.get("label.status")},
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
-        cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>',
+        cellTemplate: '<div id="emergency{{$parent.$index}}" class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.emergency}"></i></div>',
         width: 110 }
     ]
   };

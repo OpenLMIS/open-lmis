@@ -48,7 +48,6 @@ public class ManageRolesAndUsers extends TestCaseHelper {
   public static final String operatedBy = "MoH";
   public static final String facilityCodePrefix = "FCcode";
   public static final String facilityNamePrefix = "FCname";
-  public static String warehouseName;
   public static final String warehouseRole = "SHIPMENT";
 
   @BeforeMethod(groups = {"admin"})
@@ -197,7 +196,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     dbWrapper.insertUser("200", user, "Ag/myf1Whs0fxr1FFfK8cs3q/VJ1qMs3yuMLDTeEcZEGzstj/waaUsQNQTIKk1U5JRzrDbPLCzCO1/vB5YGaEQ==", "F10", "Jane_Doe@openlmis.com");
 
     HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
-    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
     String date_time = manageFacilityPage.enterValuesInFacilityAndClickSave(facilityCodePrefix, facilityNamePrefix, program,
       geoZone, facilityType, operatedBy, "500000");
@@ -223,7 +222,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
     UserPage userPage = new UserPage(testWebDriver);
     setupWarehouseRolesAndRights(facilityCodeFirst, facilityCodeSecond, programFirst, schedule, "SHIPMENT");
-    warehouseName = dbWrapper.getWarehouse1Name(facilityCodeFirst);
+    String warehouseName = dbWrapper.getAttributeFromTable("facilities", "name", "code", facilityCodeFirst);
     createUserAndAssignRoles(homePage, passwordUsers, "Jasmine_Doe@openlmis.com", "Jasmine", "Doe", LAB_IN_CHARGE, facility_code, program, "Node 1", LAB_IN_CHARGE, "REQUISITION");
     userPage.assignWarehouse(warehouseName, warehouseRole);
     userPage.saveUser();
@@ -270,7 +269,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     userPage.verifyRoleNotPresent(warehouseRole);
     userPage.verifyRemoveNotPresent();
 
-    verifyWarehouseAvailableForWarehouseRoles(facilityCodeFirst);
+    verifyWarehouseAvailableForWarehouseRoles(facilityCodeFirst, warehouseName);
 
     userPage.clickDeliveryZonesAccordion();
     testWebDriver.sleep(500);
@@ -414,7 +413,7 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     assertFalse(userPage.getAllProgramsToSupervise().contains("VACCINES"));
   }
 
-  private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode) throws IOException, SQLException {
+  private void verifyWarehouseAvailableForWarehouseRoles(String FacilityCode, String warehouseName) throws IOException, SQLException {
     UserPage userPage = new UserPage(testWebDriver);
     assertTrue(userPage.getAllWarehouseToSelect().contains(warehouseName));
     assertFalse(userPage.getAllWarehouseToSelect().contains(facilityNamePrefix));

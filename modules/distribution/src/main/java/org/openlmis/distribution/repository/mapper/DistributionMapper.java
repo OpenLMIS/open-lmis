@@ -25,12 +25,13 @@ public interface DistributionMapper {
   @Options(useGeneratedKeys = true)
   void insert(Distribution distribution);
 
-  @Select("SELECT * FROM distributions where programId=#{program.id} AND periodId=#{period.id} AND deliveryZoneId=#{deliveryZone.id}")
+  @Select({"SELECT * FROM distributions where programId=#{program.id}",
+    "AND periodId=#{period.id}",
+    "AND deliveryZoneId=#{deliveryZone.id}"})
   @Results(value = {
     @Result(property = "program.id", column = "programId"),
     @Result(property = "period.id", column = "periodId"),
     @Result(property = "deliveryZone.id", column = "deliveryZoneId")
-  }
-  )
+  })
   Distribution get(Distribution distribution);
 }

@@ -19,8 +19,8 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.testng.annotations.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
@@ -46,7 +46,7 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     List<String> rightsList = new ArrayList<String>();
     rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
+    setupTestDataToInitiateRnRAndDistribution(facilityCodeFirst, facilityCodeSecond, true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
     setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
       deliveryZoneNameFirst, deliveryZoneNameSecond,
       facilityCodeFirst, facilityCodeSecond,
@@ -54,36 +54,36 @@ public class E2EDistributionTest extends TestCaseHelper {
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
     dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
     dbWrapper.insertProductGroup("PG1");
-    dbWrapper.insertProductWithGroup("Product5", "ProdutName5", "PG1", true);
-    dbWrapper.insertProductWithGroup("Product6", "ProdutName6", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product5", "ProductName5", "PG1", true);
+    dbWrapper.insertProductWithGroup("Product6", "ProductName6", "PG1", true);
     dbWrapper.insertProgramProduct("Product5", programFirst, "10", "false");
     dbWrapper.insertProgramProduct("Product6", programFirst, "10", "true");
-    dbWrapper.deleteDeliveryZoneMembers("F11");
+    dbWrapper.deleteDeliveryZoneMembers(facilityCodeSecond);
 
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     testWebDriver.sleep(1000);
     HomePage homePage = loginPage.loginAs(userSIC, password);
     testWebDriver.sleep(1000);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
+    DistributionPage distributionPage = homePage.navigateToDistributionWhenOnline();
     distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
     distributionPage.selectValueFromProgram(programFirst);
     distributionPage.clickInitiateDistribution();
 
     waitForAppCacheComplete();
     switchOffNetwork();
-    testWebDriver.sleep(2000);
+    testWebDriver.sleep(3000);
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
-    assertFalse("Delivery Zone selectbox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
-    assertFalse("Period selectbox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
-    assertFalse("Program selectbox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
+    assertFalse("Delivery Zone selectBox displayed.", distributionPage.verifyDeliveryZoneSelectBoxNotPresent());
+    assertFalse("Period selectBox displayed.", distributionPage.verifyPeriodSelectBoxNotPresent());
+    assertFalse("Program selectBox displayed.", distributionPage.verifyProgramSelectBoxNotPresent());
 
 
-    distributionPage.clickRecordData();
+    distributionPage.clickRecordData(1);
     FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility("F10");
+    RefrigeratorPage refrigeratorPage = facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "AMBER");
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
+
     refrigeratorPage.onRefrigeratorScreen();
     refrigeratorPage.clickAddNew();
     refrigeratorPage.enterValueInBrandModal("LG");
@@ -91,13 +91,12 @@ public class E2EDistributionTest extends TestCaseHelper {
     refrigeratorPage.enterValueInManufacturingSerialNumberModal("GR-J287PGHV");
     refrigeratorPage.clickDoneOnModal();
 
-
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
 
 
-    distributionPage.clickRecordData();
-    facilityListPage.selectFacility("F10");
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
 
     String[] refrigeratorDetails = "LG;800 LITRES;GR-J287PGHV".split(";");
     for (int i = 0; i < refrigeratorDetails.length; i++) {
@@ -106,71 +105,77 @@ public class E2EDistributionTest extends TestCaseHelper {
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "RED");
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "RED");
-    refrigeratorPage.clickShow();
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "RED");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "RED");
+    refrigeratorPage.clickShowForRefrigerator1();
+    refrigeratorPage.verifyRefrigeratorColor("individual", "RED");
 
     refrigeratorPage.enterValueInRefrigeratorTemperature("3");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "AMBER");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "AMBER");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "AMBER");
 
     refrigeratorPage.clickFunctioningCorrectlyYesRadio();
     refrigeratorPage.enterValueInLowAlarmEvents("1");
     refrigeratorPage.enterValueInHighAlarmEvents("0");
     refrigeratorPage.clickProblemSinceLastVisitDontKnowRadio();
 
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
     refrigeratorPage.enterValueInNotesTextArea("miscellaneous");
     refrigeratorPage.clickDone();
 
-    EPIUse epiUse = new EPIUse(testWebDriver);
-    epiUse.navigate();
-    epiUse.verifyProductGroup("PG1-Name", 1);
-    epiUse.verifyIndicator("RED");
+    EPIUsePage epiUsePage = refrigeratorPage.navigateToEpiUse();
+    epiUsePage.verifyProductGroup("PG1-Name", 1);
+    epiUsePage.verifyIndicator("RED");
 
-    epiUse.enterValueInStockAtFirstOfMonth("10", 1);
-    epiUse.verifyIndicator("AMBER");
-    epiUse.enterValueInReceived("20", 1);
-    epiUse.enterValueInDistributed("30", 1);
-    epiUse.enterValueInLoss("40", 1);
-    epiUse.enterValueInStockAtEndOfMonth("50", 1);
-    epiUse.enterValueInExpirationDate("10/2011", 1);
-    epiUse.verifyIndicator("GREEN");
+    epiUsePage.enterValueInStockAtFirstOfMonth("10", 1);
+    epiUsePage.verifyIndicator("AMBER");
+    epiUsePage.enterValueInReceived("20", 1);
+    epiUsePage.enterValueInDistributed("30", 1);
+    epiUsePage.checkApplyNRToLoss0();
+    epiUsePage.enterValueInStockAtEndOfMonth("50", 1);
+    epiUsePage.enterValueInExpirationDate("10/2011", 1);
+    epiUsePage.verifyIndicator("GREEN");
 
-
-    GeneralObservationPage generalObservationPage = new GeneralObservationPage(testWebDriver);
-    generalObservationPage.navigate();
-    generalObservationPage.setObservations("Some observations");
-    generalObservationPage.setConfirmedByName("samuel");
-    generalObservationPage.setConfirmedByTitle("Doe");
-    generalObservationPage.setVerifiedByName("Mai ka");
-    generalObservationPage.setVerifiedByTitle("Laal");
+    GeneralObservationPage generalObservationPage = epiUsePage.navigateToGeneralObservations();
+    generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     homePage.navigateHomePage();
     homePage.navigateOfflineDistribution();
-    distributionPage.clickRecordData();
-    facilityListPage.selectFacility("F10");
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
 
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), "3");
     assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), "1");
     assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), "0");
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), "miscellaneous");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("overall", "GREEN");
-    refrigeratorPage.verifyIndividualRefrigeratorColor("individual", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("overall", "GREEN");
+    refrigeratorPage.verifyRefrigeratorColor("individual", "GREEN");
 
-    epiUse.navigate();
-    epiUse.verifyIndicator("GREEN");
+    epiUsePage.navigate();
+    epiUsePage.verifyIndicator("GREEN");
 
-    epiUse.verifyTotal("30", 1);
-    epiUse.verifyStockAtFirstOfMonth("10", 1);
-    epiUse.verifyReceived("20", 1);
-    epiUse.verifyDistributed("30", 1);
-    epiUse.verifyLoss("40", 1);
-    epiUse.verifyStockAtEndOfMonth("50", 1);
-    epiUse.verifyExpirationDate("10/2011", 1);
+    epiUsePage.verifyTotal("30", 1);
+    epiUsePage.verifyStockAtFirstOfMonth("10", 1);
+    epiUsePage.verifyReceived("20", 1);
+    epiUsePage.verifyDistributed("30", 1);
+    epiUsePage.verifyLoss(null, 1);
+    epiUsePage.verifyLossStatus(false,1);
+    epiUsePage.verifyStockAtEndOfMonth("50", 1);
+    epiUsePage.verifyExpirationDate("10/2011", 1);
+
+    EpiInventoryPage epiInventoryPage = epiUsePage.navigateToEpiInventory();
+    epiInventoryPage.applyNRToAll();
+    epiInventoryPage.fillDeliveredQuantity(1,"10");
+    epiInventoryPage.fillDeliveredQuantity(2,"20");
+    epiInventoryPage.fillDeliveredQuantity(3,"30");
+
+    epiInventoryPage.verifyIndicator("GREEN");
+
+    CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
+    coveragePage.enterData(5,7,0,9999999);
+    coveragePage.verifyIndicator("GREEN");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
 
@@ -180,30 +185,41 @@ public class E2EDistributionTest extends TestCaseHelper {
     switchOnNetwork();
     testWebDriver.sleep(5000);
 
-    distributionPage.syncDistribution();
+    distributionPage.syncDistribution(1);
     assertTrue("Incorrect Sync Facility", distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
 
-    HashMap m1 = dbWrapper.getFacilityVisitDetails();
+    Map<String, String> facilityVisitDetails = dbWrapper.getFacilityVisitDetails(facilityCodeFirst);
 
-    assertEquals(m1.get("observations").toString(), "Some observations");
-    assertEquals(m1.get("confirmedByName").toString(), "samuel");
-    assertEquals(m1.get("confirmedByTitle").toString(), "Doe");
-    assertEquals(m1.get("verifiedByName").toString(), "Mai ka");
-    assertEquals(m1.get("verifiedByTitle").toString(), "Laal");
+    assertEquals(facilityVisitDetails.get("observations"), "Some observations");
+    assertEquals(facilityVisitDetails.get("confirmedByName"), "samuel");
+    assertEquals(facilityVisitDetails.get("confirmedByTitle"), "Doe");
+    assertEquals(facilityVisitDetails.get("verifiedByName"), "Verifier");
+    assertEquals(facilityVisitDetails.get("verifiedByTitle"), "XYZ");
 
     distributionPage.syncDistributionMessageDone();
-    distributionPage.clickRecordData();
-    facilityListPage.selectFacility("F10");
+    distributionPage.clickRecordData(1);
+    facilityListPage.selectFacility(facilityCodeFirst);
     facilityListPage.verifyFacilityIndicatorColor("Overall", "BLUE");
-    generalObservationPage.navigate();
+    refrigeratorPage.navigateToGeneralObservations();
     generalObservationPage.verifyAllFieldsDisabled();
 
-    epiUse.navigate();
-    epiUse.verifyAllFieldsDisabled();
+    generalObservationPage.navigateToEpiUse();
+    epiUsePage.verifyAllFieldsDisabled();
 
-    refrigeratorPage.navigateToRefrigeratorTab();
-    refrigeratorPage.clickShow();
+    epiUsePage.navigateToRefrigerators();
+    refrigeratorPage.clickShowForRefrigerator1();
     refrigeratorPage.verifyAllFieldsDisabled();
+
+    refrigeratorPage.navigateToCoverage();
+    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
+
+    verifyEpiUseDataInDatabase(10, 20, 30, null, 50, "10/2011", "PG1", facilityCodeFirst);
+    verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
+    verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
+    verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
   }
 
   @AfterMethod(groups = {"offline"})
@@ -221,6 +237,5 @@ public class E2EDistributionTest extends TestCaseHelper {
       {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M"}
     };
-
   }
 }

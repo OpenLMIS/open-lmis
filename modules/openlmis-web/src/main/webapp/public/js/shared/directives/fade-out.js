@@ -14,15 +14,15 @@ app.directive('fadeOut', function ($timeout) {
     link: function (scope, element, attrs) {
       var timeouts = [];
 
-      var messageVar = attrs.openlmisMessage || 'message';
+      var message = attrs.openlmisMessage || 'message';
 
       function fadeMessage() {
-        element.fadeOut('slow');
-        scope[messageVar] = undefined;
+        element.fadeOut();
+        scope[message] = undefined;
       }
 
-      scope.$watch(messageVar, function () {
-        if (!scope[messageVar]) return;
+      scope.$watch(message, function () {
+        if (!scope[message]) return;
         timeouts.forEach(function (timeoutId) {
           $timeout.cancel(timeoutId);
         });

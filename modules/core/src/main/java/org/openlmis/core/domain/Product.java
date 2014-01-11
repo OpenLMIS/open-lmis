@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
@@ -181,6 +182,12 @@ public class Product extends BaseModel implements Importable {
 
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
+
+  public void validate() {
+    if (this.packSize <= 0) {
+      throw new DataException("error.invalid.pack.size");
+    }
+  }
 
   private String programName;
 

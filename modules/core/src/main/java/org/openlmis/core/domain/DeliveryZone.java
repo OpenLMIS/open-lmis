@@ -17,12 +17,12 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @NoArgsConstructor
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class DeliveryZone extends BaseModel implements Importable {
 
   @ImportField(name = "Delivery zone code", mandatory = true)

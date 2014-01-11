@@ -27,7 +27,7 @@ public class Agent {
 
   public void validate() {
     if (StringUtils.isEmpty(agentCode) || StringUtils.isEmpty(agentName) || StringUtils.isEmpty(parentFacilityCode) || StringUtils.isEmpty(active)) {
-      throw new DataException("error.restapi.mandatory.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
     if (!validateActive(active)) {
       throw new DataException("error.active.invalid");

@@ -9,7 +9,7 @@ Feature: End to end requisition flow
     When I setup supervisory node data
     And I setup warehouse data
     And I create "Store-in-charge" role having "Requisition" based "Create Requisition,Authorize Requisition,Approve Requisition" rights
-    And I create "lmu" role having "Fulfillment" based "Convert To Order Requisition,View Orders Requisition" rights
+    And I create "lmu" role having "Fulfillment" based "Convert To Order Requisition,View Orders Requisition,Manage POD" rights
     And I create "Medical-officer" role having "Requisition" based "Approve Requisition" rights
     And I create users:
       | Email                   | FirstName | LastName | UserName       | Role            | RoleType    | FacilityCode | Program | Node   | Warehouse        | WarehouseRole |
@@ -68,6 +68,8 @@ Feature: End to end requisition flow
     When I convert to order
     And I access view orders page
     Then I should see ordered list with download link
+    When I access Manage POD page
+    Then I should see list of orders to manage POD for "Regular" Rnr
     When I do not have anything to pack to ship
     And I access view orders page
     Then I should see ordered list without download link
@@ -100,5 +102,8 @@ Feature: End to end requisition flow
     When I convert to order
     And I access view orders page
     Then I should see ordered list with download link
+    When I access Manage POD page
+    Then I should see list of orders to manage POD for "Emergency" Rnr
     When I do not have anything to pack to ship
+    And I access view orders page
     Then I should see ordered list without download link

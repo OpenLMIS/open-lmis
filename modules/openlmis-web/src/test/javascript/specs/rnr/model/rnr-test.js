@@ -417,6 +417,18 @@ describe('R&R test', function () {
     expect(rnr.periodDisplayName()).toEqual('16/01/2013 - 30/04/2013');
   });
 
+  it('should set budget exceed flag if applicable', function () {
+    var rnr = createRegularRnr({"id": "1", period: {"name": "Period 1", "stringStartDate": "16/01/2013", "stringEndDate": "30/04/2013"}}, null);
+    rnr.fullSupplyItemsSubmittedCost = 100;
+    rnr.nonFullSupplyItemsSubmittedCost = 200;
+    rnr.allocatedBudget = 100;
+    rnr.program = {budgetingApplies: true}
+
+    rnr.calculateTotalLineItemCost()
+
+    expect(rnr.costExceedsBudget).toBeTruthy();
+  });
+
 
 });
 

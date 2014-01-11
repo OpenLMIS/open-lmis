@@ -10,16 +10,16 @@
 
 CREATE TABLE budget_line_items (
   id              SERIAL PRIMARY KEY,
-  facilityCode    VARCHAR(50) NOT NULL REFERENCES facilities (code),
-  programCode     VARCHAR(50) NOT NULL REFERENCES programs (code),
-  periodId        INTEGER NOT NULL REFERENCES processing_periods (id),
-  budgetFileId    INTEGER NOT NULL REFERENCES budget_file_info (id),
-  periodDate      TIMESTAMP NOT NULL,
+  facilityCode    VARCHAR(50)    NOT NULL REFERENCES facilities (code),
+  programCode     VARCHAR(50)    NOT NULL REFERENCES programs (code),
+  periodId        INTEGER        NOT NULL REFERENCES processing_periods (id),
+  budgetFileId    INTEGER        NOT NULL REFERENCES budget_file_info (id),
+  periodDate      TIMESTAMP      NOT NULL,
   allocatedBudget NUMERIC(20, 2) NOT NULL,
   notes           VARCHAR(255),
-  createdBy       INTEGER NOT NULL REFERENCES users (id),
+  createdBy       INTEGER,
   createdDate     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  modifiedBy      INTEGER NOT NULL REFERENCES users (id),
+  modifiedBy      INTEGER,
   modifiedDate    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE (facilityCode, programCode, periodId)
 );

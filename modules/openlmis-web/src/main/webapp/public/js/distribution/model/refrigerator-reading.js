@@ -8,19 +8,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RefrigeratorReading(refrigeratorReading) {
+function RefrigeratorReading(facilityVisitId, refrigeratorReading) {
 
   var fieldList = ['temperature', 'functioningCorrectly', 'lowAlarmEvents', 'highAlarmEvents', 'problemSinceLastTime'];
 
   RefrigeratorReading.prototype.computeStatus = function () {
-    var complete = 'is-complete';
-    var incomplete = 'is-incomplete';
-    var empty = 'is-empty';
 
-    var statusClass = complete;
+    var statusClass = DistributionStatus.COMPLETE;
     var _this = this;
 
     function isEmpty(field) {
+      if (field === "temperature" && !(isUndefined(_this[field].value)) && _this[field].value.toString().trim() === "-") {
+        return true;
+      }
       if (isUndefined(_this[field])) {
         return true;
       }
@@ -29,32 +29,32 @@ function RefrigeratorReading(refrigeratorReading) {
 
     $(fieldList).each(function (index, field) {
       if (isEmpty(field)) {
-        statusClass = empty;
+        statusClass = DistributionStatus.EMPTY;
         return false;
       }
       return true;
     });
 
-    if (statusClass === empty) {
+    if (statusClass === DistributionStatus.EMPTY) {
       $(fieldList).each(function (index, field) {
         if (!isEmpty(field)) {
-          statusClass = incomplete;
+          statusClass = DistributionStatus.INCOMPLETE;
           return false;
         }
         return true;
       });
     }
 
-    if (statusClass === complete && _this.problemSinceLastTime && _this.problemSinceLastTime.value === 'Y') {
-      if (!_this.problems) statusClass = incomplete;
+    if (statusClass === DistributionStatus.COMPLETE && _this.problemSinceLastTime && _this.problemSinceLastTime.value === 'Y') {
+      if (!_this.problems) statusClass = DistributionStatus.INCOMPLETE;
       else {
-        var hasAtLeastOneProblem = _.filter(_.values(_this.problems.problemMap),
-          function (problem) {
-            return problem;
-          }).length;
+        var hasAtLeastOneProblem = _.find(_.values(_this.problems),
+          function (problemValue) {
+            return problemValue === true;
+          });
 
-        if (!_this.problems.problemMap || !hasAtLeastOneProblem)
-          statusClass = incomplete;
+        if (!_this.problems || !hasAtLeastOneProblem)
+          statusClass = DistributionStatus.INCOMPLETE;
       }
     }
 
@@ -66,6 +66,7 @@ function RefrigeratorReading(refrigeratorReading) {
   init.call(this);
 
   function init() {
+    this.facilityVisitId = facilityVisitId;
     var _this = this;
     $.extend(true, this, refrigeratorReading);
     $(fieldList).each(function (i, fieldName) {

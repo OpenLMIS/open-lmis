@@ -10,8 +10,10 @@
 
 package org.openlmis.distribution.service;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -22,8 +24,6 @@ import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.openlmis.distribution.repository.EpiUseRepository;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 
 @Category(UnitTests.class)
@@ -33,20 +33,21 @@ public class EpiUseServiceTest {
   @Mock
   EpiUseRepository epiUseRepository;
 
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
   @InjectMocks
   EpiUseService service;
+
 
   @Test
   public void shouldSaveEpiUseLineItem() throws Exception {
     EpiUse epiUse = new EpiUse();
-    epiUse.setId(1L);
     EpiUseLineItem epiUseLineItem = new EpiUseLineItem();
     epiUse.setLineItems(asList(epiUseLineItem));
 
-    service.saveLineItems(epiUse);
+    service.save(epiUse);
 
-    verify(epiUseRepository).save(epiUse);
     verify(epiUseRepository).saveLineItem(epiUseLineItem);
-    assertThat(epiUseLineItem.getEpiUseId(), is(epiUse.getId()));
   }
 }

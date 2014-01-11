@@ -15,17 +15,17 @@ function EPIUseController($scope, $routeParams, distributionService) {
 
   $scope.applyNRAll = function() {
     distributionService.applyNR(function(distribution) {
-      distribution.setEpiNotRecorded($routeParams.facility);
+      distribution.setEpiUseNotRecorded($routeParams.facility);
     });
   };
 }
 
 function EpiUseRowController($scope) {
   $scope.getTotal = function () {
-    if (!$scope.groupReading || !$scope.groupReading.reading) {
+    if (!$scope.lineItem) {
       return 0;
     }
-    return getValue($scope.groupReading.reading.stockAtFirstOfMonth) + getValue($scope.groupReading.reading.received);
+    return getValue($scope.lineItem.stockAtFirstOfMonth) + getValue($scope.lineItem.received);
   };
 
   $scope.clearError = function (notRecorded) {

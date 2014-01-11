@@ -13,43 +13,55 @@ package org.openlmis.pageobjects;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import static org.openqa.selenium.support.How.LINK_TEXT;
+
 public abstract class Page {
 
   public TestWebDriver testWebDriver;
 
+  @FindBy(how = LINK_TEXT, using = "Logout")
+  private static WebElement logoutLink = null;
+
   protected Page(TestWebDriver driver) {
     this.testWebDriver = driver;
   }
-    public void sendKeys(WebElement locator, String value) {
-        int length = testWebDriver.getAttribute(locator, "value").length();
-        for (int i = 0; i < length; i++)
-            locator.sendKeys("\u0008");
-        locator.sendKeys(value);
+
+  public LoginPage logout() throws IOException {
+    logoutLink.click();
+    return new LoginPage(testWebDriver);
+  }
+
+  public void sendKeys(WebElement locator, String value) {
+    int length = testWebDriver.getAttribute(locator, "value").length();
+    for (int i = 0; i < length; i++)
+      locator.sendKeys("\u0008");
+    locator.sendKeys(value);
+  }
+
+  public void downloadFileWhileSaveDialogOPen(WebElement element) throws IOException, NullPointerException, InterruptedException {
+    try {
+      Robot robot = new Robot();
+      //get the focus on the element..don't use click since it stalls the driver
+      element.sendKeys("");
+      element.sendKeys(Keys.RETURN);
+      //wait for the modal dialog to open
+      Thread.sleep(3000);
+      //press s key to save
+      robot.keyPress(KeyEvent.VK_ALT);
+      robot.keyPress(KeyEvent.VK_S);
+      robot.keyRelease(KeyEvent.VK_S);
+      robot.keyRelease(KeyEvent.VK_ALT);
+      Thread.sleep(3000);
+
+    } catch (AWTException e) {
+
+      e.printStackTrace();
     }
-
-    public void downloadFileWhileSaveDialogOPen(WebElement element) throws IOException, NullPointerException, InterruptedException {
-        try {
-            Robot robot = new Robot();
-            //get the focus on the element..don't use click since it stalls the driver
-            element.sendKeys("");
-            element.sendKeys(Keys.RETURN);
-            //wait for the modal dialog to open
-            Thread.sleep(3000);
-            //press s key to save
-            robot.keyPress(KeyEvent.VK_ALT);
-            robot.keyPress(KeyEvent.VK_S);
-            robot.keyRelease(KeyEvent.VK_S);
-            robot.keyRelease(KeyEvent.VK_ALT);
-            Thread.sleep(3000);
-
-        } catch (AWTException e) {
-
-            e.printStackTrace();
-        }
-    }
+  }
 }

@@ -8,6 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
+@import url("mixins.less");
 @heading-green: #17888F;
 
 //Buttons
@@ -61,7 +62,77 @@
       height: 20px;
       padding: 6px 8px;
       margin: 0 14px;
+      .rnr-form-error.budget-exceeded {
+        width: 250px;
+        position: absolute;
+        border-radius: 4px;
+        left: -132px;
+        padding: 7px 9px;
+        bottom: 25px;
+        background: rgba(0, 0, 0, 0.7);
+        font-size: 0.8em;
+        text-align: center;
+        white-space: normal;
+        color: #FFFFFF;
+        .box-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+        &:after {
+          height: 0;
+          width: 0;
+          border-top: 7px solid rgba(0, 0, 0, 0.7);
+          border-left: 8px solid transparent;
+          border-right: 8px solid transparent;
+          border-bottom: 0;
+          position: absolute;
+          left: 132px;
+          bottom: -6px;
+          content: "";
+        }
+      }
     }
+    .comments-popup {
+      width: 190px;
+      bottom: 96px;
+      text-align: left;
+      color: #504D4D;
+      h4 {
+        border-bottom: none;
+        font-size: 1em;
+        color: #005c61;
+      }
+      small {
+        div {
+          padding: 5px 0;
+          border-bottom: 1px solid #ccc;
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+      }
+      .beak-down {
+        right: 16px;
+        bottom: -10px;
+      }
+    }
+    .list-icon-container {
+      padding: 3px 4px;
+      text-shadow: none;
+    }
+    .is-icon-ul-selected {
+      font-size: 1em;
+      border-radius: 3px;
+      background: #005c61;
+      color: white;
+    }
+  }
+}
+
+#dividedCost {
+  &:hover {
+    font-size: 1em;
+    border-radius: 3px;
+    background: #005c61;
+    color: white;
+    cursor: pointer;
   }
 }
 
@@ -172,3 +243,7 @@
   line-height: 47px;
 }
 
+.budget-exceeds-detailed {
+  float: left;
+  color: #F0B159;
+}

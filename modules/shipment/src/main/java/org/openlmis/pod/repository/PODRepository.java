@@ -10,8 +10,8 @@
 
 package org.openlmis.pod.repository;
 
-import org.openlmis.pod.domain.POD;
-import org.openlmis.pod.domain.PODLineItem;
+import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.repository.mapper.PODMapper;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +26,26 @@ public class PODRepository {
   @Autowired
   PODMapper podMapper;
 
-  public void insertPODLineItem(PODLineItem podLineItem) {
-    podMapper.insertPODLineItem(podLineItem);
+  public void insertPODLineItem(OrderPODLineItem orderPodLineItem) {
+    podMapper.insertPODLineItem(orderPodLineItem);
   }
 
-  public void insertPOD(POD pod) {
-    podMapper.insertPOD(pod);
+  public void insertPOD(OrderPOD orderPod) {
+    podMapper.insertPOD(orderPod);
   }
 
-  public POD getPODByOrderId(Long orderId) {
+  public OrderPOD getPODByOrderId(Long orderId) {
     return podMapper.getPODByOrderId(orderId);
   }
 
-  public List<PODLineItem> getNPodLineItems(String productCode, Rnr requisition, int n, Date startDate) {
+  public List<OrderPODLineItem> getNPodLineItems(String productCode, Rnr requisition, Integer n, Date startDate) {
     return podMapper.getNPodLineItems(productCode, requisition, n, startDate);
+  }
+
+  public OrderPOD getPODWithLineItemsByOrderId(Long orderId) {
+    OrderPOD orderPOD = podMapper.getPODByOrderId(orderId);
+    List<OrderPODLineItem> podLineItems = podMapper.getPODLineItemsByPODId(orderPOD.getId());
+    orderPOD.setPodLineItems(podLineItems);
+    return orderPOD;
   }
 }

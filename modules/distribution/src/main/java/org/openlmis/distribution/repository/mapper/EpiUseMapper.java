@@ -10,23 +10,38 @@
 
 package org.openlmis.distribution.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.openlmis.distribution.domain.EpiUse;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.EpiUseLineItem;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface EpiUseMapper {
 
-  @Insert({"INSERT into epi_use_line_items (epiUseId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
-    "distributed, loss, stockAtEndOfMonth, expirationDate) VALUES (#{epiUseId}, #{productGroupId}, #{productGroupName}, #{stockAtFirstOfMonth},",
-    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate})"})
+  @Insert({"INSERT INTO epi_use_line_items (facilityVisitId, productGroupId, productGroupName, stockAtFirstOfMonth, received, ",
+    "distributed, loss, stockAtEndOfMonth, expirationDate, createdBy, modifiedBy) VALUES (#{facilityVisitId}, #{productGroup.id}, #{productGroup.name}, #{stockAtFirstOfMonth},",
+    " #{received}, #{distributed}, #{loss}, #{stockAtEndOfMonth}, #{expirationDate}, #{createdBy}, #{createdBy})"})
   @Options(useGeneratedKeys = true)
   public void insertLineItem(EpiUseLineItem epiUseLineItem);
 
-  @Insert({"INSERT INTO epi_use (distributionId, facilityId) VALUES (#{distributionId}, #{facilityId})"})
-  @Options(useGeneratedKeys = true)
-  public void insert(EpiUse epiUse);
 
+  @Select({"SELECT * FROM epi_use_line_items WHERE id = #{id}"})
+  @Results(value = {
+    @Result(property = "productGroup.id", column = "productGroupId"),
+    @Result(property = "productGroup.name", column = "productGroupName")
+  })
+  public EpiUseLineItem getLineItemById(EpiUseLineItem epiUseLineItem);
+
+  @Update({"UPDATE epi_use_line_items SET received = #{received}, distributed = #{distributed}, loss = #{loss},",
+    "stockAtFirstOfMonth = #{stockAtFirstOfMonth}, stockAtEndOfMonth = #{stockAtEndOfMonth}, expirationDate = #{expirationDate},",
+    "modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  public void updateLineItem(EpiUseLineItem epiUseLineItem);
+
+  @Select({"SELECT * FROM epi_use_line_items WHERE facilityVisitId = #{facilityVisitId} ORDER BY LOWER(productGroupName)"})
+  @Results(value = {
+    @Result(property = "productGroup.id", column = "productGroupId"),
+    @Result(property = "productGroup.name", column = "productGroupName")
+  })
+  List<EpiUseLineItem> getBy(Long facilityVisitId);
 }

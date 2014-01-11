@@ -18,7 +18,7 @@ describe('EPI Use controller', function () {
   }));
 
   it("should compute total of 'stockAtFirstOfMonth' and 'received' fields", function () {
-    scope.groupReading = { reading: {stockAtFirstOfMonth: {value: 50}, received: {value: 75} } };
+    scope.lineItem = { stockAtFirstOfMonth: {value: 50}, received: {value: 75} };
 
     var total = scope.getTotal();
 
@@ -26,7 +26,7 @@ describe('EPI Use controller', function () {
   });
 
   it("should ignore not recorded 'stockAtFirstOfMonth' or 'received' fields in total calculation", function () {
-    scope.groupReading = { reading: {stockAtFirstOfMonth: {value: 50}, received: {notRecorded: true} } };
+    scope.lineItem = {stockAtFirstOfMonth: {value: 50}, received: {notRecorded: true} };
 
     var total = scope.getTotal();
 
@@ -34,7 +34,7 @@ describe('EPI Use controller', function () {
   });
 
   it("should return total as zero if reading object is not available", function () {
-    scope.groupReading = { };
+    scope.lineItem = { };
 
     var total = scope.getTotal();
 

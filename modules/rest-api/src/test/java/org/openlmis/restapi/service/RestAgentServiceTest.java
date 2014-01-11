@@ -190,7 +190,7 @@ public class RestAgentServiceTest {
     agent.setAgentCode(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     restAgentService.create(agent, user.getId());
   }
@@ -202,7 +202,7 @@ public class RestAgentServiceTest {
     agent.setAgentName(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     restAgentService.create(agent, user.getId());
   }
@@ -214,7 +214,7 @@ public class RestAgentServiceTest {
     agent.setParentFacilityCode(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     restAgentService.create(agent, user.getId());
   }
@@ -253,7 +253,7 @@ public class RestAgentServiceTest {
     agent.setActive(null);
 
     expectedException.expect(DataException.class);
-    expectedException.expectMessage("error.restapi.mandatory.missing");
+    expectedException.expectMessage("error.mandatory.fields.missing");
 
     restAgentService.update(agent, user.getId());
   }

@@ -73,6 +73,7 @@ public class RequisitionGroupMemberService {
       duplicateProgram.setId(commonProgramIds.get(0));
       RequisitionGroup requisitionGroup = requisitionGroupRepository.
         getRequisitionGroupForProgramAndFacility(duplicateProgram, requisitionGroupMember.getFacility());
+//      TODO externalize the message
       throw new DataException(String.format("Facility %s is already assigned to Requisition Group %s running same program %s",
         requisitionGroupMember.getFacility().getCode(), requisitionGroup.getCode(), duplicateProgram.getCode()));
     }
@@ -116,7 +117,7 @@ public class RequisitionGroupMemberService {
     return requisitionGroupMemberRepository.getAllRequisitionGroupMembersByFacility(facilityId);
   }
 
-  public void deleteMembersFor(Facility facility){
+  public void deleteMembersFor(Facility facility) {
     requisitionGroupMemberRepository.deleteMembersFor(facility);
   }
 }

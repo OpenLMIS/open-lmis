@@ -51,4 +51,14 @@ public class ProgramProductControllerTest {
     //verify(service).getByProgram(program);
   }
 
+  @Test
+  public void shouldGetActiveProgramProductsForAProgram() throws Exception {
+    List<ProgramProduct> expectedProgramProductList = new ArrayList<>();
+    when(service.getActiveByProgram(1L)).thenReturn(expectedProgramProductList);
+
+    ResponseEntity<OpenLmisResponse> responseEntity = controller.getActiveProgramProductsByProgram(1l);
+
+    assertThat((List<ProgramProduct>) responseEntity.getBody().getData().get(PROGRAM_PRODUCT_LIST), is(expectedProgramProductList));
+    verify(service).getActiveByProgram(1L);
+  }
 }

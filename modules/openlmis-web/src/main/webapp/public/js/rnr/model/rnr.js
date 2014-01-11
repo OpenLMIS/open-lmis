@@ -138,9 +138,12 @@ var Rnr = function (rnr, programRnrColumns) {
     this.nonFullSupplyItemsSubmittedCost = calculateTotalCost(this.nonFullSupplyLineItems);
   };
 
-
   Rnr.prototype.calculateTotalLineItemCost = function () {
-    return  parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+    var cost = parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
+    if (this.allocatedBudget && this.program.budgetingApplies) {
+      this.costExceedsBudget = this.allocatedBudget < cost;
+    }
+    return cost;
   };
 
 

@@ -14,16 +14,34 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.openlmis.core.exception.DataException;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
 public class Refrigerator extends BaseModel {
 
-  String brand;
-  String serialNumber;
-  String model;
-  Long facilityId;
+  private String brand;
+  private String serialNumber;
+  private String model;
+  private Long facilityId;
+  private Boolean enabled;
 
+  public void validate() {
+    if (isBlank(brand) || isBlank(serialNumber) || isBlank(model)) {
+      throw new DataException("error.invalid.reading.value");
+    }
+  }
+
+  public Refrigerator(String serialNumber) {
+    this.serialNumber = serialNumber;
+  }
 }

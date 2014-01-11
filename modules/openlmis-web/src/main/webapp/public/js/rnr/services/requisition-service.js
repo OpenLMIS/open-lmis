@@ -41,8 +41,8 @@ services.factory('requisitionService', function (messageService) {
       return null;
     };
 
-    $scope.highlightWarningBasedOnField = function (value, field, skipped) {
-      if ($scope.inputClass && (isUndefined(value) || value === false) && field && skipped === false) {
+    $scope.highlightWarningBasedOnField = function (showError, value, field, skipped) {
+      if (showError && (isUndefined(value) || value === false) && field && skipped === false) {
         return "warning-error";
       }
       return null;

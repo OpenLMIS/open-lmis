@@ -5,27 +5,36 @@ import org.openlmis.distribution.repository.FacilityVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class FacilityVisitService {
 
-  public static final String SYNCED_SUCCESSFULLY_STATUS = "Synced";
-  public static final String ALREADY_SYNCED_STATUS = "AlreadySynced";
   @Autowired
   FacilityVisitRepository repository;
 
-  //TODO return boolean
-  public String save(FacilityVisit facilityVisit) {
-    FacilityVisit existingFacilityVisit = repository.get(facilityVisit);
-    if (existingFacilityVisit != null) {
-      return ALREADY_SYNCED_STATUS;
-    }
-    try {
+  public boolean save(FacilityVisit facilityVisit) {
+    FacilityVisit savedVisit = repository.get(facilityVisit);
+    if (savedVisit == null) {
       repository.insert(facilityVisit);
-    } catch (Exception exception) {
-      throw exception;
+    } else if (!savedVisit.getSynced()) {
+      facilityVisit.setSynced(true);
+      repository.update(facilityVisit);
+      return true;
     }
-    return SYNCED_SUCCESSFULLY_STATUS;
+    return false;
   }
 
+  public FacilityVisit getById(Long facilityVisitId) {
+    return repository.getById(facilityVisitId);
+  }
+
+  public FacilityVisit getBy(Long facilityId, Long distributionId) {
+    return repository.getBy(facilityId, distributionId);
+  }
+
+  public List<FacilityVisit> getUnSyncedFacilities(Long distributionId) {
+    return repository.getUnSyncedFacilities(distributionId);
+  }
 }

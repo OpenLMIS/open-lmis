@@ -9,7 +9,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
-<html lang="en" ng-app="rnr" style="overflow: hidden">
+<html lang="en" ng-app="rnr">
 <head>
   <meta charset="utf-8">
   <title openlmis-message="app.title"></title>
@@ -47,12 +47,13 @@
   <script src="/public/js/shared/directives/ui-nav.js"></script>
   <script src="/public/js/shared/directives/modal-events.js"></script>
   <script src="/public/js/shared/directives/ng-grid-events.js"></script>
+  <script src="/public/js/shared/directives/fade-out.js"></script>
 
   <script src="/public/js/rnr/module/rnr-module.js"></script>
 
   <!--Rnr directives-->
   <script src="/public/js/rnr/directives/comment-box.js"></script>
-  <script src="/public/js/rnr/directives/rnr-body.js"></script>
+  <script src="/public/js/rnr/directives/display-cost.js"></script>
   <script src="/public/js/rnr/directives/fixed-table-header.js"></script>
   <script src="/public/js/rnr/directives/full-screen.js"></script>
   <script src="/public/js/rnr/directives/custom-horizontal-scroll.js"></script>
@@ -90,7 +91,7 @@
   <![endif]-->
 
 </head>
-<body class="rnr-body">
+<body>
 <ng-include src="'/public/pages/header.html'"></ng-include>
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
 

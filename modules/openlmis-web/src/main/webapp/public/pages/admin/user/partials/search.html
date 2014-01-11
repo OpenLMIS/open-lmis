@@ -113,11 +113,14 @@
       </div>
 
       <div class="modal-footer">
-        <input type="button" class="btn btn-primary" openlmis-message="button.done" ng-click="updatePassword()"
+        <input id="resetPasswordDone" type="button" class="btn btn-primary" openlmis-message="button.done"
+               ng-click="updatePassword()"
                ng-hide="message"/>
-        <input type="button" class="btn btn-cancel" openlmis-message="button.cancel" ng-click="resetPasswordModal()"
+        <input id="resetPasswordCancel" type="button" class="btn btn-cancel" openlmis-message="button.cancel"
+               ng-click="resetPasswordModal()"
                ng-hide="message"/>
-        <input type="button" class="btn btn-primary" openlmis-message="button.ok" ng-click="resetPasswordModal()"
+        <input id="resetPasswordOk" type="button" class="btn btn-primary" openlmis-message="button.ok"
+               ng-click="resetPasswordModal()"
                ng-show="message"/>
       </div>
 

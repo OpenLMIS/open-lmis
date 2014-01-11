@@ -19,13 +19,13 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class ProgramProduct extends BaseModel implements Importable {
 
   @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)

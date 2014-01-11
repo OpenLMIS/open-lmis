@@ -1,71 +1,165 @@
 package org.openlmis.core.service;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-import org.openlmis.core.domain.BudgetLineItem;
-import org.openlmis.core.domain.EDIFileColumn;
-import org.openlmis.core.domain.EDIFileTemplate;
+import lombok.NoArgsConstructor;
+import org.apache.log4j.Logger;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.BudgetLineItemDTO;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.transformer.budget.BudgetLineItemTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.Message;
-import org.springframework.stereotype.Service;
+import org.springframework.integration.annotation.MessageEndpoint;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.supercsv.io.CsvListReader;
 import org.supercsv.io.ICsvListReader;
 
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
+import static org.openlmis.core.dto.BudgetLineItemDTO.populate;
 import static org.supercsv.prefs.CsvPreference.STANDARD_PREFERENCE;
 
-@Service
+@Component
+@MessageEndpoint
+@NoArgsConstructor
 public class BudgetFileProcessor {
 
-  @Autowired
-  BudgetFileTemplateService budgetFileTemplateService;
+  private static Logger logger = Logger.getLogger(BudgetFileProcessor.class);
 
   @Autowired
-  BudgetLineItemTransformer budgetLineItemTransformer;
+  private BudgetFileTemplateService budgetFileTemplateService;
 
-  public void process(Message message) throws IOException, ParseException {
+  @Autowired
+  private BudgetLineItemTransformer budgetLineItemTransformer;
 
-    File file = (File) message.getPayload();
+  @Autowired
+  private FacilityService facilityService;
 
+  @Autowired
+  private ProgramService programService;
+
+  @Autowired
+  private BudgetFileService budgetFileService;
+
+  @Autowired
+  private ProcessingScheduleService processingScheduleService;
+
+  @Autowired
+  private BudgetLineItemService budgetLineItemService;
+
+  @Autowired
+  private BudgetFilePostProcessHandler budgetFilePostProcessHandler;
+
+  private MessageService messageService = MessageService.getRequestInstance();
+
+  @Autowired
+  private ApplicationContext applicationContext;
+
+  private BudgetFileProcessor getSpringProxy() {
+    return applicationContext.getBean(this.getClass());
+  }
+
+  public void process(Message message) throws Exception {
+    File budgetFile = (File) message.getPayload();
+
+    logger.debug("processing Budget File " + budgetFile.getName());
+
+    BudgetFileInfo budgetFileInfo = saveBudgetFile(budgetFile, false);
+
+    Boolean processingError = getSpringProxy().processBudgetFile(budgetFile, budgetFileInfo);
+
+    budgetFileInfo.setProcessingError(processingError);
+    budgetFilePostProcessHandler.process(budgetFileInfo, budgetFile);
+  }
+
+  @Transactional
+  public Boolean processBudgetFile(File budgetFile, BudgetFileInfo budgetFileInfo) throws Exception {
+
+    Boolean processingError = false;
     EDIFileTemplate budgetFileTemplate = budgetFileTemplateService.get();
 
-    ICsvListReader listReader = new CsvListReader(new FileReader(file), STANDARD_PREFERENCE);
+    ICsvListReader listReader = new CsvListReader(new FileReader(budgetFile), STANDARD_PREFERENCE);
 
-    if (budgetFileTemplate.getConfiguration().isHeaderInFile()) listReader.getHeader(true);
-
-    List<String> csvRow;
-    while ((csvRow = listReader.read()) != null) {
-      Collection<EDIFileColumn> includedColumns = budgetFileTemplate.filterIncludedColumns();
-
-      BudgetLineItemDTO budgetLineItemDTO = BudgetLineItemDTO.populate(csvRow, includedColumns);
-      try {
-        budgetLineItemDTO.checkMandatoryFields();
-      } catch (Exception e) {
-        //logger
-        continue;
-      }
-
-      EDIFileColumn periodDateColumn = (EDIFileColumn) CollectionUtils.find(includedColumns, new Predicate() {
-        @Override
-        public boolean evaluate(Object o) {
-          EDIFileColumn periodDateColumn = (EDIFileColumn) o;
-          return periodDateColumn.getName().equals("periodStartDate") && periodDateColumn.getInclude();
-        }
-      });
-      String datePattern = periodDateColumn == null ? null : periodDateColumn.getDatePattern();
-      BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, datePattern);
-
-
+    if (budgetFileTemplate.getConfiguration().isHeaderInFile()) {
+      listReader.getHeader(true);
     }
 
+    List<String> csvRow;
+    Integer rowNumber;
+    Collection<EDIFileColumn> includedColumns = budgetFileTemplate.filterIncludedColumns();
 
+    while ((csvRow = listReader.read()) != null) {
+
+      BudgetLineItemDTO budgetLineItemDTO = populate(csvRow, includedColumns);
+      try {
+
+        budgetLineItemDTO.checkMandatoryFields();
+        rowNumber = listReader.getRowNumber() - budgetFileTemplate.getRowOffset();
+
+        Facility facility = getValidatedFacility(budgetLineItemDTO.getFacilityCode(), rowNumber);
+        Program program = getValidatedProgram(budgetLineItemDTO.getProgramCode(), rowNumber);
+
+        String dateFormat = budgetFileTemplate.getDateFormatForColumn("periodStartDate");
+        BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, dateFormat, rowNumber);
+
+        ProcessingPeriod processingPeriod = getValidatedPeriod(facility, program, budgetLineItem.getPeriodDate(), rowNumber);
+
+        budgetLineItem.setFacilityId(facility.getId());
+        budgetLineItem.setProgramId(program.getId());
+        budgetLineItem.setPeriodId(processingPeriod.getId());
+        budgetLineItem.setBudgetFileId(budgetFileInfo.getId());
+
+        budgetLineItemService.save(budgetLineItem);
+
+      } catch (DataException e) {
+        processingError = true;
+        String errorMessage = messageService.message(e.getOpenLmisMessage());
+        logger.error(errorMessage, e);
+      }
+    }
+
+    if (listReader.getRowNumber() == budgetFileTemplate.getRowOffset()) {
+      logger.error(messageService.message("error.facility.code.invalid"));
+      processingError = true;
+    }
+    return processingError;
+  }
+
+  private BudgetFileInfo saveBudgetFile(File budgetFile, Boolean processingError) {
+
+    BudgetFileInfo budgetFileInfo = new BudgetFileInfo(budgetFile.getName(), processingError);
+    budgetFileService.save(budgetFileInfo);
+
+    return budgetFileInfo;
+  }
+
+  private ProcessingPeriod getValidatedPeriod(Facility facility, Program program, Date date, Integer rowNumber) {
+    ProcessingPeriod periodForDate = processingScheduleService.getPeriodForDate(facility, program, date);
+    if (periodForDate == null) {
+      throw new DataException("budget.start.date.invalid", date, facility.getCode(), program.getCode(), rowNumber);
+    }
+    return periodForDate;
+  }
+
+  private Program getValidatedProgram(String programCode, Integer rowNumber) {
+    Program program = programService.getByCode(programCode);
+    if (program == null) {
+      throw new DataException("budget.program.code.invalid", programCode, rowNumber);
+    }
+    return program;
+  }
+
+  private Facility getValidatedFacility(String facilityCode, Integer rowNumber) {
+    Facility facility = new Facility();
+    facility.setCode(facilityCode);
+    if ((facility = facilityService.getByCode(facility)) == null) {
+      throw new DataException("budget.facility.code.invalid", facilityCode, rowNumber);
+    }
+    return facility;
   }
 }

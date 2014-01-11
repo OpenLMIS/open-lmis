@@ -12,14 +12,42 @@ package org.openlmis.pageobjects;
 
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
+import static org.openqa.selenium.support.How.ID;
 
 abstract public class DistributionTab extends Page {
+
+  private static final String COLOR_RED = "rgba(203, 64, 64, 1)";
+  private static final String COLOR_GREEN = "rgba(69, 182, 0, 1)";
+  private static final String COLOR_AMBER = "rgba(240, 165, 19, 1)";
+  private static final HashMap colorMap = new HashMap() {{
+    put("red", COLOR_RED);
+    put("green", COLOR_GREEN);
+    put("amber", COLOR_AMBER);
+  }};
+
+  @FindBy(how = ID, using = "epiInventoryTab")
+  private static WebElement epiInventoryTab = null;
+
+  @FindBy(how = ID, using = "refrigeratorTab")
+  private static WebElement refrigeratorTab = null;
+
+  @FindBy(how = ID, using = "epiUseTab")
+  private static WebElement epiUseTab = null;
+
+  @FindBy(how = ID, using = "generalObservationTab")
+  private static WebElement generalObservationTab = null;
+
+  @FindBy(how = ID, using = "coverageTab")
+  private static WebElement coverageTab = null;
 
   public DistributionTab(TestWebDriver driver) {
     super(driver);
@@ -28,20 +56,40 @@ abstract public class DistributionTab extends Page {
   }
 
   abstract public void verifyIndicator(String color);
-  abstract public void enterValues(Map<String, String> map);
+
+  abstract public void enterValues(List<Map<String, String>> dataMapList);
+
   abstract public void verifyData(Map<String, String> map);
+
   abstract public void navigate();
 
   public void verifyOverallIndicator(WebElement element, String color) {
     testWebDriver.sleep(500);
-    if (color.toLowerCase().equals("RED".toLowerCase()))
-      color = "rgba(203, 64, 64, 1)";
-    else if (color.toLowerCase().equals("GREEN".toLowerCase()))
-      color = "rgba(82, 168, 30, 1)";
-    else if (color.toLowerCase().equals("AMBER".toLowerCase()))
-      color = "rgba(240, 165, 19, 1)";
-
-    assertEquals(color, element.getCssValue("background-color"));
+    assertEquals(colorMap.get(color.toLowerCase()), element.getCssValue("background-color"));
   }
 
+  public RefrigeratorPage navigateToRefrigerators() {
+    refrigeratorTab.click();
+    return new RefrigeratorPage(testWebDriver);
+  }
+
+  public EPIUsePage navigateToEpiUse() {
+    epiUseTab.click();
+    return new EPIUsePage(testWebDriver);
+  }
+
+  public EpiInventoryPage navigateToEpiInventory() {
+    epiInventoryTab.click();
+    return new EpiInventoryPage(testWebDriver);
+  }
+
+  public CoveragePage navigateToCoverage() {
+    coverageTab.click();
+    return new CoveragePage(testWebDriver);
+  }
+
+  public GeneralObservationPage navigateToGeneralObservations() {
+    generalObservationTab.click();
+    return new GeneralObservationPage(testWebDriver);
+  }
 }

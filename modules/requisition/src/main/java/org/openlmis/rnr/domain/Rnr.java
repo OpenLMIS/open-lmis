@@ -21,6 +21,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 
 import javax.persistence.Transient;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +50,8 @@ public class Rnr extends BaseModel {
   private List<RnrLineItem> fullSupplyLineItems = new ArrayList<>();
   private List<RnrLineItem> nonFullSupplyLineItems = new ArrayList<>();
   private List<RegimenLineItem> regimenLineItems = new ArrayList<>();
+
+  private BigDecimal allocatedBudget;
 
   public static final String RNR_VALIDATION_ERROR = "error.rnr.validation";
 
@@ -165,7 +168,7 @@ public class Rnr extends BaseModel {
     }
   }
 
-  private List<RnrLineItem> getAllLineItems() {
+  public List<RnrLineItem> getAllLineItems() {
     if (this.allLineItems.isEmpty()) {
       this.allLineItems.addAll(this.getFullSupplyLineItems());
       this.allLineItems.addAll(this.getNonFullSupplyLineItems());
@@ -354,5 +357,11 @@ public class Rnr extends BaseModel {
       }
     }
   }
+
+  @JsonIgnore
+  public boolean isBudgetingApplicable() {
+    return !this.emergency && this.program.getBudgetingApplies();
+  }
+
 }
 

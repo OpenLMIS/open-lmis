@@ -15,22 +15,9 @@
                 <include name="requisition"/>
             </run>
         </groups>
-        <classes preserver-order="true">
-            <class name="org.openlmis.functional.ViewRequisition">
-            </class>
-            <class name="org.openlmis.functional.RnRPagination">
-            </class>
-            <class name="org.openlmis.functional.InitiateRnR">
-            </class>
-            <class name="org.openlmis.functional.DownloadOrderFile">
-            </class>
-            <class name="org.openlmis.functional.ConvertToOrderPagination">
-            </class>
-            <class name="org.openlmis.functional.ViewOrderPagination">
-            </class>
-            <class name="org.openlmis.functional.TestCalculationsForRegularRnR">
-            </class>
-        </classes>
+        <packages>
+            <package name="org.openlmis.functional"/>
+        </packages>
     </test>
 </suite>
 

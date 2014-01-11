@@ -19,21 +19,22 @@ import cucumber.api.java.en.When;
 import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
-import org.openlmis.pageobjects.*;
+import org.openlmis.pageobjects.HomePage;
+import org.openlmis.pageobjects.RefrigeratorPage;
 import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
-
 
 @TransactionConfiguration(defaultRollback = true)
 @Transactional
@@ -92,7 +93,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I verify Refrigerator data is not synchronised")
   public void verifyRefrigeratorsInDB() throws IOException, SQLException {
-    assertEquals(dbWrapper.getRecordCountInTable("Refrigerators"),0);
+    assertEquals(dbWrapper.getRowsCountFromDB("Refrigerators"), 0);
   }
 
   @And("^I delete refrigerator")
@@ -104,7 +105,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   @And("^I edit refrigerator")
   public void clickEdit() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickShow();
+    refrigeratorPage.clickShowForRefrigerator1();
   }
 
   @When("^I confirm delete$")
@@ -158,7 +159,7 @@ public class ManageRefrigerator extends TestCaseHelper {
   @Then("^I see \"([^\"]*)\" refrigerator icon as \"([^\"]*)\"$")
   public void verifyIndividualRefrigeratorColor(String whichIcon, String color) throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.verifyIndividualRefrigeratorColor(whichIcon, color);
+    refrigeratorPage.verifyRefrigeratorColor(whichIcon, color);
   }
 
   @Then("^I should not see Refrigerator details section$")
@@ -168,7 +169,7 @@ public class ManageRefrigerator extends TestCaseHelper {
 
   @And("^I should see Edit button$")
   public void shouldSeeEditButton() throws IOException, SQLException {
-    assertTrue("Edit button should show up", new RefrigeratorPage(testWebDriver).showButton.isDisplayed());
+    assertTrue("Edit button should show up", RefrigeratorPage.showButtonForRefrigerator1.isDisplayed());
   }
 
   @And("^I verify \"([^\"]*)\" it was working correctly when I left$")
@@ -197,6 +198,7 @@ public class ManageRefrigerator extends TestCaseHelper {
     else
       refrigeratorPage.clickProblemSinceLastVisitNR();
   }
+
   @Then("^I should see Refrigerators screen")
   public void onRefrigeratorScreen() throws IOException, SQLException {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
@@ -208,64 +210,31 @@ public class ManageRefrigerator extends TestCaseHelper {
     RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
     assertEquals(refrigeratorPage.getRefrigeratorTemperateTextFieldValue(), temperature);
     assertEquals(refrigeratorPage.getNotesTextAreaValue(), notes);
-  }
-
-  @Test(groups = {"distribution"}, dataProvider = "Data-Provider-Function")
-  public void testVerifyDuplicateRefrigerator(String userSIC, String password, String deliveryZoneCodeFirst, String deliveryZoneCodeSecond,
-                                              String deliveryZoneNameFirst, String deliveryZoneNameSecond,
-                                              String facilityCodeFirst, String facilityCodeSecond,
-                                              String programFirst, String programSecond, String schedule, String period, Integer totalNumberOfPeriods) throws Exception {
-
-    List<String> rightsList = new ArrayList<String>();
-    rightsList.add("MANAGE_DISTRIBUTION");
-    setupTestDataToInitiateRnRAndDistribution("F10", "F11", true, programFirst, userSIC, "200", rightsList, programSecond, "District1", "Ngorongoro", "Ngorongoro");
-    setupDataForDeliveryZone(true, deliveryZoneCodeFirst, deliveryZoneCodeSecond,
-      deliveryZoneNameFirst, deliveryZoneNameSecond,
-      facilityCodeFirst, facilityCodeSecond,
-      programFirst, programSecond, schedule);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeFirst);
-    dbWrapper.insertRoleAssignmentForDistribution(userSIC, "store in-charge", deliveryZoneCodeSecond);
-
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-    HomePage homePage = loginPage.loginAs(userSIC, password);
-    DistributionPage distributionPage = homePage.navigatePlanDistribution();
-    distributionPage.selectValueFromDeliveryZone(deliveryZoneNameFirst);
-    distributionPage.selectValueFromProgram(programFirst);
-    distributionPage.clickInitiateDistribution();
-    distributionPage.clickRecordData();
-    FacilityListPage facilityListPage = new FacilityListPage(testWebDriver);
-    facilityListPage.selectFacility("F10");
-    RefrigeratorPage refrigeratorPage = new RefrigeratorPage(testWebDriver);
-    refrigeratorPage.clickAddNew();
-    refrigeratorPage.addNewRefrigerator("a", "a", "a");
-    refrigeratorPage.clickAddNew();
-    refrigeratorPage.addNewRefrigerator("a", "a", "a");
-    refrigeratorPage.verifyDuplicateErrorMessage("Duplicate Manufacturer Serial Number");
+    assertEquals(refrigeratorPage.getLowAlarmEventsTextFieldValue(), low);
+    assertEquals(refrigeratorPage.getHighAlarmEventsTextFieldValue(), high);
   }
 
   public void verifyNewRefrigeratorModalWindowExist() {
-    assertTrue("New Refrigerator modal window should show up", new RefrigeratorPage(testWebDriver).newRefrigeratorHeaderOnModal.isDisplayed());
+    assertTrue("New Refrigerator modal window should show up", RefrigeratorPage.newRefrigeratorHeaderOnModal.isDisplayed());
   }
 
-
   public void verifyShouldNotSeeRefrigeratorSection() {
-    assertFalse("Refrigerator details section should not show up", new RefrigeratorPage(testWebDriver).refrigeratorTemperatureTextField.isDisplayed());
+    assertFalse("Refrigerator details section should not show up", RefrigeratorPage.refrigeratorTemperatureTextField.isDisplayed());
   }
 
   public void verifyConfirmationPopUp() {
     testWebDriver.sleep(250);
-    assertTrue("Refrigerator confirmation for delete should show up", new RefrigeratorPage(testWebDriver).deletePopUpHeader.isDisplayed());
+    assertTrue("Refrigerator confirmation for delete should show up", RefrigeratorPage.deletePopUpHeader.isDisplayed());
   }
 
+  @And("^I verify the refrigerator \"([^\"]*)\" present$")
   public void verifyRefrigeratorAdded(String data) {
     String[] refrigeratorDetails = data.split(";");
 
     for (int i = 0; i < refrigeratorDetails.length; i++) {
       assertEquals(testWebDriver.getElementByXpath("//div[@class='list-row ng-scope']/ng-include/form/div[1]/div[" + (i + 2) + "]").getText(), refrigeratorDetails[i]);
     }
-
   }
-
 
   @AfterMethod(groups = "distribution")
   @After
@@ -278,9 +247,7 @@ public class ManageRefrigerator extends TestCaseHelper {
       dbWrapper.closeConnection();
       ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("indexedDB.deleteDatabase('open_lmis');");
     }
-
   }
-
 
   @DataProvider(name = "Data-Provider-Function")
   public Object[][] parameterIntTestProviderPositive() {
@@ -288,7 +255,5 @@ public class ManageRefrigerator extends TestCaseHelper {
       {"storeIncharge", "Admin123", "DZ1", "DZ2", "Delivery Zone First", "Delivery Zone Second",
         "F10", "F11", "VACCINES", "TB", "M", "Period", 14}
     };
-
   }
 }
-

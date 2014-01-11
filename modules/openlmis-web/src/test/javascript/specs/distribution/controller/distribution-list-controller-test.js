@@ -22,13 +22,19 @@ describe('DistributionListController', function () {
   beforeEach(function () {
 
       module(function ($provide) {
-        $provide.value('IndexedDB', {put: function () {
-        }, get: function () {
-        }, delete: function () {
-        }});
+        $provide.value('IndexedDB',
+          {
+            put: function () {
+            },
+            get: function () {
+            },
+            delete: function () {
+            }
+          });
       });
 
       inject(function ($rootScope, $location, $controller, $compile, _$httpBackend_, $q, _messageService_, _distributionService_, _$dialog_) {
+
         rootScope = $rootScope;
         scope = rootScope.$new();
         $httpBackend = _$httpBackend_
@@ -40,24 +46,36 @@ describe('DistributionListController', function () {
         spyOn(distributionService, 'save');
         spyOn(distributionService, 'getReferenceData');
         q = $q;
-
-
         location = $location;
+
         sharedDistribution = {update: function () {
         }};
-        var facilityDistributionData = new FacilityDistributionData({'epiUse': {'productGroups': [
-          {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
-        ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []}, 'facilityVisit': {'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
 
-        spyOn(facilityDistributionData, 'computeStatus');
+        var facilityDistribution1 = new FacilityDistribution(
+          {'epiUse': {'productGroups': [
+            {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': false},
+              'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '02A'}
+          ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
+            'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': '212', 'verifiedBy': {'name': '12', 'title': '12'}, 'confirmedBy': {'title': '1', 'name': '2'}}});
+
+        var facilityDistribution2 = new FacilityDistribution(
+          {status: 'is-complete', 'epiUse': {'productGroups': [
+            {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
+          ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []},
+            'facilityVisit': {id: 1, 'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}});
+
+        spyOn(facilityDistribution1, 'computeStatus');
 
         spyOn(sharedDistribution, 'update');
 
-        distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'}, 'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
-          'facilityDistributionData': {'44': facilityDistributionData,
-            '45': new FacilityDistributionData({status: 'is-complete', 'epiUse': {'productGroups': [
-              {'id': 3, 'code': 'penta', 'name': 'penta', 'reading': {'stockAtFirstOfMonth': {'notRecorded': true}, 'received': {'notRecorded': true}, 'distributed': {'notRecorded': true}, 'loss': {'notRecorded': true}, 'stockAtEndOfMonth': {'notRecorded': true}, 'expirationDate': {'notRecorded': true}}, '$$hashKey': '0B5'}
-            ], 'status': 'is-complete'}, 'refrigerators': {'refrigeratorReadings': []}, 'facilityVisit': {'status': 'is-complete', 'observations': 'e', 'verifiedBy': {'name': 'e', 'title': 'e'}, 'confirmedBy': {'name': 'e', 'title': 'e'}}})}};
+        distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8,
+          'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'},
+          'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
+          'facilityDistributions': {
+            '44': facilityDistribution1,
+            '45': facilityDistribution2
+          }};
+
         sharedDistribution.distributionList = [distribution];
 
         spyOn(messageService, 'get');
@@ -68,6 +86,7 @@ describe('DistributionListController', function () {
         scope.$digest();
         $controller(DistributionListController,
           {$scope: scope, $location: location, SharedDistributions: sharedDistribution, messageService: messageService});
+
         scope.distributionData = distribution;
       })
     }
@@ -90,15 +109,15 @@ describe('DistributionListController', function () {
   it('should refresh shared distributions on load', function () {
     expect(sharedDistribution.update).toHaveBeenCalled();
   });
+
   it('should get facilities for distribution', function () {
     scope.syncDistribution(2);
-
     expect(distributionService.getReferenceData.calls[0].args).toEqual([2, jasmine.any(Function)]);
   });
 
   it('should sync facility data if any complete', function () {
-    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json',
-      distribution.facilityDistributionData[45]).respond(200, {syncStatus: 'Synced'});
+
+    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: true});
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
 
@@ -108,13 +127,14 @@ describe('DistributionListController', function () {
 
     $httpBackend.flush();
 
-    expect(scope.syncResult['is-synced'].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.SYNCED].length).toEqual(1);
   });
 
   it('should update progress bar on success of a sync', function () {
+
     expect(scope.progressValue).toBeUndefined();
-    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json',
-      distribution.facilityDistributionData[45]).respond(200);
+
+    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200);
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
 
@@ -128,10 +148,10 @@ describe('DistributionListController', function () {
   });
 
   it('should save synced status for facility data on success', function () {
-    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json',
-      distribution.facilityDistributionData[45]).respond(200);
+    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200);
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
+
     syncFacilitiesFunction({facilities: [
       {id: 45, code: 'abcd', name: 'xyz'}
     ]});
@@ -142,18 +162,16 @@ describe('DistributionListController', function () {
   });
 
   it('should populate synced, already synced, failed to sync facilities ', function () {
-    var distribution = {facilityDistributionData: {44: {status: 'is-complete'}, 46: {status: 'is-complete'}, 45: {status: 'is-complete'}}}
+    var distribution = {facilityDistributions: {44: {status: DistributionStatus.COMPLETE}, 46: {status: DistributionStatus.COMPLETE}, 45: {status: DistributionStatus.COMPLETE}}}
 
-    $httpBackend.when('PUT', '/distributions/1/facilities/44.json',
-      distribution.facilityDistributionData[44]).respond(200, {syncStatus : 'AlreadySynced'});
-    $httpBackend.when('PUT', '/distributions/1/facilities/46.json',
-      distribution.facilityDistributionData[46]).respond(500);
-    $httpBackend.when('PUT', '/distributions/1/facilities/45.json',
-      distribution.facilityDistributionData[45]).respond(200, {syncStatus : 'Synced'});
+    $httpBackend.when('PUT', '/distributions/1/facilities/44.json', distribution.facilityDistributions[44]).respond(200, {syncStatus: false});
+    $httpBackend.when('PUT', '/distributions/1/facilities/46.json', distribution.facilityDistributions[46]).respond(500);
+    $httpBackend.when('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: true});
 
     scope.distributionData = distribution;
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
+
     syncFacilitiesFunction({facilities: [
       {id: 45, code: 'abcd', name: 'xyz'},
       {id: 44, code: 'abcd', name: 'xyz'},
@@ -164,14 +182,18 @@ describe('DistributionListController', function () {
 
     scope.$apply();
 
-    expect(scope.syncResult['is-complete'].length).toEqual(1);
-    expect(scope.syncResult['is-synced'].length).toEqual(1);
-    expect(scope.syncResult['is-duplicate'].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.COMPLETE].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.SYNCED].length).toEqual(1);
+    expect(scope.syncResult[DistributionStatus.DUPLICATE].length).toEqual(1);
   });
+
   it('should show message if no facility available for sync ', function () {
-    distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'}, 'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true}, 'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1}, 'status': 'INITIATED', 'zpp': '8_5_9',
-      'facilityDistributionData': {'44': new FacilityDistributionData({status: 'is-synced'}),
-        '45': new FacilityDistributionData({status: 'is-synced'})}};
+    distribution = {'id': 1, 'createdBy': 8, 'modifiedBy': 8, 'deliveryZone': {'id': 8, 'code': 'Sul', 'name': 'Sul Province'},
+      'program': {'id': 5, 'code': 'VACCINES', 'name': 'VACCINES', 'description': 'VACCINES', 'active': true, 'templateConfigured': false, 'regimenTemplateConfigured': false, 'push': true},
+      'period': {'id': 9, 'scheduleId': 2, 'name': 'June2013', 'description': 'June2013', 'startDate': 1370025000000, 'endDate': 1372616999000, 'numberOfMonths': 1},
+      'status': 'INITIATED', 'zpp': '8_5_9',
+      'facilityDistributions': {'44': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}}),
+        '45': new FacilityDistribution({status: DistributionStatus.SYNCED, facilityVisit: {id: 1}})}};
 
     scope.sharedDistributions.distributionList = [distribution];
 
@@ -184,8 +206,7 @@ describe('DistributionListController', function () {
 
   it('should mark facility data as duplicate if already synced', function () {
 
-    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json',
-      distribution.facilityDistributionData[45]).respond(200, {syncStatus: 'AlreadySynced'});
+    $httpBackend.expect('PUT', '/distributions/1/facilities/45.json', distribution.facilityDistributions[45]).respond(200, {syncStatus: false});
 
     var syncFacilitiesFunction = getSyncFacilitiesFunction();
     syncFacilitiesFunction({facilities: [
@@ -194,19 +215,18 @@ describe('DistributionListController', function () {
 
     $httpBackend.flush();
 
-    expect(distribution.facilityDistributionData[45].status).toEqual('is-duplicate');
+    expect(distribution.facilityDistributions[45].status).toEqual(DistributionStatus.DUPLICATE);
 
     scope.$apply();
 
-    expect(scope.syncResult['is-duplicate'][0].facilityDistributionData).toEqual(distribution.facilityDistributionData[45]);
+    expect(scope.syncResult[DistributionStatus.DUPLICATE][0].facilityDistribution).toEqual(distribution.facilityDistributions[45]);
     expect(distributionService.save).toHaveBeenCalledWith(distribution);
   });
 
   it('should ask before deleting a distribution', function () {
     scope.deleteDistribution(1);
 
-    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog,
-      messageService);
+    expect(OpenLmisDialog.newDialog).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function), dialog);
   });
 
   it('should delete distribution on click of OK', function () {

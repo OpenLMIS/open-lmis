@@ -8,41 +8,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-distributionModule.service('distributionService', function ($dialog, messageService, SharedDistributions, IndexedDB) {
+distributionModule.service('distributionService', function ($dialog, SharedDistributions, IndexedDB) {
 
   var _this = this;
-
-  function prepareDistribution(distribution, referenceData) {
-    distribution.facilityDistributionData = {};
-    $(referenceData.facilities).each(function (index, facility) {
-
-      var productGroups = [];
-      $(facility.supportedPrograms[0].programProducts).each(function (i, programProduct) {
-        if (!programProduct.active || !programProduct.product.active) return;
-        if (!programProduct.product.productGroup) return;
-        if (_.findWhere(productGroups, {id: programProduct.product.productGroup.id})) return;
-
-        productGroups.push(programProduct.product.productGroup);
-      });
-
-      var refrigeratorReadings = [];
-      $(_.where(referenceData.refrigerators, {facilityId: facility.id})).each(function (i, refrigerator) {
-        refrigeratorReadings.push({'refrigerator': refrigerator});
-      });
-
-      distribution.facilityDistributionData[facility.id] = {};
-      distribution.facilityDistributionData[facility.id].refrigerators = {refrigeratorReadings: refrigeratorReadings};
-      distribution.facilityDistributionData[facility.id].epiUse = {productGroups: productGroups};
-    });
-
-    return distribution;
-  }
 
   this.applyNR = function (applyFunc) {
     var dialogOpts = {
       id: "distributionInitiated",
-      header: messageService.get('label.apply.nr.all'),
-      body: messageService.get('message.apply.nr')
+      header: 'label.apply.nr.all',
+      body: 'message.apply.nr'
     };
 
     var callback = function () {
@@ -54,7 +28,7 @@ distributionModule.service('distributionService', function ($dialog, messageServ
       };
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog);
   };
 
   this.isCached = function (distribution) {
@@ -70,8 +44,6 @@ distributionModule.service('distributionService', function ($dialog, messageServ
   };
 
   this.put = function (distribution, referenceData) {
-    distribution = prepareDistribution(distribution, referenceData);
-
     IndexedDB.put('distributions', distribution, function () {
     }, {}, function () {
       SharedDistributions.update();

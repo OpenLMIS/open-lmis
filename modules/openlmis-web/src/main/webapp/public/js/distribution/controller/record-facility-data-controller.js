@@ -15,6 +15,9 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
 
   IndexedDB.get('distributionReferenceData', utils.parseIntWithBaseTen($routeParams.distribution), function (event) {
     var facilities = event.target.result.facilities;
+    facilities = facilities.filter(function (facility) {
+      return (facility.id in $scope.distribution.facilityDistributions);
+    });
     $scope.zoneFacilityMap = _.groupBy(facilities, function (facility) {
       return facility.geographicZone.code;
     });
@@ -27,8 +30,8 @@ function RecordFacilityDataController($scope, $location, $routeParams, IndexedDB
   $scope.format = function (dropDownObj) {
     if (dropDownObj.element[0].value) {
       var facilityId = utils.parseIntWithBaseTen(dropDownObj.element[0].value);
-      return "<div class='" + $scope.distribution.facilityDistributionData[facilityId].computeStatus() + "'>" +
-        "<span id="+ facilityId +" class='status-icon'></span>" + dropDownObj.text +
+      return "<div class='" + $scope.distribution.facilityDistributions[facilityId].computeStatus() + "'>" +
+        "<span id=" + facilityId + " class='status-icon'></span>" + dropDownObj.text +
         "</div>";
     } else {
       return dropDownObj.text;

@@ -19,6 +19,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.FulfillmentRoleAssignment;
+import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
@@ -31,10 +32,15 @@ public interface FulfillmentRoleAssignmentMapper {
   List<FulfillmentRoleAssignment> getFulfillmentRolesForUser(Long userId);
 
   @Insert({"INSERT INTO fulfillment_role_assignments(userId, facilityId, roleId, createdBy, modifiedBy) " +
-          "VALUES(#{user.id}, #{facilityId}, #{roleId}, #{user.modifiedBy}, #{user.modifiedBy})"})
+    "VALUES(#{user.id}, #{facilityId}, #{roleId}, #{user.modifiedBy}, #{user.modifiedBy})"})
   void insertFulfillmentRole(@Param("user") User user, @Param("facilityId") Long facilityId,
                              @Param("roleId") Long roleId);
 
   @Delete({"DELETE FROM fulfillment_role_assignments WHERE userId = #{id}"})
   void deleteAllFulfillmentRoles(User user);
+
+  @Select({"SELECT userId, facilityId, array_agg(FRA.roleId) as roleAsString FROM fulfillment_role_assignments FRA",
+    "INNER JOIN role_rights RR ON RR.rightName = #{right}",
+    "WHERE userId = #{userId} GROUP BY userId, facilityId"})
+  List<FulfillmentRoleAssignment> getRolesWithRight(@Param("userId") Long userId, @Param("right") Right right);
 }

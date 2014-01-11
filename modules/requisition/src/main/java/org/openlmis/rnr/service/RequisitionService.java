@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -82,6 +83,8 @@ public class RequisitionService {
   private CalculationService calculationService;
   @Autowired
   private DbMapper dbMapper;
+  @Autowired
+  private BudgetLineItemService budgetLineItemService;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -101,10 +104,10 @@ public class RequisitionService {
       throw new DataException("error.rnr.template.not.defined");
     }
 
+    program = programService.getById(program.getId());
     ProcessingPeriod period = findPeriod(facility, program, emergency);
 
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts;
-    facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
       facility.getId(), program.getId());
 
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
@@ -112,6 +115,7 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
+    populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
@@ -120,6 +124,14 @@ public class RequisitionService {
     requisition = requisitionRepository.getById(requisition.getId());
 
     return fillSupportingInfo(requisition);
+  }
+
+  private void populateAllocatedBudget(Rnr requisition) {
+    if (requisition.isBudgetingApplicable()) {
+      BudgetLineItem budgetLineItem = budgetLineItemService.get(requisition.getFacility().getId(), requisition.getProgram().getId(), requisition.getPeriod().getId());
+      BigDecimal allocatedBudget = (budgetLineItem == null) ? null : budgetLineItem.getAllocatedBudget();
+      requisition.setAllocatedBudget(allocatedBudget);
+    }
   }
 
   @Transactional

@@ -39,9 +39,9 @@ import static org.openlmis.core.builder.ProgramProductBuilder.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ProductServiceTest {
 
-
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
+
   @Mock
   private ProductCategoryService categoryService;
 
@@ -57,20 +57,30 @@ public class ProductServiceTest {
   @InjectMocks
   private ProductService productService;
 
-
   @Test
   public void shouldStoreProduct() throws Exception {
     Product product = new Product();
+    product.setPackSize(5);
 
     productService.save(product);
 
     verify(productRepository).insert(product);
+  }
 
+  @Test
+  public void shouldValidateProductBeforeSaveThrowExceptionIfPackSizeIsZero() throws Exception {
+    Product spyProduct = spy(new Product());
+    doNothing().when(spyProduct).validate();
+
+    productService.save(spyProduct);
+
+    verify(spyProduct).validate();
   }
 
   @Test
   public void shouldThrowExceptionIfCategoryDoesNotExist() {
     Product product = new Product();
+    product.setPackSize(5);
     ProductCategory category = new ProductCategory();
     category.setCode("Invalid Code");
     product.setCategory(category);
@@ -86,6 +96,7 @@ public class ProductServiceTest {
   public void shouldInsertProductIfNotPresent() throws Exception {
     Product product = new Product();
     product.setCode("P1");
+    product.setPackSize(5);
 
     when(productRepository.getByCode("P1")).thenReturn(null);
 
@@ -99,6 +110,7 @@ public class ProductServiceTest {
     Product product = new Product();
     product.setId(2L);
     product.setCode("proCode");
+    product.setPackSize(5);
 
     List<ProgramProduct> programProducts = new ArrayList<>();
     when(programProductService.getByProductCode("proCode")).thenReturn(programProducts);
@@ -115,6 +127,7 @@ public class ProductServiceTest {
     product.setActive(false);
     product.setCode(productCode);
     product.setId(2L);
+    product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
     List programProductList = new ArrayList() {{
@@ -134,6 +147,7 @@ public class ProductServiceTest {
     product.setActive(true);
     product.setCode(productCode);
     product.setId(2L);
+    product.setPackSize(5);
 
     final ProgramProduct tbProduct = make(a(defaultProgramProduct, with(programCode, "TB"), with(active, true), with(productActive, false)));
     final ProgramProduct hivProduct = make(a(defaultProgramProduct, with(programCode, "HIV"), with(active, true), with(productActive, false)));
@@ -155,6 +169,7 @@ public class ProductServiceTest {
     Product product = new Product();
     product.setActive(true);
     product.setCode(productCode);
+    product.setPackSize(5);
 
     productService.save(product);
 
@@ -169,6 +184,7 @@ public class ProductServiceTest {
     product.setActive(false);
     product.setCode(productCode);
     product.setId(2L);
+    product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, true)));
     List programProductList = new ArrayList() {{
@@ -188,6 +204,7 @@ public class ProductServiceTest {
     product.setActive(true);
     product.setCode(productCode);
     product.setId(2L);
+    product.setPackSize(5);
 
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, false), with(productActive, false)));
     List programProductList = new ArrayList() {{
@@ -199,4 +216,5 @@ public class ProductServiceTest {
 
     verify(programService, never()).setFeedSendFlag(any(Program.class), anyBoolean());
   }
+
 }

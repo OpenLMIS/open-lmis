@@ -12,9 +12,10 @@
 
 package org.openlmis.functional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openlmis.UiUtils.HttpClient;
 import org.openlmis.UiUtils.ResponseEntity;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -33,7 +34,7 @@ public class RequisitionStatusFeed extends JsonUtility {
   public static final String FULL_JSON_POD_TXT_FILE_NAME = "ReportJsonPOD.txt";
   public static final String URL = "http://localhost:9091/feeds/requisition-status/";
 
-  @BeforeMethod(groups = {"webservice","webserviceSmoke"})
+  @BeforeMethod(groups = {"webservice", "webserviceSmoke"})
   public void setUp() throws Exception {
     super.setup();
     super.setupTestData(false);
@@ -42,10 +43,10 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.insertProcessingPeriod("current", "current period", "2013-01-30", "2016-01-30", 1, "M");
     dbWrapper.insertRoleAssignmentForSupervisoryNodeForProgramId1("700", "store in-charge", "N1");
     dbWrapper.insertFulfilmentRoleAssignment("commTrack", "store in-charge", "F10");
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
   }
 
-  @AfterMethod(groups = {"webservice","webserviceSmoke"})
+  @AfterMethod(groups = {"webservice", "webserviceSmoke"})
   public void tearDown() throws IOException, SQLException {
     dbWrapper.deleteData();
     dbWrapper.closeConnection();
@@ -55,12 +56,12 @@ public class RequisitionStatusFeed extends JsonUtility {
   public void testRequisitionStatusUsingCommTrackUserForExportOrderFlagFalse() throws Exception {
     HttpClient client = new HttpClient();
     client.createContext();
-    submitRnRThroughApi("V10","HIV", "P10",1,10,1,0,0,2);
-    Long id = (long)dbWrapper.getMaxRnrID();
+    submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
+    Long id = (long) dbWrapper.getMaxRnrID();
 
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
-
+    assertEquals(StringUtils.countMatches(responseEntity.getResponse(), ":"), 41);
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
     checkRequisitionStatusOnFeed("INITIATED", feedJSONList.get(0), id);
     checkRequisitionStatusOnFeed("SUBMITTED", feedJSONList.get(1), id);
@@ -69,9 +70,9 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(false, "F10");
 
     approveRequisition(id, 65);
-    dbWrapper.updateRestrictLogin("commTrack",false);
+    dbWrapper.updateRestrictLogin("commTrack", false);
     convertToOrder("commTrack", "Admin123");
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
 
@@ -86,11 +87,11 @@ public class RequisitionStatusFeed extends JsonUtility {
 
     dbWrapper.assignRight("store in-charge", "MANAGE_POD");
 
-    POD PODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, POD.class);
-    PODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
-    PODFromJson.getPodLineItems().get(0).setProductCode("P10");
+    OrderPOD OrderPODFromJson = JsonUtility.readObjectFromFile(FULL_JSON_POD_TXT_FILE_NAME, OrderPOD.class);
+    OrderPODFromJson.getPodLineItems().get(0).setQuantityReceived(65);
+    OrderPODFromJson.getPodLineItems().get(0).setProductCode("P10");
 
-    client.SendJSON(getJsonStringFor(PODFromJson),
+    client.SendJSON(getJsonStringFor(OrderPODFromJson),
       format(POD_URL, id),
       "POST",
       "commTrack",
@@ -107,8 +108,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    submitRnRThroughApi("V10","HIV", "P10",1,10,1,0,0,2);
-    Long id = (long)dbWrapper.getMaxRnrID();
+    submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
+    Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -118,9 +119,9 @@ public class RequisitionStatusFeed extends JsonUtility {
 
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     approveRequisition(id, 65);
-    dbWrapper.updateRestrictLogin("commTrack",false);
+    dbWrapper.updateRestrictLogin("commTrack", false);
     convertToOrder("commTrack", "Admin123");
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -144,8 +145,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     HttpClient client = new HttpClient();
     client.createContext();
 
-    submitRnRThroughApi("V10","HIV", "P10",1,10,1,0,0,2);
-    Long id = (long)dbWrapper.getMaxRnrID();
+    submitRnRThroughApi("V10", "HIV", "P10", 1, 10, 1, 0, 0, 2);
+    Long id = (long) dbWrapper.getMaxRnrID();
     ResponseEntity responseEntity = client.SendJSON("", URL + "recent", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     List<String> feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -156,9 +157,9 @@ public class RequisitionStatusFeed extends JsonUtility {
     dbWrapper.setExportOrdersFlagInSupplyLinesTable(true, "F10");
     dbWrapper.enterValidDetailsInFacilityFtpDetailsTable("F10");
     approveRequisition(id, 65);
-    dbWrapper.updateRestrictLogin("commTrack",false);
+    dbWrapper.updateRestrictLogin("commTrack", false);
     convertToOrder("commTrack", "Admin123");
-    dbWrapper.updateRestrictLogin("commTrack",true);
+    dbWrapper.updateRestrictLogin("commTrack", true);
     responseEntity = client.SendJSON("", URL + "1", "GET", "", "");
     assertEquals(200, responseEntity.getStatus());
     feedJSONList = XmlUtils.getNodeValues(responseEntity.getResponse(), "content");
@@ -185,6 +186,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringStartDate\":\"30-01-2013\""));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringEndDate\":\"30-01-2016\""));
     assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":"));
     assertFalse("Response entity : " + feedSting, feedSting.contains("\"orderID\""));
   }
@@ -195,6 +198,8 @@ public class RequisitionStatusFeed extends JsonUtility {
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"emergency\":false"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"startDate\":1359484200000"));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"endDate\":1454178599000"));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringStartDate\":\"30-01-2013\""));
+    assertTrue("Response entity : " + feedSting, feedSting.contains("\"stringEndDate\":\"30-01-2016\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderStatus\":\"" + orderStatus + "\""));
     assertTrue("Response entity : " + feedSting, feedSting.contains("\"orderId\":" + id));
   }

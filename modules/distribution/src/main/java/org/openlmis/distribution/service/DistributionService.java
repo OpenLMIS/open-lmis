@@ -13,32 +13,37 @@
 package org.openlmis.distribution.service;
 
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.FacilityDistribution;
 import org.openlmis.distribution.repository.DistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
 public class DistributionService {
 
   @Autowired
-  FacilityVisitService facilityVisitService;
+  FacilityDistributionService facilityDistributionService;
 
   @Autowired
   DistributionRepository repository;
 
+  @Transactional
   public Distribution create(Distribution distribution) {
-    return repository.create(distribution);
+    Distribution savedDistribution = repository.create(distribution);
+    Map<Long, FacilityDistribution> facilityDistributions = facilityDistributionService.createFor(distribution);
+    savedDistribution.setFacilityDistributions(facilityDistributions);
+    return savedDistribution;
+  }
+
+  @Transactional
+  public boolean sync(FacilityDistribution facilityDistribution) {
+    return facilityDistributionService.save(facilityDistribution);
   }
 
   public Distribution get(Distribution distribution) {
     return repository.get(distribution);
-  }
-
-  @Transactional
-  //TODO return boolean or status object
-  public String sync(FacilityDistributionData facilityDistributionData) {
-    return facilityVisitService.save(facilityDistributionData.getFacilityVisit());
   }
 }

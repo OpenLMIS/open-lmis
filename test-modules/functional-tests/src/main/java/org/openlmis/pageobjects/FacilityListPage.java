@@ -122,7 +122,7 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(geoZoneSecond, testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[2]/div").getText());
   }
 
-  public void selectFacility(String facilityCode) {
+  public RefrigeratorPage selectFacility(String facilityCode) {
     clickFacilityListDropDown();
     testWebDriver.waitForElementToAppear(facilityListTextField);
     facilityListTextField.clear();
@@ -130,6 +130,8 @@ public class FacilityListPage extends RequisitionPage {
     testWebDriver.waitForElementToAppear(facilityListSelectField);
     facilityListSelectField.click();
     testWebDriver.sleep(250);
+
+    return new RefrigeratorPage(testWebDriver);
   }
 
   public void clickFacilityListDropDown() {
@@ -157,19 +159,19 @@ public class FacilityListPage extends RequisitionPage {
     if (color.toLowerCase().equals("RED".toLowerCase()))
       color = "rgba(203, 64, 64, 1)";
     else if (color.toLowerCase().equals("GREEN".toLowerCase()))
-      color = "rgba(82, 168, 30, 1)";
+      color = "rgba(69, 182, 0, 1)";
     else if (color.toLowerCase().equals("AMBER".toLowerCase()))
       color = "rgba(240, 165, 19, 1)";
     else if (color.toLowerCase().equals("Blue".toLowerCase()))
-      color = "rgba(75, 169, 253, 1)";
+      color = "rgba(22, 131, 230, 1)";
 
     if (whichIcon.toLowerCase().equals("Overall".toLowerCase()))
-      assertEquals(facilityOverAllIndicator.getCssValue("background-color"),color);
+      assertEquals(facilityOverAllIndicator.getCssValue("background-color"), color);
     else if (whichIcon.toLowerCase().equals("Individual".toLowerCase())) {
       clickFacilityListDropDown();
       testWebDriver.waitForElementToAppear(facilityListTextField);
       testWebDriver.getElementByXpath("//*[@id='select2-drop']/ul/li[1]/div").click();
-      assertEquals(firstFacilityIndicator.getCssValue("background-color"),color);
+      assertEquals(firstFacilityIndicator.getCssValue("background-color"), color);
       escapeFacilitySearchInput();
     }
   }
@@ -182,13 +184,13 @@ public class FacilityListPage extends RequisitionPage {
     assertEquals(legendNotStartedText.getText(), "Not started");
     assertEquals(legendPartiallyCompletedText.getText(), "Partially completed");
     assertEquals(legendCompletedText.getText(), "Completed");
-    assertEquals(legendSynchronizedText.getText(), "Synchronized");
-    assertEquals(legendCannotSynchronizedText.getText(), "Cannot synchronize");
+    assertEquals(legendSynchronizedText.getText(), "Synced");
+    assertEquals(legendCannotSynchronizedText.getText(), "Cannot sync");
 
     assertEquals(legendNotStartedIcon.getCssValue("background-color"), "rgba(203, 64, 64, 1)");
     assertEquals(legendPartiallyCompletedIcon.getCssValue("background-color"), "rgba(240, 165, 19, 1)");
-    assertEquals(legendCompletedIcon.getCssValue("background-color"), "rgba(82, 168, 30, 1)");
-    assertEquals(legendSynchronizedIcon.getCssValue("background-color"), "rgba(75, 169, 253, 1)");
+    assertEquals(legendCompletedIcon.getCssValue("background-color"), "rgba(69, 182, 0, 1)");
+    assertEquals(legendSynchronizedIcon.getCssValue("background-color"), "rgba(22, 131, 230, 1)");
     assertEquals(legendCannotSynchronizedIcon.getCssValue("background-color"), "rgba(124, 124, 124, 1)");
   }
 }

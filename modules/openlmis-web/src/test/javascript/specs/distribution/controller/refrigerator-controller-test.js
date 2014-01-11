@@ -29,12 +29,14 @@ describe('RefrigeratorController', function () {
     distributionService = {};
 
     distribution = new Distribution({
-      facilityDistributionData: {
+      facilityDistributions: {
         1: { refrigerators: {
-          refrigeratorReadings: [
+          readings: [
             {refrigerator: {serialNumber: "abc"}},
             {refrigerator: {serialNumber: "XYZ"}}
           ]
+        }, facilityVisit: {
+          id: 1
         }
         }
       }
@@ -62,13 +64,13 @@ describe('RefrigeratorController', function () {
   });
 
   it('should set duplicate serial number if serial number already exists', function () {
-    scope.newRefrigerator = {serialNumber: "Abc"};
+    scope.newRefrigeratorReading = {refrigerator: {serialNumber: "Abc"}};
     scope.addRefrigeratorToStore();
     expect(scope.isDuplicateSerialNumber).toBeTruthy();
   });
 
   it('should add new refrigerator if serial number does not exist', function () {
-    scope.newRefrigerator = {serialNumber: "Abcc"};
+    scope.newRefrigeratorReading = {refrigerator: {serialNumber: "Abcc"}};
     spyOn(IndexedDB, 'put').andCallThrough();
 
     scope.addRefrigeratorToStore();
@@ -76,7 +78,7 @@ describe('RefrigeratorController', function () {
     expect(scope.addRefrigeratorModal).toBeUndefined();
     expect(scope.isDuplicateSerialNumber).toBeUndefined();
     expect(scope.isDuplicateSerialNumber).toBeFalsy();
-    expect(scope.distribution.facilityDistributionData[1].refrigerators.refrigeratorReadings.length).toEqual(3);
+    expect(scope.distribution.facilityDistributions[1].refrigerators.readings.length).toEqual(3);
     expect(IndexedDB.put).toHaveBeenCalledWith('distributions', scope.distribution);
   });
 

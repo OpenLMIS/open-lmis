@@ -16,19 +16,20 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_NULL;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonSerialize(include = NON_NULL)
+@JsonSerialize(include = NON_EMPTY)
 public class Program extends BaseModel {
 
   private String code;
   private String name;
   private String description;
   private Boolean active;
+  private Boolean budgetingApplies;
   private boolean templateConfigured;
   private boolean regimenTemplateConfigured;
   private boolean push;
@@ -53,6 +54,8 @@ public class Program extends BaseModel {
   }
 
   public Program basicInformation() {
-    return new Program(id, name, code);
+    Program program = new Program(id, name, code);
+    program.setBudgetingApplies(budgetingApplies);
+    return program;
   }
 }

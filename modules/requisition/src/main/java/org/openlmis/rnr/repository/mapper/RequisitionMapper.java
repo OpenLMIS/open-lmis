@@ -22,8 +22,8 @@ import java.util.Map;
 @Repository
 public interface RequisitionMapper {
 
-  @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, emergency, modifiedBy, createdBy) " +
-      "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{emergency}, #{modifiedBy}, #{createdBy})")
+  @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, emergency, allocatedBudget, modifiedBy, createdBy) " +
+    "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Rnr requisition);
 

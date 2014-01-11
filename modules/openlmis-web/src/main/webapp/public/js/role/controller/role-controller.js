@@ -8,8 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
-                        messageService) {
+function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog) {
   $scope.$parent.error = "";
   $scope.$parent.message = "";
   $scope.role = {rights: []};
@@ -136,10 +135,10 @@ function RoleController($scope, $routeParams, $location, Roles, Rights, $dialog,
       $scope.error = "";
       var options = {
         id: "roleTypeDialog",
-        header: messageService.get("header.change.roleType"),
-        body: messageService.get("confirm.roleType.change")
+        header: "header.change.roleType",
+        body: "confirm.roleType.change"
       };
-      OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
+      OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
     }
   };
 

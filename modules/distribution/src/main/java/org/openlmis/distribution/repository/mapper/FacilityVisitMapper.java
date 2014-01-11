@@ -16,11 +16,13 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.distribution.domain.FacilityVisit;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FacilityVisitMapper {
 
-  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, confirmedByName, confirmedByTitle, verifiedByName, verifiedByTitle, observations, createdBy)",
-    "VALUES (#{distributionId}, #{facilityId}, #{confirmedBy.name}, #{confirmedBy.title}, #{verifiedBy.name}, #{verifiedBy.title}, #{observations}, #{createdBy})"})
+  @Insert({"INSERT INTO facility_visits (distributionId, facilityId, confirmedByName, confirmedByTitle, verifiedByName, verifiedByTitle, observations, synced, createdBy, modifiedBy)",
+    "VALUES (#{distributionId}, #{facilityId}, #{confirmedBy.name}, #{confirmedBy.title}, #{verifiedBy.name}, #{verifiedBy.title}, #{observations}, #{synced}, #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   public void insert(FacilityVisit facilityVisit);
 
@@ -31,6 +33,18 @@ public interface FacilityVisitMapper {
     @Result(property = "confirmedBy.name", column = "confirmedByName"),
     @Result(property = "confirmedBy.title", column = "confirmedByTitle")
   })
-  FacilityVisit getByDistributionAndFacility(@Param(value = "distributionId") Long distributionId,
-                                                  @Param(value = "facilityId") Long facilityId);
+  public FacilityVisit getBy(@Param(value = "facilityId") Long facilityId, @Param(value = "distributionId") Long distributionId);
+
+  @Update({"UPDATE facility_visits SET confirmedByName = #{confirmedBy.name}, confirmedByTitle = #{confirmedBy.title}, ",
+    "verifiedByName = #{verifiedBy.name}, verifiedByTitle = #{verifiedBy.title}, " +
+      "observations = #{observations}, synced = #{synced}, modifiedBy = #{modifiedBy} WHERE id = #{id}"})
+  public void update(FacilityVisit facilityVisit);
+
+
+  @Select({"SELECT * FROM facility_visits WHERE id = #{id}"})
+  public FacilityVisit getById(Long id);
+
+
+  @Select({"SELECT * FROM facility_visits WHERE distributionId = #{distributionId} AND synced = false"})
+  List<FacilityVisit> getUnSyncedFacilities(Long distributionId);
 }

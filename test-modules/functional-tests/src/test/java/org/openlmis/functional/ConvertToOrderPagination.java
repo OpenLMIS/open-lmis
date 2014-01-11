@@ -25,7 +25,6 @@ import org.openlmis.pageobjects.edi.ConvertOrderPage;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
 
 import java.io.IOException;
@@ -40,7 +39,6 @@ import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
 public class ConvertToOrderPagination extends TestCaseHelper {
 
-
   @BeforeMethod(groups = "requisition")
   @Before
   public void setUp() throws Exception {
@@ -51,7 +49,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   public void haveRequisitionsToBeConvertedToOrder(String requisitions) throws Exception {
     String userSIC = "storeIncharge";
     setUpData("HIV", userSIC);
-    dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true);
+    dbWrapper.insertRequisitions(Integer.parseInt(requisitions), "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.insertApprovedQuantity(10);
@@ -66,7 +64,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     String url = ((JavascriptExecutor) TestWebDriver.getDriver()).executeScript("return window.location.href").toString();
     url = url.substring(0, url.length() - 1) + page;
     testWebDriver.getUrl(url);
-    selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
+    new ConvertOrderPage(testWebDriver).selectRequisitionToBeConvertedToOrder(Integer.parseInt(numberOfRequisitions));
   }
 
   @And("^I access convert to order$")
@@ -86,8 +84,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldConvertOnlyCurrentPageRequisitions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(50, "MALARIA", true);
-    dbWrapper.insertRequisitions(1, "TB", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
+    dbWrapper.insertRequisitions(1, "TB", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
@@ -108,9 +106,9 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     verifyPreviousAndFirstLinksEnabled();
     verifyNextAndLastLinksDisabled();
 
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     clickPageNumberLink(1);
-    selectRequisitionToBeConvertedToOrder(1);
+    convertOrderPage.selectRequisitionToBeConvertedToOrder(1);
     convertToOrder(convertOrderPage);
 
     verifyNumberOfPageLinks(49, 50);
@@ -122,14 +120,14 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   }
 
   private void clickPageNumberLink(int pageNumber) {
-    testWebDriver.getElementByXpath("//a[contains(text(), '" + pageNumber + "') and @class='ng-binding']").click();
+    testWebDriver.getElementById(String.valueOf(pageNumber)).click();
     testWebDriver.sleep(2000);
   }
 
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPagination(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(49, "MALARIA", true);
+    dbWrapper.insertRequisitions(49, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
@@ -137,7 +135,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     HomePage homePage = loginPage.loginAs(userSIC, password);
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(49, 50);
-    dbWrapper.insertRequisitions(2, "HIV", true);
+    dbWrapper.insertRequisitions(2, "HIV", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
@@ -149,7 +147,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifyIntroductionOfPaginationForBoundaryValue(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(50, "MALARIA", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
     dbWrapper.insertFulfilmentRoleAssignment("storeIncharge", "store in-charge", "F10");
@@ -158,7 +156,7 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     homePage.navigateConvertToOrder();
     verifyNumberOfPageLinks(50, 50);
     verifyPageLinkNotPresent(2);
-    dbWrapper.insertRequisitions(1, "HIV", true);
+    dbWrapper.insertRequisitions(1, "HIV", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "HIV");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "HIV");
     homePage.navigateHomePage();
@@ -170,8 +168,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearch(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(55, "MALARIA", true);
-    dbWrapper.insertRequisitions(40, "TB", true);
+    dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
+    dbWrapper.insertRequisitions(40, "TB", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
@@ -193,8 +191,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void shouldVerifySearchWithDifferentOptions(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(55, "MALARIA", true);
-    dbWrapper.insertRequisitions(40, "TB", false);
+    dbWrapper.insertRequisitions(55, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
+    dbWrapper.insertRequisitions(40, "TB", false, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");
@@ -225,13 +223,6 @@ public class ConvertToOrderPagination extends TestCaseHelper {
     dbWrapper.insertProcessingPeriod("Period2", "second period", "2013-01-16", "2013-01-30", 1, "M");
     setupRequisitionGroupData("RG1", "RG2", "N1", "N2", "F10", "F11");
     dbWrapper.insertSupplyLines("N1", program, "F10", true);
-  }
-
-  public void selectRequisitionToBeConvertedToOrder(int whichRequisition) {
-    testWebDriver.waitForPageToLoad();
-    List<WebElement> x = testWebDriver.getElementsByXpath("//input[@class='ngSelectionCheckbox']");
-    testWebDriver.waitForElementToAppear(x.get(whichRequisition - 1));
-    x.get(whichRequisition - 1).click();
   }
 
 
@@ -285,8 +276,8 @@ public class ConvertToOrderPagination extends TestCaseHelper {
   @Test(groups = {"requisition"}, dataProvider = "Data-Provider-Function-Positive")
   public void VerifyConvertToOrderAccessOnRequisition(String program, String userSIC, String password) throws Exception {
     setUpData(program, userSIC);
-    dbWrapper.insertRequisitions(50, "MALARIA", true);
-    dbWrapper.insertRequisitions(1, "TB", true);
+    dbWrapper.insertRequisitions(50, "MALARIA", true, "2012-12-01", "2015-12-01", "F10");
+    dbWrapper.insertRequisitions(1, "TB", true, "2012-12-01", "2015-12-01", "F10");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "MALARIA");
     dbWrapper.updateRequisitionStatus("SUBMITTED", userSIC, "TB");
     dbWrapper.updateRequisitionStatus("APPROVED", userSIC, "MALARIA");

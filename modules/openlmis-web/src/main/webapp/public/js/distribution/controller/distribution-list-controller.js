@@ -8,10 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see http://www.gnu.org/licenses. For additional information contact info@OpenLMIS.org. 
  */
 
-function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, messageService, distributionService, $dialog) {
-  $scope.COMPLETE = 'is-complete';
-  $scope.SYNCED = 'is-synced';
-  $scope.DUPLICATE = 'is-duplicate';
+function DistributionListController($scope, SharedDistributions, SyncFacilityDistributionData, $q, distributionService, $dialog) {
+  angular.extend($scope, DistributionStatus);
   var SYNC_COMPLETE = 'label.distribution.synchronization.complete';
   var SYNC_IN_PROGRESS = 'label.distribution.synchronization.progress';
   var totalFacilityCount;
@@ -21,7 +19,6 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
   SharedDistributions.update();
 
   $scope.sharedDistributions = SharedDistributions;
-
 
   $scope.syncDistribution = function (distributionId) {
     $scope.syncMessage = null;
@@ -37,27 +34,27 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     function syncFacilities(facilities) {
       var synchronizedFacilityCount = $scope.progressValue = totalFacilityCount = 0;
 
-      $.each($scope.distributionData.facilityDistributionData, function (facilityId, facilityDistributionData) {
-        if (facilityDistributionData.status !== $scope.COMPLETE)  return;
+      $.each($scope.distributionData.facilityDistributions, function (facilityId, facilityDistribution) {
+        if (facilityDistribution.status !== $scope.COMPLETE)  return;
         ++totalFacilityCount;
 
         facilityId = utils.parseIntWithBaseTen(facilityId);
         var defer = $q.defer();
         promises.push(defer.promise);
 
-        SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistributionData,
-          function (data) {
-            if (data.syncStatus === 'Synced') {
-              facilityDistributionData.status = $scope.SYNCED;
-            } else if (data.syncStatus === 'AlreadySynced') {
-              facilityDistributionData.status = $scope.DUPLICATE;
-            }
-            defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistributionData: facilityDistributionData});
-            updateProgressBar();
-          }, function () {
-            defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistributionData: facilityDistributionData});
-            updateProgressBar();
-          });
+        SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistribution,
+            function (data) {
+              if (data.syncStatus) {
+                facilityDistribution.status = $scope.SYNCED;
+              } else {
+                facilityDistribution.status = $scope.DUPLICATE;
+              }
+              defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
+              updateProgressBar();
+            }, function () {
+              defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
+              updateProgressBar();
+            });
       });
 
       function updateProgressBar() {
@@ -71,7 +68,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
         distributionService.save($scope.distributionData);
 
         $scope.syncResult = _.groupBy(resolves, function (resolve) {
-          return resolve.facilityDistributionData.status;
+          return resolve.facilityDistribution.status;
         });
       });
     }
@@ -81,26 +78,25 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     $scope.syncMessage = '';
     var dialogOpts = {
       id: "distributionInitiated",
-      header: messageService.get('label.delete.distribution.header'),
-      body: messageService.get('label.confirm.delete.distribution')
+      header: 'label.delete.distribution.header',
+      body: 'label.confirm.delete.distribution'
     };
 
-    var callback = function () {
-      return function (result) {
-        if (!result) return;
+    var callback = function (result) {
+      if (result) {
         distributionService.deleteDistribution(id);
-      };
+      }
     };
 
-    OpenLmisDialog.newDialog(dialogOpts, callback(), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, callback, $dialog);
   };
 
 
   $scope.showConfirmDistributionSync = function (distributionId) {
     $scope.distributionData = _.findWhere(SharedDistributions.distributionList, {id: distributionId});
 
-    var facilityDataToSync = _.filter($scope.distributionData.facilityDistributionData, function (facilityDistributionData) {
-      return facilityDistributionData.computeStatus() === $scope.COMPLETE;
+    var facilityDataToSync = _.filter($scope.distributionData.facilityDistributions, function (facilityDistribution) {
+      return facilityDistribution.computeStatus() === $scope.COMPLETE;
     });
 
     if (!facilityDataToSync.length) {
@@ -117,10 +113,10 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
 
     var dialogOpts = {
       id: "syncDistributionDialog",
-      header: messageService.get('sync.distribution.header'),
-      body: messageService.get('sync.distribution.confirm')
+      header: 'sync.distribution.header',
+      body: 'sync.distribution.confirm'
     };
-    OpenLmisDialog.newDialog(dialogOpts, syncDistributionCallBack(distributionId), $dialog, messageService);
+    OpenLmisDialog.newDialog(dialogOpts, syncDistributionCallBack(distributionId), $dialog);
   };
 
 }

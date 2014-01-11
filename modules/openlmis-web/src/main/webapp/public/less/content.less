@@ -80,10 +80,6 @@
   }
 }
 
-.rnr-body {
-  overflow: scroll;
-}
-
 /* TODO: Split into separate screen */
 /* RnR Template config */
 .rnr-template-head {
@@ -621,7 +617,7 @@ span[class^="tpl-"] {
 }
 
 .rnr-table td,
-#epiUseTable td {
+.facility-distribution-form-table td {
   .rnr-form-error {
     min-width: 92px;
     padding: 0px 6px;
@@ -797,12 +793,7 @@ td.col-quantityRequested,
 td.col-patientsOnTreatment,
 td.col-patientsToInitiateTreatment,
 td.col-patientsStoppedTreatment,
-td.col-quantityApproved,
-.col-starting-stock,
-.col-received,
-.col-distributed,
-.col-loss,
-.col-ending-stock {
+td.col-quantityApproved {
   input[type="text"] {
     text-align: right;
   }
@@ -1156,6 +1147,18 @@ h3 {
   border-radius: 0;
   font-size: 1.1em;
   font-weight: bold;
+}
+
+.budget-exceeded-icon {
+  position: relative;
+  color: #F0B159;
+  &:hover .budget-exceeded {
+    display: block;
+  }
+}
+
+.budget-exceeded {
+  display: none;
 }
 
 .warning-alert {
@@ -1787,6 +1790,9 @@ td .close {
 .select2-results {
   .select2-highlighted {
     background: #61acaf;
+    .status-icon {
+      .box-shadow(0px 0px 1px 1px whitesmoke);
+    }
   }
 }
 

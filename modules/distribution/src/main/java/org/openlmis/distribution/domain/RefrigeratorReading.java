@@ -15,30 +15,35 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Refrigerator;
 
-import java.util.List;
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RefrigeratorReading extends BaseModel {
 
-  Float temperature;
-  RadioOptions functioningCorrectly;
-  Integer lowAlarmEvents;
-  Integer highAlarmEvents;
-  RadioOptions problemSinceLastTime;
-  List<String> problems;
-  String notes;
-  String refrigeratorSerialNumber;
-  Long facilityId;
-  Long distributionId;
+  private Refrigerator refrigerator;
+
+  //Readings
+  private Long facilityVisitId;
+  private Float temperature;
+  private String functioningCorrectly;
+  private Integer lowAlarmEvents;
+  private Integer highAlarmEvents;
+  private String problemSinceLastTime;
+  private RefrigeratorProblem problem;
+  private String notes;
+
+  public RefrigeratorReading(Refrigerator refrigerator) {
+    this.refrigerator = refrigerator;
+  }
 }
 
-enum RadioOptions {
-  Y,
-  N,
-  D
-}

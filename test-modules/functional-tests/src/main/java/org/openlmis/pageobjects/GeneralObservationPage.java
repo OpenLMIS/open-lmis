@@ -17,6 +17,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestBase.assertFalse;
@@ -72,16 +73,17 @@ public class GeneralObservationPage extends DistributionTab {
   }
 
   @Override
-  public void enterValues(Map<String, String> data) {
-    sendKeys(fieldMap.get(OBSERVATIONS), data.get(OBSERVATIONS));
+  public void enterValues(List<Map<String, String>> data) {
+    Map<String, String> map = data.get(0);
+    sendKeys(fieldMap.get(OBSERVATIONS), map.get(OBSERVATIONS));
     fieldMap.get(OBSERVATIONS).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(VERIFIED_BY_NAME), data.get(VERIFIED_BY_NAME));
+    sendKeys(fieldMap.get(VERIFIED_BY_NAME), map.get(VERIFIED_BY_NAME));
     fieldMap.get(VERIFIED_BY_NAME).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(VERIFIED_BY_TITLE), data.get(VERIFIED_BY_TITLE));
+    sendKeys(fieldMap.get(VERIFIED_BY_TITLE), map.get(VERIFIED_BY_TITLE));
     fieldMap.get(VERIFIED_BY_TITLE).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(CONFIRMED_BY_NAME), data.get(CONFIRMED_BY_NAME));
+    sendKeys(fieldMap.get(CONFIRMED_BY_NAME), map.get(CONFIRMED_BY_NAME));
     fieldMap.get(CONFIRMED_BY_NAME).sendKeys(Keys.TAB);
-    sendKeys(fieldMap.get(CONFIRMED_BY_TITLE), data.get(CONFIRMED_BY_TITLE));
+    sendKeys(fieldMap.get(CONFIRMED_BY_TITLE), map.get(CONFIRMED_BY_TITLE));
     fieldMap.get(CONFIRMED_BY_TITLE).sendKeys(Keys.TAB);
   }
 
@@ -94,27 +96,27 @@ public class GeneralObservationPage extends DistributionTab {
     assertEquals(fieldMap.get(CONFIRMED_BY_TITLE).getAttribute(VALUE), data.get(CONFIRMED_BY_TITLE));
   }
 
-  public void setObservations(String observations) {
+  public void enterObservations(String observations) {
     testWebDriver.waitForElementToAppear(observationsField);
     sendKeys(observationsField, observations);
   }
 
-  public void setConfirmedByName(String confirmedByName) {
+  public void enterConfirmedByName(String confirmedByName) {
     testWebDriver.waitForElementToAppear(confirmedByNameField);
     sendKeys(confirmedByNameField, confirmedByName);
   }
 
-  public void setConfirmedByTitle(String confirmedByTitle) {
+  public void enterConfirmedByTitle(String confirmedByTitle) {
     testWebDriver.waitForElementToAppear(confirmedByTitleField);
     sendKeys(confirmedByTitleField, confirmedByTitle);
   }
 
-  public void setVerifiedByName(String verifiedByName) {
+  public void enterVerifiedByName(String verifiedByName) {
     testWebDriver.waitForElementToAppear(verifiedByNameField);
     sendKeys(verifiedByNameField, verifiedByName);
   }
 
-  public void setVerifiedByTitle(String verifiedByTitle) {
+  public void enterVerifiedByTitle(String verifiedByTitle) {
     testWebDriver.waitForElementToAppear(verifiedByTitleField);
     sendKeys(verifiedByTitleField, verifiedByTitle);
   }
@@ -130,5 +132,14 @@ public class GeneralObservationPage extends DistributionTab {
     assertFalse("ConfirmedBy title field enabled.", confirmedByTitleField.isEnabled());
     assertFalse("VerifiedBy name field enabled.", verifiedByNameField.isEnabled());
     assertFalse("VerifiedBy title Field field enabled.", verifiedByTitleField.isEnabled());
+  }
+
+  public void enterData(String observation, String confirmName, String confirmTitle, String verifierName,
+                        String verifierTitle) {
+    enterObservations(observation);
+    enterConfirmedByName(confirmName);
+    enterConfirmedByTitle(confirmTitle);
+    enterVerifiedByName(verifierName);
+    enterVerifiedByTitle(verifierTitle);
   }
 }

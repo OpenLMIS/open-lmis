@@ -53,6 +53,13 @@ public class LoginPage extends Page {
     testWebDriver.waitForElementToAppear(userNameField);
   }
 
+  public LoginPage(TestWebDriver testWebDriver) {
+    super(testWebDriver);
+    PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 10), this);
+    testWebDriver.setImplicitWait(10);
+    testWebDriver.waitForElementToAppear(userNameField);
+  }
+
 
   public HomePage loginAs(String username, String password) throws IOException {
     testWebDriver.waitForElementToAppear(userNameField);

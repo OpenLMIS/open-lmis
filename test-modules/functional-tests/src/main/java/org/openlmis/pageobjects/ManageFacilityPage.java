@@ -13,6 +13,7 @@ package org.openlmis.pageobjects;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.apache.commons.lang.StringUtils;
 import org.openlmis.UiUtils.TestWebDriver;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -35,187 +36,187 @@ public class ManageFacilityPage extends Page {
 
 
   @FindBy(how = How.ID, using = "searchFacility")
-  private static WebElement searchFacilityTextField=null;
+  private static WebElement searchFacilityTextField = null;
 
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-danger delete-button']")
-  private static WebElement disableButton=null;
+  private static WebElement disableButton = null;
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
-  private static WebElement okButton=null;
+  private static WebElement okButton = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='disableFacilityDialog']/div[@class='modal-body']/p")
-  private static WebElement disableMessageOnAlert=null;
+  private static WebElement disableMessageOnAlert = null;
 
   @FindBy(how = How.ID, using = "saveSuccessMsgDiv")
-  private static WebElement successMessageDiv=null;
+  private static WebElement successMessageDiv = null;
 
   @FindBy(how = How.ID, using = "saveErrorMsgDiv")
-  private static WebElement saveErrorMsgDiv=null;
+  private static WebElement saveErrorMsgDiv = null;
 
   @FindBy(how = How.XPATH, using = "//ng-switch/span")
-  private static WebElement enabledFlag=null;
+  private static WebElement enabledFlag = null;
 
   @FindBy(how = How.XPATH, using = "//input[@name='isActive' and @value='false']")
-  private static WebElement isActiveRadioNoOption=null;
+  private static WebElement isActiveRadioNoOption = null;
 
   @FindBy(how = How.XPATH, using = "//input[@class='btn btn-primary enable-button']")
-  private static WebElement enableButton=null;
+  private static WebElement enableButton = null;
 
   @FindBy(how = How.XPATH, using = "//div[@id='enableConfirmModal']/div[@class='modal-body']/p")
-  private static WebElement enableMessageOnAlert=null;
+  private static WebElement enableMessageOnAlert = null;
 
   @FindBy(how = How.LINK_TEXT, using = "OK")
-  private static WebElement okLink=null;
+  private static WebElement okLink = null;
 
   @FindBy(how = How.ID, using = "remove0")
-  private static WebElement removeSupportedProgram=null;
+  private static WebElement removeSupportedProgram = null;
 
   @FindBy(how = ID, using = "code")
-  private static WebElement facilityCode=null;
+  private static WebElement facilityCode = null;
 
   @FindBy(how = ID, using = "name")
-  private static WebElement facilityName=null;
+  private static WebElement facilityName = null;
 
   @FindBy(how = ID, using = "description")
-  private static WebElement facilityDescription=null;
+  private static WebElement facilityDescription = null;
 
   @FindBy(how = ID, using = "gln")
-  private static WebElement gln=null;
+  private static WebElement gln = null;
 
   @FindBy(how = ID, using = "main-phone")
-  private static WebElement phoneNumber=null;
+  private static WebElement phoneNumber = null;
 
   @FindBy(how = ID, using = "fax-phone")
-  private static WebElement faxNumber=null;
+  private static WebElement faxNumber = null;
 
   @FindBy(how = ID, using = "address-1")
-  private static WebElement address1=null;
+  private static WebElement address1 = null;
 
   @FindBy(how = ID, using = "address-2")
-  private static WebElement address2=null;
+  private static WebElement address2 = null;
 
   @FindBy(how = ID, using = "geographic-zone")
-  private static WebElement geographicZone=null;
+  private static WebElement geographicZone = null;
 
   @FindBy(how = ID, using = "facility-type")
-  private static WebElement facilityType=null;
+  private static WebElement facilityType = null;
 
   @FindBy(how = ID, using = "catchment-population")
-  private static WebElement catchmentPopulation=null;
+  private static WebElement catchmentPopulation = null;
 
   @FindBy(how = ID, using = "latitude")
-  private static WebElement latitude=null;
+  private static WebElement latitude = null;
 
   @FindBy(how = ID, using = "longitude")
-  private static WebElement longitude=null;
+  private static WebElement longitude = null;
 
   @FindBy(how = ID, using = "altitude")
-  private static WebElement altitude=null;
+  private static WebElement altitude = null;
 
   @FindBy(how = ID, using = "operated-by")
-  private static WebElement operatedBy=null;
+  private static WebElement operatedBy = null;
 
   @FindBy(how = ID, using = "cold-storage-gross-capacity")
-  private static WebElement coldStorageGrossCapacity=null;
+  private static WebElement coldStorageGrossCapacity = null;
 
   @FindBy(how = ID, using = "cold-storage-net-capacity")
-  private static WebElement coldStorageNetCapacity=null;
+  private static WebElement coldStorageNetCapacity = null;
 
   @FindBy(how = XPATH, using = "//input[@name='supplies-others' and @value='true']")
-  private static WebElement facilitySuppliesOthers=null;
+  private static WebElement facilitySuppliesOthers = null;
 
   @FindBy(how = XPATH, using = "//input[@name='isSdp' and @value='true']")
-  private static WebElement serviceDeliveryPoint=null;
+  private static WebElement serviceDeliveryPoint = null;
 
   @FindBy(how = XPATH, using = "//input[@name='has-electricity' and @value='true']")
-  private static WebElement hasElectricity=null;
+  private static WebElement hasElectricity = null;
 
   @FindBy(how = XPATH, using = "//input[@name='is-online' and @value='true']")
-  private static WebElement isOnline=null;
+  private static WebElement isOnline = null;
 
   @FindBy(how = XPATH, using = "//input[@name='has-electronic-scc' and @value='true']")
-  private static WebElement hasElectronicScc=null;
+  private static WebElement hasElectronicScc = null;
 
   @FindBy(how = XPATH, using = "//input[@name='has-electronic-dar' and @value='true']")
-  private static WebElement hasElectronicDar=null;
+  private static WebElement hasElectronicDar = null;
 
   @FindBy(how = XPATH, using = "//input[@name='isActive' and @value='true']")
-  private static WebElement isActive=null;
+  private static WebElement isActive = null;
 
   @FindBy(how = ID, using = "go-live-date")
-  private static WebElement goLiveDate=null;
+  private static WebElement goLiveDate = null;
 
   @FindBy(how = ID, using = "go-down-date")
-  private static WebElement goDownDate=null;
+  private static WebElement goDownDate = null;
 
   @FindBy(how = ID, using = "comments")
-  private static WebElement comments=null;
+  private static WebElement comments = null;
 
   @FindBy(how = ID, using = "programs-supported")
-  private static WebElement programsSupported=null;
+  private static WebElement programsSupported = null;
 
   @FindBy(how = ID, using = "supported-program-active")
-  private static WebElement programsSupportedActiveFlag=null;
+  private static WebElement programsSupportedActiveFlag = null;
 
   @FindBy(how = XPATH, using = "//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[1][@class='ng-scope']/td[2]/input")
-  private static WebElement programsSupportedFirstActiveFlag=null;
+  private static WebElement programsSupportedFirstActiveFlag = null;
 
   @FindBy(how = XPATH, using = "//form/div/div[3]/div/div/table/tbody/tr[1]/td[3]/input")
-  private static WebElement programsSupportedFirstStartDate=null;
+  private static WebElement programsSupportedFirstStartDate = null;
 
   @FindBy(how = ID, using = "supported-program-start-date")
-  private static WebElement programsSupportedStartDate=null;
+  private static WebElement programsSupportedStartDate = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
-  private static WebElement startDateCalender=null;
+  private static WebElement startDateCalender = null;
 
   @FindBy(how = ID, using = "button_OK")
-  private static WebElement okAlert=null;
+  private static WebElement okAlert = null;
 
   @FindBy(how = ID, using = "supported-program-add")
-  private static WebElement addSupportedProgram=null;
+  private static WebElement addSupportedProgram = null;
 
   @FindBy(how = ID, using = "save-button")
-  public static WebElement SaveButton=null;
+  public static WebElement SaveButton = null;
 
   @FindBy(how = XPATH, using = "//div[@id='saveSuccessMsgDiv']/span")
-  private static WebElement saveSuccessMsgDiv=null;
+  private static WebElement saveSuccessMsgDiv = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'25')]")
-  private static WebElement goLiveDateCalender=null;
+  private static WebElement goLiveDateCalender = null;
 
   @FindBy(how = XPATH, using = "//a[contains(text(),'26')]")
-  private static WebElement goDownDateCalender=null;
+  private static WebElement goDownDateCalender = null;
 
   @FindBy(how = XPATH, using = "//div[@class='ng-scope']/div[@ng-hide='facility.id']/h2")
-  private static WebElement facilityHeader=null;
+  private static WebElement facilityHeader = null;
 
   @FindBy(how = ID, using = "edit-facility-header")
-  private static WebElement editFacilityHeader=null;
+  private static WebElement editFacilityHeader = null;
 
-  @FindBy(how = XPATH, using = "(//a[contains(text(),'Modify ISA Values')])[1]")
-  private static WebElement modifyIsaValueLink=null;
+  @FindBy(how = ID, using = "overrideIsaVACCINES")
+  private static WebElement modifyIsaValueLink = null;
 
   @FindBy(how = ID, using = "overrideIsaTable")
-  private static WebElement overrideIsaTable=null;
+  private static WebElement overrideIsaTable = null;
 
   @FindBy(how = ID, using = "override-isa0")
-  private static WebElement overrideIsaTextField=null;
+  private static WebElement overrideIsaTextField = null;
 
   @FindBy(how = ID, using = "calculated-isa0")
-  private static WebElement calculatedIsaTextField=null;
+  private static WebElement calculatedIsaTextField = null;
 
   @FindBy(how = ID, using = "use-calculated-button0")
-  private static WebElement useCalculatedIsabutton=null;
+  private static WebElement useCalculatedIsabutton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Done']")
-  private static WebElement doneIsaButton=null;
+  private static WebElement doneIsaButton = null;
 
   @FindBy(how = XPATH, using = "//input[@value='Cancel']")
-  private static WebElement cancelIsaButton=null;
+  private static WebElement cancelIsaButton = null;
 
   @FindBy(how = XPATH, using = "//a[@id='remove0']")
-  private static WebElement removeFirstProgramSupportedLink=null;
+  private static WebElement removeFirstProgramSupportedLink = null;
 
   public void verifyNewFacilityHeader(String headerToBeVerified) {
     testWebDriver.waitForElementToAppear(facilityHeader);
@@ -233,173 +234,174 @@ public class ManageFacilityPage extends Page {
     assertEquals(editFacilityHeader.getText().trim(), headerToBeVerified);
   }
 
-    public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
-                                                    String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
-        String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
+  public String enterValuesInFacilityAndClickSave(String facilityCodePrefix, String facilityNamePrefix,
+                                                  String program, String geoZone, String facilityTypeValue, String operatedByValue, String population) {
+    String date_time = enterValuesInFacility(facilityCodePrefix, facilityNamePrefix, program, geoZone, facilityTypeValue, operatedByValue, population, false);
 
-        SaveButton.click();
+    SaveButton.click();
 
-        return date_time;
+    return date_time;
+  }
+
+  public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix, String program,
+                                      String geoZone, String facilityTypeValue, String operatedByValue,
+                                      String population, boolean push) {
+    Date dObj = new Date();
+    SimpleDateFormat formatter_date_time = new SimpleDateFormat(
+      "yyyyMMdd-hhmmss");
+    String date_time = formatter_date_time.format(dObj);
+
+    String facilityCodeText = facilityCodePrefix + date_time;
+    String facilityNameText = facilityNamePrefix + date_time;
+    verifyNewFacilityHeader("Add new facility");
+    testWebDriver.waitForElementToAppear(facilityCode);
+    facilityCode.clear();
+    facilityCode.sendKeys(facilityCodeText);
+    facilityName.sendKeys(facilityNameText);
+    testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
+
+    testWebDriver.clickForRadio(serviceDeliveryPoint);
+    testWebDriver.clickForRadio(isActive);
+
+    facilityDescription.sendKeys("Testing description");
+    gln.sendKeys("Testing Gln");
+    phoneNumber.sendKeys("9711231305");
+    faxNumber.sendKeys("9711231305");
+    address1.sendKeys("Address1");
+    address2.sendKeys("Address2");
+
+    testWebDriver.selectByVisibleText(geographicZone, geoZone);
+    testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
+
+    testWebDriver.sleep(500);
+    goLiveDate.click();
+    testWebDriver.sleep(500);
+    goLiveDateCalender.click();
+    testWebDriver.sleep(500);
+    goDownDate.click();
+    testWebDriver.sleep(500);
+    goDownDateCalender.click();
+
+    testWebDriver.handleScrollByPixels(0, 1000);
+    addProgram(program, push);
+
+    catchmentPopulation.sendKeys(population);
+    latitude.sendKeys("-555.5555");
+    longitude.sendKeys("444.4444");
+    altitude.sendKeys("4545.4545");
+
+    coldStorageGrossCapacity.sendKeys("3434.3434");
+    coldStorageNetCapacity.sendKeys("3535.3535");
+    coldStorageNetCapacity.sendKeys(Keys.TAB);
+
+    hasElectricity.click();
+    isOnline.click();
+    testWebDriver.handleScrollByPixels(0, 2000);
+
+    hasElectronicScc.click();
+    hasElectronicDar.click();
+    facilitySuppliesOthers.click();
+    comments.sendKeys("Comments");
+    return date_time;
+  }
+
+  public void addProgram(String program, boolean push) {
+    testWebDriver.selectByVisibleText(programsSupported, program);
+    if (!push) {
+      programsSupportedActiveFlag.click();
+      testWebDriver.sleep(500);
+      programsSupportedStartDate.click();
+      startDateCalender.click();
+      testWebDriver.sleep(500);
+      okAlert.click();
+      testWebDriver.sleep(500);
     }
+    addSupportedProgram.click();
+  }
 
-    public String enterValuesInFacility(String facilityCodePrefix, String facilityNamePrefix, String program,
-                                        String geoZone, String facilityTypeValue, String operatedByValue,
-                                        String population, boolean push) {
-        Date dObj = new Date();
-        SimpleDateFormat formatter_date_time = new SimpleDateFormat(
-                "yyyyMMdd-hhmmss");
-        String date_time = formatter_date_time.format(dObj);
+  public void activeInactiveFirstProgram() {
+    programsSupportedFirstActiveFlag.click();
+    testWebDriver.sleep(500);
+    programsSupportedStartDate.click();
+    programsSupportedFirstStartDate.click();
+    testWebDriver.handleScrollByPixels(0, 1000);
+    startDateCalender.click();
+    testWebDriver.sleep(500);
+  }
 
-        String facilityCodeText = facilityCodePrefix + date_time;
-        String facilityNameText = facilityNamePrefix + date_time;
-        verifyNewFacilityHeader("Add new facility");
-        testWebDriver.waitForElementToAppear(facilityCode);
-        facilityCode.clear();
-        facilityCode.sendKeys(facilityCodeText);
-        facilityName.sendKeys(facilityNameText);
-        testWebDriver.selectByVisibleText(operatedBy, operatedByValue);
+  public void removeFirstProgram() {
+    removeFirstProgramSupportedLink.click();
+    okAlert.click();
+  }
 
-        testWebDriver.clickForRadio(serviceDeliveryPoint);
-        testWebDriver.clickForRadio(isActive);
-
-        facilityDescription.sendKeys("Testing description");
-        gln.sendKeys("Testing Gln");
-        phoneNumber.sendKeys("9711231305");
-        faxNumber.sendKeys("9711231305");
-        address1.sendKeys("Address1");
-        address2.sendKeys("Address2");
-
-        testWebDriver.selectByVisibleText(geographicZone, geoZone);
-        testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
-
-        testWebDriver.sleep(500);
-        goLiveDate.click();
-        testWebDriver.sleep(500);
-        goLiveDateCalender.click();
-        testWebDriver.sleep(500);
-        goDownDate.click();
-        testWebDriver.sleep(500);
-        goDownDateCalender.click();
-
-        testWebDriver.handleScrollByPixels(0, 1000);
-        addProgram(program, push);
-
-        catchmentPopulation.sendKeys(population);
-        latitude.sendKeys("-555.5555");
-        longitude.sendKeys("444.4444");
-        altitude.sendKeys("4545.4545");
-
-        coldStorageGrossCapacity.sendKeys("3434.3434");
-        coldStorageNetCapacity.sendKeys("3535.3535");
-        coldStorageNetCapacity.sendKeys(Keys.TAB);
-
-        hasElectricity.click();
-        isOnline.click();
-        testWebDriver.handleScrollByPixels(0, 2000);
-
-        hasElectronicScc.click();
-        hasElectronicDar.click();
-        facilitySuppliesOthers.click();
-        comments.sendKeys("Comments");
-        return date_time;
+  public void verifyMessageOnFacilityScreen(String facilityName, String status) {
+    String message;
+    testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
+    if (saveSuccessMsgDiv.isDisplayed()) {
+      message = testWebDriver.getText(saveSuccessMsgDiv);
+    } else {
+      message = testWebDriver.getText(saveErrorMsgDiv);
     }
+    assertEquals(message, String.format("Facility \"%s\" %s successfully", facilityName, status));
+    testWebDriver.sleep(500);
+  }
 
-    public void addProgram(String program, boolean push) {
-        testWebDriver.selectByVisibleText(programsSupported, program);
-        if (!push) {
-            programsSupportedActiveFlag.click();
-            testWebDriver.sleep(500);
-            programsSupportedStartDate.click();
-            startDateCalender.click();
-            testWebDriver.sleep(500);
-            okAlert.click();
-            testWebDriver.sleep(500);
-        }
-        addSupportedProgram.click();
-    }
-
-    public void activeInactiveFirstProgram() {
-        programsSupportedFirstActiveFlag.click();
-        testWebDriver.sleep(500);
-        programsSupportedStartDate.click();
-        programsSupportedFirstStartDate.click();
-        testWebDriver.handleScrollByPixels(0, 1000);
-        startDateCalender.click();
-        testWebDriver.sleep(500);
-    }
-
-    public void removeFirstProgram() {
-        removeFirstProgramSupportedLink.click();
-        okAlert.click();
-    }
-
-    public void verifyMessageOnFacilityScreen(String facilityName, String status) {
-        String message;
-        testWebDriver.waitForElementsToAppear(saveSuccessMsgDiv, saveErrorMsgDiv);
-        if (saveSuccessMsgDiv.isDisplayed()) {
-            message = testWebDriver.getText(saveSuccessMsgDiv);
-        } else {
-            message = testWebDriver.getText(saveErrorMsgDiv);
-        }
-        assertEquals(message, String.format("Facility \"%s\" %s successfully", facilityName, status));
-        testWebDriver.sleep(500);
-    }
-
-    public void verifySuccessMessage() {
-        testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
-        assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
-    }
+  public void verifySuccessMessage() {
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
+    assertTrue("Save success message should show up", saveSuccessMsgDiv.isDisplayed());
+  }
 
 
-    public void overrideIsa(int overriddenIsa) {
-        modifyIsaValueLink.click();
-        testWebDriver.waitForElementToAppear(overrideIsaTable);
-        while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
-            overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
-        overrideIsaTextField.sendKeys(valueOf(overriddenIsa));
-    }
+  public void overrideIsa(String overriddenIsa, int rowNumber) {
+    modifyIsaValueLink.click();
+    testWebDriver.waitForElementToAppear(overrideIsaTable);
+    while (!StringUtils.isEmpty(overrideIsaTable.getAttribute("value")))
+      overrideIsaTable.sendKeys("\u0008"); // "\u0008" - is backspace char
+    testWebDriver.findElement(By.id("override-isa" + (rowNumber - 1))).sendKeys(overriddenIsa);
+  }
 
-    public void editPopulation(String population) {
-        testWebDriver.waitForElementToAppear(catchmentPopulation);
-        while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
-            catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
-        catchmentPopulation.sendKeys(valueOf(population));
-    }
+  public void editPopulation(String population) {
+    testWebDriver.waitForElementToAppear(catchmentPopulation);
+    while (!StringUtils.isEmpty(catchmentPopulation.getAttribute("value")))
+      catchmentPopulation.sendKeys("\u0008"); // "\u0008" - is backspace char
+    catchmentPopulation.sendKeys(valueOf(population));
+  }
 
-    public void verifyCalculatedIsa(int calculatedIsa) {
-        assertEquals(calculatedIsaTextField.getText(), valueOf(calculatedIsa));
-    }
+  public void verifyCalculatedIsa(int calculatedIsa) {
+    assertEquals(calculatedIsaTextField.getText(), valueOf(calculatedIsa));
+  }
 
-    public void clickIsaDoneButton() {
-        testWebDriver.waitForElementToAppear(doneIsaButton);
-        doneIsaButton.click();
-    }
+  public void clickIsaDoneButton() {
+    testWebDriver.waitForElementToAppear(doneIsaButton);
+    doneIsaButton.click();
+  }
 
-    public void clickIsaCancelButton() {
-        testWebDriver.waitForElementToAppear(cancelIsaButton);
-        cancelIsaButton.click();
-    }
+  public void clickIsaCancelButton() {
+    testWebDriver.waitForElementToAppear(cancelIsaButton);
+    cancelIsaButton.click();
+  }
 
-    public void clickUseCalculatedIsaButton() {
-        testWebDriver.waitForElementToAppear(useCalculatedIsabutton);
-        useCalculatedIsabutton.click();
-    }
+  public void clickUseCalculatedIsaButton() {
+    testWebDriver.waitForElementToAppear(useCalculatedIsabutton);
+    useCalculatedIsabutton.click();
+  }
 
 
-    public void verifyOverriddenIsa(String expectedIsa) {
-        testWebDriver.handleScrollByPixels(0, 1000);
-        testWebDriver.waitForElementToAppear(modifyIsaValueLink);
-        modifyIsaValueLink.click();
-        testWebDriver.waitForElementToAppear(overrideIsaTable);
+  public void verifyOverriddenIsa(String expectedIsa) {
+    testWebDriver.handleScrollByPixels(0, 1000);
+    testWebDriver.waitForElementToAppear(modifyIsaValueLink);
+    modifyIsaValueLink.click();
+    testWebDriver.waitForElementToAppear(overrideIsaTable);
 
-        assertEquals(overrideIsaTextField.getAttribute("value"), expectedIsa);
-        clickIsaDoneButton();
-        testWebDriver.sleep(1000);
-    }
+    assertEquals(overrideIsaTextField.getAttribute("value"), expectedIsa);
+    clickIsaDoneButton();
+    testWebDriver.sleep(1000);
+  }
 
-  public void saveFacility(){
+  public void saveFacility() {
     testWebDriver.waitForElementToAppear(SaveButton);
     SaveButton.click();
+    testWebDriver.waitForElementToAppear(saveSuccessMsgDiv);
   }
 
 
@@ -408,10 +410,10 @@ public class ManageFacilityPage extends Page {
     sendKeys(searchFacilityTextField, facilityCodeValue);
   }
 
-  public void clickFacilityList(String facility){
+  public void clickFacilityList(String facility) {
     testWebDriver.sleep(3000);
-    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]"));
-    testWebDriver.getElementByXpath("//a[contains(text(),'"+facility+"')]").click();
+    testWebDriver.waitForElementToAppear(testWebDriver.getElementByXpath("//a[contains(text(),'" + facility + "')]"));
+    testWebDriver.getElementByXpath("//a[contains(text(),'" + facility + "')]").click();
     testWebDriver.waitForElementToAppear(facilityCode);
   }
 
@@ -435,6 +437,7 @@ public class ManageFacilityPage extends Page {
   }
 
   private void verifyDisableAlert(String expectedMessageOnAlert) {
+    testWebDriver.sleep(1000);
     testWebDriver.waitForElementToAppear(disableMessageOnAlert);
 
     String disableMessageOnAlertValue = disableMessageOnAlert.getText();
@@ -518,7 +521,7 @@ public class ManageFacilityPage extends Page {
 
   public HomePage verifyProgramSupported(java.util.ArrayList<String> programsSupported, String date_time) throws IOException {
     int i = 1;
-    verifyEditFacilityHeader("Edit facility") ;
+    verifyEditFacilityHeader("Edit facility");
     testWebDriver.waitForElementToAppear(disableButton);
     testWebDriver.sleep(1500);
     for (String program : programsSupported) {
@@ -534,33 +537,41 @@ public class ManageFacilityPage extends Page {
     return new HomePage(testWebDriver);
   }
 
-  public void editFacilityType(String facilityTypeValue){
+  public void editFacilityType(String facilityTypeValue) {
     testWebDriver.waitForElementToAppear(facilityType);
     testWebDriver.selectByVisibleText(facilityType, facilityTypeValue);
   }
 
-  public String getFacilityType(){
+  public String getFacilityType() {
     testWebDriver.waitForElementToAppear(facilityType);
     return testWebDriver.getFirstSelectedOption(facilityType).getText();
   }
 
-  public void editGeographicZone(String geographicZoneValue){
+  public void editGeographicZone(String geographicZoneValue) {
     testWebDriver.waitForElementToAppear(geographicZone);
     testWebDriver.selectByVisibleText(geographicZone, geographicZoneValue);
   }
 
-  public String getGeographicZone(){
+  public String getGeographicZone() {
     testWebDriver.waitForElementToAppear(geographicZone);
     return testWebDriver.getFirstSelectedOption(geographicZone).getText();
   }
 
-  public String getProgramSupported(int serialNumber){
+  public String getProgramSupported(int serialNumber) {
     testWebDriver.waitForElementToAppear(programsSupported);
-    return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber +"]/td[1]").getText();
+    return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber + "]/td[1]").getText();
   }
 
-  public boolean getProgramSupportedActive(int serialNumber){
-      testWebDriver.waitForElementToAppear(programsSupported);
-      return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber +"]/td[2]/input").isSelected();
+  public boolean getProgramSupportedActive(int serialNumber) {
+    testWebDriver.waitForElementToAppear(programsSupported);
+    return testWebDriver.getElementByXpath("//form[@id='create-facility']/div/div[3]/div/div/table/tbody/tr[" + serialNumber + "]/td[2]/input").isSelected();
+  }
+
+  public void overrideISA(String overriddenIsa, int productRowNumber, String facilityCode) {
+    searchFacility(facilityCode);
+    clickFacilityList(facilityCode);
+    overrideIsa(overriddenIsa, productRowNumber);
+    clickIsaDoneButton();
+    saveFacility();
   }
 }

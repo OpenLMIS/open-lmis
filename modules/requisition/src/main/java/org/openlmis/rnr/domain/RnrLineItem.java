@@ -43,7 +43,7 @@ public class RnrLineItem extends LineItem {
 
   public static final BigDecimal NUMBER_OF_DAYS = new BigDecimal(30);
 
-  public static final MathContext MATH_CONTEXT = new MathContext(2, HALF_UP);
+  public static final MathContext MATH_CONTEXT = new MathContext(12, HALF_UP);
 
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;

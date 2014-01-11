@@ -27,4 +27,22 @@ public class RefrigeratorService {
     return repository.getRefrigeratorsForADeliveryZoneAndProgram(deliveryZoneId, programId);
   }
 
+  public void disableAllFor(Long facilityId) {
+    repository.disableAllFor(facilityId);
+  }
+
+
+  public List<Refrigerator> getAllBy(Long facilityId) {
+    return repository.getAllBy(facilityId);
+  }
+
+  public void save(Refrigerator refrigerator) {
+    if (refrigerator.getId() == null) {
+      repository.insert(refrigerator);
+    } else {
+      repository.update(refrigerator);
+    }
+
+  }
+
 }

@@ -83,9 +83,9 @@
     <int:outbound-channel-adapter channel="ftpInputChannel" ref="shipmentFileProcessor" method="process"/>
 
     <bean id="messageDispatcher" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="5"/>
-        <property name="maxPoolSize" value="10"/>
-        <property name="queueCapacity" value="27"/>
+        <property name="corePoolSize" value="1"/>
+        <property name="maxPoolSize" value="1"/>
+        <property name="queueCapacity" value="-1"/>
     </bean>
 
     <int:channel id="ftpInputChannel">

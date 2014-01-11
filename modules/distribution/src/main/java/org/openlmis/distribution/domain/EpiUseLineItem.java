@@ -10,17 +10,25 @@
 
 package org.openlmis.distribution.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.ProductGroup;
+
+import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
+@EqualsAndHashCode(callSuper = false)
 public class EpiUseLineItem extends BaseModel {
 
-  private Long epiUseId;
-  private Long productGroupId;
-  private String productGroupName;
+  private Long facilityVisitId;
+  private ProductGroup productGroup;
   private Integer stockAtFirstOfMonth;
   private Integer stockAtEndOfMonth;
   private Integer received;
@@ -28,9 +36,9 @@ public class EpiUseLineItem extends BaseModel {
   private Integer distributed;
   private String expirationDate;
 
-  public EpiUseLineItem(Long productGroupId, String productGroupName) {
-    this.productGroupId = productGroupId;
-    this.productGroupName = productGroupName;
+  public EpiUseLineItem(Long facilityVisitId, ProductGroup productGroup, Long createdBy) {
+    this.productGroup = productGroup;
+    this.createdBy = createdBy;
+    this.facilityVisitId = facilityVisitId;
   }
-
 }

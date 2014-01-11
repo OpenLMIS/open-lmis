@@ -20,13 +20,16 @@ describe("RecordFacilityMenuController", function () {
     distributionService = {};
 
     distribution = new Distribution({
-      facilityDistributionData: {
+      facilityDistributions: {
         1: { refrigerators: {
           refrigeratorReadings: [
             {refrigerator: {serialNumber: "abc"}},
             {refrigerator: {serialNumber: "XYZ"}}
           ]
-        }
+        },
+          facilityVisit: {
+            id: 1
+          }
         }
       }
     });
@@ -39,7 +42,7 @@ describe("RecordFacilityMenuController", function () {
   }));
 
   it('should set distribution data for facility in scope', function () {
-    expect(scope.distributionData).toEqual(distribution.facilityDistributionData[1]);
+    expect(scope.distributionData).toEqual(distribution.facilityDistributions[1]);
   });
 
 });

@@ -24,6 +24,9 @@
       }
     }
   }
+  #noFacilitySelected {
+    margin-left: 0;
+  }
   .info-box {
     padding-bottom: 8px;
 
@@ -80,14 +83,15 @@
 
 .select2-results {
   ul.select2-result-sub {
-    &> li {
+    & > li {
       .select2-result-label {
         padding-left: 12px;
       }
     }
   }
 }
-.position-fixing{
+
+.position-fixing {
   position: relative;
   top: 14px;
 }
@@ -108,7 +112,7 @@
 
 .is-complete {
   .status-icon {
-    background: #52a81e;
+    background: #45B600;
   }
 }
 
@@ -120,7 +124,7 @@
 
 .is-synced {
   .status-icon {
-    background: #4BA9FD;
+    background: #1683E6;
   }
 }
 
@@ -129,7 +133,6 @@
     background: #7c7c7c;
   }
 }
-
 
 .facility-toolbar {
   min-height: 41px;
@@ -238,7 +241,7 @@
   background: #f9f9f9;
 }
 
-#epiUseTable {
+.facility-distribution-form-table {
   overflow: auto;
   table {
     min-width: 800px;
@@ -266,14 +269,23 @@
       position: relative;
     }
     .rnr-form-error {
+      left: initial;
       bottom: 30px;
-      left: -10px;
+      right: 8%;
+    }
+    .rnr-form-error:after {
+      left: initial;
+      right: 16px;
     }
     .warning-alert {
       bottom: 25px;
     }
   }
-  .col-doses {
+  .col-ideal-quantity span {
+    display: block;
+    text-align: right;
+  }
+  .col-doses, .col-vials {
     min-width: 100px;
     max-width: 250px;
     word-wrap: break-word;
@@ -281,9 +293,20 @@
   .col-total {
     min-width: 70px;
   }
-  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-expiration-date {
+  .col-starting-stock, .col-received, .col-distributed, .col-loss, .col-ending-stock, .col-ideal-quantity, .col-existing-quantity, .col-spoiled-quantity, .col-delivered-quantity, .col-complete-vaccinated, .col-health-center, .col-mobile-brigade {
     max-width: 100px;
     min-width: 70px;
+    input[type="text"] {
+      text-align: right;
+    }
+  }
+  .col-complete-vaccinated, .col-health-center, .col-mobile-brigade {
+//    max-width: 70px;
+//    min-width: 20px;
+    input[type="text"] {
+      text-align: right;
+      width: 80px;
+    }
   }
   input[type="text"] {
     width: 85%;
@@ -291,6 +314,33 @@
   }
   input[type="checkbox"] {
     margin-top: 0;
+  }
+}
+
+#coverageHeader {
+  margin-bottom: 0px;
+}
+
+#coverageContainer .rnr-tabs {
+  margin: 5px 0 11px;
+}
+
+#applyNRContainer {
+  width: 55%;
+  min-width: 600px;
+  padding-bottom: 12px;
+}
+
+#coverageTable table{
+  width: 55%;
+  min-width: 600px;
+  th, td {
+    word-wrap: break-word;
+  }
+  tbody {
+    tr td:first-child {
+      font-weight: bold;
+    }
   }
 }
 
@@ -397,28 +447,31 @@
   }
 }
 
-
 //responsive styles
-@media screen and (max-width: 910px){
+@media screen and (max-width: 910px) {
   .facility-visit-container {
     min-width: 0px;
     width: 92%;
   }
+
   .facility-visit-container textarea {
     width: 99%;
   }
+
   .facility-visit-container .signatures .details-container {
-    margin-left: 0px!important;
+    margin-left: 0px !important;
     margin-top: 40px;
   }
-  .facility-info{
+
+  .facility-info {
     margin-left: 205px;
   }
+
   .left-navigation {
     width: 205px;
-    ul{
-      li{
-        a{
+    ul {
+      li {
+        a {
           font-size: 1.1em;
         }
       }
@@ -426,37 +479,36 @@
   }
 }
 
-
 /*Accordion for the User Roles*/
-.accordion{
-  .accordion-heading{
+.accordion {
+  .accordion-heading {
     border-bottom: 1px solid #aaa;
     margin-bottom: 25px;
     font-size: 1.2em;
     font-weight: bold;
-    cursor:pointer;
-    span{
+    cursor: pointer;
+    span {
       padding: 0px 10px 10px 0px;
       background: #F8F8F8;
     }
-    b, a{
+    b, a {
       position: relative;
       bottom: -10px;
     }
-    b{
-      margin-right:5px;
+    b {
+      margin-right: 5px;
       color: #999;
       background: #F8F8F8;
-      margin-top:10px;
+      margin-top: 10px;
       left: -10px;
     }
-    a{
+    a {
       text-decoration: none;
       background: #F8F8F8;
     }
   }
-  .accordion-body{
-    display:none;
+  .accordion-body {
+    display: none;
     margin-bottom: 35px;
   }
 }

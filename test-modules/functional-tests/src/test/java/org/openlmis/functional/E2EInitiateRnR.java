@@ -21,16 +21,21 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.pageobjects.*;
 import org.openlmis.pageobjects.edi.ConvertOrderPage;
+import org.openqa.selenium.By;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.round;
+import static org.junit.Assert.assertTrue;
 
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
@@ -52,7 +57,6 @@ public class E2EInitiateRnR extends TestCaseHelper {
   public String passwordUsers = "TQskzK3iiLfbRVHeM1muvBCiiKriibfl6lh8ipo91hb74G3OvsybvkzpPI4S3KIeWTXAiiwlUU0iiSxWii4wSuS8mokSAieie";
   public String userSICUserName = "storeInCharge";
 
-
   @Before
   public void setUp() throws Exception {
     super.setup();
@@ -66,7 +70,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I access create facility page$")
   public void navigateManageFacilityPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    homePage.navigateCreateFacility();
+    homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
   }
 
@@ -91,8 +95,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     String[] roleRights = rightsList.split(",");
     List<String> userRoleListStoreInCharge = new ArrayList<>();
-    for (int i = 0; i < roleRights.length; i++)
-      userRoleListStoreInCharge.add(roleRights[i]);
+    Collections.addAll(userRoleListStoreInCharge, roleRights);
     createRoleAndAssignRights(homePage, userRoleListStoreInCharge, roleName, roleName, roleType);
   }
 
@@ -158,7 +161,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
 
   @And("^I update \"([^\"]*)\" home facility$")
   public void updateHomeFacility(String user) throws Exception {
-    dbWrapper.allocateFacilityToUser(dbWrapper.getUserID(user), facility_code);
+    dbWrapper.allocateFacilityToUser(dbWrapper.getAttributeFromTable("users", "id", "userName", user), facility_code);
   }
 
   @And("^I configure \"([^\"]*)\" template$")
@@ -182,16 +185,16 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I enter beginning balance as \"([^\"]*)\", quantityDispensed as \"([^\"]*)\", quantityReceived as \"([^\"]*)\" and totalAdjustmentAndLoses as \"([^\"]*)\"$")
   public void enterValuesInRnR(String beginningBalance, String quantityDispensed, String quantityReceived, String totalAdjustmentAndLoses) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.calculateAndVerifyStockOnHand(Integer.parseInt(beginningBalance), Integer.parseInt(quantityDispensed),
-                                                   Integer.parseInt(quantityReceived), Integer.parseInt(totalAdjustmentAndLoses));
+    initiateRnRPage.calculateAndVerifyStockOnHand(parseInt(beginningBalance), parseInt(quantityDispensed),
+      parseInt(quantityReceived), parseInt(totalAdjustmentAndLoses));
     initiateRnRPage.verifyTotalField();
   }
 
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\"$")
-   public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
+  public void verifyNormalisedConsumptionAndAmc(String normalisedConsumption, String amc) throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(Integer.parseInt(normalisedConsumption));
-    initiateRnRPage.verifyAmcForFirstProduct(Integer.parseInt(amc));
+    initiateRnRPage.verifyNormalizedConsumptionForFirstProduct(parseInt(normalisedConsumption));
+    initiateRnRPage.verifyAmcForFirstProduct(parseInt(amc));
   }
 
   @And("^I submit RnR$")
@@ -219,8 +222,7 @@ public class E2EInitiateRnR extends TestCaseHelper {
   @And("^I access proceed$")
   public void accessProceed() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-
+    homePage.clickProceed();
   }
 
   @And("^I add comments$")
@@ -234,34 +236,38 @@ public class E2EInitiateRnR extends TestCaseHelper {
     initiateRnRPage.closeCommentPopUp();
     initiateRnRPage.addComments("Dummy Comments.");
     initiateRnRPage.verifyComment("Dummy Comments.", userSICUserName, 1);
-
   }
 
   @And("^I update & verify ordered quantities$")
-public void enterAndVerifyOrderedQuantities() throws Exception {
+  public void enterAndVerifyOrderedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantities(10, 10);
-    int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyCalculatedOrderQuantity(expectedCalculatedNC, 36, 108, 97);
-    initiateRnRPage.verifyPacksToShip("10");
+    initiateRnRPage.enterValue(10, "newPatientFirstProduct");
+    initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
+    int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
+    initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, 36, 3, 11);
+    Integer packSize = parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
+    initiateRnRPage.verifyPacksToShip(packSize);
   }
 
   @And("^I update & verify quantities for emergency RnR$")
   public void enterAndVerifyOrderedQuantitiesForEmergencyRnR() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterQuantities(10, 10);
-    int expectedCalculatedNC=CalculatedExpectedNC(10,10,10);
-    initiateRnRPage.verifyCalculationsForEmergencyRnR(expectedCalculatedNC,Math.round (((float)(expectedCalculatedNC + 36) / 2)), 3, 11);
-    initiateRnRPage.verifyPacksToShip("11");
+    initiateRnRPage.enterValue(10, "newPatientFirstProduct");
+    initiateRnRPage.enterValue(10, "totalStockOutDaysFirstProduct");
+    int expectedCalculatedNC = calculatedExpectedNC(10, 10, 10);
+    initiateRnRPage.verifyAmcAndCalculatedOrderQuantity(expectedCalculatedNC, round(((float) (expectedCalculatedNC + 36) / 2)), 3, 11);
+    Integer packSize = Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
+    initiateRnRPage.verifyPacksToShip(packSize);
   }
 
   @And("^I update & verify requested quantities$")
   public void enterAndVerifyRequestedQuantities() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
-    initiateRnRPage.enterRequestedQuantityForFirstProduct(10);
+    initiateRnRPage.enterValue(10, "requestedQuantityFirstProduct");
     initiateRnRPage.verifyRequestedQuantityExplanation();
     initiateRnRPage.enterExplanationReason();
-    initiateRnRPage.verifyPacksToShip("1");
+    Integer packSize = Integer.parseInt(dbWrapper.getAttributeFromTable("products", "packSize", "code", "P10"));
+    initiateRnRPage.verifyPacksToShip(packSize);
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.saveRnR();
   }
@@ -284,7 +290,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
 
   @And("^I verify normalized consumption as \"([^\"]*)\" and amc as \"([^\"]*)\" for product \"([^\"]*)\" in Database$")
   public void verifyNormalisedConsumptionAndAmcInDatabase(String normalizedConsumption, String amc, String productCode) throws Exception {
-    Long rnrId = Long.valueOf(dbWrapper.getMaxRnrID());
+    Long rnrId = (long) dbWrapper.getMaxRnrID();
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "normalizedConsumption", productCode), normalizedConsumption);
     assertEquals(dbWrapper.getRequisitionLineItemFieldValue(rnrId, "amc", productCode), amc);
   }
@@ -305,10 +311,10 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   }
 
   @When("^I access requisition on approval page$")
-  public void nevigateRequisitionApprovalPage() throws Exception {
+  public void navigateRequisitionApprovalPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     ApprovePage approvePage = homePage.navigateToApprove();
-    periodTopSNUser = approvePage.ClickRequisitionPresentForApproval();
+    periodTopSNUser = approvePage.clickRequisitionPresentForApproval();
   }
 
   @Then("I access non full supply tab$")
@@ -435,13 +441,13 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   }
 
   @When("^I access view orders page$")
-  public void nevigateViewOrdersPage() throws Exception {
+  public void navigateViewOrdersPage() throws Exception {
     HomePage homePage = new HomePage(testWebDriver);
     homePage.navigateViewOrders();
   }
 
   @Then("^I should see ordered list with download link$")
-  public void verifyOrderListWithdDownloadLink() throws Exception {
+  public void verifyOrderListWithDownloadLink() throws Exception {
     verifyOrderedList(true);
   }
 
@@ -451,7 +457,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   }
 
   @Then("^I should see ordered list without download link$")
-  public void verifyOrderListWithoutdDownloadLink() throws Exception {
+  public void verifyOrderListWithoutDownloadLink() throws Exception {
     verifyOrderedList(false);
   }
 
@@ -465,6 +471,26 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
   public void verifyEmergencyRnRText() throws Exception {
     InitiateRnRPage initiateRnRPage = new InitiateRnRPage(testWebDriver);
     assertEquals(initiateRnRPage.getEmergencyLabelText(), "Emergency");
+  }
+
+  @When("^I access Manage POD page$")
+  public void navigateManagePodPage() throws Exception {
+    HomePage homePage = new HomePage(testWebDriver);
+    homePage.navigateManagePOD();
+  }
+
+  @Then("^I should see list of orders to manage POD for \"([^\"]*)\" Rnr$")
+  public void verifyListOfOrdersOnPodScreen(String rnrType) throws Exception {
+    testWebDriver.sleep(1000);
+    assertEquals("Central Hospital", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Central Hospital')]")).getText());
+    assertEquals("HIV", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'HIV')]")).getText());
+    assertEquals("Transfer failed", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Transfer failed')]")).getText());
+    assertEquals("Period1 (01/12/2013 - 02/02/2014)", testWebDriver.findElement(By.xpath("//div/span[contains(text(),'Period1 (01/12/2013 - 02/02/2014)')]")).getText());
+    assertEquals("Update POD", testWebDriver.findElement(By.xpath("//div/a[contains(text(),'Update POD')]")).getText());
+    //TODO find proper xpath or give id for facility_code
+    if (rnrType.equals("Emergency")) {
+      assertTrue(testWebDriver.findElement(By.xpath("//i[@class='icon-ok']")).isDisplayed());
+    }
   }
 
   private void createUserAndAssignRoles(HomePage homePage, String passwordUsers, String userEmail,
@@ -503,10 +529,10 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     viewOrdersPage.verifyOrderListElements(program, dbWrapper.getMaxRnrID(), facility_code + " - " + facility_name, "Period1" + " (" + periods[0].trim() + " - " + periods[1].trim() + ")", supplyFacilityName, "Transfer failed", downloadFlag);
   }
 
-  public int CalculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws IOException, SQLException {
+  public int calculatedExpectedNC(Integer numberOfNewPatients, Integer stockOutDays, Integer quantityDispensed) throws IOException, SQLException {
     int id = dbWrapper.getMaxRnrID();
 
-    Integer dayDiff = Integer.parseInt(dbWrapper.getRequisitionLineItemFieldValue((long) id, "reportingDays", "P10"));
+    Integer dayDiff = parseInt(dbWrapper.getRequisitionLineItemFieldValue((long) id, "reportingDays", "P10"));
     float ans;
 
     if (dayDiff <= stockOutDays) {
@@ -514,7 +540,7 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
     } else {
       ans = ((quantityDispensed * 30.0f / (dayDiff - stockOutDays))) + (numberOfNewPatients * (30 / 10));
     }
-    return Math.round(ans);
+    return round(ans);
   }
 
   @After
@@ -526,7 +552,6 @@ public void enterAndVerifyOrderedQuantities() throws Exception {
       dbWrapper.deleteData();
       dbWrapper.closeConnection();
     }
-
   }
 
 }

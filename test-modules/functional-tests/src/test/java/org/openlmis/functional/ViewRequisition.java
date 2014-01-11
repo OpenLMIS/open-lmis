@@ -192,7 +192,7 @@ public class ViewRequisition extends TestCaseHelper {
 
     ApprovePage approvePageTopSNUser = homePageInApproval.navigateToApprove();
     approvePageTopSNUser.verifyEmergencyStatus();
-    approvePageTopSNUser.ClickRequisitionPresentForApproval();
+    approvePageTopSNUser.clickRequisitionPresentForApproval();
     approvePageTopSNUser.editFullSupplyApproveQuantity("20");
     approvePageTopSNUser.VerifyTotalCostViewRequisition("20");
     approvePageTopSNUser.addComments("Dummy Comments");
@@ -272,18 +272,19 @@ public class ViewRequisition extends TestCaseHelper {
     dbWrapper.deletePeriod("Period1");
     dbWrapper.deletePeriod("Period2");
     dbWrapper.insertProcessingPeriod("current Period", "current Period", "2013-10-03", "2014-01-30", 1, "M");
-    dbWrapper.UpdateProductFullSupplyStatus("P11", true);
+    dbWrapper.updateProductFullSupplyStatus("P11", true);
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     HomePage homePage = loginPage.loginAs(userSIC, password);
 
     homePage.navigateInitiateRnRScreenAndSelectingRequiredFields(program, "Emergency");
-    InitiateRnRPage initiateRnRPage = homePage.clickProceed();
-    initiateRnRPage.enterBeginningBalanceForFirstProduct(1);
-    initiateRnRPage.enterQuantityDispensedForFirstProduct(1);
-    initiateRnRPage.enterQuantityReceivedForFirstProduct(2);
-    initiateRnRPage.enterBeginningBalanceForSecondProduct(10);
-    initiateRnRPage.enterQuantityReceivedForSecondProduct(0);
-    initiateRnRPage.enterQuantityDispensedForSecondProduct(0);
+    homePage.clickProceed();
+   InitiateRnRPage initiateRnRPage=new InitiateRnRPage(testWebDriver);
+    initiateRnRPage.enterValue(1, "beginningBalanceFirstProduct");
+    initiateRnRPage.enterValue(1, "quantityDispensedFirstProduct");
+    initiateRnRPage.enterValue(2, "quantityReceivedFirstProduct");
+    initiateRnRPage.enterValue(10, "beginningBalanceSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityReceivedSecondProduct");
+    initiateRnRPage.enterValue(0, "quantityDispensedSecondProduct");
     initiateRnRPage.calculateAndVerifyTotalCost();
     initiateRnRPage.verifyCostOnFooter();
     initiateRnRPage.skipAllProduct();

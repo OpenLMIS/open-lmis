@@ -35,6 +35,7 @@ import java.util.List;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyLong;
@@ -238,5 +239,14 @@ public class ProgramProductRepositoryTest {
     assertThat(programProducts, is(expectedProgramProducts));
   }
 
+  @Test
+  public void shouldGetActiveProgramProductsForAProgram() throws Exception {
+    List<ProgramProduct> expectedProgramProducts = EMPTY_LIST;
+    when(programProductMapper.getActiveByProgram(5L)).thenReturn(expectedProgramProducts);
 
+    List<ProgramProduct> programProducts = programProductRepository.getActiveByProgram(5L);
+
+    verify(programProductMapper).getActiveByProgram(5L);
+    assertThat(programProducts, is(expectedProgramProducts));
+  }
 }

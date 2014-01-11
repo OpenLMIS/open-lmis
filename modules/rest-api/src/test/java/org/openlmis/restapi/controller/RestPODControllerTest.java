@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.pod.domain.POD;
+import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestPODService;
 import org.powermock.api.mockito.PowerMockito;
@@ -57,30 +57,30 @@ public class RestPODControllerTest {
 
   @Test
   public void shouldSavePOD() throws Exception {
-    POD pod = new POD();
+    OrderPOD orderPod = new OrderPOD();
     when(principal.getName()).thenReturn("2");
-    doNothing().when(restPODService).updatePOD(pod, 2L);
+    doNothing().when(restPODService).updatePOD(orderPod, 2L);
 
     ResponseEntity<RestResponse> response = new ResponseEntity<>(new RestResponse(SUCCESS, "success"), OK);
     PowerMockito.when(success("message.success.pod.updated")).thenReturn(response);
 
-    ResponseEntity<RestResponse> responseEntity = controller.savePOD(pod, 1L, principal);
+    ResponseEntity<RestResponse> responseEntity = controller.savePOD(orderPod, 1L, principal);
 
     assertThat(responseEntity.getBody().getSuccess(), is("success"));
-    verify(restPODService).updatePOD(pod, 2L);
+    verify(restPODService).updatePOD(orderPod, 2L);
   }
 
   @Test
   public void shouldThrowErrorIfSaveUnSuccessFul() throws Exception {
-    POD pod = new POD();
+    OrderPOD orderPod = new OrderPOD();
 
     when(principal.getName()).thenReturn("2");
     DataException dataException = new DataException("error.pod.updated");
-    doThrow(dataException).when(restPODService).updatePOD(pod, 2L);
+    doThrow(dataException).when(restPODService).updatePOD(orderPod, 2L);
     ResponseEntity<RestResponse> response = new ResponseEntity<>(new RestResponse(ERROR, "error"), BAD_REQUEST);
     PowerMockito.when(error(dataException.getOpenLmisMessage(), BAD_REQUEST)).thenReturn(response);
 
-    ResponseEntity<RestResponse> responseEntity = controller.savePOD(pod, 1L, principal);
+    ResponseEntity<RestResponse> responseEntity = controller.savePOD(orderPod, 1L, principal);
 
     assertThat(responseEntity.getBody().getError(), is("error"));
   }

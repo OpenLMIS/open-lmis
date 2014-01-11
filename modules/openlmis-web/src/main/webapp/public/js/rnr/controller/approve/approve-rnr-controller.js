@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, messageService, requisitionService) {
+function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, regimenTemplate, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
   $scope.rnr = new Rnr(requisition, rnrColumns);
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
@@ -25,22 +25,27 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
   requisitionService.populateScope($scope, $location, $routeParams);
 
   $scope.saveRnr = function (preventMessage) {
-    if (isUndefined($scope.approvalForm) || !$scope.approvalForm.$dirty) {
-      return;
+    var deferred = $q.defer();
+    if (!$scope.approvalForm || !$scope.approvalForm.$dirty) {
+      deferred.resolve();
+      return deferred.promise;
     }
     resetFlags();
     var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"},
       rnr, function (data) {
+        deferred.resolve();
         if (preventMessage === true) return;
         $scope.message = data.success;
         $scope.error = "";
-        setTimeout(fadeSaveMessage, 3000);
+        $scope.approvalForm.$setPristine();
       }, function (data) {
+        deferred.reject();
         $scope.error = data.data.error;
         $scope.message = "";
       });
-    $scope.approvalForm.$setPristine();
+
+    return deferred.promise;
   };
 
   $scope.$on('$routeUpdate', function () {
@@ -68,62 +73,47 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
     return rnr;
   }
 
-  var fadeSaveMessage = function () {
-    $scope.$apply(function () {
-      angular.element("#saveSuccessMsgDiv").fadeOut('slow', function () {
-        $scope.message = '';
-      });
+  $scope.approveRnr = function () {
+    $scope.approvedQuantityRequiredFlag = true;
+    resetFlags();
+    requisitionService.resetErrorPages($scope);
+    var saveRnrPromise = $scope.saveRnr(true);
+
+    saveRnrPromise.then(function () {
+      if (!setError()) confirm();
     });
   };
 
-  function validateAndSetErrorClass() {
+  function setError() {
     var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
     $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
-    return fullSupplyError || nonFullSupplyError;
-  }
+    var error = fullSupplyError || nonFullSupplyError;
 
-  $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab === NON_FULL_SUPPLY ?
-      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
-  };
-
-  $scope.dialogCloseCallback = function (result) {
-    if (result) {
-      approveValidatedRnr();
-    }
-  };
-
-  var showConfirmModal = function () {
-    var options = {
-      id: "confirmDialog",
-      header: messageService.get("label.confirm.action"),
-      body: messageService.get("msg.question.confirmation")
-    };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog, messageService);
-  };
-
-  $scope.approveRnr = function () {
-    $scope.approvedQuantityRequiredFlag = true;
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
-    $scope.saveRnr(true);
-    var error = validateAndSetErrorClass();
     if (error) {
       requisitionService.setErrorPages($scope);
       $scope.error = error;
       $scope.message = '';
-      return;
     }
-    showConfirmModal();
+
+    return !!error;
+  }
+
+  var confirm = function () {
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.action",
+      body: "msg.question.confirmation"
+    };
+    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
   };
 
-  function resetFlags() {
-    $scope.error = "";
-    $scope.message = "";
-  }
+  $scope.dialogCloseCallback = function (result) {
+    if (result)
+      approveValidatedRnr();
+  };
 
   var approveValidatedRnr = function () {
     Requisitions.update({id: $scope.rnr.id, operation: "approve"}, {}, function (data) {
@@ -135,6 +125,16 @@ function ApproveRnrController($scope, requisition, Requisitions, rnrColumns, reg
       $scope.message = "";
     });
   };
+
+  $scope.checkErrorOnPage = function (page) {
+    return $scope.visibleTab === NON_FULL_SUPPLY ?
+      _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+  };
+
+  function resetFlags() {
+    $scope.error = "";
+    $scope.message = "";
+  }
 
 }
 

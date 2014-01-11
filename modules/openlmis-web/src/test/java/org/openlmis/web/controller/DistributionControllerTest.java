@@ -18,13 +18,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.authentication.web.UserAuthenticationSuccessHandler;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.db.categories.UnitTests;
 import org.openlmis.distribution.domain.Distribution;
-import org.openlmis.distribution.domain.FacilityDistributionData;
+import org.openlmis.distribution.domain.DistributionRefrigerators;
+import org.openlmis.distribution.domain.FacilityDistribution;
+import org.openlmis.distribution.dto.FacilityDistributionDTO;
 import org.openlmis.distribution.service.DistributionService;
+import org.openlmis.distribution.service.FacilityDistributionService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,13 +36,15 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.natpryce.makeiteasy.MakeItEasy.*;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 import static org.openlmis.core.builder.UserBuilder.defaultUser;
 import static org.openlmis.distribution.builder.DistributionBuilder.*;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -58,10 +64,11 @@ public class DistributionControllerTest {
   @Mock
   MessageService messageService;
 
+  @Mock
+  private FacilityDistributionService facilityDistributionService;
+
   private MockHttpSession session;
-
   private MockHttpServletRequest httpServletRequest;
-
 
   @InjectMocks
   DistributionController controller;
@@ -107,14 +114,15 @@ public class DistributionControllerTest {
       with(createdDate, creationTimeStamp)));
 
     when(service.get(distribution)).thenReturn(existingDistribution);
+    Map<Long, FacilityDistribution> facilityDistributions = new HashMap<>();
+    when(facilityDistributionService.createFor(distribution)).thenReturn(facilityDistributions);
 
     User user = make(a(defaultUser));
     when(userService.getById(createdById)).thenReturn(user);
 
     when(messageService.message("message.distribution.already.exists", user.getUserName(), DistributionController.DATE_FORMAT.format(creationTimeStamp))).
       thenReturn("Distribution already initiated by XYZ at 2013-05-03 12:10");
-    when(messageService.message("message.distribution.created.success", null, null, null)
-    ).thenReturn("Distribution created successfully");
+    when(messageService.message("message.distribution.created.success", null, null, null)).thenReturn("Distribution created successfully");
 
     ResponseEntity<OpenLmisResponse> response = controller.create(distribution, httpServletRequest);
     assertThat(response.getStatusCode(), is(OK));
@@ -124,35 +132,31 @@ public class DistributionControllerTest {
       is("Distribution already initiated by XYZ at 2013-05-03 12:10"));
     assertThat((Distribution) responseData.get("distribution"), is(existingDistribution));
     assertThat((String) response.getBody().getData().get("success"), is("Distribution created successfully"));
+    assertThat(((Distribution) responseData.get("distribution")).getFacilityDistributions(), is(facilityDistributions));
   }
 
   @Test
   public void shouldSyncFacilityDistributionData() {
-    Long distributionId = 1l;
-    Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
+    Facility facility = new Facility(3L);
+    Distribution distribution = new Distribution();
+    distribution.setId(1L);
+    FacilityDistributionDTO facilityDistributionDTO = spy(new FacilityDistributionDTO());
+    FacilityDistribution facilityDistributionData = new FacilityDistribution(null, null, new DistributionRefrigerators(EMPTY_LIST), null, null);
 
-    when(service.sync(facilityDistributionData)).thenReturn("Synced");
+    when(service.sync(facilityDistributionData)).thenReturn(true);
+    doReturn(facilityDistributionData).when(facilityDistributionDTO).transform();
+    doNothing().when(facilityDistributionDTO).setModifiedBy(USER_ID);
+    doNothing().when(facilityDistributionDTO).setFacilityId(facility.getId());
+    doNothing().when(facilityDistributionDTO).setDistributionId(distribution.getId());
 
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
+    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionDTO, distribution.getId(), facility.getId(), httpServletRequest);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat((String) response.getBody().getData().get("syncStatus"), is("Synced"));
+    assertTrue((boolean) response.getBody().getData().get("syncStatus"));
     verify(service).sync(facilityDistributionData);
-    assertThat(facilityDistributionData.getFacilityVisit().getFacilityId(), is(facilityId));
-    assertThat(facilityDistributionData.getFacilityVisit().getDistributionId(), is(distributionId));
+    verify(facilityDistributionDTO).setModifiedBy(USER_ID);
+    verify(facilityDistributionDTO).setFacilityId(facility.getId());
+    verify(facilityDistributionDTO).setDistributionId(distribution.getId());
   }
 
-  @Test
-  public void shouldReturnErrorIfAlreadySynced() throws Exception {
-    Long distributionId = 1l;
-    Long facilityId = 3l;
-    FacilityDistributionData facilityDistributionData = new FacilityDistributionData();
-
-    when(service.sync(facilityDistributionData)).thenReturn("Failed");
-
-    ResponseEntity<OpenLmisResponse> response = controller.sync(facilityDistributionData, distributionId, facilityId, httpServletRequest);
-
-    assertThat((String) response.getBody().getData().get("syncStatus"), is("Failed"));
-  }
 }

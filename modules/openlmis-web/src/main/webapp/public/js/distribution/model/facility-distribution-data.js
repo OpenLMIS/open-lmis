@@ -8,33 +8,33 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function FacilityDistributionData(facilityDistributionData) {
-  var COMPLETE = 'is-complete';
-  var EMPTY = 'is-empty';
-  var INCOMPLETE = 'is-incomplete';
-  var SYNCED = 'is-synced';
-  var DUPLICATE = 'is-duplicate';
+function FacilityDistribution(facilityDistribution) {
 
+  this.facilityVisitId = facilityDistribution.facilityVisit.id;
+  this.epiUse = new EpiUse(facilityDistribution.epiUse);
+  this.epiInventory = new EpiInventory(facilityDistribution.epiInventory);
+  this.refrigerators = new Refrigerators(this.facilityVisitId, facilityDistribution.refrigerators);
+  this.facilityVisit = new FacilityVisit(facilityDistribution.facilityVisit);
+  this.coverage = new Coverage(this.facilityVisitId, facilityDistribution.coverage);
 
-  this.epiUse = new EpiUse(facilityDistributionData.epiUse);
-  this.refrigerators = new Refrigerators(facilityDistributionData.refrigerators);
-  this.facilityVisit = new FacilityVisit(facilityDistributionData.facilityVisit);
-  this.status = facilityDistributionData.status;
-  FacilityDistributionData.prototype.computeStatus = function () {
-    var forms = [this.epiUse, this.refrigerators, this.facilityVisit];
+  this.status = facilityDistribution.status;
+
+  FacilityDistribution.prototype.computeStatus = function () {
+
+    var forms = [this.epiUse, this.refrigerators, this.facilityVisit, this.epiInventory, this.coverage];
     var overallStatus;
-    if(this.status === SYNCED || this.status === DUPLICATE) {
+    if (this.status === DistributionStatus.SYNCED || this.status === DistributionStatus.DUPLICATE) {
       return this.status;
     }
     $.each(forms, function (index, form) {
       var computedStatus = form.computeStatus();
-      if (computedStatus === COMPLETE && (overallStatus === COMPLETE || !overallStatus)) {
-        overallStatus = COMPLETE;
-      } else if (computedStatus === EMPTY && (!overallStatus || overallStatus == EMPTY)) {
-        overallStatus = EMPTY;
-      } else if (computedStatus === INCOMPLETE || (computedStatus === EMPTY && overallStatus === COMPLETE) ||
-        (computedStatus === COMPLETE && overallStatus === EMPTY)) {
-        overallStatus = INCOMPLETE;
+      if (computedStatus === DistributionStatus.COMPLETE && (overallStatus === DistributionStatus.COMPLETE || !overallStatus)) {
+        overallStatus = DistributionStatus.COMPLETE;
+      } else if (computedStatus === DistributionStatus.EMPTY && (!overallStatus || overallStatus == DistributionStatus.EMPTY)) {
+        overallStatus = DistributionStatus.EMPTY;
+      } else if (computedStatus === DistributionStatus.INCOMPLETE || (computedStatus === DistributionStatus.EMPTY && overallStatus === DistributionStatus.COMPLETE) ||
+        (computedStatus === DistributionStatus.COMPLETE && overallStatus === DistributionStatus.EMPTY)) {
+        overallStatus = DistributionStatus.INCOMPLETE;
         return false;
       }
       return true;
@@ -42,9 +42,11 @@ function FacilityDistributionData(facilityDistributionData) {
 
     this.status = overallStatus;
     return overallStatus;
+
   };
 
-  FacilityDistributionData.prototype.isDisabled = function () {
-    return [SYNCED, DUPLICATE].indexOf(this.status) != -1;
+  FacilityDistribution.prototype.isDisabled = function () {
+    return [DistributionStatus.SYNCED, DistributionStatus.DUPLICATE].indexOf(this.status) != -1;
   };
+
 }

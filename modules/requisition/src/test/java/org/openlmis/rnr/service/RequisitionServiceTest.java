@@ -40,6 +40,7 @@ import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -127,6 +128,8 @@ public class RequisitionServiceTest {
   private CalculationService calculationService;
   @Mock
   private DbMapper dbMapper;
+  @Mock
+  private BudgetLineItemService budgetLineItemService;
 
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
@@ -148,7 +151,9 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldSetFieldValuesAccordingToTemplateOnInitiate() throws Exception {
+    PROGRAM.setBudgetingApplies(true);
     Rnr requisition = createRequisition(PERIOD.getId(), null);
+    requisition.setProgram(PROGRAM);
     setupForInitRnr();
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
@@ -181,7 +186,7 @@ public class RequisitionServiceTest {
     doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
-
+    when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
     Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false);
 
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId());
@@ -207,22 +212,33 @@ public class RequisitionServiceTest {
 
     RequisitionService spyRequisitionService = spy(requisitionService);
 
-    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
-    doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
-    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
-    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
-    when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(regimenTemplate);
+    Program requisitionProgram = new Program(1234L);
+    requisitionProgram.setBudgetingApplies(true);
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, requisitionProgram, CREATE_REQUISITION)).thenReturn(true);
+    doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, requisitionProgram, false);
+    when(regimenService.getByProgram(requisitionProgram.getId())).thenReturn(regimens);
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), requisitionProgram.getId())).thenReturn(facilityApprovedProducts);
+    when(regimenColumnService.getRegimenTemplateByProgramId(requisitionProgram.getId())).thenReturn(regimenTemplate);
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(getRnrColumns());
-    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(rnrTemplate);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(requisitionProgram.getId())).thenReturn(rnrTemplate);
 
-    when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(previousRnr);
-
+    when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, requisitionProgram, previousPeriod)).thenReturn(previousRnr);
+    BudgetLineItem budgetLineItem = new BudgetLineItem();
+    BigDecimal allocatedBudget = new BigDecimal(45.67);
+    budgetLineItem.setAllocatedBudget(allocatedBudget);
+    when(budgetLineItemService.get(FACILITY.getId(), requisitionProgram.getId(), PERIOD.getId())).thenReturn(budgetLineItem);
+    when(programService.getById(requisitionProgram.getId())).thenReturn(requisitionProgram);
+    when(budgetLineItemService.get(FACILITY.getId(), requisitionProgram.getId(), PERIOD.getId())).thenReturn(budgetLineItem);
     Rnr requisition = new Rnr();
-    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
+    requisition.setFacility(FACILITY);
+    requisition.setProgram(requisitionProgram);
+    requisition.setPeriod(PERIOD);
+    whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
 
-    spyRequisitionService.initiate(FACILITY, PROGRAM, USER_ID, false);
+    spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false);
 
     verify(calculationService).fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
+    assertThat(requisition.getAllocatedBudget(), is(allocatedBudget));
   }
 
   @Test
@@ -860,8 +876,10 @@ public class RequisitionServiceTest {
 
   @Test
   public void shouldNotifyStatusChangeEvent() throws Exception {
+    PROGRAM.setBudgetingApplies(true);
     Rnr requisition = spy(createRequisition(PERIOD.getId(), INITIATED));
     setupForInitRnr();
+    requisition.setProgram(PROGRAM);
     RequisitionService spyRequisitionService = spy(requisitionService);
     doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
 
@@ -872,6 +890,7 @@ public class RequisitionServiceTest {
     when(facilityService.getById(requisition.getFacility().getId())).thenReturn(FACILITY);
     when(processingScheduleService.getPeriodById(requisition.getPeriod().getId())).thenReturn(PERIOD);
     when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
+    when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
 
     spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false);
 
@@ -1310,29 +1329,33 @@ public class RequisitionServiceTest {
 
     Rnr previousRnr = new Rnr();
     ProcessingPeriod previousPeriod = new ProcessingPeriod(3L);
+    Program requisitionProgram = new Program(1234L);
+    requisitionProgram.setBudgetingApplies(true);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
 
-    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, PROGRAM, CREATE_REQUISITION)).thenReturn(true);
-    doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, PROGRAM, false);
-    when(regimenService.getByProgram(PROGRAM.getId())).thenReturn(regimens);
-    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), PROGRAM.getId())).thenReturn(facilityApprovedProducts);
-    when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(regimenTemplate);
+    when(requisitionPermissionService.hasPermission(USER_ID, FACILITY, requisitionProgram, CREATE_REQUISITION)).thenReturn(true);
+    doReturn(PERIOD).when(spyRequisitionService).findPeriod(FACILITY, requisitionProgram, false);
+    when(regimenService.getByProgram(requisitionProgram.getId())).thenReturn(regimens);
+    when(facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(), requisitionProgram.getId())).thenReturn(facilityApprovedProducts);
+    when(regimenColumnService.getRegimenTemplateByProgramId(requisitionProgram.getId())).thenReturn(regimenTemplate);
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(getRnrColumns());
-    when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(rnrTemplate);
+    when(rnrTemplateService.fetchProgramTemplateForRequisition(requisitionProgram.getId())).thenReturn(rnrTemplate);
 
-    when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, PROGRAM, previousPeriod)).thenReturn(previousRnr);
+    when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, requisitionProgram, previousPeriod)).thenReturn(previousRnr);
     Date createdDateFromDB = DateTime.now().toDate();
     when(dbMapper.getCurrentTimeStamp()).thenReturn(createdDateFromDB);
     Rnr requisition = mock(Rnr.class);
     when(requisition.getId()).thenReturn(1l);
     when(requisition.getFacility()).thenReturn(FACILITY);
-    when(requisition.getProgram()).thenReturn(PROGRAM);
+    when(requisition.getProgram()).thenReturn(requisitionProgram);
     when(requisition.getPeriod()).thenReturn(PERIOD);
-    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
+    whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens, USER_ID).thenReturn(requisition);
     when(requisitionRepository.getById(1l)).thenReturn(requisition);
+    when(budgetLineItemService.get(FACILITY.getId(), requisitionProgram.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
+    when(programService.getById(requisitionProgram.getId())).thenReturn(requisitionProgram);
 
-    spyRequisitionService.initiate(FACILITY, PROGRAM, USER_ID, false);
+    spyRequisitionService.initiate(FACILITY, requisitionProgram, USER_ID, false);
 
     verify(calculationService).fillReportingDays(requisition);
     verify(requisition).setCreatedDate(createdDateFromDB);

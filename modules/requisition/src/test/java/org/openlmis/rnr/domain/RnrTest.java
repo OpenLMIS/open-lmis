@@ -30,10 +30,9 @@ import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.openlmis.core.builder.FacilityApprovedProductBuilder.defaultFacilityApprovedProduct;
 import static org.openlmis.core.builder.ProgramProductBuilder.defaultProgramProduct;
@@ -283,7 +282,6 @@ public class RnrTest {
 
   @Test
   public void shouldCopyRegimenLineItems() throws Exception {
-
     Rnr newRnr = make(a(defaultRequisition));
     List<RegimenColumn> regimenColumns = new ArrayList<>();
     RegimenLineItem regimenLineItem = make(a(RegimenLineItemBuilder.defaultRegimenLineItem));
@@ -303,8 +301,6 @@ public class RnrTest {
     verify(spyRegimenLineItem1).copyCreatorEditableFieldsForRegimen(regimenLineItem1, regimenTemplate);
     assertThat(spyRegimenLineItem.getModifiedBy(), is(1L));
     assertThat(spyRegimenLineItem1.getModifiedBy(), is(1L));
-
-
   }
 
   private void assertModifiedBy(long userId) {
@@ -469,5 +465,59 @@ public class RnrTest {
     rnr.setRegimenLineItems(regimenLineItems);
     rnr.validateRegimenLineItems(regimenTemplate);
     verify(regimenLineItem).validate(regimenTemplate);
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsFalseIfEmergencyRnr() throws Exception {
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(true);
+
+    assertFalse(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsFalseIfNotApplicableToProgram() throws Exception {
+    Program program = mock(Program.class);
+    when(program.getBudgetingApplies()).thenReturn(false);
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(false);
+    rnr.setProgram(program);
+
+    assertFalse(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsTrueIBudgetingApplicableToProgram() throws Exception {
+    Program program = mock(Program.class);
+    when(program.getBudgetingApplies()).thenReturn(true);
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(false);
+    rnr.setProgram(program);
+
+    assertTrue(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldReturnBudgetingAppliesAsFalseIBudgetingApplicableToProgramAndRnrIsEmergency() throws Exception {
+    Program program = mock(Program.class);
+    when(program.getBudgetingApplies()).thenReturn(true);
+    Rnr rnr = new Rnr();
+    rnr.setEmergency(true);
+    rnr.setProgram(program);
+
+    assertFalse(rnr.isBudgetingApplicable());
+  }
+
+  @Test
+  public void shouldGetAllLineItems() throws Exception {
+    Rnr rnr = make(a(defaultRequisition));
+    RnrLineItem lineItem1 = make(a(defaultRnrLineItem, with(beginningBalance, 24), with(RnrLineItemBuilder.productCode, "P1")));
+    RnrLineItem lineItem2 = make(a(defaultRnrLineItem, with(beginningBalance, 25), with(RnrLineItemBuilder.productCode, "P2")));
+    rnr.setFullSupplyLineItems(asList(lineItem1));
+    rnr.setNonFullSupplyLineItems(asList(lineItem2));
+
+    assertThat(rnr.getAllLineItems().size(), is(2));
+    assertThat(rnr.getAllLineItems().get(0), is(lineItem1));
+    assertThat(rnr.getAllLineItems().get(1), is(lineItem2));
   }
 }

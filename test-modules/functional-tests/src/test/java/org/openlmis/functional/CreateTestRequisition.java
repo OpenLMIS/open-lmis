@@ -76,7 +76,7 @@ public class CreateTestRequisition extends TestCaseHelper {
     dbWrapper.updateRequisitionStatusByRnrId(AUTHORIZED, userSIC, dbWrapper.getMaxRnrID());
     dbWrapper.updateRequisitionStatusByRnrId(IN_APPROVAL, userSIC, dbWrapper.getMaxRnrID());
     ApprovePage approvePageTopSNUser = homePage.navigateToApprove();
-    approvePageTopSNUser.ClickRequisitionPresentForApproval();
+    approvePageTopSNUser.clickRequisitionPresentForApproval();
     approvePageTopSNUser.verifyNoRequisitionMessage();
     approvePageTopSNUser.editFullSupplyApproveQuantity("20");
     approvePageTopSNUser.clickRegimenTab();

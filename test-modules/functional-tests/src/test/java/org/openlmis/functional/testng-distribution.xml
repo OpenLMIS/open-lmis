@@ -15,18 +15,9 @@
         <include name="distribution"/>
       </run>
     </groups>
-    <classes preserver-order="true">
-      <class name="org.openlmis.functional.RecordEPIUse">
-      </class>
-      <class name="org.openlmis.functional.ManageDistribution">
-      </class>
-      <class name="org.openlmis.functional.ViewWarehouseLoadAmount">
-      </class>
-      <class name="org.openlmis.functional.ManageRefrigerator">
-        </class>
-      <class name="org.openlmis.functional.DistributionSyncTest">
-        </class>
-    </classes>
+    <packages>
+      <package name="org.openlmis.functional"/>
+    </packages>
   </test>
 </suite>
 

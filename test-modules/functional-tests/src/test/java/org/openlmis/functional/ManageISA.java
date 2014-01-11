@@ -39,8 +39,8 @@ public class ManageISA extends TestCaseHelper {
   private static String operatedBy = "MoH";
   private static String facilityCodePrefix = "FCcode";
   private static String facilityNamePrefix = "FCname";
-  public String user, program, product, productName, category, whoratio, dosesperyear, wastageFactor,
-    bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue, date_time;
+  public String user, program, product, productName, category, whoRatio, dosesPerYear, wastageFactor,
+    bufferPercentage, minimumValue, maximumValue, adjustmentValue, date_time;
 
   @BeforeMethod(groups = "admin")
   @Before
@@ -58,16 +58,16 @@ public class ManageISA extends TestCaseHelper {
       product = map.get("product").toString();
       productName = map.get("productName").toString();
       category = map.get("category").toString();
-      whoratio = map.get("whoRatio").toString();
-      dosesperyear = map.get("dosesPerYear").toString();
+      whoRatio = map.get("whoRatio").toString();
+      dosesPerYear = map.get("dosesPerYear").toString();
       wastageFactor = map.get("wastageFactor").toString();
-      bufferpercentage = map.get("bufferPercentage").toString();
-      minimumvalue = map.get("minimumValue").toString();
-      maximumvalue = map.get("maximumValue").toString();
-      adjustmentvalue = map.get("adjustmentValue").toString();
+      bufferPercentage = map.get("bufferPercentage").toString();
+      minimumValue = map.get("minimumValue").toString();
+      maximumValue = map.get("maximumValue").toString();
+      adjustmentValue = map.get("adjustmentValue").toString();
 
       setupProgramProductTestDataWithCategories(product, productName, category, program);
-      setupProgramProductISA(program, product, whoratio, dosesperyear, wastageFactor, bufferpercentage, minimumvalue, maximumvalue, adjustmentvalue);
+      setupProgramProductISA(program, product, whoRatio, dosesPerYear, wastageFactor, bufferPercentage, minimumValue, maximumValue, adjustmentValue);
 
     }
   }
@@ -82,7 +82,7 @@ public class ManageISA extends TestCaseHelper {
   @And("^I override ISA \"([^\"]*)\"$")
   public void overrideISA(String isaValue) throws Exception {
     ManageFacilityPage manageFacilityPage = new ManageFacilityPage(testWebDriver);
-    manageFacilityPage.overrideIsa(Integer.parseInt(isaValue));
+    manageFacilityPage.overrideIsa(isaValue, 1);
   }
 
   @Then("^I should see calculated ISA \"([^\"]*)\"$")
@@ -128,7 +128,7 @@ public class ManageISA extends TestCaseHelper {
     LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
     loginPage.loginAs(userSIC, password);
     HomePage homePage=new HomePage(testWebDriver);
-    ManageFacilityPage manageFacilityPage = homePage.navigateCreateFacility();
+    ManageFacilityPage manageFacilityPage = homePage.navigateManageFacility();
     homePage.clickCreateFacilityButton();
 
     String date_time = manageFacilityPage.enterValuesInFacility(facilityCodePrefix, facilityNamePrefix,
@@ -137,32 +137,32 @@ public class ManageISA extends TestCaseHelper {
     manageFacilityPage.searchFacility(date_time);
     manageFacilityPage.clickFacilityList(date_time);
 
-    manageFacilityPage.overrideIsa(24);
+    manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.verifyCalculatedIsa(100);
     manageFacilityPage.clickIsaDoneButton();
     manageFacilityPage.verifyOverriddenIsa("24");
 
-    manageFacilityPage.overrideIsa(30);
+    manageFacilityPage.overrideIsa("30", 1);
     manageFacilityPage.clickIsaCancelButton();
     manageFacilityPage.verifyOverriddenIsa("24");
 
-    manageFacilityPage.overrideIsa(30);
+    manageFacilityPage.overrideIsa("30", 1);
     manageFacilityPage.clickUseCalculatedIsaButton();
     manageFacilityPage.clickIsaDoneButton();
     manageFacilityPage.verifyOverriddenIsa("");
 
-    manageFacilityPage.editPopulation(valueOf(30));
-    manageFacilityPage.overrideIsa(24);
+    manageFacilityPage.editPopulation(valueOf("30"));
+    manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.verifyCalculatedIsa(100);
     manageFacilityPage.clickIsaCancelButton();
 
     manageFacilityPage.editPopulation(valueOf(3000000));
-    manageFacilityPage.overrideIsa(124);
+    manageFacilityPage.overrideIsa("124", 1);
     manageFacilityPage.verifyCalculatedIsa(1000);
     manageFacilityPage.clickIsaCancelButton();
     manageFacilityPage.verifyOverriddenIsa("");
 
-    manageFacilityPage.overrideIsa(24);
+    manageFacilityPage.overrideIsa("24", 1);
     manageFacilityPage.clickIsaDoneButton();
     SaveButton.click();
     manageFacilityPage.verifySuccessMessage();

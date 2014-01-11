@@ -31,7 +31,6 @@ import static com.thoughtworks.selenium.SeleneseTestBase.assertNotEquals;
 import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static com.thoughtworks.selenium.SeleneseTestNgHelper.assertEquals;
 
-
 @Listeners(CaptureScreenshotOnFailureListener.class)
 
 public class E2EUpload extends TestCaseHelper {
@@ -44,11 +43,9 @@ public class E2EUpload extends TestCaseHelper {
   @Test(groups = {"admin"}, dataProvider = "Data-Provider-Function-Positive")
   public void uploadCSVFiles(String[] credentials) throws Exception {
 
-    LoginPage loginPage = new LoginPage(testWebDriver, baseUrlGlobal);
-
-    HomePage homePage = loginPage.loginAs(credentials[0], credentials[1]);
+    HomePage homePage = new LoginPage(testWebDriver, baseUrlGlobal).loginAs(credentials[0], credentials[1]);
     RolesPage rolesPage = homePage.navigateRoleAssignments();
-    List<String> userRoleList = new ArrayList<String>();
+    List<String> userRoleList = new ArrayList<>();
     userRoleList.add("Create Requisition");
 
     rolesPage.createRole("User", "User", userRoleList, "Requisition");
@@ -56,7 +53,6 @@ public class E2EUpload extends TestCaseHelper {
     UploadPage uploadPage = homePage.navigateUploads();
     verifyValidUserUpload(uploadPage);
     verifyInValidUserUpload(uploadPage);
-
 
     String userName = "User123";
     String userId = "200";
@@ -136,23 +132,23 @@ public class E2EUpload extends TestCaseHelper {
     dbWrapper.insertVirtualFacility(virtualFacilityCode, parentFacilityCode);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Geographic_Zone.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode), dbWrapper.getGeographicZoneId("Ngorongoro"));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographicZoneId", "code", parentFacilityCode), dbWrapper.getAttributeFromTable("geographic_zones", "id", "code", "Ngorongoro"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Type.csv");
     testWebDriver.sleep(2000);
-    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode), dbWrapper.getFacilityTypeId("warehouse"));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeId", "code", parentFacilityCode), dbWrapper.getAttributeFromTable("facility_types", "id", "code", "warehouse"));
     verifyGeographicZoneAndFacilityTypeForVirtualFacility(virtualFacilityCode, parentFacilityCode);
 
     dbWrapper.changeVirtualFacilityTypeId(virtualFacilityCode, 5);
     uploadPage.uploadFacilities("QA_Parent_Facility_New_Name.csv");
-    assertEquals("Dispensary", dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
-    assertNotEquals(dbWrapper.getFacilityFieldBYCode("name", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("name", parentFacilityCode));
+    assertEquals("Dispensary", dbWrapper.getAttributeFromTable("facilities", "name", "code", parentFacilityCode));
+    assertNotEquals(dbWrapper.getAttributeFromTable("facilities", "name", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "name", "code", parentFacilityCode));
     uploadPage.uploadProgramSupportedByFacilities("QA_program_supported.csv");
     testWebDriver.sleep(2000);
     List<Integer> listOfProgramsSupportedByParentFacility;
     listOfProgramsSupportedByParentFacility = dbWrapper.getAllProgramsOfFacility(parentFacilityCode);
-    assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getProgramID("HIV")))));
+    assertTrue(listOfProgramsSupportedByParentFacility.contains(new Integer(String.valueOf(dbWrapper.getAttributeFromTable("programs", "id", "code", "HIV")))));
     List<Integer> listOfProgramsSupportedByVirtualFacility;
     listOfProgramsSupportedByVirtualFacility = dbWrapper.getAllProgramsOfFacility(virtualFacilityCode);
     Set<Integer> setOfProgramsSupportedByParentFacility = new HashSet<>();
@@ -219,7 +215,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroupMembers("QA_Requisition_Group_Members_Subsequent_Duplicate.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Duplicate Requisition Group Member found in Record No");
-
   }
 
   private void verifyValidRequisitionGroupProgramScheduleUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -254,7 +249,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadRequisitionGroupProgramSchedule("QA_Requisition_Group_Program_Schedule_PUSH_Program.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Program type not supported for requisitions in Record No");
-
   }
 
   private void verifyValidRequisitionGroupUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -383,7 +377,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadGeographicZoneInvalidScenarios("QA_Geographic_Data_Invalid_No_Parent.csv");
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Hierarchy in Record No");
-
   }
 
   private void verifyValidProductPriceUpload(UploadPage uploadPage) throws FileNotFoundException {
@@ -405,7 +398,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Invalid Price per pack in Record No");
   }
 
-
   private void verifyValidProgramProductMappingUpload(UploadPage uploadPage) throws FileNotFoundException {
     uploadPage.uploadProgramProductMapping("QA_program_product.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
@@ -422,19 +414,18 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.validateErrorMessageOnUploadScreen("Invalid program code");
   }
 
-
   private void verifyValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
     String tableName = "users";
     uploadPage.uploadUsers("QA_Users.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "2");
-    assertEquals(dbWrapper.getRestrictLogin("User123"), "f");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User123"), "f");
 
     uploadPage.uploadUsers("QA_Users_Others.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
-    assertEquals(dbWrapper.getRestrictLogin("User1234"), "f");
-    assertEquals(dbWrapper.getRestrictLogin("User1235"), "t");
-    assertEquals(dbWrapper.getRestrictLogin("User1236"), "f");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1234"), "f");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1235"), "t");
+    assertEquals(dbWrapper.getAttributeFromTable("users", "restrictLogin", "userName", "User1236"), "f");
   }
 
   private void verifyInValidUserUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -497,6 +488,11 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.verifyErrorMessageOnUploadScreen();
     uploadPage.validateErrorMessageOnUploadScreen("Invalid reference data Product Group in Record No");
     assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+    uploadPage.uploadProductsInvalidScenarios("QA_Products_Invalid_Packsize_Less_Than_Zero.csv");
+    uploadPage.verifyErrorMessageOnUploadScreen();
+    uploadPage.validateErrorMessageOnUploadScreen("Invalid Pack size in Record No");
+    assertEquals(dbWrapper.getRowsCountFromDB(tableName), "0");
+
   }
 
   private void verifyValidProductUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -667,7 +663,6 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
-
   }
 
   private void verifyValidVirtualFacilityUpload(UploadPage uploadPage) throws IOException, SQLException {
@@ -677,12 +672,11 @@ public class E2EUpload extends TestCaseHelper {
     uploadPage.uploadFacilityFTPDetails("QA_Facility_FTP_Details_Subsequent.csv");
     uploadPage.verifySuccessMessageOnUploadScreen();
     uploadPage.validateSuccessMessageOnUploadScreen("File uploaded successfully. \"Number of records processed: 1\".");
-
   }
 
   public void verifyGeographicZoneAndFacilityTypeForVirtualFacility(String virtualFacilityCode, String parentFacilityCode) throws IOException, SQLException {
-    assertEquals(dbWrapper.getFacilityFieldBYCode("geographiczoneid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("geographiczoneid", parentFacilityCode));
-    assertEquals(dbWrapper.getFacilityFieldBYCode("typeid", virtualFacilityCode), dbWrapper.getFacilityFieldBYCode("typeid", parentFacilityCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "geographicZoneId", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "geographicZoneId", "code", parentFacilityCode));
+    assertEquals(dbWrapper.getAttributeFromTable("facilities", "typeId", "code", virtualFacilityCode), dbWrapper.getAttributeFromTable("facilities", "typeId", "code", parentFacilityCode));
   }
 
   @AfterMethod(groups = {"admin"})

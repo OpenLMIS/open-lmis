@@ -115,6 +115,16 @@ public class TestWebDriver {
     });
   }
 
+  public void waitForAjax() {
+    waitForPageToLoad();
+    final WebElement loader = findElement(By.id("loader"));
+    (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
+      public Boolean apply(WebDriver d) {
+        return (!loader.isDisplayed());
+      }
+    });
+  }
+
   public void waitForElementToBeEnabled(final WebElement element) {
     (new WebDriverWait(driver, DEFAULT_WAIT_TIME)).until(new ExpectedCondition<Boolean>() {
       public Boolean apply(WebDriver d) {
@@ -236,5 +246,10 @@ public class TestWebDriver {
       }
       element.sendKeys(Keys.RETURN);
     }
+  }
+
+  public void moveToElement(WebElement element) {
+    new Actions(this.driver).moveToElement(element).perform();
+    return;
   }
 }

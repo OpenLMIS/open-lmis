@@ -10,21 +10,29 @@
 
 package org.openlmis.order.domain;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.builder.FacilityBuilder;
+import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.builder.SupplyLineBuilder;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.Rnr;
 
-import static com.natpryce.makeiteasy.MakeItEasy.a;
-import static com.natpryce.makeiteasy.MakeItEasy.make;
+import static com.natpryce.makeiteasy.MakeItEasy.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
-import static org.openlmis.rnr.builder.RequisitionBuilder.defaultRequisition;
+import static org.openlmis.core.builder.FacilityBuilder.name;
+import static org.openlmis.core.builder.ProgramBuilder.defaultProgram;
+import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
+import static org.openlmis.rnr.builder.RequisitionBuilder.*;
 
 @RunWith(MockitoJUnitRunner.class)
 @Category(UnitTests.class)
@@ -46,6 +54,46 @@ public class OrderTest {
     order.setSupplyLine(supplyLine);
 
     assertThat(order.getSupplyingFacility(), is(supplyLine.getSupplyingFacility()));
+  }
+
+  @Test
+  public void shouldCompareTwoOrdersBasedOnSupplyingFacilityName() throws Exception {
+    Rnr rnrForHIV = make(a(RequisitionBuilder.defaultRequisition, with(id, 2L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "HIV"))))));
+    Order order1 = new Order(rnrForHIV);
+    order1.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+
+    Rnr rnrForTB = make(a(RequisitionBuilder.defaultRequisition, with(id, 4L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "TB"))))));
+    Order order2 = new Order(rnrForTB);
+    order2.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F11")))))));
+
+    assertThat(order1.compareTo(order2), is(lessThan(0)));
+  }
+
+  @Test
+  public void shouldCompareTwoOrdersBasedOnProgramNameIfSupplyingFacilityNameSame() throws Exception {
+    Rnr rnrForHIV = make(a(RequisitionBuilder.defaultRequisition, with(id, 2L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "HIV"))))));
+    Order order1 = new Order(rnrForHIV);
+    order1.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+
+    Rnr rnrForTB = make(a(RequisitionBuilder.defaultRequisition, with(id, 4L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "TB"))))));
+    Order order2 = new Order(rnrForTB);
+    order2.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+
+    assertThat(order1.compareTo(order2), is(lessThan(0)));
+  }
+
+  @Test
+  public void shouldCompareTwoOrderBasedOnCreationDateIfSupplyingFacilityNameAndProgramNameIsSame() throws Exception {
+    Rnr rnrForHIV = make(a(RequisitionBuilder.defaultRequisition, with(id, 2L), with(program, make(a(defaultProgram, with(ProgramBuilder.programName, "HIV"))))));
+    Order order1 = new Order(rnrForHIV);
+    order1.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+    order1.setCreatedDate(DateTime.now().toDate());
+
+    Order order2 = new Order(rnrForHIV);
+    order2.setSupplyLine(make(a(defaultSupplyLine, with(SupplyLineBuilder.facility, make(a(FacilityBuilder.defaultFacility, with(name, "F10")))))));
+    order2.setCreatedDate(DateTime.now().minusDays(1).toDate());
+
+    assertThat(order1.compareTo(order2), is(greaterThan(0)));
   }
 
   @Test

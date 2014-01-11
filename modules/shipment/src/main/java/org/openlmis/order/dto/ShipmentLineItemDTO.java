@@ -50,7 +50,7 @@ public class ShipmentLineItemDTO {
       isBlank(this.orderId) ||
       isBlank(this.quantityShipped)) {
 
-      throw new DataException("mandatory.field.missing");
+      throw new DataException("error.mandatory.fields.missing");
     }
   }
 

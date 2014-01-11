@@ -10,20 +10,14 @@
 
 package org.openlmis.pageobjects;
 
-
-import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
-
 import java.io.IOException;
 import java.util.List;
-
-import static com.thoughtworks.selenium.SeleneseTestBase.assertEquals;
-import static com.thoughtworks.selenium.SeleneseTestBase.assertTrue;
 import static org.openqa.selenium.support.How.ID;
 import static org.openqa.selenium.support.How.XPATH;
 
@@ -99,6 +93,11 @@ public class ProgramProductISAPage extends Page {
   @FindBy(how = ID, using = "productPrimaryName")
   private static WebElement productPrimaryName=null;
 
+  @FindBy(how = XPATH, using = "//div[@class='modal-header']")
+  private static WebElement programNameOnModalHeaderOFConfigureISAFormulaWindow =null;
+
+  @FindBy(how = XPATH, using = "//div[@id='ISA-population']")
+  private static WebElement programNameOnPopulationLabelOFConfigureISAFormulaWindow =null;
 
 
 
@@ -112,7 +111,7 @@ public class ProgramProductISAPage extends Page {
   public void fillProgramProductISA(String ratio, String dosesPerYear, String wastage, String bufferPercentage,
                                     String adjustmentValue, String minimumValue, String maximumValue) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
-    enterValueInRadioTextField(ratio);
+    enterValueInRatioTextField(ratio);
     enterValueInDosesTextField(dosesPerYear);
     enterValueInWastageTextField(wastage);
     enterValueInBufferPercentageTextField(bufferPercentage);
@@ -155,39 +154,18 @@ public class ProgramProductISAPage extends Page {
     dosesPerYearTextBox.sendKeys(dosesPerYear);
   }
 
-  public void enterValueInRadioTextField(String ratio) {
+  public void enterValueInRatioTextField(String ratio) {
     testWebDriver.waitForElementToAppear(ratioTextBox);
     ratioTextBox.sendKeys(Keys.ARROW_RIGHT);
     ratioTextBox.sendKeys(Keys.BACK_SPACE);
     ratioTextBox.sendKeys(ratio);
   }
 
-  public void verifyMandatoryFieldsToBeFilled() {
-    assertTrue(testWebDriver.getAttribute(ratioTextBox,"ng-required").equals("true"));
-    assertTrue(testWebDriver.getAttribute(dosesPerYearTextBox,"ng-required").equals("true"));
-    assertTrue(testWebDriver.getAttribute(wastageRateTextBox,"ng-required").equals("true"));
-    assertTrue(testWebDriver.getAttribute(bufferPercentageTextBox,"ng-required").equals("true"));
-    assertTrue(testWebDriver.getAttribute(adjustmentValueTextBox, "ng-required").equals("true"));
+  public boolean verifyErrorMessageDiv() {
+    return saveFailMessage.isDisplayed();
   }
 
-  public void verifyFieldsOnISAModalWindow() {
-    assertTrue("ratioTextBox should be displayed",ratioTextBox.isDisplayed());
-    assertTrue("dosesPerYearTextBox should be displayed",dosesPerYearTextBox.isDisplayed());
-    assertTrue("wastageRateTextBox should be displayed", wastageRateTextBox.isDisplayed());
-    assertTrue("bufferPercentageTextBox should be displayed", bufferPercentageTextBox.isDisplayed());
-    assertTrue("adjustmentValueTextBox should be displayed", adjustmentValueTextBox.isDisplayed());
-//    assertTrue("minimumValueTextBox should be displayed", minimumValueTextBox.isDisplayed());
-    assertTrue("ISAPopulationTextField should be displayed", ISAPopulationTextField.isDisplayed());
-    assertTrue("programProductISASaveButton should be displayed", programProductISASaveButton.isDisplayed());
-    assertTrue("programProductISACancelButton should be displayed", programProductISACancelButton.isDisplayed());
-  }
-
-  public void verifyErrorMessageDiv() {
-    assertTrue("saveFailMessage should be present",saveFailMessage.isDisplayed());
-  }
-
-
-  public String fillPopulation(String population) {
+  public String calculateISA(String population) {
     populationTextBox.clear();
     populationTextBox.sendKeys(population);
     testWebDriver.sleep(100);
@@ -196,11 +174,11 @@ public class ProgramProductISAPage extends Page {
     return testWebDriver.getText(isaValueLabel);
   }
 
-  public void verifyISAFormula(String ISAFormula) {
+  public String verifyISAFormula() {
     testWebDriver.sleep(500);
     testWebDriver.waitForElementToAppear(ISAFormulaFromConfigureProgramISAModalWindow);
     String formulaConfigureProgramWindow = ISAFormulaFromConfigureProgramISAModalWindow.getText();
-    assertEquals(ISAFormula, formulaConfigureProgramWindow);
+    return (formulaConfigureProgramWindow);
   }
 
   public String getISAFormulaFromISAFormulaModal() {
@@ -226,9 +204,9 @@ public class ProgramProductISAPage extends Page {
     return productsListValue;
   }
 
-  public void verifyMonthlyRestockAmountPresent() {
+  public boolean verifyMonthlyRestockAmountPresent() {
     testWebDriver.waitForElementToAppear(ratioTextBox);
-    SeleneseTestNgHelper.assertTrue("monthlyRestockAmountLabel should be present", monthlyRestockAmountLabel.isDisplayed());
+    return monthlyRestockAmountLabel.isDisplayed();
   }
 
   public void selectProgram(String program) {
@@ -258,9 +236,59 @@ public class ProgramProductISAPage extends Page {
     searchProductTextBox.sendKeys(product);
   }
 
-  public void verifySearchResults(String product) {
+  public boolean verifySearchResults(String product) {
     testWebDriver.waitForElementToAppear(productPrimaryName);
-    assertTrue("Product "+product+" should be displayed as a search Result",productPrimaryName.isDisplayed());
+    return productPrimaryName.isDisplayed();
   }
+
+  public String fillProgramProductISA(String program, String ratio, String dosesPerYear, String wastage, String bufferPercentage, String adjustmentValue, String minimumValue, String maximumValue, String population) {
+    selectProgram(program);
+    editFormula();
+    fillProgramProductISA(ratio, dosesPerYear, wastage, bufferPercentage, adjustmentValue, minimumValue, maximumValue);
+    String expectedISAValue = String.valueOf(Math.round(Integer.parseInt(calculateISA(population)) / 10));
+    saveISA();
+    return expectedISAValue;
+  }
+
+  public String getProgramNameDisplayedOnModalHeaderOFConfigureISAFormulaWindow(){
+    return programNameOnModalHeaderOFConfigureISAFormulaWindow.getText();
+  }
+
+  public String getProgramNameDisplayedOnPopulationLabelOFConfigureISAFormulaWindow(){
+    return programNameOnPopulationLabelOFConfigureISAFormulaWindow.getText();
+  }
+
+  public boolean verifyDosesPerYearTextBoxFieldOnISAModalWindowIsDisplayed() {
+    return dosesPerYearTextBox.isDisplayed();
+  }
+
+  public boolean verifyWastageRateTextBoxFieldOnISAModalWindowIsDisplayed() {
+    return wastageRateTextBox.isDisplayed();
+  }
+
+  public boolean verifyBufferPercentageTextBoxFieldOnISAModalWindowIsDisplayed() {
+    return bufferPercentageTextBox.isDisplayed();
+  }
+
+  public boolean verifyRatioTextBoxFieldOnISAModalWindowIsDisplayed() {
+    return ratioTextBox.isDisplayed();
+  }
+
+  public boolean verifyISAPopulationTextFieldOnISAModalWindowIsDisplayed() {
+    return ISAPopulationTextField.isDisplayed();
+  }
+
+  public boolean verifyAdjustmentValueTextBoxFieldOnISAModalWindowIsDisplayed() {
+    return adjustmentValueTextBox.isDisplayed();
+  }
+
+  public boolean verifyProgramProductISASaveButtonFieldOnISAModalWindowIsDisplayed() {
+    return programProductISASaveButton.isDisplayed();
+  }
+
+  public boolean verifyProgramProductISACancelButtonFieldOnISAModalWindowIsDisplayed() {
+    return programProductISACancelButton.isDisplayed();
+  }
+
 
 }

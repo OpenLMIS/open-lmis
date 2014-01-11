@@ -34,7 +34,7 @@
         </div>
       </div>
 
-      <div class="list-container">
+      <div id="distributionList" class="list-container">
         <div class="row-fluid list-row" ng-repeat="distribution in sharedDistributions.distributionList">
 
           <div class="span2">
@@ -43,9 +43,9 @@
           <div class="span2" ng-bind="distribution.program.name"></div>
           <div class="span2" ng-bind="distribution.period.name"></div>
           <div class="span2" ng-bind="distribution.status"></div>
-          <div class="span2"><a href="javascript:void(0)" openlmis-message="label.record.data"
+          <div class="span2"><a id="recordData{{$index}}" href="javascript:void(0)" openlmis-message="label.record.data"
                                 ng-href="#/record-facility-data/{{distribution.id}}"></a></div>
-          <div class="span1"><a href="javascript:void(0)" openlmis-message="label.sync"
+          <div class="span1"><a id="sync{{$index}}" href="javascript:void(0)" openlmis-message="label.sync"
                                 ng-click="showConfirmDistributionSync(distribution.id)"></a></div>
           <div class="span1">
             <i class="icon-remove-sign" ng-click="deleteDistribution(distribution.id)"></i>

@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -30,4 +29,15 @@ public class ProgramProductISA extends BaseModel {
   Integer minimumValue;
   Integer maximumValue;
   Integer adjustmentValue;
+
+  public Integer calculate(Long population) {
+    int isaValue = (int) Math.ceil(population * (this.whoRatio / 100) * this.dosesPerYear * this.wastageFactor / 12 * (1 + this.bufferPercentage / 100) + this.adjustmentValue);
+
+    if (this.minimumValue != null && isaValue < this.minimumValue)
+      return this.minimumValue;
+    if (this.maximumValue != null && isaValue > this.maximumValue)
+      return this.maximumValue;
+
+    return isaValue;
+  }
 }

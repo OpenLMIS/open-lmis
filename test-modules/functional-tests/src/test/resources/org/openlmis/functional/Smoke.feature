@@ -253,6 +253,16 @@ Feature: Smoke Tests
     And I access convert to order
     Then "1" requisition converted to order
 
+  @smokeRequisition
+  Scenario: User should able to see list of orders to update POD
+    Given I have "storeIncharge" user with "MANAGE_POD" rights
+    And I have "5" requisitions for convert to order
+    And I am logged in as "storeIncharge"
+    And I access convert to order page
+    And I select "1" requisition on page "1"
+    And I access convert to order
+    When I access Manage POD page
+    Then I should see list of orders to manage POD for Rnr
 
 # DISTRIBUTION SMOKE TESTS
 
@@ -333,7 +343,8 @@ Feature: Smoke Tests
       | VACCINES | P10     | 10       | 10           | 10            | 10               | null         | null         | 0               |
     And I have following override ISA values:
       | Facility Code | Program  | Product | ISA  |
-      | F11           | VACCINES | P11     | 1000 |
+      | F11           | VACCINES | P11     | 1005 |
+    And I update population of facility "F10" as "342"
     And I have role assigned to delivery zones
     When I am logged in as "fieldCoordinator"
     And I access plan my distribution page
@@ -342,6 +353,13 @@ Feature: Smoke Tests
     And I select period "Period14"
     And I click load amount
     Then I should see ISA values as per delivery zone facilities
+    And  I verify ISA values for Product1 as:
+      | Facility1 | Facility2 |
+      | 31        | 31        |
+    And  I verify ISA values for Product2 as:
+      | Facility1 | Facility2 |
+      | 101       | --        |
+    And I should not see inactive products on view load amount
     When I access plan my distribution page
     And I select delivery zone "Delivery Zone Second"
     And I select program "TB"
@@ -381,7 +399,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     And I verify Distributions data is not synchronised
     Then I should see Delivery Zone "Delivery Zone First", Program "VACCINES" and Period "Period14" in the header
     And I should see No facility selected
@@ -390,7 +408,6 @@ Feature: Smoke Tests
     Then I should verify facility zone "Health center" in the header
     And  I should verify facility name "Village Dispensary" in the header
     And I verify legends
-
 
   @smokeDistribution
   Scenario: User should be able to add/edit/delete refrigerator
@@ -405,7 +422,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     When I choose facility "F10"
     Then I should see Refrigerators screen
     When I add new refrigerator
@@ -455,7 +472,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     And I choose facility "F10"
     And I navigate to general observations tab
     Then Verify "general observation" indicator should be "RED"
@@ -465,11 +482,11 @@ Feature: Smoke Tests
     Then Verify "general observation" indicator should be "AMBER"
     When I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier       | X YZ            |
     Then Verify "general observation" indicator should be "GREEN"
     And I verify saved "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier       | X YZ            |
 
   @smokeDistribution
   Scenario: User should fill EPI use data
@@ -485,7 +502,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    And I record data
+    And I record data for distribution "1"
     And I choose facility "F10"
     And Navigate to EPI tab
     Then Verify "epi use" indicator should be "RED"
@@ -501,9 +518,77 @@ Feature: Smoke Tests
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth | total |
       | 16          | 11/2012        | 1    | 10       | 12           | 5          | 22    |
     When I access plan my distribution page
-    When I record data
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then Verify "epi use" indicator should be "GREEN"
+
+
+  @smokeDistribution
+  Scenario: User should fill EPI Inventory data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    When I am logged in as "storeIncharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And I navigate to epi inventory tab
+    Then Verify "epi inventory" indicator should be "RED"
+    And I Enter "epi inventory" values:
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 20               | 100               | 5               |
+      | 10               |                   | 10              |
+    Then Verify "epi inventory" indicator should be "AMBER"
+    When I enter EPI Inventory deliveredQuantity of Row "2" as "5"
+    Then Verify "epi inventory" indicator should be "GREEN"
+    And I verify saved "epi inventory" values:
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 20               | 100               | 10              |
+      | 10               | 5                 | 10              |
+    When I access plan my distribution page
+    When I record data for distribution "1"
+    And I choose facility "F10"
+    Then Verify "epi inventory" indicator should be "GREEN"
+
+
+  @smokeDistribution
+  Scenario: User should fill Coverage data
+    Given I have the following data for distribution:
+      | userSIC       | deliveryZoneCodeFirst | deliveryZoneCodeSecond | deliveryZoneNameFirst | deliveryZoneNameSecond | facilityCodeFirst | facilityCodeSecond | programFirst | programSecond | schedule |
+      | storeIncharge | DZ1                   | DZ2                    | Delivery Zone First   | Delivery Zone Second   | F10               | F11                | VACCINES     | TB            | M        |
+    And I update product "P10" to have product group "penta"
+    And I have data available for "Multiple" facilities attached to delivery zones
+    And I assign delivery zone "DZ1" to user "storeIncharge" having role "store in-charge"
+    When I am logged in as "storeIncharge"
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate distribution
+    And I record data for distribution "1"
+    And I choose facility "F10"
+    And Navigate to Coverage tab
+    Then Verify "coverage" indicator should be "RED"
+    And I Enter "coverage" values:
+      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | female   | 123                | 22                  | 23               |                   |
+    Then Verify "coverage" indicator should be "AMBER"
+    When I enter coverage maleMobileBrigade as "500"
+    Then Verify "coverage" indicator should be "GREEN"
+    And I verify saved "coverage" values:
+      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | female   | 123                | 22                  | 23               | 500              |
+    When I access plan my distribution page
+    When I record data for distribution "1"
+    And I choose facility "F10"
+    Then Verify "coverage" indicator should be "GREEN"
 
   @smokeDistribution
   Scenario: User should verify facility and sync status
@@ -520,7 +605,7 @@ Feature: Smoke Tests
     And I select program "VACCINES"
     And I select period "Period14"
     And I initiate distribution
-    When I record data
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "AMBER"
     And I see "Individual" facility icon as "AMBER"
@@ -533,8 +618,8 @@ Feature: Smoke Tests
     And I see "Individual" facility icon as "RED"
     When I access plan my distribution page
     When I try to sync recorded data
-    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be synchronized"
-    When I record data
+    Then I verify sync message as "No facility for the chosen zone, program and period is ready to be sync"
+    When I record data for distribution "1"
 
     And I choose facility "F10"
     When I edit refrigerator
@@ -547,7 +632,7 @@ Feature: Smoke Tests
     And I navigate to general observations tab
     And I Enter "general observation" values:
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
+      | some observation | samuel          | fc               | Verifier       | XYZ             |
 
     And Navigate to EPI tab
     And I Enter "epi use" values:
@@ -555,16 +640,33 @@ Feature: Smoke Tests
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
+    And Navigate to Coverage tab
+    And I Enter "coverage" values:
+      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | female   | 123                | 22                  | 23               | 242               |
+    And I navigate to epi inventory tab
+    And I Enter "epi inventory" values:
+      | existingQuantity | deliveredQuantity | spoiledQuantity |
+      | 20               | 100               | 5               |
+      | 10               | 50                | 3               |
     Then I see "Overall" facility icon as "GREEN"
     And I see "Individual" facility icon as "GREEN"
     When I access plan my distribution page
+
     When I sync recorded data
     Then I check confirm sync message as "F10-Village Dispensary"
     When I done sync message
-    And I view observations data in DB:
+    And I view observations data in DB for facility "F10":
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
-      | some observation | samuel          | fc               | mai ka         | lal             |
-    When I record data
+      | some observation | samuel          | fc               | Verifier       | XYZ             |
+    And I view epi use data in DB for facility "F10" and product group "penta":
+      | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
+      | 16          | 11/2012        | 1    | 10       | 12           | 5          |
+    And I view refrigerator readings in DB for refrigerator serial number "GR-J287PGHV" and facility "F10":
+      | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
+      | 3.0         | Y                    | 1              | 0               | N                    | null  |
+    And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
+    When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
     And I see "Individual" facility icon as "BLUE"
@@ -575,3 +677,19 @@ Feature: Smoke Tests
     When I navigate to refrigerator tab
     And I access show
     Then I see refrigerator fields disabled
+
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period13"
+    And I initiate distribution
+    When I record data for distribution "2"
+    And I choose facility "F10"
+    Then I see "Overall" facility icon as "RED"
+    And I see "Individual" facility icon as "RED"
+    And I see "overall" refrigerator icon as "RED"
+    And I verify the refrigerator "LG;800 LITRES;GR-J287PGHV" present
+
+
+
+

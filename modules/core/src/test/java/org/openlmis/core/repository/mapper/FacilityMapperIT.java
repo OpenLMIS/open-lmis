@@ -577,7 +577,7 @@ public class FacilityMapperIT {
     deliveryZoneProgramScheduleMapper.insert(new DeliveryZoneProgramSchedule(deliveryZone.getId(),
       program.getId(), processingSchedule.getId()));
 
-    Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility1", 10l, true);
+    Facility facility1 = insertMemberFacility(deliveryZone, program, "F10A", "facility", 10l, true);
 
     insertMemberFacility(deliveryZone, program, "F10011", "facility2", 9l, true);
     insertMemberFacility(deliveryZone, program, "F10010", "facility3", 9L, true);

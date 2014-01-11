@@ -11,10 +11,13 @@
 package org.openlmis.order.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.Transformer;
+import org.openlmis.core.domain.FulfillmentRoleAssignment;
 import org.openlmis.core.domain.OrderConfiguration;
 import org.openlmis.core.domain.Right;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.repository.OrderConfigurationRepository;
+import org.openlmis.core.service.RoleAssignmentService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.SupplyLineService;
 import org.openlmis.order.domain.DateFormat;
@@ -37,6 +40,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
+import static org.apache.commons.collections.CollectionUtils.collect;
 import static org.openlmis.order.domain.OrderStatus.*;
 
 @Service
@@ -45,10 +50,13 @@ public class OrderService {
 
   @Autowired
   private OrderConfigurationRepository orderConfigurationRepository;
+
   @Autowired
   private OrderRepository orderRepository;
+
   @Autowired
   private RequisitionService requisitionService;
+
   @Autowired
   private SupplyLineService supplyLineService;
   @Autowired
@@ -56,6 +64,9 @@ public class OrderService {
 
   @Autowired
   private OrderEventService orderEventService;
+
+  @Autowired
+  RoleAssignmentService roleAssignmentService;
 
   public static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
 
@@ -91,19 +102,13 @@ public class OrderService {
 
   public List<Order> getOrdersForPage(int page, Long userId, Right right) {
     List<Order> orders = orderRepository.getOrdersForPage(page, pageSize, userId, right);
-    Rnr rnr;
-    for (Order order : orders) {
-      rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
-      removeUnorderedProducts(rnr);
-      order.setRnr(rnr);
-    }
-    return orders;
+    return fillOrders(orders);
   }
 
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     if (order == null) {
-      return order;
+      return null;
     }
     Rnr requisition = requisitionService.getFullRequisitionById(order.getRnr().getId());
     requisition.setProgram(programService.getById(requisition.getProgram().getId()));
@@ -117,16 +122,6 @@ public class OrderService {
     requisition.setFullSupplyLineItems(getLineItemsForOrder(fullSupplyLineItems));
     List<RnrLineItem> nonFullSupplyLineItems = requisition.getNonFullSupplyLineItems();
     requisition.setNonFullSupplyLineItems(getLineItemsForOrder(nonFullSupplyLineItems));
-  }
-
-  private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
-    List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
-    for (RnrLineItem rnrLineItem : rnrLineItems) {
-      if (rnrLineItem.getPacksToShip() != null && rnrLineItem.getPacksToShip() > 0) {
-        lineItemsForOrder.add(rnrLineItem);
-      }
-    }
-    return lineItemsForOrder;
   }
 
   public void updateStatusAndShipmentIdForOrders(Set<Long> orderIds, ShipmentFileInfo shipmentFileInfo) {
@@ -174,5 +169,41 @@ public class OrderService {
 
   public Integer getPageSize() {
     return pageSize;
+  }
+
+  public List<Order> searchByStatusAndRight(Long userId, Right right, List<OrderStatus> statuses) {
+    List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, right);
+
+    List<Order> orders = orderRepository.searchByWarehousesAndStatuses((List<Long>) collect(fulfilmentRolesWithRight, new Transformer() {
+      @Override
+      public Object transform(Object o) {
+        return ((FulfillmentRoleAssignment) o).getFacilityId();
+      }
+    }), statuses);
+
+    orders = fillOrders(orders);
+    sort(orders);
+
+    return orders;
+  }
+
+  private List<Order> fillOrders(List<Order> orders) {
+    Rnr rnr;
+    for (Order order : orders) {
+      rnr = requisitionService.getFullRequisitionById(order.getRnr().getId());
+      removeUnorderedProducts(rnr);
+      order.setRnr(rnr);
+    }
+    return orders;
+  }
+
+  private List<RnrLineItem> getLineItemsForOrder(List<RnrLineItem> rnrLineItems) {
+    List<RnrLineItem> lineItemsForOrder = new ArrayList<>();
+    for (RnrLineItem rnrLineItem : rnrLineItems) {
+      if (rnrLineItem.getPacksToShip() != null && rnrLineItem.getPacksToShip() > 0) {
+        lineItemsForOrder.add(rnrLineItem);
+      }
+    }
+    return lineItemsForOrder;
   }
 }

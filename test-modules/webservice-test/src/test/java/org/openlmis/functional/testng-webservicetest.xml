@@ -15,32 +15,9 @@
         <include name="webservice"/>
       </run>
     </groups>
-    <classes preserver-order="true">
-      <class name="org.openlmis.functional.FacilityFeed">
-      </class>
-      <class name="org.openlmis.functional.ProgramCatalogChangesFeed">
-      </class>
-      <class name="org.openlmis.functional.CreateUpdateCHW">
-      </class>
-      <class name="org.openlmis.functional.FacilityProgramSupportedFeed">
-      </class>
-      <class name="org.openlmis.functional.ApproveRequisitionTest">
-      </class>
-      <class name="org.openlmis.functional.SubmitReportTest">
-      </class>
-      <class name="org.openlmis.functional.ProgramProductAPI">
-      </class>
-      <class name="org.openlmis.functional.FacilityAPI">
-        </class>
-      <class name="org.openlmis.functional.PODTest">
-      </class>
-      <class name="org.openlmis.functional.GetRequisitionDetailsAPI">
-      </class>
-        <class name="org.openlmis.functional.TestCalculationsOnRnRThroughAPI">
-      </class>
-      <class name="org.openlmis.functional.RequisitionStatusFeed">
-      </class>
-    </classes>
+      <packages>
+          <package name="org.openlmis.functional"/>
+      </packages>
   </test>
 </suite>
 

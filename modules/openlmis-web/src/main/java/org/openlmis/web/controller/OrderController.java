@@ -29,8 +29,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Set;
 
+import static java.util.Arrays.asList;
+import static org.openlmis.core.domain.Right.MANAGE_POD;
+import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
 import static org.openlmis.web.response.OpenLmisResponse.error;
 import static org.openlmis.web.response.OpenLmisResponse.response;
@@ -48,6 +52,7 @@ public class OrderController extends BaseController {
   public static final String DATE_FORMATS = "dateFormats";
   public static final String PAGE_SIZE = "pageSize";
   public static final String NUMBER_OF_PAGES = "numberOfPages";
+  public static final String ORDERS_FOR_POD = "ordersForPOD";
 
   @Autowired
   private OrderService orderService;
@@ -65,8 +70,11 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page", required = true, defaultValue = "1") Integer page, HttpServletRequest request) {
-    ResponseEntity<OpenLmisResponse> response = response(ORDERS, getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
+  public ResponseEntity<OpenLmisResponse> getOrdersForPage(@RequestParam(value = "page",
+    required = true,
+    defaultValue = "1") Integer page, HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response = response(ORDERS,
+      getOrdersForView(orderService.getOrdersForPage(page, loggedInUserId(request), Right.VIEW_ORDER)));
     response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
     response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
     return response;
@@ -92,7 +100,8 @@ public class OrderController extends BaseController {
 
   @RequestMapping(value = "/order-file-template", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CONFIGURE_EDI')")
-  public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO, HttpServletRequest request) {
+  public ResponseEntity<OpenLmisResponse> saveOrderFileTemplateDTO(@RequestBody OrderFileTemplateDTO orderFileTemplateDTO,
+                                                                   HttpServletRequest request) {
     orderService.saveOrderFileTemplate(orderFileTemplateDTO, loggedInUserId(request));
     return OpenLmisResponse.success("order.file.template.saved.success");
   }
@@ -102,5 +111,14 @@ public class OrderController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getAllDateFormats() {
     Set<DateFormat> dateFormats = orderService.getAllDateFormats();
     return response(DATE_FORMATS, dateFormats);
+  }
+
+  @RequestMapping(value = "/manage-pod-orders", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
+  public ResponseEntity<OpenLmisResponse> getOrdersForPOD(HttpServletRequest request) {
+    List<Order> ordersForPOD = orderService.searchByStatusAndRight(loggedInUserId(request),
+      MANAGE_POD,
+      asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK));
+    return response(ORDERS_FOR_POD, getOrdersForView(ordersForPOD));
   }
 }

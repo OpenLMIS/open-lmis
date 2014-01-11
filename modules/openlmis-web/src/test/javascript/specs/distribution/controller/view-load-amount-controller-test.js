@@ -17,28 +17,29 @@ describe('ViewLoadAmountController', function () {
     scope = $rootScope.$new();
     controller = $controller;
     httpBackend = $httpBackend;
-    program1 = {id:1, name:'Vaccine'};
+    program1 = {id: 1, name: 'Vaccine'};
     var programProducts = [
-      {product:{id:1, name:'polio10', productGroup:{name:'polio'}}},
-      {product:{id:2, name:'polio20', productGroup:{name:'polio'}}},
-      {product:{id:3, name:'penta1', productGroup:{name:'penta'}}}
+      {product: {id: 1, name: 'polio10', productGroup: {name: 'polio'}}},
+      {product: {id: 2, name: 'polio20', productGroup: {name: 'polio'}}},
+      {product: {id: 3, name: 'penta1', productGroup: {name: 'penta'}}},
+      {product: {id: 4, name: 'blank', productGroup: {name: ''}}}
     ];
     facilities = [
-      {id:'F10', name:'Village Dispensary', geographicZone:{id:1, name:'Ngrogoro', level:{name:'City' }}, catchmentPopulation: 200,
-        supportedPrograms:[
-          {program:program1, programProducts:programProducts}
+      {id: 'F10', name: 'Village Dispensary', geographicZone: {id: 1, name: 'Ngrogoro', level: {name: 'City' }}, catchmentPopulation: 200,
+        supportedPrograms: [
+          {program: program1, programProducts: programProducts}
         ]},
-      {id:'F11', name:'Central Hospital', geographicZone:{id:1, name:'District 1', level:{name:'City' }}, catchmentPopulation: 150,
-        supportedPrograms:[
-          {program:program1, programProducts:programProducts}
+      {id: 'F11', name: 'Central Hospital', geographicZone: {id: 1, name: 'District 1', level: {name: 'City' }}, catchmentPopulation: 150,
+        supportedPrograms: [
+          {program: program1, programProducts: programProducts}
         ]}
     ];
-    controller(ViewLoadAmountController, {$scope:scope, facilities:facilities, period:{id:1, name:'period 1'}, deliveryZone:{id:1}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: facilities, period: {id: 1, name: 'period 1'}, deliveryZone: {id: 1}});
 
   }));
 
   it('should set no records found message if no facilities are found', function () {
-    controller(ViewLoadAmountController, {$scope:scope, facilities:[], period:{}, deliveryZone:{}});
+    controller(ViewLoadAmountController, {$scope: scope, facilities: [], period: {}, deliveryZone: {}});
     expect(scope.message).toEqual("msg.delivery.zone.no.record");
   });
 
@@ -51,7 +52,7 @@ describe('ViewLoadAmountController', function () {
   });
 
   it('should set period', function () {
-    expect(scope.period).toEqual({id:1, name:'period 1'});
+    expect(scope.period).toEqual({id: 1, name: 'period 1'});
   });
 
   it('should group program products of each facility by product group name', function () {
@@ -60,36 +61,82 @@ describe('ViewLoadAmountController', function () {
   });
 
   it('should sort program products of each facility by product group name', function () {
-    expect(scope.facilityMap['Ngrogoro'][0].supportedPrograms[0].sortedProductGroup).toEqual(['penta', 'polio']);
+    expect(scope.facilityMap['Ngrogoro'][0].supportedPrograms[0].sortedProductGroup).toEqual(['penta', 'polio', '']);
   });
 
   it('should sort facilities geo zones on the basis of geo zone name', function () {
     expect(scope.sortedGeoZoneKeys).toEqual(['District 1', 'Ngrogoro']);
   });
 
-  it('should get all program products of all product groups in facility in order by product group name as an array', function () {
+  it('should get all program products of all product groups in facility in order by product group name as an array and push blank to last', function () {
     var programProducts = scope.getProgramProducts(facilities[0]);
-    expect(programProducts.length).toEqual(3);
+    expect(programProducts.length).toEqual(4);
     expect(programProducts[0].product.name).toEqual('penta1');
     expect(programProducts[1].product.name).toEqual('polio10');
     expect(programProducts[2].product.name).toEqual('polio20');
+    expect(programProducts[3].product.name).toEqual('blank');
   });
 
-  it('should get all program products of all product groups in facility in order by product group name as an array', function () {
-    var programProducts = scope.getProgramProducts(facilities[0]);
-    expect(programProducts.length).toEqual(3);
-    expect(programProducts[0].product.name).toEqual('penta1');
-    expect(programProducts[1].product.name).toEqual('polio10');
-    expect(programProducts[2].product.name).toEqual('polio20');
-  });
 
-  it('should calculate total population of all geo zones', function(){
+  it('should calculate total population of all geo zones', function () {
     expect(scope.zonesTotal['totalPopulation']).toEqual(350);
   });
 
-  it('should calculate total population by each geo zone for all geo zones', function(){
+  it('should calculate total population by each geo zone for all geo zones', function () {
     expect(scope.aggregateMap['Ngrogoro']['totalPopulation']).toEqual(200);
     expect(scope.aggregateMap['District 1']['totalPopulation']).toEqual(150);
+  });
+
+  it('should get program products for total of zones', function () {
+    var product1 = {
+      name: "product1",
+      productGroup: {
+        name: 'group1'
+      }
+    };
+    scope.zonesTotal = {
+      totalProgramProductsMap: {
+        group1: [
+          {
+            product: product1
+          },
+          {
+            product: {
+              productGroup: {
+                name: 'group1'
+              }
+            }
+          }
+        ],
+        group2: [
+          {
+            product: {
+              productGroup: {
+                name: 'group2'
+              }
+            }
+          }
+        ],
+        group3: [
+          {
+            product: {
+              productGroup: {
+                name: 'group3'
+              }
+            }
+          }
+        ]
+      }
+    };
+    scope.sortedGeoZoneKeys = ['zone1', 'zone2'];
+    scope.aggregateMap = {zone1: {
+      sortedProductGroup: [ "group1", "group2", "group3"]
+    }};
+
+    var programProducts = scope.getProgramProductsForAggregateRow(null, scope.zonesTotal);
+
+    expect(programProducts.length).toEqual(4);
+    expect(programProducts[0]).toEqual({product: product1});
   });
 });
 
@@ -99,10 +146,10 @@ describe("View load amount resolve", function () {
   beforeEach(module('openlmis.services'));
   beforeEach(inject(function (_$httpBackend_, $controller, _$timeout_, _$route_) {
     $httpBackend = _$httpBackend_;
-    deferredObject = {promise:{id:1}, resolve:function () {
+    deferredObject = {promise: {id: 1}, resolve: function () {
     }};
     spyOn(deferredObject, 'resolve');
-    $q = {defer:function () {
+    $q = {defer: function () {
       return deferredObject
     }};
     $timeout = _$timeout_;
@@ -111,28 +158,27 @@ describe("View load amount resolve", function () {
   }));
 
   it('should get all facilities with their Isa amount in delivery zone', function () {
-    $route = {current:{params:{deliveryZoneId:1, programId:2}}};
+    $route = {current: {params: {deliveryZoneId: 1, programId: 2}}};
     $httpBackend.expect('GET', '/deliveryZones/1/programs/2/facilities.json').respond([]);
-    ctrl(ViewLoadAmountController.resolve.facilities, {$q:$q, $route : $route});
+    ctrl(ViewLoadAmountController.resolve.facilities, {$q: $q, $route: $route});
     $timeout.flush();
     $httpBackend.flush();
     expect(deferredObject.resolve).toHaveBeenCalled();
   });
 
   it('should get period reference data', function () {
-    $route = {current:{params:{periodId:2}}};
+    $route = {current: {params: {periodId: 2}}};
     $httpBackend.expect('GET', '/periods/2.json').respond([]);
-    ctrl(ViewLoadAmountController.resolve.period, {$q:$q, $route : $route});
+    ctrl(ViewLoadAmountController.resolve.period, {$q: $q, $route: $route});
     $timeout.flush();
     $httpBackend.flush();
     expect(deferredObject.resolve).toHaveBeenCalled();
   });
 
-
   it('should get period reference data', function () {
-    $route = {current:{params:{deliveryZoneId:2}}};
+    $route = {current: {params: {deliveryZoneId: 2}}};
     $httpBackend.expect('GET', '/deliveryZones/2.json').respond([]);
-    ctrl(ViewLoadAmountController.resolve.deliveryZone, {$q:$q, $route : $route});
+    ctrl(ViewLoadAmountController.resolve.deliveryZone, {$q: $q, $route: $route});
     $timeout.flush();
     $httpBackend.flush();
     expect(deferredObject.resolve).toHaveBeenCalled();

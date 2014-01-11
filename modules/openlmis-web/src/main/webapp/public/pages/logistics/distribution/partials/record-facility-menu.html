@@ -11,39 +11,39 @@
 <div class="left-navigation" ng-controller="RecordFacilityMenuController">
   <ul>
     <li class="is-complete">
-      <a href="">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.visit.information"></span>
+      <a id="facilityVisitTab" href="">
+        <span id="facilityVisitTabIcon" class="status-icon" ></span>
+        <span id="facilityVisitTabLabel" openlmis-message="label.visit.information"></span>
       </a>
     </li>
     <li ng-class="[distributionData.refrigerators.computeStatus(), isSelected('refrigerator-data')]">
-      <a href="" ng-click="changeRoute('refrigerator-data')">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.refrigerators"></span>
+      <a id="refrigeratorTab" href="" ng-click="changeRoute('refrigerator-data')">
+        <span id="refrigeratorTabIcon" class="status-icon"></span>
+        <span id="refrigeratorTabLabel" openlmis-message="label.refrigerators"></span>
       </a>
     </li>
-    <li ng-class="[isSelected('epi-inventory')]" class="is-complete">
-      <a href="">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.epi.inventory"></span>
+    <li ng-class="[distributionData.epiInventory.computeStatus(), isSelected('epi-inventory')]">
+      <a id="epiInventoryTab" href="" ng-click="changeRoute('epi-inventory')">
+        <span id="epiInventoryTabIcon" class="status-icon"></span>
+        <span id="epiInventoryTabLabel" openlmis-message="label.epi.inventory"></span>
       </a>
     </li>
     <li ng-class="[distributionData.epiUse.computeStatus(), isSelected('epi-use')]">
-      <a href="" ng-click="changeRoute('epi-use')">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.epi.use"></span>
+      <a id="epiUseTab" href="" ng-click="changeRoute('epi-use')">
+        <span id="epiUseTabIcon" class="status-icon"></span>
+        <span id="epiUseTabLabel" openlmis-message="label.epi.use"></span>
       </a>
     </li>
-    <li class="is-empty">
-      <a href="">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.coverage"></span>
+    <li ng-class="[distributionData.coverage.computeStatus(), isSelected('coverage')]">
+      <a id="coverageTab" href="" ng-click="changeRoute('coverage')">
+        <span id="coverageTabIcon" class="status-icon"></span>
+        <span id="coverageTabLabel" openlmis-message="label.coverage"></span>
       </a>
     </li>
     <li ng-class="[distributionData.facilityVisit.computeStatus(), isSelected('facility-visit')]">
-      <a href="" ng-click="changeRoute('facility-visit')">
-        <span class="status-icon"></span>
-        <span openlmis-message="label.observations"></span>
+      <a id="generalObservationTab"  href="" ng-click="changeRoute('facility-visit')">
+        <span id="generalObservationTabIcon" class="status-icon"></span>
+        <span id="generalObservationTabLabel" openlmis-message="label.observations"></span>
       </a>
     </li>
   </ul>

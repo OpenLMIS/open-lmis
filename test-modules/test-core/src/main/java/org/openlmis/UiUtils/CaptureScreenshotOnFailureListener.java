@@ -15,6 +15,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.TestListenerAdapter;
 
 import java.io.File;
@@ -57,6 +58,7 @@ public class CaptureScreenshotOnFailureListener extends TestListenerAdapter {
 
     try {
       FileUtils.copyFile(scrFile, new File(filename));
+      Reporter.log(filename, true);
     } catch (IOException e) {
       e.printStackTrace();
     }

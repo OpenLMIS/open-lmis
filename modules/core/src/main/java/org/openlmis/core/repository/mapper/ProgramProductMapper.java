@@ -68,6 +68,20 @@ public interface ProgramProductMapper {
   List<ProgramProduct> getOptionsByProduct(Product product);
 
 
+  @Select({"SELECT PP.*, PD.* FROM program_products PP INNER JOIN products PD ON PP.productId = PD.id",
+    "WHERE PP.programId = #{id} AND PP.active = TRUE AND PD.active = TRUE",
+    "ORDER BY PD.displayOrder NULLS LAST, LOWER(PD.code)"})
+  @Results(value = {
+    @Result(property = "id", column = "id"),
+    @Result(property = "program", column = "programId", javaType = Program.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+    @Result(property = "product", column = "productId", javaType = Product.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+    @Result(property = "programProductIsa", column = "id", javaType = ProgramProductISA.class,
+      one = @One(select = "org.openlmis.core.repository.mapper.ProgramProductIsaMapper.getIsaByProgramProductId"))
+  })
+  List<ProgramProduct> getActiveByProgram(Long programId);
+
   @Select("SELECT * FROM program_products WHERE id = #{id}")
   @Results(value = {
     @Result(property = "product", column = "productId", javaType = Product.class,
@@ -83,6 +97,7 @@ public interface ProgramProductMapper {
     @Result(property = "product.active", column = "productActive")
   })
   List<ProgramProduct> getByProductCode(String code);
+
 
   @Select("SELECT DISTINCT pp.active, pr.code AS programCode, pr.name AS programName, p.code AS productCode, " +
     "       p.primaryName AS productName, p.description, p.dosesPerDispensingUnit AS unit, pc.name AS category " +
@@ -110,7 +125,6 @@ public interface ProgramProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getByCode"))
   })
   List<ProgramProduct> getByProgramIdAndFacilityCode(@Param("programId") Long programId, @Param("facilityTypeCode") String facilityTypeCode);
-
 
   @Select({"SELECT * FROM program_products pp INNER JOIN products p ON pp.productId = p.id WHERE programId = #{id} AND p.fullsupply = FALSE"})
   @Results(value = {
