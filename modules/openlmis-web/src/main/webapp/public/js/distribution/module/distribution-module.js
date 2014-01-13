@@ -16,6 +16,10 @@ var DistributionStatus = {
   DUPLICATE: 'is-duplicate'
 };
 
+String.prototype.endsWith = function (suffix) {
+  return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
 var distributionModule = angular.module('distribution',
   ['openlmis', 'IndexedDB', 'ui.bootstrap.dialog', 'ui.bootstrap.modal']);
 
@@ -44,6 +48,20 @@ distributionModule.config(['$routeProvider', function ($routeProvider) {
     IndexedDBProvider
       .setDbName("open_lmis")
       .migration(4, migrationFunc);
+  }).config(function ($httpProvider) {        //#1261
+    var interceptor = function (loginConfig) {
+      function responseHandler(response) {
+        if (response.config.url.endsWith('.json') && (typeof response.data === 'string')) {
+          loginConfig.preventReload = (response.config.method != 'GET');
+          loginConfig.modalShown = true;
+        } else {
+          return response;
+        }
+      }
+
+      return {response: responseHandler}
+    };
+    $httpProvider.interceptors.push(interceptor);
   });
 
 distributionModule.directive('notRecorded', function ($timeout) {
