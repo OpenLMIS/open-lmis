@@ -118,7 +118,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
-    //TODO verify data in db
+    verifyFullCoveragesDataInDatabase(null,null,null,null,coverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})
@@ -181,7 +181,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
 
     refrigeratorPage.navigateToCoverage();
     verifyAllFieldsDisabled(coveragePage);
-    //TODO verify data in db
+    verifyFullCoveragesDataInDatabase(9999999,null,10,null,coverageData.get(FIRST_FACILITY_CODE));
   }
 
   private void verifyAllFieldsDisabled(CoveragePage coveragePage) {
@@ -221,7 +221,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     distributionPage.syncDistribution(1);
     assertTrue(distributionPage.getSyncMessage().contains("F10-Village Dispensary"));
     distributionPage.syncDistributionMessageDone();
-    //TODO verify data in db
+    verifyFullCoveragesDataInDatabase(12, 34, 45, 56, coverageData.get(FIRST_FACILITY_CODE));
   }
 
   @Test(groups = {"distribution"})

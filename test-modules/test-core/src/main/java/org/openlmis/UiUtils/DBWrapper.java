@@ -1271,6 +1271,11 @@ public class DBWrapper {
       "(Select id from facilities where code ='%s'));", productGroupCode, facilityCode).get(0);
   }
 
+  public Map<String, String> getFullCoveragesDetails(String facilityCode) throws SQLException {
+    return select("SELECT * FROM full_coverages WHERE facilityVisitId=(Select id from facility_visits where facilityId=" +
+      "(Select id from facilities where code ='%s'));", facilityCode).get(0);
+  }
+
   public void updateBudgetFlag(String ProgramName, Boolean Flag) throws IOException, SQLException {
     update("update programs set budgetingApplies ='" + Flag + "' where name ='" + ProgramName + "';");
   }

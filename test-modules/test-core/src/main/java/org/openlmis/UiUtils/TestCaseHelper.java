@@ -559,6 +559,16 @@ public class TestCaseHelper {
     assertEquals(otherProblemExplanation, resultSet.getString("otherProblemExplanation"));
   }
 
+  public void verifyFullCoveragesDataInDatabase(Integer femaleHealthCenterReading, Integer femaleMobileBrigadeReading,
+                                                Integer maleHealthCenterReading, Integer maleMobileBrigadeReading, String facilityCode) throws SQLException {
+    Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
+
+    assertEquals(femaleHealthCenterReading, fullCoveragesDetails.get("femalehealthcenterreading"));
+    assertEquals(femaleMobileBrigadeReading, fullCoveragesDetails.get("femalemobilebrigadereading"));
+    assertEquals(maleHealthCenterReading, fullCoveragesDetails.get("malehealthcenterreading"));
+    assertEquals(maleMobileBrigadeReading, fullCoveragesDetails.get("malemobilebrigadereading"));
+  }
+
 }
 
 
