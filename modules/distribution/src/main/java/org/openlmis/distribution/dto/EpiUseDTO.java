@@ -34,7 +34,7 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPT
 public class EpiUseDTO extends BaseModel {
 
   Long facilityVisitId;
-  List<EpiUseLineItemDTO> lineItems;
+  List<EpiUseLineItemDTO> lineItems = new ArrayList<>();
 
   public EpiUse transform() {
     List<EpiUseLineItem> epiUseLineItems = new ArrayList<>();
