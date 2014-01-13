@@ -10,19 +10,21 @@
 
 function PODController($scope, OrderPOD, $routeParams) {
   $scope.columns = [
+    {label: "Full Supply", name: "fullSupply"},
     {label: "Product Code", name: "productCode"},
     {label: "Product Name", name: "productName"},
     {label: "Unit Of Issue", name: "dispensingUnit"},
     {label: "Packs To Ship", name: "packsToShip"},
     {label: "Quantity Shipped", name: "quantityShipped"},
     {label: "Quantity Received", name: "quantityReceived"},
-    {label: "Full Supply", name: "fullSupply"},
     {label: "Notes", name: "notes"}
   ];
 
   if (!$scope.$parent.pod) {
     OrderPOD.get({orderId: $routeParams.orderId}, function (data) {
       $scope.pod = data.orderPOD;
+      $scope.order = data.order;
+      $scope.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
     }, {});
   }
 

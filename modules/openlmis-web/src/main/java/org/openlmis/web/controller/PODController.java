@@ -10,6 +10,8 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.order.dto.OrderPODDTO;
+import org.openlmis.order.service.OrderService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.web.response.OpenLmisResponse;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 
 import static org.openlmis.web.response.OpenLmisResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -29,14 +32,21 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class PODController extends BaseController {
 
   public static final String ORDER_POD = "orderPOD";
+  public static final String ORDER = "order";
+
   @Autowired
   private PODService service;
 
+  @Autowired
+  private OrderService orderService;
+
   @RequestMapping(value = "/pod-orders/{orderId}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> getPOD(HttpServletRequest request, @PathVariable("orderId") Long orderId) {
+  public ResponseEntity<OpenLmisResponse> getPOD(HttpServletRequest request, @PathVariable("orderId") Long orderId) throws ParseException {
     OrderPOD pod = service.getPOD(orderId, loggedInUserId(request));
+    OrderPODDTO orderPODDTO = OrderPODDTO.getOrderDetailsForPOD(orderService.getOrder(orderId));
     ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, pod);
+    response.getBody().addData(ORDER, orderPODDTO);
     return response;
   }
 }

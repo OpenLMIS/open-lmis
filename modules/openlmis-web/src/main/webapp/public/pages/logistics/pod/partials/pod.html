@@ -29,29 +29,41 @@
       </tr>
       <tr>
         <td>
-          <span ng-bind="podLineItem.productCode" id="productCode_{{$index}}"></span>
+          <div class="checked ngCellText">
+            <i ng-class="{'icon-ok': podLineItem.fullSupply}"></i>
+          </div>
         </td>
-        <td>
-          <span ng-bind="podLineItem.productName" id="productName_{{$index}}"></span>
+        <td class="col-productCode">
+        <span ng-bind="podLineItem.productCode" id="productCode_{{$index}}"></span>
         </td>
-        <td>
-          <span ng-bind="podLineItem.dispensingUnit" id="dispensingUnit_{{$index}}"></span>
+        <td class="col-product">
+        <span ng-bind="podLineItem.productName" id="productName_{{$index}}"></span>
         </td>
-        <td>
-          <span ng-bind="podLineItem.packsToShip" id="packsToShip_{{$index}}"></span>
+        <td class="">
+        <span ng-bind="podLineItem.dispensingUnit" id="dispensingUnit_{{$index}}"></span>
+        </td>
+        <td class="col-packsToShip">
+        <span ng-bind="podLineItem.packsToShip" id="packsToShip_{{$index}}"></span>
         </td>
         <td>
           <span ng-bind="podLineItem.quantityShipped" id="quantityShipped_{{$index}}"></span>
         </td>
-        <td>
-          <input class="cell-input" type="text" ng-model="podLineItem.quantityReceived"
-                 id="quantityReceived_{{$index}}"/>
+        <td class="cell-input col-quantityReceived">
+          <div>
+            <input id="quantityReceived{{$index}}" type="text"
+                   ng-model="podLineItem.quantityReceived"
+                   numeric-validator="positiveInteger" maxlength="8"
+                   error-holder="receivedQuantityError{{$index}}"/>
+          </div>
+          <div class="error">
+                <span id="receivedQuantityError{{$index}}"
+                      class="rnr-form-error"
+                      openlmis-message="error.number.only"
+                      style="display: none"></span>
+          </div>
         </td>
         <td>
-          <span ng-bind="podLineItem.fullSupply" id="fullSupply_{{$index}}"></span>
-        </td>
-        <td>
-          <input class="cell-input" type="text" maxlength="250" ng-model="podLineItem.notes"
+          <input class="cell-input col-remarks" type="text" maxlength="250" ng-model="podLineItem.notes"
                  id="notes_{{$index}}"></span>
         </td>
       </tr>

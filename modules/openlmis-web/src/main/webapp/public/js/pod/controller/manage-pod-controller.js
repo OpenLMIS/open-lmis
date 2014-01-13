@@ -39,6 +39,8 @@ function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPO
   $scope.getPOD = function (orderId) {
     OrderPOD.get({orderId: orderId}, function (data) {
       $scope.$parent.pod = data.orderPOD;
+      $scope.$parent.order = data.order;
+      $scope.$parent.requisitionType = $scope.order.emergency ? "requisition.type.emergency" : "requisition.type.regular";
       $location.url('/pod-orders/' + orderId);
     }, {});
   };
