@@ -1,0 +1,61 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<div ng-controller="PODController">
+  <ng-include src="'/public/pages/logistics/pod/partials/header.html'"></ng-include>
+  <div class="float-left left-table rnr-table">
+    <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+      <thead>
+      <tr>
+        <th class="col-{{column.name}}" ng-repeat="column in columns">
+          <span ng-bind="column.label"></span>
+        </th>
+      </tr>
+      </thead>
+
+      <tbody ng-repeat="podLineItem in pod.podLineItems">
+      <tr>
+        <td class="productCategory" id="category_{{$index}}" colspan="{{columns.length}}"
+            ng-show="showCategory($index)"
+            ng-bind="podLineItem.productCategory">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <span ng-bind="podLineItem.productCode" id="productCode_{{$index}}"></span>
+        </td>
+        <td>
+          <span ng-bind="podLineItem.productName" id="productName_{{$index}}"></span>
+        </td>
+        <td>
+          <span ng-bind="podLineItem.dispensingUnit" id="dispensingUnit_{{$index}}"></span>
+        </td>
+        <td>
+          <span ng-bind="podLineItem.packsToShip" id="packsToShip_{{$index}}"></span>
+        </td>
+        <td>
+          <span ng-bind="podLineItem.quantityShipped" id="quantityShipped_{{$index}}"></span>
+        </td>
+        <td>
+          <input class="cell-input" type="text" ng-model="podLineItem.quantityReceived"
+                 id="quantityReceived_{{$index}}"/>
+        </td>
+        <td>
+          <span ng-bind="podLineItem.fullSupply" id="fullSupply_{{$index}}"></span>
+        </td>
+        <td>
+          <input class="cell-input" type="text" maxlength="250" ng-model="podLineItem.notes"
+                 id="notes_{{$index}}"></span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

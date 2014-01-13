@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ManagePODController($scope, OrdersForManagePOD, messageService) {
+function ManagePODController($scope, OrdersForManagePOD, messageService, OrderPOD, $location) {
 
   OrdersForManagePOD.get({}, function (data) {
     $scope.orders = data.ordersForPOD || [];
@@ -32,8 +32,15 @@ function ManagePODController($scope, OrdersForManagePOD, messageService) {
       {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: '<div class="ngCellText checked"><i ng-class="{\'icon-ok\': row.entity.rnr.emergency}"></i></div>',
         width: 90 },
-      {cellTemplate: "<div class='ngCellText'><a ng-href='javascript:void(0)' openlmis-message='link.update.pod'></a></div>", width: 180}
+      {cellTemplate: "<div class='ngCellText'><a ng-click='getPOD({{row.entity.id}})' openlmis-message='link.update.pod'></a></div>", width: 180}
     ]
+  };
+
+  $scope.getPOD = function (orderId) {
+    OrderPOD.get({orderId: orderId}, function (data) {
+      $scope.$parent.pod = data.orderPOD;
+      $location.url('/pod-orders/' + orderId);
+    }, {});
   };
 
   $scope.getStatus = function (status) {

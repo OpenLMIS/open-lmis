@@ -299,3 +299,7 @@ services.factory('BudgetFileTemplate', function ($resource) {
 services.factory('EnabledWarehouse', function ($resource) {
   return $resource('/enabledWarehouses.json', {}, {});
 });
+
+services.factory('OrderPOD', function ($resource) {
+  return $resource('/pod-orders/:orderId.json', {}, {});
+});
