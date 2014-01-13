@@ -220,6 +220,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     verifyRefrigeratorReadingDataInDatabase(facilityCodeFirst, "GR-J287PGHV",3F,"Y",1,0,"D","miscellaneous");
     verifyRefrigeratorProblemDataNullInDatabase("GR-J287PGHV", facilityCodeFirst);
     verifyGeneralObservationsDataInDatabase(facilityCodeFirst,"Some observations","samuel","Doe","Verifier","XYZ");
+    verifyFullCoveragesDataInDatabase(5,7,0,9999999,facilityCodeFirst);
   }
 
   @AfterMethod(groups = {"offline"})
