@@ -61,7 +61,7 @@ public class EpiUse extends BaseModel {
 
     @Override
     public int compare(EpiUseLineItem lineItem1, EpiUseLineItem lineItem2) {
-      return lineItem1.getProductGroup().getName().compareTo(lineItem2.getProductGroup().getName());
+      return lineItem1.getProductGroup().getName().toLowerCase().compareTo(lineItem2.getProductGroup().getName().toLowerCase());
     }
   }
 }
