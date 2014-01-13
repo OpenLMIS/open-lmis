@@ -1268,7 +1268,7 @@ public class DBWrapper {
 
   public Map<String, String> getEpiUseDetails(String productGroupCode, String facilityCode) throws SQLException {
     return select("SELECT * FROM epi_use_line_items WHERE productGroupName = " +
-      "(SELECT name FROM product_groups where code = '%s') AND epiUseId=(Select id from epi_use where facilityId=" +
+      "(SELECT name FROM product_groups where code = '%s') AND facilityVisitId=(Select id from facility_visits where facilityId=" +
       "(Select id from facilities where code ='%s'));", productGroupCode, facilityCode).get(0);
   }
 

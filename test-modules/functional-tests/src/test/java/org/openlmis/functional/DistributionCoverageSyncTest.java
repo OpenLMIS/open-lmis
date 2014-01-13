@@ -144,7 +144,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     coveragePage.toggleApplyNRToMaleHealthCenter();
     coveragePage.toggleApplyNRToMaleHealthCenter();
     coveragePage.enterMaleHealthCenter(10);
-    coveragePage.enterMaleMobileBrigade(0);
+    coveragePage.enterMaleMobileBrigade("0");
     coveragePage.toggleApplyNRToMaleMobileBrigade();
 
     coveragePage.verifyIndicator("GREEN");
@@ -203,7 +203,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
 
     CoveragePage coveragePage = refrigeratorPage.navigateToCoverage();
     coveragePage.verifyIndicator("RED");
-    coveragePage.enterData(12, 34, 45, 56);
+    coveragePage.enterData(12, 34, 45,"56");
     coveragePage.verifyIndicator("GREEN");
 
     EPIUsePage epiUsePage = coveragePage.navigateToEpiUse();
@@ -241,7 +241,7 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     coveragePage.verifyIndicator("RED");
     coveragePage.enterMaleHealthCenter(33);
     coveragePage.enterFemaleHealthCenter(67);
-    coveragePage.enterMaleMobileBrigade(0);
+    coveragePage.enterMaleMobileBrigade("0");
     coveragePage.toggleApplyNRToMaleMobileBrigade();
     coveragePage.verifyIndicator("AMBER");
 

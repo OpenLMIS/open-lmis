@@ -431,7 +431,7 @@ public class ManageDistribution extends TestCaseHelper {
   }
 
   @When("I enter coverage maleMobileBrigade as \"([^\"]*)\"$")
-  public void enterCoverageMaleMobileBrigade(Integer maleMobileBrigade) throws IOException {
+  public void enterCoverageMaleMobileBrigade(String maleMobileBrigade) throws IOException {
    CoveragePage coveragePage=new CoveragePage(testWebDriver);
    coveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }

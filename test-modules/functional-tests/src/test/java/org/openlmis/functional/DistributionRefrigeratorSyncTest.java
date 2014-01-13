@@ -113,7 +113,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(45, 67, 89, 90);
+    coveragePage.enterData(45, 67, 89,"90");
 
     EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -162,7 +162,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(67, 44, 22, 11);
+    coveragePage.enterData(67, 44, 22,"11");
 
     EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -211,7 +211,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(77, 56, 78, 34);
+    coveragePage.enterData(77, 56, 78,"34");
 
     EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -254,7 +254,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(78, 67, 34, 12);
+    coveragePage.enterData(78, 67, 34,"12");
 
     EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -295,7 +295,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(78, 67, 34, 12);
+    coveragePage.enterData(78, 67, 34,"12");
 
     coveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
@@ -348,7 +348,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     epiUsePage.enterData(10, 20, 30, 40, 50, "10/2011", 1);
 
     CoveragePage coveragePage = epiUsePage.navigateToCoverage();
-    coveragePage.enterData(12, 34, 45, 56);
+    coveragePage.enterData(12, 34, 45,"56");
 
     GeneralObservationPage generalObservationPage = coveragePage.navigateToGeneralObservations();
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
@@ -404,7 +404,7 @@ public class DistributionRefrigeratorSyncTest extends TestCaseHelper {
     generalObservationPage.enterData("some observations", "samuel", "Doe", "Verifier", "XYZ");
 
     CoveragePage coveragePage = generalObservationPage.navigateToCoverage();
-    coveragePage.enterData(67, 8, 33, 54);
+    coveragePage.enterData(67, 8, 33,"54");
 
     EpiInventoryPage epiInventoryPage = coveragePage.navigateToEpiInventory();
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");

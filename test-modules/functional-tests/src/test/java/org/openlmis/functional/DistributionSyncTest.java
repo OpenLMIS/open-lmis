@@ -409,7 +409,7 @@ public class DistributionSyncTest extends TestCaseHelper {
     fillEpiInventoryWithOnlyDeliveredQuantity(epiInventoryPage, "2", "4", "6");
 
     CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(23, 66, 77, 45);
+    coveragePage.enterData(23, 66, 77, "45");
 
     return generalObservationPage;
   }

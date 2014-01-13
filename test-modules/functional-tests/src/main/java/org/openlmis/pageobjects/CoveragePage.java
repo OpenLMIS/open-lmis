@@ -106,7 +106,7 @@ public class CoveragePage extends DistributionTab {
     enterFemaleHealthCenter(Integer.valueOf(data.get("femaleHealthCenter")));
     enterFemaleMobileBrigade(Integer.valueOf(data.get("femaleMobileBrigade")));
     enterMaleHealthCenter(Integer.valueOf(data.get("maleHealthCenter")));
-    enterMaleMobileBrigade(Integer.valueOf(data.get("maleMobileBrigade")));
+    enterMaleMobileBrigade(data.get("maleMobileBrigade"));
   }
 
   @Override
@@ -136,12 +136,12 @@ public class CoveragePage extends DistributionTab {
     sendKeys(maleHealthCenterField, maleHealthCenter.toString());
   }
 
-  public void enterMaleMobileBrigade(Integer maleMobileBrigade) {
+  public void enterMaleMobileBrigade(String maleMobileBrigade) {
     testWebDriver.waitForElementToAppear(maleMobileBrigadeField);
-    sendKeys(maleMobileBrigadeField, maleMobileBrigade.toString());
+    sendKeys(maleMobileBrigadeField, maleMobileBrigade);
   }
 
-  public void enterData(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, Integer maleMobileBrigade) {
+  public void enterData(Integer femaleHealthCenter, Integer femaleMobileBrigade, Integer maleHealthCenter, String maleMobileBrigade) {
     enterFemaleHealthCenter(femaleHealthCenter);
     enterFemaleMobileBrigade(femaleMobileBrigade);
     enterMaleHealthCenter(maleHealthCenter);

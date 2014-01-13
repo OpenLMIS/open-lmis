@@ -174,7 +174,7 @@ public class E2EDistributionTest extends TestCaseHelper {
     epiInventoryPage.verifyIndicator("GREEN");
 
     CoveragePage coveragePage = epiInventoryPage.navigateToCoverage();
-    coveragePage.enterData(5,7,0,9999999);
+    coveragePage.enterData(5,7,0,"9999999");
     coveragePage.verifyIndicator("GREEN");
 
     facilityListPage.verifyFacilityIndicatorColor("Overall", "GREEN");
