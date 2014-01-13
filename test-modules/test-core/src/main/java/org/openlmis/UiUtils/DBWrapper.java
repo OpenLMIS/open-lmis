@@ -347,9 +347,9 @@ public class DBWrapper {
 
     update("delete from user_password_reset_tokens");
     update("delete from comments");
-    update("delete from facility_visits");
     update("delete from epi_use_line_items");
     update("delete from epi_inventory_line_items");
+    update("delete from facility_visits");
     update("delete from refrigerator_problems");
     update("delete from refrigerator_readings");
     update("delete from full_coverages");
