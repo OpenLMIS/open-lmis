@@ -355,6 +355,7 @@ public class DBWrapper {
 
     update("delete from facility_visits");
     update("delete from distributions");
+    update("delete from refrigerators");
     update("delete from users where userName not like('Admin%')");
     deleteRnrData();
 
@@ -381,7 +382,6 @@ public class DBWrapper {
 
     update("delete from supervisory_nodes");
     update("delete from facility_ftp_details");
-    update("delete from refrigerators");
     update("delete from facilities");
     update("delete from geographic_zones where code not in ('Root','Arusha','Dodoma', 'Ngorongoro')");
     update("delete from processing_periods");
