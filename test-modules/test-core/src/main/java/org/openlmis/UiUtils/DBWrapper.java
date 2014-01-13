@@ -497,6 +497,7 @@ public class DBWrapper {
   public void insertProducts(String product1, String product2) throws SQLException, IOException {
 
     update("delete from facility_approved_products;");
+    update("delete from epi_inventory_line_items;");
     update("delete from program_products;");
     update("delete from products;");
     update("delete from product_categories;");
