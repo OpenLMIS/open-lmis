@@ -267,6 +267,8 @@ public class RefrigeratorPage extends DistributionTab {
 
     assertFalse("notesTextArea enabled.", notesTextArea.isEnabled());
 
+    assertFalse("Add new button enabled", addNewButton.isEnabled());
+    assertFalse("Delete button enabled", deleteButton.isEnabled());
   }
 
   public void clickProblemSinceLastVisitNoRadio() {
