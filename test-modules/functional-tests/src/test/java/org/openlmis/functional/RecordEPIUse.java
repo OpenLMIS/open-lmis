@@ -71,8 +71,8 @@ public class RecordEPIUse extends TestCaseHelper {
   }
 
 
-  @Then("^Navigate to EPI tab$")
-  public void navigateToEpiTab() throws IOException {
+  @Then("^I navigate to EPI Use tab$")
+  public void navigateToEpiUseTab() throws IOException {
     EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.navigate();
   }

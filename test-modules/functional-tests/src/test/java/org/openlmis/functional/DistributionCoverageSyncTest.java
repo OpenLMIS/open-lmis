@@ -184,10 +184,6 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     verifyFullCoveragesDataInDatabase(9999999,null,10,null,coverageData.get(FIRST_FACILITY_CODE));
   }
 
-  private void verifyAllFieldsDisabled(CoveragePage coveragePage) {
-    verifyEnableStatusOfFields(coveragePage, false, false, false, false);
-  }
-
   @Test(groups = {"distribution"})
   public void shouldTestFillCoverageFormAndSync() throws IOException, SQLException {
 
@@ -305,6 +301,10 @@ public class DistributionCoverageSyncTest extends TestCaseHelper {
     assertEquals(femaleMobileBrigadeValue, coveragePage.getValueForField("femaleMobileBrigade"));
     assertEquals(maleHealthCenterValue, coveragePage.getValueForField("maleHealthCenter"));
     assertEquals(maleMobileBrigadeValue, coveragePage.getValueForField("maleMobileBrigade"));
+  }
+
+  private void verifyAllFieldsDisabled(CoveragePage coveragePage) {
+    verifyEnableStatusOfFields(coveragePage, false, false, false, false);
   }
 
   @AfterMethod(groups = "distribution")

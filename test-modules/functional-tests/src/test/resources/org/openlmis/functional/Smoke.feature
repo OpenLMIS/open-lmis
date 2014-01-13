@@ -504,7 +504,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And Navigate to EPI tab
+    And I navigate to EPI Use tab
     Then Verify "epi use" indicator should be "RED"
     Then I should see product group "penta-Name"
     When I Enter "epi use" values:
@@ -539,7 +539,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And I navigate to epi inventory tab
+    And I navigate to EPI Inventory tab
     Then Verify "epi inventory" indicator should be "RED"
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
@@ -574,7 +574,7 @@ Feature: Smoke Tests
     And I initiate distribution
     And I record data for distribution "1"
     And I choose facility "F10"
-    And Navigate to Coverage tab
+    And I navigate to Coverage tab
     Then Verify "coverage" indicator should be "RED"
     And I Enter "coverage" values:
       | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
@@ -634,17 +634,17 @@ Feature: Smoke Tests
       | observations     | confirmedByName | confirmedByTitle | verifiedByName | verifiedByTitle |
       | some observation | samuel          | fc               | Verifier       | XYZ             |
 
-    And Navigate to EPI tab
+    And I navigate to EPI Use tab
     And I Enter "epi use" values:
       | distributed | expirationDate | loss | received | firstOfMonth | endOfMonth |
       | 16          | 11/2012        | 1    | 10       | 12           |            |
     And I enter EPI end of month as "5"
 
-    And Navigate to Coverage tab
+    And I navigate to Coverage tab
     And I Enter "coverage" values:
-      | coverage | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
-      | female   | 123                | 22                  | 23               | 242               |
-    And I navigate to epi inventory tab
+      | femaleHealthCenter | femaleMobileBrigade | maleHealthCenter | maleMobileBrigade |
+      | 123                | 22                  | 23               | 242               |
+    And I navigate to EPI Inventory tab
     And I Enter "epi inventory" values:
       | existingQuantity | deliveredQuantity | spoiledQuantity |
       | 20               | 100               | 5               |
@@ -665,15 +665,20 @@ Feature: Smoke Tests
     And I view refrigerator readings in DB for refrigerator serial number "GR-J287PGHV" and facility "F10":
       | temperature | functioningCorrectly | lowAlarmEvents | highAlarmEvents | problemSinceLastTime | notes |
       | 3.0         | Y                    | 1              | 0               | N                    | null  |
+    And I view full coverage readings in DB for facility "F10":
+      | femaleHealthCenterReading | femaleMobileBrigadeReading | maleHealthCenterReading | maleMobileBrigadeReading |
+      | 123                       | 22                         | 23                      | 242                      |
     And I verify no record present in refrigerator problem table for refrigerator serial number "GR-J287PGHV" and facility "F10"
     When I record data for distribution "1"
     And I choose facility "F10"
     Then I see "Overall" facility icon as "BLUE"
     And I see "Individual" facility icon as "BLUE"
     When I navigate to general observations tab
-    And I see general observations fields disabled
-    When Navigate to EPI tab
-    Then I see epi fields disabled
+    Then I see general observations fields disabled
+    When I navigate to EPI Use tab
+    Then I see EPI Use fields disabled
+    When I navigate to Coverage tab
+    Then I see full coverage fields disabled
     When I navigate to refrigerator tab
     And I access show
     Then I see refrigerator fields disabled

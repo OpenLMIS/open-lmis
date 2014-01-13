@@ -11,6 +11,7 @@
 package org.openlmis.functional;
 
 
+
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
@@ -244,7 +245,16 @@ public class ManageDistribution extends TestCaseHelper {
     refrigeratorPage.verifyAllFieldsDisabled();
   }
 
-  @Then("^I see epi fields disabled$")
+  @Then("^I see full coverage fields disabled$")
+  public void verifyFullCoverageFieldsDisabled() throws IOException {
+    CoveragePage coveragePage = new CoveragePage(testWebDriver);
+    assertFalse(coveragePage.getStatusForField("femaleHealthCenter"));
+    assertFalse(coveragePage.getStatusForField("femaleMobileBrigade"));
+    assertFalse(coveragePage.getStatusForField("maleHealthCenter"));
+    assertFalse(coveragePage.getStatusForField("maleMobileBrigade"));
+  }
+
+  @Then("^I see EPI Use fields disabled$")
   public void verifyEpiFieldsDisabled() throws IOException {
     EPIUsePage epiUse = new EPIUsePage(testWebDriver);
     epiUse.verifyAllFieldsDisabled();
@@ -356,6 +366,18 @@ public class ManageDistribution extends TestCaseHelper {
         notes = null;
       }
       assertEquals(notes, resultSet.getString("notes"));
+    }
+  }
+
+  @And("^I view full coverage readings in DB for facility \"([^\"]*)\":$")
+  public void verifyFullCoverageDataInDB(String facilityCode, DataTable tableData) throws SQLException {
+    List<Map<String, String>> data = tableData.asMaps();
+    Map<String, String> fullCoveragesDetails = dbWrapper.getFullCoveragesDetails(facilityCode);
+    for (Map map : data) {
+      assertEquals(map.get("femaleHealthCenterReading").toString(), fullCoveragesDetails.get("femalehealthcenterreading"));
+      assertEquals(map.get("femaleMobileBrigadeReading").toString(), fullCoveragesDetails.get("femalemobilebrigadereading"));
+      assertEquals(map.get("maleHealthCenterReading").toString(), fullCoveragesDetails.get("malehealthcenterreading"));
+      assertEquals(map.get("maleMobileBrigadeReading").toString(), fullCoveragesDetails.get("malemobilebrigadereading"));
     }
   }
 
@@ -812,12 +834,12 @@ public class ManageDistribution extends TestCaseHelper {
     assertFalse(warehouseLoadAmountPage.getTable1Data().contains("PG1-Name"));
   }
 
-  @And("^Navigate to Coverage tab$")
+  @And("^I navigate to Coverage tab$")
   public void navigateToCoverageTab() throws Throwable {
     new CoveragePage(testWebDriver).navigateToCoverage();
   }
 
-  @And("^I navigate to epi inventory tab$")
+  @And("^I navigate to EPI Inventory tab$")
   public void navigateToEpiInventoryTab() {
     new EpiInventoryPage(testWebDriver).navigateToEpiInventory();
   }
