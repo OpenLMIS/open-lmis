@@ -59,8 +59,11 @@ public class PODService {
     orderPOD.setModifiedBy(userId);
 
     checkPermissions(orderPOD);
-    insertOrderPOD(orderPOD);
-    insertLineItems(orderPOD);
+
+    if (podRepository.getPODByOrderId(orderId) == null) {
+      insertOrderPOD(orderPOD);
+      insertLineItems(orderPOD);
+    }
   }
 
   public void updateOrderStatus(OrderPOD orderPod) {

@@ -63,7 +63,7 @@ public class PODControllerTest {
 
     OrderPOD orderPOD = new OrderPOD();
     when(service.getPOD(orderId, USER_ID)).thenReturn(orderPOD);
-    ResponseEntity<OpenLmisResponse> response = controller.updatePOD(request, orderId);
+    ResponseEntity<OpenLmisResponse> response = controller.getPOD(request, orderId);
 
     verify(service).getPOD(orderId, USER_ID);
     assertThat((OrderPOD) response.getBody().getData().get(ORDER_POD), is(orderPOD));

@@ -29,6 +29,8 @@ public class OrderPODLineItem extends BaseModel {
 
   private Long podId;
   private String productCode;
+  private String productCategory;
+  private Integer productCategoryDisplayOrder;
   private Integer quantityReceived;
   private String productName;
   private String dispensingUnit;
@@ -56,6 +58,8 @@ public class OrderPODLineItem extends BaseModel {
   public static OrderPODLineItem createFrom(RnrLineItem rnrLineItem) {
     OrderPODLineItem orderPODLineItem = new OrderPODLineItem();
     orderPODLineItem.setProductCode(rnrLineItem.getProductCode());
+    orderPODLineItem.setProductCategory(rnrLineItem.getProductCategory());
+    orderPODLineItem.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
     orderPODLineItem.setProductName(rnrLineItem.getProduct());
     orderPODLineItem.setDispensingUnit(rnrLineItem.getDispensingUnit());
     orderPODLineItem.setPacksToShip(rnrLineItem.getPacksToShip());

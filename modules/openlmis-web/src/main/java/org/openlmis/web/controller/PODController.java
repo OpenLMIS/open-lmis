@@ -10,6 +10,7 @@
 
 package org.openlmis.web.controller;
 
+import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.web.response.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,11 @@ public class PODController extends BaseController {
   @Autowired
   private PODService service;
 
-  @RequestMapping(value = "/update-pod-orders/{orderId}", method = GET)
+  @RequestMapping(value = "/pod-orders/{orderId}", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_POD')")
-  public ResponseEntity<OpenLmisResponse> updatePOD(HttpServletRequest request, @PathVariable("orderId") Long orderId) {
-    ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, service.getPOD(orderId, loggedInUserId(request)));
+  public ResponseEntity<OpenLmisResponse> getPOD(HttpServletRequest request, @PathVariable("orderId") Long orderId) {
+    OrderPOD pod = service.getPOD(orderId, loggedInUserId(request));
+    ResponseEntity<OpenLmisResponse> response = response(ORDER_POD, pod);
     return response;
   }
 }

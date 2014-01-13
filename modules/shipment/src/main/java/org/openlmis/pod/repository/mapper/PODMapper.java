@@ -1,4 +1,3 @@
-
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
@@ -27,12 +26,12 @@ import java.util.List;
 public interface PODMapper {
 
   @Insert({"INSERT INTO pod_line_items " +
-    "(podId, productCode, quantityReceived, productName, dispensingUnit, packsToShip, fullSupply, createdBy, modifiedBy) VALUES " +
-    "(#{podId}, #{productCode}, #{quantityReceived}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply}, #{createdBy}, #{modifiedBy})"})
+    "(podId, productCode, quantityReceived, productName, dispensingUnit, packsToShip, fullSupply, productCategory, productCategoryDisplayOrder, createdBy, modifiedBy) VALUES " +
+    "(#{podId}, #{productCode}, #{quantityReceived}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply}, #{productCategory}, #{productCategoryDisplayOrder},  #{createdBy}, #{modifiedBy})"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
-  @Select("SELECT * FROM pod_line_items WHERE podId = #{podId}")
+  @Select("SELECT * FROM pod_line_items WHERE podId = #{podId} ORDER BY productCategoryDisplayOrder, productCategory, productCode")
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
   @Insert({"INSERT INTO pod (orderId, facilityId, programId, periodId, receivedDate, createdBy, modifiedBy) VALUES ",
