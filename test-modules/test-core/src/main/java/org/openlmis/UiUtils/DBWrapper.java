@@ -349,13 +349,12 @@ public class DBWrapper {
     update("delete from comments");
     update("delete from epi_use_line_items");
     update("delete from epi_inventory_line_items");
-    update("delete from facility_visits");
     update("delete from refrigerator_problems");
     update("delete from refrigerator_readings");
     update("delete from full_coverages");
 
+    update("delete from facility_visits");
     update("delete from distributions");
-    update("delete from refrigerators");
     update("delete from users where userName not like('Admin%')");
     deleteRnrData();
 
@@ -381,7 +380,6 @@ public class DBWrapper {
     update("delete from delivery_zones");
 
     update("delete from supervisory_nodes");
-    update("delete from refrigerators");
     update("delete from facility_ftp_details");
     update("delete from refrigerators");
     update("delete from facilities");
