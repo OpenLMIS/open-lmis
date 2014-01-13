@@ -72,7 +72,8 @@ public class ManageRolesAndUsers extends TestCaseHelper {
     HomePage homePage = new HomePage(testWebDriver);
     UserPage userPage = homePage.navigateToUser();
     userPage.searchUser(user);
-    userPage.clickUserList();
+    userPage.clickEditUserButton();
+    //userPage.clickUserList();
     userPage.clickDisableButton();
   }
 

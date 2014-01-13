@@ -569,4 +569,9 @@ public class UserPage extends Page {
   private void verifyWarehouseSelectedNotAvailable(String warehouse1) {
     assertFalse(getAllWarehouseToSelect().contains(warehouse1));
   }
+
+  public void clickEditUserButton() {
+    focusOnFirstUserLink();
+    selectFirstEditUser.click();
+  }
 }
