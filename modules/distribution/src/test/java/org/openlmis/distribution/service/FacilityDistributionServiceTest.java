@@ -198,19 +198,36 @@ public class FacilityDistributionServiceTest {
   @Test
   public void shouldGetDataForADistribution() throws Exception {
     Distribution distribution = new Distribution();
+    DeliveryZone zone = new DeliveryZone(5L);
+    Program program = new Program(3L);
+    distribution.setDeliveryZone(zone);
+    distribution.setProgram(program);
+
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(1L);
     facilityVisit.setFacilityId(2L);
+
     List<FacilityVisit> facilityVisits = asList(facilityVisit);
     when(facilityVisitService.getUnSyncedFacilities(distribution.getId())).thenReturn(facilityVisits);
+
     EpiUse epiUse = new EpiUse();
     when(epiUseService.getBy(facilityVisit.getId())).thenReturn(epiUse);
-    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
-    when(distributionRefrigeratorsService.getBy(facilityVisit.getId())).thenReturn(distributionRefrigerators);
+
+
     EpiInventory epiInventory = new EpiInventory();
     when(epiInventoryService.getBy(facilityVisit.getId())).thenReturn(epiInventory);
+
     VaccinationCoverage vaccinationCoverage = new VaccinationCoverage();
     when(vaccinationCoverageService.getBy(facilityVisit.getId())).thenReturn(vaccinationCoverage);
+
+    Refrigerator refrigerator = new Refrigerator();
+    refrigerator.setFacilityId(2L);
+    when(refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId())).thenReturn(asList(refrigerator));
+
+    RefrigeratorReading refrigeratorReading = new RefrigeratorReading(refrigerator);
+
+    DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators();
+    whenNew(DistributionRefrigerators.class).withArguments(asList(refrigeratorReading)).thenReturn(distributionRefrigerators);
 
     FacilityDistribution facilityDistribution = new FacilityDistribution();
     whenNew(FacilityDistribution.class).withArguments(facilityVisit, epiUse, distributionRefrigerators, epiInventory, vaccinationCoverage).thenReturn(facilityDistribution);
