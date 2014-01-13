@@ -46,6 +46,7 @@ public class EpiUseDTO extends BaseModel {
     }
 
     EpiUse epiUse = new EpiUse(epiUseLineItems);
+    epiUse.setId(this.id);
     return epiUse;
   }
 }
