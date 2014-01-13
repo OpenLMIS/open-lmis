@@ -12,6 +12,7 @@ package org.openlmis.functional;
 
 
 
+import com.thoughtworks.selenium.SeleneseTestBase;
 import com.thoughtworks.selenium.SeleneseTestNgHelper;
 import cucumber.api.DataTable;
 import cucumber.api.java.After;
@@ -24,6 +25,7 @@ import org.openlmis.UiUtils.CaptureScreenshotOnFailureListener;
 import org.openlmis.UiUtils.TestCaseHelper;
 import org.openlmis.UiUtils.TestWebDriver;
 import org.openlmis.pageobjects.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.*;
@@ -324,6 +326,14 @@ public class ManageDistribution extends TestCaseHelper {
     distributionPage.syncDistributionMessageDone();
   }
 
+  @When("^I try to choose facility$")
+  public void clickFacilityListDropDown() {
+    testWebDriver.sleep(2000);
+    testWebDriver.waitForElementToAppear(testWebDriver.findElement(By.xpath("//*[@id='s2id_selectFacility']/a")));
+    testWebDriver.findElement(By.xpath("//*[@id='s2id_selectFacility']/a")).click();
+    testWebDriver.sleep(2000);
+  }
+
   @Then("^I view observations data in DB for facility \"([^\"]*)\":$")
   public void verifyObservationsDataInDB(String facility, DataTable tableData) throws SQLException {
     List<Map<String, String>> data = tableData.asMaps();
@@ -457,6 +467,28 @@ public class ManageDistribution extends TestCaseHelper {
    CoveragePage coveragePage=new CoveragePage(testWebDriver);
    coveragePage.enterMaleMobileBrigade(maleMobileBrigade);
   }
+
+
+  @And("^I delete already cached data for distribution$")
+  public void deleteAlreadyCachedDistribution() throws IOException, SQLException {
+    DistributionPage distributionPage=new DistributionPage(testWebDriver);
+    distributionPage.deleteDistribution();
+    distributionPage.clickOk();
+  }
+
+  @Then("^I should not see already cached facility \"([^\"]*)\"$")
+  public void verifyAlreadyCachedDistributionFacilityNotPresentInDropDown(String facilityCodeFirst) throws IOException, SQLException {
+    FacilityListPage facilityListPage=new FacilityListPage(testWebDriver);
+    SeleneseTestBase.assertFalse(facilityListPage.getAllFacilitiesFromDropDown().contains(facilityCodeFirst));
+  }
+
+  @And("^I initiate already cached distribution$")
+  public void initiateAlreadyCachedDistribution() throws IOException {
+    DistributionPage distributionPage = new DistributionPage(testWebDriver);
+    distributionPage.clickInitiateDistribution();
+    distributionPage.clickOk();
+  }
+
   private void verifyElementsInTable(String deliveryZoneNameFirst, String programFirst, String periodDisplayedByDefault) {
     SeleneseTestNgHelper.assertEquals(testWebDriver.getElementByXpath("//div[@id='cachedDistributions']/div[2]/" +
       "div[1]/div[1]/div").getText(), deliveryZoneNameFirst);

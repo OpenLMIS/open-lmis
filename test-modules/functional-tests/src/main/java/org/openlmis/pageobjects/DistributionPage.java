@@ -74,6 +74,10 @@ public class DistributionPage extends Page {
   @FindBy(how = ID, using = "duplicateFacilities")
   private WebElement facilityAlreadySyncMessage = null;
 
+  @FindBy(how = ID, using = "distributionInitiated")
+  private WebElement distributionAlreadyInitiatedMessage = null;
+
+
   public DistributionPage(TestWebDriver driver) throws IOException {
     super(driver);
     PageFactory.initElements(new AjaxElementLocatorFactory(TestWebDriver.getDriver(), 1), this);

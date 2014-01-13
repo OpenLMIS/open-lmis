@@ -684,6 +684,19 @@ Feature: Smoke Tests
     Then I see refrigerator fields disabled
 
     And I access plan my distribution page
+    And I delete already cached data for distribution
+    And I access plan my distribution page
+    And I select delivery zone "Delivery Zone First"
+    And I select program "VACCINES"
+    And I select period "Period14"
+    And I initiate already cached distribution
+    When I record data for distribution "1"
+    And I try to choose facility
+    Then I should not see already cached facility "F10"
+
+    And I logout
+    And I am logged in as "storeIncharge"
+    And I access plan my distribution page
     And I select delivery zone "Delivery Zone First"
     And I select program "VACCINES"
     And I select period "Period13"
