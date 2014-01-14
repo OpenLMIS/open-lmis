@@ -27,11 +27,9 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
     $scope.requestInProgress = $scope.synchronizationModal = true;
     var promises = [];
 
-    distributionService.getReferenceData(distributionId, function (referenceData) {
-      syncFacilities(referenceData.facilities);
-    });
+    syncFacilities();
 
-    function syncFacilities(facilities) {
+    function syncFacilities() {
       var synchronizedFacilityCount = $scope.progressValue = totalFacilityCount = 0;
 
       $.each($scope.distributionData.facilityDistributions, function (facilityId, facilityDistribution) {
@@ -43,18 +41,18 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
         promises.push(defer.promise);
 
         SyncFacilityDistributionData.update({id: distributionId, facilityId: facilityId}, facilityDistribution,
-            function (data) {
-              if (data.syncStatus) {
-                facilityDistribution.status = $scope.SYNCED;
-              } else {
-                facilityDistribution.status = $scope.DUPLICATE;
-              }
-              defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
-              updateProgressBar();
-            }, function () {
-              defer.resolve({facility: _.findWhere(facilities, {id: facilityId}), facilityDistribution: facilityDistribution});
-              updateProgressBar();
-            });
+          function (data) {
+            if (data.syncStatus) {
+              facilityDistribution.status = $scope.SYNCED;
+            } else {
+              facilityDistribution.status = $scope.DUPLICATE;
+            }
+            defer.resolve(facilityDistribution);
+            updateProgressBar();
+          }, function () {
+            defer.resolve(facilityDistribution);
+            updateProgressBar();
+          });
       });
 
       function updateProgressBar() {

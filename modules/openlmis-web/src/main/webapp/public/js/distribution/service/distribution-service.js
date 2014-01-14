@@ -43,28 +43,18 @@ distributionModule.service('distributionService', function ($dialog, SharedDistr
     IndexedDB.put('distributions', distribution, null, null, SharedDistributions.update);
   };
 
-  this.put = function (distribution, referenceData) {
+  this.put = function (distribution) {
     IndexedDB.put('distributions', distribution, function () {
     }, {}, function () {
       SharedDistributions.update();
     });
-
-    referenceData.distributionId = distribution.id;
-    IndexedDB.put('distributionReferenceData', referenceData, function () {
-    }, {});
   };
 
   this.deleteDistribution = function (id) {
     IndexedDB.delete('distributions', id, null, null, function () {
       SharedDistributions.update();
     });
-    IndexedDB.delete('distributionReferenceData', id);
-  };
-
-  this.getReferenceData = function (id, callBack) {
-    IndexedDB.get('distributionReferenceData', id, function (event) {
-      callBack(event.target.result);
-    });
   };
 });
+
 
