@@ -42,10 +42,6 @@ public class FacilityDistributionDTO {
     facilityVisit.setDistributionId(distributionId);
   }
 
-  public void setFacilityId(Long facilityId) {
-    facilityVisit.setFacilityId(facilityId);
-  }
-
   public void setModifiedBy(Long modifiedBy) {
     facilityVisit.setModifiedBy(modifiedBy);
     epiUse.setModifiedBy(modifiedBy);

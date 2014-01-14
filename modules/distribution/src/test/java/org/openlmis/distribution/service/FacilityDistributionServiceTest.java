@@ -15,6 +15,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.RefrigeratorService;
@@ -27,6 +28,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.natpryce.makeiteasy.MakeItEasy.a;
+import static com.natpryce.makeiteasy.MakeItEasy.make;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -202,6 +205,8 @@ public class FacilityDistributionServiceTest {
     Program program = new Program(3L);
     distribution.setDeliveryZone(zone);
     distribution.setProgram(program);
+
+    when(facilityService.getById(2L)).thenReturn(make(a(FacilityBuilder.defaultFacility)));
 
     FacilityVisit facilityVisit = new FacilityVisit();
     facilityVisit.setId(1L);

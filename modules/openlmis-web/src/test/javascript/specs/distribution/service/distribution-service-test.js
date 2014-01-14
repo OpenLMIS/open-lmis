@@ -51,38 +51,16 @@ describe('Distribution Service', function () {
       "status": "INITIATED", "zpp": "8_5_3"
     }
 
-    var referenceData =
-    {
-      facilities: [
-        {"id": 44, "code": "F14A", "name": "Facility14A",
-          "geographicZone": {"id": 18, "code": "District7", "name": "District7",
-            "level": {"id": 4, "code": "district", "name": "District", "levelNumber": 4},
-            "parent": {"code": "Sul", "name": "Sul", "level": {"code": "province", "name": "Province"}}},
-          "catchmentPopulation": 80000, "virtualFacility": false,
-          "supportedPrograms": []}
-      ],
-      refrigerators: []
-    };
-
-    distributionService.put(distribution, referenceData);
+    distributionService.put(distribution);
 
     expect(distribution.facilityDistributions).toEqual({ "44": {"refrigerators": {}}});
     expect(indexedDB.put.calls[0].args).toEqual(['distributions', distribution, jasmine.any(Function), {}, jasmine.any(Function)]);
-    expect(indexedDB.put.calls[1].args).toEqual(['distributionReferenceData', referenceData, jasmine.any(Function), {}]);
   });
 
   it('should delete distribution from cache', function () {
     distributionService.deleteDistribution(2);
 
     expect(indexedDB.delete).toHaveBeenCalledWith('distributions', 2, null, null, jasmine.any(Function));
-    expect(indexedDB.delete).toHaveBeenCalledWith('distributionReferenceData', 2);
   });
-
-  it('should get reference data for a distribution', function () {
-    distributionService.getReferenceData(1, function () {
-    });
-
-    expect(indexedDB.get).toHaveBeenCalledWith('distributionReferenceData', 1, jasmine.any(Function));
-  })
 
 });

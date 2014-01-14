@@ -73,7 +73,7 @@ public class DistributionController extends BaseController {
   @RequestMapping(value = "/distributions/{id}/facilities/{facilityId}", method = PUT, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> sync(@RequestBody FacilityDistributionDTO facilityDistributionDTO, @PathVariable Long id,
                                                @PathVariable Long facilityId, HttpServletRequest httpServletRequest) {
-    facilityDistributionDTO.setFacilityId(facilityId);
+    facilityDistributionDTO.getFacilityVisit().setFacilityId(facilityId);
     facilityDistributionDTO.setDistributionId(id);
     facilityDistributionDTO.setModifiedBy(loggedInUserId(httpServletRequest));
     return OpenLmisResponse.response("syncStatus", distributionService.sync(facilityDistributionDTO.transform()));

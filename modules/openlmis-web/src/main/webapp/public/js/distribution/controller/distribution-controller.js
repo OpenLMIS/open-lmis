@@ -117,7 +117,7 @@ function DistributionController(DeliveryZoneFacilities, Refrigerators, deliveryZ
       var distribution = resolved[0];
       var referenceData = resolved[1];
 
-      distributionService.put(distribution, referenceData);
+      distributionService.put(distribution);
 
       $scope.message = message;
     });

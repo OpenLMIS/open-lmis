@@ -66,7 +66,7 @@ function DistributionListController($scope, SharedDistributions, SyncFacilityDis
         distributionService.save($scope.distributionData);
 
         $scope.syncResult = _.groupBy(resolves, function (resolve) {
-          return resolve.facilityDistribution.status;
+          return resolve.status;
         });
       });
     }
