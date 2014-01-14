@@ -28,7 +28,6 @@ import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = Inclusion.NON_EMPTY)
 public class OrderPODLineItem extends BaseModel {
 
