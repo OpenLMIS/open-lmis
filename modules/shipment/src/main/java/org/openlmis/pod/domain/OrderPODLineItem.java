@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
@@ -35,6 +34,7 @@ public class OrderPODLineItem extends BaseModel {
   private String productCode;
   private String productCategory;
   private Integer productCategoryDisplayOrder;
+  private Integer productDisplayOrder;
   private Integer quantityReceived;
   private String productName;
   private String dispensingUnit;
@@ -64,6 +64,7 @@ public class OrderPODLineItem extends BaseModel {
     orderPODLineItem.setProductCode(rnrLineItem.getProductCode());
     orderPODLineItem.setProductCategory(rnrLineItem.getProductCategory());
     orderPODLineItem.setProductCategoryDisplayOrder(rnrLineItem.getProductCategoryDisplayOrder());
+    orderPODLineItem.setProductDisplayOrder(rnrLineItem.getProductDisplayOrder());
     orderPODLineItem.setProductName(rnrLineItem.getProduct());
     orderPODLineItem.setDispensingUnit(rnrLineItem.getDispensingUnit());
     orderPODLineItem.setPacksToShip(rnrLineItem.getPacksToShip());
