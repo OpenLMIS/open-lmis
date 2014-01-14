@@ -81,7 +81,7 @@ public class FacilityDistributionService {
   }
 
   private List<RefrigeratorReading> getRefrigeratorReadings(final Long facilityId, List<Refrigerator> refrigerators) {
-    return (List) collect(select(refrigerators, new Predicate() {
+    return (List<RefrigeratorReading>) collect(select(refrigerators, new Predicate() {
       @Override
       public boolean evaluate(Object o) {
         return ((Refrigerator) o).getFacilityId().equals(facilityId);
@@ -122,9 +122,13 @@ public class FacilityDistributionService {
     List<Refrigerator> refrigerators = refrigeratorService.getRefrigeratorsForADeliveryZoneAndProgram(distribution.getDeliveryZone().getId(), distribution.getProgram().getId());
     DistributionRefrigerators distributionRefrigerators = new DistributionRefrigerators(getRefrigeratorReadings(facilityVisit.getFacilityId(), refrigerators));
 
+    Facility facility = facilityService.getById(facilityVisit.getFacilityId());
+
     EpiInventory epiInventory = epiInventoryService.getBy(facilityVisit.getId());
     VaccinationCoverage coverage = vaccinationCoverageService.getBy(facilityVisit.getId());
 
-    return new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage);
+    FacilityDistribution facilityDistribution = new FacilityDistribution(facilityVisit, epiUse, distributionRefrigerators, epiInventory, coverage);
+    facilityDistribution.setFacility(facility);
+    return facilityDistribution;
   }
 }

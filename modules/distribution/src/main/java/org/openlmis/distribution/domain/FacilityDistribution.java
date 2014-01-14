@@ -12,7 +12,6 @@
 
 package org.openlmis.distribution.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -24,14 +23,16 @@ import java.util.List;
 
 import static org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion.NON_EMPTY;
 
-@EqualsAndHashCode(callSuper = false)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityDistribution {
-
+  private String facilityCode;
+  private String facilityName;
+  private Long population;
+  private String geographicZone;
   private FacilityVisit facilityVisit;
   private EpiUse epiUse;
   private DistributionRefrigerators refrigerators;
@@ -39,9 +40,25 @@ public class FacilityDistribution {
   private VaccinationCoverage coverage;
 
   public FacilityDistribution(FacilityVisit facilityVisit, Facility facility, Distribution distribution, List<RefrigeratorReading> readings) {
+    this.setFacility(facility);
     this.facilityVisit = facilityVisit;
     this.epiUse = new EpiUse(facility, facilityVisit);
     this.refrigerators = new DistributionRefrigerators(facilityVisit, readings);
     this.epiInventory = new EpiInventory(facilityVisit, facility, distribution);
+  }
+
+  public FacilityDistribution(FacilityVisit facilityVisit, EpiUse epiUse, DistributionRefrigerators refrigerators, EpiInventory epiInventory, VaccinationCoverage coverage) {
+    this.facilityVisit = facilityVisit;
+    this.epiUse = epiUse;
+    this.refrigerators = refrigerators;
+    this.epiInventory = epiInventory;
+    this.coverage = coverage;
+  }
+
+  public void setFacility(Facility facility) {
+    this.facilityCode = facility.getCode();
+    this.facilityName = facility.getName();
+    this.population = facility.getCatchmentPopulation();
+    this.geographicZone = facility.getGeographicZone().getName();
   }
 }
